@@ -1,30 +1,34 @@
 import {
-    Component, SimpleChanges, OnChanges, OnDestroy,
-    Input, Output, EventEmitter
+    Component,
+    SimpleChanges,
+    OnChanges,
+    OnDestroy,
+    Input,
+    Output,
+    EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of, SubscriptionLike, Subject } from 'rxjs';
-import {
-    catchError, filter, skipWhile, takeUntil
-} from 'rxjs/operators';
+import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
-    InfoBlockSection, InfoBlockLine
+    InfoBlockSection,
+    InfoBlockLine
 } from '@components/info-block/info-block.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxApplyService, Watcher } from '@services/apply.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxMenuService } from '@src/menu';
 import { NxSystem } from '@services/system.service';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxToastService } from '@dialogs/toast.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { environment } from '@environments/environment';
+import { NxMenuService } from '@src/menu';
 
 interface DropdownStorage {
     name: string,
@@ -148,7 +152,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
-            this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
+            this.fullInfoPath = this.uriService.getSystemSettingsRoute({
+                systemId: this.system.id,
+                childRoute: ChildRoutes.HEALTH
+            }) + this.CONFIG.menus.systemSettings.servers.path;
         }
 
         if (changes.selectedServer?.currentValue) {
@@ -161,7 +168,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
             if (!NxUtilsService.isEqual(currentValue, previousValue)) {
                 if (!this.applyService.locked) {
-                    setTimeout(() => this.setServer(currentValue?.id !== previousValue?.id));
+                    setTimeout(() => this.setServer(
+                        currentValue?.id !== previousValue?.id
+                    ));
                 }
             } else {
                 this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
@@ -178,12 +187,16 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
         this.applyService.setVisible(false);
         this.serverLoaded = false;
-        this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
-        this.serverName = this.serverNameWatcher.originalValue = this.selectedServer.name;
+        this.betaMode = this.CONFIG.clientMode.beta ||
+            this.route.snapshot.queryParams.beta !== undefined;
+        this.serverName = this.selectedServer.name;
+        this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
-        this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown?.();
+        this.selectedServer.osName = this.selectedServer.osInfo
+            ? JSON.parse(this.selectedServer.osInfo).platform
+            : this.LANG.common.unknown?.();
         const { isAdmin, editAdmins } = this.system.userManager.permissions;
         this.enableEdit = isAdmin;
         this.restartDisabled = !isAdmin;
@@ -192,12 +205,22 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.portChangeDisabled = !editAdmins;
 
         this.serverDetails = new InfoBlockSection([
-            new InfoBlockLine(this.LANG.common.ip(), this.selectedServer.ip || '-'),
-            new InfoBlockLine(this.LANG.common.os(), this.selectedServer.osName || '-'),
-            new InfoBlockLine(this.LANG.common.version(), this.selectedServer.version || '-')
+            new InfoBlockLine(
+                this.LANG.common.ip(),
+                this.selectedServer.ip || '-'
+            ),
+            new InfoBlockLine(
+                this.LANG.common.os(),
+                this.selectedServer.osName || '-'
+            ),
+            new InfoBlockLine(
+                this.LANG.common.version(),
+                this.selectedServer.version || '-'
+            )
         ]);
 
-        this.ipPortWatcher.originalValue = this.ipPortWatcher.value = +serverPort;
+        this.ipPortWatcher.originalValue = +serverPort;
+        this.ipPortWatcher.value = +serverPort;
         this.checkIfOnline(this.parsedServerId).finally(() => {
             this.serverLoaded = true;
         });
@@ -211,8 +234,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             () => {
                 this.applyService.reset();
                 this.applyService.unsetInvalidField('port');
-                this.selectedStorage = this.dropdownStorages.find(({ value: id }) => id === this.currentAnalyticsDbId) ||
-                    this.selectDefaultStorage();
+                this.selectedStorage = this.dropdownStorages.find(
+                    ({ value: id }) =>
+                        id === this.currentAnalyticsDbId
+                ) || this.selectDefaultStorage();
                 this.setSystemStorageChosen(this.selectedStorage);
             }
         );
@@ -228,32 +253,36 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             let newPort;
 
             if (this.serverNameWatcher.changed) {
-                await this.system.renameServer(this.selectedServer.id, this.serverNameWatcher.value)
-                    .then(() => {
-                        this.serverNameWatcher.originalValue = this.serverNameWatcher.value;
-                        this.selectedServer.name = this.serverNameWatcher.value;
-                    })
-                    .catch(() => {
-                        this.serverNameWatcher.reset();
-                        const options = {
-                            classname: this.CONFIG.toast.warning,
-                            autohide: true,
-                            delay: this.CONFIG.alertTimeout
-                        };
+                await this.system.renameServer(
+                    this.selectedServer.id,
+                    this.serverNameWatcher.value
+                ).then(() => {
+                    this.serverNameWatcher.originalValue = this.serverNameWatcher.value;
+                    this.selectedServer.name = this.serverNameWatcher.value;
+                }).catch(() => {
+                    this.serverNameWatcher.reset();
+                    const options = {
+                        classname: this.CONFIG.toast.warning,
+                        autohide: true,
+                        delay: this.CONFIG.alertTimeout
+                    };
 
-                        this.toastService.show(
-                            NxLanguageProviderService.translate(
-                                this.LANG.toastMessage.nameFail,
-                                { type: this.LANG.common.server?.() }
-                            ), options);
-                    });
+                    this.toastService.show(
+                        NxLanguageProviderService.translate(
+                            this.LANG.toastMessage.nameFail,
+                            { type: this.LANG.common.server?.() }
+                        ), options);
+                });
             }
 
             try {
                 if (!port.value) {
                     port.value = port.originalValue;
                 } else if (port.value !== port.originalValue) {
-                    const portReturn = await this.system.changeServerPort(port.value, serverId);
+                    const portReturn = await this.system.changeServerPort(
+                        port.value,
+                        serverId
+                    );
                     switch (portReturn.error) {
                         case '0':
                             await this.system.update();
@@ -270,7 +299,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         metadataStorageId: this.selectedStorage.id
                     };
                     try {
-                        await this.system.updateResource(this.selectedServer.id, params);
+                        await this.system.updateResource(
+                            this.selectedServer.id,
+                            params
+                        );
                         await this.system.update();
                         this.saveStorageWatcher.value = false;
                         this.currentAnalyticsDbId = this.selectedStorage.id;
@@ -295,15 +327,34 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     setStatus(status) {
-        this.selectedServer.internalStatus = status ? this.CONFIG.servers.status[status] : '';
-        this.selectedServer.shownStatus = status ? this.LANG.servers.status[status]?.() : '';
-        this.certError = (this.CONFIG.servers.status.mismatchedcertificate === this.selectedServer.internalStatus);
-        this.serverOffline = [this.CONFIG.servers.status.mismatchedcertificate, this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
-            .includes(this.selectedServer.internalStatus);
+        this.selectedServer.internalStatus = status
+            ? this.CONFIG.servers.status[status]
+            : '';
+        this.selectedServer.shownStatus = status
+            ? this.LANG.servers.status[status]?.()
+            : '';
+        this.certError = (
+            this.CONFIG.servers.status.mismatchedcertificate ===
+            this.selectedServer.internalStatus
+        );
+        this.serverOffline = [
+            this.CONFIG.servers.status.mismatchedcertificate,
+            this.CONFIG.servers.status.offline,
+            this.CONFIG.servers.status.checking
+        ].includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
-            (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
+            (
+                !this.system.currentServerNotBusy &&
+                this.system.currentBusyServerIds.has(this.selectedServer.id)
+            );
 
-        if (!this.serverOffline && (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id))) {
+        if (
+            !this.serverOffline &&
+            (
+                !this.system.currentServerNotBusy &&
+                this.system.currentBusyServerIds.has(this.selectedServer.id)
+            )
+        ) {
             this.selectedServer.internalStatus = this.CONFIG.servers.status.restarting;
         }
 
@@ -314,21 +365,29 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     checkIfOnline = (serverId) => {
-        return this.system.serverManager.getServers().pipe(untilDestroyed(this)).toPromise().then(res => {
-            if (res) {
-                const servers: any[] = Object.entries(res).map(server => server[1]);
-                this.setStatus(servers.find(server => {
-                    if (NxUtilsService.cleanId(server.id) === NxUtilsService.cleanId(serverId)) {
-                        return server;
-                    }
-                }).status.toLowerCase());
+        return this.system.serverManager
+            .getServers()
+            .pipe(untilDestroyed(this))
+            .toPromise()
+            .then(res => {
+                if (res) {
+                    const servers: any[] =
+                        Object.entries(res).map(server => server[1]);
+                    this.setStatus(servers.find(server => {
+                        if (
+                            NxUtilsService.cleanId(server.id) ===
+                            NxUtilsService.cleanId(serverId)
+                        ) {
+                            return server;
+                        }
+                    }).status.toLowerCase());
+                    this.applyService.setVisible(true);
+                }
+            }, err => {
+                console.error(err);
+                this.setStatus(this.CONFIG.servers.status.offline);
                 this.applyService.setVisible(true);
-            }
-        }, err => {
-            console.error(err);
-            this.setStatus(this.CONFIG.servers.status.offline);
-            this.applyService.setVisible(true);
-        });
+            });
     }
 
     checkStatus() {
@@ -347,9 +406,14 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 }))
             .subscribe(result => {
                 if (result) {
-                    const servers: any[] = Object.entries(result).map(server => server[1]);
-                    const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
-                    this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
+                    const servers: any[] =
+                        Object.entries(result).map(server => server[1]);
+                    const isOnline = servers.find(server =>
+                        server.id === this.selectedServer.id
+                    ).status === 'Online';
+                    this.setStatus(
+                        isOnline ? '' : this.CONFIG.servers.status.offline
+                    );
                 } else {
                     this.setStatus(this.CONFIG.servers.status.offline);
                 }
@@ -384,8 +448,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     detachServer() {
         const { id, name } = this.selectedServer;
-        const currentServerIndex = this.system.servers.findIndex((server) => server.id === id);
-        const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length ? currentServerIndex + 1 : currentServerIndex - 1;
+        const currentServerIndex = this.system.servers.findIndex((server) =>
+            server.id === id
+        );
+        const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length
+            ? currentServerIndex + 1
+            : currentServerIndex - 1;
         const nextServerId = this.system.servers[nextServerIndex].id;
         return this.dialogs
             .detachServer(this.system, id, name)
@@ -417,7 +485,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     onPortChange(port) {
         this.portBusy = false;
-        if (port && port >= this.CONFIG.servers.port.min && port < this.CONFIG.servers.port.max) {
+        if (
+            port &&
+            port >= this.CONFIG.servers.port.min &&
+            port < this.CONFIG.servers.port.max
+        ) {
             this.ipPortWatcher.value = port;
         }
         if (this.ipPortWatcher.value === null) {
@@ -433,7 +505,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     private setSystemStorageChosen(storage) {
         const hasMultipleStorages = this.dropdownStorages.length > 1;
-        this.systemStorageChosen = hasMultipleStorages && storage && !storage.isNotSystem;
+        this.systemStorageChosen = hasMultipleStorages &&
+            storage &&
+            !storage.isNotSystem;
     }
 
     async changeAnalyticsStorage(newStorage) {
@@ -445,7 +519,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
-        const analyticsData = await this.system.storageManager.checkForAnalyticsData(this.selectedServer.id).toPromise();
+        const analyticsData = await this.system.storageManager
+            .checkForAnalyticsData(this.selectedServer.id).toPromise();
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
             this.dialogs.changeStorage(this.system)
@@ -457,7 +532,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         const params = {
                             metadataStorageId: this.selectedStorage.id
                         };
-                        await this.system.updateResource(this.selectedServer.id, params);
+                        await this.system.updateResource(
+                            this.selectedServer.id,
+                            params
+                        );
                         await this.system.update();
                     } else if (closeRes === 'error') {
                         const options = {
@@ -466,7 +544,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             delay: this.CONFIG.alertTimeout
                         };
                         this.setSystemStorageChosen(this.selectedStorage);
-                        this.toastService.show(this.LANG.servers.analyticsDataPolicyError?.(), options);
+                        this.toastService.show(
+                            this.LANG.servers.analyticsDataPolicyError?.(),
+                            options
+                        );
                     } else if (closeRes === 'cancel') {
                         this.selectedStorage = { ...this.selectedStorage };
                         this.setSystemStorageChosen(this.selectedStorage);
@@ -476,7 +557,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 });
         } else {
             this.selectedStorage = newStorage;
-            this.saveStorageWatcher.value = this.selectedStorage.id !== this.currentAnalyticsDbId;
+            this.saveStorageWatcher.value =
+                this.selectedStorage.id !== this.currentAnalyticsDbId;
         }
         this.checkingForDataAnalytics = false;
     }
@@ -497,13 +579,22 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             hasCompatibleAnalyticsPlugins
         }) => {
             this.currentAnalyticsDbId = currentAnalyticsDbLocation?.storageId;
-            this.dropdownStorages = analyticsDbTargetLocations.map(({ url, isOnline, storageStatus, storageId, isWritable, freeSpace }) => {
+            this.dropdownStorages = analyticsDbTargetLocations.map(({
+                url,
+                isOnline,
+                storageStatus,
+                storageId,
+                isWritable,
+                freeSpace
+            }) => {
                 const selected = this.currentAnalyticsDbId === storageId;
                 return {
                     name: url,
                     isOnline,
                     isWritable,
-                    isNotSystem: !storageStatus ? !this.systemStorageChosen : !storageStatus.includes('system'),
+                    isNotSystem: !storageStatus
+                        ? !this.systemStorageChosen
+                        : !storageStatus.includes('system'),
                     selected,
                     id: storageId,
                     value: storageId,
@@ -511,10 +602,14 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 };
             });
             if (!this.saveStorageWatcher.value) {
-                this.selectedStorage = this.dropdownStorages.find(store => store.selected) || this.selectDefaultStorage();
+                this.selectedStorage = this.dropdownStorages.find(store =>
+                    store.selected
+                ) || this.selectDefaultStorage();
             }
             this.storagesLoading = false;
-            this.showAnalytics = !!currentAnalyticsDbLocation || hasAnalyticsData || hasCompatibleAnalyticsPlugins;
+            this.showAnalytics = !!currentAnalyticsDbLocation ||
+                hasAnalyticsData ||
+                hasCompatibleAnalyticsPlugins;
 
             this.setSystemStorageChosen(this.selectedStorage);
 
@@ -551,12 +646,20 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         const filteredStorages = storages.filter(storage => storage[curCriteria]);
         if (filteredStorages.length === 1) {
             return filteredStorages[0];
-        } else if (filteredStorages.length === 0 || storages.length === filteredStorages.length) {
+        } else if (
+            filteredStorages.length === 0 ||
+            storages.length === filteredStorages.length
+        ) {
             return this.highestFreeSpace(storages);
         } else if (remainingCriteria.length === 0) {
-            return lastSetOfCriteria ? this.highestFreeSpace(filteredStorages) : false;
+            return lastSetOfCriteria
+                ? this.highestFreeSpace(filteredStorages)
+                : false;
         } else {
-            return this.selectDefaultStorageRecursion(filteredStorages, remainingCriteria);
+            return this.selectDefaultStorageRecursion(
+                filteredStorages,
+                remainingCriteria
+            );
         }
     }
 

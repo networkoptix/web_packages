@@ -3,7 +3,7 @@ import {
     Component,
     OnInit,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -62,10 +62,10 @@ export class NxSystemUsersComponent implements OnInit {
     userRoleFormWatcher: FormWatcher;
     userSettingsFormWatcher: FormWatcher;
 
-    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
-    @ViewChild('userEnabledForm', { read: NgForm }) userEnabledForm;
-    @ViewChild('userRoleForm', { read: NgForm }) userRoleForm;
-    @ViewChild('userSettingsForm', { read: NgForm }) userSettingsForm;
+    @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply: ViewContainerRef;
+    @ViewChild('userEnabledForm', { read: NgForm }) userEnabledForm: NgForm;
+    @ViewChild('userRoleForm', { read: NgForm }) userRoleForm: NgForm;
+    @ViewChild('userSettingsForm', { read: NgForm }) userSettingsForm: NgForm;
 
     get localUserNameDiffers (): boolean {
         return this.localUserName !== this.username;
@@ -105,7 +105,8 @@ export class NxSystemUsersComponent implements OnInit {
         this.setupDefaults();
     }
 
-    private _filterUser = (user: any) => NxUtilsService.cleanId(user.id) === this.paramUser;
+    private _filterUser =
+        (user: any) => NxUtilsService.cleanId(user.id) === this.paramUser;
 
     private _findUser () {
         return this.system.userManager.users.find(this._filterUser);
@@ -138,7 +139,10 @@ export class NxSystemUsersComponent implements OnInit {
                 // Route guard did not work :( ... so doing it the old way
                 if (!this.system.userManager.permissions?.editUsers) {
                     this.uriService
-                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
+                        .navigateSystem(
+                            `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`,
+                            this.system
+                        )
                         .catch(error => {
                             console.error(error);
                         });
@@ -149,16 +153,23 @@ export class NxSystemUsersComponent implements OnInit {
                     this.userSubscription.unsubscribe();
                 }
                 this.userSubscription = this.system.infoSubject.subscribe(() => {
-                    this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+                    this.systemAvailable = this.system.isAvailable &&
+                        this.system.mergeInfo === undefined;
 
                     const updatedUser = this._findUser();
 
                     const cleanUser =  { ...this.selectedUser };
                     delete cleanUser.role?.optionLabel;
 
-                    if (!this.applyService.locked && (this.paramUser === undefined ||
-                        this.paramUser !== NxUtilsService.cleanId(this.selectedUser?.id) ||
-                        !NxUtilsService.isEqual(updatedUser, cleanUser))) {
+                    if (
+                        !this.applyService.locked && (
+                            this.paramUser === undefined ||
+                            this.paramUser !== NxUtilsService.cleanId(
+                                this.selectedUser?.id
+                            ) ||
+                            !NxUtilsService.isEqual(updatedUser, cleanUser)
+                        )
+                    ) {
                         this.setUser();
                     }
                 });
@@ -231,8 +242,10 @@ export class NxSystemUsersComponent implements OnInit {
                 this.paramUser = this.nextUserId;
 
                 this.uriService
-                    .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${this.nextUserId}`, this.system)
-                    .catch(error => {
+                    .navigateSystem(
+                        `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${this.nextUserId}`,
+                        this.system
+                    ).catch(error => {
                         console.error(error);
                     });
 
@@ -253,7 +266,9 @@ export class NxSystemUsersComponent implements OnInit {
             (incIndex !== this.system.users?.length)
                 ? incIndex
                 : decIndex; // single-user list case check required here, too?
-        this.nextUserId = this.system.mediaserver.cleanId(this.system.users[nextIndex].id);
+        this.nextUserId = this.system.mediaserver.cleanId(
+            this.system.users[nextIndex].id
+        );
     }
 
     private setUser () {
@@ -267,8 +282,10 @@ export class NxSystemUsersComponent implements OnInit {
                 const userId = this.system.mediaserver.cleanId(user.id);
 
                 this.uriService
-                    .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`, this.system)
-                    .catch(error => {
+                    .navigateSystem(
+                        `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`,
+                        this.system
+                    ).catch(error => {
                         console.error(error);
                     });
                 return;
@@ -286,37 +303,49 @@ export class NxSystemUsersComponent implements OnInit {
                 ? this.LANG.system.users.cloudDelete()
                 : this.LANG.system.users.localDelete();
 
-            this.menuService.detail = NxUtilsService.cleanId(this.selectedUser.id);
+            this.menuService.detail = NxUtilsService.cleanId(
+                this.selectedUser.id
+            );
             if (this.selectedUser.role.name === 'Custom') {
-                this.currentCustomRole = NxUtilsService.deepCopy(this.selectedUser.role);
+                this.currentCustomRole = NxUtilsService.deepCopy(
+                    this.selectedUser.role
+                );
             }
 
             this.setPermission(this.selectedUser.role);
             this.fullName = this.selectedUser.fullName;
             this.email = this.selectedUser.email;
             this.username = user.isCloud ? user.email : user.name;
-            this.role = !user.isCloud && user.name === 'admin' ? 'Owner' : user.role.name;
+            this.role = !user.isCloud && user.name === 'admin'
+                ? 'Owner'
+                : user.role.name;
 
             this.settingsService.footerSubject.next(true);
 
             setTimeout(() => {
-                this.userEnabledFormWatcher = this.applyService.createFormWatcher(
-                    'userEnabledForm',
-                    this.userEnabledForm,
-                    this.editUser);
+                this.userEnabledFormWatcher = this.applyService
+                    .createFormWatcher(
+                        'userEnabledForm',
+                        this.userEnabledForm,
+                        this.editUser
+                    );
 
                 if (this.selectedUser.canBeEdited) {
-                    this.userRoleFormWatcher = this.applyService.createFormWatcher(
-                        'userRoleForm',
-                        this.userRoleForm,
-                        this.editUser);
+                    this.userRoleFormWatcher = this.applyService
+                        .createFormWatcher(
+                            'userRoleForm',
+                            this.userRoleForm,
+                            this.editUser
+                        );
                 }
 
                 if (!this.selectedUser.isCloud) {
-                    this.userSettingsFormWatcher = this.applyService.createFormWatcher(
-                        'userSettingsForm',
-                        this.userSettingsForm,
-                        this.editUser);
+                    this.userSettingsFormWatcher = this.applyService
+                        .createFormWatcher(
+                            'userSettingsForm',
+                            this.userSettingsForm,
+                            this.editUser
+                        );
                 }
             });
         }

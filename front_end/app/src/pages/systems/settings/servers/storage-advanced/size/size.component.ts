@@ -1,15 +1,19 @@
 import {
-    Component, Inject, OnDestroy,
-    LOCALE_ID, Input, OnChanges,
-    SimpleChanges, OnInit
-}                       from '@angular/core';
+    Component,
+    Inject,
+    OnDestroy,
+    LOCALE_ID,
+    Input,
+    OnChanges,
+    SimpleChanges,
+} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxUtilsService }            from '@services/utils.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { Storage, STORAGE_STATUS }   from '@services/system.service/system/storage-manager/storage';
+import { Storage, STORAGE_STATUS } from '@services/system.service/system/storage-manager/storage';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -39,7 +43,10 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges {
     STATUS: any;
 
     get inaccessible() {
-        return [STORAGE_STATUS.INACCESSIBLE, STORAGE_STATUS.BEING_CHECKED].includes(this.store.status);
+        return [
+            STORAGE_STATUS.INACCESSIBLE,
+            STORAGE_STATUS.BEING_CHECKED
+        ].includes(this.store.status);
     }
 
     get cachedSizesClean() {

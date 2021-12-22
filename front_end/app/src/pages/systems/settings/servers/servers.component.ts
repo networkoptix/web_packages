@@ -4,7 +4,7 @@ import {
     OnDestroy,
     OnInit,
     ViewContainerRef,
-    Inject
+    Inject,
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -81,7 +81,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 .replace('%7D', '}');
 
             if (this.serverIdFromParams.indexOf('?') > -1) {
-                this.serverIdFromParams = this.serverIdFromParams.substring(0, this.serverIdFromParams.indexOf('?'));
+                this.serverIdFromParams = this.serverIdFromParams.substring(
+                    0, this.serverIdFromParams.indexOf('?')
+                );
             }
 
             this.menuService.detail = this.serverIdFromParams;
@@ -118,15 +120,20 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     }
                     if (this.system && !this.system.userManager.permissions?.isAdmin) {
                         this.uriService
-                            .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
-                            .catch(error => {
+                            .navigateSystem(
+                                `${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`,
+                                this.system
+                            ).catch(error => {
                                 console.error(error);
                             });
                     }
                 }),
                 switchMap(() => this.system.infoSubject.pipe(
                     map(system => {
-                        if (!system.serverManager.servers || system.serverManager.servers.length === 0) {
+                        if (
+                            !system.serverManager.servers ||
+                            system.serverManager.servers.length === 0
+                        ) {
                             throw system;
                         }
                         return system;
@@ -196,7 +203,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            server.osName = server.osInfo ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown?.();
+            server.osName = server.osInfo
+                ? JSON.parse(server.osInfo).platform
+                : this.LANG.common.unknown?.();
             if (!server.ip) {
                 NxUtilsService.formatURL(server);
             }
