@@ -1,7 +1,7 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <header #authCodeHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
-    <svg-icon nx-add-svg-src 
-        [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header' + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
+    <svg-icon nx-add-svg-src
+        [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header' + (viewType === 'web' ? '' : '_desktop') + '.svg'"
         [svgStyle]="{'width.px': '320', 'height.px': '80'}"
         [applyClass]="true"></svg-icon>
     <div class="for-small">
@@ -37,8 +37,8 @@
                 nxFocusMe>
         </div>
         <div class="mt-2" *ngIf="authCode.invalid && (authCode.dirty || authCode.touched)">
-            <p *ngIf="authCode.errors.required" class="error-label mb-0" translate>Enter Authentication code</p>
-            <p *ngIf="authCode.errors.wrongAuthCode" class="error-label mb-0" translate>Wrong Authentication code</p>
+            <p *ngIf="authCode.errors.required" class="error-label mb-0" translate>Code is required</p>
+            <p *ngIf="authCode.errors.wrongAuthCode" class="error-label mb-0" translate>Invalid code</p>
             <p *ngIf="authCode.errors.lockedOut" class="error-label mb-0" translate>Too many attempts. Try again in a minute.</p>
         </div>
         <div class="mt-2">
