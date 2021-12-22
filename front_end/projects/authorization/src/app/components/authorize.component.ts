@@ -1,8 +1,13 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
 import {
-    Component, ElementRef, HostListener, Inject,
-    OnDestroy, OnInit, ViewEncapsulation
+    Component,
+    ElementRef,
+    HostListener,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -10,16 +15,16 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUtilsService } from '@services/utils.service';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import { WINDOW } from '@services/window-provider';
-import { NxToastService } from '@dialogs/toast.service';
 
-import { environment } from '@environments/environment';
 require('what-input');
 
 export interface AuthorizeParams {
@@ -39,7 +44,17 @@ export interface AuthorizeParams {
     access_token?: string
 }
 
-export type AuthorizeStateType = 'email' | 'password' | 'create' | 'activate' | 'confirm' | 'request' | 'reset' | 'error' | 'auth' | 'backup'
+export type AuthorizeStateType = 'email' |
+    'password' |
+    'create' |
+    'activate' |
+    'confirm' |
+    'request' |
+    'reset' |
+    'error' |
+    'auth' |
+    'backup'
+
 export enum AuthorizeState {
     email = 'email',
     password = 'password',
@@ -96,7 +111,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     checkEmailProcess: Process;
     loginCode: string;
     emailLocked = false;
-    action: 'restore_password'| 'activate';
+    action: 'restore_password'| 'activate' | 'register';
 
     // email
     loginEmail: string;

@@ -1,15 +1,25 @@
 import {
-    Component, EventEmitter, Input, OnChanges, OnDestroy,
-    OnInit, Output, SimpleChanges, ViewChild, Inject
-}                                               from '@angular/core';
-import { UntilDestroy }                         from '@ngneat/until-destroy';
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild,
+    Inject,
+} from '@angular/core';
+import type { NgForm } from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }             from '@services/nx-config';
-import { NxLanguageProviderService }            from '@services/nx-language-provider';
-import { Process }                              from '@services/process.service';
-import { LanguageI18NStaticTypes }              from '@app/language_i18n_static_types';
-import { AuthorizeStateType } from '../authorize.component';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Process } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
+
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,6 +34,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @Input() viewType: string;
     @Input() smallView: boolean;
     @Input() loginEmail: string;
+    @Input() fromInvite: boolean;
     @Input() footerItems: { name: string, url: string }[];
     @Input() accountInfo: {
         email: string;
@@ -55,7 +66,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @Input() createAccountProcess: Process;
     onCreateSubmit: any;
 
-    @ViewChild('createAccountForm', { static: false }) createForm: HTMLFormElement;
+    @ViewChild('createAccountForm', { static: false }) createForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,
