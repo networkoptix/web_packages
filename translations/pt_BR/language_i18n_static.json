@@ -114,7 +114,7 @@
         "passResetHeader": "Reset da Senha",
         "newPassHeader": "Definir nova senha",
         "newPassConfirmText": "A senha está definida!",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "newPassInvalidCode": "Não é possível salvar a senha: o código de confirmação já está em uso ou está incorreto",
         "confirmHeader": "Sistema conectado a %CLOUD_NAME%!",
         "loginError": "Não é possível conectar a %CLOUD_NAME%",
         "loginErrorAdditional": "Tente novamente ou faça login no sistema diretamente com sua conta local.",
@@ -396,7 +396,7 @@
                 "required": "A autenticação de dois fatores é necessária.",
                 "configure": "Você pode configurá-lo em seu",
                 "accountLink": "configurações da conta",
-                "codeRequired": "Code is required"
+                "codeRequired": "O código é obrigatório"
             }
         },
         "removeSystem": {

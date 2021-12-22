@@ -114,7 +114,7 @@
         "passResetHeader": "Reset wachtwoord",
         "newPassHeader": "Stel nieuw wachtwoord in",
         "newPassConfirmText": "Wachtwoord is ingesteld!",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "newPassInvalidCode": "Kan wachtwoord niet opslaan: de bevestigingscode is al in gebruik of onjuist",
         "confirmHeader": "Systeem verbonden met %CLOUD_NAME%!",
         "loginError": "Kan geen verbinding maken met %CLOUD_NAME%",
         "loginErrorAdditional": "Probeer het opnieuw of log rechtstreeks in op het systeem met uw lokale account.",
@@ -396,7 +396,7 @@
                 "required": "Tweestapsverificatie is vereist.",
                 "configure": "U kunt het configureren in uw",
                 "accountLink": "account instellingen",
-                "codeRequired": "Code is required"
+                "codeRequired": "Code is vereist"
             }
         },
         "removeSystem": {
