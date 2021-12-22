@@ -108,6 +108,7 @@ Open New Browser On Failure
 
 13. Link works and suggests to log out user, if he was logged in, buttons operate correctly
     [Tags]    email    C41564
+    Skip    Not sure if this is necessary anymore.
     ${email1}=   Get Random Email    ${BASE EMAIL}
     Register Account    mark    hamill    ${email1}    ${password}
     ${code1}=   Get Code From Email    ${url}    ${auth}    ${email1}    activate_account
