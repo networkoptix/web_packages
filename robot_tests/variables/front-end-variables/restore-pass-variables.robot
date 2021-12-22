@@ -7,7 +7,7 @@ ${RESET NEXT BUTTON}                  //button[contains(@class,"btn btn-primary"
 ${RESET PASSWORD INPUT}               ${RESET PASSWORD FORM}//input[@id="resetPassword"]
 ${FORGOT PASSWORD BUTTON}             //button//span[contains(text(),"${FORGOT PASSWORD TEXT}")]
 ${SAVE PASSWORD}                      ${RESET PASSWORD FORM}/following-sibling::footer//button[contains(@class,'btn btn-primary')]
-${RESET EMAIL SENT MESSAGE}           //h1/span[contains(text(),"${RESET EMAIL SENT MESSAGE TEXT}")]
+${RESET EMAIL SENT MESSAGE}           //nx-authorize-reset-request-component//p[contains(text(),"${RESET EMAIL SENT MESSAGE TEXT}")]
 ${RESET EMAIL SENT MESSAGE HEBREW}    //h1/span[contains(text(),'${RESET EMAIL SENT MESSAGE TEXT}')]
 ${RESET SUCCESS MESSAGE}              //h3[contains(text(),"${RESET SUCCESS MESSAGE TEXT}")]
 ${RESET SUCCESS INSTRUCTION}          //p[contains(text(),"${RESET SUCCESS INSTRUCTION TEXT}")]

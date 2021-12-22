@@ -40,6 +40,11 @@ ${EMAIL INPUT}                        //nx-authorize-component//input[@id='autho
 ${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
 ${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
 ${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//button[@type="button"]/span[text()="${CREATE ACCOUNT BUTTON TEXT}"]
+${LOG IN BTN REGISTER ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN CREATE ACCOUNT PAGE}     //nx-authorize-create-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN ACTIVATE ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//button[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN RESET PASSWORD PAGE}     //nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN SET NEW PASSWORD PAGE}   //nx-authorize-reset-password-component//footer//nx-process-button//button[contains(text(), '${LOG IN BUTTON TEXT}')]
 
 ${REMEMBER ME CHECKBOX VISIBLE}       //form[@name='loginForm']//input[@id='remember']/following-sibling::span[@class="checkmark"]/..
 ${REMEMBER ME CHECKBOX REAL}          //form[@name='loginForm']//input[@id='remember']
@@ -53,6 +58,9 @@ ${RESEND ACTIVATION EMAIL LINK}       //nx-authorize-component//a[text()='${RESE
 ${WRONG PASSWORD MESSAGE}             //nx-authorize-component//p[text()="${WRONG PASSWORD}"]
 ${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCOUNT DOES NOT EXIST TEXT}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[text()="${TOO MANY ATTEMPTS TEXT}"]
+${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//form//input[@id="resetPassword"]
+${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
+${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${PASSWORD IS SET TEXT}')]
 
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
@@ -259,6 +267,7 @@ ${TAKE ME HOME}                       //button/a[text()="${GO TO MAIN PAGE TEXT}
 ${404 ICON}                           //div[@name="404"]/svg-icon
 ${OFFLINE BADGE}                      //a[contains(@class, "badge") and contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
+${RESET PASSWORD PAGE BUTTON}         //nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '${RESET PASSWORD TEXT}')]
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
