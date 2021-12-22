@@ -140,12 +140,12 @@ export abstract class BaseAccount implements OnDestroy {
     private loginTokens(tokens) {
         return this.cloudApi.loginTokens(tokens).then((res: any) => {
             this.tokens = undefined;
-            this.sessionService.loginState = res.email;
             this.clearCodeFromUri();
-            this.account = undefined;
             this.localStorage.clear(this.CONFIG.oauthStore.verify2fa);
-            this.storageService.clear(); // Clear session
-            this.window.location.reload();
+            this.localStorage.clear('systemId');
+            // Changing "loginState" is enough here. Re-init routes are subscribed to it.
+            this.sessionService.loginState = res.email;
+            // Reloading page sometimes breaks the page so better not doing it ().
         });
     }
 
@@ -399,6 +399,7 @@ export abstract class BaseAccount implements OnDestroy {
             if (tokenInfo.username === account.email) {
                 return false;
             }
+
             const res = await this.dialogs.confirm('',
                 this.LANG.dialogs.titles.loggedFromOtherAccount(),
                 this.LANG.dialogs.buttons.ok(),
@@ -476,7 +477,6 @@ export abstract class BaseAccount implements OnDestroy {
 
     protected stopAccountPoll() {
         if (this.accountPollSubscription) {
-            this.account = undefined;
             this.accountPollSubscription.unsubscribe();
         }
     }
