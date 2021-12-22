@@ -205,6 +205,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             const name = menuNode.display_name.toLowerCase();
             const startInd = name.indexOf(query.toLowerCase());
             const pathMatchesQuery = menuNode.name.toLowerCase().includes(query.toLowerCase());  // For API-Tool: display_name is not always the path, need to check if the path matches the query
+            const isSeperator = menuNode.name.includes('-seperator');
             const displayedNode = NxUtilsService.deepCopyWithCircularReference(menuNode);
             displayedNode.nodes = [];
             let newName = displayedNode.display_name || displayedNode.name;
@@ -212,7 +213,7 @@ export class NxDevelopersMenuComponent implements OnInit {
                 newName = highlightText(menuNode, startInd);
                 inQuery = true;
             }
-            if (pathMatchesQuery) {
+            if (pathMatchesQuery || isSeperator) {
                 inQuery = true;
             }
             for (const node of menuNode.nodes) {
@@ -234,6 +235,10 @@ export class NxDevelopersMenuComponent implements OnInit {
             if (queriedNode) {
                 newDisplayedNodes.push(queriedNode);
             }
+        }
+
+        if (newDisplayedNodes[newDisplayedNodes.length - 1].name.includes('-seperator')) {
+            newDisplayedNodes.pop();
         }
         this.openNodes = newOpenNodes;
         this.displayedMenuNodes = newDisplayedNodes;

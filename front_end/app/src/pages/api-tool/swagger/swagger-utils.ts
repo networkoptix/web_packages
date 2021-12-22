@@ -22,7 +22,7 @@ const createSpan = (className: string) => {
  */
 export const highlightAllCode = (element: HTMLElement) => {
     const lines = element.querySelectorAll('div');
-    if (!brackets.includes(lines[0].innerText[0])) return; // not json
+    if (!lines.length || !brackets.includes(lines[0].innerText[0])) return; // not json
 
     for (const line of lines) {
         highlight(line);
