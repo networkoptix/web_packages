@@ -52,7 +52,6 @@
     "@ngneat/until-destroy": "8.0.3",
     "@ngx-translate/core": "13.0.0",
     "@ngx-translate/http-loader": "6.0.0",
-    "@videojs/http-streaming": "^2.8.0",
     "angular-in-memory-web-api": "0.10.0",
     "angular-svg-icon": "10.0.0",
     "angular2-csv": "0.2.9",
@@ -84,7 +83,7 @@
     "rxjs-compat": "6.6.3",
     "tslib": "2.0.3",
     "underscore": "^1.13.1",
-    "video.js": "^7.12.1",
+    "video.js": "^7.18.0",
     "swagger-ui": "3.40.0",
     "what-input": "5.2.10",
     "zone.js": "0.11.3"
