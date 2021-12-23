@@ -361,7 +361,7 @@
                 <ng-container *ngIf="tfaCodeInputDisable.invalid">
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
                     <div class="input-error" *ngIf="notAuthorized" translate>Invalid code</div>
-                    <div class="input-error" *ngIf="!tfaCodeInputDisable.pristine && tfaCodeInputDisable.errors?.required"
+                    <div class="input-error" *ngIf="tfaCodeInputDisable.touched && tfaCodeInputDisable.errors?.required"
                          [innerText]="'dialogs.message.twoFactor.codeRequired' | translate"></div>
                 </ng-container>
             </div>

@@ -273,7 +273,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 },
-                notAuthorized: () => {
+                forbidden: () => {
                     this.notAuthorized = true;
                     this.codeForm.controls.tfaCodeInput.markAsTouched();
                     this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
@@ -347,7 +347,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 },
-                notAuthorized: () => {
+                forbidden: () => {
                     this.notAuthorized = true;
                     this.codeForm.controls.tfaCodeInput.markAsTouched();
                     this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
