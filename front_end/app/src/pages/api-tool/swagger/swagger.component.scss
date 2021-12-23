@@ -70,32 +70,32 @@
 	padding-bottom  : 18px;
 }
 
-.swagger-ui .tabitem {
-	@include typography.medium13dark10;
+.swagger-ui li.tabitem {
 	height: 100%;
-    border: 1px solid transparent;
+    border-bottom: 1px solid transparent;
 	padding-bottom: 7px !important;
+	padding-right: 0px;
+	min-width: 0px;
 	border-bottom: 1px solid $light6;
     cursor: pointer;
-	.tablinks {
+
+	&:first-of-type {
+		padding-right: 12px;
+	}
+
+    a {
+		@include typography.medium14light16;
+		font-weight: 500;
 		text-decoration: none;
 		padding-bottom: 7px;
 	}
-
 	&.active {
-		border-bottom-color: $blue1;
 		position: relative;
-		a {
-			color: $blue1;
-			font-family: $font-family-medium !important;
+		a {	
+			@include typography.medium14blue1;
+			padding-bottom: 8px;
+			border-bottom: 1px solid $blue1;
 		}
-	}
-}
-
-.swagger-ui .tab li {
-	@include typography.regular13dark10;
-	a {
-		color: $dark10;
 	}
 }
 
@@ -237,7 +237,7 @@
 
 .swagger-ui .media-type-wrapper {
 	position: absolute;
-	padding: 4px 8px;
+	padding: 1px 4px;
 	right: 0px;
 	margin-top: 10px;
 	border-radius: 2px;
@@ -473,6 +473,7 @@
 }
 
 .swagger-ui .response-col_description {
+	width: auto;
 	border-left: 1px solid $light3 !important;
 	h5 {
 		padding-bottom: 8px !important;
@@ -499,7 +500,7 @@
 	height: 100%;
 }
 
-.swagger-ui .opblock-body pre.microlight, .swagger-ui .info.highlight-code pre  {
+.swagger-ui .opblock-body pre.microlight, .swagger-ui .info.highlight-code pre {
 	@extend .code-block-common;
 	background      : $light2 !important;
 	border	        : 1px solid $light4;
@@ -513,7 +514,7 @@
 .swagger-ui .model-box {
 	width: 100%;
 	background: #E1E7EA;
-	font-size: 13px;
+	font-size: 12px;
 	color: $additional_dark1 !important;
 	.model {
 		font-family: robotomonoregular, monospace;
@@ -524,13 +525,28 @@
 			font-weight: 500 !important;
 		}
 	}
-	.renderedMarkdown p {
-		font-family: robotomonoregular, monospace;
+	tr { 
+		td {
+    		width: auto !important;
+			.renderedMarkdown {
+				display: inline-block;
+				p {
+					margin-bottom: 0px;
+					font-family: robotomonoregular, monospace;
+					padding-left: 12px;
+				}
+			}
+			&:first-child {
+				padding-right: 8px !important;
+			}	
+		}
+		&:last-child {
+			display:none
+		}
 	}
 	.prop-type, .property.primitive, .prop-format, .model {
 		color: $additional_dark1 !important;
-		font-size: 13px;
-
+		font-size: 12px;
 	}
 }
 
@@ -768,7 +784,7 @@
 }
 
 .swagger-ui .opblock-body {
-	table {
+	table:not(.model) {
 		thead{ 
 			display: none;
 		}
@@ -780,13 +796,13 @@
 	}
 }
 
-.swagger-ui .bracket, .value-text {
+.swagger-container  .bracket, .value-text {
 	color: $dark9;
 }
-.swagger-ui span.key-text {
+.swagger-container span.key-text {
    color: $purple500;
 }
-.swagger-ui span.value-number {
+.swagger-container  span.value-number {
    color: $green_main;
 }
 

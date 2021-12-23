@@ -1,4 +1,4 @@
-import type { componentMap, textareaMap } from './swagger-types';
+import type { textareaMap } from './swagger-types';
 
 const brackets = ['{', '}', '[', ']'];
 

@@ -17,6 +17,7 @@ import {
     MenuNodeWithParent
 } from '@components/developers-menu/developers-menu.component';
 import { environment } from '@environments/environment';
+import { MenuNode } from '@services/menus.service.types';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
 import { NxAPIToolService } from '../api-tool.service';
@@ -266,7 +267,6 @@ export class NxSwaggerComponent implements OnChanges {
                     setCodeBlockHTML(element, this.textareaMap, 'codeblock');
                     this.addCopyToClipBoardButton(element);
                 }
-                // Ignore code blocks that come from the markdown from the json
                 highlightAllCode(element);
             }
         }
@@ -385,9 +385,17 @@ export class NxSwaggerComponent implements OnChanges {
         const lines =  parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
         if (lines.length > 1) { // Don't show line counters if only one line
             parent.innerHTML = lines.join('\n');
+            let contentFound = false;
             for (const child of parent.childNodes as any) {
                 if (!child.textContent.length && !child.childElementCount) {
-                    child.innerHTML = '<br>'; // if code blocks contain an empty div, it should be a line break
+                    if (contentFound) {
+                        child.innerHTML = '<br>'; // if code blocks contain an empty div, it should be a line break
+                    } else {
+                        // remove blank lines at beginning of code blocks
+                        parent.removeChild(child);
+                    }
+                } else {
+                    contentFound = true;
                 }
             }
             if (parent.childElementCount > 1) {
@@ -423,14 +431,22 @@ export class NxSwaggerComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeNode.currentValue) {
-            const node = changes.activeNode.currentValue;
+            const node: MenuNode = changes.activeNode.currentValue;
             const isSingleView = this.isAPIRouteNode(node);
+            const expand = isSingleView ? 'full' : 'list';
+
+            if (!this.APIToolService.isAPIInfoMenuNode(node)) {
+                this.setSwaggerDescription(node, expand);
+            }
             if (isSingleView) {
                 const { path, method } = getPathAndMethodFromNodeName(node.name);
                 this.singleRoutePath = path;
                 this.singleRouteMethod = method;
+                const summary = this.APIToolService.selectedServer.apiDocFull.paths?.[path]?.[method.toLowerCase()]?.summary;
+                if (summary) {
+                    this.swaggerMenuDescription.title = summary;
+                }
             }
-            const expand = isSingleView ? 'full' : 'list';
             this.singleAPIRouteShowing = isSingleView;
             if (this.VCR) {
                 // Destroys custom components
@@ -439,9 +455,6 @@ export class NxSwaggerComponent implements OnChanges {
                 this.textareaMap = {};
             }
             this.initSwagger(node.name, expand);
-            if (!this.APIToolService.isAPIInfoMenuNode(node)) {
-                this.setSwaggerDescription(node, expand);
-            }
         }
     }
 }

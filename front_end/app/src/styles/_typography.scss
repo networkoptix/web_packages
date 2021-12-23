@@ -360,6 +360,10 @@ p {
 @mixin medium32dark9 {
     @include font-source($font-family-medium, $font-size-xxlg, $dark9);
 }
+
+@mixin medium14blue1 {
+    @include font-source($font-family-medium, $h5-font-size, $blue1);
+}
 // MEDIUM
 
 // BOLD
