@@ -1522,3 +1522,7 @@ class CustomClientAdmin(admin.ModelAdmin):
 @admin.register(Flag)
 class FlagAdmin(WaffleFlagAdmin):
     pass
+
+@admin.register(OpenAPIJSON)
+class OpenAPIJSONAdmin(CMSAdmin):
+    pass

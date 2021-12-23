@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework import serializers
 
-from cms.models import Context, DataStructure, AssetType, CustomClient, Customization
+from cms.models import Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON
 
 import re
 
@@ -256,3 +256,9 @@ class PackageDownloadIdSerializer(serializers.Serializer):
 
 class SanitizeHTMLSerializer(serializers.Serializer):
     html = serializers.CharField()
+
+class OpenAPIJSONSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(source='get_type_display')
+    class Meta:
+        model = OpenAPIJSON
+        fields = ('__all__')

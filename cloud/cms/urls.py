@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from cms.views import integration, article, agreement, asset, documentation, menu, utils, portal_notifications
+from cms.views import integration, article, agreement, asset, documentation, menu, utils, portal_notifications, openapi_json
 
 from rest_framework.routers import DefaultRouter
 
@@ -31,7 +31,9 @@ urlpatterns = [
     path('menu_clean_zd', menu.menu_clean_zd, name='menu_clean_zd'),
     path('menu_cancel_sync', menu.menu_cancel_sync, name='menu_cancel_sync'),
     path('sanitize_html', utils.sanitize_html, name='sanitize_html'),
-    path('portal_notifications', portal_notifications.notifications, name='portal_notifications')
-]
+    path('portal_notifications', portal_notifications.notifications, name='portal_notifications'),
+    path('openapi_jsons/<int:json_id>', openapi_json.get_openapi_json, name="get_openapi_json"),
+    path('openapi_jsons', openapi_json.get_openapi_jsons, name="get_openapi_jsons")
+] 
 
 

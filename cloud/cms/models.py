@@ -2912,6 +2912,9 @@ class MaintenanceCompletion(models.Model):
             portal_notification.maintenancecompletion_set.add(self)
 
 class OpenAPIJSON(models.Model):
+    class Meta:
+        verbose_name = "OpenAPI JSON"
+
     JSON_TYPES = Choices((0, "VMS", "VMS"))
 
     name = models.CharField(help_text="API display name", max_length=36)
