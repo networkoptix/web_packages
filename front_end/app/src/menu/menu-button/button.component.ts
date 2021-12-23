@@ -9,10 +9,14 @@ import { NxMenuService } from '../menu.service';
 
 @Component({
     selector: 'nx-menu-button',
-    template: `<button *ngIf="!environment.isLocal || CONFIG.cloudSystemId|| button.id !== 'addUser'"
-                    class="inset btn btn-menu btn-clear"
-                    [disabled]="button.disabled"
-                    (click)="action()">{{caption}}</button>`
+    template: `<button
+        *ngIf="!environment.isLocal ||
+            CONFIG.cloudSystemId ||
+            button.id !== 'addUser'"
+        class="inset btn btn-menu btn-clear"
+        [disabled]="button.disabled"
+        (click)="action()"
+    >{{caption}}</button>`
 })
 export class NxMenuButtonComponent {
     @Input() button;
