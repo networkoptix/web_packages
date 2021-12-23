@@ -8,7 +8,7 @@ import {
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { fromEvent } from 'rxjs';
+import { BehaviorSubject, fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
 import SwaggerUI from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
@@ -27,6 +27,7 @@ import {
 import {
     NxSwaggerDropdownComponent
 } from './swagger-dropdown/swagger-dropdown.component';
+import { NxSwaggerSpinnerComponent } from './swagger-spinner/swagger-spinner.component';
 import { NxSwaggerTextareaComponent } from './swagger-textarea/swagger-textarea.component';
 import type { componentMap, textareaMap } from './swagger-types';
 import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
@@ -44,6 +45,7 @@ export class NxSwaggerComponent implements OnChanges {
     @Input() activeNode: MenuNodeWithParent;
 
     swagger: SwaggerUI;
+    swaggerLoading$ = new BehaviorSubject(false);
     swaggerMenuDescription = { title: '', description: '' }
 
     // Misc properties
@@ -125,6 +127,8 @@ export class NxSwaggerComponent implements OnChanges {
             if (this.APIToolService.isAPIInfoMenuNode(this.APIToolService.activeNode)) {
                 this.modifyCodeBlocksAndTextareas();
             }
+            this.addSpinner(this.singleAPIRouteShowing);
+            this.swaggerLoading$.next(true);
         });
     }
 
@@ -198,6 +202,7 @@ export class NxSwaggerComponent implements OnChanges {
 
     private addCustomChanges = () => {
         this.customComponentsRendering = true;
+
         setTimeout(() => {
             this.addCustomTextareas();
             this.modifyCodeBlocksAndTextareas();
@@ -210,7 +215,21 @@ export class NxSwaggerComponent implements OnChanges {
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
             this.customComponentsRendering = false;
+            this.swaggerLoading$.next(false);
         }, 0);
+    }
+
+    private addSpinner = (singleAPIRoute) => {
+        const opblocks = this.document.querySelectorAll('.opblock-summary');
+        for (const opblock of opblocks as any) {
+            if (opblock.nextElementSibling.tagName !== 'NX-SWAGGER-SPINNER') {
+                const { componentRef, element } = this.generateComponent(NxSwaggerSpinnerComponent);
+                componentRef.instance.opblock = opblock.parentNode;
+                componentRef.instance.initialIsVisible = singleAPIRoute;
+                componentRef.instance.swaggerLoading = this.swaggerLoading$;
+                opblock.insertAdjacentElement('afterend', element);
+            }
+        }
     }
 
     private addButtonEventListeners = () => {
