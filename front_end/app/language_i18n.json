@@ -250,6 +250,7 @@
     "Login cannot be empty": "Login cannot be empty",
     "Login or password is incorrect": "Login or password is incorrect",
     "Look for the email with the activation link in your inbox or login to %CLOUD_NAME% and follow provided instructions.": "Look for the email with the activation link in your inbox or login to %CLOUD_NAME% and follow provided instructions.",
+    "Maintenance": "Maintenance",
     "Mandatory two-factor authentication for cloud users": "Mandatory two-factor authentication for cloud users",
     "Merge Systems": "Merge Systems",
     "Merge with Another System": "Merge with Another System",

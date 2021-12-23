@@ -154,6 +154,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     // connection error
     errorDialog$ = new BehaviorSubject<boolean>(false);
     errorDialogProcess: Process;
+    errorType: string;
 
     // authentication code
     authCode: string;
@@ -268,6 +269,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             (typeof err === 'string' && err.includes('Error occured while trying to proxy to:')) || // occurs when wifi on machine turned off
             err instanceof ProgressEvent // occurs when virtual machine connection turned off (offline testing)
         )) {
+            this.errorType = err.status === 503 ? 'maintenance' : 'connection';
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }

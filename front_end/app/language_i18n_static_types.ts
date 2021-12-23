@@ -57,6 +57,7 @@ export interface LanguageI18NStaticTypes {
     security:              Security;
     storage:               Storage;
     metaDefaults:          MetaDefaults;
+    maintenance:           Maintenance;
 }
 
 export interface AccessRole {
@@ -656,6 +657,11 @@ export interface Messages {
     trialActivated: any;
 }
 
+export interface Maintenance {
+    description_a: any;
+    description_b: any;
+}
+
 export interface Menu {
     titles: MenuTitles;
 }
@@ -1197,6 +1203,7 @@ const typeMap: any = {
         { json: "security", js: "security", typ: r("Security") },
         { json: "storage", js: "storage", typ: r("Storage") },
         { json: "metaDefaults", js: "metaDefaults", typ: r("MetaDefaults") },
+        { json: "maintenance", js: "maintenance", typ: r("Maintenance") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "any" },
@@ -1739,6 +1746,10 @@ const typeMap: any = {
         { json: "activated", js: "activated", typ: "any" },
         { json: "inuse", js: "inuse", typ: "any" },
         { json: "trialActivated", js: "trialActivated", typ: "any" },
+    ], false),
+    "Maintenance": o([
+        { json: "description_a", js: "description_a", typ: "any" },
+        { json: "description_b", js: "description_b", typ: "any" },
     ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },

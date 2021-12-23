@@ -1,13 +1,13 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, OnChanges, SimpleChanges
-}                       from '@angular/core';
+    Component, EventEmitter, Input,
+    OnInit, Output
+} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { Process } from '@services/process.service';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -16,22 +16,16 @@ import { AuthorizeStateType } from '../authorize.component';
     templateUrl: 'connect-error.component.html',
     styleUrls: ['connect-error.component.scss']
 })
-export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDestroy {
+export class NxAuthorizeConnectErrorComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @Input() viewType: string;
     @Input() smallView: boolean;
     @Input() clientType: string;
+    @Input() errorType: string;
     @Input() processTryAgain: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
-
-    additionalText: string;
-    templateText: {
-        [clientType: string]: {
-            additionalText: string
-        }
-    }
 
     constructor(
         language: NxLanguageProviderService,
@@ -42,41 +36,9 @@ export class NxAuthorizeConnectErrorComponent implements OnInit, OnChanges, OnDe
     }
 
     ngOnInit(): void {
-        this.setupText();
-        this.setText();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (!changes.clientType.firstChange) {
-            this.setText();
-        }
-    }
-
-    setupText() {
-        const auth = this.LANG.authorize;
-        this.templateText = {
-            loginToCloud: {
-                additionalText: auth.loginErrorAdditional()
-            },
-            connectSystemToCloud: {
-                additionalText: auth.connectErrorAdditional()
-            },
-            setupWizard: {
-                additionalText: auth.setupErrorAdditional()
-            },
-            loginToWebadmin: {
-                additionalText: auth.loginErrorAdditional()
-            }
-        };
-    }
-
-    setText() {
-        this.additionalText = this.templateText[this.clientType]?.additionalText;
     }
 
     setupNonCloudSystem() {
         // future TO-DO
     }
-
-    ngOnDestroy(): void {}
 }
