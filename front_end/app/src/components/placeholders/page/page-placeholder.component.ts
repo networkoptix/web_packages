@@ -1,9 +1,8 @@
 import {
     Component,
     Input,
-    OnDestroy,
     OnInit,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
@@ -32,16 +31,16 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
     styleUrls: ['page-placeholder.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
+export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;
     @Input() iconClass: string;
     @Input() placeholderTitle: string;
     @Input() message: string;
     @Input() preloader: boolean;
     @Input() condition: boolean;
-    @Input() withFooter;
+    @Input() withFooter: boolean | '';
     @Input() constrainWidth: boolean;
-    @Input() data: any;
+    @Input() data: { systemName: string };
     @Input() showMainButton = false;
     @Input() addPadding = true;
 
@@ -72,11 +71,7 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {}
-
-    ngOnInit() {
-        this.withFooter = (this.withFooter !== undefined);
-
+    ngOnInit(): void {
         if (this.type) {
             if (!this.preloader && !this.condition) {
                 this.preloader = false;

@@ -148,6 +148,15 @@ $preloader_small_circle_distance : 8px;
     @include typography.regular15dark9;
     line-height : 24px;
     max-width   : 560px;
+
+    a {
+        color : $brand_core;
+
+        &:hover,
+        &:active {
+            color : $brand_l1;
+        }
+    }
 }
 
 .placeholder-preloader {
