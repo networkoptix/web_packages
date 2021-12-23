@@ -62,7 +62,7 @@
       "offline": "オフライン",
       "error": "エラー",
       "errorLoading": "ビデオの読み込み中にエラーが発生しました",
-      "unauthorized": "認証が必要です。",
+      "unauthorized": "要認証",
       "noData": "データがありません",
       "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
       "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> してください。",

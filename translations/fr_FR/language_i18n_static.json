@@ -114,7 +114,7 @@
         "passResetHeader": "Réinitialiser mot de passe",
         "newPassHeader": "Définir un nouveau mot de passe",
         "newPassConfirmText": "Mot de passe défini !",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "newPassInvalidCode": "Impossible d'enregistrer le mot de passe : le code de confirmation est déjà utilisé ou incorrect",
         "confirmHeader": "Système connecté à %CLOUD_NAME%!",
         "loginError": "Impossible de se connecter à %CLOUD_NAME%",
         "loginErrorAdditional": "Veuillez réessayer ou vous connecter au système directement avec votre compte local.",
@@ -238,10 +238,10 @@
         "viewingOutdatedReport": "Vous visualisez un rapport obsolète."
     },
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "dashboardEditEnabled": "L'édition du tableau de bord est activée",
+        "dashboardLocked": "Tableau de bord verrouillé",
+        "unlockToUpload": "Déverrouiller le tableau de bord pour télécharger la configuration depuis json",
+        "unlockToMove": "Déverrouiller le tableau de bord pour déplacer les widgets"
     },
     "devConsole": {
         "create": "Créer"
@@ -396,7 +396,7 @@
                 "required": "Une authentification à deux facteurs est requise.",
                 "configure": "Vous pouvez le configurer dans votre",
                 "accountLink": "paramètres du compte",
-                "codeRequired": "Code is required"
+                "codeRequired": "Le code est requis"
             }
         },
         "removeSystem": {
@@ -928,8 +928,8 @@
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "message": "La route \"{url}\" a été déplacée vers \"{redirectUrl}\".",
+        "defaultMessage": "Veuillez mettre à jour tous les liens pour référencer la nouvelle route.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }
@@ -1039,7 +1039,7 @@
             "v5Warning_a1": "Vous avez",
             "v5Warning_a2": "{count, plural, =0{# systèmes} one{# système} other{# systèmes}}",
             "v5Warning_a3": "avec la version du logiciel inférieure à 5.0. {count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} ne seront pas accessibles via",
-            "v5Warning_a4": " %VMS_NAME% Client ",
+            "v5Warning_a4": " Client %VMS_NAME% ",
             "v5Warning_a5": "car les versions précédentes du client %VMS_NAME% ne prennent pas en charge l'authentification à deux facteurs, vous ne serez donc pas en mesure d'entrer un code de vérification pour votre compte %CLOUD_NAME%.",
             "v5Warning_b": "{count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} {count, plural, =0{seront} one{sera} other{seront}} entièrement accessible dès qu'{count, plural, =0{ils seront} one{il sera} other{ils seront}} mis à niveau vers la version 5.0.",
             "disableWarning": "Vous avez {count, plural, one{# système} other{# systèmes}} qui {count, plural, one{requiert} other{requiert}} l'authentification à deux facteurs. Vous ne pourrez pas vous connecter à {count, plural, one{ce système} other{ces systèmes}}."
