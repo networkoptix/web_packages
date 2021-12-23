@@ -431,15 +431,17 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 this.system.infoSubject
                     .pipe(
                         untilDestroyed(this),
-                        skipWhile(system => !system.isOnline),
+                        skipWhile(system => system.isOnline),
                         takeUntil(this.destroyRestartTake$))
                     .subscribe(() => {
-                        this.system.currentServerNotBusy = true;
-                        this.system.currentBusyServerIds.delete(id);
-                        this.system.isAvailable = true;
-                        this.destroyRestartTake$.next(true);
-                        this.destroyRestartTake$.complete();
-                        this.setStatus('');
+                        if (this.system.isOnline) {
+                            this.system.currentServerNotBusy = true;
+                            this.system.currentBusyServerIds.delete(id);
+                            this.system.isAvailable = true;
+                            this.destroyRestartTake$.next(true);
+                            this.destroyRestartTake$.complete();
+                            this.setStatus('');
+                        }
                     });
             }).catch(() => {
                 // Dialog was canceled

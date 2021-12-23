@@ -81,7 +81,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     public get isSessionOauth() {
-        return this.currentUser?.type === 'cloud';
+        return !environment.isLocal || this.currentUser?.type === 'cloud';
     }
 
     private createSignature(message) {
