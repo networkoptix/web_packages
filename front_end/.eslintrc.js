@@ -248,8 +248,8 @@ module.exports = {
             excludedFiles: [
                 'app/src/pages/systems/settings/*.ts',
                 // 'app/src/pages/systems/settings/admin/**/*.ts',
-                'app/src/pages/systems/settings/cloud-storage/**/*.ts',
-                'app/src/pages/systems/settings/licenses/**/*.ts',
+                // 'app/src/pages/systems/settings/cloud-storage/**/*.ts',
+                // 'app/src/pages/systems/settings/licenses/**/*.ts',
                 // 'app/src/pages/systems/settings/servers/**/*.ts',
                 // 'app/src/pages/systems/settings/users/**/*.ts',
                 'app/src/pages/systems/view/*.ts',

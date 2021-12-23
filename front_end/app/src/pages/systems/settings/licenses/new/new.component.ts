@@ -1,18 +1,21 @@
 import {
     Component,
-    OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewChild
+    OnDestroy,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewChild,
 } from '@angular/core';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { SubscriptionLike }          from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { SubscriptionLike } from 'rxjs';
 
-import { IConfig, NxConfigService }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService }          from '@services/process.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxSystem }                  from '@services/system.service';
-import { NxUtilsService }            from '@services/utils.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxProcessService } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

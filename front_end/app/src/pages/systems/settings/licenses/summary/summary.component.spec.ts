@@ -1,24 +1,29 @@
+import { CommonModule } from '@angular/common';
+import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed,
     inject,
     fakeAsync,
-    tick
 } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { NxLicenseSummaryComponent } from './summary.component';
-import { NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxContentBlockComponent } from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
 import { MockProvider } from 'ng-mocks';
+
+import {
+    NxContentBlockComponent
+} from '@components/content-block/content-block.component';
+import {
+    NxContentBlockSectionComponent
+} from '@components/content-block/section/section.component';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
-import { setupTest50System, setupTest41System } from '@src/_mocks/system.test';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service';
+import { setupTest50System, setupTest41System } from '@src/_mocks/system.test';
+
+import { NxLicenseSummaryComponent } from './summary.component';
 
 describe('Licenses (Summary)', () => {
     let component: NxLicenseSummaryComponent;

@@ -1,20 +1,29 @@
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgxMaskModule } from 'ngx-mask';
 
-import { NxLicenseNewComponent } from './new.component';
+import {
+    NxContentBlockComponent
+} from '@components/content-block/content-block.component';
+import {
+    NxContentBlockSectionComponent
+} from '@components/content-block/section/section.component';
+import {
+    NxProcessButtonComponent
+} from '@components/process-button/process-button.component';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import {
+    NxLicenseTrialComponent
+} from '@pages/systems/settings/licenses/trial/trial.component';
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxContentBlockComponent } from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
 import { NxProcessService } from '@services/process.service';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxLicenseTrialComponent } from '@pages/systems/settings/licenses/trial/trial.component';
-import { CommonModule } from '@angular/common';
-import { NgxMaskModule } from 'ngx-mask';
+
+import { NxLicenseNewComponent } from './new.component';
 
 describe('Licenses (New)', () => {
     let component: NxLicenseNewComponent;

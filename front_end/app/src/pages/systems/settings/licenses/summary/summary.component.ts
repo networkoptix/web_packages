@@ -1,11 +1,12 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { filter } from 'rxjs/operators';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSystem } from '@services/system.service';
-import { filter } from 'rxjs/operators';
-import { NxSettingsService } from '@pages/systems/settings/settings.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -67,14 +68,17 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
 
     setLicenses (response) {
         this.licenses = Object.keys(response).map((licence) => {
-            const title = this.CONFIG.licenseTypes.find((item) => item.name === licence).title ||
-                    licence.charAt(0).toUpperCase() + licence.slice(1);
+            const title = this.CONFIG.licenseTypes.find((item) =>
+                item.name === licence
+            ).title || licence.charAt(0).toUpperCase() + licence.slice(1);
             return {
                 type: title,
                 count: response[licence].total,
                 countAvail: response[licence].available,
                 inUse: response[licence].inUse,
-                required: -1 * (response[licence].available - response[licence].inUse)
+                required: -1 * (
+                    response[licence].available - response[licence].inUse
+                )
             };
         });
     }

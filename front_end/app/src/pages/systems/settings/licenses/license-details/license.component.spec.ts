@@ -1,16 +1,24 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { NxLicenseDetailComponent } from './license.component';
-import { NxContentBlockComponent } from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
-import { FormsModule } from '@angular/forms';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService } from '@services/nx-config';
-import { NxSystem } from '@services/system.service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { MockProvider } from 'ng-mocks';
+
+import {
+    NxContentBlockComponent
+} from '@components/content-block/content-block.component';
+import {
+    NxContentBlockSectionComponent
+} from '@components/content-block/section/section.component';
+import {
+    NxInfoBlockComponent
+} from '@components/info-block/info-block.component';
+import { NxConfigService } from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystem } from '@services/system.service';
+
+import { NxLicenseDetailComponent } from './license.component';
 
 describe('Licenses (Details)', () => {
     let component: NxLicenseDetailComponent;
@@ -212,14 +220,21 @@ describe('Licenses (Details)', () => {
                 expect(properties.length).toBe(7);
 
                 // ? value for class is empty
-                // expect(properties[0].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.class);
-                expect(properties[1].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.count);
-                expect(properties[2].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.serverName);
-                expect(properties[3].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.hwid);
-                expect(properties[4].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.status);
-                expect(properties[5].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe('-');
+                // expect(properties[0].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                // .toBe(component.licenses[0].info.class);
+                expect(properties[1].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                    .toBe(component.licenses[0].info.count);
+                expect(properties[2].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                    .toBe(component.licenses[0].info.serverName);
+                expect(properties[3].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                    .toBe(component.licenses[0].info.hwid);
+                expect(properties[4].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                    .toBe(component.licenses[0].info.status);
+                expect(properties[5].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                    .toBe('-');
 
-                expect(properties[6].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim()).toBe(component.licenses[0].info.deactivations);
+                expect(properties[6].innerHTML.replace(/<!--((.|[\r\n|\r|\n])*?)-->/g, '').trim())
+                    .toBe(component.licenses[0].info.deactivations);
                 expect(properties[6].getAttribute('style')).toBe('display: none;');
             });
         });
