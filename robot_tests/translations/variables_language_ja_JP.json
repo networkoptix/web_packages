@@ -378,7 +378,7 @@
     "HOURS TEXT": "時間",
     "MINUTES TEXT": "分",
     "NO IMAGE TEXT": "画像なし",
-    "CAMERA UNAUTHORIZED TEXT": "カメラにアクセスする権限がありません",
+    "CAMERA UNAUTHORIZED TEXT": "カメラに認証が通っていません",
     "CAMERA OFFLINE TEXT": "カメラはオフラインです",
     "PROFESSIONAL LICENSE REQUIRED TEXT": "プロフェッショナルライセンスが必要です",
     "ONE LICENSE WILL BE USED TEXT": "プロフェッショナルライセンスチャンネルを1つ使用します",

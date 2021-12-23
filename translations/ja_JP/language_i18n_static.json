@@ -126,7 +126,7 @@
             "noFormat": "このブラウザは、このカメラのビデオ再生をサポートしていません。",
             "offline": "オフライン",
             "ubuntuNX": "このブラウザは、ARMベースのサーバーのビデオをサポートしていません。代わりにChromiumブラウザを使用してください。",
-            "unauthorized": "認証が必要です。"
+            "unauthorized": "要認証"
         },
         "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
         "login": "ログイン",

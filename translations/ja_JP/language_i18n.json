@@ -1,7 +1,7 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "API Documentation": "API ドキュメント",
-    "AUTHENTICATION REQUIRED": "認証が必要です",
+    "AUTHENTICATION REQUIRED": "要認証",
     "About %CLOUD_NAME%": "%CLOUD_NAME% について",
     "Access Level": "アクセスレベル",
     "Access level": "アクセスレベル",
@@ -53,7 +53,7 @@
     "Camera controls": "カメラコントロール",
     "Camera header": "カメラヘッダー",
     "Camera is offline": "カメラはオフラインです",
-    "Camera is unauthorized": "カメラにアクセスする権限がありません",
+    "Camera is unauthorized": "カメラに認証が通っていません",
     "Cameras menu": "カメラメニュー",
     "Can't activate license: only one NVR license is allowed per System": "ライセンスを有効化できません：NVRライセンスはシステムごとに1つのみ利用可能です",
     "Cancel": "キャンセル",
