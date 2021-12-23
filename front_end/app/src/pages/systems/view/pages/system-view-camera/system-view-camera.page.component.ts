@@ -350,6 +350,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 if (!ar.error || ar.error !== '0' || !records.length) {
                     this._log('empty archive', ar);
                     this.playback.restore(false);
+                    this.vms.setCameraRecords(this.id, 0, []);
                 } else {
                     try {
                         const firstRecordStartTimeMs = parseInt(records[0].startTimeMs);
@@ -443,7 +444,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             // Too many chunks. So it gets split up into manageable batches for copying.
             for (let i = 0; i < batches; ++i) {
                 const start = i * batchSize;
-                const end = Math.min((i + 1) * batchSize, periods.length) - 1;
+                const end = start + batchSize - 1;
                 records.push(...periods.slice(start, end));
             }
         });

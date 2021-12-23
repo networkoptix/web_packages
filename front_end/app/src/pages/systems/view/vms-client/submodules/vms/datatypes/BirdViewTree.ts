@@ -96,11 +96,11 @@ export class BirdViewTree {
             startMs = this._originalArchiveRange.start;
             // console.log('narrowed start')
         }
-        const treeRecords = this._treeRoot.getRecords(
+        const treeRecords = this._treeRoot?.getRecords(
             startMs,
             endMs > this._originalArchiveRange.end ? this._originalArchiveRange.end : endMs,
             minGapMs
-        );
+        ) || [];
         if (endMs > this._originalArchiveRange.end) {
             // console.log('GNRR', this.newlyRecorded, this.newlyRecorded.filter(r => r.start < endMs))
             this.newlyRecorded.filter(r => r.start < endMs).map(r => {
