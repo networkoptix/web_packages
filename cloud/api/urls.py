@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^systems/revokeToken$',                    systems.revoke_token),
     url(r'^systems/(?P<system_id>.+?)/accessRoles$', systems.access_roles),
     url(r'^systems/(?P<system_id>.+?)/auth$',        systems.get_auth),
-    url(r'^systems/(?P<system_id>.+?)/accessCode$',       systems.get_access_code),
+    url(r'^systems/(?P<system_id>.+?)/code$',        systems.get_code),
     url(r'^systems/(?P<system_id>.+?)/token$',       systems.get_token),
     url(r'^systems/(?P<system_id>.+?)/name$',        systems.rename),
     url(r'^systems/(?P<system_id>.+?)/users$',       systems.sharing),

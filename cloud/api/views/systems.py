@@ -136,7 +136,7 @@ def digest(login, password, realm, nonce, method):
                      ))
 @api_view(["POST"])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
-def get_access_code(request, system_id):
+def get_code(request, system_id):
     refresh_token = get_refresh_from_request(request)
     scope = None
     if system_id != "*":

@@ -82,7 +82,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     public valueQR: string;
     public tfaCode: string;
 
-    private accessCode: string;
+    private code: string;
 
     // static property is needed for unit tests
     @ViewChild('loginForm') loginForm: NgForm;
@@ -196,10 +196,10 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             if (response?.keyUrl) {
                 this.setTemplate(T_FA_STEPS.WizardQR);
                 this.valueQR = response.keyUrl;
-                this.accessCode = response.keyUrl.slice(-16);
+                this.code = response.keyUrl.slice(-16);
                 this.credentials = new InfoBlockSection([
                     new InfoBlockLine(this.LANG.account.account(), this.account.email),
-                    new InfoBlockLine(this.LANG.account.key(), this.accessCode)
+                    new InfoBlockLine(this.LANG.account.key(), this.code)
                 ]);
             }
         });

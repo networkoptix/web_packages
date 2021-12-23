@@ -82,7 +82,7 @@ class TestOauthViews:
         return authenticate(request)
 
     def test_valid_authenticate(self, mocker):
-        mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'access_code': str(uuid4())})
+        mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'code': str(uuid4())})
         mocked_check_signature = mocker.patch('oauth.views.check_signature', return_value='')
         test_signature = str(uuid4())
         redirect_uri = f'https://{uuid4()}.com'
@@ -212,8 +212,8 @@ class TestOauthViews:
         mock_get_access_token.assert_called_once_with(data['code'], ip=self.mock_ip)
 
     def test_token_valid_password(self, mock_get_ip, mocker):
-        mock_access_code = str(uuid4())
-        mock_get_code = mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'access_code': mock_access_code})
+        mock_code = str(uuid4())
+        mock_get_code = mocker.patch('api.controllers.cloud_api.Auth.get_code', return_value={'code': mock_code})
         mock_check_signature = mocker.patch('oauth.views.check_signature', return_value=True)
         mock_redirect = mocker.patch('oauth.views.redirect', return_value=Response())
         # Password grant_type and code response type
@@ -240,7 +240,7 @@ class TestOauthViews:
                                               redirect_uri=data['redirect_uri'],
                                               scope=data['scope']
                                             )
-        mock_redirect.assert_called_once_with(f"{data['redirect_uri']}?{urllib.parse.urlencode(set_params_for_redirect(mock_access_code, data['state']))}")
+        mock_redirect.assert_called_once_with(f"{data['redirect_uri']}?{urllib.parse.urlencode(set_params_for_redirect(mock_code, data['state']))}")
 
     def test_token_require_params_grant_type_and_response_type(self):
         data = {}

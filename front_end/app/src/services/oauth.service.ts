@@ -96,7 +96,7 @@ export class OauthService {
             params.append('email', email);
         }
         if (code) {
-            params.append('access_code', code);
+            params.append('code', code);
         }
 
         if (accessToken) {

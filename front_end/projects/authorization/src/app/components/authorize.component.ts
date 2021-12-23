@@ -232,11 +232,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.initialData.response_type = 'code';
             }
 
-            const { access_token, access_code, email, redirect_url } = this.initialData;
+            const { access_token, access_code, code, email, redirect_url } = this.initialData;
             const skipTo2FaClientTypes = ['renewSessionDesktop', 'renewSessionWeb', 'openClientFromCloud'];
-            if (skipTo2FaClientTypes.includes(this.clientType) && (access_token || access_code)) {
+            if (skipTo2FaClientTypes.includes(this.clientType) && (access_token || access_code || code)) {
                 this.loginEmail = email;
-                this.loginCode = access_token || access_code;
+                this.loginCode = access_token || access_code || code;
                 this.redirectLink = redirect_url;
                 this.currentState = AuthorizeState.auth;
             } else if (this.action === 'restore_password') {
@@ -301,11 +301,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
         if (this.initialData.redirect_url === 'redirect-oauth') {
-            const { client_id, client_type, access_code, access_token } = this.initialData;
+            const { client_id, client_type, code, access_code, access_token } = this.initialData;
             // @ts-ignore
-            if (nativeClient && (access_code || access_token)) {
+            if (nativeClient && (access_code || access_token || code)) {
                 // @ts-ignore
-                nativeClient.twoFaVerified(access_code || access_token);
+                nativeClient.twoFaVerified(access_code || code || access_token);
             } else {
                 this.router.navigate(['redirect-oauth'], {
                     queryParams: { code, client_id, client_type, view_type: this.viewType }
@@ -378,7 +378,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     }
                 // error message exists when 2fa is required
                 } else if (err?.error === 'second_factor_required') {
-                    this.loginCode = err.access_code;
+                    this.loginCode = err.access_code || err.code;
                     this.redirectLink = err.link;
                     this.currentState = AuthorizeState.auth;
                 } else {

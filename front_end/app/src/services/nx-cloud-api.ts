@@ -176,8 +176,8 @@ export class NxCloudApiService {
         return this.http.post<t.TwoFactorBackupCodes[]>(this.CONFIG.apiBase + '/2fa/backup', {}).toPromise();
     }
 
-    verify2FaKey(accessCode, verificationCode) {
-        const uri = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verificationCode}&access_code=${accessCode}`;
+    verify2FaKey(code, verificationCode) {
+        const uri = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verificationCode}&code=${code}`;
         return this.http.get(uri).toPromise();
     }
 
@@ -233,8 +233,8 @@ export class NxCloudApiService {
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
-    getAccessCode(systemId: string) {
-        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/accessCode`, {});
+    getCode(systemId: string) {
+        return this.http.post<any>(`${this.CONFIG.apiBase}/systems/${systemId}/code`, {});
     }
 
     @swClear('cloudSystemAPI', '/systems', false)
@@ -375,13 +375,13 @@ export class NxCloudApiService {
         return this.http.post<any>('/oauth/authenticate', body).toPromise();
     }
 
-    verifyCode(verification_code: string, access_code: string) {
-        const url = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verification_code}&access_code=${access_code}`;
+    verifyCode(verification_code: string, code: string) {
+        const url = `${this.CONFIG.apiBase}/2fa/verification?verification_code=${verification_code}&code=${code}`;
         return this.http.get<any>(url);
     }
 
-    verifyBackupCode(verification_code: string, access_code: string) {
-        const url = `${this.CONFIG.apiBase}/2fa/backup?verification_code=${verification_code}&access_code=${access_code}`;
+    verifyBackupCode(verification_code: string, code: string) {
+        const url = `${this.CONFIG.apiBase}/2fa/backup?verification_code=${verification_code}&code=${code}`;
         return this.http.get<any>(url);
     }
 

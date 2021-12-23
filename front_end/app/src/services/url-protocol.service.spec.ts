@@ -25,7 +25,7 @@ describe('Url Protocol Service', () => {
         }
     };
     const cloudMock = {
-        getAccessCode: () => of({ access_code: 'someCode' })
+        getCode: () => of({ code: 'someCode' })
     };
     const accountMock = {
         authKey: () => Promise.resolve('someAuth')
@@ -64,10 +64,10 @@ describe('Url Protocol Service', () => {
             from: 'client',
             auth: 'authString',
             context: 'someContext',
-            access_code: 'someCode'
+            code: 'someCode'
         };
         expect(urlService.generateLink(linkSettings))
-            .toBe('https://localhost:7001/client/?from=client&auth=authString&context=someContext&access_code=someCode');
+            .toBe('https://localhost:7001/client/?from=client&auth=authString&context=someContext&code=someCode');
     });
 
     it('should attach systemId and action if they exist', () => {
@@ -79,17 +79,17 @@ describe('Url Protocol Service', () => {
             .toBe('https://localhost:7001/client/systemId/actionString?from=portal');
     });
 
-    it('should use access_code if useOauth === true', async () => {
+    it('should use code if useOauth === true', async () => {
         const linkData = await urlService.getLink({ useOauth: true });
-        expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&access_code=someCode');
-        expect(linkData.access_code).toBe('someCode');
+        expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&code=someCode');
+        expect(linkData.code).toBe('someCode');
         expect(linkData.authKey).toBeUndefined();
     });
 
     it('should use authKey if useOauth is falsy', async () => {
         const linkData = await urlService.getLink({});
         expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&auth=someAuth');
-        expect(linkData.access_code).toBeUndefined();
+        expect(linkData.code).toBeUndefined();
         expect(linkData.authKey).toEqual('someAuth');
     });
 });

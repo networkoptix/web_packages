@@ -28,7 +28,7 @@ class TestTwoFAViews:
 
             def get_permissions(self):
                 return [mockPermissionClass]
-        
+
         class MockView(TwoFactorPermissionsMixin, MockAPIView):
             pass
 
@@ -40,7 +40,7 @@ class TestTwoFAViews:
         view = MockView('post')
         assert view.get_permissions()[0] == mockPermissionClass
 
-    def test_create_backup_code_serializer(self):  
+    def test_create_backup_code_serializer(self):
         count = CreateBackupCodeSerializer().fields['count']
 
         assert isinstance(count, IntegerField)
@@ -57,30 +57,30 @@ class TestTwoFAViews:
 
     def test_verification_serializer(self):
         fields = VerificationSerializer().fields
-        access_code, verification_code = fields['access_code'], fields['verification_code']
+        code, verification_code = fields['code'], fields['verification_code']
 
         assert len(fields) == 2
 
-        assert isinstance(access_code, CharField)
-        assert access_code.required == True
+        assert isinstance(code, CharField)
+        assert code.required == True
 
         assert isinstance(verification_code, CharField)
         assert verification_code.required == True
-    
+
 
     def test_two_factor_verification(self, create_user, arf, mocker):
         mock_verify_2fa = mocker.patch(self.auth_mock_path + 'verify_2fa_code', return_value=True)
         mock_generate_2fa_key = mocker.patch(self.auth_mock_path + 'generate_2fa_key', return_value=True)
-        access_code, verification_code = self.make_uuids(2)
+        code, verification_code = self.make_uuids(2)
         view = TwoFactorVerification().as_view()
 
         # Valid Get
-        request = arf.get(f'/2fa/verification?access_code={access_code}&verification_code={verification_code}')
+        request = arf.get(f'/2fa/verification?code={code}&verification_code={verification_code}')
         request.session = {}
         request.user = self.user
 
         assert view(request).status_code == 200
-        mock_verify_2fa.assert_called_once_with(verification_code, access_code)
+        mock_verify_2fa.assert_called_once_with(verification_code, code)
 
         # Raise Get error
         mock_verify_2fa.side_effect = APIInternalException('','')
@@ -99,13 +99,13 @@ class TestTwoFAViews:
 
     def test_backup_code_get(self, create_user, arf, mocker):
         mock_verify_backup_code = mocker.patch(self.auth_mock_path + 'verify_backup_code', return_value=True)
-        access_code, verification_code = self.make_uuids(2)
-        request = arf.get(f'/?access_code={access_code}&verification_code={verification_code}')
+        code, verification_code = self.make_uuids(2)
+        request = arf.get(f'/?code={code}&verification_code={verification_code}')
         request.user = self.user
         view = BackupCode().as_view()
 
         assert view(request).status_code == 200
-        mock_verify_backup_code.assert_called_once_with(verification_code, access_code)
+        mock_verify_backup_code.assert_called_once_with(verification_code, code)
 
 
     def test_backup_code_post_and_delete(self, create_user, arf, mocker):
@@ -119,9 +119,9 @@ class TestTwoFAViews:
         request = arf.post('/2fa/backup', {'count': count})
         request.user = self.user
 
-        # POST 
+        # POST
         assert view(request).status_code == 200
-        
+
         args, kwargs = mock_get_active_backup_codes.call_args_list[0]
         assert isinstance(args[0], Request)
 
@@ -132,7 +132,7 @@ class TestTwoFAViews:
         args, kwargs = mock_generate_backup_code.call_args_list[0]
         assert isinstance(args[0], Request)
         assert count in args
- 
+
 
         # DELETE
         delete_backup_codes_string = backup_code_one + ',' + backup_code_two + ',' + backup_code_three
@@ -144,7 +144,6 @@ class TestTwoFAViews:
         assert isinstance(args[0], Request)
         assert delete_backup_codes_string in args
 
-    
     def test_get_active_backup_codes(self, create_user, arf, mocker):
         mock_get_active_backup_codes =  mocker.patch(self.auth_mock_path + 'get_active_backup_codes')
         req = arf.get('/')

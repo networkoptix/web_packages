@@ -65,7 +65,7 @@ export class NxUrlProtocolService {
             action: undefined,
             actionParameters: {}, // Object with parameters
             auth: true, // true for request, null for skipping, string for specific value
-            access_code: undefined
+            code: undefined
         };
 
         if (linkSettings.systemId) {
@@ -92,8 +92,8 @@ export class NxUrlProtocolService {
             getParams.context = settings.context;
         }
 
-        if (settings.access_code) {
-            getParams.access_code = settings.access_code;
+        if (settings.code) {
+            getParams.code = settings.code;
         }
 
         let url = `${protocol}//${host}/${settings.command}/`;
@@ -120,15 +120,15 @@ export class NxUrlProtocolService {
         link: string,
         authKey?: string | undefined,
         // eslint-disable-next-line camelcase
-        access_code?: string
+        code?: string
     }> {
         const auth = linkSettings.useOauth
-            ? this.cloudApiService.getAccessCode('*').toPromise()
+            ? this.cloudApiService.getCode('*').toPromise()
             : this.accountService.authKey();
 
         return auth.then((data) => {
             if (linkSettings.useOauth) {
-                linkSettings.access_code = data.access_code;
+                linkSettings.code = data.code;
             } else {
                 linkSettings.auth = data;
             }
@@ -136,7 +136,7 @@ export class NxUrlProtocolService {
                 link: this.generateLink(linkSettings)
             };
             if (linkSettings.useOauth) {
-                linkData.access_code = data.access_code;
+                linkData.code = data.code;
             } else {
                 linkData.authKey = data;
             }
@@ -246,6 +246,6 @@ export interface linkSettings {
     actionParameters?: {},
     auth?: boolean|string|undefined,
     // eslint-disable-next-line camelcase
-    access_code?: string|undefined,
+    code?: string|undefined,
     useOauth?: boolean
 }

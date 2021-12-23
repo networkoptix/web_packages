@@ -171,8 +171,8 @@ def authenticate(request):
                         scope=scope)
 
     data = {
-        "access_code": res.get('access_code'),
-        "link": build_redirect_url(redirect_uri, res.get('access_code'), state)
+        "code": res.get('code'),
+        "link": build_redirect_url(redirect_uri, res.get('code'), state)
     }
 
     error = res.get("error")
@@ -326,7 +326,7 @@ def token(request):
 
         if response_type == Auth.RESPONSE_TYPE.code:
             res = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri, scope=scope)
-            return redirect(build_redirect_url(redirect_uri, res.get('access_code'), state))
+            return redirect(build_redirect_url(redirect_uri, res.get('code'), state))
 
     elif response_type == Auth.RESPONSE_TYPE.token:
         if grant_type == Auth.GRANT_TYPE.authorization_code:

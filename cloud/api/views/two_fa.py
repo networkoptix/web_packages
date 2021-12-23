@@ -32,7 +32,7 @@ class DeleteBackupCodeSerializer(serializers.Serializer):
 
 
 class VerificationSerializer(serializers.Serializer):
-    access_code = serializers.CharField(required=True)
+    code = serializers.CharField(required=True)
     verification_code = serializers.CharField(required=True)
 
 
@@ -49,7 +49,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         try:
-            res = Auth.verify_2fa_code(data["verification_code"], data["access_code"])
+            res = Auth.verify_2fa_code(data["verification_code"], data["code"])
         except APIInternalException:
             raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
         return api_success(res)
@@ -74,7 +74,7 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         try:
-            res = Auth.verify_backup_code(data["verification_code"], data["access_code"])
+            res = Auth.verify_backup_code(data["verification_code"], data["code"])
         except APIInternalException:
             raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
         return api_success(res)

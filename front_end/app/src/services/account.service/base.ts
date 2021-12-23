@@ -270,8 +270,8 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.get2FaBackupCode();
     }
 
-    verify2FaKey(accessCode, verificationCode) {
-        return this.cloudApi.verify2FaKey(accessCode, verificationCode);
+    verify2FaKey(code, verificationCode) {
+        return this.cloudApi.verify2FaKey(code, verificationCode);
     }
 
     updateSessionWith2fa(verificationCode) {
