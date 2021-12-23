@@ -677,16 +677,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     handleRecordingToggle(switchValue: boolean) {
-        if ((!this.recording && !this.recordingWatcher.originalValue) ? this.availableLicenses <= 0 : this.availableLicenses < 0) {
+        const needLicenses = (!this.recording && !this.recordingWatcher.originalValue)
+            ? this.availableLicenses <= 0
+            : this.availableLicenses < 0;
+
+        // ... the strange logic here ...
+        // if the switch is disabled "switchValue" is undefined but we still want to register the click and if
+        // not enough licenses to "shake" the warning (same when we try to turn on recording)
+        if ((switchValue === undefined || switchValue) && needLicenses) {
             this.shakeHint = true;
             setTimeout(() => {
                 this.shakeHint = false;
             }, 500);
             return;
         }
-        // TODO: remove comment after task review
-        // this block changed in 20.1_hotfix to fix CLOUD-6788
-        // IF condition was removed as not necessary
+
         this.recording = switchValue;
     }
 
