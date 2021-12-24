@@ -76,6 +76,30 @@
             }
           },
           "configurations": {
+            "cloud-test": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.cloud-test.ts"
+                }
+              ]
+            },
+            "dev2": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.dev2.ts"
+                }
+              ]
+            },
+            "dev3": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.dev3.ts"
+                }
+              ]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -106,6 +130,14 @@
               ],
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
+            },
+            "stage": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.stage.ts"
+                }
+              ]
             },
             "webadmin": {
               "fileReplacements": [
@@ -166,8 +198,23 @@
             "ssl": true
           },
           "configurations": {
+            "cloud-test": {
+              "browserTarget": "front-end:build:cloud-test"
+            },
+            "dev2": {
+              "browserTarget": "front-end:build:dev2"
+            },
+            "dev3": {
+              "browserTarget": "front-end:build:dev3"
+            },
+            "local": {
+              "browserTarget": "front-end:build:production"
+            },
             "production": {
               "browserTarget": "front-end:build:production"
+            },
+            "stage": {
+              "browserTarget": "front-end:build:stage"
             },
             "webadmin": {
               "port": 9001,
