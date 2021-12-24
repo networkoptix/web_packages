@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import * as df from 'dateformat';
+
+import { ms, px } from '../../../../../utils/type-aliases';
+import VideoManagementSystemService from '../../../../vms/services/vms.service';
+import cfg from '../../timeline.config';
 import TimelineService from '../../timeline.service';
+import drawingConfig from '../drawingConfigs/topRulerDrawingConfig';
+
+import topRulerDateFormats from './dateformats/top_ruler_date_formats';
 import IrregularLengthInterval from './intervals/IrregularLengthInterval';
+import TOP__MIN_WIDTH_FOR_INTERVALS from './intervals/cfg/TOP__MIN_WIDTH_FOR_INTERVALS';
 import irregularLengthIntervals from './intervals/irregularLengthIntervals';
 import estimateIrregularLengthIntervalPessimistically
     from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
-import TOP__MIN_WIDTH_FOR_INTERVALS from './intervals/cfg/TOP__MIN_WIDTH_FOR_INTERVALS';
-import { ms, px } from '../../../../../utils/type-aliases';
-import drawingConfig from '../drawingConfigs/topRulerDrawingConfig';
-import cfg from '../../timeline.config';
-import topRulerDateFormats from './dateformats/top_ruler_date_formats';
-import percentageToHex from './utils/percentageToHex';
-
 import isIntervalOdd from './intervals/utils/isIntervalOdd';
-import VideoManagementSystemService from '../../../../vms/services/vms.service';
+import percentageToHex from './utils/percentageToHex';
 
 const dateformat = df.default || df;
 
@@ -44,8 +45,10 @@ export class TimelineTopRulerCanvasRendererService {
             ctx.stroke();
 
             serifTimes.map(
-                (time, index, serifTimes) =>
-                    this._drawSerif(ctx, interval, time, serifTimes[index - 1], serifTimes[index + 1])
+                (time, index, serifTimes) => this._drawSerif(
+                    ctx, interval, time, serifTimes[index - 1],
+                    serifTimes[index + 1]
+                )
             );
         });
     }
@@ -67,7 +70,9 @@ export class TimelineTopRulerCanvasRendererService {
     protected _getInterval (): IrregularLengthInterval {
         for (const interval of irregularLengthIntervals) {
             if (interval in TOP__MIN_WIDTH_FOR_INTERVALS) {
-                const displayWidth = this.timeline.durationToDomWidth(estimateIrregularLengthIntervalPessimistically(interval));
+                const displayWidth = this.timeline.durationToDomWidth(
+                    estimateIrregularLengthIntervalPessimistically(interval)
+                );
                 const requiredWidth = TOP__MIN_WIDTH_FOR_INTERVALS[interval];
                 if (displayWidth >= requiredWidth) {
                     return interval;
@@ -108,7 +113,9 @@ export class TimelineTopRulerCanvasRendererService {
 
         const xNext: px = nextTime
             ? this.timeline.timeToCanvasOffsetX(nextTime)
-            : x0 + this.timeline.durationToCanvasWidth(estimateIrregularLengthIntervalPessimistically(interval));
+            : x0 + this.timeline.durationToCanvasWidth(
+                estimateIrregularLengthIntervalPessimistically(interval)
+            );
 
         let x1 = xNext;
 
@@ -120,8 +127,12 @@ export class TimelineTopRulerCanvasRendererService {
         }
 
         const y0: px = 0;
-        const y1: px = Math.round(cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height);
-        const y2: px = Math.round(drawingConfig.serif.heightRelative * this.timeline.canvasGeometry.height);
+        const y1: px = Math.round(
+            cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height
+        );
+        const y2: px = Math.round(
+            drawingConfig.serif.heightRelative * this.timeline.canvasGeometry.height
+        );
 
         if (isIntervalOdd(curTime, interval)) {
             ctx.fillStyle = drawingConfig.backgroundOddColor;

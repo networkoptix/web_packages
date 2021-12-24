@@ -1,5 +1,6 @@
-import { deg, px, pxPerSecond, color } from './types';
 import colors from '../drawingConfigs/colors';
+
+import { deg, px, pxPerSecond, color } from './types';
 
 export default {
     stripeWidth: 8 as px,

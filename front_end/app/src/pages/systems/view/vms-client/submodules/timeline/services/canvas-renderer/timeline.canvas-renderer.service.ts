@@ -1,9 +1,12 @@
 import { Injectable, isDevMode } from '@angular/core';
-import TimelineRulerCanvasRendererService from './ruler/timeline.ruler-canvas-renderer.service';
-import TimelineRecordsCanvasRendererService from './timeline.records-canvas-renderer.service';
-import TimelineService from '../timeline.service';
-import TimelineDebugCanvasRendererService from './timeline.debug-canvas-renderer.service';
+
 import { NxConfigService, IConfig } from '@services/nx-config';
+
+import TimelineService from '../timeline.service';
+
+import TimelineRulerCanvasRendererService from './ruler/timeline.ruler-canvas-renderer.service';
+import TimelineDebugCanvasRendererService from './timeline.debug-canvas-renderer.service';
+import TimelineRecordsCanvasRendererService from './timeline.records-canvas-renderer.service';
 
 @Injectable({
     providedIn: 'root'

@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import TimelineService from '../timeline.service';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+
 import { float, ms } from '../../../../utils/type-aliases';
-import drawStripyBar from './stripy-bar/stripy-bar';
-import getSlopeWidth from './stripy-bar/slope';
+import VideoManagementSystemService from '../../../vms/services/vms.service';
+import TimelineService from '../timeline.service';
+
 import cfg from './drawingConfigs/recordsDrawingConfig';
 import stripeCfg from './stripy-bar/cfg';
+import getSlopeWidth from './stripy-bar/slope';
+import drawStripyBar from './stripy-bar/stripy-bar';
 
 @Injectable({
     providedIn: 'root'
@@ -31,9 +33,14 @@ export class TimelineRecordsCanvasRendererService {
     protected _drawBackground (ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = this.cfg.BACKGROUND_FILL_STYLE;
         ctx.fillRect(
-            0, Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height),
+            0,
+            Math.round(
+                this.cfg.RECORDS_OFFSET_RELATIVE * this.timeline.canvasGeometry.height
+            ),
             this.timeline.canvasGeometry.width,
-            Math.round(this.cfg.RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height)
+            Math.round(
+                this.cfg.RECORDS_HEIGHT_RELATIVE * this.timeline.canvasGeometry.height
+            )
         );
     }
 
@@ -53,7 +60,10 @@ export class TimelineRecordsCanvasRendererService {
 
             const LAST_MINUTE_SIZE = 1.5 * 60 * 1000; // 1.5 minutes
             const lastMinuteStartMs: ms = Date.now() - LAST_MINUTE_SIZE;
-            if (endMs > lastMinuteStartMs && this.timeline.durationToCanvasWidth(LAST_MINUTE_SIZE) > 1) {
+            if (
+                endMs > lastMinuteStartMs &&
+                this.timeline.durationToCanvasWidth(LAST_MINUTE_SIZE) > 1
+            ) {
                 this._drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs);
             }
         }
@@ -74,7 +84,9 @@ export class TimelineRecordsCanvasRendererService {
 
     protected _drawLastMinuteStripes (ctx, lastMinuteStartMs, pxPerMs) {
         const dpr = this.timeline.canvasGeometry.dpr;
-        const x = Math.round((lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs);
+        const x = Math.round(
+            (lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs
+        );
         const w = this.timeline.canvasGeometry.width - x;
         const ch = this.timeline.canvasGeometry.height;
         const y = Math.round(this.cfg.RECORDS_OFFSET_RELATIVE * ch);

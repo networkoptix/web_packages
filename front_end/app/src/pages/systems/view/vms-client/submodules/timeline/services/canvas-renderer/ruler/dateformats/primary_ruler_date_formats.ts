@@ -1,5 +1,13 @@
+import {
+    SECOND,
+    MINUTE,
+    HOUR,
+    DAY,
+    ROUGH_YEAR,
+    ROUGH_MONTH
+} from '../intervals/regularLengthIntervals';
+
 import { LABEL_FORMATS as LF } from './label_formats';
-import { SECOND, MINUTE, HOUR, DAY, ROUGH_YEAR, ROUGH_MONTH } from '../intervals/regularLengthIntervals';
 
 export const primaryRulerDateFormats = {
     [SECOND]: LF.SECONDS_ONLY,

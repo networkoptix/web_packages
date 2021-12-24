@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import TimelineService from '../timeline.service';
+
 import VideoManagementSystemService from '../../../vms/services/vms.service';
+import TimelineService from '../timeline.service';
+
 import cfg from './drawingConfigs/recordsDrawingConfig';
 
 @Injectable({

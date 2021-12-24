@@ -1,5 +1,5 @@
-import IAnimated     from './IAnimated';
 import AnimatedFloat from './AnimatedFloat';
+import IAnimated from './IAnimated';
 import { EASING } from './easing-functions';
 
 type int = number
