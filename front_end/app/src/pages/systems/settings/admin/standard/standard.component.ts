@@ -103,11 +103,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         sessionLimitMinutes: 0
     };
 
-    systemSettingsFormWatcher: FormWatcher;
-    securitySettingsFormWatcher: FormWatcher;
+    systemAndSecuritySettingsFormWatcher: FormWatcher;
 
-    @ViewChild('systemSettingsForm', { read: NgForm }) systemSettingsForm: NgForm;
-    @ViewChild('securitySettingsForm', { read: NgForm }) securitySettingsForm: NgForm;
+    @ViewChild('systemAndSecuritySettingsForm', { read: NgForm }) systemAndSecuritySettingsForm: NgForm;
 
     @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
         if (el) {
@@ -221,9 +219,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.settingsWatchersSet = true;
 
         setTimeout(() => {
-            this.securitySettingsFormWatcher = this.applyService.createFormWatcher(
-                'securitySettingsForm',
-                this.securitySettingsForm,
+            this.systemAndSecuritySettingsFormWatcher = this.applyService.createFormWatcher(
+                'systemAndSecuritySettingsForm',
+                this.systemAndSecuritySettingsForm,
                 this.saveSettings,
                 () => {
                     if (this.systemAndSecuritySettings.sessionLimitMinutes) {
@@ -265,9 +263,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         };
 
         this.saveSettings = this.processService.createProcess(() => {
-            if (this.applyService.forms.securitySettingsForm.changedFields.has('mandatory2fa')) {
+            if (this.applyService.forms.systemAndSecuritySettingsForm.changedFields.has('mandatory2fa')) {
                 return this.handleMandatory2fa().finally(() => {
-                    if (this.applyService.forms.securitySettingsForm.changedFields.size > 1) {
+                    if (this.applyService.forms.systemAndSecuritySettingsForm.changedFields.size > 1) {
                         return this.updateSettings();
                     } else {
                         return Promise.resolve();

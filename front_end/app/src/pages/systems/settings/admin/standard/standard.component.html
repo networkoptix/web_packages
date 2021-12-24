@@ -60,21 +60,20 @@
     </nx-section>
 </nx-block>
 
-<nx-block type="mt-3">
-    <header><h4 translate>System Settings</h4></header>
-    <nx-section-placeholder
-            *ngIf="system && settings === false || !system.isOnline; else systemSettingsTemplate"
-            svgFileName="system_settings_placeholder"
-            width="64"
-            [translatedMessage]="LANG.system.settings.notAbleToLoadSystem()">
-    </nx-section-placeholder>
+<form name="systemAndSecuritySettingsForm" class="form-horizontal" #systemAndSecuritySettingsForm="ngForm" novalidate>
+    <nx-block type="mt-3">
+        <header><h4 translate>System Settings</h4></header>
+        <nx-section-placeholder
+                *ngIf="system && settings === false || !system.isOnline; else systemSettingsTemplate"
+                svgFileName="system_settings_placeholder"
+                width="64"
+                [translatedMessage]="LANG.system.settings.notAbleToLoadSystem()">
+        </nx-section-placeholder>
 
-    <ng-template #systemSettingsTemplate>
-        <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
-        <nx-section *ngIf="settingsWatchersSet">
-            <div class="m-0">
-                <form name="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
-                      novalidate>
+        <ng-template #systemSettingsTemplate>
+            <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
+            <nx-section *ngIf="settingsWatchersSet">
+                <div class="m-0">
                     <div class="form-check pl-0">
                         <div *ngIf="systemAndSecuritySettings.autoDiscoveryEnabled !== undefined">
                             <div class="d-flex checkbox-block align-items-center">
@@ -127,23 +126,21 @@
                             </label>
                         </div>
                     </div>
-                </form>
-            </div>
-        </nx-section>
-    </ng-template>
-</nx-block>
-<nx-block type="mt-3">
-    <header><h4 translate>Security</h4></header>
-    <nx-section-placeholder
-            *ngIf="system && settings === false || !system.isOnline; else securitySettingsTemplate"
-            svgFileName="system_settings_placeholder"
-            width="64"
-            [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity()">
-    </nx-section-placeholder>
-    <ng-template #securitySettingsTemplate>
-        <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
-        <nx-section *ngIf="settingsWatchersSet">
-            <form #securitySettingsForm="ngForm" id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
+                </div>
+            </nx-section>
+        </ng-template>
+    </nx-block>
+    <nx-block type="mt-3">
+        <header><h4 translate>Security</h4></header>
+        <nx-section-placeholder
+                *ngIf="system && settings === false || !system.isOnline; else securitySettingsTemplate"
+                svgFileName="system_settings_placeholder"
+                width="64"
+                [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity()">
+        </nx-section-placeholder>
+        <ng-template #securitySettingsTemplate>
+            <nx-pre-loader *ngIf="!settingsWatchersSet" [minHeight]="100"></nx-pre-loader>
+            <nx-section *ngIf="settingsWatchersSet">
                 <div class="form-check p-0 mr-4">
                     <ng-container *ngIf="systemAndSecuritySettings.auditTrailEnabled !== undefined">
                         <div class="d-flex checkbox-block align-items-center">
@@ -271,7 +268,7 @@
                         <span translate>It is recommended that user session lifetimes be less than 30 days</span>
                     </div>
                 </div>
-            </form>
-        </nx-section>
-    </ng-template>
-</nx-block>
+            </nx-section>
+        </ng-template>
+    </nx-block>
+</form>
