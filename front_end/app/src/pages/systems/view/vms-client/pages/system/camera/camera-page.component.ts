@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import FpsMeterService from '../../../../../../../services/fps-meter.service';
+import PlaybackService from '../../../submodules/playback/services/playback.service';
+import TimelineExtendToNowService from '../../../submodules/timeline/services/timeline.extend-to-now.service';
+import TimelineService from '../../../submodules/timeline/services/timeline.service';
 import ICamera from '../../../submodules/vms/datatypes/ICamera';
 import { VmsState, VMS_MODE } from '../../../submodules/vms/datatypes/VmsState';
 import VideoManagementSystemService from '../../../submodules/vms/services/vms.service';
-
-import PlaybackService from '../../../submodules/playback/services/playback.service';
-import TimelineService from '../../../submodules/timeline/services/timeline.service';
-import TimelineExtendToNowService from '../../../submodules/timeline/services/timeline.extend-to-now.service';
-import FpsMeterService from '../../../../../../../services/fps-meter.service';
 
 @Component({
     selector: 'camera-page',
@@ -38,8 +37,12 @@ export class CameraPageComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit (): void {
-        this._routeSubscription = this.route.params.subscribe(this._onRouteChange);
-        this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsStateChange);
+        this._routeSubscription = this.route.params.subscribe(
+            this._onRouteChange
+        );
+        this._vmsStateSubscription = this.vms.subject.subscribe(
+            this._onVmsStateChange
+        );
         this._animationFrameRequestHandler =
             requestAnimationFrame(this._onAnimationFrame);
         this.fpsMeter.install();
@@ -74,7 +77,9 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         }
 
         setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() => this._onAnimationFrame);
+            this._animationFrameRequestHandler = requestAnimationFrame(() =>
+                this._onAnimationFrame
+            );
         }, Math.ceil(1000 / 34));
     }
 
@@ -95,7 +100,10 @@ export class CameraPageComponent implements OnInit, OnDestroy {
 
         if (this.camera.hasArchive) {
             console.log('timeline reset time', this.camera);
-            this.timeline.reset(this.camera.archiveRange.start, this.camera.archiveRange.end);
+            this.timeline.reset(
+                this.camera.archiveRange.start,
+                this.camera.archiveRange.end
+            );
         }
 
         if (this.camera.isLive) {

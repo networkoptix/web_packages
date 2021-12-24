@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import VideoManagementSystemService from '../../submodules/vms/services/vms.service';
-import VmsState, { VMS_MODE } from '../../submodules/vms/datatypes/VmsState';
-import MediaServer from '../../submodules/vms/datatypes/MediaServer';
 import { Subscription } from 'rxjs';
+
+import MediaServer from '../../submodules/vms/datatypes/MediaServer';
+import VmsState, { VMS_MODE } from '../../submodules/vms/datatypes/VmsState';
+import VideoManagementSystemService from '../../submodules/vms/services/vms.service';
 
 @Component({
     selector: 'system-page',

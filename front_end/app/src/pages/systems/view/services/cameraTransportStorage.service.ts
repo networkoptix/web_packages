@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { NxAccountService } from '@services/account.service';
 import { LocalStorageService } from 'ngx-webstorage';
+
+import { NxAccountService } from '@services/account.service';
+
 import { PlaybackTransport } from '../view.types';
 
 @Injectable({
@@ -9,7 +11,8 @@ import { PlaybackTransport } from '../view.types';
 export class CameraTransportStorageService {
     user = ''
     constructor(
-        private localStorageService: LocalStorageService, private accountService: NxAccountService
+        private localStorageService: LocalStorageService,
+        private accountService: NxAccountService
     ) {
         this.accountService.accountSubject.subscribe(({ email, id }) => {
             this.user = email || id;
@@ -17,12 +20,16 @@ export class CameraTransportStorageService {
     }
 
     public get (cameraId: string) {
-        return this.localStorageService.retrieve(`${this.user}_transport_${cameraId}`);
+        return this.localStorageService.retrieve(
+            `${this.user}_transport_${cameraId}`
+        );
     }
 
     public set (cameraId: string, transport: PlaybackTransport) {
         if (transport) {
-            this.localStorageService.store(`${this.user}_transport_${cameraId}`, transport);
+            this.localStorageService.store(
+                `${this.user}_transport_${cameraId}`, transport
+            );
         }
     }
 }
