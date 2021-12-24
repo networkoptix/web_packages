@@ -1,5 +1,5 @@
-import { ms, GUID } from '@vms-client/utils/type-aliases';
-import Camera from './Camera';
+import { GUID } from '@vms-client/utils/type-aliases';
+
 import ICamera from './ICamera';
 import IMediaServer from './IMediaServer';
 

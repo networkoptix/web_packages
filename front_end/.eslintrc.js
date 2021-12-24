@@ -260,7 +260,7 @@ module.exports = {
                 // 'app/src/pages/systems/view/vms-client/pages/**/*.ts',
                 // 'app/src/pages/systems/view/vms-client/submodules/playback/**/*.ts',
                 'app/src/pages/systems/view/vms-client/submodules/timeline/**/*.ts',
-                'app/src/pages/systems/view/vms-client/submodules/vms/**/*.ts',
+                // 'app/src/pages/systems/view/vms-client/submodules/vms/**/*.ts',
                 'app/src/pages/systems/view/vms-client/utils/**/*.ts',
             ],
             rules: {

@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
 
-import { CookieService } from 'ngx-cookie-service';
-
-import VideoManagementSystemService from '../../services/vms.service';
-import VmsState, { VMS_MODE } from '../../datatypes/VmsState';
-import MediaServer from '../../datatypes/MediaServer';
-import ICamera from '../../datatypes/ICamera';
 import { IConfig, NxConfigService } from '@services/nx-config';
+
 import { NxUtilsService } from '../../../../../../../../services/utils.service';
+import ICamera from '../../datatypes/ICamera';
+import MediaServer from '../../datatypes/MediaServer';
+import VmsState, { VMS_MODE } from '../../datatypes/VmsState';
+import VideoManagementSystemService from '../../services/vms.service';
 
 @Component({
     selector: 'media-server-list',
@@ -50,7 +50,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit (): void {
-        this._vmsStateSubscription = this.vms.subject.subscribe(this._onVmsSubjectChange);
+        this._vmsStateSubscription = this.vms.subject.subscribe(
+            this._onVmsSubjectChange
+        );
     }
 
     public ngOnDestroy (): void {
@@ -72,7 +74,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
                     });
                 });
                 setTimeout(() => {
-                    this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED ? this.vms.selectedCamera?.id : undefined;
+                    this.activeCameraId = s.mode === VMS_MODE.CAMERA_SELECTED
+                        ? this.vms.selectedCamera?.id
+                        : undefined;
                 }, 0);
                 const cameraComparator = (c1: ICamera, c2: ICamera) => {
                     const n1 = c1.name.toLocaleLowerCase();
@@ -99,7 +103,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
                 (acc, ms) => {
                     const systemId = this.vms.systemId;
                     const cookieName = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
-                    acc[ms.id] = this.cookieService.check(cookieName) ? JSON.parse(this.cookieService.get(cookieName)) : true;
+                    acc[ms.id] = this.cookieService.check(cookieName)
+                        ? JSON.parse(this.cookieService.get(cookieName))
+                        : true;
                     return acc;
                 },
                 {}
@@ -128,8 +134,15 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         }
         token = token.toLocaleLowerCase();
         this.mediaservers = this._mediaservers.reduce((acc: any[], ms) => {
-            const cameras = ms.cameras.filter(c => c.name.toLocaleLowerCase().includes(token) || c.url.toLocaleLowerCase().includes(token));
-            if (cameras.length || ms.name.toLocaleLowerCase().includes(token) || ms.ip.toLocaleLowerCase().includes(token)) {
+            const cameras = ms.cameras.filter(c =>
+                c.name.toLocaleLowerCase().includes(token) ||
+                c.url.toLocaleLowerCase().includes(token)
+            );
+            if (
+                cameras.length ||
+                ms.name.toLocaleLowerCase().includes(token) ||
+                ms.ip.toLocaleLowerCase().includes(token)
+            ) {
                 acc.push({ ...ms, cameras });
             }
             return acc;

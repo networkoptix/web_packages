@@ -1,6 +1,12 @@
-import { int, ms }                                                   from '@vms-client/utils/type-aliases';
-import { CameraArchive, ISimpleTimeRange, IRecord, SimpleTimeRange } from './ICamera';
-import { _getNextRecord }                                            from './utils';
+import { int, ms } from '@vms-client/utils/type-aliases';
+
+import {
+    CameraArchive,
+    ISimpleTimeRange,
+    IRecord,
+    SimpleTimeRange
+} from './ICamera';
+import { _getNextRecord } from './utils';
 
 export interface SubrangeIndicies {
     firstIndex: int,
@@ -122,7 +128,11 @@ export class BirdViewTree {
         this._newlyRecorded.push(...ar);
     }
 
-    protected _zoomingRequiredCallback = (node: BirdViewTreeNode, part: 'left' | 'right', minGapMs: ms) => {
+    protected _zoomingRequiredCallback = (
+        node: BirdViewTreeNode,
+        part: 'left' | 'right',
+        minGapMs: ms
+    ) => {
         // console.log('_zoomingRequiredCallback', node.depth, minGapMs, part, node.startMs, node.endMs)
         const { records, perfect } = part === 'left'
             ? this._spareArchiveDetails(node.startMs, node.centerMs, minGapMs)
@@ -192,7 +202,12 @@ export class BirdViewTree {
                     }
                 } else {
                     // console.log('C', (record.end > needle && record.start < this._range.end) ? 0 : -1)
-                    return (record.end > needle && record.start < this._originalArchiveRange.end) ? 0 : -1;
+                    return (
+                        record.end > needle &&
+                        record.start < this._originalArchiveRange.end
+                    )
+                        ? 0
+                        : -1;
                 }
             }
         );
@@ -204,7 +219,9 @@ export class BirdViewTree {
             subrangeEnd,
             (record: IRecord, needle: ms, i: int) => {
                 // needle ===def=== subrangeEnd
-                const next = i <= this._originalArchive.length - 2 ? this._originalArchive[i + 1] : null;
+                const next = i <= this._originalArchive.length - 2
+                    ? this._originalArchive[i + 1]
+                    : null;
                 // console.log('LAST comparator', record, needle, i, next)
                 if (next) {
                     if (record.start < needle) {
@@ -216,7 +233,12 @@ export class BirdViewTree {
                     }
                 } else {
                     // console.log('C', (record.start < needle && record.end > this._range.start) ? 0 : +1)
-                    return (record.start < needle && record.end > this._originalArchiveRange.start) ? 0 : +1;
+                    return (
+                        record.start < needle &&
+                        record.end > this._originalArchiveRange.start
+                    )
+                        ? 0
+                        : +1;
                 }
             }
         );
@@ -225,12 +247,18 @@ export class BirdViewTree {
     protected _spareArchiveDetails(startMs: ms, endMs: ms, minGapMs: ms) {
         // TODO: optimize (use binary search insted of linear map; spare detailization same time)
 
-        const { firstIndex, lastIndex } = this.getSubrangeIndicies(new SimpleTimeRange(startMs, endMs));
+        const { firstIndex, lastIndex } = this.getSubrangeIndicies(
+            new SimpleTimeRange(startMs, endMs)
+        );
         // this._binarySearchForArchiveSubRange(startMs, endMs)
 
         const maxDetailizedLength = lastIndex - firstIndex + 1;
 
-        const records = this._undetalizeArchiveSubRange(firstIndex, lastIndex, minGapMs);
+        const records = this._undetalizeArchiveSubRange(
+            firstIndex,
+            lastIndex,
+            minGapMs
+        );
 
         const unDetailizedLength = records.length;
         const perfect = maxDetailizedLength === unDetailizedLength;
@@ -299,7 +327,12 @@ export class BirdViewTreeNode {
         // }
     }
 
-    public setChild(part: 'left' | 'right', minGapMs: ms, records: Array<IRecord>, perfect: boolean = false) {
+    public setChild(
+        part: 'left' | 'right',
+        minGapMs: ms,
+        records: Array<IRecord>,
+        perfect: boolean = false
+    ) {
         if (part === 'left' && this._leftChild) {
             console.warn('attempt to reset left child', this);
             return;
@@ -332,7 +365,8 @@ export class BirdViewTreeNode {
 
     public get archiveEnd (): ms {
         if (this._rightChild) {
-            return this._rightChild.archiveEnd || this._records[this._records.length - 1]?.end;
+            return this._rightChild.archiveEnd ||
+                this._records[this._records.length - 1]?.end;
         } else {
             return this._records[this._records.length - 1]?.end;
         }
@@ -359,7 +393,9 @@ export class BirdViewTreeNode {
             const zoomingRequired = false;
             let result = [];
 
-            const nextMinGap = this._minGapMs === Infinity ? minGapMs : Math.floor(this._minGapMs / 2);
+            const nextMinGap = this._minGapMs === Infinity
+                ? minGapMs
+                : Math.floor(this._minGapMs / 2);
             // console.log('nextMinGap', nextMinGap)
 
             if (startMs <= this._intervalCenterMs) {
@@ -370,9 +406,17 @@ export class BirdViewTreeNode {
                         this._zoomingRequiredCallback(this, 'left', nextMinGap);
                     }
 
-                    result = result.concat(this._records.filter(r => r.start < endMs && r.end > startMs));
+                    result = result.concat(
+                        this._records.filter(r => r.start < endMs && r.end > startMs)
+                    );
                 } else {
-                    result = result.concat(this._leftChild.getRecords(Math.max(this._startMs, startMs), Math.min(endMs, this._intervalCenterMs), minGapMs));
+                    result = result.concat(
+                        this._leftChild.getRecords(
+                            Math.max(this._startMs, startMs),
+                            Math.min(endMs, this._intervalCenterMs),
+                            minGapMs
+                        )
+                    );
                 }
             }
 
@@ -384,9 +428,17 @@ export class BirdViewTreeNode {
                         this._zoomingRequiredCallback(this, 'right', nextMinGap);
                     }
 
-                    result = result.concat(this._records.filter(r => r.start < endMs && r.end > startMs));
+                    result = result.concat(
+                        this._records.filter(r => r.start < endMs && r.end > startMs)
+                    );
                 } else {
-                    result = result.concat(this._rightChild.getRecords(Math.max(this._intervalCenterMs, startMs), Math.min(this._endMs, endMs), minGapMs));
+                    result = result.concat(
+                        this._rightChild.getRecords(
+                            Math.max(this._intervalCenterMs, startMs),
+                            Math.min(this._endMs, endMs),
+                            minGapMs
+                        )
+                    );
                 }
             }
 

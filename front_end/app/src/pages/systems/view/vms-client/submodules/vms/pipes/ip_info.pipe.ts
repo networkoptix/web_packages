@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { NxUtilsService }      from '../../../../../../../services/utils.service';
 
 @Pipe({
     name: 'ip_info'

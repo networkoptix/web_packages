@@ -1,7 +1,13 @@
-import { ms, int } from '@vms-client/utils/type-aliases';
-import { ICamera, ISimpleTimeRange, SimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
-import BirdViewTree from './BirdViewTree';
 import { PlaybackTransport } from '@view/view.types';
+import { ms, int } from '@vms-client/utils/type-aliases';
+
+import BirdViewTree from './BirdViewTree';
+import {
+    ICamera,
+    ISimpleTimeRange,
+    CAMERA_STATUS,
+    CameraArchive
+} from './ICamera';
 
 interface NameValue {
     name: string,
@@ -38,7 +44,11 @@ export class Camera implements ICamera {
         protected _archiveRange: ISimpleTimeRange,
         protected _archive: CameraArchive = [],
         public readonly thumbnailUrl: string | undefined = undefined,
-        public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+        public readonly getVideoUrl: (
+            transport: string,
+            quality: string,
+            t?: ms
+        ) => string,
         public readonly getPosterUrl: (t?: ms) => string
     ) {
         this._initBirdView();
@@ -102,7 +112,10 @@ export class Camera implements ICamera {
         const isHls = transport === 'hls';
         this._mediaStreams
             .filter(s => s.resolution !== '*')
-            .map(s => s.transports.filter(t => t === transport) && resolutions.push(s.resolution));
+            .map(s =>
+                s.transports.filter(t => t === transport) &&
+                resolutions.push(s.resolution)
+            );
 
         if (resolutions.length === 1) {
             result.high = isHls ? 'hi' : resolutions[0];
@@ -118,7 +131,9 @@ export class Camera implements ICamera {
         }
 
         if (resolutions.length && transport !== 'hls') {
-            const primaryResolutionHeight = parseInt((result.high || result.low).split('x')[1]);
+            const primaryResolutionHeight = parseInt(
+                (result.high || result.low).split('x')[1]
+            );
             const defaultResolutions = {
                 1080: '1920x1080',
                 720: '1280x720',
@@ -150,7 +165,11 @@ export class Camera implements ICamera {
     public get isLive () {
         return (
             !this.isVirtual &&
-            (this.status === 'Online' || this.status === 'Live' || this.status === 'Recording')
+            (
+                this.status === 'Online' ||
+                this.status === 'Live' ||
+                this.status === 'Recording'
+            )
         );
     }
 
@@ -175,7 +194,10 @@ export class Camera implements ICamera {
     }
 
     public get hasArchive () {
-        return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
+        return !!(
+            this.archiveRange &&
+            this.archiveRange.end > this.archiveRange.start
+        );
     }
 
     public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
