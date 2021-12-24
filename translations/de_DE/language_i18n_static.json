@@ -1093,5 +1093,9 @@
         "/ipvd": {
             "title": "Unterstützte Geräte - %CLOUD_NAME%"
         }
+    },
+    "maintenance": {
+        "description_a": "We are working on some improvements",
+        "description_b": "and brand new features."
     }
 }
