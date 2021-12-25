@@ -1095,7 +1095,7 @@
         }
     },
     "maintenance": {
-        "description_a": "We are working on some improvements",
-        "description_b": "and brand new features."
+        "description_a": "機能改修および",
+        "description_b": "新機能の実装に取り組んでいます。"
     }
 }
