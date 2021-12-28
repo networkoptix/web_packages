@@ -300,10 +300,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             code = params.get('code');
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
-        if (this.initialData.redirect_url === 'redirect-oauth') {
+        if (this.initialData.redirect_url.includes('redirect-oauth')) {
             const { client_id, client_type, code, access_code, access_token } = this.initialData;
             // @ts-ignore
-            if (nativeClient && (access_code || access_token || code)) {
+            if (this.window.nativeClient && (access_code || access_token || code)) {
                 // @ts-ignore
                 nativeClient.twoFaVerified(access_code || code || access_token);
             } else {
