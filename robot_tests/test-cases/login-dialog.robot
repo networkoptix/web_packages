@@ -99,16 +99,13 @@ Restart
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
 10. Shows non-activated user message when not activated at login; Resend activation button sends email
-    [tags]    email    C41865    
+    [tags]    email    C41865 
     Go To    ${url}/register
     ${random email}    get random email    ${BASE EMAIL}    extra=sendemail
     Register    'mark'    'hamill'    ${random email}    ${password}
-    Wait Until Elements are Visible
-    ...    ${ACCOUNT CREATION SUCCESS}
-    ...    ${ACCOUNT CREATION SUCCESS ICON}
-    ...    ${ACCOUNT CREATION CONFIRMATION}
-    Wait Until Element Is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
+    Validate Register Success
+    Wait Until Element Is Visible    ${LOG IN BTN REGISTER ACCOUNT PAGE}
+    Click Element    ${LOG IN BTN REGISTER ACCOUNT PAGE}
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${random email}
@@ -137,7 +134,9 @@ Restart
 
 12. Requires log In, if the user has just logged out and pressed back button in browser
     Log In    ${login user}    ${password}
+    Sleep   2
     Log Out
+    Sleep   3
     Go Back
     Wait Until Element is Visible    ${LOG IN MODAL}
 
@@ -192,13 +191,14 @@ Restart
     Validate Log In    ${login user}
 
 18. Should respond to Tab key
+    [Tags]
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Set Focus To Element    ${EMAIL INPUT}
     Press Keys    ${EMAIL INPUT}    TAB
-    Element Should Be Focused    ${LOG IN CREATE ACCOUNT BUTTON}
-    Press Keys    ${LOG IN CREATE ACCOUNT BUTTON}    TAB
+    Element Should Be Focused    ${LOG IN CREATE ACCOUNT BUTTON}/parent::button
+    Press Keys    ${EMAIL INPUT}    TAB   TAB
     Element Should Be Focused    ${LOG IN NEXT BUTTON}
 
 #19. Should respond to Space key and toggle checkbox
@@ -212,7 +212,8 @@ Restart
 #    Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 20. Handles two tabs, updates second tab state if logout is done on first
-    Go To    ${url}/register
+    [Tags]
+    Go To    ${url}/authorize?client_type=create
     Wait Until Elements are Visible
     ...    ${REGISTER FIRST NAME INPUT}
     ...    ${REGISTER LAST NAME INPUT}
@@ -234,12 +235,13 @@ Restart
     Sleep    5
     Log In    ${login user}    ${password}
     Switch Window    ${tabs}[0]
-    Location Should Be    ${url}/register
-    Reload Page
-    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Sleep    2
-    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
+    Location Should Be    ${url}/authorize?client_type=create
+    Go To   ${url}
+#    Reload Page
+#    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+#    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+#    Sleep    2
+#    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In    ${login user}
     Log Out
     ${tabs}    Get Window Handles
@@ -249,8 +251,8 @@ Restart
     Wait Until Element is Visible    ${LOG IN MODAL}
 
 21. Log in more than 5 times
-    [tags]    C42075    
-    Go To    ${url}/register
+    [tags]    C42075
+    Go To    ${url}/authorize?client_type=create
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
     Activate    ${email}
@@ -275,6 +277,7 @@ Restart
 
 22. User is logged out of browser after a password change in another browser
     [tags]    C41837
+    Skip    Due to "Failed to establish a new connection: [Errno 61] Connection refused')"
     Log In    ${login user}    ${password}
     Open Browser and go to URL    ${url}
     Switch Browser    1

@@ -39,7 +39,7 @@ ${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="su
 ${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
 ${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
 ${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
-${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//button[@type="button"]/span[text()="${CREATE ACCOUNT BUTTON TEXT}"]
+${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//footer//button[@type="button"]//span[text()="${CREATE ACCOUNT BUTTON TEXT}"]
 ${LOG IN BTN REGISTER ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
 ${LOG IN BTN CREATE ACCOUNT PAGE}     //nx-authorize-create-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
 ${LOG IN BTN ACTIVATE ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//button[contains(text(), '${LOG IN BUTTON TEXT}')]
