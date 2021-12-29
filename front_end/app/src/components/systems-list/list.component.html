@@ -11,14 +11,13 @@
         </nx-page-placeholder>
         <ng-template #listOfSystems>
             <div class="search-block row border-bottom" *ngIf="!disableSearch && showSearch">
-                <div class="col-sm-9 col-md-8 col-lg-6 input-overlay">
-                    <span class="form-control-static input-overlay-left"><span
-                            class="glyphicon glyphicon-search"></span></span>
-                    <a href *ngIf="search.value" (click)="search.value=''"
-                        class="form-control-static input-overlay-right"><span class="glyphicon glyphicon-remove"></span></a>
-                    <input type="text" class="form-control" [ngModel]="search.value" (ngModelChange)="setSearch($event)"
-                        placeholder="Search">
-                </div>
+                <nx-search class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+                           [ngModel]="search"
+                           (ngModelChange)="setSearch($event)"
+                           layout='compact'
+                           placeholder='Search systems'
+                           instant
+                ></nx-search>
             </div>
             <div *ngIf="systems.length">
                 <h1 *ngIf="!showCompact" class="old-h12 p-0 mb-3 mt-3"><span>{{search.value &&
