@@ -146,6 +146,22 @@ export class LoginWebadminModalContent implements OnInit {
             });
         };
 
+        const cloudLogin = this.LANG.errorCodes['This authorization method is forbidden. Please contact your system administrator.']();
+        const errorCodes = {
+            notFound: showWrongCredentialsError,
+            invalidParameter: showWrongCredentialsError,
+            notAuthorized: showWrongCredentialsError,
+            accountBlocked: () => {
+                this.loginForm.controls.login_password.markAsPristine();
+                this.loginForm.controls.login_password.markAsUntouched();
+
+                this.accountBlocked = true;
+                this.loginForm.controls.login_password.setErrors({
+                    nx_account_blocked: true
+                });
+            }
+        };
+        errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError();
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
@@ -159,22 +175,7 @@ export class LoginWebadminModalContent implements OnInit {
             );
         }, {
             ignoreUnauthorized: true,
-            errorCodes: {
-                notFound: showWrongCredentialsError,
-                invalidParameter: showWrongCredentialsError,
-                notAuthorized: showWrongCredentialsError,
-                accountBlocked: () => {
-                    this.loginForm.controls.login_password.markAsPristine();
-                    this.loginForm.controls.login_password.markAsUntouched();
-
-                    this.accountBlocked = true;
-                    this.loginForm.controls.login_password.setErrors({
-                        nx_account_blocked: true
-                    });
-                },
-                'This authorization method is forbidden. Please contact your system administrator.':
-                    this.LANG.toastMessage.webAdminCloudCredentialError()
-            }
+            errorCodes
         }, (result) => {
             this.activeModal.close(result);
             if (this.blockNavigation) {

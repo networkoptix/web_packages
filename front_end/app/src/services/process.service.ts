@@ -283,8 +283,8 @@ export const formatError = (
         error?.resultCode ||
         error?.type === 'error' && 'networkConnection' ||
         error?.errorText ||
-        error?.errorId ||
         error?.errorString ||
+        error?.errorId ||
         error;
     if (!errorCode) {
         return lang.errorCodes.unknownError();
