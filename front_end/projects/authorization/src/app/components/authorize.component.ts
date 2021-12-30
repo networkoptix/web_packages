@@ -300,15 +300,18 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             code = params.get('code');
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
-        if (this.initialData.redirect_url.includes('redirect-oauth')) {
-            const { client_id, client_type, code, access_code, access_token } = this.initialData;
+        if (link.includes('redirect-oauth')) {
+            const { client_id, client_type, access_code, access_token } = this.initialData;
             // @ts-ignore
-            if (this.window.nativeClient && (access_code || access_token || code)) {
+            if (this.window.nativeClient &&
+                [ClientType.renewDesktop, ClientType.renewWeb].includes(this.clientType) &&
+                (access_code || access_token || code)
+            ) {
                 // @ts-ignore
                 nativeClient.twoFaVerified(access_code || code || access_token);
             } else {
                 this.router.navigate(['redirect-oauth'], {
-                    queryParams: { code, client_id, client_type, view_type: this.viewType }
+                    queryParams: { client_id, client_type, view_type: this.viewType, code: code || access_code }
                 });
             }
         } else if (this.clientType === 'setupWizard') {
