@@ -171,6 +171,7 @@ export abstract class BaseAccount implements OnDestroy {
         }
     }
 
+    // these seem to be deprecated (@gbezyuk)
     get email() {
         return this.sessionService.email;
     }

@@ -444,7 +444,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(
-            this.accountService.email,
+            // this.accountService.email, // doesn't work as it was never set; looks like it's out of sync conceptually
+            this.accountService.account.email,
             this.system.id
         );
         this.currentlyMerging = true;

@@ -142,10 +142,11 @@ export class NxSystemsService implements OnDestroy {
         return system.ownerAccountEmail;
     }
 
-    getMySystems(currentUserEmail: string, currentSystemId: string): NxSystem[] {
-        return this.systems.filter((system) => {
-            return system.ownerAccountEmail === currentUserEmail && system.id !== currentSystemId;
-        }).sort((a, b) => {
+    getMySystems (currentUserEmail: string, currentSystemId: string): NxSystem[] {
+        return this.systems.filter(system =>
+            system.ownerAccountEmail === currentUserEmail &&
+            system.id !== currentSystemId
+        ).sort((a, b) => {
             return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
         });
     }
