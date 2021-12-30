@@ -523,7 +523,9 @@ export class NxApplyService {
 
                     extNgForm.changedFields.clear();
                     Object.keys(extNgForm.originalForm).forEach(key => {
-                        if (extNgForm.originalForm[key] !== change[key]) {
+                        if (
+                            (isObject(extNgForm.originalForm[key]) && !NxUtilsService.isEqual(extNgForm.originalForm[key], change[key])) ||
+                            (!isObject(extNgForm.originalForm[key]) && extNgForm.originalForm[key] !== change[key])) {
                             extNgForm.changedFields.add(key);
                         }
                     });
@@ -531,7 +533,9 @@ export class NxApplyService {
 
                     if (this.applyComponentRef) {
                         this.applyComponentInstance.show = extNgForm.hasChange;
-                        const hasInvalid = Object.keys(this.applyComponentInstance.forms).some(key => this.applyComponentInstance.forms[key].form.invalid);
+                        const hasInvalid = Object.keys(this.applyComponentInstance.forms)
+                            .some(key => this.applyComponentInstance.forms[key].form.invalid);
+
                         this.applyComponentInstance.setInvalid(hasInvalid);
                     }
                 });
@@ -573,7 +577,7 @@ export class NxApplyService {
      * at the bottom of page pass true to the onlyShowSectionWatchers param on initPageWatcher.
      *
      * If you want to have the save / discard at the bottom of the page to run all save processes
-     * or discard all changes, that code will need to be implmemented on the save and discard
+     * or discard all changes, that code will need to be implemented on the save and discard
      * functions passed to initPageWatcher.
      *
      * TODO: We might want to add a way to run all section save processes sequentially when
