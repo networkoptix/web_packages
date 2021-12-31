@@ -3,7 +3,7 @@
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "For developers",
-	"Integrations (β)": "Integrations (β)",
+    "Integrations (β)": "Integrations (β)",
     "Privacy": "Privacy",
     "Support": "Support",
     "Terms": "Terms",
@@ -69,7 +69,7 @@
         "accountSavedSuccess": "Your account is successfully saved",
         "accountSettings": "Account Settings",
         "activationLinkSent": "Activation Link Sent",
-		"agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
         "passwordChangedSuccess": "Password successfully saved",
@@ -95,13 +95,13 @@
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "common": {
-        "account":{
-            "created":{
+        "account": {
+            "created": {
                 "title": "Account Created",
                 "message": "Confirmation message with the activation link is sent to {email}"
             },
             "activated": {
-                "title" : "Account successfully activated"
+                "title": "Account successfully activated"
             }
         },
         "cameraLinks": {
@@ -336,7 +336,7 @@
             "serversDetach": "Detach server \"{ title }\" from current system?",
             "serversReset": "Reset server \"{ title }\" to defaults?",
             "serversRestart": "Restart server \"{ title }\"?",
-            "changePasswordFor" : "Change Password for User \"{username}\""
+            "changePasswordFor": "Change Password for User \"{username}\""
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
@@ -459,7 +459,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Wrong password",
-        "badUsername":"Account not found",
+        "badUsername": "Account not found",
         "notFound": "Not found",
         "ok": "ok",
         "oldPasswordMistmatch": "Current password is incorrect.",
@@ -757,7 +757,7 @@
         "nameFail": "Failed to change {type} name",
         "reviewAccepted": "The review has been accepted",
         "system": {
-            "deleted" :{
+            "deleted": {
                 "success": "System {systemName} is successfully deleted from your account"
             },
             "disconnected": {
@@ -930,7 +930,7 @@
             "disabled": "Disabled"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage" : "Delete External Storage?",
+        "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
         "invalidPath": "Invalid storage path.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
@@ -942,5 +942,60 @@
         "serverOffline": "Failed to add external storage - server doesn't respond",
         "success": "External storage added",
         "urlPlaceholder": "\/\/<Computer Name>\/<Folder>"
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Sun",
+                "Mon": "Mon",
+                "Tue": "Tue",
+                "Wed": "Wed",
+                "Thu": "Thu",
+                "Fri": "Fri",
+                "Sat": "Sat",
+                "Sunday": "Sunday",
+                "Monday": "Monday",
+                "Tuesday": "Tuesday",
+                "Wednesday": "Wednesday",
+                "Thursday": "Thursday",
+                "Friday": "Friday",
+                "Saturday": "Saturday"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Mar",
+                "Apr": "Apr",
+                "May": "May",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Aug",
+                "Sep": "Sep",
+                "Oct": "Oct",
+                "Nov": "Nov",
+                "Dec": "Dec",
+                "January": "January",
+                "February": "February",
+                "March": "March",
+                "April": "April",
+                "June": "June",
+                "July": "July",
+                "August": "August",
+                "September": "September",
+                "October": "October",
+                "November": "November",
+                "December": "December"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "am",
+                "pm": "pm",
+                "A": "A",
+                "P": "P",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

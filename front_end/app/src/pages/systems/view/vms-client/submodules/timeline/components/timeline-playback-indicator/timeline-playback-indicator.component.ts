@@ -6,6 +6,7 @@ import { assertNever, ms, px } from '../../../../utils';
 import { Subscription } from 'rxjs';
 import * as df from 'dateformat';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 const dateformat = df.default || df;
 
@@ -29,11 +30,13 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     public visibleOffset: px
 
     constructor(
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         private timeline: TimelineService,
         private vms: VideoManagementSystemService,
         public playback: PlaybackService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }
@@ -122,11 +125,11 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     public onTimelineSubjectChange (s: TimelineServiceStatus) {
-        const ps = this.playback.state
+        const ps = this.playback.state;
         if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
-            this.timeMs = ps.currentTime // prevents the weired jitter
-            const ho = this.honestOffset
-            const vo = this.visibleOffset
+            this.timeMs = ps.currentTime; // prevents the weired jitter
+            const ho = this.honestOffset;
+            const vo = this.visibleOffset;
             this.honestOffset = this.timeline.timeToDomOffsetX(this.timeMs);
             this.visibleOffset = Math.max(
                 MARGIN + PRIMARY_WIDTH / 2,
@@ -166,7 +169,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                 this.timeMs = s.currentTime;
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'dd mmmm yyyy';
-                const tweakedT = this.vms.tweakT(this.timeMs)
+                const tweakedT = this.vms.tweakT(this.timeMs);
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
 

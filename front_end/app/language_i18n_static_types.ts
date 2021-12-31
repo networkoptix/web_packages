@@ -51,6 +51,7 @@ export interface LanguageI18NStaticTypes {
     result:                any;
     additionalSystems:     any;
     storage:               Storage;
+    view:                  View;
 }
 
 export interface AccessRole {
@@ -852,6 +853,70 @@ export interface Deleted {
     success: any;
 }
 
+export interface View {
+    timeline: Timeline;
+}
+
+export interface Timeline {
+    dayNames:   DayNames;
+    monthNames: MonthNames;
+    timeNames:  TimeNames;
+}
+
+export interface DayNames {
+    Sun:       any;
+    Mon:       any;
+    Tue:       any;
+    Wed:       any;
+    Thu:       any;
+    Fri:       any;
+    Sat:       any;
+    Sunday:    any;
+    Monday:    any;
+    Tuesday:   any;
+    Wednesday: any;
+    Thursday:  any;
+    Friday:    any;
+    Saturday:  any;
+}
+
+export interface MonthNames {
+    Jan:       any;
+    Feb:       any;
+    Mar:       any;
+    Apr:       any;
+    May:       any;
+    Jun:       any;
+    Jul:       any;
+    Aug:       any;
+    Sep:       any;
+    Oct:       any;
+    Nov:       any;
+    Dec:       any;
+    January:   any;
+    February:  any;
+    March:     any;
+    April:     any;
+    June:      any;
+    July:      any;
+    August:    any;
+    September: any;
+    October:   any;
+    November:  any;
+    December:  any;
+}
+
+export interface TimeNames {
+    a:  any;
+    p:  any;
+    am: any;
+    pm: any;
+    A:  any;
+    P:  any;
+    AM: any;
+    PM: any;
+}
+
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
@@ -1041,6 +1106,7 @@ const typeMap: any = {
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },
         { json: "storage", js: "storage", typ: r("Storage") },
+        { json: "view", js: "view", typ: r("View") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "any" },
@@ -1757,5 +1823,64 @@ const typeMap: any = {
     ], false),
     "Deleted": o([
         { json: "success", js: "success", typ: "any" },
+    ], false),
+    "View": o([
+        { json: "timeline", js: "timeline", typ: r("Timeline") },
+    ], false),
+    "Timeline": o([
+        { json: "dayNames", js: "dayNames", typ: r("DayNames") },
+        { json: "monthNames", js: "monthNames", typ: r("MonthNames") },
+        { json: "timeNames", js: "timeNames", typ: r("TimeNames") },
+    ], false),
+    "DayNames": o([
+        { json: "Sun", js: "Sun", typ: "any" },
+        { json: "Mon", js: "Mon", typ: "any" },
+        { json: "Tue", js: "Tue", typ: "any" },
+        { json: "Wed", js: "Wed", typ: "any" },
+        { json: "Thu", js: "Thu", typ: "any" },
+        { json: "Fri", js: "Fri", typ: "any" },
+        { json: "Sat", js: "Sat", typ: "any" },
+        { json: "Sunday", js: "Sunday", typ: "any" },
+        { json: "Monday", js: "Monday", typ: "any" },
+        { json: "Tuesday", js: "Tuesday", typ: "any" },
+        { json: "Wednesday", js: "Wednesday", typ: "any" },
+        { json: "Thursday", js: "Thursday", typ: "any" },
+        { json: "Friday", js: "Friday", typ: "any" },
+        { json: "Saturday", js: "Saturday", typ: "any" },
+    ], false),
+    "MonthNames": o([
+        { json: "Jan", js: "Jan", typ: "any" },
+        { json: "Feb", js: "Feb", typ: "any" },
+        { json: "Mar", js: "Mar", typ: "any" },
+        { json: "Apr", js: "Apr", typ: "any" },
+        { json: "May", js: "May", typ: "any" },
+        { json: "Jun", js: "Jun", typ: "any" },
+        { json: "Jul", js: "Jul", typ: "any" },
+        { json: "Aug", js: "Aug", typ: "any" },
+        { json: "Sep", js: "Sep", typ: "any" },
+        { json: "Oct", js: "Oct", typ: "any" },
+        { json: "Nov", js: "Nov", typ: "any" },
+        { json: "Dec", js: "Dec", typ: "any" },
+        { json: "January", js: "January", typ: "any" },
+        { json: "February", js: "February", typ: "any" },
+        { json: "March", js: "March", typ: "any" },
+        { json: "April", js: "April", typ: "any" },
+        { json: "June", js: "June", typ: "any" },
+        { json: "July", js: "July", typ: "any" },
+        { json: "August", js: "August", typ: "any" },
+        { json: "September", js: "September", typ: "any" },
+        { json: "October", js: "October", typ: "any" },
+        { json: "November", js: "November", typ: "any" },
+        { json: "December", js: "December", typ: "any" },
+    ], false),
+    "TimeNames": o([
+        { json: "a", js: "a", typ: "any" },
+        { json: "p", js: "p", typ: "any" },
+        { json: "am", js: "am", typ: "any" },
+        { json: "pm", js: "pm", typ: "any" },
+        { json: "A", js: "A", typ: "any" },
+        { json: "P", js: "P", typ: "any" },
+        { json: "AM", js: "AM", typ: "any" },
+        { json: "PM", js: "PM", typ: "any" },
     ], false),
 };

@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import * as df from 'dateformat';
 import { px } from '../../../../utils/type-aliases';
 import VideoManagementSystemService from '../../../vms/services/vms.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 const dateformat = df.default || df;
 
@@ -32,11 +33,13 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     protected _visualOffset: px
 
     constructor(
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
         public timeUnderMouse: TimelineTimeUnderMouseService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
@@ -66,7 +69,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             try {
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'ddd mmm dd yyyy';
-                const tweakedT = this.vms.tweakT(s.timeUnderMouse)
+                const tweakedT = this.vms.tweakT(s.timeUnderMouse);
                 this.time = dateformat(tweakedT, TIME_FORMAT);
                 this.date = dateformat(tweakedT, DATE_FORMAT);
                 if (s.pressed) {

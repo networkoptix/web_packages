@@ -21,6 +21,7 @@ import AnimatedFloat from './animationPrimitives/AnimatedFloat';
 
 import getIntervalDiffDict from './utils/getIntervalDiffDict';
 import VideoManagementSystemService from '../../../../vms/services/vms.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 const dateformat = df.default || df;
 
@@ -35,9 +36,11 @@ export interface RulerSerif {
 })
 export class TimelinePrimaryRulerCanvasRendererService {
     constructor(
+        languageService: NxLanguageProviderService,
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService,
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
     }
 
     protected _prevIntervals: Array<IrregularLengthInterval> = []

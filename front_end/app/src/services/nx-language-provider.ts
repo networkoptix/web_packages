@@ -95,6 +95,23 @@ export class NxLanguageProviderService {
             : this.cloudApiService.getLanguage()).toPromise();
     }
 
+    loadTimelineTranslations() {
+        const reduceTranslations = (names, sortList) => sortList.map((key) => names[key]());
+        const timelineTranslations = this.translations.view.timeline;
+        const times = {
+            "dayNames": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December"],
+            "timeNames": ["a", "p", "am", "pm", "A", "P", "AM", "PM"]
+        }
+        const translations: any = {
+            dayNames: reduceTranslations(timelineTranslations.dayNames, times.dayNames),
+            monthNames: reduceTranslations(timelineTranslations.monthNames, times.monthNames),
+            timeNames: reduceTranslations(timelineTranslations.timeNames, times.timeNames)
+        };
+        translations.monthNames.splice(4, 0, timelineTranslations.monthNames.May());
+        return translations
+    }
+
     setTranslations(lang: string, translation): void {
         this.translate.setTranslation(lang, translation);
         this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
