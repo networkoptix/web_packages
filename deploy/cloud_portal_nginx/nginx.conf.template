@@ -93,6 +93,13 @@ http {
 
         access_log /dev/stdout combined if=${DOLLAR}logging;
 
+        location = /myip {
+           default_type text/plain;
+           echo $remote_addr;
+
+           expires 1d;
+        }
+
         location /authorize {
             try_files /static/authorization/index.html =404;
         }
