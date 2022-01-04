@@ -51,6 +51,11 @@ http {
         default "SAMEORIGIN";
     }
 
+    map ":${DOLLAR}http_x_forwarded_for" ${DOLLAR}real_remote_addr {
+        ":" ${DOLLAR}remote_addr;
+        default ${DOLLAR}http_x_forwarded_for;
+    }
+
     upstream app_server {
         # For a TCP configuration:
         server $PORTAL_HOST:5000 fail_timeout=0;
@@ -95,7 +100,7 @@ http {
 
         location = /myip {
            default_type text/plain;
-           echo $remote_addr;
+           return 200 "$real_remote_addr\n";
 
            expires 1d;
         }
