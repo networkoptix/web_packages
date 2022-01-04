@@ -2,45 +2,9 @@
   "38834": {
     "name": "urllib3"
   },
-  "38765": {
-    "name": "pip",
-    "note": "The pip package before 19.2 for Python allows Directory Traversal when a URL is given in an install command"
-  },
   "38678": {
     "name": "django-celery-results",
     "note": "Django-celery-results through 1.2.1 stores task results in the database. Among the data it stores are the variables passed into the tasks."
-  },
-  "39646": {
-    "name": "django",
-    "note": "Django 2.2.19 fixes a security issue in 2.2.18 (CVE-2021-23336)."
-  },
-  "40072": {
-    "name": "lxml",
-    "note": "The HTML cleaner in lxml 4.6.3 no longer includes the HTML5 'formaction' attribute to avoid it from allowing JavaScript to pass through."
-  },
-  "40158": {
-    "name": "django",
-    "note": "Django 2.2.20 fixes a security issue with severity \"low\" in 2.2.19."
-  },
-  "40163": {
-    "name": "django",
-    "note": "In Django 2.2 before 2.2.20, 3.0 before 3.0.14, and 3.1 before 3.1.8, MultiPartParser allowed directory traversal via uploaded files with suitably crafted file names. Built-in upload handlers were not affected by this vulnerability. See CVE-2021-28658."
-  },
-  "40291": {
-    "name": "pip",
-    "note": "Pip 21.1 stops splitting on unicode separators in git references, which could be maliciously used to install a different revision on the repository."
-  },
-  "40375": {
-    "name": "django",
-    "note": "Django 2.2.21 fixes CVE-2021-31542 in 2.2.20."
-  },
-  "40404": {
-    "name": "django",
-    "note": "In Django 2.2 before 2.2.21, 3.1 before 3.1.9, and 3.2 before 3.2.1, MultiPartParser, UploadedFile, and FieldFile allowed directory traversal via uploaded files with suitably crafted file names. See CVE-2021-31542."
-  },
-  "40414": {
-    "name": "django",
-    "note": "In Django 2.2 before 2.2.22, 3.1 before 3.1.10, and 3.2 before 3.2.2 (with Python 3.9.5+), URLValidator does not prohibit newlines and tabs (unless the URLField form field is used). If an application uses values with newlines in an HTTP response, header injection can occur. Django itself is unaffected because HttpResponse prohibits newlines in HTTP headers."
   },
   "40965": {
     "name": "pillow",
@@ -54,10 +18,6 @@
     "name": "pillow",
     "note": "Pillow 8.3.2 fixes a 6-byte out-of-bounds (OOB) read. The previous bounds check in FliDecode.c incorrectly calculated the required read buffer size when copying a chunk, potentially reading six extra bytes off the end of the allocated buffer from the heap. Present since Pillow 7.1.0."
   },
-  "41288": {
-    "name": "sqlparse",
-    "note": "sqlparse is a non-validating SQL parser module for Python. In sqlparse versions 0.4.0 and 0.4.1 there is a regular Expression Denial of Service in sqlparse vulnerability. The regular expression may cause exponential backtracking on strings containing many repetitions of '\\r\\n' in SQL comments. Only the formatting feature that removes comments from SQL statements is affected by this regular expression. As a workaround don't use the sqlformat.format function with keyword strip_comments=True or the --strip-comments command line flag when using the sqlformat command line tool. The issues has been fixed in sqlparse 0.4.2."
-  },
   "42497": {
     "name": "kombu",
     "note": "Kombu 5.2.1 updates dependencies to include security fixes. https://github.com/celery/kombu/commit/f3b04558fa0df4ecc383c93e0b3b300d95e17 c47                                                     "
@@ -65,5 +25,9 @@
   "42498": {
     "name": "celery",
     "note": "Celery 5.2.0 updates 'kombu' to v5.2.1, which includes dependencies updates that resolve security issues."
+  },
+  "43738": {
+      "name": "celery",
+      "note": "Celery 5.2.2 includes a fix for CVE-2021-23727: Celery before 5.2.2. by default trusts the messages and metadata stored in backends (result stores). When reading task metadata from the backend, the data is deserialized. Given that an attacker can gain access to, or somehow manipulate the metadata within a celery backend, they could trigger a stored command injection vulnerability and potentially gain further access to the system. https://github.com/celery/celery/blob/master/Changelog.rst#522"
   }
 }
