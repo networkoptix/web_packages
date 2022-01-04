@@ -345,7 +345,7 @@
     "ALLOW ONLY SECURE TEXT": "安全な接続のみを許可する",
     "ENCRYPT VIDEO TRAFFIC TEXT": "ビデオトラフィックを暗号化する",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "クライアント・サーバー間の映像トラフィックのみ暗号化できます。",
-    "LIMIT SESSION DURATION TEXT": "セッション時間を制限",
+    "LIMIT SESSION DURATION TEXT": "セッション期間を制限",
     "RELEASES TAB TEXT": "リリース",
     "PATCHES TAB TEXT": "パッチ",
     "BETAS TAB TEXT": "ベータ",
