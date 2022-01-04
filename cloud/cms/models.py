@@ -1,7 +1,10 @@
 import hashlib
 import json
+from json.decoder import JSONDecodeError
 import os
 import re
+import sys
+from typing import Any, List
 import uuid
 from itertools import chain
 from functools import reduce
@@ -1089,6 +1092,40 @@ class DataStructure(models.Model):
             content_value = DataStructure.cast_value(self, self.default)
 
         return content_value
+
+    def validate_value(self, value: Any) -> List[str]:
+        """Validates that a value is valid for the current data structure.
+
+        TODO: Might need to add validation here for file meta_settings depending on how we handle uploads
+
+        Args:
+            value (Any): Accepts either the datarecord string or already casted value
+
+        Returns:
+            List[str]: List of validation errors
+        """
+        errors = []
+        val_string = str(value)
+
+        try:
+            casted_value = DataStructure.cast_value(self, val_string)
+        except JSONDecodeError:
+            errors.append('Invalid JSON')
+        else:
+            if not self.optional and not casted_value:
+                errors.append('This field is required.')
+
+            if len(val_string) > (char_limit := self.meta_settings.get('char_limit', sys.maxsize)):
+                errors.append(
+                    f'Value is over the {char_limit} character limit')
+
+            if val_string and (regex := self.meta_settings.get('regex', None)) and not re.compile(
+                regex
+            ).match(val_string):
+                errors.append(
+                    f"'{val_string}' is an invalid value. Should match regex pattern: {regex}")
+
+            return errors
 
     @classmethod
     def find_actual_values(cls, data_structures, asset=None, language=None, version_id=None, draft=False,

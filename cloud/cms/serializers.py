@@ -1,8 +1,9 @@
+from json.decoder import JSONDecodeError
 from django.conf import settings
 from rest_framework import serializers
+from cms.controllers.modify_db import save_unrevisioned_records
 
-from cms.models import Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON
-
+from cms.models import Asset, Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON
 import re
 
 
@@ -54,7 +55,8 @@ class DataStructureSerializer(BaseCMSSerializer):
 class ContextSerializer(BaseCMSSerializer):
     class Meta:
         model = Context
-        fields = ("name", "label", "file_path", "description", "url", "translatable", "values")
+        fields = ("name", "label", "file_path", "description",
+                  "url", "translatable", "values")
 
     values = serializers.SerializerMethodField('get_datastructure_values')
 
@@ -81,13 +83,15 @@ class AssetTypeSerializer(BaseCMSSerializer):
 
 class DocumentationBlock(serializers.Serializer):
     title = serializers.CharField(label='Title', allow_blank=True)
-    contentHTML = serializers.CharField(label='HTML Content',  allow_blank=True)
+    contentHTML = serializers.CharField(
+        label='HTML Content',  allow_blank=True)
     content = serializers.CharField(label='Content', allow_blank=True)
 
 
 class DocumentationPageSerializer(serializers.Serializer):
     title = serializers.CharField(label='Title')
-    shortDescription = serializers.CharField(label='Short Description', allow_blank=True)
+    shortDescription = serializers.CharField(
+        label='Short Description', allow_blank=True)
     blocks = DocumentationBlock(many=True)
     script = serializers.CharField(label='Script', allow_blank=True)
     id = serializers.CharField(label='Id')
@@ -99,7 +103,8 @@ class DocumentsSerializer(serializers.Serializer):
     page = serializers.IntegerField(label='Page number'),
     pageSize = serializers.IntegerField(label='Max number of docs per page'),
     totalPages = serializers.IntegerField(label='Total number of pages'),
-    totalResults = serializers.IntegerField(label='Total number documents for search')
+    totalResults = serializers.IntegerField(
+        label='Total number documents for search')
 
 
 class MenuSerializer(serializers.Serializer):
@@ -134,11 +139,13 @@ REGEX_FIELD_MAP = {
 class CustomClientSerializer(serializers.ModelSerializer):
 
     class ValuesSerializer(serializers.Serializer):
-        cloud_host_regex = re.compile(r'(?:https?://)?([\da-z.~_-]+\.[a-z.]{2,6})*')
+        cloud_host_regex = re.compile(
+            r'(?:https?://)?([\da-z.~_-]+\.[a-z.]{2,6})*')
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.custom_fields = AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms) if not settings.MIGRATING else {}
+            self.custom_fields = AssetType.get_custom_fields_by_type(
+                AssetType.ASSET_TYPES.vms) if not settings.MIGRATING else {}
             self.custom_fields = {
                 key: value for key, value in self.custom_fields.items()
                 if self.custom_fields[key].get('source', '') == 'custom' and not (
@@ -147,12 +154,14 @@ class CustomClientSerializer(serializers.ModelSerializer):
             for field_name, field_props in self.custom_fields.items():
                 optional = field_props.get('optional', False)
                 regex = field_props.get('regex', '')
-                field_kwargs = dict(required=not optional, allow_blank=optional, label=field_props.get('label', field_name))
+                field_kwargs = dict(required=not optional, allow_blank=optional,
+                                    label=field_props.get('label', field_name))
                 if regex:
                     if regex in REGEX_FIELD_MAP:
                         field = REGEX_FIELD_MAP[regex](**field_kwargs)
                     else:
-                        field = serializers.RegexField(regex=regex, **field_kwargs)
+                        field = serializers.RegexField(
+                            regex=regex, **field_kwargs)
                 else:
                     field = serializers.CharField(**field_kwargs)
 
@@ -177,9 +186,11 @@ class CustomClientSerializer(serializers.ModelSerializer):
                         increment_eula = True
 
                 if increment_eula:
-                    eula_version = self.parent.instance.values.get('%eulaVersion%', 0) + 1
+                    eula_version = self.parent.instance.values.get(
+                        '%eulaVersion%', 0) + 1
                 else:
-                    eula_version = self.parent.instance.values.get('%eulaVersion%', 1)
+                    eula_version = self.parent.instance.values.get(
+                        '%eulaVersion%', 1)
 
             data['%eulaVersion%'] = eula_version
             return data
@@ -187,7 +198,8 @@ class CustomClientSerializer(serializers.ModelSerializer):
         def to_representation(self, instance):
             return instance
 
-    created_by = serializers.SlugRelatedField(slug_field='email', read_only=True)
+    created_by = serializers.SlugRelatedField(
+        slug_field='email', read_only=True)
     values = ValuesSerializer(required=False, partial=True)
 
     class Meta:
@@ -262,3 +274,153 @@ class OpenAPIJSONSerializer(serializers.ModelSerializer):
     class Meta:
         model = OpenAPIJSON
         fields = ('__all__')
+
+class AssetDataRecordSerializer(serializers.Serializer):
+    def __init__(self, *args, **kwargs):
+        self.asset = kwargs.pop('asset', None)
+        super().__init__(*args, **kwargs)
+
+    def to_representation(self, instance):
+        self._instance = instance
+        ds = DataStructure.objects.get(id=instance)
+        return ds.find_actual_value(
+            self.asset, draft=True, customization_name=settings.CUSTOMIZATION)
+
+
+class AssetDsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataStructure
+        read_only_fields = 'id', 'name'
+        fields = 'id', 'name'
+
+    def __init__(self, *args, **kwargs):
+        self.asset = kwargs.pop('asset', None)
+        super().__init__(*args, **kwargs)
+        self.fields['value'] = AssetDataRecordSerializer(
+            source='id', asset=self.asset)
+
+    def to_representation(self, instance):
+        self._instance = instance
+        return super().to_representation(instance)
+
+
+class AssetContextSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Context
+        fields = 'id', 'name'
+        read_only_fields = 'id', 'name'
+
+    def __init__(self, *args, **kwargs):
+        self.asset = kwargs.pop('asset', None)
+        super().__init__(*args, **kwargs)
+        self.fields['values'] = AssetDsSerializer(
+            source='datastructure_set', many=True, asset=self.asset)
+
+
+class AssetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asset
+        exclude = 'preview_status', 'protected', 'created_by', 'primary_group', 'asset_type'
+
+    assetType = serializers.PrimaryKeyRelatedField(
+        required=True, queryset=AssetType.objects.all(), source='asset_type')
+
+    state = serializers.SerializerMethodField('get_state')
+
+    context_errors = None
+
+    def handle_ds_value_validation(self, ds, value, context_errors):
+        if ds and (errors := ds.validate_value(value)):
+            context_errors[ds.name] = errors
+
+    def validate(self, data):
+        validated = super().validate(data)
+        self.process_contexts(self.initial_data)
+
+        return validated
+
+    def process_contexts(self, data):
+        qs = DataStructure.objects.all()
+        context_errors = {}
+        for context_dict in data.get('contexts', []):
+            # context_id = context_dict.get('id', None)
+            datastructures = context_dict.get('values', [])
+            for ds_dict in datastructures:
+                ds_id = ds_dict.get('id', None)
+                value = ds_dict.get('value', None)
+                ds = qs.filter(id=ds_id).first()
+                self.handle_ds_value_validation(ds, value, context_errors)
+
+        if context_errors:
+            self.context_errors = context_errors
+            # raise serializers.ValidationError({'contexts': context_errors})
+
+    def get_state(self, obj):
+        version = obj.contentversion_set.last()
+        return 'draft' if obj.is_dirty or not version else version.state
+
+    def run_validation(self, *args, **kwargs):
+        validated_data = super().run_validation(*args, **kwargs)
+        asset_id = args[0].pop('id', None)
+        values = {
+            context['id']: {
+                ds['name']: ds['value']
+                for ds in context.get('values', [])
+            }
+            for context in args[0].pop('contexts', [])
+
+        }
+        return {
+            **validated_data,
+            'values': values,
+            'assetId': asset_id
+        }
+
+    def create(self, validated_data):
+        request, values, asset_id = self.get_values(validated_data)
+        asset = self.update(Asset.objects.get(id=asset_id),
+                            validated_data) if asset_id else super().create(validated_data)
+
+        self.update_records(request, values, asset)
+
+        return asset
+
+    def update_records(self, request, values, asset):
+        from cms.views.asset import save_records
+
+        for context_id, datarecords in values.items():
+            context = Context.objects.get(id=context_id)
+            save_records(None, datarecords, False, asset,
+                         context, request._files, request)
+
+    def get_values(self, validated_data):
+        request = self.context.get("request")
+        values = validated_data.pop('values', [])
+        asset_id = validated_data.pop('assetId', None)
+        return request, values, asset_id
+
+    def add_context_validation_messages(self, data):
+        if self.context_errors is None:
+            self.process_contexts(data)
+
+        if self.context_errors:
+            for context in data.get('contexts', []):
+                for ds in context.get('values', []):
+                    ds['errors'] = next(
+                        (
+                            errors for context_name, errors in self.context_errors.items()
+                            if context_name == ds.get('name', None)
+                        ),
+                        []
+                    )
+
+    def to_representation(self, instance):
+        if isinstance(self.instance, Asset):
+            self.fields['contexts'] = AssetContextSerializer(
+                source='asset_type.context_set', many=True, asset=self.instance)
+
+        rep = super().to_representation(instance)
+
+        self.add_context_validation_messages(rep)
+
+        return rep

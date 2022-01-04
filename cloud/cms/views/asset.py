@@ -2,6 +2,7 @@ from functools import wraps
 from collections import defaultdict, OrderedDict
 from PIL import Image
 from django.core.files import base
+from django.db.models.expressions import OuterRef, Subquery
 from waffle import flag_is_active
 from cms.views.celery import download_result
 from util import helpers
@@ -35,7 +36,7 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
+from cms.serializers import AssetSerializer, ContextManifestSerializer, CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
     CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
 from cms import tasks
 
@@ -609,7 +610,6 @@ def handle_settings_from_json(request, is_loaded, form, file, asset):
     else:
         return [None, HttpResponseBadRequest('json is acceptable only for Updating structure'), conflicts]
 
-
     return [None, None, conflicts]
 
 
@@ -662,7 +662,8 @@ def handle_settings_file(request, form, file, asset):
 
 def get_settings_from_request(request, obj_id, target_class=Asset):
     PACKAGE_CACHE = PackagesCache()
-    form = AssetSettingsForm(request.POST, request.FILES, user=request.user, target_class=target_class)
+    form = AssetSettingsForm(request.POST, request.FILES,
+                             user=request.user, target_class=target_class)
     instance = target_class.objects.get(pk=obj_id)
     is_asset_type = isinstance(instance, AssetType)
     asset = instance.asset_set.first() if is_asset_type else instance
@@ -696,7 +697,9 @@ def get_settings_from_request(request, obj_id, target_class=Asset):
 
 
 def render_settings(request, instance_id, target_class=Asset):
-    asset, file, context, *_ = get_settings_from_request(request, instance_id, target_class=target_class)
+    asset, file, context, * \
+        _ = get_settings_from_request(
+            request, instance_id, target_class=target_class)
 
     if context['form']:
         task_id, response, asset_name_conflicts = handle_settings_file(
@@ -712,7 +715,8 @@ def render_settings(request, instance_id, target_class=Asset):
             return response
 
     else:
-        context['form'] = AssetSettingsForm(user=request.user, target_class=target_class)
+        context['form'] = AssetSettingsForm(
+            user=request.user, target_class=target_class)
 
     if context['form'].is_valid() and not context['form'].cleaned_data['force']:
         messages.info(request, 'Checking asset names...')
@@ -1087,7 +1091,7 @@ def build_up(target_dict, name, asset_type, include_preview=True, include_admin=
             'url': url,
             'type': 'preview'
         } for preview_name, url in modify_db.generate_preview_links(asset=asset)
-        if url] if include_preview else []
+            if url] if include_preview else []
 
         if len(preview_links) == 1:
             preview_links[0]['name'] = 'Preview'
@@ -1114,18 +1118,23 @@ def build_up(target_dict, name, asset_type, include_preview=True, include_admin=
 @permission_required('cms.change_asset')
 def get_assets(request):
     max_age = int(request.GET.get('maxAge') or 0)
-    included_types = request.GET.getlist('type') or ['custom_clients', *[asset_type for asset_type in AssetType.ASSET_TYPES._identifier_map.keys()]]
-    selected_type_ids = [asset_type_id for identifier in included_types if (asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
+    included_types = request.GET.getlist('type') or [
+        'custom_clients', *[asset_type for asset_type in AssetType.ASSET_TYPES._identifier_map.keys()]]
+    selected_type_ids = [asset_type_id for identifier in included_types if (
+        asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
 
     preview = request.GET.getlist('preview') or included_types
-    preview_type_ids = [asset_type_id for identifier in preview if (asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
+    preview_type_ids = [asset_type_id for identifier in preview if (
+        asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
 
     admin = request.GET.getlist('admin') or included_types
-    admin_type_ids = [asset_type_id for identifier in admin if (asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
+    admin_type_ids = [asset_type_id for identifier in admin if (
+        asset_type_id := getattr(AssetType.ASSET_TYPES, identifier, ''))]
 
     asset_dict = OrderedDict()
 
-    cache_key = '-'.join(str(val) for val in ([request.user.email] + selected_type_ids + preview_type_ids + admin_type_ids))
+    cache_key = '-'.join(str(val) for val in (
+        [request.user.email] + selected_type_ids + preview_type_ids + admin_type_ids))
     cached = PACKAGES_CACHE.get(cache_key)
 
     if cached and cached['last'] > (datetime.utcnow() - timedelta(minutes=max_age)):
@@ -1134,7 +1143,8 @@ def get_assets(request):
     # Build up custom clients menu
     if 'custom_clients' in included_types:
         mapped_clients = defaultdict(lambda: [])
-        custom_clients = request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
+        custom_clients = request.user.customclient_set.filter(
+            created_customization__name=settings.CUSTOMIZATION)
 
         for client in custom_clients:
             settings_link = {
@@ -1173,9 +1183,11 @@ def get_assets(request):
 
     for args in asset_mapping:
         if args[1] in selected_type_ids:
-            build_up(asset_dict, *args, include_preview=args[1] in preview_type_ids, include_admin=args[1] in admin_type_ids)
+            build_up(asset_dict, *args,
+                     include_preview=args[1] in preview_type_ids, include_admin=args[1] in admin_type_ids)
 
-    cached = PACKAGES_CACHE[cache_key] = {'last': datetime.utcnow(), 'data': dict_to_nodes(asset_dict)}
+    cached = PACKAGES_CACHE[cache_key] = {
+        'last': datetime.utcnow(), 'data': dict_to_nodes(asset_dict)}
 
     return api_success({**cached, 'last': f'{cached["last"]}Z'})
 
@@ -1291,3 +1303,73 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         file_name = slugify(
             f'{custom_client.name}-package-{datetime.now()}') + '.zip'
         return response_attachment(package['file'], file_name, 'application/zip', attachment=True)
+
+
+def generate_manifest(asset_type: AssetType):
+    return {
+        'type': asset_type.id,
+        'name': str(asset_type),
+        'manifest': {
+            'contexts': [
+                {
+                    'name': context.name,
+                    'label': context.label,
+                    'global': context.is_global,
+                    'fields': [
+                        {
+                            attr: getattr(ds, attr, '')
+                            for attr in ['name', 'label', 'type', 'description', 'optional']
+                        }
+                        for ds in context.datastructure_set.all()
+                    ]
+                }
+                for context in asset_type.context_set.all()
+            ]
+        }
+    }
+
+
+def generate_manifest_for_asset_type(asset_type: AssetType = None):
+    if asset_type:
+        return api_success(generate_manifest(asset_type))
+
+    return api_success([
+        generate_manifest(asset_type)
+        for asset_type in AssetType.objects.all()
+    ])
+
+
+class AssetViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    serializer_class = AssetSerializer
+
+    def get_queryset(self):
+        latest_version = Subquery(
+            ContentVersion.objects.filter(asset_id=OuterRef('id')).order_by('pk').values('id')[:1])
+
+        return Asset.objects.annotate(latest_version=latest_version).all()
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    def save_asset(self, *args, **kwargs):
+        kwargs.pop('partial', False)
+        return self.create(*args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        return self.save_asset(*args, **kwargs)
+
+    def partial_update(self, *args, **kwargs):
+        return self.save_asset(*args, **kwargs)
+
+    @action(detail=False)
+    def manifests(self, request):
+        asset_type_id = request.query_params.get('id', None)
+        asset_type = asset_type_id and get_object_or_404(
+            AssetType, id=asset_type_id)
+        return generate_manifest_for_asset_type(asset_type)
+
+    @action(detail=True)
+    def manifest(self, request, pk=None):
+        asset = self.get_object()
+        return generate_manifest_for_asset_type(asset.asset_type)
