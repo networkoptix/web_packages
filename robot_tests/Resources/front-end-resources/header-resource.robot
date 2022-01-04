@@ -127,6 +127,7 @@ Check Drop Menu Systems Grid System
 
     FOR    ${width}    ${columns}    ${max systems}    IN ZIP    ${WIDTHS}    ${COLUMNS SHOWN}    ${MAX SYSTEMS SHOWN}
         Set Window Size    ${width}    1080
+        Sleep    1
         ${tiles}=   Get Element Count    ${SYSTEMS GRID TILES}
         ${tiles to show}=   Get Tiles to Show    ${system list count}    ${max systems}
         Should be Equal As Integers    ${tiles}    ${tiles to show}

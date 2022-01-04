@@ -295,13 +295,13 @@ Force Tags        cloud
 
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
-    Click Element    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
     Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
     ${grid systems}=   Get systems names from Systems grid
     FOR    ${sys}    IN    @{grid systems}
         Click Element    //div[contains(@class, "system-info")]/span[contains(text(), "${sys}")]
-        Wait Until Element Is Visible    //h2[contains(text(), "${sys}")]
+        Wait Until Element Is Visible    //span[contains(text(), "${sys}")]
         Validate Header Button Text    ${sys}    systems=False
         Click Element    ${SYSTEMS DROPDOWN}
         Wait Until Elements Are Visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
@@ -312,7 +312,7 @@ Force Tags        cloud
     [Tags]        diff_width    ui    
     Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
     Log in to user and system    ${many systems owner}    ${main system}[cloud id]
-    Wait until element is visible    //h2[text()="${main system}[name]"]
+    Wait until element is visible    //span[text()="${main system}[name]"]
 
     Wait Until Element is Visible    ${VIEW TAB}
     Click Element    ${VIEW TAB}
