@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.request import Request
 
 from api.views.account import *
+from api.helpers.exceptions import kill_tokens
 from notifications.models import PushDevice
 
 
@@ -12,7 +13,7 @@ def test_kill_tokens(arf, mocker):
     req = arf.get('')
     req.session = {'refresh_token': 'ref_token', 'access_token': 'acc_token'}
     mock = mocker.patch.object(Auth, 'delete_token')
-    kill_tokens(req)
+    kill_tokens(req, mock)
     for token in ['ref_token', 'acc_token']:
         mock.assert_any_call(req, token)
 

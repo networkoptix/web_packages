@@ -29,7 +29,7 @@ from api.account_backend import get_ip
 from api.helpers.exceptions import (
     APIRequestException, APINotAuthorisedException, APILogicException,
     APIInternalException, APINotFoundException, api_success, ErrorCodes,
-    require_params, kill_session)
+    require_params, kill_session, kill_tokens)
 from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
 from cloud.utils import get_authenticated_session_cookie_age
@@ -59,17 +59,6 @@ code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_S
 
 # Swagger Responses
 account__response = openapi.Response('Account info.', AccountSerializer)
-
-
-def kill_tokens(request):
-    for key in ['refresh_token', 'access_token']:
-        token = request.session.get(key)
-        if token:
-            try:
-                Auth.delete_token(request, token)
-            except (APINotAuthorisedException, APILogicException):
-                pass
-            request.session[key] = None
 
 
 def login_helper(request, token, user):
@@ -228,7 +217,7 @@ def login_with_tokens(request):
         user = models.Account.objects.get(email=validate_token['username'])
     except models.Account.DoesNotExist:
         raise APINotFoundException("User not in cloud")
-    kill_tokens(request)
+    kill_tokens(request, Auth.delete_token)
     kill_session(request)
     request.session.set_expiry(get_authenticated_session_cookie_age())
     return login_helper(request, tokens, user)
@@ -238,7 +227,7 @@ def login_with_tokens(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def logout(request):
-    kill_tokens(request)
+    kill_tokens(request, Auth.delete_token)
     kill_session(request)
     return api_success()
 
@@ -360,7 +349,7 @@ def delete_user(request):
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong password', ErrorCodes.wrong_password,
                                   error_data={'password': error.error_data})
-    kill_tokens(request)
+    kill_tokens(request, Auth.delete_token)
     kill_session(request)
     user.delete()
     return api_success()

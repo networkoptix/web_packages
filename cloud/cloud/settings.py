@@ -482,7 +482,7 @@ SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
 # Don't access this directly, use function in cloud/utils
-_AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 1 month
+_AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 30 * 2  # 2 months
 
 ADMINS = conf['admins']
 

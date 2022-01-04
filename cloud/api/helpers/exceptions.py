@@ -123,7 +123,7 @@ def require_params(request, param_list_or_dict: Union[List[str], Tuple[str], Dic
                 error_data[param] = ['This field is required.']
             elif request.method == "GET" and (param not in request.GET):
                 error_data[param] = ['This field is required.']
-            
+
             if isinstance(param_list_or_dict, dict) and (validator := param_list_or_dict.get(param)):
                 data_to_validate = post_data if post_data is not None else request.GET.get(param)
 
@@ -411,6 +411,19 @@ def kill_session(request):
     request.session.pop('timezone', None)
     request.session.pop('time', None)
     logout(request)
+
+
+def kill_tokens(request, delete_token=None):
+    if not delete_token:
+        raise APIInternalException('No delete function was specified', ErrorCodes.unknown_error)
+    for key in ['refresh_token', 'access_token']:
+        token = request.session.get(key)
+        if token:
+            try:
+                delete_token(request, token)
+            except (APINotAuthorisedException, APILogicException):
+                pass
+            request.session[key] = None
 
 
 def handler(request, exception):

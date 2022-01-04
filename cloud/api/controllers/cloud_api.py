@@ -12,8 +12,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
-                                    APINotAuthorisedException, APINotFoundException, get_client_ip)
-from cloud.utils import get_authenticated_session_cookie_age
+                                    APINotAuthorisedException, APINotFoundException, get_client_ip,
+                                    kill_session, kill_tokens)
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,12 @@ CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
 CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
 CLOUD_2FA_URL = f"{CLOUD_DB_URL}/account/self/2fa"
+
+INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
+                          ErrorCodes.not_authorized.value,
+                          ErrorCodes.not_found.value,
+                          ErrorCodes.account_not_activated.value,
+                          ErrorCodes.forbidden.value]
 
 
 # Todo: Once cloud_db supports basic and digest switch to true.
@@ -106,14 +112,11 @@ def auto_refresh_token(func):
         except requests.exceptions.HTTPError as e:
             response_data = res.headers.get('content-type') == 'application/json' and res.json()
             if not refresh_token:
-                if response_data and response_data["resultCode"] in [ErrorCodes.bad_username.value,
-                                                                     ErrorCodes.not_authorized.value,
-                                                                     ErrorCodes.not_found.value,
-                                                                     ErrorCodes.account_not_activated.value,
-                                                                     ErrorCodes.forbidden.value]:
+                if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
+        try:
             tokens = Auth.get_refresh_token(refresh_token, ip=ip)
             access_token = tokens["access_token"]
             if hasattr(request, "session"):
@@ -123,7 +126,24 @@ def auto_refresh_token(func):
             kwargs["headers"] = {
                 "Authorization": f"Bearer {access_token}"
             }
-            return func(request, *args, **kwargs)
+            res = func(request, *args, **kwargs)
+            res.raise_for_status()
+            return res
+        # Handles error for refreshing token.
+        except (APINotAuthorisedException, APINotAuthorisedException, APINotAuthorisedException) as e:
+            kill_tokens(request, Auth.delete_token_no_refresh)
+            kill_session(request)
+            raise e
+
+        # Handles http error for wrapped request function.
+        except requests.exceptions.HTTPError as e:
+            response_data = res.headers.get('content-type') == 'application/json' and res.json()
+            if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
+                kill_tokens(request, Auth.delete_token)
+                kill_session(request)
+                raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+            else:
+                raise e
     return _wrapper
 
 
@@ -755,16 +775,12 @@ class Auth(object):
         headers = {
             "X-Forwarded-For": ip
         }
-        session_age = get_authenticated_session_cookie_age()
         params = {
             "client_id": client_id,
             "grant_type": Auth.GRANT_TYPE.password,
             "response_type": Auth.RESPONSE_TYPE.token,
-            "expiration_period": session_age,
-            "prolongation_period": session_age,
             "username": email,
-            "password": password,
-            "refresh_token_lifetime": session_age
+            "password": password
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
@@ -774,14 +790,10 @@ class Auth(object):
         headers = {
             "X-Forwarded-For": ip
         }
-        session_age = get_authenticated_session_cookie_age()
         params = {
             "grant_type": Auth.GRANT_TYPE.authorization_code,
             "response_type": Auth.RESPONSE_TYPE.token,
-            "code": code,
-            "expiration_period": session_age,
-            "prolongation_period": session_age,
-            "refresh_token_lifetime": session_age
+            "code": code
         }
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
@@ -811,6 +823,11 @@ class Auth(object):
     @validate_response
     @auto_refresh_token
     def delete_token(request, token, headers=None):
+        return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", headers=headers)
+
+    @staticmethod
+    @validate_response
+    def delete_token_no_refresh(request, token, headers=None):
         return delete_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{token}", headers=headers)
 
     @staticmethod
