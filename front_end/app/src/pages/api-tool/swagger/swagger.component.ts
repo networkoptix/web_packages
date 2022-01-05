@@ -69,7 +69,8 @@ export class NxSwaggerComponent implements OnChanges {
      *  If so, then the node is an API Route path (ex: /rest/v1/login/users) and some actions must be handled differently
      */
     isAPIRouteNode = (node: MenuNodeWithParent) => {
-        return !this.APIToolService.APIInfoStore[node.name] && !node.nodes.length;
+        const { method } = getPathAndMethodFromNodeName(node.name);
+        return !this.APIToolService.APIInfoStore[node.name] && !node.nodes.length && method;
     }
 
     private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list') {
