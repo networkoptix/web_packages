@@ -9,15 +9,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from bs4 import BeautifulSoup
 from drf_yasg.utils import swagger_auto_schema
-from html_sanitizer import Sanitizer
 from zapier.models import ZapHook, GeneratedRule
 
 from api.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
 from api.controllers import cloud_api, cloud_gateway
 
 from cloud import settings
-sanitizer = Sanitizer()
 
 CLOUD_INSTANCE_URL = settings.conf['cloud_portal']['url']
 logger = logging.getLogger(__name__)
@@ -73,6 +72,10 @@ def authenticate(request):
 def increment_rule(rule):
     rule.times_used += 1
     rule.save()
+
+
+def sanitize(text):
+    return BeautifulSoup(text, "lxml").text
 
 
 @zapier_exceptions
@@ -221,12 +224,12 @@ def get_systems(request):
 def zapier_send_generic_event(request):
     user, email, password = authenticate(request)
     system_id = request.data['systemId']
-    source = sanitizer.sanitize(request.data['source'])
-    caption = sanitizer.sanitize(request.data['caption'])
+    source = sanitize(request.data['source'])
+    caption = sanitize(request.data['caption'])
 
     query_params = {"source": source, "caption": caption}
 
-    description = sanitizer.sanitize(request.data['description']) if 'description' in request.data else ""
+    description = sanitize(request.data['description']) if 'description' in request.data else ""
 
     if description:
         query_params['description'] = description
@@ -278,7 +281,7 @@ def subscribe_webhook(request):
     user, email, password = authenticate(request)
 
     system_id = request.query_params['system_id']
-    caption = sanitizer.sanitize(request.query_params['caption'])
+    caption = sanitize(request.query_params['caption'])
     target = request.data['target_url']
 
     event = system_id + " " + caption
