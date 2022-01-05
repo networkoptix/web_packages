@@ -83,7 +83,7 @@ def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], sessi
                 message.result = RESULT_STATES.failure
                 message.save()
                 return
-            
+
             cloud_users = [user['accountEmail'] for user in users['sharing']]
             message.targets = [email for email in message.targets if email in cloud_users]
 
@@ -96,7 +96,7 @@ def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], sessi
         failed_emails = []
 
         for email in targets:
-            if not isinstance(email_content, dict):
+            if not isinstance(email_content, dict) or 'userFullName' in email_content:
                 pass
             elif send_individual and (user := Account.objects.filter(email=email).first()):
                 email_content['userFullName'] = user.get_full_name()
@@ -107,7 +107,7 @@ def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], sessi
             except Exception as e:
                 errors.append(e)
                 failed_emails.append(email)
-            
+
         if errors:
             if smtp_data_error := next(filter(lambda error: isinstance(error, SMTPDataError), errors), None):
                 raise smtp_data_error
