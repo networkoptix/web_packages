@@ -17,7 +17,7 @@ class BaseCache(object):
     Setting global_clear on init marks that cache to be cleared on clear_global cache.
     """
  
-    global_clear_cache_keys = {'documentation', 'agreement', 'article', 'integrations', 'menus'}
+    global_clear_cache_keys = {'documentation', 'agreement', 'article', 'integrations', 'menus', 'release_notes'}
     cache_key = ''
     lookup_key = ''
 

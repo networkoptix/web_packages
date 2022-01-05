@@ -331,6 +331,13 @@ CACHES = {
         "KEY_PREFIX": "emails",
         "TIMEOUT": 60 * 60 # 1 hour
     },
+    "release_notes": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 24 * 60 * 60,  # 1 day
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
+        "KEY_PREFIX": 'release_notes'
+    },
 }
 
 if DEBUG:

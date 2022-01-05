@@ -7,12 +7,13 @@ from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from waffle import switch_is_active
+from cms.controllers.integration import make_integrations_json
 
 from cms.models import cloud_portal_customization_cache
+from util.base_cache import BaseCache
 from util.helpers import detect_language_by_request
 from cms.models import Menu, Asset, Language
 from cms.controllers.documentation import generate_doc_json
-from cms.controllers.integration import make_integrations_json
 from cms.feature_flags import SWITCHES
 
 
@@ -54,7 +55,8 @@ def get_integrations_meta(path, config, lang, config_meta, lang_meta):
 
         if integration:
             base_route_meta['type'] = 'article'
-            integration_content, = make_integrations_json([integration], lang)
+            integration_content, = make_integrations_json(
+                [integration], lang)
 
             information_content = integration_content.get('information', {})
             overview_content = integration_content.get('overview', {})

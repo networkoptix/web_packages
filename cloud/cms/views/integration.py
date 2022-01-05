@@ -142,14 +142,18 @@ def get_integrations(request):
             review_integrations = draft_integrations
 
         if draft_integrations:
-            integration_list.extend(make_integrations_json(draft_integrations, language=language, user=request.user, show_drafts=True))
+            integration_list.extend(make_integrations_json(
+                draft_integrations, language=language, user=request.user, show_drafts=True))
         if review_integrations:
-            integration_list.extend(make_integrations_json(review_integrations, language=language, user=request.user, show_pending=True))
+            integration_list.extend(make_integrations_json(
+                review_integrations, language=language, user=request.user, show_pending=True))
 
     if is_enabled or is_portal_manager or has_beta_access:
-        integration_list.extend(make_integrations_json(integrations, language=language, user=request.user))
+        integration_list.extend(make_integrations_json(
+            integrations, language=language, user=request.user))
     else:
-        integration_list.extend(make_integrations_json(draft_integrations, language=language, user=request.user))
+        integration_list.extend(make_integrations_json(
+            draft_integrations, language=language, user=request.user))
 
     # Sort integrations by name. Ignore case.
     # Name might not exist if integration was just created.

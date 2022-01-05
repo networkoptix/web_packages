@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from cms.views import integration, article, agreement, asset, documentation, menu, utils, portal_notifications, openapi_json
+from cms.views import integration, article, agreement, asset, documentation, menu, release_notes, utils, portal_notifications, openapi_json
 
 from rest_framework.routers import DefaultRouter
 
@@ -18,6 +18,8 @@ urlpatterns = [
     path('integration_count', integration.get_integrations_count,
          name='integration_count'),
     path('article/<url_param>/', article.get_article, name='get_article'),
+    path('release-notes/<int:asset_id>', release_notes.get_release_note, name='get_release_note'),
+    path('release-notes', release_notes.get_release_notes, name='get_release_notes'),
     path('agreement', agreement.get_agreement, name='get_agreement'),
     path('accept_agreement', agreement.accept_agreement, name='accept_agreement'),
     path('accept_review', asset.accept_review, name='accept_review'),

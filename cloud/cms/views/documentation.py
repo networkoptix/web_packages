@@ -8,13 +8,14 @@ from rest_framework import status
 
 from api.helpers.exceptions import (
     APIInternalException, api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+from cms.controllers.integration import make_integrations_json
 from cms.controllers.documentation import generate_doc_json, DOC_CACHE
 from cms.controllers.filldata import global_contexts_to_dict
 from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_portal_asset, Menu, cached_doc_menu_map, \
     AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
-from cms.views.integration import make_integrations_json
+from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request, get_meilisearch_client
 import re
 from meilisearch.errors import MeiliSearchApiError
