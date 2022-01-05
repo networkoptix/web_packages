@@ -889,7 +889,7 @@ Move focus and check element
 Check New Password Outline and Error Message
     [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
     Click Element    ${new focus}
-    IF    '''${new pw}''' not in ${fair passwords} or '''${new pw}''' not in ${good passwords}
+    IF    '''${new pw}''' not in ${fair passwords} and '''${new pw}''' not in ${good passwords}
          Element Style Should Be    ${input}    border-bottom-color    ${ERROR COLOR WITH OPACITY}
          Element Style Should Be    ${input}    border-top-color    ${ERROR COLOR WITH OPACITY}
          Element Style Should Be    ${input}    border-right-color    ${ERROR COLOR WITH OPACITY}
