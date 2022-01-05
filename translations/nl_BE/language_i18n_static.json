@@ -513,6 +513,7 @@
         "Connection timed out": "Systeem <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "Systeem <strong>{failedSystem}</strong> is momenteel onbereikbaar.<br>Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
+        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
         "This user does not exist.": "Deze gebruiker bestaat niet.",
         "The user is disabled. Please contact your system administrator.": "De gebruiker is uitgeschakeld. Neem contact op met uw systeembeheerder.",
         "This user has been disabled by a system administrator.": "Deze gebruiker is uitgeschakeld door een systeembeheerder.",

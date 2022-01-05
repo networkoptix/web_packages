@@ -513,6 +513,7 @@
         "Connection timed out": "Il sistema <strong>{failedSystem}</strong> è offline.",
         "Bad Gateway": "Il sistema <strong>{failedSystem}</strong> è attualmente irraggiungibile.<br>Riprova tra qualche minuto o contatta il supporto <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "INCOMPATIBLE": "I sistemi hanno versioni software non corrispondenti. Si prega di aggiornare entrambi allo {downloadHTML}.",
+        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
         "This user does not exist.": "Questo utente non esiste.",
         "The user is disabled. Please contact your system administrator.": "L'utente è disabilitato. Contatta l'amministratore di sistema.",
         "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
