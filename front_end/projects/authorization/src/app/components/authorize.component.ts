@@ -83,7 +83,8 @@ export enum ClientType {
     setup = 'setupWizard',
     renewDesktop = 'renewSessionDesktop',
     renewWeb = 'renewSessionWeb',
-    openClient = 'openClientFromCloud'
+    openClient = 'openClientFromCloud',
+    system2faAuth = 'system2faAuth',
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -233,7 +234,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             }
 
             const { access_token, access_code, code, email, redirect_url } = this.initialData;
-            const skipTo2FaClientTypes = ['renewSessionDesktop', 'renewSessionWeb', 'openClientFromCloud'];
+            const skipTo2FaClientTypes = [
+                'renewSessionDesktop',
+                'renewSessionWeb',
+                'openClientFromCloud',
+                'system2faAuth'
+            ];
             if (skipTo2FaClientTypes.includes(this.clientType) && (access_token || access_code || code)) {
                 this.loginEmail = email;
                 this.loginCode = access_token || access_code || code;
@@ -289,6 +295,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.localStorageService.store(this.CONFIG.oauthStore.verify2fa, code);
             this.window.close();
             return;
+        }
+        if (this.clientType === 'system2faAuth') {
+            this.localStorageService.store(this.CONFIG.oauthStore.verify2fa, code);
         }
         const params = link.includes('?') && new URLSearchParams(
             link.match(/.*(\?.*)/i)[1]

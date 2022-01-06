@@ -5,7 +5,7 @@
         [svgStyle]="{'width.px': '320', 'height.px': '80'}"
         [applyClass]="true"></svg-icon>
     <div class="for-small">
-        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud'].includes(clientType) && smallView"
+        <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud', 'system2faAuth'].includes(clientType) && smallView"
             class="btn mobile-back-button" type="button" (click)="setCurrentState.emit(restore ? 'reset' : 'password')">
             <svg-icon nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
@@ -61,7 +61,7 @@
             </button>
         </div>
         <div class="right">
-            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud'].includes(clientType) && !smallView"
+            <button *ngIf="!['renewSessionWeb', 'renewSessionDesktop', 'openClientFromCloud', 'system2faAuth'].includes(clientType) && !smallView"
                 class="btn text-button" type="button" (click)="setCurrentState.emit(restore ? 'reset' : 'password')">
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"

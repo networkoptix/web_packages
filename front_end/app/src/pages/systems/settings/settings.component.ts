@@ -1,8 +1,10 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     Input,
     OnDestroy,
-    OnInit
+    OnInit,
+    Inject,
 } from '@angular/core';
 import {
     ActivatedRoute,
@@ -136,7 +138,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -325,7 +328,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 );
                                 if (
                                     system?.system2faEnabled &&
-                                    !this.account.account2faEnabled
+                                    !this.account.totpExistsForAccount
                                 ) {
                                     this.systemName = system.name;
                                     this.show2faRequired = true;
@@ -340,6 +343,32 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     undefined,
                                     true
                                 );
+
+                                if (
+                                    system?.system2faEnabled &&
+                                    !this.account.account2faEnabled
+                                ) {
+                                    this.system.mediaserver
+                                        .getMediaServers(false)
+                                        .toPromise()
+                                        .then(
+                                            () => {},
+                                            () => {
+                                                this.router.navigate(
+                                                    ['/authorize'],
+                                                    {
+                                                        queryParams: {
+                                                            client_type: 'system2faAuth',
+                                                            email: account.email,
+                                                            access_token: this.system.mediaserver.accessToken,
+                                                            redirect_url: this.document.location.href,
+                                                        },
+                                                    }
+                                                );
+                                            }
+                                        );
+                                }
+
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
                                     this.systemNoAccess = true;
