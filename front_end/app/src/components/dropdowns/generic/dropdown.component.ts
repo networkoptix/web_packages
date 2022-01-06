@@ -83,7 +83,7 @@ export class NxGenericDropdown extends BaseDropdown {
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';
 
-        this.items.forEach((item) => {
+        this.items?.forEach((item) => {
             if (item.help && !item.name.includes(item.help)) {
                 item.name += `<span class="additional-help">${item.help}</span>`;
             }
@@ -124,7 +124,7 @@ export class NxGenericDropdown extends BaseDropdown {
                     `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
             }
             this._selectedItem = changes.selected.currentValue;
-        } else if (!this.selected && !changes.selected.firstChange) {
+        } else if (!this.selected && !changes.selected?.firstChange) {
             this._selectedItem = { name: this.message, value: '0' };
         }
     }
