@@ -173,11 +173,7 @@ export abstract class BaseAccount implements OnDestroy {
 
     // these seem to be deprecated (@gbezyuk)
     get email() {
-        return this.sessionService.email;
-    }
-
-    set email(email) {
-        this.sessionService.email = email;
+        return this.sessionService.loginState;
     }
 
     async authKey() {
