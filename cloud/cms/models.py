@@ -72,9 +72,10 @@ PORTAL_MANAGER_PERMISSIONS = [
 INTEGRATIONS_DEV_PERMISSIONS = [
     'edit_content', 'change_asset', 'change_assetcustomizationreview']
 
+
 def get_name_factory(base_group_name):
     def get_name_handler(asset):
-        def generate_name (name = ''):
+        def generate_name(name=''):
             return f'{base_group_name} - {name} - {asset.id}'
 
         max_group_name_length = Group._meta.get_field('name').max_length
@@ -84,6 +85,7 @@ def get_name_factory(base_group_name):
         return generate_name(trimmed_asset_name)
 
     return get_name_handler
+
 
 def portal_manager_group_name(asset):
     return get_name_factory('Portal Manager')(asset)
@@ -100,7 +102,8 @@ def create_default_permission_group(asset):
     if asset.is_cloud_portal:
         group = Group.objects.create(
             name=portal_manager_group_name(asset))
-        permissions = Permission.objects.filter(codename__in=PORTAL_MANAGER_PERMISSIONS)
+        permissions = Permission.objects.filter(
+            codename__in=PORTAL_MANAGER_PERMISSIONS)
 
         # Bind the Group to the following asset_types so that the portal managers can review them
         asset_types = AssetType.objects.filter(name="",
@@ -200,9 +203,11 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             .replace("%CLOUD_NAME%", cloud_name)\
             .replace("%VMS_NAME%", vms_name)
         landing_description = ''
-        landing_description_ds = DataStructure.objects.filter(context__name='Landing page', name='%SUBTITLE%').first()
+        landing_description_ds = DataStructure.objects.filter(
+            context__name='Landing page', name='%SUBTITLE%').first()
         if landing_description_ds:
-            landing_description = landing_description_ds.find_actual_value(asset)
+            landing_description = landing_description_ds.find_actual_value(
+                asset)
 
         data = {
             'version_id': asset.version_id(),
@@ -321,7 +326,8 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
         check_user_menu_permissions(menu['nodes'], user)
 
     if menu_type:
-        menu_customization = {name: menu for name, menu in menu_customization.items() if menu['type'] == menu_type}
+        menu_customization = {name: menu for name, menu in menu_customization.items(
+        ) if menu['type'] == menu_type}
     if name:
         return menu_customization.get(name.lower(), None)
 
@@ -338,7 +344,8 @@ def slugify(name, lowercase=False):
 def rename_file(instance, filename):
     if instance.admin_upload:
         return os.path.join('admin-upload', filename)
-    asset_ds_pair = instance.asset_ds_pair.first() if hasattr(instance, 'asset_ds_pair') else instance
+    asset_ds_pair = instance.asset_ds_pair.first() if hasattr(
+        instance, 'asset_ds_pair') else instance
     asset_name = slugify(asset_ds_pair.asset.name, True)
     structure_name = slugify(asset_ds_pair.data_structure.name, True)
     file_info = f"{structure_name}-{instance.id}"
@@ -460,7 +467,8 @@ class Customization(models.Model):
                 assets_with_all_enabled = Asset.objects.annotate(num_customizations=Count('customizations')).filter(
                     num_customizations=all_customizations_count, asset_type__single_customization=False
                 )
-                menu_nodes_with_all_enabled = MenuNode.objects.annotate(num_customizations=Count('enabled')).filter(num_customizations=all_customizations_count)
+                menu_nodes_with_all_enabled = MenuNode.objects.annotate(num_customizations=Count(
+                    'enabled')).filter(num_customizations=all_customizations_count)
                 new_customization = self
                 for asset in assets_with_all_enabled:
                     asset.customizations.add(new_customization)
@@ -517,7 +525,8 @@ class AssetType(models.Model):
             fields = cache.get(f'ASSET_TYPE-{type}-CUSTOM_FIELDS')
             if fields is None:
                 asset_type = cls.get_model_by_type(type)
-                fields = (asset_type.custom_field_overrides or dict()).get('fields', {})
+                fields = (asset_type.custom_field_overrides or dict()).get(
+                    'fields', {})
                 cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
             return fields
         except (ConnectionError, OperationalError, ProgrammingError):
@@ -568,7 +577,6 @@ class Asset(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     objects = AssetManager()
-
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:
@@ -669,8 +677,9 @@ class Asset(models.Model):
 
     @property
     def admin_link(self):
-        context_id = context.id if (context := self.datarecord_set.first()) else Context.objects.filter(asset_type=self.asset_type.type).first().id
-        return reverse('admin:change_page', args=(self.id, context_id))
+        context = getattr(self.datarecord_set.first(), 'context', None) or Context.objects.filter(
+            asset_type=self.asset_type.type).first()
+        return reverse('admin:change_page', args=(self.id, context.id))
 
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
@@ -798,9 +807,11 @@ def update_asset_customization_reviews(sender, instance, action, pk_set, **kwarg
     if action == 'post_add':
         customizations = Customization.objects.filter(pk__in=pk_set)
         for customization in customizations:
-            version = ContentVersion.objects.filter(asset=instance).order_by('-id').first()
+            version = ContentVersion.objects.filter(
+                asset=instance).order_by('-id').first()
             if version:
-                ContentVersion.create_missing_reviews(instance, version, customization)
+                ContentVersion.create_missing_reviews(
+                    instance, version, customization)
 
 
 class Context(models.Model):
@@ -1224,7 +1235,8 @@ class DataStructure(models.Model):
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
                                      DataStructure.DATA_TYPES.multiselect]:
             if not value:
-                value = {} if data_structure.type in [DataStructure.DATA_TYPES.object] else []
+                value = {} if data_structure.type in [
+                    DataStructure.DATA_TYPES.object] else []
             # Only parse as json if str
             elif type(value) is str:
                 value = json.loads(value)
@@ -1340,7 +1352,8 @@ class UserGroupsToAssetPermissions(models.Model):
 
     @staticmethod
     def get_customizations_with_permission(user, permission):
-        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
+        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(
+            permission)
         if user.is_superuser or Group.objects.filter(
             options__all_assets=True, usergroupstoassettype__asset_type=AssetType.ASSET_TYPES.cloud_portal, user=user,
             permissions__codename=codename
@@ -1455,16 +1468,19 @@ class ContentVersion(models.Model):
         ).distinct():
             review = None
             if parent_in_review:
-                parent_review = version.assetcustomizationreview_set.filter(customization=customization.parent).first()
+                parent_review = version.assetcustomizationreview_set.filter(
+                    customization=customization.parent).first()
                 # If the review doesn't exist yet, it will be created at some point in the outer loop and this child review should be blocked
                 # If parent review exists but is pending, this one should be blocked
                 if not parent_review or parent_review.state == pending:
-                    review = AssetCustomizationReview(customization=customization, version=version, state=blocked)
+                    review = AssetCustomizationReview(
+                        customization=customization, version=version, state=blocked)
                 elif customization.trust_parent:
                     review = AssetCustomizationReview(customization=customization, version=version,
                                                       state=parent_review.state)
             if not review:
-                review = AssetCustomizationReview(customization=customization, version=version, state=pending)
+                review = AssetCustomizationReview(
+                    customization=customization, version=version, state=pending)
             review.save()
             review.update_children_reviews()
 
@@ -1484,12 +1500,15 @@ class ContentVersion(models.Model):
                 parent_in_review = self.asset.customizations.filter(
                     id=customization.parent.id).exists()
             if parent_in_review:
-                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(
+                    customization=customization, version=self, state=blocked).save()
             else:
-                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(
+                    customization=customization, version=self, state=pending).save()
 
             # Create missing reviews caused by adding/removing customizations to assets
-            self.create_missing_reviews(self.asset, self, customization, parent_in_review)
+            self.create_missing_reviews(
+                self.asset, self, customization, parent_in_review)
 
     @property
     def state(self):
@@ -1622,6 +1641,7 @@ class AssetCustomizationReview(models.Model):
 def unblock_child_reviews(sender, instance, **kwargs):
     instance.update_children_reviews()
 
+
 class ExternalFileManager(models.Manager):
     def create(self, file, asset=None, data_structure=None, user=None):
         '''
@@ -1653,9 +1673,10 @@ class ExternalFileManager(models.Manager):
                 external_file_obj.admin_upload = user
 
         except ExternalFile.DoesNotExist:
-            external_file_obj = ExternalFile(md5=md5, size=file.size, admin_upload=user)
+            external_file_obj = ExternalFile(
+                md5=md5, size=file.size, admin_upload=user)
             external_file_obj.save()
-            external_file_obj.file=file
+            external_file_obj.file = file
         else:
             if external_file_obj.file and MediaStorage().exists(external_file_obj.file.name):
                 external_raw_bytes = b''
@@ -1667,7 +1688,7 @@ class ExternalFileManager(models.Manager):
                 if external_raw_bytes != raw_bytes:
                     raise ValueError('md5 Hash Collision')
             else:
-                external_file_obj.file=file
+                external_file_obj.file = file
 
         if asset_ds_pair:
             external_file_obj.assest_ds_pair_last_added = datetime.now()
@@ -1693,13 +1714,15 @@ class ExternalFile(models.Model):
                             storage=MediaStorage(), max_length=1000)
     md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
-    asset_ds_pair = models.ManyToManyField(AssetDsPair,  default=None, blank=True)
+    asset_ds_pair = models.ManyToManyField(
+        AssetDsPair,  default=None, blank=True)
     assest_ds_pair_last_added = models.DateTimeField(default=datetime.now)
-    admin_upload = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,default=None, blank=True, null=True)
+    admin_upload = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, default=None, blank=True, null=True)
 
     objects = ExternalFileManager()
 
-    def delete(self, *args, asset_ds_pair = None, **kwargs):
+    def delete(self, *args, asset_ds_pair=None, **kwargs):
         '''
         Removes asset_ds_pair relation from file, deletes file if no other relations exist or if no asset_ds_pair passed.
         '''
@@ -1713,6 +1736,7 @@ class ExternalFile(models.Model):
 
     def __str__(self):
         return self.file.name
+
 
 def file_saved(sender, created, signal, instance, **kwargs):
     if not created:
@@ -1728,12 +1752,15 @@ def file_saved(sender, created, signal, instance, **kwargs):
 
 
 if not settings.TESTING:
-    post_save.connect(file_saved, sender=ExternalFile, dispatch_uid='file_post_save')
+    post_save.connect(file_saved, sender=ExternalFile,
+                      dispatch_uid='file_post_save')
+
 
 @receiver(pre_delete, sender=AssetDsPair)
 def delete_asset_ds_reverse(sender, instance, **kwargs):
     external_files = instance.externalfile_set.all()
-    files_to_delete = [file for file in external_files if not file.asset_ds_pair.exclude(id=instance.id).count()]
+    files_to_delete = [file for file in external_files if not file.asset_ds_pair.exclude(
+        id=instance.id).count()]
     for file in files_to_delete:
         file.delete()
 
@@ -1855,9 +1882,12 @@ class Menu(models.Model):
                            help_text='Ex: knowledgebase')
     type = models.IntegerField(choices=MENU_TYPES, default=MENU_TYPES.generic)
     allow_porting = models.BooleanField(default=False)
-    zendesk_sync_enabled = models.ManyToManyField(Customization, blank=True, help_text="Used to select Customizations with Zendesk syncing enabled")
-    title = models.CharField(max_length=255, blank=True, help_text="Title, used in meta tags for SEO if applicable")
-    short_description = models.TextField(blank=True, help_text="Short description, used in meta tags for SEO if applicable")
+    zendesk_sync_enabled = models.ManyToManyField(
+        Customization, blank=True, help_text="Used to select Customizations with Zendesk syncing enabled")
+    title = models.CharField(max_length=255, blank=True,
+                             help_text="Title, used in meta tags for SEO if applicable")
+    short_description = models.TextField(
+        blank=True, help_text="Short description, used in meta tags for SEO if applicable")
     admin_config = models.TextField(blank=False, help_text='customizes admin view', default=r"""{
         "header": ["name","url","enabled","order","preview"],
         "details": ["asset","icon","authentication"],
@@ -1938,9 +1968,11 @@ class Menu(models.Model):
     @classmethod
     def generate_menu(cls, menu_name, customization_name=settings.CUSTOMIZATION):
         menu_name = menu_name.lower()
-        customization = Customization.objects.filter(name=customization_name).first()
+        customization = Customization.objects.filter(
+            name=customization_name).first()
         menus = cls.get_prefetched_menus(menu_name)
-        _, structures = cls.generate_menus_for_customization(menus, customization, include_not_accepted=True)
+        _, structures = cls.generate_menus_for_customization(
+            menus, customization, include_not_accepted=True)
         return structures.get(menu_name)
 
     @classmethod
@@ -1986,7 +2018,8 @@ class Menu(models.Model):
     @classmethod
     def get_prefetch_objects(cls, max_depth, depth=1):
         nodes_to_attr = 'nodes_list'
-        parent_node_lookup = '__'.join([nodes_to_attr for _ in range(1, depth)])
+        parent_node_lookup = '__'.join(
+            [nodes_to_attr for _ in range(1, depth)])
         nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
         enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
         permission_lookup = f'{parent_node_lookup}__{nodes_to_attr}__permissions' if depth > 1 else f'{nodes_to_attr}__permissions'
@@ -2013,6 +2046,7 @@ class Menu(models.Model):
 
     def to_dict(self):
         assets = set()
+
         def get_nodes(nodes_list):
             nodes = []
             for node in nodes_list:
@@ -2038,7 +2072,8 @@ class Menu(models.Model):
                     'nodes': get_nodes(getattr(node, 'nodes_list')) if hasattr(node, 'nodes_list') else []
                 }
                 assets.add(node_dict['uuid'])
-                assets.update({str(related_asset[2]) for related_asset in node_dict['related_assets']})
+                assets.update(
+                    {str(related_asset[2]) for related_asset in node_dict['related_assets']})
                 nodes.append(node_dict)
             return nodes
 
@@ -2052,7 +2087,7 @@ class Menu(models.Model):
             'assets': list(filter(lambda id: id, assets))
         }
 
-    def from_dict(self, menu_dict, user, update_progress_cb = None, accept_reviews=False):
+    def from_dict(self, menu_dict, user, update_progress_cb=None, accept_reviews=False):
         from cms.controllers.structure import import_assets_from_json
         node_asset_count = len(menu_dict['assets'])
         progress = 0
@@ -2070,18 +2105,23 @@ class Menu(models.Model):
         node_asset_count += get_node_count(menu_dict)
         if update_progress_cb:
             update_progress_cb(progress, node_asset_count)
-        import_assets_from_json(menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
+        import_assets_from_json(
+            menu_dict['assets'], user, increment_progress=update_progress_cb and increment_progress, publish=accept_reviews)
+
         def set_nodes(nodes_list, parent):
             for node in nodes_list:
-                parent_type = 'parent_menu' if isinstance(parent, Menu)else 'parent_node'
-                node_qs = MenuNode.objects.filter(**{parent_type: parent}, id__in=all_node_ids)
+                parent_type = 'parent_menu' if isinstance(
+                    parent, Menu)else 'parent_node'
+                node_qs = MenuNode.objects.filter(
+                    **{parent_type: parent}, id__in=all_node_ids)
                 node_obj = None
                 node_name = node.get('name', '')
                 node_asset_uuid = node.get('uuid', '-1')
                 if node_name:
                     node_obj = node_qs.filter(name=node_name).first()
                 elif node_asset_uuid and node_asset_uuid != '-1':
-                    node_obj = node_qs.filter(asset__uuid=node_asset_uuid).first()
+                    node_obj = node_qs.filter(
+                        asset__uuid=node_asset_uuid).first()
                 if not node_obj:
                     node_obj = MenuNode()
 
@@ -2108,17 +2148,21 @@ class Menu(models.Model):
                     list(Permission.objects.filter(codename__in=node['permissions'])))
 
                 if node['asset']:
-                    asset_obj = Asset.objects.filter(uuid=node_asset_uuid).first()
+                    asset_obj = Asset.objects.filter(
+                        uuid=node_asset_uuid).first()
                     if asset_obj:
                         asset_obj.name = node['asset']
-                        asset_obj.customizations.set(Customization.objects.filter(name__in=node['enabled']))
+                        asset_obj.customizations.set(
+                            Customization.objects.filter(name__in=node['enabled']))
                         asset_obj.save()
                         node_obj.asset = asset_obj
                     else:
-                        increment_progress(f'Failed to set customizations for <b>"{node["asset"]}"</b> to due imported asset type <b>"{AssetType.ASSET_TYPES[node["asset_type"]]}"</b> not match existing assets type.')
+                        increment_progress(
+                            f'Failed to set customizations for <b>"{node["asset"]}"</b> to due imported asset type <b>"{AssetType.ASSET_TYPES[node["asset_type"]]}"</b> not match existing assets type.')
 
                 for asset, asset_type, asset_uuid in node.get('related_assets', []):
-                    node_obj.related_assets.add(Asset.objects.filter(uuid=asset_uuid).first())
+                    node_obj.related_assets.add(
+                        Asset.objects.filter(uuid=asset_uuid).first())
                 node_obj.save()
 
                 increment_progress()
@@ -2141,16 +2185,15 @@ class Menu(models.Model):
                     append_nodes(node.nodes_list)
 
         all_nodes = []
-        prefetched_menu = self.get_prefetched_menus(menu_name=self.name, only_enabled=False)[0]
+        prefetched_menu = self.get_prefetched_menus(
+            menu_name=self.name, only_enabled=False)[0]
         if hasattr(prefetched_menu, 'nodes_list'):
             append_nodes(prefetched_menu.nodes_list)
         return all_nodes
 
-
     @property
     def all_node_ids(self):
         return self.extract_from_nodes(lambda node: node.id)
-
 
     @property
     def all_asset_ids(self):
@@ -2161,17 +2204,18 @@ class Menu(models.Model):
         return reverse("admin:cms_menu_change", args=(self.id,))
 
     LABEL_LOOKUP = {
-                'Out of Sync': 'warning',
-                'In Progress': 'primary',
-                'Success': 'success',
-                'Failed': 'danger',
-                'Canceled': 'warning',
+        'Out of Sync': 'warning',
+        'In Progress': 'primary',
+        'Success': 'success',
+        'Failed': 'danger',
+        'Canceled': 'warning',
     }
 
     @property
     def zendesk_sync_state(self):
         PACKAGE_CACHE = PackagesCache()
         customizations_not_cached = []
+
         def get_cached(key):
             return PACKAGE_CACHE[f'menu_sync_{self.id}_{key}']
 
@@ -2182,28 +2226,35 @@ class Menu(models.Model):
         def not_cached(customization):
             customizations_not_cached.append(customization)
             return {
-            'logs': [],
-            'state': 'Out of Sync' if len(self.zendesk_out_of_sync(customization)) else 'Success',
-            'out_of_sync': self.zendesk_out_of_sync(customization)
-        }
+                'logs': [],
+                'state': 'Out of Sync' if len(self.zendesk_out_of_sync(customization)) else 'Success',
+                'out_of_sync': self.zendesk_out_of_sync(customization)
+            }
 
-        enabled_customizations = [customization.name for customization in self.zendesk_sync_enabled.all().order_by('name')]
-        logs_by_customization = {customization: get_cached(customization) or not_cached(customization) for customization in enabled_customizations}
+        enabled_customizations = [
+            customization.name for customization in self.zendesk_sync_enabled.all().order_by('name')]
+        logs_by_customization = {customization: get_cached(customization) or not_cached(
+            customization) for customization in enabled_customizations}
         for log in reversed(self.zendesksynclog_set.all().order_by('-sync_time')[:self.LOGS_TO_SHOW]):
             customization = log.zendesk_site.customization.name
             if customization in enabled_customizations:
                 if customization in customizations_not_cached:
-                    info = get_cached(log.id) or cache_item(log.id, log.sync_info)
+                    info = get_cached(log.id) or cache_item(
+                        log.id, log.sync_info)
                     logs_by_customization[customization]['logs'].append(info)
-                    success = not log.sync_items.exclude(state=SYNC_STATES.success).count()
-                    failed = log.sync_items.filter(state=SYNC_STATES.failed).count()
+                    success = not log.sync_items.exclude(
+                        state=SYNC_STATES.success).count()
+                    failed = log.sync_items.filter(
+                        state=SYNC_STATES.failed).count()
                     if logs_by_customization[customization]['state'] != 'Out of Sync' and not success:
                         for sync_item in log.sync_items.all():
-                            sync_item.zendesk_article.map_sync_stats(customization, target=logs_by_customization[customization]['out_of_sync'])
+                            sync_item.zendesk_article.map_sync_stats(
+                                customization, target=logs_by_customization[customization]['out_of_sync'])
                     state = SYNC_STATES.success if success else SYNC_STATES.failed if failed else SYNC_STATES.in_progress
                     logs_by_customization[customization]['state'] = SYNC_STATES[state]
                 else:
-                    logs_by_customization[customization]['out_of_sync'] = self.zendesk_out_of_sync(customization)
+                    logs_by_customization[customization]['out_of_sync'] = self.zendesk_out_of_sync(
+                        customization)
 
         return [cache_item(customization, {
             'customization_name': customization,
@@ -2225,14 +2276,15 @@ class Menu(models.Model):
         total = []
         categories = list(self.zendeskcategory_set.filter(sync=True))
         for category in categories:
-            sections = list(category.zendesksection_set.filter(sync=True).exclude(menu_node=None))
+            sections = list(category.zendesksection_set.filter(
+                sync=True).exclude(menu_node=None))
             for section in sections:
-                articles = section.zendeskarticle_set.filter(sync=True).exclude(menu_node=None)
+                articles = section.zendeskarticle_set.filter(
+                    sync=True).exclude(menu_node=None)
                 for article in articles:
                     article.map_sync_stats(customization, total)
 
         return total
-
 
 
 class MenuNodeManager(models.Manager):
@@ -2244,9 +2296,11 @@ def node_asset_on_delete(collector, fields, sub_objs, using):
     sub_objs_no_children = sub_objs.filter(nodes=None).distinct()
     sub_objs_children = sub_objs.exclude(nodes=None).distinct()
     if sub_objs_no_children:
-        models.CASCADE(collector, fields, sub_objs=sub_objs_no_children, using=using)
+        models.CASCADE(collector, fields,
+                       sub_objs=sub_objs_no_children, using=using)
     if sub_objs_children:
-        models.SET_NULL(collector, fields, sub_objs=sub_objs_children, using=using)
+        models.SET_NULL(collector, fields,
+                        sub_objs=sub_objs_children, using=using)
 
 
 class MenuNode(models.Model):
@@ -2339,14 +2393,20 @@ class MenuNode(models.Model):
                     asset_title = None
                     asset_url = None
                     if asset_accepted:
-                        asset_title = title_ds.find_actual_value(node.asset, customization_name=customization.name)
-                        asset_url = url_ds.find_actual_value(node.asset, customization_name=customization.name)
+                        asset_title = title_ds.find_actual_value(
+                            node.asset, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(
+                            node.asset, customization_name=customization.name)
                     elif pending is not None:
-                        asset_title = title_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
-                        asset_url = url_ds.find_actual_value(node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
+                        asset_title = title_ds.find_actual_value(
+                            node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(
+                            node.asset, draft=True, version_id=pending.version.id, customization_name=customization.name)
                     elif node_structure['draft']:
-                        asset_title = title_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
-                        asset_url = url_ds.find_actual_value(node.asset, draft=True, customization_name=customization.name)
+                        asset_title = title_ds.find_actual_value(
+                            node.asset, draft=True, customization_name=customization.name)
+                        asset_url = url_ds.find_actual_value(
+                            node.asset, draft=True, customization_name=customization.name)
 
                     if not title and asset_title:
                         title = asset_title
@@ -2364,7 +2424,8 @@ class MenuNode(models.Model):
                     node_structure['name_raw'] = node_structure['name']
 
                 if node_structure['name'] != 'untitled':
-                    node_structure['name'] = cloud_portal_asset.replace_global_values(node_structure['name'], global_contexts_dict)
+                    node_structure['name'] = cloud_portal_asset.replace_global_values(
+                        node_structure['name'], global_contexts_dict)
                 node_structure['display_name'] = node_structure['name']
 
                 if depth < max_depth and node.nodes_list:
@@ -2445,7 +2506,8 @@ class ZendeskCategory(models.Model):
         name_changed = previous_name != self.name
 
         if general_changed:
-            existing_section = self.zendesksection_set.filter(name=previous_general_title).first()
+            existing_section = self.zendesksection_set.filter(
+                name=previous_general_title).first()
             if existing_section:
                 existing_section.name = self.general_section_title
                 existing_section.needs_sync = True
@@ -2468,9 +2530,12 @@ class ZendeskCategory(models.Model):
 
 class ZendeskSection(models.Model):
     site = models.ForeignKey(ZendeskSite, on_delete=models.CASCADE)
-    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.CASCADE)
-    parent_category = models.ForeignKey(ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
-    parent_section = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(
+        MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    parent_category = models.ForeignKey(
+        ZendeskCategory, blank=True, null=True, on_delete=models.CASCADE)
+    parent_section = models.ForeignKey(
+        'self', blank=True, null=True, on_delete=models.CASCADE)
     section_id = models.BigIntegerField(blank=True, null=True)
     position = models.IntegerField(default=0)
     name = models.CharField(max_length=500, blank=True)
@@ -2490,7 +2555,6 @@ class ZendeskSection(models.Model):
         while not current_section.parent_category:
             current_section = current_section.parent_section
         return current_section.parent_category.category_id
-
 
 
 class ZendeskArticleLabel(models.Model):
@@ -2538,12 +2602,12 @@ class ZendeskArticle(models.Model):
     user_segment_id = models.BigIntegerField(blank=True, null=True)
 
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    menu_node = models.ForeignKey(MenuNode, blank=True, null=True, on_delete=models.CASCADE)
+    menu_node = models.ForeignKey(
+        MenuNode, blank=True, null=True, on_delete=models.CASCADE)
     sync = models.BooleanField(default=True)
 
     needs_sync = models.BooleanField(default=False)
     ignore_structure = models.BooleanField(default=False)
-
 
     objects = ZendeskArticleManager()
 
@@ -2572,7 +2636,8 @@ class ZendeskArticle(models.Model):
         published_version = self.asset.version_id(customization=customization)
         successful_syncs = self.zendesksyncitem_set.filter(
             state=SYNC_STATES.success, sync_log__zendesk_site__customization__name=customization, zendesk_article=self)
-        update_to_date = next(filter(lambda sync: published_version == 0 or (sync.review.version.id == published_version), successful_syncs), None)
+        update_to_date = next(filter(lambda sync: published_version == 0 or (
+            sync.review.version.id == published_version), successful_syncs), None)
 
         if include_published or not published_version or not update_to_date:
             last_success = successful_syncs.last()
@@ -2591,15 +2656,17 @@ class ZendeskArticle(models.Model):
 
 
 SYNC_STATES = Choices((0, "in_progress", "In Progress"),
-                    (1, "success", "Success"),
-                    (2, "failed", "Failed"),
-                    (3, "canceled", "Canceled"))
+                      (1, "success", "Success"),
+                      (2, "failed", "Failed"),
+                      (3, "canceled", "Canceled"))
+
 
 @receiver(pre_delete, sender=ZendeskArticle)
 def archive_on_zendesk(sender, instance, **kwargs):
     from cms.controllers.zendesk import Exporter
     if not instance.ignore_structure:
-        Exporter(customization_name=instance.site.customization.name).sync_article(instance, delete=True)
+        Exporter(customization_name=instance.site.customization.name).sync_article(
+            instance, delete=True)
 
 
 class ZendeskSyncLog(models.Model):
@@ -2651,17 +2718,18 @@ class ZendeskSyncLog(models.Model):
 
             section_added = next(
                 filter(lambda existing_item: existing_item['zd_section_id'] == section['zd_section_id'] and
-                                             existing_item['zd_section_id'] is not None,
+                       existing_item['zd_section_id'] is not None,
                        sections), None)
             article_added = next(
                 filter(lambda existing_item: existing_item['zd_article_id'] == article['zd_article_id'] and
-                                             existing_item['zd_article_id'] is not None, articles), None)
+                       existing_item['zd_article_id'] is not None, articles), None)
             if not section_added:
                 sections.append(section)
             if not article_added:
                 articles.append(article)
 
-        progress = round(nodes_success / nodes_total * 100) if nodes_success  else 0
+        progress = round(nodes_success / nodes_total *
+                         100) if nodes_success else 0
 
         sync_time = self.sync_time
         pending_time = datetime.now() - timedelta(seconds=30)
@@ -2695,11 +2763,12 @@ class ZendeskSyncLog(models.Model):
 class ZendeskSyncItem(models.Model):
     SYNC_STATES = SYNC_STATES
     sync_log = models.ForeignKey(ZendeskSyncLog,
-        on_delete=models.CASCADE, related_name='sync_items', editable=False)
+                                 on_delete=models.CASCADE, related_name='sync_items', editable=False)
     menu_node = models.ForeignKey(
         MenuNode, on_delete=models.CASCADE, editable=False)
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE, editable=False)
-    review = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE, editable=False, null=True, blank=True)
+    review = models.ForeignKey(
+        AssetCustomizationReview, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     zendesk_section = models.ForeignKey(
         ZendeskSection, on_delete=models.CASCADE, editable=False)
     zendesk_article = models.ForeignKey(
@@ -2717,6 +2786,7 @@ class ZendeskSyncItem(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         PACKAGE_CACHE = PackagesCache()
+
         def clear_item(key):
             del PACKAGE_CACHE[f'menu_sync_{menu.id}_{key}']
         menu = self.menu_node.get_parent()
@@ -2730,12 +2800,14 @@ class ZendeskSyncItem(models.Model):
 
     @property
     def details(self):
-        title_structure = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.documentation, name='title').first()
+        title_structure = DataStructure.objects.filter(
+            context__asset_type__type=AssetType.ASSET_TYPES.documentation, name='title').first()
         title = DataStructure.find_actual_values(
-                    [title_structure], asset=self.asset, version_id=getattr(self.review, 'id', 0), customization_name=self.sync_log.zendesk_site.customization.name
+            [title_structure], asset=self.asset, version_id=getattr(self.review, 'id', 0), customization_name=self.sync_log.zendesk_site.customization.name
         ).get(title_structure, self.zendesk_article.title)
         menu_node_id = getattr(self.zendesk_section.menu_node, 'id', 0)
-        menu_node_admin_link = getattr(self.zendesk_section.menu_node, 'admin_link', '')
+        menu_node_admin_link = getattr(
+            self.zendesk_section.menu_node, 'admin_link', '')
         return {
             'section': {
                 'zd_section_id': self.zendesk_section.section_id,
@@ -2767,7 +2839,6 @@ class ZendeskSyncItem(models.Model):
         if exception:
             self.failure_message = str(exception)
         self.save()
-
 
     def mark_completed(self):
         self.__update_state(self.SYNC_STATES.success)
@@ -2802,30 +2873,37 @@ class CustomClient(models.Model):
     name = models.CharField(max_length=100)
     last_modified = models.DateTimeField(auto_now=True)
     base_vms = models.ForeignKey(
-        Asset, on_delete=models.CASCADE, limit_choices_to={'asset_type__type': AssetType.ASSET_TYPES.vms}
+        Asset, on_delete=models.CASCADE, limit_choices_to={
+            'asset_type__type': AssetType.ASSET_TYPES.vms}
     )
     values = JSONField(default={})
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
-    created_customization = models.ForeignKey(Customization, null=True, on_delete=models.CASCADE)
+    created_customization = models.ForeignKey(
+        Customization, null=True, on_delete=models.CASCADE)
 
 
 class PortalNotification(models.Model):
     title = models.TextField(help_text='Title of notification')
     body = models.TextField(help_text='Body text of notification')
-    min_ts = models.DateTimeField(null=True, blank=True, help_text='Notification should not be shown before this time')
-    max_ts = models.DateTimeField(null=True, blank=True, help_text='Notification should not be shown after this time')
-    build_raw = models.FloatField(null=True, blank=True, help_text="Stores build as a float, don't use directly, instead use build attribute/kwarg")
+    min_ts = models.DateTimeField(
+        null=True, blank=True, help_text='Notification should not be shown before this time')
+    max_ts = models.DateTimeField(
+        null=True, blank=True, help_text='Notification should not be shown after this time')
+    build_raw = models.FloatField(
+        null=True, blank=True, help_text="Stores build as a float, don't use directly, instead use build attribute/kwarg")
     users_viewed = models.ManyToManyField('api.Account')
-    url = models.URLField(null=True, blank=True, help_text='Where to navigate if notification is clicked')
+    url = models.URLField(
+        null=True, blank=True, help_text='Where to navigate if notification is clicked')
 
     def __init__(self, *args, **kwargs):
         if (build_raw := kwargs.pop('build_raw', None)) and not isinstance(build_raw, float):
-            raise ValueError("Don't use build_raw directly, instead use build kwarg")
+            raise ValueError(
+                "Don't use build_raw directly, instead use build kwarg")
 
         if build := kwargs.pop('build', None):
             kwargs['build_raw'] = PortalNotification.calc_build(build)
-
 
         super().__init__(*args, **kwargs)
 
@@ -2849,12 +2927,12 @@ class PortalNotification(models.Model):
         if (last_index := friendly_version.rindex('.')) > (expected_last := len(friendly_version) - 6):
             friendly_version += (last_index - expected_last) * '0'
 
-
         return friendly_version if friendly_version != '0' else ''
 
     @staticmethod
     def calc_build(build_version: str) -> float:
-        build, *segments = [float(segment or 0) for segment in build_version.split('.')[::-1]]
+        build, *segments = [float(segment or 0)
+                            for segment in build_version.split('.')[::-1]]
 
         while build > 1:
             build /= 10
@@ -2869,8 +2947,10 @@ class PortalNotification(models.Model):
 class MaintenanceScheduling(models.Model):
     datetime = models.DateTimeField(help_text='Maintenance scheduled datetime')
     components = models.TextField(help_text='List of affected components')
-    partner_message = models.TextField(help_text='List of affected partner features')
-    user_message = models.TextField(help_text='List of affected end user features')
+    partner_message = models.TextField(
+        help_text='List of affected partner features')
+    user_message = models.TextField(
+        help_text='List of affected end user features')
     custom = models.TextField(help_text='Custom message text')
     portal_notification = models.ForeignKey(
         PortalNotification, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related notification')
@@ -2911,7 +2991,8 @@ class MaintenanceScheduling(models.Model):
 
 class MaintenanceCompletion(models.Model):
     datetime = models.DateTimeField(help_text='Maintenance completed datetime')
-    partner_message = models.TextField(help_text='List of affected partner features')
+    partner_message = models.TextField(
+        help_text='List of affected partner features')
     custom = models.TextField(help_text='Custom message text')
     scheduled_maintenance = models.ForeignKey(
         MaintenanceScheduling, on_delete=models.SET_NULL, null=True, blank=True, help_text='Related scheduled maintenance')
@@ -2948,6 +3029,7 @@ class MaintenanceCompletion(models.Model):
         if portal_notification:
             portal_notification.maintenancecompletion_set.add(self)
 
+
 class OpenAPIJSON(models.Model):
     class Meta:
         verbose_name = "OpenAPI JSON"
@@ -2964,10 +3046,12 @@ class OpenAPIJSON(models.Model):
     def __str__(self):
         return f"{self.name} - {self.version}"
 
+
 class Flag(AbstractUserFlag):
     FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'
 
-    data_structure = models.ForeignKey(DataStructure, blank=True, null=True, on_delete=models.SET_NULL)
+    data_structure = models.ForeignKey(
+        DataStructure, blank=True, null=True, on_delete=models.SET_NULL)
 
     @classmethod
     def _ds_cache_key(cls, name, customization_name):
@@ -2980,7 +3064,8 @@ class Flag(AbstractUserFlag):
         if cached:
             return cached
 
-        ds_val = self.data_structure.find_actual_value(get_cloud_portal_asset(customization_name))
+        ds_val = self.data_structure.find_actual_value(
+            get_cloud_portal_asset(customization_name))
 
         flag_cache.add(cache_key, ds_val)
         return ds_val
