@@ -513,7 +513,7 @@
         "Connection timed out": "システム <strong>{failedSystem}</strong> はオフラインです。",
         "Bad Gateway": "システム <strong>{failedSystem}</strong> は現在アクセスできません。<br>しばらくしてから再試行するか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> にお問い合わせください。",
         "INCOMPATIBLE": "システムのソフトウェアバージョンが一致していません。双方を {downloadHTML} にアップデートしてください。",
-        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
+        "This authorization method is forbidden. Please contact your system administrator.": "この認証方法は禁止されています。システム管理者に問い合わせてください。",
         "This user does not exist.": "該当ユーザが存在しません。",
         "The user is disabled. Please contact your system administrator.": "ユーザーは無効になっています。システム管理者に問い合わせてください。",
         "This user has been disabled by a system administrator.": "このユーザーはシステム管理者によって無効にされています。",

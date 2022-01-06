@@ -513,7 +513,7 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> är offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> kan inte nås just nu.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till {downloadHTML}.",
-        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
+        "This authorization method is forbidden. Please contact your system administrator.": "Denna auktoriseringsmetod är förbjuden. Kontakta din systemadministratör.",
         "This user does not exist.": "Denna användaren finns inte.",
         "The user is disabled. Please contact your system administrator.": "Användaren är inaktiverad. Kontakta din systemadministratör.",
         "This user has been disabled by a system administrator.": "Den här användaren är inaktiverad av systemadministratören.",

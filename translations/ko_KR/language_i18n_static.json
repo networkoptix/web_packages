@@ -513,7 +513,7 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
+        "This authorization method is forbidden. Please contact your system administrator.": "이 승인 방법은 허용되지 않습니다. 시스템 관리자에게 문의하십시오.",
         "This user does not exist.": "이 사용자는 존재하지 않습니다",
         "The user is disabled. Please contact your system administrator.": "사용자가 비활성화 되었습니다. 시스템 관리자에게 문의하십시오.",
         "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
