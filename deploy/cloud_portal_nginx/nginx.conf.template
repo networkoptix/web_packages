@@ -100,7 +100,7 @@ http {
 
         location = /myip {
            default_type text/plain;
-           return 200 "$real_remote_addr\n";
+           return 200 "${DOLLAR}real_remote_addr\n";
 
            expires 1d;
         }
