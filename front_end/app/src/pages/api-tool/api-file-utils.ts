@@ -22,7 +22,7 @@ export const getTagModifier = (type: APIDocVersion) => {
     }
 };
 
-export const addRequestTypeToAPIRoute = (endpoint: string, requestType: string) => {
+export const generateAPIRouteName = (endpoint: string, requestType: string) => {
     return endpoint + ' - ' + requestType.toUpperCase();
 };
 
@@ -39,7 +39,7 @@ const URLSAFEREGEX = new RegExp('[^a-zA-Z0-9/_-]');
  * Example: rest/v1/users becomes rest-v1-users-get
 */
 export const generateNodeURL = (endpoint :string, requestType: string) => {
-    // Remove chraracters that aren't valid in URL, replace / with -, add request type to the end
+    // Remove characters that aren't valid in URL, replace / with -, add request type to the end
     const modifiedEndpoint = endpoint.slice(1).toLowerCase().split(URLSAFEREGEX).join('').split('/').join('-') + '-' + requestType.toLowerCase();
     return appendBaseAPIToolRoute(modifiedEndpoint);
 };
@@ -70,7 +70,7 @@ export const modifyPathTags = (api: APIDoc, type: APIDocVersion = 'main') => {
             checkMethodResponseDescription(method[1]);
             api.paths[endpoint][method[0]].tags[0] = modifiedTag;
             // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
-            api.paths[endpoint][method[0]].tags.push(addRequestTypeToAPIRoute(endpoint, endpoint === RTSPRoute ? RTSPMethod : method[0]));
+            api.paths[endpoint][method[0]].tags.push(generateAPIRouteName(endpoint, endpoint === RTSPRoute ? RTSPMethod : method[0]));
         });
     });
     return api;
@@ -126,34 +126,10 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
  */
 export const createMenuContent = (API: APIDoc) => {
     const menuContent: MenuNodeWithParent[] = [];
-    if (API.info && API.info.description) {
-        menuContent.push(new MenuNode('api_information', appendBaseAPIToolRoute('main'), 'API Information'));
-    }
+    addAPIInfoNodesToMenu(API, menuContent);
 
-    if (Object.keys(API || {}).length) {
-        API.tags.forEach(tag => {
-            if (!tag.name.includes('Proprietary')) {
-                const url = generateSubMenuNodeURL(tag.name);
-                menuContent.push(new MenuNode(tag.name, url, tag.name.slice(0, -2)));
-            }
-        });
-    }
-
-    let tag: MenuNodeWithParent;
-    Object.keys(API.paths).forEach(endpoint => {
-        const endpointObj = Object.entries(API.paths[endpoint]);
-        endpointObj.forEach((method: method) => {
-            tag = menuContent.find((node) => {
-                return node.name === method[1].tags[0];
-            });
-
-            const url = generateNodeURL(endpoint, method[0]);
-            const apiRouteName = addRequestTypeToAPIRoute(endpoint, method[0]);
-            const methodNode: MenuNodeWithParent = new MenuNode(apiRouteName, url, method[1].summary || apiRouteName);
-            methodNode.parentNode = tag;
-            tag.nodes.push(methodNode);
-        });
-    });
+    generateMenuNodesFromCategoryTags(API, menuContent);
+    generateMenuNodesFromEndpoints(API, menuContent);
     return menuContent;
 };
 
@@ -163,8 +139,14 @@ export const createMenuContent = (API: APIDoc) => {
 export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], seperator: string) => {
     menuNodes.push(new MenuNode(`${seperator}-seperator`, '', seperator));
 
-    // Replace RTSPRoute with the custom RTSPRoute to fix an issue with how swagger-ui filters routes
+    generateMenuNodesFromCategoryTags(API, menuNodes);
+    generateMenuNodesFromEndpoints(API, menuNodes);
+};
 
+/**
+    Creates the sub-menu from tags such as System, Login, or License
+ */
+const generateMenuNodesFromCategoryTags = (API: APIDoc, menuNodes: MenuNodeWithParent[]) => {
     if (Object.keys(API || {}).length) {
         API.tags.forEach(tag => {
             if (!tag.name.includes('Proprietary')) {
@@ -175,21 +157,31 @@ export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], se
             }
         });
     }
+};
 
-    let tag: MenuNodeWithParent;
+/**
+    Creates menuNodes from API routes such as /rest/v1/login/sessions
+    and pushes them to the subMenuNode tag that they belong to.
+ */
+const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWithParent[]) => {
     Object.keys(API.paths).forEach(endpoint => {
         const endpointObj = Object.entries(API.paths[endpoint]);
         endpointObj.forEach((method: method) => {
-            tag = menuNodes.find(node => node.name === method[1].tags[0]);
-            if (endpoint === RTSPRoute) {
-                method[0] = RTSPMethod;
-            }
-            checkMethodResponseDescription(method[1]);
-            const methodName = addRequestTypeToAPIRoute(endpoint, method[0]);
-            const url = generateNodeURL(endpoint, method[0]);
-            const methodNode: MenuNodeWithParent = new MenuNode(methodName, url, method[1].summary || methodName);
-            methodNode.parentNode = tag;
-            tag.nodes.push(methodNode);
+            const subMenuTag = method[1].tags[0];
+            const HTTPMethod = method[0];
+            const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
+
+            const url = generateNodeURL(endpoint, HTTPMethod);
+            const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
+            const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
+            methodNode.parentNode = subMenuNode;
+            subMenuNode.nodes.push(methodNode);
         });
     });
+};
+
+const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[]) => {
+    if (API.info && API.info.description) {
+        menuNodes.push(new MenuNode('api_information', appendBaseAPIToolRoute('main'), 'API Information'));
+    }
 };
