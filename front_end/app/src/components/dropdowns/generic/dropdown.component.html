@@ -4,7 +4,7 @@
 
     <button class="btn btn-dropdown-toggle dropdown-toggle"
             #dropdownButtonFocus
-            (click)="show = !show"
+            (click)="stillLoading ? null: show = !show"
             type="button" id="{{id}}" data-toggle="dropdown">
         <div class="btn loading" *ngIf="stillLoading">
             <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>

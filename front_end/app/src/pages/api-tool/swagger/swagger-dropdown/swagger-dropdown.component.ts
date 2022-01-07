@@ -85,5 +85,6 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.disabledMutationObserver.disconnect();
+        this.swaggerSelect = null;
     }
 }

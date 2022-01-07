@@ -153,5 +153,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
 
     ngOnDestroy() {
         this.attributeMutationObserver.disconnect();
+        this.textareaMap = null;
+        this.textarea = null;
     }
 }

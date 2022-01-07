@@ -62,5 +62,6 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.classMutationObserver.disconnect();
+        this.opblock = null;
     }
 }
