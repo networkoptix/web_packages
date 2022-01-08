@@ -677,9 +677,19 @@ class Asset(models.Model):
 
     @property
     def admin_link(self):
-        context = getattr(self.datarecord_set.first(), 'context', None) or Context.objects.filter(
-            asset_type=self.asset_type.type).first()
-        return reverse('admin:change_page', args=(self.id, context.id))
+        kwargs = {'asset_id': self.id}
+
+        if context := getattr(
+            self.datarecord_set.first(), 'context', None) or Context.objects.filter(
+                asset_type=self.asset_type.type).first():
+
+            kwargs['context_id'] = context.id
+
+            # Should use change page on pretty much all cases
+            return reverse('admin:change_page', kwargs=kwargs)
+
+        # This will handle a weird edge case where no context is found
+        return reverse('admin:pages', kwargs=kwargs)
 
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
