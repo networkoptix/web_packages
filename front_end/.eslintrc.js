@@ -247,7 +247,7 @@ module.exports = {
             files: ['app/**/*.ts'],
             // Remaining to be done
             excludedFiles: [
-                'app/src/pages/systems/settings/*.ts',
+                // 'app/src/pages/systems/settings/*.ts',
                 // 'app/src/pages/systems/settings/admin/**/*.ts',
                 // 'app/src/pages/systems/settings/cloud-storage/**/*.ts',
                 // 'app/src/pages/systems/settings/licenses/**/*.ts',

@@ -34,6 +34,7 @@ import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu';
 import type { Content, Level3Item } from '@src/menu/menu.types';
+
 import { NxSettingsService } from './settings.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -174,8 +175,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.router.events.subscribe(route => {
-            if (route instanceof NavigationStart && route.url.includes('health')) {
-                // remove unnecessary system update (ex. health monitor will trigger system update)
+            if (
+                route instanceof NavigationStart &&
+                route.url.includes('health')
+            ) {
+                // remove unnecessary system update
+                // (ex. health monitor will trigger system update)
                 // and orphan metrics request in systemInfoSubscription
                 this.systemInfoSubscription?.unsubscribe();
                 this.systemSubscription?.unsubscribe();
@@ -252,7 +257,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         // Retrieve system info
         this.gettingSystem = this.processService.createProcess(() => {
-            return this.system.getInfo(true); // Force reload system info when opening page
+            return this.system.getInfo(true);
+            // Force reload system info when opening page
         }, {
             errorCodes: {
                 forbidden: () => {
@@ -278,8 +284,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription =
-            this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
+            .subscribe(({ width }) => {
                 if (width >= 768) {
                     this.setHeaderHeight();
                 }
@@ -319,13 +325,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         }
                         this.systemSubscription = this.systemsService.systemsSubject
                             .subscribe((systems) => {
-                                if (!systems.filter(s => s.id === this.systemId).length) {
-                                    this.systemNoAccess = true;
-                                    return;
-                                }
                                 const system = systems.find((system) =>
                                     system.id === this.systemId
                                 );
+                                if (system === undefined) {
+                                    this.systemNoAccess = true;
+                                    return;
+                                }
                                 if (
                                     system?.system2faEnabled &&
                                     !this.account.totpExistsForAccount
@@ -405,7 +411,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             ) &&
                                             !environment.isLocal
                                         ) {
-                                            this.uriService.updateURI(this.CONFIG.featureFlags.dashboard || 'beta' in this.route.snapshot.queryParams ? '/dashboard' : '/systems');
+                                            this.uriService.updateURI(
+                                                this.CONFIG.featureFlags.dashboard || 'beta' in this.route.snapshot.queryParams
+                                                    ? '/dashboard'
+                                                    : '/systems'
+                                            );
                                         }
                                         if (this.system.isAvailable) {
                                             this.updateAlert();
@@ -476,15 +486,20 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system.ribbonService.hide();
                     let ribbonText: string;
                     let systemOnly = false;
-                    const { primary, secondary } = this.systemsService.systemsMerging || {};
+                    const { primary, secondary } =
+                        this.systemsService.systemsMerging || {};
                     if (!this.system.isOnline) {
                         ribbonText = this.LANG.ribbon.systemOffline?.();
                         systemOnly = true;
                     } else if (primary?.id === this.system.id) {
-                        const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                        let secondaryName = secondarySystem?.name || secondary?.name || this.LANG.system.mergeUnknownName?.();
+                        const secondarySystem = this.systemsService.systems
+                            .find(system => secondary.id === system.id);
+                        let secondaryName = secondarySystem?.name ||
+                            secondary?.name ||
+                            this.LANG.system.mergeUnknownName?.();
                         if (secondaryName.startsWith('server at ')) {
-                            secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
+                            secondaryName = secondaryName[0].toUpperCase() +
+                                secondaryName.slice(1);
                         }
                         ribbonText = `<div class="my-1">
                                             <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to?.()}</div>
@@ -492,14 +507,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         </div>`;
                     } else if (secondary?.id === this.system.id) {
                         this.mergeTargetSystem = this.systemsService.systems
-                            .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName?.() };
+                            .find((system) => primary.id === system.id) ||
+                                { name: this.LANG.system.mergeUnknownName?.() };
                         this.secondaryMerge = true;
                     } else if (mergeInProgress) {
                         ribbonText = this.LANG.ribbon.systemsMerging;
                     }
 
                     if (ribbonText) {
-                        this.system.ribbonService.show(ribbonText, [], 'alert', undefined, systemOnly);
+                        this.system.ribbonService.show(
+                            ribbonText,
+                            [],
+                            'alert',
+                            undefined,
+                            systemOnly
+                        );
                     }
 
                     setTimeout(() => {
@@ -549,11 +571,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 camerasNode.level3 = this.system.cameras.map(camera => ({
                     id: camera.id.replace(/\s|\{|\}/g, ''),
                     svgIcon: this.getCameraStatusIcon(camera),
-                    isEnabled: camera.status !== 'Offline' && camera.status !== 'Unauthorized',
+                    isEnabled: camera.status !== 'Offline' &&
+                        camera.status !== 'Unauthorized',
                     label: camera.name,
                     indent: true,
                     path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                    additionalLabel: camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
+                    additionalLabel: camera.url.match(
+                        /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
+                    )
                 }));
             } else {
                 camerasNode.level3 = [];
@@ -599,10 +624,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode.level2 = [];
             }
             if (this.system && this.system.users?.length > 0) {
-                const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
+                const {
+                    cloudUsers,
+                    localUsers
+                } = this.system.users.reduce((result, user) => {
                     const id = NxUtilsService.cleanId(user.id);
                     const node: Level3Item = {
-                        additionalLabel: (this.LANG.accessRoles[user.role.name]?.label?.()) || user.role.name,
+                        additionalLabel: this.LANG.accessRoles[user.role.name]?.label?.() ||
+                            user.role.name,
                         id,
                         isEnabled: user.isEnabled,
                         label: user.name || user.email,
@@ -727,11 +756,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getCameraStatusIcon({ status }) {
-        return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
+        return this.CONFIG.menus.systemSettings.cameras.statusIcons[
+            status.toLowerCase()
+        ];
     }
 
     getServerStatusIcon({ status }) {
-        return this.CONFIG.menus.systemSettings.servers.statusIcons[status.toLowerCase()];
+        return this.CONFIG.menus.systemSettings.servers.statusIcons[
+            status.toLowerCase()
+        ];
     }
 
     cleanUrl() {
@@ -760,6 +793,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system.stopPoll();
                 }
             });
-        setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
+        setTimeout(
+            () => this.router.navigate([route]),
+            this.CONFIG.alertTimeout
+        );
     }
 }

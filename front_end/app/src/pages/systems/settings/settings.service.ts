@@ -1,9 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxRibbonService } from '@components/ribbon';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-
 @Injectable({
     providedIn: 'root'
 })
@@ -12,10 +9,7 @@ export class NxSettingsService implements OnDestroy {
     systemSubject = new BehaviorSubject<any>(false);
     selectedSectionSubject = new BehaviorSubject([]);
 
-    constructor(
-        private ribbonService: NxRibbonService,
-        private languageService: NxLanguageProviderService
-    ) {}
+    constructor() {}
 
     get system() {
         return this.systemSubject.getValue();
