@@ -28,6 +28,10 @@ INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
                           ErrorCodes.account_not_activated.value,
                           ErrorCodes.forbidden.value]
 
+REFRESH_EXEMPT_URLS = [
+    '/cdb/account/self'
+]
+
 
 # Todo: Once cloud_db supports basic and digest switch to true.
 def basic_digest_handler(use_basic_auth=False):
@@ -116,6 +120,8 @@ def auto_refresh_token(func):
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
+            elif response_data and res is not None and any(filter(lambda url: url in res.url, REFRESH_EXEMPT_URLS)):
+                raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
         try:
             tokens = Auth.get_refresh_token(refresh_token, ip=ip)
             access_token = tokens["access_token"]
