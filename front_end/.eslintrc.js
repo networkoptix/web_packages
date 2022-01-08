@@ -253,7 +253,7 @@ module.exports = {
                 // 'app/src/pages/systems/settings/licenses/**/*.ts',
                 // 'app/src/pages/systems/settings/servers/**/*.ts',
                 // 'app/src/pages/systems/settings/users/**/*.ts',
-                'app/src/pages/systems/view/*.ts',
+                // 'app/src/pages/systems/view/*.ts',
                 // 'app/src/pages/systems/view/pages/**/*.ts',
                 // 'app/src/pages/systems/view/services/**/*.ts',
                 // 'app/src/pages/systems/view/vms-client/*.ts',
