@@ -38,6 +38,8 @@ export class NxNavigationTileComponent {
                     ? Auth.LOGGED_IN
                     : Auth.LOGGED_OUT;
             });
+
+        this._setupIds()
     }
 
     ngOnDestroy() {}
@@ -49,5 +51,23 @@ export class NxNavigationTileComponent {
             (childNode?.breadcrumbs || [])
                 .map(({ url }) => url).filter(url => url);
         return breadcrumbUrls.includes(url);
+    }
+
+    protected _setupIds () {
+        this.node['htmlID'] = this._generateNodeId(this.node);
+        this.node.nodes.map(link => link['htmlID'] = this._generateLinkId(this.node, link));
+    }
+
+    protected _handleName (name) {
+        return name.toLocaleLowerCase().split(' ').join('-');
+    }
+
+    protected _generateNodeId (node) {
+        return 'header-navigation--' + this._handleName(node.name);
+    }
+
+    protected _generateLinkId (node, link) {
+        const name = this._handleName(link.name);
+        return this._generateNodeId(node) + '--' + name;
     }
 }
