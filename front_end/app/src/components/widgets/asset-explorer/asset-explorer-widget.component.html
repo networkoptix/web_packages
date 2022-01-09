@@ -61,7 +61,11 @@
                         <a (click)="showAction(node)">
                             {{node.name}}
                         </a>
-                        <a *ngFor="let action of (node?.actions || [])" class="action-link" (click)="showAction({url: action.url, label: node.name + ' - ' + action.name, params: action.params || {}})" [ngbTooltip]="action.name">{{ACTION_ICONS[action.type] || action.name}}</a>
+                        <a *ngFor="let action of (node?.actions || [])"
+                           class="action-link"
+                           (click)="showAction({url: action.url, label: node.name + ' - ' + action.name, params: action.params || {}})"
+                           [nxTooltip]="action.name"
+                        >{{ACTION_ICONS[action.type] || action.name}}</a>
                     </div>
                 </cdk-nested-tree-node>
                 <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild" class="explorer-node">

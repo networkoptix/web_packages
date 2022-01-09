@@ -1,6 +1,7 @@
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
 import { TextFieldModule } from '@angular/cdk/text-field';
@@ -117,7 +118,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         OverlayModule,
         TextFieldModule,
         EditorModule,
-        SharedComponentsModule
+        SharedComponentsModule,
+        PortalModule
     ],
     declarations: [
         NxThreeDotDropdown,
@@ -170,7 +172,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxDynamicWidgetComponent,
         NxHealthMonitorWidgetComponent,
         NxAssetExplorerWidgetComponent,
-        NxStepperComponent,
         NxThirdPartyWidgetComponent,
         NxLiveViewWidgetComponent,
         NxBookmarksWidgetComponent,
@@ -216,7 +217,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxDynamicWidgetComponent,
         NxHealthMonitorWidgetComponent,
         NxAssetExplorerWidgetComponent,
-        NxStepperComponent,
         NxThirdPartyWidgetComponent,
         NxLiveViewWidgetComponent,
         NxBookmarksWidgetComponent,
@@ -278,7 +278,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxDynamicWidgetComponent,
         NxHealthMonitorWidgetComponent,
         NxAssetExplorerWidgetComponent,
-        NxStepperComponent,
         NxThirdPartyWidgetComponent,
         NxLiveViewWidgetComponent,
         NxBookmarksWidgetComponent,

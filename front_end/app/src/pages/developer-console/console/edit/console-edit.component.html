@@ -7,7 +7,7 @@
         <nx-section>
             <form #editForm="ngForm">
                 <section *ngFor="let structure of context.fields" [ngClass]="'section-' + structure.name">
-                    <label [for]="structure.name" [ngbTooltip]="!structure.optional && ('This field is required' | translate)">
+                    <label [for]="structure.name" [nxTooltip]="!structure.optional && ('This field is required' | translate)">
                         {{structure.label}}
                         <span *ngIf="!structure.optional" class="input-error">*</span>
                     </label>

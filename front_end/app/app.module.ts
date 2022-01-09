@@ -1,4 +1,5 @@
 import { LayoutModule } from '@angular/cdk/layout';
+import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
     PathLocationStrategy,
@@ -103,7 +104,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         NgxWebstorageModule.forRoot(),
         // Need to find a different way to choose page module for webadmin
         environment.isLocal ? WebadminPageModule : PagesModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production && !environment.isLocal, registrationStrategy: 'registerImmediately' })
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production && !environment.isLocal,
+            registrationStrategy: 'registerImmediately'
+        }),
+        CdkScrollableModule
     ],
     providers: [
         NgbToast,

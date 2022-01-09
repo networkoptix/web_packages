@@ -55,6 +55,7 @@ require('./scripts/vendor/protocolcheck');
                 class="mainContainer"
                 [ngClass]="{ altMainBackground: appStateService.altBackground }"
                 nxScrollHelper
+                cdkScrollable
                 #mainContainer
             >
                 <nx-cookie-banner></nx-cookie-banner>

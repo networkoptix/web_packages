@@ -1,3 +1,4 @@
+import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -5,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -30,6 +32,7 @@ import { NxTagComponent } from './tag/tag.component';
 
 @NgModule({
     imports: [
+        PortalModule,
         CommonModule,
         TranslateModule,
         FormsModule,
@@ -47,7 +50,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxTagComponent
+        NxTagComponent,
+        NxTooltipComponent,
     ],
     providers: [
         NxCheckboxComponent,
@@ -58,7 +62,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxTagComponent
+        NxTagComponent,
+        NxTooltipComponent,
     ],
     exports: [
         NxCheckboxComponent,
@@ -69,7 +74,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
-        NxTagComponent
+        NxTagComponent,
+        NxTooltipComponent,
     ]
 })
 export class SharedComponentsModule {

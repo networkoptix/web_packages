@@ -15,6 +15,7 @@ import { NxProjectedLinkHandler } from './nx-projected-link-handler.directive';
 import { NxResizeObserver } from './nx-resize.directive';
 import { NxScrollHelperDirective } from './nx-scroll-helper';
 import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
+import { NxTooltipDirective } from './nx-tooltip.directive';
 import { NxUrlValidatorDirective } from './nx-url-validator';
 
 @NgModule({
@@ -35,6 +36,7 @@ import { NxUrlValidatorDirective } from './nx-url-validator';
         NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,
+        NxTooltipDirective,
         NxMatchHeightDirective,
         FeatureFlagDirective
     ],
@@ -52,6 +54,7 @@ import { NxUrlValidatorDirective } from './nx-url-validator';
         NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,
+        NxTooltipDirective,
         NxMatchHeightDirective,
         FeatureFlagDirective
     ]

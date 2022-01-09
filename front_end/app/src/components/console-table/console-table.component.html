@@ -45,23 +45,26 @@
                 </th>
                 <ng-container [ngSwitch]="field.type">
                     <ng-container *ngSwitchCase="CONFIG_TYPE.STATUS">
-                        <td cdk-cell *cdkCellDef="let element" [ngbTooltip]="field.meta?.tooltip" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
-                            {{element[field.name]}}
-                        </td>
+                        <td cdk-cell *cdkCellDef="let element"
+                            [nxTooltip]="field.meta?.tooltip"
+                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
+                        >{{element[field.name]}}</td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.COMMENTS">
-                        <td cdk-cell *cdkCellDef="let element" [ngbTooltip]="field.meta?.tooltip" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
-                            {{element[field.name]}}
-                        </td>
+                        <td cdk-cell *cdkCellDef="let element"
+                            [nxTooltip]="field.meta?.tooltip"
+                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
+                        >{{element[field.name]}}</td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_LINK">
                         <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
                             <ng-template #icon>
                                 <svg-icon nx-add-svg-src
-                                [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
-                                [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
-                                [applyClass]="true"
-                                [ngbTooltip]="field.meta?.tooltip"></svg-icon>
+                                    [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
+                                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
+                                    [applyClass]="true"
+                                    [nxTooltip]="field.meta?.tooltip"
+                                ></svg-icon>
                             </ng-template>
                             <ng-template #externalLink>
                                 <a [href]="element[field.name]" target="_blank">
@@ -108,9 +111,8 @@
                                     <ng-template #standardStatus>
                                         <span class="status-label">{{element[field.name].manifest.fields[0].label}}</span>
                                     </ng-template>
-                                    <span *ngIf="asyncErrors[element[field.name].lookupKey];
-                                        else standardStatus" 
-                                        [ngbTooltip]="errorsTooltip"
+                                    <span *ngIf="asyncErrors[element[field.name].lookupKey]; else standardStatus"
+                                        [nxTooltip]="errorsTooltip"
                                     >{{element[field.name].manifest.fields[0].meta.options.error}}</span>
                                 </ng-template>
                                 <ng-container *ngIf="asyncInProgress[element[field.name].lookupKey] as progress; else download">
@@ -137,7 +139,8 @@
                                     [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
                                     [applyClass]="true"
                                     class="icon-modal-svg"
-                                    [ngbTooltip]="field.meta?.tooltip"></svg-icon>
+                                    [nxTooltip]="field.meta?.tooltip"
+                                ></svg-icon>
                             </a>
                         </td>
                     </ng-container>
