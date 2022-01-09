@@ -19,6 +19,7 @@ export class MenuNode {
     public state?: 'pending' | 'draft'
     public breadcrumbs: MenuNode[];
     public queryParamsHandling: QueryParamsHandling = ''
+    public htmlID?: string;
 
     constructor(
         public name = '',
@@ -34,7 +35,7 @@ export class MenuNode {
         public next_item = false,
         public urlified = '',
         public subtitle = '',
-        public name_raw = ''
+        public name_raw = '',
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;

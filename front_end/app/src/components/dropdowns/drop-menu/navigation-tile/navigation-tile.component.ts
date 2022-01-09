@@ -39,7 +39,7 @@ export class NxNavigationTileComponent {
                     : Auth.LOGGED_OUT;
             });
 
-        this._setupIds()
+        this._setupIds();
     }
 
     ngOnDestroy() {}
@@ -54,8 +54,10 @@ export class NxNavigationTileComponent {
     }
 
     protected _setupIds () {
-        this.node['htmlID'] = this._generateNodeId(this.node);
-        this.node.nodes.map(link => link['htmlID'] = this._generateLinkId(this.node, link));
+        this.node.htmlID = this._generateNodeId(this.node);
+        this.node.nodes.map(link => {
+            link.htmlID = this._generateLinkId(this.node, link);
+        });
     }
 
     protected _handleName (name) {
