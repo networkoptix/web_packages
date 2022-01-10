@@ -335,7 +335,7 @@ export class MergeModalContent {
                             id: peer.id.replace(/[{}]/g, ''),
                             url: `${ip}:${peer.port}`,
                             systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName() : peer.systemName,
-                            name: peer.name,
+                            name: peer.systemName || peer.name,
                             discoveredPeer: true,
                             ip,
                             isNew
