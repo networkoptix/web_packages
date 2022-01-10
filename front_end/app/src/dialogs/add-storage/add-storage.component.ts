@@ -106,7 +106,8 @@ export class AddStorageModalContent {
                 this.urlChecked = false;
                 this.url = values.url;
                 this.checkUrlValidity();
-                this.passwordChecked = this.loginPasswordWrong = false;
+                this.loginPasswordWrong = false;
+                this.passwordChecked = false;
             });
 
         const options = {

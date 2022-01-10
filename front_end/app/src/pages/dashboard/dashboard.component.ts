@@ -265,7 +265,8 @@ export class NxDashboardComponent implements DashboardGroup {
         this.router.navigate([], { relativeTo: this.route, queryParams: { widgetUrl, dashboardUrl: '', dashboardId }, queryParamsHandling: 'merge' });
         this.menu = menu;
         this.dragEnabled = Boolean(widgetUrl || dragEnabled && menu.length);
-        this.pageService.pageTitle = this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems();
+        this.dashboardGroupName = menu.length ? dashboardGroupName : this.LANG.pageTitles.systems();
+        this.pageService.pageTitle = this.dashboardGroupName;
 
         this.updateCards(dashboardId, this.menu);
 
@@ -386,7 +387,10 @@ export class NxDashboardComponent implements DashboardGroup {
                 this.menu.push(newDashboard);
                 activeIndex = newDashboard.id;
             }
-            this.activeDashboard = this.menu[activeIndex].cards = this.cards = this.validateCards([...this.cards, card]);
+            this.cards = this.validateCards([...this.cards, card]);
+            this.menu[activeIndex].cards = this.cards;
+            // @ts-ignore
+            this.activeDashboard = this.cards;
             this.updatePersistedConfig();
             setTimeout(() => {
                 this.activeCellIndex = this.cards.length - 1;
@@ -452,7 +456,8 @@ export class NxDashboardComponent implements DashboardGroup {
             }
             this.updateCards(activeId, menu);
             this.dragEnabled = dragEnabled;
-            this.pageService.pageTitle = this.dashboardGroupName = dashboardGroupName;
+            this.dashboardGroupName = dashboardGroupName;
+            this.pageService.pageTitle = dashboardGroupName;
             this.updatePersistedConfig();
         };
         fileReader.readAsText(settingsFile);

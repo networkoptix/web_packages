@@ -129,7 +129,8 @@ export class EmailNotificationsComponent {
     }
 
     handleSendAnother() {
-        this.payload = this.response = '';
+        this.response = '';
+        this.payload = '';
     }
 
     updatePreview() {

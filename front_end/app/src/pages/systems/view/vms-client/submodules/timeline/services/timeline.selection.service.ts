@@ -184,9 +184,11 @@ export class TimelineSelectionService {
             const diff_ms = Math.abs(mouseTime - playbackTime);
             const diff_px = this.timeline.durationToDomWidth(diff_ms);
             if (diff_px < PLAYBACK_OVERLAY_TRESHOLD_PX) {
-                this._selectedRange.end = this._selectedRange.start = playbackTime;
+                this._selectedRange.start = playbackTime;
+                this._selectedRange.end = playbackTime;
             } else {
-                this._selectedRange.end = this._selectedRange.start = mouseTime;
+                this._selectedRange.start = mouseTime;
+                this._selectedRange.end = mouseTime;
             }
             this._dragAnchorMs = this._selectedRange.start;
         } else {

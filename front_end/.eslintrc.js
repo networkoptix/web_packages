@@ -128,6 +128,7 @@ module.exports = {
         //         "VariableDeclarator": true
         //     }
         // }],
+        'no-multi-assign': 'error',
         'no-multi-str': 'error',
         'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
         'no-new': 'error',

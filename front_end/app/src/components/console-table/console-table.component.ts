@@ -99,7 +99,9 @@ export class NxConsoleTableComponent {
 
     async ngOnChanges({ sectionParam }: SimpleChanges) {
         if (sectionParam && (sectionParam.firstChange || sectionParam.currentValue !== sectionParam.previousValue)) {
-            this.selectedData = this.displayedColumns = this.selectedManifest = null;
+            this.selectedManifest = null;
+            this.displayedColumns = null;
+            this.selectedData = null;
             this.dataLoaded = false;
 
             combineLatest([
@@ -270,7 +272,8 @@ export class NxConsoleTableComponent {
         this.asyncErrors[asyncSettings.lookupKey] = false;
         this.asyncInProgress[asyncSettings.lookupKey] = asyncSettings.manifest.fields[1].meta?.options?.pending;
         this.cancelHandlers[asyncSettings.lookupKey] = () => {
-            this.asyncInProgress[asyncSettings.lookupKey] = this.asyncErrors[asyncSettings.lookupKey] = false;
+            this.asyncErrors[asyncSettings.lookupKey] = false;
+            this.asyncInProgress[asyncSettings.lookupKey] = false;
             packageHandler.cancelProcess();
         };
         packageHandler.state$.pipe(untilDestroyed(this)).subscribe((state) => {

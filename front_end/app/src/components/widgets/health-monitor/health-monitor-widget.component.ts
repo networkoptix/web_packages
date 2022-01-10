@@ -204,7 +204,8 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         if (!this.manifest) {
             try {
                 const { reply: manifest } = await nextSystem.mediaserver.getHealthManifest().toPromise();
-                this.manifest = NxHealthMonitorWidgetComponent.manifestLookup[system.value] = manifest;
+                NxHealthMonitorWidgetComponent.manifestLookup[system.value] = manifest;
+                this.manifest = manifest;
             } catch (e) {
                 if (systemsToTry.length) {
                     const [system, ...systems] = systemsToTry;

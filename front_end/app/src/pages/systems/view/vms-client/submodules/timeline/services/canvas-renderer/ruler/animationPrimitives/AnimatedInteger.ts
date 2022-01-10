@@ -24,7 +24,8 @@ export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
     }
 
     public reset (v: int) {
-        this._target = this._value = Math.round(v);
+        this._value = Math.round(v);
+        this._target = Math.round(v);
         this._lastChange = Date.now();
     }
 

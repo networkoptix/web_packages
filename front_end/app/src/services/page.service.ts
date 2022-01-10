@@ -80,7 +80,8 @@ export class NxPageService {
      */
     updateLookups(property, value) {
         const { url } = this.router;
-        const urlProperties = this.metaLookup[url] ||= this.generateDefaultMeta(url);
+        this.metaLookup[url] ||= this.generateDefaultMeta(url);
+        const urlProperties = this.metaLookup[url];
         if (value) {
             urlProperties[property] = value;
         }

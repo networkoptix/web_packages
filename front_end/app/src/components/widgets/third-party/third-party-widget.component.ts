@@ -40,7 +40,8 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         const editableSource = frame.contentDocument.querySelector('pre#plain-text-editable');
         if (editableSource) {
             editableSource.addEventListener('blur', ({ target: { innerText } }) => {
-                this.card.config.source = this.card.config.editSource = `<pre id="plain-text-editable" contenteditable>${innerText}</pre>`;
+                this.card.config.editSource = `<pre id="plain-text-editable" contenteditable>${innerText}</pre>`;
+                this.card.config.source = `<pre id="plain-text-editable" contenteditable>${innerText}</pre>`;
                 this.saveSettings();
             });
         }

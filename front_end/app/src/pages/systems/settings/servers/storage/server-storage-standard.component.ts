@@ -199,7 +199,8 @@ export class NxSystemStorageComponent implements OnInit {
                             this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
                         }
                         const watcher = this.modeWatchers[this.normalizeId(storageId)];
-                        watcher.value = watcher.originalValue = mode;
+                        watcher.originalValue = mode;
+                        watcher.value = mode;
                     }
                     if (reservedOrBeingChecked) {
                         this.previouslyReserved.add(storageId);
@@ -221,7 +222,8 @@ export class NxSystemStorageComponent implements OnInit {
                     this.pollStats();
                 }
                 this.setupWatchers();
-                this.waitingForStorages = this.loading = false;
+                this.loading = false;
+                this.waitingForStorages = false;
                 if (this.currentStorageState.reindexing) {
                     this.currentStorageState.reindexing.forEach(mode => {
                         this.reindexing(TARGET_STORAGE[mode.toUpperCase()]);
@@ -332,7 +334,8 @@ export class NxSystemStorageComponent implements OnInit {
         };
         const handleFailedBackupChange = (backupSaveState) => {
             const backup = backupSaveState === 'StartFail';
-            this.isBackupOn.originalValue = this.backupState = !backup;
+            this.backupState = !backup;
+            this.isBackupOn.originalValue = !backup;
             this.isBackupOn.value = backup;
         };
         const updateBackup = () => this.system.useRest
@@ -432,12 +435,16 @@ export class NxSystemStorageComponent implements OnInit {
             await this.system.update();
         }
         this.customSettings = false;
-        this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = true;
+        this.isBackupOn.originalValue = true;
+        this.isBackupOn.value = true;
+        this.backupState = true;
         return Promise.resolve();
     }
 
     turnOffBackup = async(retries = 5) => {
-        this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = !retries;
+        this.isBackupOn.originalValue = !retries;
+        this.isBackupOn.value = !retries;
+        this.backupState = !retries;
         await this.system.serverManager.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
         if (this.system.useRest) {
             const cameras: any = this.system.cameraManager.cameras.map(({ id }) => ({ id, backupPolicy: 'off' }));
@@ -450,7 +457,9 @@ export class NxSystemStorageComponent implements OnInit {
             await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
             return this.turnOffBackup(retries - 1);
         } else {
-            this.backupState = this.isBackupOn.value = this.isBackupOn.originalValue = false;
+            this.isBackupOn.originalValue = false;
+            this.isBackupOn.value = false;
+            this.backupState = false;
         }
     }
 

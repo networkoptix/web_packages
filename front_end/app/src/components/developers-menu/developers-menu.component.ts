@@ -248,7 +248,8 @@ export class NxDevelopersMenuComponent implements OnInit {
             untilDestroyed(this)
         ).subscribe(menu => {
             if (menu?.nodes?.length) {
-                this.menuNodes = this.displayedMenuNodes = menu.nodes;
+                this.displayedMenuNodes = menu.nodes;
+                this.menuNodes = menu.nodes;
                 if (this.searchEnabled && this.uriService.queryParams.search && !this.queryChanged) {
                     this.filterMenuItems(this.uriService.queryParams.search);
                 }
@@ -256,7 +257,8 @@ export class NxDevelopersMenuComponent implements OnInit {
                     this.openNodeAndParents(this.service.activeNode);
                 }
             } else {
-                this.menuNodes = this.displayedMenuNodes =  [];
+                this.displayedMenuNodes = [];
+                this.menuNodes = this.displayedMenuNodes;
             }
         });
 

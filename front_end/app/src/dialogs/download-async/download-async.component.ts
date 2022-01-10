@@ -91,7 +91,8 @@ export class PackageHandler {
             switch (state) {
                 case PackageState.READY:
                     this.packageState = PackageProgress.DOWNLOAD_READY;
-                    this.current = this.total = this.total || 100;
+                    this.total ||= 100;
+                    this.current = this.total;
                     this.downloadUrl = packageDownloadHandler(
                         this.id,
                         this.downloadId
