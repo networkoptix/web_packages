@@ -104,7 +104,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
+    Login With Code    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
 
 4. password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
@@ -120,7 +120,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
+    Login With Code    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
 
 5. password with space in the middle is valid
@@ -136,7 +136,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
+    Login With Code    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
 
 6. more than 255 symbols can be entered in new password field and then are cut to 255
@@ -193,7 +193,7 @@ Reset DB and Open New Browser On Failure
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
+    Login With Code    ${email}    ${BASE PASSWORD}
 
 11. should open change password page in anonymous state
     [tags]    anonymous

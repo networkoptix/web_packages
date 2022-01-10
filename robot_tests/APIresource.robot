@@ -2,6 +2,8 @@
 Resource          resource.robot
 Library           RequestsLibrary
 Library           NoptixLibrary/Encode.py
+Library           NoptixLibrary/CloudAuth.py     ${ENV}
+
 
 *** Variables ***
 ${default name}    API made system
@@ -155,7 +157,7 @@ Activate Account
     Create Digest Session    Activate Account session    ${ENV}    auth=${new user auth}    disable_warnings=1
     ${resp}=    Post Request    Activate Account session    /api/account/activate    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
-    CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
+    Login With Code    ${email}    ${password}
     Return From Keyword    ${resp.json()}
 
 Log Out via API

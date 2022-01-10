@@ -18,6 +18,7 @@ Library      NoptixLibrary
 Library      NoptixLibrary/ServerAPI.py
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
+Library      NoptixLibrary/CloudAuth.py     ${ENV}
 Library      pabot.PabotLib
 
 *** Variables ***
@@ -342,7 +343,7 @@ Register And Activate Account
     Sleep    1
     Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
     Run Keyword If    '${act}'=='ui'     Activate    ${email}
-    Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
+    Run Keyword If    '${act}'=='ui'     Login With Code    ${email}    ${password}
 
 Register and activate account with random email
     [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=api
@@ -394,7 +395,7 @@ Restore Password using API
     ${code}=   Convert Code    ${code}
     ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${new password}
     Should Be Equal As Strings    ${resp}    200
-    CloudPortalAPI.Log In    ${ENV}    ${email}    ${new password}
+    Login With Code    {email}    ${new password}
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
