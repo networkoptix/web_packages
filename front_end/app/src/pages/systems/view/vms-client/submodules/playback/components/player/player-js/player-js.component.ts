@@ -1,11 +1,23 @@
 import {
-    Component, AfterViewInit, OnDestroy,
-    ElementRef, ViewChild, Input, Output,
-    EventEmitter, ViewEncapsulation, OnChanges, SimpleChanges
+    Component,
+    OnDestroy,
+    ElementRef,
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    ViewEncapsulation,
+    OnChanges,
+    SimpleChanges,
 } from '@angular/core';
-import { PLAYBACK_MODE }                                    from '../../../datatypes/PlaybackState';
-import { LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
-import videojs                                              from 'video.js';
+import videojs from 'video.js';
+
+import {
+    LoggerDecorator,
+    BASE64_SINGLE_TRANSPARENT_PIXEL
+} from '@pages/systems/view/vms-client/utils';
+
+import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
 
 @Component({
     selector: 'player-js',
@@ -29,7 +41,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     @Output() videoEnded = new EventEmitter<boolean>();
     @Output() videoError = new EventEmitter<any>();
 
-    @ViewChild('video', { static: true }) videoView: ElementRef;
+    @ViewChild('video', { static: true }) videoView: ElementRef<HTMLVideoElement>;
 
     actualRotation = 0;
     private player: videojs.Player;
@@ -106,7 +118,14 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 
-        if (this.videoView && (changes.mode || changes.sourceUrl || changes.posterUrl || changes.paused)) {
+        if (
+            this.videoView && (
+                changes.mode ||
+                changes.sourceUrl ||
+                changes.posterUrl ||
+                changes.paused
+            )
+        ) {
             if (this.sourceUrl) {
                 this.transport = this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm';
             }

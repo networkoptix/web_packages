@@ -1,14 +1,38 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import PlaybackService from '../../../services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
-import { Subscription } from 'rxjs';
+import {
+    Component,
+    OnInit,
+    AfterViewInit,
+    OnDestroy,
+    ElementRef,
+    ViewChild,
+    Input,
+    Output,
+    EventEmitter,
+    HostListener,
+    OnChanges,
+} from '@angular/core';
 import Hls from 'hls.js';
-import { assertNever, LoggerDecorator, BASE64_SINGLE_TRANSPARENT_PIXEL } from '@pages/systems/view/vms-client/utils';
-import { WebClientUxService } from '@pages/systems/view/services/webclient-ux.service';
+import { Subscription } from 'rxjs';
+
+import {
+    WebClientUxService
+} from '@pages/systems/view/services/webclient-ux.service';
+import {
+    assertNever,
+    LoggerDecorator,
+    BASE64_SINGLE_TRANSPARENT_PIXEL
+} from '@pages/systems/view/vms-client/utils';
 import { NxUtilsService } from '@services/utils.service';
-import { NxLanguageProviderService }  from '../../../../../../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '../../../../../../../../../../language_i18n_static_types';
+
+import {
+    LanguageI18NStaticTypes
+} from '../../../../../../../../../../language_i18n_static_types';
+import {
+    NxLanguageProviderService
+}  from '../../../../../../../../../services/nx-language-provider';
+import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
+import PlaybackService from '../../../services/playback.service';
 
 @Component({
     selector: 'player-native',
@@ -26,8 +50,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     @Output() bufferingChange = new EventEmitter<boolean>();
 
-    @ViewChild('video') videoView: ElementRef;
-    @ViewChild('videoSource') videoSourceView: ElementRef;
+    @ViewChild('video') videoView: ElementRef<HTMLVideoElement>;
+    @ViewChild('videoSource') videoSourceView: ElementRef<HTMLSourceElement>;
 
     protected get $video(): HTMLVideoElement {
         return this.videoView?.nativeElement;
@@ -53,7 +77,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     videoErrorEventHandler = (event: any) => {
-        if (this.videoView?.nativeElement.error?.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+        if (
+            this.videoView?.nativeElement.error?.code ===
+            MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED
+        ) {
             this.playback.setError(this.LANG.common.cameraStates.noFormat());
         }
 
@@ -78,7 +105,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
                 });
         }
 
-        if (this.videoView?.nativeElement.error?.message === 'PIPELINE_ERROR_EXTERNAL_RENDERER_FAILED') {
+        if (
+            this.videoView?.nativeElement.error?.message ===
+            'PIPELINE_ERROR_EXTERNAL_RENDERER_FAILED'
+        ) {
             this.playback.pause();
             this.playback.unpause();
             this._log('PIPELINE_ERROR_EXTERNAL_RENDERER_FAILED ->');
@@ -86,8 +116,13 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     public ngAfterViewInit (): void {
-        this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.videoView.nativeElement.addEventListener('error', this.videoErrorEventHandler);
+        this.playbackSubscription = this.playback.subject.subscribe(
+            this.onPlaybackSubjectChange
+        );
+        this.videoView.nativeElement.addEventListener(
+            'error',
+            this.videoErrorEventHandler
+        );
         this._handleRotation();
     }
 
@@ -108,7 +143,8 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
 
         if (Math.abs(this.rotation % 180) === 90) {
-            this.videoView.nativeElement.style.width = `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
+            this.videoView.nativeElement.style.width =
+                `${this.videoView.nativeElement.parentElement.getBoundingClientRect().height}px`;
             this.videoView.nativeElement.style.transform = `rotate(${this.rotation}deg)`;
         } else {
             this.videoView.nativeElement.style.width = '100%';
@@ -118,7 +154,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     }
 
     public ngOnDestroy (): void {
-        this.videoView?.nativeElement.removeEventListener('error', this.videoErrorEventHandler);
+        this.videoView?.nativeElement.removeEventListener(
+            'error',
+            this.videoErrorEventHandler
+        );
         this.playbackSubscription.unsubscribe();
         this.$video.pause();
         this.$video.src = '';
@@ -134,7 +173,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.$video.pause();
         // remind player it have poster to show (Safari)
         const poster = this.videoView.nativeElement.getAttribute('poster');
-        this.videoView.nativeElement.setAttribute('poster', poster || BASE64_SINGLE_TRANSPARENT_PIXEL);
+        this.videoView.nativeElement.setAttribute(
+            'poster',
+            poster || BASE64_SINGLE_TRANSPARENT_PIXEL
+        );
     }
 
     protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
@@ -149,7 +191,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
                 if (prevState.mode !== this.state.mode) {
                     this._startPlayback();
                 }
-                if (this.state.mode === PLAYBACK_MODE.ARCHIVE && this.state.paused) {
+                if (
+                    this.state.mode === PLAYBACK_MODE.ARCHIVE &&
+                    this.state.paused
+                ) {
                     this.pauseVideo();
                     this._log('react on pause');
                     this.bufferingChange.emit(false);
@@ -169,7 +214,10 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         // @ts-ignore
         const posterUrl = `${this.state?.posterUrl}&rotate=${this.state.transport !== 'hls' ? this.rotation : 0}` || null;
 
-        this.videoView.nativeElement.setAttribute('poster', posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL);
+        this.videoView.nativeElement.setAttribute(
+            'poster',
+            posterUrl || BASE64_SINGLE_TRANSPARENT_PIXEL
+        );
 
         if (!sourceUrl) {
             this._warn('ordered start playback request with empty sourceUrl');
