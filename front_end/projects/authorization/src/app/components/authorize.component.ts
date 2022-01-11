@@ -10,10 +10,10 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, of } from 'rxjs';
+import { catchError, debounceTime, map } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
@@ -24,6 +24,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { HttpClient } from '@angular/common/http';
 
 require('what-input');
 
@@ -53,7 +54,8 @@ export type AuthorizeStateType = 'email' |
     'reset' |
     'error' |
     'auth' |
-    'backup'
+    'backup' |
+    'notSecure'
 
 export enum AuthorizeState {
     email = 'email',
@@ -65,7 +67,8 @@ export enum AuthorizeState {
     reset = 'resetPassword',
     error = 'error',
     auth = 'authCode',
-    backup = 'backupCode'
+    backup = 'backupCode',
+    notSecure = 'notSecure'
 }
 
 export enum ClientType {
@@ -177,6 +180,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private httpClient: HttpClient,
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
@@ -184,13 +188,23 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private elem: ElementRef,
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
-        @Inject(WINDOW) public window: Window,
-        // private pageService: NxPageService,
-        // private uriService: NxUriService,
-        // private scrollMechanicsService: NxScrollMechanicsService
+        @Inject(WINDOW) public window: Window
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+    }
+
+    private verifyRedirectUrl(systemId) {
+        const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
+        return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
+            .pipe(
+                untilDestroyed(this),
+                catchError(() => of(false)),
+                map((servers: any) => {
+                    return servers.some(({ remoteAddresses }) => remoteAddresses
+                        .some((address) => this.initialData.redirect_url.includes(address))
+                    );
+                }));
     }
 
     // method only used by child components to transition between child components
@@ -259,11 +273,21 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.emailLocked = true;
                 this.currentState = AuthorizeState.password;
             } else {
-                if (email) {
-                    this.loginEmail = email;
-                    this.checkEmailProcess.run();
+                const { scope } = this.initialData;
+                let verifiedCheck = of(true);
+                if (scope && !this.initialData.redirect_url.includes(this.window.location.origin)) {
+                    const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
+                    if (findId?.groups.systemId) {
+                        verifiedCheck = this.verifyRedirectUrl(findId.groups.systemId);
+                    }
                 }
-                this.currentState = AuthorizeState.email;
+                verifiedCheck.subscribe((verified) => {
+                    if (email) {
+                        this.loginEmail = email;
+                        this.checkEmailProcess.run();
+                    }
+                    this.currentState = verified ? AuthorizeState.email : AuthorizeState.notSecure;
+                });
             }
         });
     }

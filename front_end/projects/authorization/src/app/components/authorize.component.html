@@ -2,6 +2,13 @@
     <div class="auth-window" [ngSwitch]="currentState"
         [ngClass]="{ 'window-w': viewType === 'web', 'window-d': viewType === 'desktop', 'window-m': viewType === 'mobile' }"
     >
+        <nx-authorize-not-secure-component
+            *ngSwitchCase="AuthorizeState.notSecure"
+            [viewType]="viewType"
+            [loginEmail]="loginEmail"
+            [redirectUrl]="initialData.redirect_url"
+            (setCurrentState)="setCurrentState($event)"
+        ></nx-authorize-not-secure-component>
         <nx-authorize-email-component
             *ngSwitchCase="AuthorizeState.email"
             [clientType]="clientType"

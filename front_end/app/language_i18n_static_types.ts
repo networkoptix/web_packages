@@ -117,6 +117,7 @@ export interface Authorize {
     newPassHeader:              any;
     newPassConfirmText:         any;
     newPassInvalidCode:         any;
+    notSecureText:              any;
     confirmHeader:              any;
     loginError:                 any;
     loginErrorAdditional:       any;
@@ -1259,6 +1260,7 @@ const typeMap: any = {
         { json: "newPassHeader", js: "newPassHeader", typ: "any" },
         { json: "newPassConfirmText", js: "newPassConfirmText", typ: "any" },
         { json: "newPassInvalidCode", js: "newPassInvalidCode", typ: "any" },
+        { json: "notSecureText", js: "notSecureText", typ: "any" },
         { json: "confirmHeader", js: "confirmHeader", typ: "any" },
         { json: "loginError", js: "loginError", typ: "any" },
         { json: "loginErrorAdditional", js: "loginErrorAdditional", typ: "any" },

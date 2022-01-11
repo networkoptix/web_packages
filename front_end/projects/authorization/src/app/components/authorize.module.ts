@@ -23,6 +23,7 @@ import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.
 import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
 import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
+import { NxAuthorizeNotSecureComponent } from './not-secure/not-secure.component';
 
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
@@ -53,6 +54,7 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeCreateAccountComponent,
         NxAuthorizeActivateAccountComponent,
         NxAuthorizeConfirmationComponent,
+        NxAuthorizeNotSecureComponent,
         NxAuthorizeResetPasswordComponent,
         NxAuthorizeResetRequestComponent,
         NxAuthorizeConnectErrorComponent,
