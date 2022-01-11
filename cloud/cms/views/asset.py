@@ -4,6 +4,7 @@ from PIL import Image
 from django.core.files import base
 from django.db.models.expressions import OuterRef, Subquery
 from waffle import flag_is_active
+from cms.controllers.asset_json import get_contexts_and_datastructures_of_asset_type
 from cms.views.celery import download_result
 from util import helpers
 from django.views.decorators.http import require_http_methods
@@ -365,6 +366,42 @@ def review_generator(target_reviews):
         blocked_marker = None
 
 
+def manage_release_note_notification(asset_review):
+    asset = asset_review.version.asset
+    if asset.asset_type.type == AssetType.ASSET_TYPES.release_notes:
+        create_or_update_notification_for_release_note(asset, asset_review.version)
+
+def create_or_update_notification_for_release_note(asset, version):
+    _, datastructures = get_contexts_and_datastructures_of_asset_type(AssetType.ASSET_TYPES.release_notes)
+    datastructures = DataStructure.find_actual_values(
+                    datastructures, asset=asset, version_id=version,
+                    customization_name=settings.CUSTOMIZATION, draft=True
+                )
+
+    build_ds = next(filter(lambda ds: ds.name == "%build%", datastructures.keys()))
+    build_raw = PortalNotification.calc_build(datastructures[build_ds])
+    portal_notification = PortalNotification.objects.filter(build_raw=build_raw).first() or PortalNotification()
+
+    # Do not create if all fields are blank
+    if all(not datastructures[datastructure] or datastructure.name == '%build%' for datastructure in datastructures.keys()):
+        if(portal_notification.id):
+            portal_notification.delete()
+        return
+
+    updated_message = "Cloud Portal Has been Updated. See what’s new"
+
+    notification_dict = {
+        'title' : updated_message,
+        'body'  : updated_message,
+        'build' : datastructures[build_ds],
+        'max_ts': datetime.now() + timedelta(weeks=2)
+    }
+
+    for key, val in notification_dict.items():
+        setattr(portal_notification, key, val)
+    portal_notification.save()
+
+
 def defer_handler(func):
     @wraps(func)
     def _wrap_handler(*args, **kwargs):
@@ -393,6 +430,8 @@ def handle_publish_single_customization(request, asset_review, can_publish, has_
     if not all(["publish" in request.POST, can_publish, has_asset_type_permission]):
         return
 
+    manage_release_note_notification(asset_review)
+
     return publish_review(request, asset_review, settings.CUSTOMIZATION)
 
 
@@ -400,6 +439,8 @@ def handle_publish_single_customization(request, asset_review, can_publish, has_
 def handle_publish_all_customizations(request, asset_review, can_publish, has_asset_type_permission):
     if not all(["publish_all" in request.POST, can_publish, has_asset_type_permission]):
         return
+
+    manage_release_note_notification(asset_review)
 
     reviews = asset_review.version.assetcustomizationreview_set. \
         filter(customization__in=asset_review.version.asset.customizations.all())

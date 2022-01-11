@@ -403,7 +403,8 @@ def test_handle_force_update(mocker, account_factory, arf, db):
 
 
 def test_handle_publish_single_customization(mocker, arf, account_factory, db):
-    published_result, asset_review = [str(uuid4()) for _ in range(2)]
+    published_result = str(uuid4())
+    asset_review = baker.make(AssetCustomizationReview)
     mocker.patch('cms.views.asset.publish_review',
                  return_value=published_result)
     superuser = account_factory()
