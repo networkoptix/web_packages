@@ -19,6 +19,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu';
+import type { Content } from '@src/menu/menu.types';
 
 import { IntegrationService } from '../integration.service';
 
@@ -33,7 +34,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
-    content: any = {};
+    content: Partial<Content> = {};
 
     private integrationSubscription: Subscription;
     private menuDetailsSubscription: Subscription;

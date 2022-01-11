@@ -1,6 +1,16 @@
 import {
-    Component, ElementRef, HostListener, Input, OnChanges, OnInit,
-    SimpleChanges, ViewChild, ViewEncapsulation, EventEmitter, Output
+    Component,
+    ElementRef,
+    HostListener,
+    Input,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+    ViewChild,
+    ViewEncapsulation,
+    EventEmitter,
+    Output,
+    Inject,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -15,13 +25,26 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
 import { NxSystem } from '@services/system.service';
 import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 import { NxMenuService } from './menu.service';
+import type {
+    Content,
+    Level1Item,
+    Level2Item,
+    Level2Button,
+    MenuModel,
+} from './menu.types';
 
 /* Usage
  <nx-menu>
  </nx-menu>
- */
+*/
+
+interface ContentToggle {
+    nodeId: string;
+    state: boolean;
+}
 
 const SCROLL_AREA_LIMIT = 120;
 
@@ -34,14 +57,14 @@ const SCROLL_AREA_LIMIT = 120;
 })
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
-    @Input() content;
-    @Input() searchable;
-    @Input() autoFit = false;
+    @Input() content: Partial<Content>;
+    @Input() searchable: boolean | '';
+    @Input() autoFit: boolean = false;
 
-    @Output() menuSearchMode = new EventEmitter();
-    @Output() contentToggle = new EventEmitter();
+    @Output() menuSearchMode = new EventEmitter<boolean>();
+    @Output() contentToggle = new EventEmitter<ContentToggle>();
 
-    systemId;
+    systemId: string;
     selectedLevel1: string;
     selectedLevel2: string;
     selectedLevel3: string;
@@ -50,9 +73,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
     transition: boolean;
     toggle: boolean;
 
-    menuContent: any = [];
-    menuModel: any = {};
-    navItems: any = [];
+    menuContent: Level1Item[] = [];
+    menuModel: MenuModel = { query: '' };
+    navItems: HTMLAnchorElement[] = [];
     navItemIdx: number;
     windowHeight: number;
     menuHeight: number;
@@ -66,17 +89,17 @@ export class NxMenuComponent implements OnInit, OnChanges {
     menuInit: boolean;
     ribbonShown: boolean = false;
 
-    private unsub$: Subject<boolean> = new Subject();
+    private unsub$ = new Subject<boolean>();
     private origLevel1: string;
     private origLevel2: string;
     private origLevel3: string;
-    private menuOverflowCalc;
+    private menuOverflowCalc: number;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    @ViewChild('menuWrapper') menuWrapper: ElementRef;
-    @ViewChild('scrollArea') scrollArea: ElementRef;
+    @ViewChild('menuWrapper') menuWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('scrollArea') scrollArea: ElementRef<HTMLDivElement>;
 
     constructor(
         configService: NxConfigService,
@@ -86,7 +109,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         public menuService: NxMenuService,
         private searchService: NxSearchService,
         private applyService: NxApplyService,
-        private appStateService: NxAppStateService
+        private appStateService: NxAppStateService,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -97,10 +121,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.menuModel = {
-            query: ''
-        };
-
         this.isSearchable = this.searchable || false;
 
         this.route
@@ -146,7 +166,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         fromEvent(window, 'resize')
             .pipe(
                 untilDestroyed(this),
-                map((event: any) => event.target.innerHeight as number),
+                map((event: FocusEvent) => (event.target as Window).innerHeight),
                 startWith(window.innerHeight)
             ).subscribe(height => {
                 this.windowHeight = height - 64; // 48px header and 1rem padding
@@ -255,7 +275,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
             this.menuHeight = this.menuWrapper.nativeElement.scrollHeight; // getBoundingClientRect().height;
             this.scrollHeight = this.scrollArea.nativeElement.getBoundingClientRect().height;
 
-            this.containerHeight = this.scrollArea.nativeElement.parentNode.parentNode.getBoundingClientRect().height;
+            this.containerHeight = (this.scrollArea.nativeElement // .scroll-area
+                .parentNode // .level-3-items
+                .parentNode as HTMLDivElement) // .level-1-container
+                .getBoundingClientRect().height;
             // this.menuService.content.length - 1 -> the number of other level1 nodes
             this.permHeight = (this.menuService.content.length - 1) * 40 + (this.containerHeight - this.scrollHeight);
         }
@@ -279,12 +302,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 if (this.scrollArea.nativeElement.scrollHeight > SCROLL_AREA_LIMIT) {
                     this.scrollHeightFit = Math.max(SCROLL_AREA_LIMIT, (windowHeightFit - this.permHeight)) + 'px';
                 } else {
-                    this.scrollHeightFit = this.scrollArea.nativeElement.scrollHeight;
+                    this.scrollHeightFit = this.scrollArea.nativeElement.scrollHeight.toString();
                 }
 
                 // set scrollbar if needed but only after resizing finishes
                 clearTimeout(this.menuOverflowCalc);
-                this.menuOverflowCalc = setTimeout(() => {
+                this.menuOverflowCalc = this.window.setTimeout(() => {
                     const magicNumberToAdd  = 40/* search box */ + 2 * 16/* bottom and top padding */;
                     this.menuOverflow = (windowHeightFit + magicNumberToAdd > this.windowHeight) ? 'auto' : 'hidden';
                 }, 250);
@@ -302,7 +325,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.modelChanged(this.menuModel, false);
     }
 
-    private assignItemId() {
+    private assignItemId(): string {
         if (this.menuService.hoverItemId) {
             this.navItemIdx = this.navItems.findIndex((item: any) => item.id === this.menuService.hoverItemId);
             // remove info for hovered item
@@ -318,7 +341,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return this.navItems[this.navItemIdx].id;
     }
 
-    modelChanged(model, resetLayout = true) {
+    modelChanged(model: MenuModel, resetLayout = true) {
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.menuSearchMode.emit(this.searchMode);
         this.transition = true;
@@ -347,7 +370,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 this.scrollHeightFit = '100%';
                 this.menuOverflow = 'auto';
                 this.navItems = Array.from(
-                    this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3')
+                    this.menuWrapper.nativeElement
+                        .querySelectorAll<HTMLAnchorElement>('.menu-level-3')
                 );
             });
         } else {
@@ -360,8 +384,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         }
     }
 
-    subLevelItemsFor(item) {
-        let levelItems = [];
+    subLevelItemsFor(item: Level1Item): Level2Item[] {
+        let levelItems: Level2Item[] = [];
 
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
@@ -374,7 +398,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return levelItems;
     }
 
-    subLevelButtonsFor(item) {
+    subLevelButtonsFor(item: Level1Item): Level2Button[] {
         let buttons: any = [];
 
         // To avoid complicated code this cover only level2 for now ...
@@ -392,11 +416,14 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return buttons;
     }
 
-    trackItem(index, item) {
+    trackItem<T extends { id: string}>(
+        index: number,
+        item: T
+    ): string | undefined {
         return item ? item.id : undefined;
     }
 
-    toggleItem(state, nodeId) {
+    toggleItem(state: boolean, nodeId: string) {
         // menu have internal state but also is controlled by parent component
         // so we need to update both states
         this.menuContent.find((node) => {

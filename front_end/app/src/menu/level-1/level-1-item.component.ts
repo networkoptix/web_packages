@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxMenuService } from '@src/menu/menu.service';
 
+import type { Level1Item } from '../menu.types';
+
 /* Usage
  */
 
@@ -22,11 +24,11 @@ import { NxMenuService } from '@src/menu/menu.service';
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
     @Input() searchMode: boolean;
-    @Input() base: any = {};
-    @Input() item: any = {};
+    @Input() base: string = '';
+    @Input() item: Partial<Level1Item> = {};
     @Input() selected: boolean;
 
-    @Output() toggle: EventEmitter<any> = new EventEmitter<any>();
+    @Output() toggle = new EventEmitter<boolean>();
 
     itemPath: string;
     _toggle: boolean;
@@ -74,7 +76,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         }
     }
 
-    menuClick(sectionId) {
+    menuClick(sectionId: string) {
         if (!this.searchMode) {
             this.menuService.section = sectionId;
             if (this.itemPath) {

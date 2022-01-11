@@ -7,6 +7,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { NxMenuService } from '@src/menu';
+import type { Content } from '@src/menu/menu.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,7 +20,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    content: any = {};
+    content: Partial<Content> = {};
     menuReady = false;
     userEmail: string;
     private loginStateSubscription: Subscription;

@@ -5,67 +5,75 @@ import { isArray } from 'rxjs/internal-compatibility';
 import { NxSearchService } from '@services/search.service';
 import { NxUtilsService } from '@services/utils.service';
 
+import type {
+    Level1Item,
+    SanitizedLevel1Item,
+    Level2Item,
+    SanitizedLevel3Item,
+    MenuModel,
+} from './menu.types';
+
 @Injectable({
     providedIn: 'root'
 })
 export class NxMenuService implements OnDestroy {
-    selectedSectionSubject = new BehaviorSubject('');
-    selectedSubSectionSubject = new BehaviorSubject([]);
+    selectedSectionSubject = new BehaviorSubject<string>('');
+    selectedSubSectionSubject = new BehaviorSubject<string>('');
     selectedDetailsSection = new BehaviorSubject<string>('');
-    contentSubject = new BehaviorSubject([]);
-    navItemSubject = new BehaviorSubject('');
+    contentSubject = new BehaviorSubject<SanitizedLevel1Item[]>([]);
+    navItemSubject = new BehaviorSubject<string>('');
 
-    private regex;
-    private _hoverItemId;
+    private regex: RegExp;
+    private _hoverItemId: string;
 
     constructor(private searchService: NxSearchService) {
     }
 
-    set content(content) {
+    set content(content: SanitizedLevel1Item[]) {
         this.contentSubject.next(content);
     }
 
-    get content() {
+    get content(): SanitizedLevel1Item[] {
         return this.contentSubject.getValue();
     }
 
-    set navItemId(id) {
+    set navItemId(id: string) {
         this.navItemSubject.next(id);
     }
 
-    get navItemId() {
+    get navItemId(): string {
         return this.navItemSubject.getValue();
     }
 
-    set hoverItemId(id) {
+    set hoverItemId(id: string) {
         this._hoverItemId = id;
     }
 
-    get hoverItemId() {
+    get hoverItemId(): string {
         return this._hoverItemId;
     }
 
-    get section() {
+    get section(): string {
         return this.selectedSectionSubject.getValue();
     }
 
-    set section(section) {
+    set section(section: string) {
         this.selectedSectionSubject.next(section);
     }
 
-    get detail() {
+    get detail(): string {
         return this.selectedDetailsSection.getValue();
     }
 
-    set detail(section) {
+    set detail(section: string) {
         this.selectedDetailsSection.next(section);
     }
 
-    set subSection(section) {
+    set subSection(section: string) {
         this.selectedSubSectionSubject.next(section);
     }
 
-    get subSection() {
+    get subSection(): string {
         return this.selectedSubSectionSubject.getValue();
     }
 
@@ -76,7 +84,7 @@ export class NxMenuService implements OnDestroy {
         this.contentSubject.unsubscribe();
     }
 
-    getItemBy(id) {
+    getItemBy(id: string): SanitizedLevel3Item {
         for (const node of this.content) {
             if (node.level3?.length) {
                 const match = node.level3.filter((item) => {
@@ -92,24 +100,28 @@ export class NxMenuService implements OnDestroy {
         return undefined;
     }
 
-    getAdditionalText(label) {
+    getAdditionalText<T = any>(label: unknown): T {
         if (typeof label === 'function') {
             return label();
         } else if (isArray(label)) {
             return label[0];
         } else {
-            return label;
+            return label as T;
         }
     }
 
-    isEqual(currentContent, newContent, nodeGroup) {
+    isEqual(
+        currentContent: Level1Item[],
+        newContent: Level1Item[],
+        nodeGroup: string
+    ): boolean {
         return NxUtilsService.isEqual(
             currentContent.filter(node => node.id === nodeGroup),
             newContent.filter(node => node.id === nodeGroup)
         );
     }
 
-    hasUpdatedContent(content) {
+    hasUpdatedContent(content: Level1Item[]): boolean {
         const cleanedContent = this.cleanUpAdditionalTextIfNeeded(content);
         return !NxUtilsService.isEqual(cleanedContent, content) ||
             !this.isEqual(cleanedContent, content, 'cameras') ||
@@ -119,7 +131,9 @@ export class NxMenuService implements OnDestroy {
 
     // level-3-item adds additionalText if it doesn't exist
     // cleaning that up if it was added for hasUpdatedContent comparison
-    cleanUpAdditionalTextIfNeeded(newContent) {
+    cleanUpAdditionalTextIfNeeded(
+        newContent: Level1Item[]
+    ): Omit<Level1Item, 'additionalText'>[] {
         return this.content.map(c => {
             const node = newContent.find(nC => nC.id === c.id)?.level3;
             if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
@@ -132,8 +146,11 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    filterItemsBy(model, searchSubMenus = false) {
-        let filteredContent = [];
+    filterItemsBy(
+        model: MenuModel,
+        searchSubMenus: boolean = false
+    ): SanitizedLevel1Item[] {
+        let filteredContent: SanitizedLevel1Item[] = [];
         if (model.query) {
             this.setHighlightPattern(model);
 
@@ -170,7 +187,10 @@ export class NxMenuService implements OnDestroy {
         return filteredContent;
     }
 
-    addHaveNodeToFilteredContent(haveNode, filteredContent) {
+    addHaveNodeToFilteredContent(
+        haveNode: Level1Item,
+        filteredContent: Level1Item[]
+    ) {
         // remove separator if last in search result
         if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
             haveNode.level3.pop();
@@ -178,11 +198,17 @@ export class NxMenuService implements OnDestroy {
         filteredContent.push(haveNode);
     }
 
-    filterNodesIntoHaveNode(model, filteredContent, node, subNode = undefined) {
+    filterNodesIntoHaveNode(
+        model: MenuModel,
+        filteredContent: SanitizedLevel1Item[],
+        node: SanitizedLevel1Item,
+        subNode?: Level2Item
+    ): SanitizedLevel1Item {
         let haveNode = filteredContent.find((filtered) => filtered.id === (subNode || node).id);
+
         (subNode || node).level3.forEach(item => {
             if (item.id) {
-                const additional: string = this.getAdditionalText(item.additionalLabel);
+                const additional = this.getAdditionalText<string>(item.additionalLabel);
 
                 let searchAggregate = item.label || '';
                 searchAggregate += (additional) ? ' ' + additional : '';
@@ -209,7 +235,7 @@ export class NxMenuService implements OnDestroy {
         return haveNode;
     }
 
-    sanitizeContent(content) {
+    sanitizeContent(content: Level1Item[]): SanitizedLevel1Item[] {
         const clean = NxUtilsService.deepCopy(content);
         return clean.map((node) => {
             if (node.level3?.length) {
@@ -229,11 +255,11 @@ export class NxMenuService implements OnDestroy {
                     }
                 });
             }
-            return node;
+            return node as SanitizedLevel1Item;
         });
     }
 
-    cleanMenuContent(content) {
+    cleanMenuContent(content: Level1Item[]): Level1Item[] {
         const clean = NxUtilsService.deepCopy(content);
         return clean.map((node) => {
             delete node.toggle;
@@ -241,7 +267,7 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    private setHighlightPattern(model) {
+    private setHighlightPattern(model: MenuModel) {
         const pattern = (model.queryExactMatch ||
             model.queryEndsWith ||
             model.queryStartsWith ||
@@ -254,7 +280,7 @@ export class NxMenuService implements OnDestroy {
         this.regex = new RegExp(pattern, 'gi');
     }
 
-    private highlighted(item) {
+    private highlighted(item: SanitizedLevel3Item): SanitizedLevel3Item {
         if (item.label) {
             item.label = item.label.replace(
                 this.regex,

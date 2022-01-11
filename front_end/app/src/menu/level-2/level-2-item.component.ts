@@ -2,6 +2,8 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 
 import { NxMenuService } from '@src/menu/menu.service';
 
+import type { Level2Item } from '../menu.types';
+
 /* Usage
  */
 
@@ -11,8 +13,8 @@ import { NxMenuService } from '@src/menu/menu.service';
     styleUrls: ['level-2-item.component.scss']
 })
 export class NxLevel2ItemComponent implements OnInit {
-    @Input() base: any = {};
-    @Input() item: any = {};
+    @Input() base: string = '';
+    @Input() item: Partial<Level2Item> = {};
     @Input() selected: boolean;
 
     itemPath: string;

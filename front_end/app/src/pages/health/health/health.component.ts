@@ -26,6 +26,7 @@ import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu';
+import type { Content } from '@src/menu/menu.types';
 
 import { NxHealthService } from '../health.service';
 
@@ -43,7 +44,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     system: NxSystem | any;
     server: NxSystemAPI;
 
-    menu;
+    menu: Content;
 
     reportSnapshot;
 

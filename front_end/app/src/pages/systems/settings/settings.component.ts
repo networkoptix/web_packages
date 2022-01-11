@@ -33,7 +33,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu';
-
+import type { Content, Level3Item } from '@src/menu/menu.types';
 import { NxSettingsService } from './settings.service';
 
 @UntilDestroy({ checkProperties: true })
@@ -49,7 +49,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
-    content: any = [];
+    content: Partial<Content> = {};
 
     account: Account;
     system: NxSystem|any;
@@ -193,7 +193,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             searchableResults: false,
             selectedSection: '', // updated by selectedSectionSubject
             selectedSubSection: '', // updated by selectedSubSectionSubject
-            system: {}, // updated by getSystemInfo
+            system: {} as NxSystem, // updated by getSystemInfo
             base: this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
             level1: [
                 {
@@ -593,9 +593,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             // Retain buttons
-            // @ts-ignore
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
-                // @ts-ignore
                 usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
             } else {
                 usersNode.level2 = [];
@@ -603,7 +601,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (this.system && this.system.users?.length > 0) {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
                     const id = NxUtilsService.cleanId(user.id);
-                    const node: any = {
+                    const node: Level3Item = {
                         additionalLabel: (this.LANG.accessRoles[user.role.name]?.label?.()) || user.role.name,
                         id,
                         isEnabled: user.isEnabled,
@@ -629,8 +627,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 if (localUsers.length) {
                     usersNode.level3.push(...localUsers);
                     if (cloudUsers.length) {
-                        usersNode.level3.push({ horizontal: true });
+                        usersNode.level3.push(
+                            { horizontal: true } as Level3Item
+                        );
                     }
+                    // Hack to get a horizontal divider
+                    // between local and cloud users
+                    // (See menu.component.html)
                 }
                 if (cloudUsers.length) {
                     usersNode.level3.push(...cloudUsers);

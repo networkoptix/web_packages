@@ -13,6 +13,8 @@ import { SubscriptionLike } from 'rxjs';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxMenuService } from '@src/menu/menu.service';
 
+import type { Level3Item, MenuModel } from '../menu.types';
+
 /* Usage
  */
 
@@ -23,8 +25,8 @@ import { NxMenuService } from '@src/menu/menu.service';
     styleUrls: ['level-3-item.component.scss']
 })
 export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() base: any = {};
-    @Input() item: any = {};
+    @Input() base: string = '';
+    @Input() item: Partial<Level3Item> = {};
     @Input() selected: boolean;
     @Input() first: boolean;
     @Input() idx: number;
@@ -34,7 +36,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     itemPath: string;
     isEnabled: boolean;
     menuNavItemId: string;
-    queryParams: any = {};
+    queryParams: Partial<MenuModel> = {};
 
     navItemSubscription: SubscriptionLike;
 
@@ -79,7 +81,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    setNavIdx(item) {
+    setNavIdx(item: Partial<Level3Item>) {
         this.menuService.hoverItemId = item.id;
     }
 }

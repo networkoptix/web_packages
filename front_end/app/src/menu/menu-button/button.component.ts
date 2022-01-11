@@ -3,9 +3,11 @@ import { Component, Input }  from '@angular/core';
 import { NxDialogsService }  from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { IConfig, NxConfigService } from '@services/nx-config';
+import type { NxSystem } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
 
 import { NxMenuService } from '../menu.service';
+import type { Level2Button } from '../menu.types';
 
 @Component({
     selector: 'nx-menu-button',
@@ -19,8 +21,8 @@ import { NxMenuService } from '../menu.service';
     >{{caption}}</button>`
 })
 export class NxMenuButtonComponent {
-    @Input() button;
-    @Input() system;
+    @Input() button: Level2Button;
+    @Input() system: NxSystem;
 
     caption: string;
     CONFIG: IConfig;
