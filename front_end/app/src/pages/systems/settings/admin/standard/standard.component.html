@@ -197,7 +197,7 @@
                             <span translate>Only client-server video traffic can be encrypted.</span>
                         </label>
                     </ng-container>
-                    <ng-container *ngIf="!environment.isLocal && system.useRest">
+                    <ng-container *ngIf="!environment.isLocal && system.useRest && system.userManager.isMine">
                         <div class="d-flex checkbox-block align-items-center mt-1">
                             <nx-checkbox
                                     name="mandatory2fa"
