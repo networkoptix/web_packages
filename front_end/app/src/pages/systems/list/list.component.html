@@ -36,7 +36,7 @@
                         <div *cdkDragPlaceholder></div>
                         <div class="card card-condensed hoverable">
                             <ng-template #isSystem>
-                            <div class="card-body" (click)="openSystem(system)">
+                            <div class="card-body d-flex flex-column" (click)="openSystem(system)">
                                 <h2 class="old-h12 d-block" [innerHTML]="(system.name | unsafe | highlight:search.value)"></h2>
                                 <span class="user-name"
                                     [innerHTML]="(getSystemOwnerName(system, userEmail) | unsafe | highlight:search.value)"></span>

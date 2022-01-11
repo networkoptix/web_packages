@@ -1,26 +1,26 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Location }                  from '@angular/common';
 import {
     Component, OnDestroy, OnInit
 }                                    from '@angular/core';
-import { Location }                  from '@angular/common';
 import { Router }                    from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
-import { debounceTime }              from 'rxjs/operators';
 import { Subject, Subscription }     from 'rxjs';
+import { debounceTime }              from 'rxjs/operators';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { NxDialogsService }          from '@dialogs/dialogs.service';
+import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
 import { NxAccountService, Account } from '@services/account.service';
+import { NxMenusService }            from '@services/menus.service';
+import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxHeaderService }           from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService }             from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUriService }              from '@services/uri.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxHeaderService }           from '@services/nx-header.service';
-import { NxMenusService }            from '@services/menus.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
+import { NxUriService }              from '@services/uri.service';
 import { NxUtilsService }            from '@services/utils.service';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 interface SystemGroup {
     id: string;
@@ -34,10 +34,10 @@ interface SystemGroup {
 @Component({
     selector: 'nx-systems-list-component',
     templateUrl: 'list.component.html',
-    styleUrls: ['list.component.scss']
+    styleUrls: ['../../../components/systems-list/list.component.scss']
 })
 
-export class NxSystemsListComponent implements OnInit, OnDestroy {
+export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
