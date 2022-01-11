@@ -98,7 +98,7 @@
         'grid-row': 'span ' + card.size.value.rows
       }">
       <div cdkDrag cdkDragBoundary=".dashboard-parent" (cdkDragEntered)="entered($event)" [cdkDragData]="i"
-        (mousedown)="updateActive(i, $event); showSettings = false" class="dashboard-card" (mouseover)="hoverCellIndex = i"
+        (mousedown)="updateActive(i, $event)" class="dashboard-card" (mouseover)="hoverCellIndex = i"
         (mouseleave)="hoverCellIndex = -1"
         [ngClass]="{'active-widget': dragEnabled && activeCellIndex === i, 'drag-enabled': dragEnabled}">
         <div cdkDragHandle>
