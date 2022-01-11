@@ -1,7 +1,7 @@
-import { ms, int } from '../../../utils/type-aliases';
+import { ms, int } from '@vms-client/utils/type-aliases';
 import { ICamera, ISimpleTimeRange, SimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
 import BirdViewTree from './BirdViewTree';
-import { PlaybackTransport } from '@pages/systems/view/view.types';
+import { PlaybackTransport } from '@view/view.types';
 
 interface NameValue {
     name: string,

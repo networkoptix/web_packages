@@ -3,9 +3,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
+import { LoggerDecorator } from '@view/vms-client/utils';
+import SelectionService from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
-import SelectionService from '../../../timeline/services/timeline.selection.service';
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
 import PlaybackService from '../../services/playback.service';
 

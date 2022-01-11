@@ -17,6 +17,18 @@ import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import FpsMeterService from '@services/fps-meter.service';
 import { NxUtilsService } from '@services/utils.service';
+import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import PlaybackState, { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import TimelineExtendToNowService from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
+import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
+import ICamera, {
+    AvailableTransportsAndResolutions,
+    SimpleTimeRange,
+} from '@vms-client/submodules/vms/datatypes/ICamera';
+import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { LoggerDecorator } from '@vms-client/utils';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
@@ -27,18 +39,6 @@ import { NxSystemService, NxSystem } from '../../../../../services/system.servic
 import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import { PlaybackQuality, PlaybackTransport } from '../../view.types';
-import PlaybackState, { PLAYBACK_MODE } from '../../vms-client/submodules/playback/datatypes/PlaybackState';
-import PlaybackService from '../../vms-client/submodules/playback/services/playback.service';
-import TimelineExtendToNowService from '../../vms-client/submodules/timeline/services/timeline.extend-to-now.service';
-import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service';
-import ICamera, {
-    AvailableTransportsAndResolutions,
-    SimpleTimeRange,
-} from '../../vms-client/submodules/vms/datatypes/ICamera';
-import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service';
-import { LoggerDecorator } from '../../vms-client/utils';
 import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
 import sidebarLayout from '../sidebarLayout.cfg';
 

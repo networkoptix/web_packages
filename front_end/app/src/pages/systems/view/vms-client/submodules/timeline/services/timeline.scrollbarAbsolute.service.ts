@@ -6,7 +6,7 @@ import {
     TimelineScrollbarRelativeServiceStatus
 } from './timeline.scrollbarRelative.service';
 
-import { px } from '../../../utils/type-aliases';
+import { px } from '@vms-client/utils/type-aliases';
 import TimelineService from './timeline.service';
 import { NxUtilsService } from '@services/utils.service';
 

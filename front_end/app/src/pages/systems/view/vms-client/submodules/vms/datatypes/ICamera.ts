@@ -1,5 +1,5 @@
-import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
-import { ms, int } from '../../../utils/type-aliases';
+import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import { ms, int } from '@vms-client/utils/type-aliases';
 
 export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized'
 

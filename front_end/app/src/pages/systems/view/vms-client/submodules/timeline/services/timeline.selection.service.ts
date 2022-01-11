@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import TimelineService from './timeline.service';
 import TimeRange from './TimeRange';
-import { ms, px } from '../../../utils/type-aliases';
-import PlaybackService from '../../playback/services/playback.service';
+import { ms, px } from '@vms-client/utils/type-aliases';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
 import TimelineScrollbarRelativeService from './timeline.scrollbarRelative.service';
-import VideoManagementSystemService from '../../vms/services/vms.service';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;

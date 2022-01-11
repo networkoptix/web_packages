@@ -15,7 +15,7 @@ import videojs from 'video.js';
 import {
     LoggerDecorator,
     BASE64_SINGLE_TRANSPARENT_PIXEL
-} from '@pages/systems/view/vms-client/utils';
+} from '@vms-client/utils';
 
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
 

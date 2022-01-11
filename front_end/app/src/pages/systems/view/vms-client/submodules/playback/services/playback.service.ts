@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
+import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { assertNever } from '@vms-client/utils';
+import { ms, percentage } from '@vms-client/utils/type-aliases';
 
-import { assertNever } from '../../../utils';
-import { ms, percentage } from '../../../utils/type-aliases';
-import TimelineService from '../../timeline/services/timeline.service';
-import VideoManagementSystemService from '../../vms/services/vms.service';
 import {
     PLAYBACK_MODE,
     PlaybackState,

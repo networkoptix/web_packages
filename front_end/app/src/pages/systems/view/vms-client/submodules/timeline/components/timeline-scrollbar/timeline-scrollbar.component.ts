@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, OnInit, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
-import PlaybackService from '../../../playback/services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { PlaybackState, PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 
 import {
     TimelineScrollbarAbsoluteService,
@@ -9,8 +9,8 @@ import {
 } from '../../services/timeline.scrollbarAbsolute.service';
 import TimelineScrollbarRelativeService from '../../services/timeline.scrollbarRelative.service';
 import TimelineService from '../../services/timeline.service';
-import { float, px } from '../../../../utils/type-aliases';
-import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
+import { float, px } from '@vms-client/utils/type-aliases';
+import { LoggerDecorator } from '@view/vms-client/utils';
 import { NxUtilsService } from '@services/utils.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import TimelineSelectionService, { TimelineSelectionServiceStatus } from '../../services/timeline.selection.service';

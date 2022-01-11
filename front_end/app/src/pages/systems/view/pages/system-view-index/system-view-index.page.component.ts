@@ -15,19 +15,19 @@ import { NxAccountService } from '@services/account.service';
 import { NxSystemService, NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
+import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
+import Camera from '@vms-client/submodules/vms/datatypes/Camera';
+import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import MediaServer from '@vms-client/submodules/vms/datatypes/MediaServer';
+import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { ms, LoggerDecorator } from '@vms-client/utils';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 import { NxRibbonService } from '../../../../../components/ribbon';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import TimelineService from '../../vms-client/submodules/timeline/services/timeline.service';
-import Camera from '../../vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange } from '../../vms-client/submodules/vms/datatypes/ICamera';
-import MediaServer from '../../vms-client/submodules/vms/datatypes/MediaServer';
-import VmsState, { VMS_MODE } from '../../vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '../../vms-client/submodules/vms/services/vms.service';
-import { ms, LoggerDecorator } from '../../vms-client/utils';
 import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
 import sidebarLayout from '../sidebarLayout.cfg';
 

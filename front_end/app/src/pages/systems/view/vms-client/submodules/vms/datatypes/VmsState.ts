@@ -1,4 +1,4 @@
-import { ms, GUID } from '../../../utils/type-aliases';
+import { ms, GUID } from '@vms-client/utils/type-aliases';
 import Camera from './Camera';
 import ICamera from './ICamera';
 import IMediaServer from './IMediaServer';

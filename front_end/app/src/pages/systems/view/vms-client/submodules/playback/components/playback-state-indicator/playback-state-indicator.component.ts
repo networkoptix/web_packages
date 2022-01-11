@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+
 import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
 import PlaybackService from '../../services/playback.service';
 

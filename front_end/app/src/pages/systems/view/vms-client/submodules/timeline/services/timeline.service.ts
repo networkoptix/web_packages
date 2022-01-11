@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import TimeRange from './TimeRange';
-import { int, float, ms, px, CanvasGeometry } from '../../../utils/type-aliases';
+import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
 import cfg from './timeline.config';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import VideoManagementSystemService from '../../vms/services/vms.service';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 
 export interface TimelineServiceStatus {
     fullRange: TimeRange,

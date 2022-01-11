@@ -5,9 +5,9 @@ import TimelineCanvasRendererService from '../../services/canvas-renderer/timeli
 import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
 import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
 import TimelineSelectionService from '../../services/timeline.selection.service';
-import PlaybackService from '../../../playback/services/playback.service';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
 import { Subject, Subscription } from 'rxjs';
-import { px, ms } from '@pages/systems/view/vms-client/utils/type-aliases';
+import { px, ms } from '@view/vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { onPinch } from './onPinch';

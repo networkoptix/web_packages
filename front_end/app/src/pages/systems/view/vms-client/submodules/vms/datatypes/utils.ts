@@ -1,4 +1,4 @@
-import { ms } from '../../../utils/type-aliases';
+import { ms } from '@vms-client/utils/type-aliases';
 import { CameraArchive, ISimpleTimeRange } from './ICamera';
 
 export function _isThereRecord (archive: CameraArchive, t: ms): boolean {

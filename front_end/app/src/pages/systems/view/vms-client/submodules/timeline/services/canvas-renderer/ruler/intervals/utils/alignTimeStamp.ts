@@ -1,4 +1,4 @@
-import { ms } from '../../../../../../../utils/type-aliases';
+import { ms } from '@vms-client/utils/type-aliases';
 import IrregularLengthInterval from '../IrregularLengthInterval';
 
 export type timeStampMs = ms

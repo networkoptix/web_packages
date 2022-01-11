@@ -15,15 +15,15 @@ import {
 import Hls from 'hls.js';
 import { Subscription } from 'rxjs';
 
+import { NxUtilsService } from '@services/utils.service';
 import {
     WebClientUxService
-} from '@pages/systems/view/services/webclient-ux.service';
+} from '@view/services/webclient-ux.service';
 import {
     assertNever,
     LoggerDecorator,
     BASE64_SINGLE_TRANSPARENT_PIXEL
-} from '@pages/systems/view/vms-client/utils';
-import { NxUtilsService } from '@services/utils.service';
+} from '@vms-client/utils';
 
 import {
     LanguageI18NStaticTypes

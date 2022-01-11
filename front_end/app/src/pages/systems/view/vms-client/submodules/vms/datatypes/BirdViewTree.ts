@@ -1,4 +1,4 @@
-import { int, ms }                                                   from '../../../utils/type-aliases';
+import { int, ms }                                                   from '@vms-client/utils/type-aliases';
 import { CameraArchive, ISimpleTimeRange, IRecord, SimpleTimeRange } from './ICamera';
 import { _getNextRecord }                                            from './utils';
 

@@ -24,6 +24,8 @@
       "@environments/*": ["environments/*"],
       "@interceptors/*": ["src/interceptors/*"],
       "@pages/*": ["src/pages/*"],
+      "@view/*": ["src/pages/systems/view/*"],
+      "@vms-client/*": ["src/pages/systems/view/vms-client/*"],
       "@guards/*": ["src/routeGuards/*"],
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],

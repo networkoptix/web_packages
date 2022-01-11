@@ -2,7 +2,7 @@ import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import TimelineService from './timeline.service';
-import { float, ms, px, sign } from '../../../utils/type-aliases';
+import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
 
 export interface TimelineScrollbarRelativeServiceStatus {

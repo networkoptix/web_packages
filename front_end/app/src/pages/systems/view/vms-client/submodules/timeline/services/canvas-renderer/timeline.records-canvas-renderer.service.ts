@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { float, ms } from '../../../../utils/type-aliases';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+import { float, ms } from '@vms-client/utils/type-aliases';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 import TimelineService from '../timeline.service';
 
 import cfg from './drawingConfigs/recordsDrawingConfig';

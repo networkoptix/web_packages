@@ -5,9 +5,9 @@ import TimelineService, { TimelineServiceStatus } from '../../services/timeline.
 import * as df from 'dateformat';
 import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
 import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
-import PlaybackService from '../../../playback/services/playback.service';
-import { PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState';
-import { ms } from '../../../../utils';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import { ms } from '@vms-client/utils';
 
 const dateformat = df.default || df;
 

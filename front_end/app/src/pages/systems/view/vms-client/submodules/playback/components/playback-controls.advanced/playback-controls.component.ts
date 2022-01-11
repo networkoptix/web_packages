@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import SelectionService from '../../../timeline/services/timeline.selection.service';
+import SelectionService from '@vms-client/submodules/timeline/services/timeline.selection.service';
+
 import PlaybackState from '../../datatypes/PlaybackState';
 import PlaybackService from '../../services/playback.service';
 

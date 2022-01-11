@@ -6,8 +6,8 @@ import {
 import TimelineService from '../../services/timeline.service';
 import { Subscription } from 'rxjs';
 import * as df from 'dateformat';
-import { px } from '../../../../utils/type-aliases';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+import { px } from '@vms-client/utils/type-aliases';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 
 const dateformat = df.default || df;
 

@@ -11,13 +11,13 @@ import {
 import { Subscription } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { PlaybackTransport } from '@pages/systems/view/view.types';
-import { LoggerDecorator } from '@pages/systems/view/vms-client/utils';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { PlaybackTransport } from '@view/view.types';
+import { LoggerDecorator } from '@view/vms-client/utils';
+import VmsState from '@vms-client/submodules/vms/datatypes/VmsState';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import generateClickDubleClickPair from '@vms-client/utils/generateClickDubleClickPair';
 
-import generateClickDubleClickPair from '../../../../utils/generateClickDubleClickPair';
-import VmsState from '../../../vms/datatypes/VmsState';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
 import {
     ArchivePlaybackState,
     PlaybackState,

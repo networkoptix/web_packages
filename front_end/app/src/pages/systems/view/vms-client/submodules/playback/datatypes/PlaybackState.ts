@@ -1,6 +1,5 @@
-import { PlaybackQuality, PlaybackTransport } from '@pages/systems/view/view.types';
-
-import { ms } from '../../../utils/type-aliases';
+import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import { ms } from '@vms-client/utils/type-aliases';
 
 export enum PLAYBACK_MODE {
     STOPPED = 0,

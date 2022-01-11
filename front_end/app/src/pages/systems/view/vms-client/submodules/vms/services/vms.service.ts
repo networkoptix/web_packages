@@ -4,7 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import IMediaServer from '../datatypes/IMediaServer';
 import Camera from '../datatypes/Camera';
 // import testMediaServers from '../testMediaServers'
-import { GUID, ms } from '../../../utils/type-aliases';
+import { GUID, ms } from '@vms-client/utils/type-aliases';
 import {
     VmsState,
     VMS_MODE,

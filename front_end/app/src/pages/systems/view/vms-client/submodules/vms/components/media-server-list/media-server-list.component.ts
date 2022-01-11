@@ -3,9 +3,9 @@ import { Subscription } from 'rxjs';
 
 import { CookieService } from 'ngx-cookie-service';
 
-import VideoManagementSystemService from '../../../../../vms-client/submodules/vms/services/vms.service';
-import VmsState, { VMS_MODE } from '../../../../../vms-client/submodules/vms/datatypes/VmsState';
-import MediaServer from '../../../../../vms-client/submodules/vms/datatypes/MediaServer';
+import VideoManagementSystemService from '../../services/vms.service';
+import VmsState, { VMS_MODE } from '../../datatypes/VmsState';
+import MediaServer from '../../datatypes/MediaServer';
 import ICamera from '../../datatypes/ICamera';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxUtilsService } from '../../../../../../../../services/utils.service';

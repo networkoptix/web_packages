@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
-import PlaybackService from '../../../playback/services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '../../../playback/datatypes/PlaybackState';
-import { assertNever, ms, px } from '../../../../utils';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { PlaybackState, PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import { assertNever, ms, px } from '@vms-client/utils';
 import { Subscription } from 'rxjs';
 import * as df from 'dateformat';
-import VideoManagementSystemService from '../../../vms/services/vms.service';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 
 const dateformat = df.default || df;
 
