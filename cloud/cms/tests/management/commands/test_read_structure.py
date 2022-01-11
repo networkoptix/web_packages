@@ -212,10 +212,6 @@ def test_read_structure_file(mocker, db):
 
 def test_read_structure(mocker, db):
     for asset_type_id, _ in AssetType.ASSET_TYPES:
-        if asset_type_id == AssetType.ASSET_TYPES.cloud_portal:
-            # TODO: CLOUD-8418: Need to find out why test_read_structure fails for cloud portal asset type in pipeline
-            continue
-
         asset_type = structure.find_or_add_asset_type(asset_type_id)
         global_strings, skins, cms_files = generate_nested_args()
 
@@ -234,16 +230,27 @@ def test_read_structure(mocker, db):
         mock_read_structure_file = mocker.patch(
             f'{BASE_PATH}.read_structure_file')
 
+        read_structure(asset_type_id)
+
+        if asset_type_id == AssetType.ASSET_TYPES.cloud_portal:
+            # Need special handling for checking cloud portal type since asset is created before tests can run
+            actual_global_strings = mock_read_structure_file.mock_calls[0].args[2]
+            mock_strings = set(actual_global_strings)
+            mock_with_global_strings = set(actual_global_strings + global_strings)
+
+            assert mock_strings == mock_with_global_strings
+
+            global_strings = actual_global_strings
+
         expected_read_structure_file_calls = [
             call(file, asset_type, global_strings, skin)
             for skin in skins
             for file in cms_files]
 
-        read_structure(asset_type_id)
-
         mock_get_skins.assert_called_once_with()
         mock_iterate_cms_files.assert_has_calls(
             call(skin, False) for skin in skins)
+
         mock_read_structure_file.assert_has_calls(
             expected_read_structure_file_calls)
 
@@ -316,7 +323,8 @@ class TestReadStructure:
             structure, 'read_menu_structure')
         mock_write_stdout = mocker.patch.object(
             instance.stdout, 'write')
-        mock_read_languages = mocker.patch('cms.management.commands.readstructure.read_languages')
+        mock_read_languages = mocker.patch(
+            'cms.management.commands.readstructure.read_languages')
 
         # Test error if missing asset_type
         pytest.raises(ValueError, instance.handle, match='asset_type required')
