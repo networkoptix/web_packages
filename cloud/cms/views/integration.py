@@ -15,7 +15,6 @@ from api.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
 
-INTEGRATION_CACHE = BaseCache(cache_key='integrations')
 INTEGRATION = AssetType.ASSET_TYPES.integration
 PENDING = AssetCustomizationReview.REVIEW_STATES.pending
 

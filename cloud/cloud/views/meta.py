@@ -9,7 +9,6 @@ from django.views.generic.base import TemplateView
 import waffle
 
 from cms.models import cloud_portal_customization_cache
-from util.base_cache import BaseCache
 from util.helpers import detect_language_by_request
 from cms.models import Menu, Asset, Language
 from cms.controllers import documentation

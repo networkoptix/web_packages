@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+from cms.controllers.asset_json import get_review_matching_current_version
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
                         DataStructure, ContributorAgreement)
@@ -56,7 +57,7 @@ def get_agreement(request):
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
 
         agreement_id = agreement_review.version.asset.id
-        AGREEMENT_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{agreement_id}-{state}-{agreement_review.version if not draft and agreement_id else "latest"}'
+        AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state, agreement_id, agreement_review.version)
         cached_agreement = AGREEMENT_CACHE.get_cached_item()
 
         if agreement_review and not cached_agreement:
@@ -76,9 +77,7 @@ def get_agreement(request):
         # Set version based on draft or pending query params
         version = agreement.version_id()
         if review:
-            pending_review = AssetCustomizationReview.objects.filter(
-                version__id__gt=version, version__asset=agreement, customization__name=settings.CUSTOMIZATION,
-                state=AssetCustomizationReview.REVIEW_STATES.pending).last()
+            pending_review = get_review_matching_current_version(agreement, version)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -127,7 +126,7 @@ def get_agreement(request):
 
             AGREEMENT_CACHE.set_cached_item(agreement_dict)
             if agreement_id:
-                AGREEMENT_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}--{state}-latest'
+                AGREEMENT_CACHE.lookup_key = BaseCache.generate_lookup_key(language, state)
                 AGREEMENT_CACHE.set_cached_item(agreement_dict)
             return api_success(agreement_dict)
 

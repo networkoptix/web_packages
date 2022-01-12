@@ -8,6 +8,7 @@ from cms.controllers.release_notes import RELEASE_NOTES, make_release_notes_json
 from cms.models import AssetCustomizationReview, AssetType, Context, DataStructure
 from cms.controllers.asset_json import REPLACEMENT_LINK, S3_LINK, generate_asset_dictionary, get_contexts_and_datastructures_of_asset_type, get_current_version, get_latest_ds_values
 from conftest import generate_uuids
+from util.base_cache import BaseCache
 
 CLOUD_PORTAL = AssetType.ASSET_TYPES.cloud_portal
 REVIEW = AssetCustomizationReview.REVIEW_STATES.pending
@@ -205,16 +206,17 @@ class TestGetLatestDsValues:
         
 class TestGetCurrentVersion:
     @pytest.fixture(autouse=True)
-    def setup(self, db, mocker):
-        self.language, self.state,self.lookup_key = generate_uuids(3)
+    def setup(self, db, mocker, language_factory):
+        self.state = choice('latest, review')
+        self.language = language_factory()
         self.current_version = randint(1000,4000)
         self.asset = baker.make('Asset')
         self.versions = {
             self.asset.id: self.current_version
         }
 
-        self.mocked_get_latest_version = mocker.patch(
-            'cms.controllers.asset_json.get_lookup_key',  return_value=self.lookup_key)
+    def generate_lookup_key(self):
+        return BaseCache.generate_lookup_key(self.language, self.state, self.asset.id, self.current_version)
 
     def version_not_found(self, has_version, current_version, lookup_key, review_id):
         assert has_version is False
@@ -228,7 +230,7 @@ class TestGetCurrentVersion:
 
         assert has_version == True
         assert current_version == self.current_version
-        assert lookup_key == self.lookup_key
+        assert lookup_key == self.generate_lookup_key()
         assert review_id == None
 
     def test_version_not_found(self):
@@ -249,7 +251,7 @@ class TestGetCurrentVersion:
         assert mocked_get_pending_version.called_once_with(self.asset, self.current_version)
         assert has_version == True
         assert current_version == self.current_version
-        assert lookup_key == self.lookup_key
+        assert lookup_key == self.generate_lookup_key()
         assert review_id == review.id
 
     def test_pending_version_not_found(self, mocker):
@@ -261,10 +263,11 @@ class TestGetCurrentVersion:
         self.version_not_found(has_version, current_version, lookup_key, review_id)
 
     def test_draft_success(self):
+        self.state = 'draft'
         has_version, current_version, lookup_key, review_id = get_current_version(
             self.language, self.state, self.versions, self.asset, show_drafts=True) # show_drafts True
 
         assert has_version == True
         assert current_version == None
-        assert lookup_key == self.lookup_key
+        assert lookup_key == self.generate_lookup_key()
         assert review_id == None

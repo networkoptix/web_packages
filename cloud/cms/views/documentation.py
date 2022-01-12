@@ -332,7 +332,7 @@ def find_asset_knowledgebase(asset, base_url):
     return ''
 
 
-def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False):
+def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_contexts_dict=None, draft=False, review=False, user=None):
     for node in parent:
         asset_id = node.get('asset_id', None)
         if asset_id:
@@ -352,7 +352,7 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                         node['asset'] = docs[0]
                         node['assetKB'] = find_asset_knowledgebase(asset, base_url)
                 elif asset_type == AssetType.ASSET_TYPES.integration:
-                    integrations = make_integrations_json([asset], language=language)
+                    integrations = make_integrations_json([asset], language=language, user=user)
                     if integrations:
                         node['asset'] = integrations[0]
         if node.get('nodes', None):
@@ -362,7 +362,8 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                 global_contexts=global_contexts,
                 global_contexts_dict=global_contexts_dict,
                 draft=draft,
-                review=review
+                review=review,
+                user=user
             )
 
 
@@ -401,7 +402,8 @@ def menu_to_endpoint(request, name):
             global_contexts=global_contexts,
             global_contexts_dict=global_contexts_dict,
             draft=draft,
-            review=review
+            review=review,
+            user=request.user
         )
         if not (draft or review):
             DOC_CACHE[cache_id] = menu_dict

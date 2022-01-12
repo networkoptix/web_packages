@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from mistletoe import markdown
 from html2text import HTML2Text
 from waffle import switch_is_active
+from cms.controllers.asset_json import get_review_matching_current_version, process_asset_global_contexts
 from cms.feature_flags import SWITCHES
 from meilisearch.errors import MeiliSearchCommunicationError, MeiliSearchApiError
 from util.base_cache import BaseCache
@@ -236,9 +237,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
 
         pending_review = None
         if review:
-            pending_review = AssetCustomizationReview.objects.filter(
-                version__id__gt=version, version__asset=doc, customization__name=settings.CUSTOMIZATION,
-                state=AssetCustomizationReview.REVIEW_STATES.pending).last()
+            pending_review = get_review_matching_current_version(doc, version)
             if pending_review:
                 version = pending_review.version.id
         elif draft:
@@ -274,11 +273,8 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             css = values['styling']
 
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
-            context_processor = ContextProcessor(
-                asset=cloud_portal, global_contexts=global_contexts, global_contexts_dict=global_contexts_dict,
-                preview=False, version_id=doc.version_id()
-            )
-            context_processor.process_global_contexts(content=doc_dict, language=language)
+
+            process_asset_global_contexts(language, cloud_portal, global_contexts, doc.version_id(), doc_dict, global_contexts_dict)
 
             doc_dict['version'] = version
             doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))

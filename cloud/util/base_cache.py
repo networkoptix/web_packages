@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from django.core.cache import caches
 from django.core.cache.backends.base import InvalidCacheBackendError
 
@@ -24,6 +26,11 @@ class BaseCache(object):
     def __init__(self, cache_key='documentation', lookup_key=''):
         self.cache_key = cache_key
         self.lookup_key = lookup_key
+
+    @staticmethod
+    def generate_lookup_key(language, state, identifier='', version='latest'):
+        draft = state == "draft"
+        return f'{settings.CUSTOMIZATION}-{language.code}-{identifier}-{state}-{version if not draft else "latest"}'
 
     @classmethod
     def clear_global_cache(cls):

@@ -22,7 +22,7 @@ from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScop
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.exceptions import APIException
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.viewsets import ModelViewSet
 
 from celery import result
@@ -42,7 +42,7 @@ from cms.serializers import AssetSerializer, ContextManifestSerializer, CustomCl
 from cms import tasks
 
 from ..controllers.documentation import DOC_CACHE
-from ..views.integration import INTEGRATION_CACHE
+from ..controllers.integration import INTEGRATION_CACHE
 
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]

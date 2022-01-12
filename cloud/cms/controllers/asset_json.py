@@ -40,17 +40,12 @@ def get_global_contexts(cloud_portal):
         asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
 
 
-def get_lookup_key(language, state, asset):
-    return f'{settings.CUSTOMIZATION}-{language.code}-{asset.id}-{state}'
-
-
 def get_current_version(language, state, versions, asset, show_pending=False, show_drafts=False):
     review_id = None
     has_version = False
     version_not_found = has_version, None, None, None
     current_version = versions[asset.id]
-    lookup_key = get_lookup_key(language, state, asset)
-
+    lookup_key = BaseCache.generate_lookup_key(language, state, asset.id, current_version)
     if show_pending:
         if not (review := get_review_matching_current_version(asset, current_version)):
             return version_not_found
@@ -86,7 +81,7 @@ def generate_asset_dictionary(show_pending, show_drafts, asset, current_version,
 def find_actual_values(data_structures, asset, current_version, show_pending, show_drafts):
     records = DataStructure.find_actual_values(data_structures, asset=asset, version_id=current_version,
                                                draft=show_pending or show_drafts, customization_name=settings.CUSTOMIZATION)
-    return {ds.id: val for ds, val in records.items()}
+    return {ds.id: actual_value for ds, actual_value in records.items()}
 
 
 def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, asset, current_version):
@@ -111,11 +106,11 @@ def get_latest_ds_values(show_pending, show_drafts, contexts, data_structures, a
         yield context, context_dict
 
 
-def process_asset_global_contexts(language, cloud_portal, global_contexts, current_version, asset_dict, global_context_dict=None):
+def process_asset_global_contexts(language, cloud_portal, global_contexts, current_version, asset_dict, global_contexts_dict=None):
     context_processor = ContextProcessor(
         asset=cloud_portal, version_id=current_version, 
         preview=False, global_contexts=global_contexts, 
-        global_contexts_dict=global_context_dict
+        global_contexts_dict=global_contexts_dict
     )
     context_processor.process_global_contexts(
         content=asset_dict, language=language)
@@ -126,10 +121,3 @@ def get_review_matching_current_version(asset, current_version):
                                                    version__asset=asset,
                                                    customization__name=settings.CUSTOMIZATION,
                                                    state=PENDING).last()
-
-
-def get_latest_version(language, state, versions, asset):
-    current_version = versions[asset.id]
-
-    lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{asset.id}-{state}'
-    return current_version, lookup_key

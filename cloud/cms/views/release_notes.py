@@ -47,11 +47,7 @@ def get_release_note(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
     language = get_language_object_from_request(request)
-    release_note_id = request.query_params.get('id')
-    state = get_state(review, draft)
 
-
-    RELEASE_NOTES_CACHE.lookup_key = f'{settings.CUSTOMIZATION}-{language.code}-{release_note_id}-{state}'
 
     if not asset_id:
         return api_success(RELEASE_NOTES_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)

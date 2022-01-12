@@ -14,10 +14,8 @@ from django.db.models import Q
 from django.utils.http import urlencode
 from PIL import Image
 
-from cms.controllers.documentation import DOC_CACHE
 from api.models import Account
 from cms.models import *
-from cms.views.integration import INTEGRATION_CACHE
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[
