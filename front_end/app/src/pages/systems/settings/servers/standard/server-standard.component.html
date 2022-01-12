@@ -92,7 +92,7 @@
             </header>
             <nx-section *ngIf="system.userManager.isOwner || system.userManager.isAdmin">
                 <div class="server-setting-buttons">
-                    <div class="left setting-buttons">
+                    <div *ngIf="system.userManager.isOwner" class="left setting-buttons">
                         <button
                             class="btn btn-default"
                             (click)="restartServer()"
