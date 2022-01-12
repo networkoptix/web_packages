@@ -115,6 +115,7 @@
         "newPassHeader": "Stel nieuw wachtwoord in",
         "newPassConfirmText": "Wachtwoord is ingesteld!",
         "newPassInvalidCode": "Kan wachtwoord niet opslaan: de bevestigingscode is al in gebruik of onjuist",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "Systeem verbonden met %CLOUD_NAME%!",
         "loginError": "Kan geen verbinding maken met %CLOUD_NAME%",
         "loginErrorAdditional": "Probeer het opnieuw of log rechtstreeks in op het systeem met uw lokale account.",

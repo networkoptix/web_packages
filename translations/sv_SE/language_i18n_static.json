@@ -115,6 +115,7 @@
         "newPassHeader": "Ange nytt lösenord",
         "newPassConfirmText": "Lösenord sparat!",
         "newPassInvalidCode": "Det går inte att spara lösenordet: Bekräftelsekoden används redan eller är felaktig",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "System anslutet till %CLOUD_NAME%!",
         "loginError": "Kan inte ansluta till %CLOUD_NAME%",
         "loginErrorAdditional": "Försök igen eller logga in på systemet direkt med ditt lokala konto.",

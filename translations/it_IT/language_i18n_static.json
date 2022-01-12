@@ -115,6 +115,7 @@
         "newPassHeader": "Imposta nuova password",
         "newPassConfirmText": "Password impostata!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "Sistema connesso a %CLOUD_NAME%!",
         "loginError": "Impossibile connettersi a %CLOUD_NAME%",
         "loginErrorAdditional": "Riprova o accedi al sistema direttamente con il tuo account locale.",

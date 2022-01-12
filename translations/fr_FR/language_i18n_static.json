@@ -115,6 +115,7 @@
         "newPassHeader": "Définir un nouveau mot de passe",
         "newPassConfirmText": "Mot de passe défini !",
         "newPassInvalidCode": "Impossible d'enregistrer le mot de passe : le code de confirmation est déjà utilisé ou incorrect",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "Système connecté à %CLOUD_NAME%!",
         "loginError": "Impossible de se connecter à %CLOUD_NAME%",
         "loginErrorAdditional": "Veuillez réessayer ou vous connecter au système directement avec votre compte local.",

@@ -115,6 +115,7 @@
         "newPassHeader": "新しいパスワードを設定",
         "newPassConfirmText": "パスワードが設定されました。",
         "newPassInvalidCode": "パスワードを保存できません: 確認コードが既に使用されているか、間違っています",
+        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "システムは %CLOUD_NAME% に接続されました!",
         "loginError": "%CLOUD_NAME% に接続できません",
         "loginErrorAdditional": "再試行するか、ローカルアカウントでシステムに直接ログインしてください。",
