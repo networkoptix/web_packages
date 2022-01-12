@@ -1,13 +1,26 @@
-import { Component, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { TimelineSelectionService, TimelineSelectionServiceStatus } from '../../services/timeline.selection.service';
-import { Subscription } from 'rxjs';
-import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    HostListener,
+    ElementRef,
+    ViewChild,
+    AfterViewInit,
+} from '@angular/core';
 import * as df from 'dateformat';
-import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
-import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { Subscription } from 'rxjs';
+
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
 import { ms } from '@vms-client/utils';
+
+import {
+    TimelineSelectionService,
+    TimelineSelectionServiceStatus
+} from '../../services/timeline.selection.service';
+import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
+import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
 
 const dateformat = df.default || df;
 
@@ -27,13 +40,13 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     protected selectionStatus: TimelineSelectionServiceStatus
 
     @ViewChild('selectedRange')
-    protected selectedRangeView: ElementRef
+    protected selectedRangeView: ElementRef<HTMLDivElement>
 
     @ViewChild('leftEar')
-    protected leftEarView: ElementRef
+    protected leftEarView: ElementRef<HTMLDivElement>
 
     @ViewChild('rightEar')
-    protected rightEarView: ElementRef
+    protected rightEarView: ElementRef<HTMLDivElement>
 
     public get dateStrings () {
         if (!this.selectionStatus || !this.selectionStatus.isActive) {
@@ -73,8 +86,12 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     public ngOnInit (): void {
-        this.selectionSubscription = this.selection.subject.subscribe(this.onSelectionSubjectChange);
-        this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange);
+        this.selectionSubscription = this.selection.subject.subscribe(
+            this.onSelectionSubjectChange
+        );
+        this.timelineSubscription = this.timeline.subject.subscribe(
+            this.onTimelineSubjectChange
+        );
     }
 
     public ngAfterViewInit (): void {
@@ -91,12 +108,22 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     protected _updateCss () {
         if (this.selectedRangeView && this.selectionStatus.isActive) {
             this.selectedRangeView.nativeElement.classList.add('active');
-            const left = this.timeline.timeToDomOffsetX(this.selectionStatus.range.start);
-            const width = this.timeline.durationToDomWidth(this.selectionStatus.range.duration);
+            const left = this.timeline.timeToDomOffsetX(
+                this.selectionStatus.range.start
+            );
+            const width = this.timeline.durationToDomWidth(
+                this.selectionStatus.range.duration
+            );
             this.selectedRangeView.nativeElement.style.left = `${left}px`;
             this.selectedRangeView.nativeElement.style.width = `${width}px`;
-            this.leftEarView.nativeElement.classList.toggle('playback', this._leftEarOverPlayback);
-            this.rightEarView.nativeElement.classList.toggle('playback', this._rightEarOverPlayback);
+            this.leftEarView.nativeElement.classList.toggle(
+                'playback',
+                this._leftEarOverPlayback
+            );
+            this.rightEarView.nativeElement.classList.toggle(
+                'playback',
+                this._rightEarOverPlayback
+            );
         } else if (this.selectedRangeView) {
             this.selectedRangeView.nativeElement.classList.remove('active');
         }

@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { float, int, ms } from '@vms-client/utils/type-aliases';
+
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import VmsState, { CameraSelectedVmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { float, int, ms } from '@vms-client/utils/type-aliases';
+
 import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
 
 type signType = int // -1 | 0 | 1
@@ -35,14 +37,22 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     public onAnimationFrame (): void {
         this.performZoomingStep();
         setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+            this._animationFrameRequestHandler = requestAnimationFrame(() =>
+                this.onAnimationFrame()
+            );
         }, this.timeline.renderFps);
     }
 
     public ngOnInit (): void {
-        this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange);
-        this.vmsSubscription = this.vms.subject.subscribe(this.onVmsSubjectChange);
-        this._animationFrameRequestHandler = requestAnimationFrame(() => this.onAnimationFrame());
+        this.timelineSubscription = this.timeline.subject.subscribe(
+            this.onTimelineSubjectChange
+        );
+        this.vmsSubscription = this.vms.subject.subscribe(
+            this.onVmsSubjectChange
+        );
+        this._animationFrameRequestHandler = requestAnimationFrame(() =>
+            this.onAnimationFrame()
+        );
     }
 
     public ngOnDestroy (): void {

@@ -5,20 +5,23 @@ import {
     ElementRef,
     AfterViewInit
 } from '@angular/core';
-import {
-    TimelineSelectionService,
-    TimelineSelectionServiceStatus
-} from '../../services/timeline.selection.service';
 import { interval, Observable, Subscription } from 'rxjs';
-import TimelineService from '../../services/timeline.service';
-import { msDurationToString } from './utils';
 import { map, distinctUntilChanged } from 'rxjs/operators';
+
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
+
 import { NxAccountService } from '../../../../../../../../services/account.service';
 import { NxSystem, NxSystemService } from '../../../../../../../../services/system.service';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 import TimeRange from '../../services/TimeRange';
-import { NxDialogsService } from '@dialogs/dialogs.service';
-import { environment } from '@environments/environment';
+import {
+    TimelineSelectionService,
+    TimelineSelectionServiceStatus
+} from '../../services/timeline.selection.service';
+import TimelineService from '../../services/timeline.service';
+
+import { msDurationToString } from './utils';
 
 const THROTTLE_MS = 50;
 const EAR_WIDTH = 120;
@@ -36,12 +39,16 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     protected system: NxSystem
 
     public get duration (): string {
-        return msDurationToString(Math.floor(this.selection.range.duration / 1000) * 1000);
+        return msDurationToString(
+            Math.floor(this.selection.range.duration / 1000) * 1000
+        );
     }
 
     public get exportUrl (): string {
         // return this.selection.exportUrl
-        return this.system ? this.system.getExportUrl(this.selection.exportUrlParams) : '';
+        return this.system
+            ? this.system.getExportUrl(this.selection.exportUrlParams)
+            : '';
     }
 
     constructor(
@@ -71,16 +78,27 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         //     .pipe(map(s => msDurationToString(Math.floor(s.range.duration / 1000) * 1000)))
 
         // a fallback jitter reduction solution
-        this.duration$ = interval(THROTTLE_MS).pipe(map(_ => this.duration)).pipe(distinctUntilChanged());
+        this.duration$ = interval(THROTTLE_MS)
+            .pipe(map(_ => this.duration))
+            .pipe(distinctUntilChanged());
 
         this.accountService.get().then((account) => {
             if (!account) {
                 return Promise.reject();
             }
             if (environment.isLocal) {
-                this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+                this.system = this.systemService.createLocalSystem(
+                    this.accountService.mediaServerApi,
+                    account.id,
+                    account.email
+                );
             } else {
-                this.system = this.systemService.createSystem(account.email, this.vms.systemId, undefined, true);
+                this.system = this.systemService.createSystem(
+                    account.email,
+                    this.vms.systemId,
+                    undefined,
+                    true
+                );
             }
         });
     }
@@ -107,7 +125,10 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         );
     }
 
-    public handleDurationDoubleClick (e: MouseEvent, recalibrate: boolean = false) {
+    public handleDurationDoubleClick (
+        e: MouseEvent,
+        recalibrate: boolean = false
+    ) {
         const margin = this.timeline.domWidthToDuration(EAR_WIDTH);
         this.timeline.visibleRange = new TimeRange(
             this.selection.range.start - margin,

@@ -1,13 +1,15 @@
-import { Component, ElementRef, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import * as df from 'dateformat';
+import { Subscription } from 'rxjs';
+
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { px } from '@vms-client/utils/type-aliases';
+
+import TimelineService from '../../services/timeline.service';
 import {
     TimelineTimeUnderMouseService,
     TimelineTimeUnderMouseServiceStatus
 } from '../../services/timeline.time-under-mouse.service';
-import TimelineService from '../../services/timeline.service';
-import { Subscription } from 'rxjs';
-import * as df from 'dateformat';
-import { px } from '@vms-client/utils/type-aliases';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 
 const dateformat = df.default || df;
 
@@ -42,7 +44,9 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit (): void {
-        this.subscription = this.timeUnderMouse.subject.subscribe(this.onSubjectChange);
+        this.subscription = this.timeUnderMouse.subject.subscribe(
+            this.onSubjectChange
+        );
     }
 
     public ngOnDestroy (): void {
@@ -56,7 +60,9 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
             if (offset < MARGIN + PRIMARY_WIDTH / 2) {
                 offset = MARGIN + PRIMARY_WIDTH / 2;
             }
-            if (offset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2) {
+            if (
+                offset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2
+            ) {
                 offset = this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - MARGIN - PRIMARY_WIDTH / 2;
             }
             this._honestOffset = s.offsetX;

@@ -1,15 +1,26 @@
-import { NxConfigService } from '@services/nx-config';
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
-import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
-import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
-import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
-import TimelineSelectionService from '../../services/timeline.selection.service';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import {
+    Component,
+    OnInit,
+    ElementRef,
+    ViewChild,
+    AfterViewInit,
+    OnDestroy,
+    HostListener
+} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { px, ms } from '@view/vms-client/utils/type-aliases';
-import { NxUtilsService } from '@services/utils.service';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+
+import { NxConfigService } from '@services/nx-config';
+import { NxUtilsService } from '@services/utils.service';
+import { px, ms } from '@view/vms-client/utils/type-aliases';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+
+import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
+import TimelineSelectionService from '../../services/timeline.selection.service';
+import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
+import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
+
 import { onPinch } from './onPinch';
 
 const CANVAS_SELECTION_OFFSET_START = 60;
@@ -25,7 +36,7 @@ const MOUSE_HIDE_UNTIL_PX = 8;
     styleUrls: ['./timeline.component.scss']
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
-    @ViewChild('canvas') canvasView: ElementRef;
+    @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
 
     protected _state: TimelineServiceStatus
     protected _stateSubscription: Subscription
@@ -42,7 +53,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         protected selection: TimelineSelectionService
     ) {
         this._onTimelineStatusChange = this._onTimelineStatusChange.bind(this);
-        this.archiveSelectionEnabled = this.configService.flagsEnabled('archiveSelection');
+        this.archiveSelectionEnabled = this.configService.flagsEnabled(
+            'archiveSelection'
+        );
     }
 
     public readonly archiveSelectionEnabled: boolean = false
@@ -58,13 +71,15 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     protected _pinchDestructor: Function
 
     public ngOnInit (): void {
-        this._stateSubscription = this.timeline.subject.subscribe(this._onTimelineStatusChange);
+        this._stateSubscription = this.timeline.subject.subscribe(
+            this._onTimelineStatusChange
+        );
         this._animationFrameRequestHandler =
             requestAnimationFrame(() => this.onAnimationFrame());
     }
 
     public onAnimationFrame (): void {
-        const ctx = (this.canvasView.nativeElement as HTMLCanvasElement).getContext('2d');
+        const ctx = this.canvasView.nativeElement.getContext('2d');
         // console.log('render #', times_rendered)
         this.canvasRenderer.render(ctx);
 
@@ -95,10 +110,14 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             takeUntil(this.unsub$)
         ).subscribe(() => this._updateCanvasGeometry());
 
-        this._pinchDestructor = onPinch(this.canvasView.nativeElement, ({ newScale, scaleChange, offset }) => {
-            const durationDelta = (scaleChange - 1) * this.timeline.fullRange.duration;
-            this.timeline.zoom(durationDelta, offset);
-        });
+        this._pinchDestructor = onPinch(
+            this.canvasView.nativeElement,
+            ({ newScale, scaleChange, offset }) => {
+                const durationDelta =
+                    (scaleChange - 1) * this.timeline.fullRange.duration;
+                this.timeline.zoom(durationDelta, offset);
+            }
+        );
     }
 
     protected _updateCanvasGeometry (): void {
@@ -126,7 +145,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             this.isDragging = true;
         }
         if (this.isDragging) {
-            const dt = -1 * this.timeline.domWidthToDuration(screenX - this._mouseDownScreenX);
+            const dt = -1 * this.timeline.domWidthToDuration(
+                screenX - this._mouseDownScreenX
+            );
             // console.log('dragging in progress', dt)
             this.timeline.shiftVisibleRange(dt);
             this._mouseDownScreenX = screenX;
@@ -196,7 +217,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.timeline.jumpScrollTo(time - offset, true);
             } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
                 // console.log('right edge fix')
-                this.timeline.jumpScrollTo(time - this.timeline.visibleRange.duration + offset, true);
+                this.timeline.jumpScrollTo(
+                    time - this.timeline.visibleRange.duration + offset,
+                    true
+                );
             }
 
             // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
@@ -211,7 +235,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
-            this.selection.handleMouseUp(e as MouseEvent);
+            this.selection.handleMouseUp(e);
         }
     }
 }

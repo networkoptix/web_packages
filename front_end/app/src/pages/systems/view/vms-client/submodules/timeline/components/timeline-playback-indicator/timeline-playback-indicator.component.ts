@@ -1,11 +1,22 @@
-import { Component, OnInit, OnDestroy, ElementRef, HostListener } from '@angular/core';
-import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import { PlaybackState, PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import { assertNever, ms, px } from '@vms-client/utils';
-import { Subscription } from 'rxjs';
+import {
+    Component,
+    OnInit,
+    OnDestroy,
+    ElementRef,
+    HostListener,
+} from '@angular/core';
 import * as df from 'dateformat';
+import { Subscription } from 'rxjs';
+
+import {
+    PlaybackState,
+    PLAYBACK_MODE
+} from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { assertNever, ms, px } from '@vms-client/utils';
+
+import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
 
 const dateformat = df.default || df;
 
@@ -41,13 +52,21 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     @HostListener('click', ['$event'])
     onClick (e) {
         if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
-            this.timeline.jumpScrollTo(this.playback.state.currentTime - Math.round(this.timeline.visibleRange.duration / 2), true);
+            this.timeline.jumpScrollTo(
+                this.playback.state.currentTime -
+                    Math.round(this.timeline.visibleRange.duration / 2),
+                true
+            );
         }
     }
 
     public ngOnInit (): void {
-        this.playbackSubscription = this.playback.subject.subscribe(this.onPlaybackSubjectChange);
-        this.timelineSubscription = this.timeline.subject.subscribe(this.onTimelineSubjectChange);
+        this.playbackSubscription = this.playback.subject.subscribe(
+            this.onPlaybackSubjectChange
+        );
+        this.timelineSubscription = this.timeline.subject.subscribe(
+            this.onTimelineSubjectChange
+        );
     }
 
     public ngOnDestroy (): void {
@@ -59,7 +78,8 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible');
         return {
             'left-most': this.honestOffset <= 0,
-            leftish: this.honestOffset > 0 && this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
+            leftish: this.honestOffset > 0 &&
+                this.honestOffset < (MARGIN + PRIMARY_WIDTH) / 2,
             rightish: this.honestOffset < this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr &&
                 this.honestOffset > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - (MARGIN + PRIMARY_WIDTH),
             'right-most': this.honestOffset >= this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr
