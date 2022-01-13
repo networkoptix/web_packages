@@ -32,7 +32,7 @@
     "CANNOT SHARE SYSTEM": "Невозможно объединить систему:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Не допускается изменение собственных полномочий",
     "EMAIL IS ALREADY REGISTERED TEXT": "Этот адрес уже зарегистрирован в системе %SYSTEM%",
-    "RESET SUCCESS MESSAGE TEXT": "Password is set",
+    "RESET SUCCESS MESSAGE TEXT": "Новый пароль сохранен",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Ваша учетная запись успешно сохранена",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
     "SYSTEM NAME SAVED": "Имя системы сохранено",

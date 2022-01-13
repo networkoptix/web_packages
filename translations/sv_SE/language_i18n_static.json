@@ -1099,5 +1099,60 @@
     "maintenance": {
         "description_a": "Vi arbetar på vissa förbättringar",
         "description_b": "och helt nya funktioner."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Sön",
+                "Mon": "Mån",
+                "Tue": "Tis",
+                "Wed": "Ons",
+                "Thu": "Tor",
+                "Fri": "Fre",
+                "Sat": "Lör",
+                "Sunday": "Söndag",
+                "Monday": "Måndag",
+                "Tuesday": "Tisdag",
+                "Wednesday": "Onsdag",
+                "Thursday": "Torsdag",
+                "Friday": "Fredag",
+                "Saturday": "Lördag"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Mar",
+                "Apr": "Apr",
+                "May": "Maj",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Aug",
+                "Sep": "Sep",
+                "Oct": "Okt",
+                "Nov": "Nov",
+                "Dec": "Dec",
+                "January": "Januari",
+                "February": "Februari",
+                "March": "Mars",
+                "April": "April",
+                "June": "Juni",
+                "July": "Juli",
+                "August": "Augusti",
+                "September": "September",
+                "October": "Oktober",
+                "November": "November",
+                "December": "December"
+            },
+            "timeNames": {
+                "a": "en",
+                "p": "p",
+                "am": "am",
+                "pm": "pm",
+                "A": "A",
+                "P": "P",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

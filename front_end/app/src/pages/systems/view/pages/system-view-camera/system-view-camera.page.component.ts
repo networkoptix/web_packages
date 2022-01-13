@@ -35,6 +35,7 @@ import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxAccountService } from '../../../../../services/account.service';
 import { NxConfigService, IConfig } from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxSettingsService } from '../../../settings/settings.service';
 import { NxSystemService, NxSystem } from '../../../../../services/system.service';
 import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
@@ -114,6 +115,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected systemService: NxSystemService,
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService,
+        private settingsService: NxSettingsService,
         private dialogs: NxDialogsService,
         @Inject(DOCUMENT) private document: Document
     ) {
@@ -257,28 +259,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             }
         });
 
-        this.accountService.get().then((account) => {
-            if (!account) {
-                this._warn('accountService returned no account');
-                return Promise.reject();
-            }
-            if (environment.isLocal) {
-                this.system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi,
-                    account.id,
-                    account.email
-                );
-                this._log('local system created', this.system);
-            } else {
-                this.system = this.systemService.createSystem(
-                    account.email,
-                    this.vms.systemId,
-                    undefined,
-                    true
-                );
-            }
-            this._getRecords();
-        });
+        this.system = this.settingsService.system;
+        this._getRecords();
     }
 
     public get availableTransportsAndResolutions () {
@@ -296,7 +278,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private set transports (transports) {
-        this.transports$.next(transports || []);
+        this.transports$.next(transports.filter((transport) => ['hls', 'webm'].includes(transport)) || []);
     }
 
     get selectedTransport (): PlaybackTransport {
@@ -344,12 +326,16 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     set selectedQuality (initialQuality: PlaybackQuality) {
-        let quality = (initialQuality || '').toLowerCase();
+        if (!this.selectedTransport) {
+            return;
+        }
+        const storedQuality = this.cameraQualityStorage.get(this.id);
+        let quality = (initialQuality || storedQuality || '').toLowerCase();
         if (quality === '') {
+            const qualities = this.visibleQualities$.getValue();
             if (this.selectedTransport === 'hls') {
-                quality = 'high';
+                quality = qualities.includes('Low') ? 'low' : qualities[0].toLowerCase();
             } else {
-                const qualities = this.visibleQualities$.getValue();
                 if (this.qualities.low) {
                     quality = 'low';
                 } else if (this.qualities.high) {
@@ -367,6 +353,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.qualityFromVerbose(this.qualities[quality])
         );
         this.selectedQuality$.next(quality);
+    }
+
+    public currentQuality(quality) {
+        return quality ? this.LANG.common.resolution[quality]?.() || quality : this.LANG.common.resolution.auto();
     }
 
     public qualityToVerbose (q: PlaybackQuality) {
@@ -457,6 +447,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 if (!ar.error || ar.error !== '0' || !records.length) {
                     this._log('empty archive', ar);
                     this._restorePlayback();
+                    this.vms.setCameraRecords(this.id, 0, []);
                 } else {
                     try {
                         const firstRecordStartTimeMs = parseInt(
@@ -506,6 +497,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this._log('polling started');
                 this.startPollingForNewlyRecordedChunks();
                 this.getRecordsInProgress = undefined;
+            }).catch(() => {
+                // Handles the case where the request for the archive times out.
+                this._log('unable to fetch the archive');
+                this.playback.restore(false);
+                setTimeout(() => {
+                    this.getRecordsInProgress = undefined;
+                    this._getRecords();
+                }, this.CONFIG.pollingTimeout);
             });
         }
 
@@ -558,12 +557,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (!response?.reply.length) {
             return [];
         }
-        return response.reply
-            .reduce((records, { periods }) => {
-                records.splice(-1, 0, ...periods);
-                return records;
-            }, [])
-            .sort((a, b) => a.startTimeMs - b.startTimeMs);
+        const records = [];
+        response.reply.forEach(({ periods }) => {
+            const chunks = periods.length;
+            const batchSize = 10000; // Arbitrary size
+            const batches = Math.ceil(chunks / batchSize);
+            // Too many chunks. So it gets split up into manageable batches for copying.
+            for (let i = 0; i < batches; ++i) {
+                const start = i * batchSize;
+                const end = start + batchSize - 1;
+                records.push(...periods.slice(start, end));
+            }
+        });
+        return records.sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
     public ngAfterViewInit () {
@@ -679,7 +685,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public get showTimeline (): boolean {
-        return this.camera && this.camera.hasArchive && this.canViewArchives;
+        return this.camera && this.camera.hasArchive && this.canViewArchives && this.getRecordsInProgress === undefined;
     }
 
     public get enableControls (): boolean {

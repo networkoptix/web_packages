@@ -8,6 +8,7 @@ import {
 import * as df from 'dateformat';
 import { Subscription } from 'rxjs';
 
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import {
     PlaybackState,
     PLAYBACK_MODE
@@ -40,11 +41,13 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     public visibleOffset: px
 
     constructor(
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         private timeline: TimelineService,
         private vms: VideoManagementSystemService,
         public playback: PlaybackService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }

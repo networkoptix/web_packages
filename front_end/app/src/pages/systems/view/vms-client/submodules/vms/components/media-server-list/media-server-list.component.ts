@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
+import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 
 import { IConfig, NxConfigService } from '@services/nx-config';
@@ -41,8 +41,8 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     public activeCameraId: string
 
     constructor(
+        private localStorage: LocalStorageService,
         private vms: VideoManagementSystemService,
-        protected cookieService: CookieService,
         configService: NxConfigService
     ) {
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
@@ -102,10 +102,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
             this.isServerExpanded = this._mediaservers.reduce(
                 (acc, ms) => {
                     const systemId = this.vms.systemId;
-                    const cookieName = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
-                    acc[ms.id] = this.cookieService.check(cookieName)
-                        ? JSON.parse(this.cookieService.get(cookieName))
-                        : true;
+                    const key = `nx_system_${systemId}_server_${ms.id}_expansion_status`;
+                    const status = this.localStorage.retrieve(key);
+                    acc[ms.id] = status ? JSON.parse(status) : true;
                     return acc;
                 },
                 {}
@@ -118,8 +117,8 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     public changeServerVisibility (serverId: string) {
         this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
         const systemId = this.vms.systemId;
-        const cookieName = `nx_system_${systemId}_server_${serverId}_expansion_status`;
-        this.cookieService.set(cookieName, JSON.stringify(this.isServerExpanded[serverId]));
+        const key = `nx_system_${systemId}_server_${serverId}_expansion_status`;
+        this.localStorage.store(key, JSON.stringify(this.isServerExpanded[serverId]));
     }
 
     public updateShowIP (newValue: boolean) {

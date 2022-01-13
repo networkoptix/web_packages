@@ -1099,5 +1099,60 @@
     "maintenance": {
         "description_a": "Wir arbeiten an einigen Verbesserungen",
         "description_b": "und brandneuen Funktionen."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "So",
+                "Mon": "Mo",
+                "Tue": "Di",
+                "Wed": "Mi",
+                "Thu": "Do",
+                "Fri": "Fr",
+                "Sat": "Sa",
+                "Sunday": "Sonntag",
+                "Monday": "Montag",
+                "Tuesday": "Dienstag",
+                "Wednesday": "Mittwoch",
+                "Thursday": "Donnerstag",
+                "Friday": "Freitag",
+                "Saturday": "Samstag"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Mär",
+                "Apr": "Apr",
+                "May": "Mai",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Aug",
+                "Sep": "Sep",
+                "Oct": "Okt",
+                "Nov": "Nov",
+                "Dec": "Dez",
+                "January": "Januar",
+                "February": "Februar",
+                "March": "März",
+                "April": "April",
+                "June": "Juni",
+                "July": "Juli",
+                "August": "August",
+                "September": "September",
+                "October": "Oktober",
+                "November": "November",
+                "December": "Dezember"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "am",
+                "pm": "pm",
+                "A": "A",
+                "P": "P",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

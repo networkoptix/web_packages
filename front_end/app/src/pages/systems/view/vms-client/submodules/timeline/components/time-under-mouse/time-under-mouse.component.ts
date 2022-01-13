@@ -34,11 +34,13 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
     protected _visualOffset: px
 
     constructor(
+        languageService: NxLanguageProviderService,
         private self: ElementRef,
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
         public timeUnderMouse: TimelineTimeUnderMouseService
     ) {
+        dateformat.i18n = languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }

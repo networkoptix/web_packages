@@ -26,7 +26,7 @@
           [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
           [applyClass]="true"></svg-icon>
       </div>
-      <div class="cameras">
+      <div class="cameras" *ngIf="isServerExpanded[server.id]">
         <a
           class="camera"
           *ngFor="let camera of server.cameras; trackBy: cameraId"

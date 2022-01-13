@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import CameraPageComponent from './pages/system/camera/camera-page.component';
 import SystemPageComponent from './pages/system/system-page.component';
@@ -17,6 +18,7 @@ import VmsClientRoutingModule from './vms-client-routing.module';
     ],
     imports: [
         CommonModule,
+        TranslateModule,
         VmsModule,
         PlaybackModule,
         TimelineModule,

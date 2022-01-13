@@ -66,7 +66,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
         this.player = videojs(this.videoView.nativeElement, options);
 
-        this.player.on('ready', () => {
+        this.player.on('canplay', () => {
             this.player.play();
         });
 
@@ -76,14 +76,14 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
 
         this.player.on('waiting', () => {
-            if (this.hasPlayed) {
-                resetTimer();
-                this.hasPlayed = false;
-            }
             if (!stallTimer) {
+                this.hasPlayed = false;
                 stallTimer = setTimeout(() => {
                     this.bufferingChange.emit(waitingTime);
                 }, waitingTime);
+            }
+            if (this.hasPlayed) {
+                resetTimer();
             }
         });
 

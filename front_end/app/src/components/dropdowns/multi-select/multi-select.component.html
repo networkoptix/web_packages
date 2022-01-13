@@ -22,7 +22,7 @@
                 <input id="localFilter"
                        class="form-control search-input inset"
                        autocomplete="off"
-                       placeholder="Search"
+                       [placeholder]="'Search' | translate"
                        [ngModel]="filter"
                        (ngModelChange)="applyLocalFilter($event)">
                 <span class="glyphicon close-icon search-clear"

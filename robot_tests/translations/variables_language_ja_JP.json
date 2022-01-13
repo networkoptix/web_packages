@@ -150,6 +150,7 @@
     "PASSWORD TOO SHORT TEXT": "パスワードは8文字以上必要です",
     "PASSWORD TOO COMMON TEXT": "このパスワードは世界で最も一般的なパスワードです",
     "PASSWORD IS WEAK TEXT": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください",
+    "TERMS AND CONDITIONS ERROR TEXT": "続行するには、利用規約とプライバシーポリシーを確認して同意してください",
     "DISCARD CHANGES BUTTON TEXT": "変更を破棄",
     "APPLY CHANGES BUTTON TEXT": "適用",
     "CANCEL CHANGES BUTTON TEXT": "キャンセル",

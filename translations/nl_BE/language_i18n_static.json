@@ -1099,5 +1099,60 @@
     "maintenance": {
         "description_a": "We werken aan enkele verbeteringen",
         "description_b": "en gloednieuwe functies."
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "Zon",
+                "Mon": "Ma",
+                "Tue": "Di",
+                "Wed": "Woe",
+                "Thu": "Do",
+                "Fri": "Vr",
+                "Sat": "Za",
+                "Sunday": "Zondag",
+                "Monday": "Maandag",
+                "Tuesday": "Dinsdag",
+                "Wednesday": "Woensdag",
+                "Thursday": "Donderdag",
+                "Friday": "Vrijdag",
+                "Saturday": "Zaterdag"
+            },
+            "monthNames": {
+                "Jan": "Jan",
+                "Feb": "Feb",
+                "Mar": "Maa",
+                "Apr": "Apr",
+                "May": "Mei",
+                "Jun": "Jun",
+                "Jul": "Jul",
+                "Aug": "Aug",
+                "Sep": "Sep",
+                "Oct": "Okt",
+                "Nov": "Nov",
+                "Dec": "Dec",
+                "January": "Januari",
+                "February": "Februari",
+                "March": "Maart",
+                "April": "April",
+                "June": "Juni",
+                "July": "Juli",
+                "August": "Augustus",
+                "September": "September",
+                "October": "Oktober",
+                "November": "November",
+                "December": "December"
+            },
+            "timeNames": {
+                "a": "a",
+                "p": "p",
+                "am": "am",
+                "pm": "pm",
+                "A": "A",
+                "P": "P",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

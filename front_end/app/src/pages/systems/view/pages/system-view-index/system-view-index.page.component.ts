@@ -27,6 +27,7 @@ import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_
 import { NxRibbonService } from '../../../../../components/ribbon';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxSettingsService } from '../../../settings/settings.service';
 import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
 import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
 import sidebarLayout from '../sidebarLayout.cfg';
@@ -131,7 +132,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected ux: WebClientUxService,
         private utilsService: NxUtilsService,
         private dialogs: NxDialogsService,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        private settingsService: NxSettingsService
     ) {
         this.LANG = languageService.translations;
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
@@ -152,10 +154,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 if (systems.length) {
                     this.systems = systems;
                 }
-                if (!this.system) {
-                    this._log('systemsService -> initSystem', [...systems]);
-                    this._initSystem();
-                }
+                setTimeout(() => {
+                    if (!this.system) {
+                        this._log('systemsService -> initSystem', [...systems]);
+                        this._initSystem();
+                    }
+                });
             });
     }
 
@@ -272,12 +276,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this._setInitializationState(false, false);
                     this.ribbonService.hide();
 
-                    this.system = this.systemService.createSystem(
-                        account.email,
-                        this.systemId,
-                        undefined,
-                        false
-                    );
+                    this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
+                    this.settingsService.system = this.system;
                     return this.system.update();
                 }
 
@@ -364,7 +364,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     const serverTimeInfos = await this.system.getServerTimes();
                     this.vms.serverTimes = serverTimeInfos;
                     serverTimeInfos.forEach(sti => {
-                        const mediaServer = mediaServers.find(ms =>
+                        const mediaServer = mediaServers?.find(ms =>
                             ms.id === sti.serverId
                         );
                         if (mediaServer) {
@@ -434,7 +434,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             c.disableDualStreaming,
                             archiveRanges[c.id] || new SimpleTimeRange(0, 0),
                             [],
-                            c.status === 'Online'
+                            c.status !== 'Offline'
                                 ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
                                 : '',
                             (transport: string, quality: string, t?: ms) =>

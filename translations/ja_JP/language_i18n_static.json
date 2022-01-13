@@ -1099,5 +1099,60 @@
     "maintenance": {
         "description_a": "機能改修および",
         "description_b": "新機能の実装に取り組んでいます。"
+    },
+    "view": {
+        "timeline": {
+            "dayNames": {
+                "Sun": "日",
+                "Mon": "月",
+                "Tue": "火",
+                "Wed": "水",
+                "Thu": "木",
+                "Fri": "金",
+                "Sat": "土",
+                "Sunday": "日曜日",
+                "Monday": "月曜日",
+                "Tuesday": "火曜日",
+                "Wednesday": "水曜日",
+                "Thursday": "木曜日",
+                "Friday": "金曜日",
+                "Saturday": "土曜日"
+            },
+            "monthNames": {
+                "Jan": "1月",
+                "Feb": "2月",
+                "Mar": "3月",
+                "Apr": "4月",
+                "May": "5月",
+                "Jun": "6月",
+                "Jul": "7月",
+                "Aug": "8月",
+                "Sep": "9月",
+                "Oct": "10月",
+                "Nov": "11月",
+                "Dec": "12月",
+                "January": "1月",
+                "February": "2月",
+                "March": "3月",
+                "April": "4月",
+                "June": "6月",
+                "July": "7月",
+                "August": "8月",
+                "September": "9月",
+                "October": "10月",
+                "November": "11月",
+                "December": "12月"
+            },
+            "timeNames": {
+                "a": "午前",
+                "p": "午後",
+                "am": "午前",
+                "pm": "午後",
+                "A": "午前",
+                "P": "午後",
+                "AM": "AM",
+                "PM": "PM"
+            }
+        }
     }
 }

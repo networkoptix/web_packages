@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '../../../../../../components/components.module';
 
@@ -22,6 +23,7 @@ import IpInfoPipe from './pipes/ip_info.pipe';
     imports: [
         CommonModule,
         RouterModule,
+        TranslateModule,
         ComponentsModule,
         FormsModule,
         DirectivesModule,

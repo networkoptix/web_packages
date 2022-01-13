@@ -561,7 +561,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     };
 
     ngOnDestroy() {
-        this.appStateService.altBackground = false;
+        setTimeout(() => {
+            this.appStateService.altBackground = false;
+        });
         this.ribbonService.hide();
     }
 };

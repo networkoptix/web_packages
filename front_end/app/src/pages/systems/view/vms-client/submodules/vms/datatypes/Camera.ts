@@ -120,13 +120,21 @@ export class Camera implements ICamera {
         if (resolutions.length === 1) {
             result.high = isHls ? 'hi' : resolutions[0];
         } else {
-            const high = resolutions.filter(r => !this._resolutionIsLow(r)).sort();
+            const high = resolutions.filter(r => {
+                return !this._resolutionIsLow(r);
+            }).sort();
             if (high.length) {
                 result.high = isHls ? 'hi' : high[high.length - 1];
             }
             const low = resolutions.filter(r => this._resolutionIsLow(r)).sort();
-            if (!this.disableDualStreaming && low.length) {
-                result.low = isHls ? 'lo' : low[0];
+            if (!this.disableDualStreaming) {
+                if(isHls) {
+                    result.low = 'lo'
+                } else if (low.length) {
+                    result.low = low[0];
+                } else {
+                    result.low = high[0]; // If there is no low use the lowest high stream.
+                }
             }
         }
 
@@ -155,7 +163,7 @@ export class Camera implements ICamera {
                 acc = v;
             }
             return acc;
-        }, Infinity) < 1000;
+        }, Infinity) < 720;
     }
 
     public get isVirtual () {
