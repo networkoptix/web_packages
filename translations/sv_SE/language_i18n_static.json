@@ -115,7 +115,7 @@
         "newPassHeader": "Ange nytt lösenord",
         "newPassConfirmText": "Lösenord sparat!",
         "newPassInvalidCode": "Det går inte att spara lösenordet: Bekräftelsekoden används redan eller är felaktig",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "notSecureText": "Om du fortsätter kommer du att tillåta<br><span class='error-label'>{ redirectUrl }</span><br>att komma åt ditt %CLOUD_NAME% konto.",
         "confirmHeader": "System anslutet till %CLOUD_NAME%!",
         "loginError": "Kan inte ansluta till %CLOUD_NAME%",
         "loginErrorAdditional": "Försök igen eller logga in på systemet direkt med ditt lokala konto.",
@@ -863,7 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Det gick inte att ändra {type} namn",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
+        "noInternet": "%CLOUD_NAME% är tillfälligt otillgänglig. Vänligen försök igen senare.",
         "userChangesFail": "Det gick inte att tillämpa ändringar",
         "reviewAccepted": "Avtal har accepterats",
         "system": {
@@ -886,8 +886,8 @@
             }
         },
         "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait."
+        "twoFaRequired": "Tvåfaktorsautentisering har aktiverats för det här kontot. Vänligen ange din verifieringskod i popup-fönstret.",
+        "loggingIn": "Loggar in. Vänligen vänta."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath-rapport för system {systemName}"
@@ -1041,7 +1041,7 @@
             "v5Warning_a1": "Du har",
             "v5Warning_a2": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
             "v5Warning_a3": "med mjukvaruversion lägre än 5.0. {count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer inte att vara tillgängliga via",
-            "v5Warning_a4": " %VMS_NAME% Client ",
+            "v5Warning_a4": " %VMS_NAME% klient ",
             "v5Warning_a5": "eftersom tidigare versioner av %VMS_NAME% Client inte stöder tvåfaktorsautentisering, så kommer du inte att kunna ange en verifieringskod för ditt %CLOUD_NAME% konto.",
             "v5Warning_b": "{count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer att vara fullt tillgänglig så snart som möjligt {count, plural, =0{dom är} one{det är} other{dom är}} uppgraderad till 5.0 -versionen.",
             "disableWarning": "Du har {count, plural, one{# ett system} other{# flera system}} som {count, plural, one{kräver} other{kräver}} tvåfaktorsautentisering. Du kommer inte att kunna logga in på {count, plural, one{detta system} other{dessa system}}."

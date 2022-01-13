@@ -9,4 +9,4 @@ Du har blivit inbjuden till %CLOUD_NAME%.
 Vänligen skapa konto på %CLOUD_NAME%
 använd din nuvarande e-postadress och följ ytterligare instruktioner.
 
-Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}
+Registrera ditt konto med den här länken: {{ config.portal_url }}/ register /{{ message.code }}

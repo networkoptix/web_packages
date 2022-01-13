@@ -115,7 +115,7 @@
         "newPassHeader": "Neues Passwort festlegen",
         "newPassConfirmText": "Das Passwort ist gesetzt!",
         "newPassInvalidCode": "Kennwort kann nicht gespeichert werden: Der Bestätigungscode wurde bereits verwendet oder ist falsch",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "notSecureText": "Wenn Sie fortfahren, gestatten Sie<br><span class='error-label'>{ redirectUrl }</span><br>den Zugriff auf Ihr %CLOUD_NAME% Konto.",
         "confirmHeader": "System verbunden mit %CLOUD_NAME%!",
         "loginError": "Verbindung zu %CLOUD_NAME% nicht möglich",
         "loginErrorAdditional": "Bitte versuchen Sie es erneut oder melden Sie sich direkt mit Ihrem lokalen Konto am System an.",
