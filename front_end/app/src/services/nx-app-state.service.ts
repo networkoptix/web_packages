@@ -9,7 +9,7 @@ export class NxAppStateService {
     readySubject = new BehaviorSubject(false);
     authorizeSubject = new BehaviorSubject(false);
     ribbonSubject = new BehaviorSubject(false);
-    headerContainerHeight = new BehaviorSubject(48);
+    headerContainerHeight$ = new BehaviorSubject(48);
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
@@ -19,7 +19,7 @@ export class NxAppStateService {
     altBackground = false;
 
     constructor() {
-        this.headerContainerHeight.pipe(debounceTime(50)).subscribe((value) => {
+        this.headerContainerHeight$.pipe(debounceTime(50)).subscribe((value) => {
             this.appContainerHeight = `calc(100% - ${value}px)`;
         });
     }
@@ -64,12 +64,12 @@ export class NxAppStateService {
         this.manualAccessSubject$.next(canAccess);
     }
 
-    set authorizing(authorize: boolean) {
-        this.headerContainerHeight.next(authorize ? 0 : 48);
-        this.authorizeSubject.next(authorize);
-    }
-
-    get authorizing() {
-        return this.authorizeSubject.getValue();
-    }
+    // TODO: Remove as not used
+    // set authorizing(authorize: boolean) {
+    //     this.authorizeSubject.next(authorize);
+    // }
+    //
+    // get authorizing() {
+    //     return this.authorizeSubject.getValue();
+    // }
 }

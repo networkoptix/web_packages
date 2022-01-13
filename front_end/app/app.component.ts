@@ -39,7 +39,7 @@ require('./scripts/vendor/protocolcheck');
 @Component({
     selector: 'nx-app',
     template: `
-        <div *ngIf="!reauthorizing" class="headerContainer">
+        <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
             <nx-header *ngIf="
                 (appStateService.ready || environment.isLocal) &&
                 !CONFIG.browserNotSupported
@@ -81,6 +81,7 @@ export class AppComponent {
     newSystem: boolean;
     loading: boolean;
     reauthorizing: boolean;
+    headerHeight: number;
 
     CONFIG: IConfig;
     readonly environment = environment;
@@ -247,6 +248,13 @@ export class AppComponent {
                     (event.target as Window).innerWidth
                 );
             });
+    }
+
+    headerResize(size: { width: number, height: number}) {
+        if (this.headerHeight !== size.height) {
+            this.appStateService.headerContainerHeight$.next(size.height);
+            this.headerHeight = size.height;
+        }
     }
 
     @HostListener('window:popstate')
