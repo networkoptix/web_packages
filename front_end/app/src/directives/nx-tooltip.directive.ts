@@ -3,19 +3,32 @@ import {
     Overlay, OverlayPositionBuilder,
     OverlayRef
 } from '@angular/cdk/overlay';
-import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
-    ComponentRef,
-    Directive, ElementRef, HostBinding, HostListener, Input, OnChanges,
-    OnInit, SimpleChanges, TemplateRef, ViewContainerRef
+    ComponentPortal,
+    TemplatePortal
+} from '@angular/cdk/portal';
+import {
+    Directive,
+    ElementRef,
+    HostListener,
+    Input,
+    OnChanges, OnDestroy,
+    OnInit,
+    SimpleChanges,
+    TemplateRef,
+    ViewContainerRef
 } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
-import { debounce } from '@src/decorators/debounce';
 
+@UntilDestroy()
 @Directive({ selector: '[nxTooltip]' })
-export class NxTooltipDirective implements OnInit, OnChanges {
+export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     private overlayRef: OverlayRef;
+    private destroy$ = new Subject();
 
     @Input('nxTooltip') content: string | TemplateRef<any>;
 
@@ -61,26 +74,33 @@ export class NxTooltipDirective implements OnInit, OnChanges {
         }
     }
 
+    ngOnDestroy() {
+        this.hide();
+    }
+
     @HostListener('mouseenter')
-    @debounce(300)
     show() {
-        const tooltipPortal = new ComponentPortal(NxTooltipComponent);
-        const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;
-        if (this.content instanceof TemplateRef) {
-            tooltipRef.attachTemplate(
-                new TemplatePortal(
-                    this.content,
-                    this._viewContainerRef
-                )
-            );
-        } else {
-            tooltipRef.attachText(this.content);
-        }
+        timer(300).pipe(
+            takeUntil(this.destroy$),
+        ).subscribe(() => {
+            const tooltipPortal = new ComponentPortal(NxTooltipComponent);
+            const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;
+            if (this.content instanceof TemplateRef) {
+                tooltipRef.attachTemplate(
+                    new TemplatePortal(
+                        this.content,
+                        this._viewContainerRef
+                    )
+                );
+            } else {
+                tooltipRef.attachText(this.content);
+            }
+        });
     }
 
     @HostListener('mouseout')
-    @debounce(100)
     hide() {
-        this.overlayRef && this.overlayRef.detach();
+        this.overlayRef?.detach();
+        this.destroy$.next();
     }
 }
