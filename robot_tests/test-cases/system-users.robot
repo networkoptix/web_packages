@@ -498,15 +498,17 @@ Reset
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
     ...    ${server 1['name']}
-    # ${emailID}    Wait For Email    recipient=${random email}    timeout=120
-    # Check Email Subject
-    # ...    ${emailID}
-    # ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
-    # ...    ${BASE EMAIL}
-    # ...    ${BASE EMAIL PASSWORD}
-    # ...    ${BASE HOST}
-    # ...    ${BASE PORT}
-    # Delete Email    ${emailID}
+    ${emailID}    Wait For Email    recipient=${user}    timeout=120
+    ${check email status}=    Run Keyword And Ignore Error    Check Email Subject
+    ...    ${emailID}
+    ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
+    ...    ${BASE EMAIL}
+    ...    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
+    IF    ${check email status} == "PASS"
+        Delete Email    ${emailID}
+    END
     ${emailID}    Wait For Email    recipient=${user}    timeout=120
     Check Email Subject
     ...    ${emailID}
@@ -576,7 +578,7 @@ Reset
     Close Mailbox
 
     Log    Step 5-6
-    Go To    ${url}/register/${code}
+    Go To    ${url}/authorize/register/${code}
     Wait Until Elements Are Visible
     ...    ${REGISTER FIRST NAME INPUT}
     ...    ${REGISTER LAST NAME INPUT}
@@ -1087,7 +1089,7 @@ Reset
         Click Button    ${USER CANCEL}
         Sleep    .1
         Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
-        Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
+        Element Text Should Be    //*[@id="permissionsSelect"]//span    ${role names}[advancedViewer]
         Page Should Not Contain Element   ${USER DISABLED MSG}
 # commented out because of CLOUD-6854
         #Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+advancedViewer

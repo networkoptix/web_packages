@@ -60,7 +60,7 @@ ${ACCOUNT NOT FOUND MESSAGE}          //nx-authorize-component//p[text()="${ACCO
 ${TOO MANY ATTEMPTS MESSAGE}          //nx-authorize-component//p[text()="${TOO MANY ATTEMPTS TEXT}"]
 ${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//form//input[@id="resetPassword"]
 ${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
-${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${PASSWORD IS SET TEXT}')]
+${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${RESET SUCCESS MESSAGE TEXT}')]
 
 ${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
@@ -267,7 +267,7 @@ ${TAKE ME HOME}                       //button/a[text()="${GO TO MAIN PAGE TEXT}
 ${404 ICON}                           //div[@name="404"]/svg-icon
 ${OFFLINE BADGE}                      //a[contains(@class, "badge") and contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
-${RESET PASSWORD PAGE BUTTON}         //nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '${RESET PASSWORD TEXT}')]
+${RESET PASSWORD PAGE BUTTON}         //nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '${RESET PASSWORD BUTTON TEXT}')]
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
