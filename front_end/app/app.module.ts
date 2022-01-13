@@ -36,6 +36,7 @@ import {
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { ComponentsModule } from '@components/components.module';
+import { PopoverModule } from '@components/popover/popover.module';
 import { DialogsModule } from '@dialogs/dialogs.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
@@ -87,6 +88,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         InputTrimModule,
         ComponentsModule,
         MenuModule,
+        PopoverModule,
         DialogsModule,
         DirectivesModule,
         PipesModule,

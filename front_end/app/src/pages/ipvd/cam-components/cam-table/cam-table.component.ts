@@ -60,6 +60,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     private paramsShown;
     private beta: boolean;
 
+    targets: object[] = [];
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -124,6 +125,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         removeNewLines: true
     };
 
+    @ViewChild('ipvdRequest', { static: false }) ipvdRequest: ElementRef;
     @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
     @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
@@ -262,6 +264,16 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     ngAfterViewInit(): void {
+        if (this.ipvdRequest) {
+            const linkRequest = this.ipvdRequest.nativeElement.querySelector('span#request');
+            NxUtilsService.addPseudoAnchor(
+                this.targets,
+                linkRequest,
+                undefined,
+                'click',
+                () => { this.onFeedbackClick.emit('page'); });
+        }
+
         this.calcElementScrollMechanics();
 
         this.windowScrollSubscription = this.scrollMechanicsService
@@ -286,7 +298,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             });
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.elements) {

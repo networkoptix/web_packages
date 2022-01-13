@@ -1,11 +1,24 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { DOCUMENT } from '@angular/common';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Inject,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { PopoverRef } from '@components/popover/popover-ref';
+import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxAccountService, Account } from '@services/account.service';
+import { Account, NxAccountService } from '@services/account.service';
 import { NxApplyService, Watcher } from '@services/apply.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
@@ -19,8 +32,7 @@ import { NxMenuService } from '@src/menu';
     templateUrl: 'security.component.html',
     styleUrls: ['security.component.scss']
 })
-
-export class NxAccountSecurityComponent implements OnInit {
+export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -31,8 +43,16 @@ export class NxAccountSecurityComponent implements OnInit {
     twoFaSystems: NxSystemWithUserInfo[] = [];
     subV5Systems: NxSystemWithUserInfo[] = [];
 
-    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
+    targets: object[] = [];
+    popover: PopoverRef;
+
     verificationWatcher = new Watcher<boolean>();
+
+    @ViewChild('twoFaSystemsSpan') twoFaSystemsSpan: ElementRef;
+    @ViewChild('v5WarningSpan') v5WarningSpan: ElementRef;
+    @ViewChild('popLegend2faTemplate') popLegend2faTemplate: TemplateRef<any>;
+    @ViewChild('popLegendSubV5Template') popLegendSubV5Template: TemplateRef<any>;
+    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
 
     private setupDefaults() {
         this.menuService.detail = 'security';
@@ -47,7 +67,10 @@ export class NxAccountSecurityComponent implements OnInit {
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
         private pageService: NxPageService,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
+        private popoverService: NxPopoverService,
+        private _viewContainerRef: ViewContainerRef,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -81,6 +104,9 @@ export class NxAccountSecurityComponent implements OnInit {
                 });
                 this.twoFaSystems = twoFaSystems;
                 this.subV5Systems = subV5Systems;
+
+                this.clearPopoverTargets();
+                this.setPopoverTargets();
             });
 
         // TODO: Replace with API logic
@@ -94,8 +120,7 @@ export class NxAccountSecurityComponent implements OnInit {
                             if (action === 'canceled') {
                                 return Promise.reject('dialogCancel');
                             } else {
-                                const newState = (action === 'enabled');
-                                this.account2faEnabled = newState;
+                                this.account2faEnabled = (action === 'enabled');
                                 this.updateVerificationOriginal();
                             }
                         });
@@ -109,6 +134,63 @@ export class NxAccountSecurityComponent implements OnInit {
             },
             [this.verificationWatcher]
         );
+    }
+
+    private clearPopoverTargets() {
+        this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+
+        if (this.popover) {
+            this.popover.close();
+            this.popover = undefined;
+        }
+    }
+
+    private setPopoverTargets() {
+        if (this.subV5Systems.length && this.v5WarningSpan) {
+            const targetV5 = this.v5WarningSpan.nativeElement.querySelector('span#targetV5');
+            NxUtilsService.addPseudoAnchor(
+                this.targets,
+                targetV5,
+                this.popLegendSubV5Template,
+                'click',
+                this.showPopoverWithTemplate.bind(this));
+        }
+
+        if (this.twoFaSystems.length && this.twoFaSystemsSpan) {
+            const target2FaSystems = this.twoFaSystemsSpan.nativeElement.querySelector('span#target2FaSystems');
+            NxUtilsService.addPseudoAnchor(
+                this.targets,
+                target2FaSystems,
+                this.popLegend2faTemplate,
+                'click',
+                this.showPopoverWithTemplate.bind(this));
+        }
+    }
+
+    ngAfterViewInit() {
+        this.setPopoverTargets();
+    }
+
+    showPopoverWithTemplate(template: TemplateRef<any>, target: any): void {
+        if (this.popover) {
+            this.popover.close();
+
+            if (this.popover.targetId === target.id) {
+                this.popover = undefined;
+                return;
+            }
+        }
+        this.popover = this.popoverService.open(
+            template,
+            target,
+            {
+                panelClass: 'system-popover',
+            },
+            this._viewContainerRef);
+    }
+
+    ngOnDestroy() {
+        this.clearPopoverTargets();
     }
 
     updateVerificationOriginal(newValue?: boolean): void {

@@ -68,16 +68,10 @@
                 </div>
             </div>
 
-            <div class=""
-                *ngIf="pagedItems.length">
-
+            <div *ngIf="pagedItems.length">
                 <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
                     <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
-                    <span>
-                        <ng-container>{{LANG.ipvdFeedback.a_Please()}}&nbsp;</ng-container>
-                        <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvdFeedback.b_Link()}}</a>
-                        <ng-container>&nbsp;{{LANG.ipvdFeedback.c_Info()}}</ng-container>
-                    </span>
+                    <span #ipvdRequest [innerHTML]="LANG.ipvdFeedback.request() | safe : 'html'"></span>
                 </p>
                 <button *ngIf="debug">reset</button>
             </div>

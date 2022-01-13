@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID, TemplateRef } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { isArray } from 'rxjs/internal-compatibility';
 
@@ -426,5 +426,38 @@ export class NxUtilsService {
             }
         });
         return obj as Record<string, string | string[]>;
+    }
+
+    /* Create pseudo anchor out of an element and attach an event handler
+    * typical usage is element supplied by translations i.e. "Blah <span id=\"target\">{number}</span>"
+    * @param {object[]} targetArr Array to store current targets(anchors) ... needed for handlers cleanup
+    * @param {HTMLElement} target Element we want to make an anchor
+    * @param {TemplateRef} template Template to show or "undefined"
+    * @param {string} eventType
+    * @param {Function} handler Function to be caller on event ...
+    * ... function should be passed bind to "this" (this.showPopoverWithTemplate.bind(this))
+    * ... or if specific/no additional params as () => { this.onFeedbackClick.emit('page'); }
+    */
+    static addPseudoAnchor(targetArr: object[], target: HTMLElement, template: TemplateRef<any>, eventType: string, handler: Function) {
+        const newTarget = {
+            id: `${target.id}`,
+            target: target,
+            eventType,
+            handler: (event) => handler(template, event.target)
+        };
+        targetArr.push(newTarget);
+        NxUtilsService.createPseudoAnchor(target, eventType, newTarget.handler);
+    }
+
+    static clearPseudoAnchors(targetArr: object[]) {
+        targetArr.forEach(({ target, eventType, handler }: any) => {
+            target.removeEventListener(eventType, handler);
+        });
+        return [];
+    }
+
+    private static createPseudoAnchor(target: HTMLElement, eventType: string, clickHandler: Function) {
+        target.classList.add('pseudo-anchor');
+        target.addEventListener(eventType, (event) => clickHandler(event));
     }
 }

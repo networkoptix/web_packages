@@ -1,3 +1,5 @@
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +24,9 @@ import { NxAccountSecurityComponent } from './security.component';
         ComponentsModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        CdkScrollableModule,
+        OverlayModule
     ],
     providers: [],
     declarations: [

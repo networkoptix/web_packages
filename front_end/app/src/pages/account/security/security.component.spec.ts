@@ -6,11 +6,16 @@ import {
     fakeAsync
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockModule, MockComponent, MockProvider } from 'ng-mocks';
+import {
+    MockModule,
+    MockComponent,
+    MockProvider
+} from 'ng-mocks';
 
-import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
+import {
+    NxCheckboxComponent
+} from '@components/checkbox/checkbox.component';
 import {
     NxContentBlockComponent
 } from '@components/content-block/content-block.component';
@@ -20,6 +25,7 @@ import {
 import {
     NxPreLoaderComponent
 } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxPopoverService } from '@components/popover/popover.service';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
@@ -30,6 +36,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxMenuService } from '@src/menu';
+import { NxSafePipe } from '@src/pipes/nx-safe';
 
 import { NxAccountSecurityComponent } from './security.component';
 
@@ -43,11 +50,11 @@ describe('NxAccountSecurityComponent', () => {
             imports: [
                 TranslateModule.forRoot(),
                 MockModule(FormsModule),
-                MockModule(NgbModule)
             ],
             declarations: [
                 NxAccountSecurityComponent,
                 NxSwitchComponent,
+                NxSafePipe,
                 MockComponent(NxPreLoaderComponent),
                 MockComponent(NxContentBlockComponent),
                 MockComponent(NxContentBlockSectionComponent),
@@ -63,6 +70,7 @@ describe('NxAccountSecurityComponent', () => {
                 MockProvider(NxMenuService),
                 MockProvider(NxPageService),
                 MockProvider(NxSystemsService),
+                MockProvider(NxPopoverService),
             ]
         }).compileComponents();
 

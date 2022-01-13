@@ -1,16 +1,23 @@
 import {
+    AfterViewInit,
     Component,
     Inject,
-    OnDestroy,
-    LOCALE_ID,
     Input,
+    LOCALE_ID,
     OnChanges,
+    OnDestroy,
     SimpleChanges,
+    TemplateRef,
+    ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { of, Subject, Subscription, timer } from 'rxjs';
+import { delay, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { POS_STRATEGY } from '@components/popover/popover-config';
+import { PopoverRef } from '@components/popover/popover-ref';
+import { NxPopoverService } from '@components/popover/popover.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/system/storage-manager/storage';
 import { NxUtilsService } from '@services/utils.service';
@@ -21,16 +28,18 @@ import { NxUtilsService } from '@services/utils.service';
     templateUrl: 'size.component.html',
     styleUrls: ['size.component.scss']
 })
-export class NxStorageSizeComponent implements OnDestroy, OnChanges {
+export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewInit {
     @Input() store: Storage;
     @Input() cachedSizes: {[key: string]: { vms: number, total: number }} = {}
 
     LANG: LanguageI18NStaticTypes;
 
+    destroy$ = new Subject();
+    targets: object[] = [];
+    popover: PopoverRef;
+
     loading: boolean;
     showStorage: boolean;
-    systemSubscription: Subscription;
-
     totalSpace: string;
     reserved: string;
     reservedPercentage: number;
@@ -62,11 +71,42 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges {
 
     constructor(
         languageService: NxLanguageProviderService,
-        @Inject(LOCALE_ID) private locale: string
+        private popoverService: NxPopoverService,
+        private _viewContainerRef: ViewContainerRef,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.LANG = languageService.translations;
-
         this.STATUS = STORAGE_STATUS;
+    }
+
+    showLegend(template: TemplateRef<any>, target: any): void {
+        timer(300)
+            .pipe(
+                takeUntil(this.destroy$)
+            ).subscribe(() => {
+                this.popover = this.popoverService.open(
+                    template,
+                    target,
+                    {
+                        panelClass: 'size-popover',
+                        arrowOffset: 4,
+                        positionStrategy: POS_STRATEGY.BOTTOM
+                    },
+                    this._viewContainerRef);
+            });
+    }
+
+    closeLegend() {
+        this.popover?.close();
+        this.popover = undefined;
+        this.destroy$.next();
+    }
+
+    ngAfterViewInit() {
+    }
+
+    ngOnDestroy() {
+        this.closeLegend();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -95,11 +135,11 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges {
 
         if (this.store.freeSpace === undefined) {
             this.store.freeSpace = this.store.totalSpace - this.store.vmsSpace;
-        };
+        }
 
         if (this.store.reservedSpace === undefined) {
             this.store.reservedSpace = 0;
-        };
+        }
 
         const usedSpace = this.store.totalSpace - this.store.freeSpace - this.store.vmsSpace;
         this.totalSpace = this.toFriendlyBytes(this.store.totalSpace) || '&mdash;';
@@ -149,9 +189,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges {
             TB: 2
         };
         return `${parseFloat(size).toFixed(fixed[units])} ${units}`;
-    }
-
-    ngOnDestroy() {
     }
 }
 

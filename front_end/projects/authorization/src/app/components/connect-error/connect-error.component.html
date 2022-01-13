@@ -53,8 +53,7 @@
             <h3 *ngIf="errorType === 'maintenance'" class="authorize-header mt-3 mb-2" translate>Maintenance</h3>
         </div>
         <p class="my-0" style="text-align: center" *ngIf="errorType === 'maintenance'">
-            <span class="d-block" [innerText]="'maintenance.description_a' | translate"></span>
-            <span class="d-block" [innerText]="'maintenance.description_b' | translate"></span>
+            <span class="d-block" [innerHTML]="'maintenance.description' | translateAndSplitText: 40"></span>
         </p>
         <div style="margin-top: 26px">
             <nx-process-button

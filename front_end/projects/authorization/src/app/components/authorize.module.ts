@@ -6,8 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-    ReactiveFormsModule, FormsModule
-}                               from '@angular/forms';
+    ReactiveFormsModule,
+    FormsModule
+} from '@angular/forms';
 
 import { DirectivesModule } from '@directives/directives.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
@@ -24,6 +25,7 @@ import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
 import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
 import { NxAuthorizeNotSecureComponent } from './not-secure/not-secure.component';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
@@ -43,7 +45,8 @@ export const authorizedRoutes: Routes = [
         SharedComponentsModule,
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule.forRoot(),
-        DirectivesModule
+        DirectivesModule,
+        PipesModule
     ],
     providers: [
     ],

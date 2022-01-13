@@ -46,6 +46,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    targets: object[] = [];
     placeholder: string;
     data;
     company: string;
@@ -87,6 +88,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
     @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef;
+    @ViewChild('ipvdRequest', { static: false }) ipvdRequest: ElementRef;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -240,6 +242,18 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
     }
 
+    initPseudoAnchors() {
+        if (this.ipvdRequest && !this.targets.find((target: any) => target.id === 'request')) {
+            const linkRequest = this.ipvdRequest.nativeElement.querySelector('span#request');
+            NxUtilsService.addPseudoAnchor(
+                this.targets,
+                linkRequest,
+                undefined,
+                'click',
+                () => { this.openFeedback('page'); });
+        }
+    }
+
     ngAfterViewInit() {
         if (this.searchContainer?.nativeElement) {
             this.scrollMechanicsService.searchViewHeight =
@@ -247,7 +261,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+    }
 
     findVendorForCamera(name) {
         const camera = this.cameras.find((camera) => {
@@ -569,6 +585,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.uri.resetURI(this.uriPath, queryParams);
 
                 this.params = queryParams;
+
+                setTimeout(() => {
+                    this.initPseudoAnchors();
+                });
             }
         }
     }

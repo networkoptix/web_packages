@@ -609,9 +609,7 @@ export interface Ipvd {
 }
 
 export interface IpvdFeedback {
-    a_Please: any;
-    b_Link:   any;
-    c_Info:   any;
+    request: any;
 }
 
 export interface License {
@@ -659,8 +657,7 @@ export interface Messages {
 }
 
 export interface Maintenance {
-    description_a: any;
-    description_b: any;
+    description: any;
 }
 
 export interface Menu {
@@ -824,16 +821,11 @@ export interface Security {
 }
 
 export interface SecurityTwoFa {
-    twoFADescription_a1: any;
-    twoFADescription_a2: any;
-    systemsRemainder:    any;
-    v5Warning_a1:        any;
-    v5Warning_a2:        any;
-    v5Warning_a3:        any;
-    v5Warning_a4:        any;
-    v5Warning_a5:        any;
-    v5Warning_b:         any;
-    disableWarning:      any;
+    twoFADescription:     any;
+    systemsRemainder:     any;
+    v5Warning:            any;
+    v5WarningExplanation: any;
+    disableWarning:       any;
 }
 
 export interface ServerTabTitles {
@@ -1705,9 +1697,7 @@ const typeMap: any = {
         { json: "sortKey", js: "sortKey", typ: "any" },
     ], false),
     "IpvdFeedback": o([
-        { json: "a_Please", js: "a_Please", typ: "any" },
-        { json: "b_Link", js: "b_Link", typ: "any" },
-        { json: "c_Info", js: "c_Info", typ: "any" },
+        { json: "request", js: "request", typ: "any" },
     ], false),
     "License": o([
         { json: "licenseTypeTitles", js: "licenseTypeTitles", typ: r("LicenseTypeTitles") },
@@ -1750,8 +1740,7 @@ const typeMap: any = {
         { json: "trialActivated", js: "trialActivated", typ: "any" },
     ], false),
     "Maintenance": o([
-        { json: "description_a", js: "description_a", typ: "any" },
-        { json: "description_b", js: "description_b", typ: "any" },
+        { json: "description", js: "description", typ: "any" },
     ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },
@@ -1895,15 +1884,10 @@ const typeMap: any = {
         { json: "twoFa", js: "twoFa", typ: r("SecurityTwoFa") },
     ], false),
     "SecurityTwoFa": o([
-        { json: "twoFADescription_a1", js: "twoFADescription_a1", typ: "any" },
-        { json: "twoFADescription_a2", js: "twoFADescription_a2", typ: "any" },
+        { json: "twoFADescription", js: "twoFADescription", typ: "any" },
         { json: "systemsRemainder", js: "systemsRemainder", typ: "any" },
-        { json: "v5Warning_a1", js: "v5Warning_a1", typ: "any" },
-        { json: "v5Warning_a2", js: "v5Warning_a2", typ: "any" },
-        { json: "v5Warning_a3", js: "v5Warning_a3", typ: "any" },
-        { json: "v5Warning_a4", js: "v5Warning_a4", typ: "any" },
-        { json: "v5Warning_a5", js: "v5Warning_a5", typ: "any" },
-        { json: "v5Warning_b", js: "v5Warning_b", typ: "any" },
+        { json: "v5Warning", js: "v5Warning", typ: "any" },
+        { json: "v5WarningExplanation", js: "v5WarningExplanation", typ: "any" },
         { json: "disableWarning", js: "disableWarning", typ: "any" },
     ], false),
     "ServerTabTitles": o([

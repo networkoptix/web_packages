@@ -101,7 +101,7 @@ export class NxBootstrapProvider {
             Object.entries(language).forEach(([key, phrase]) => {
                 if (typeof phrase === 'string') {
                     language[key] = Object.entries(customStrings)
-                        .reduce((text: string, [rKey, rValue]) => text.replace(rKey, rValue), phrase);
+                        .reduce((text: string, [rKey, rValue]) => text.replace(new RegExp(rKey, 'g'), rValue), phrase);
                 } else if (typeof phrase !== 'number') {
                     language[key] = processLanguage(phrase);
                 }

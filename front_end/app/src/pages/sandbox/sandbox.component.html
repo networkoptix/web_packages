@@ -486,6 +486,15 @@
                                             id="rotations"></nx-select>
                                 </div>
                             </div>
+                            <br>
+                            <br>
+                            <h3>Split text in chunks</h3>
+                            <div style="width: 310px; border: 1px solid gold">
+                                {{'maintenance.description' | translate }}
+                            </div>
+                            <div style="width: 310px; border: 1px solid green"
+                                 [innerHTML]="'maintenance.description' | translateAndSplitText: 35">
+                            </div>
                         </div>
                     </div>
                 </ng-template>

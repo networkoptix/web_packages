@@ -40,12 +40,15 @@ export class NxSandboxComponent {
     theme: string;
     change: Process;
     restore: Process;
+    wholeText: string;
 
     submitted = false;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
+        this.wholeText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+
         this.data = {
             newPassword: '',
             email: ''
