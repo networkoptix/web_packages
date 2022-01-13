@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { ms, px } from '@vms-client/utils/type-aliases';
-import TimelineService from './timeline.service';
 import { NxUtilsService } from '@services/utils.service';
+
+import TimelineService from './timeline.service';
 
 export interface TimelineTimeUnderMouseServiceStatus {
     isMouseInside: boolean,

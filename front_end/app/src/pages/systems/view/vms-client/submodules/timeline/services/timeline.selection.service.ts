@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import TimelineService from './timeline.service';
-import TimeRange from './TimeRange';
-import { ms, px } from '@vms-client/utils/type-aliases';
+
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import TimelineScrollbarRelativeService from './timeline.scrollbarRelative.service';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { ms, px } from '@vms-client/utils/type-aliases';
+
+import TimeRange from './TimeRange';
+import TimelineScrollbarRelativeService from './timeline.scrollbarRelative.service';
+import TimelineService from './timeline.service';
 
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;
@@ -260,18 +262,24 @@ export class TimelineSelectionService {
                 const offsetPx = this._getOffsetPx(e) - this._dragAnchorPx;
                 const timeUnderMouse = this.timeline.domOffsetXtoTime(offsetPx);
                 const leftEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse);
-                const rightEdgeFits = this.timeline.archiveRange.contains(timeUnderMouse + this._selectedRange.duration);
+                const rightEdgeFits = this.timeline.archiveRange.contains(
+                    timeUnderMouse + this._selectedRange.duration
+                );
                 if (offsetPx < 0) {
                     if (leftEdgeFits) {
                         this._selectedRange.moveStartTo(timeUnderMouse);
                     } else {
-                        this._selectedRange.moveStartTo(this.timeline.archiveRange.start);
+                        this._selectedRange.moveStartTo(
+                            this.timeline.archiveRange.start
+                        );
                     }
                 } else if (offsetPx > 0) {
                     if (rightEdgeFits) {
                         this._selectedRange.moveStartTo(timeUnderMouse);
                     } else {
-                        this._selectedRange.moveStartTo(this.timeline.archiveRange.end - this._selectedRange.duration);
+                        this._selectedRange.moveStartTo(
+                            this.timeline.archiveRange.end - this._selectedRange.duration
+                        );
                     }
                 }
                 this._emit();
@@ -409,18 +417,27 @@ export class TimelineSelectionService {
         const STEP = 0.2;
         switch (this._dragMode) {
             case SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE:
-                if (!(this.leftEdgeScrollingSpeed && this.scroll.canScrollLeft) && !(this.rightEdgeScrollingSpeed && this.scroll.canScrollRight)) {
+                if (
+                    !(this.leftEdgeScrollingSpeed && this.scroll.canScrollLeft) &&
+                    !(this.rightEdgeScrollingSpeed && this.scroll.canScrollRight)
+                ) {
                     return;
                 }
                 if (this.leftEdgeScrollingSpeed) {
                     speed = this.leftEdgeScrollingSpeed;
                     offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    this.timeline.stepScrollToStartTime((this.timeline.visibleRange.start - offset), STEP);
+                    this.timeline.stepScrollToStartTime(
+                        this.timeline.visibleRange.start - offset,
+                        STEP
+                    );
                 }
                 if (this.rightEdgeScrollingSpeed) {
                     speed = this.rightEdgeScrollingSpeed;
                     offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    this.timeline.stepScrollToStartTime((this.timeline.visibleRange.start + offset), STEP);
+                    this.timeline.stepScrollToStartTime(
+                        this.timeline.visibleRange.start + offset,
+                        STEP
+                    );
                 }
                 this.handleMouseMove(this._lastMouseMove);
                 break;
@@ -433,7 +450,12 @@ export class TimelineSelectionService {
                     speed = this.leftEdgeScrollingSpeed;
                     offset = this.timeline.domWidthToDuration((1 << speed) * 10);
                     // console.log('left', speed, offset, this.timeline.durationToDomWidth(offset))
-                    if (this.timeline.stepScrollToStartTime((this.timeline.visibleRange.start - offset), STEP)) {
+                    if (
+                        this.timeline.stepScrollToStartTime(
+                            this.timeline.visibleRange.start - offset,
+                            STEP
+                        )
+                    ) {
                         this._selectedRange.start -= offset * STEP;
                         this._sanitizeStart();
                         this._dragAnchorMs = this._selectedRange.start;
@@ -445,7 +467,12 @@ export class TimelineSelectionService {
                 } else if (this.rightEdgeScrollingSpeed) {
                     speed = this.rightEdgeScrollingSpeed;
                     offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    if (this.timeline.stepScrollToStartTime((this.timeline.visibleRange.start + offset), STEP)) {
+                    if (
+                        this.timeline.stepScrollToStartTime(
+                            (this.timeline.visibleRange.start + offset),
+                            STEP
+                        )
+                    ) {
                         this._selectedRange.start += offset * STEP;
                         this._dragAnchorMs = this._selectedRange.start;
                         this._dragAnchorPx = this._lastMouseMove.clientX;
@@ -459,8 +486,14 @@ export class TimelineSelectionService {
                 }
                 if (this.rightEdgeScrollingSpeed) {
                     speed = this.rightEdgeScrollingSpeed;
-                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);   // console.log('right', speed, offset, this.timeline.durationToDomWidth(offset))
-                    if (this.timeline.stepScrollToStartTime((this.timeline.visibleRange.start + offset), STEP)) {
+                    offset = this.timeline.domWidthToDuration((1 << speed) * 10);
+                    // console.log('right', speed, offset, this.timeline.durationToDomWidth(offset))
+                    if (
+                        this.timeline.stepScrollToStartTime(
+                            this.timeline.visibleRange.start + offset,
+                            STEP
+                        )
+                    ) {
                         this._selectedRange.end += offset * STEP;
                         this._sanitizeEnd();
                         this._dragAnchorMs = this._selectedRange.end;
@@ -472,7 +505,12 @@ export class TimelineSelectionService {
                 } else if (this.leftEdgeScrollingSpeed) {
                     speed = this.leftEdgeScrollingSpeed;
                     offset = this.timeline.domWidthToDuration((1 << speed) * 10);
-                    if (this.timeline.stepScrollToStartTime((this.timeline.visibleRange.start - offset), STEP)) {
+                    if (
+                        this.timeline.stepScrollToStartTime(
+                            this.timeline.visibleRange.start - offset,
+                            STEP
+                        )
+                    ) {
                         this._selectedRange.end -= offset * STEP;
                         this._sanitizeEnd();
                         this._dragAnchorMs = this._selectedRange.end;

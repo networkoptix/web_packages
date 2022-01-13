@@ -1,14 +1,14 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxUtilsService } from '@services/utils.service';
+import { px } from '@vms-client/utils/type-aliases';
+
 import {
     TimelineScrollbarRelativeService,
     TimelineScrollbarRelativeServiceStatus
 } from './timeline.scrollbarRelative.service';
-
-import { px } from '@vms-client/utils/type-aliases';
 import TimelineService from './timeline.service';
-import { NxUtilsService } from '@services/utils.service';
 
 const MIN_BAR_WIDTH_PX = 50;
 

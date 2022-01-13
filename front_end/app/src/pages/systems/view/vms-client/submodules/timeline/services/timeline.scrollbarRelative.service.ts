@@ -1,9 +1,10 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import TimelineService from './timeline.service';
-import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
+import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
+
+import TimelineService from './timeline.service';
 
 export interface TimelineScrollbarRelativeServiceStatus {
     magnification: float,
@@ -102,7 +103,10 @@ export class TimelineScrollbarRelativeService {
         this.isBackgroundMouseDown = true;
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
-        this._scrollDirection = NxUtilsService.calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr) ? -1 : +1;
+        this._scrollDirection =
+            NxUtilsService.calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
+                ? -1
+                : +1;
     }
 
     public handleBackgroundMouseUp (e: MouseEvent|TouchEvent) {
@@ -154,7 +158,10 @@ export class TimelineScrollbarRelativeService {
     }
 
     public handleButtonRightDblClick () {
-        this.timeline.jumpScrollTo(this.timeline.fullRange.end - this.timeline.visibleRange.duration, true);
+        this.timeline.jumpScrollTo(
+            this.timeline.fullRange.end - this.timeline.visibleRange.duration,
+            true
+        );
         this._emit();
     }
 

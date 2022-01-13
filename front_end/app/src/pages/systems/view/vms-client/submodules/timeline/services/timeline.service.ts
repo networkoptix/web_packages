@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
-import TimeRange from './TimeRange';
-import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
-import cfg from './timeline.config';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-aliases';
+
+import TimeRange from './TimeRange';
+import cfg from './timeline.config';
 
 export interface TimelineServiceStatus {
     fullRange: TimeRange,
@@ -38,7 +39,10 @@ export class TimelineService {
         const _30fps = Math.ceil(1000 / 34);
 
         let renderFps = _60fps;
-        if (browserDetector.isMobile() || ['safari', 'firefox'].includes(browserDetector.browser)) {
+        if (
+            browserDetector.isMobile() ||
+            ['safari', 'firefox'].includes(browserDetector.browser)
+        ) {
             renderFps = _30fps;
         }
         this.renderFps = renderFps;
@@ -66,7 +70,9 @@ export class TimelineService {
 
     public get zoomStatus () {
         return {
-            canZoomIn: (this._visibleRange.duration / this.canvasGeometry.dpr) > this.canvasGeometry.width,
+            canZoomIn: (
+                this._visibleRange.duration / this.canvasGeometry.dpr
+            ) > this.canvasGeometry.width,
             canZoomOut: this._visibleRange.duration < this._fullRange.duration
         };
     }
@@ -145,7 +151,9 @@ export class TimelineService {
     }
 
     public timeToDomOffsetX (t: ms): px {
-        return Math.round((t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr));
+        return Math.round(
+            (t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr)
+        );
     }
 
     public timeToCanvasOffsetX (t: ms): px {
@@ -170,7 +178,10 @@ export class TimelineService {
 
     public shiftVisibleRange (offset: ms) {
         // If the visible start is less than full range ignore the move.
-        if (this.fullRange.start <= this.visibleRange.start + offset && this.visibleRange.end + offset <= this.fullRange.end) {
+        if (
+            this.fullRange.start <= this.visibleRange.start + offset &&
+            this.visibleRange.end + offset <= this.fullRange.end
+        ) {
             this._visibleRange.shift(offset);
             this._emit();
         }
