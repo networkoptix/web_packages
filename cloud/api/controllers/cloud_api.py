@@ -29,7 +29,8 @@ INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
                           ErrorCodes.forbidden.value]
 
 REFRESH_EXEMPT_URLS = [
-    '/cdb/account/self'
+    '/cdb/account/self',
+    '/oauth2/token'
 ]
 
 
