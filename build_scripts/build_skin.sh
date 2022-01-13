@@ -91,6 +91,10 @@ do
         pushd $TARGET_DIR/$SKIN
         python ../../../../build_scripts/generate_language_compiled_json.py $LANG
         popd
+
+        pushd ../front_end
+            npm run test-lang $TARGET_DIR/$SKIN
+        popd
     else
         echo "Copy language.json from blue skin"
         cp $TARGET_DIR/blue/static/lang_$LANG/language_compiled.json $TARGET_DIR/$SKIN/static/lang_$LANG/language_compiled.json
