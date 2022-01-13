@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import * as df from 'dateformat';
 import { Subscription } from 'rxjs';
 
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 import { px } from '@vms-client/utils/type-aliases';
 
