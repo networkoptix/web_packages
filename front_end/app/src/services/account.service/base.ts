@@ -145,7 +145,7 @@ export abstract class BaseAccount implements OnDestroy {
             this.localStorage.clear('systemId');
             // Changing "loginState" is enough here. Re-init routes are subscribed to it.
             this.sessionService.loginState = res.email;
-            // Reloading page sometimes breaks the page so better not doing it ().
+            setTimeout(() => this.window.location.reload());
         });
     }
 

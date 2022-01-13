@@ -220,27 +220,33 @@ def authenticate(request):
 @permission_classes((AllowAny, ))
 def logout(request):
     require_params(request, ("cloudAccessToken", "refreshToken"))
-    request.session["access_token"] = request.data["cloudAccessToken"]
-    request.session["refresh_token"] = request.data["refreshToken"]
+    cloud_access_token = request.data["cloudAccessToken"]
+    refresh_token = request.data["refreshToken"]
+
+    # Handles situation where we cancel re-login attempt with different user
+    temporary_session = {
+        "access_token": cloud_access_token,
+        "refresh_token": refresh_token
+    }
 
     # If this fails that means the refresh and cloud access token expired.
     # If one or the other is valid logout should work.
     if access_token := request.data.get("accessToken"):
         try:
-            Auth.delete_token(request, access_token)
+            Auth.delete_token(temporary_session, access_token)
         except (APILogicException, APINotAuthorisedException):
             raise APINotAuthorisedException("Invalid cloud access and refresh token", ErrorCodes.not_authorized)
 
     # At this point the access_token is valid and the refresh might be valid
     try:
-        Auth.delete_token(request, request.session["refresh_token"])
+        Auth.delete_token(temporary_session, refresh_token)
     # Handles the 404 error when the refresh token is gone, and 401 if the access_token is invalid
     except (APILogicException, APINotAuthorisedException):
         pass
 
     # At this point it doesn't matter if the call fails since the refresh token is dead.
     try:
-        Auth.delete_token(request, request.session["access_token"])
+        Auth.delete_token(request, cloud_access_token)
     # Handles the rare case where the access token expires after killing the refresh
     except (APILogicException, APINotAuthorisedException):
         pass
