@@ -4,28 +4,28 @@
     <div class="col-12 p-0" style="min-height: 80px;">
         <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
 
-        <ngb-tabset *ngIf="activeBuilds"
-                    [style.visibility]="tabsVisible ? 'visible' : 'hidden'"
-                    (tabChange)="beforeChange($event)" #tabs="ngbTabset">
-
-            <ngb-tab *ngFor="let type of noteTypes"
-                     [id]="type">
-                <ng-template ngbTabTitle>
-                    <span class="tab-heading">{{ LANG.downloads.releasesTypes[type]() || type.name}}</span>
-                </ng-template>
-                <ng-template ngbTabContent>
-                    <div class="card card-default">
-                        <div class="card-body" *ngIf="activeBuilds">
-                            <div *ngFor="let release of activeBuilds">
-                                <nx-release [LANG]="LANG"
-                                            [build]="build || (release.backwardsCompatible ? release.version : release.buildNumber)" [linkbase]="linkbase"
-                                            [release]="release"></nx-release>
-                            </div>
-                        </div>
+        <div class="tab-set" *ngIf="tabsVisible">
+            <ul class="tab-list">
+                <li *ngFor="let type of noteTypes"
+                    class="tab-item"
+                    (click)="switchTo(type)">
+                    <a href class="tab-link"
+                       [ngClass]="{'active': currentTab === type }">
+                        <span class="tab-heading" [textContent]="LANG.downloads.releasesTypes[type]() || type.name"></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="card card-default">
+                <div class="card-body" *ngIf="activeBuilds">
+                    <div *ngFor="let release of activeBuilds">
+                        <nx-release [LANG]="LANG"
+                                    [build]="build || (release.backwardsCompatible ? release.version : release.buildNumber)"
+                                    [linkbase]="linkbase"
+                                    [release]="release"></nx-release>
                     </div>
-                </ng-template>
-            </ngb-tab>
-        </ngb-tabset>
+                </div>
+            </div>
+        </div>
     </div>
     <nx-footer></nx-footer>
 </div>

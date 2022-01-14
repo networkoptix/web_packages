@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Injectable, NgModule } from '@angular/core';
 import { Resolve, Router, RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { EMPTY as empty } from 'rxjs';
 
@@ -36,7 +35,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        NgbModule,
         TranslateModule,
         DirectivesModule,
         PipesModule,

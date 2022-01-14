@@ -7,7 +7,6 @@ import {
     RouterModule,
     Routes
 } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY as empty } from 'rxjs';
@@ -58,7 +57,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        NgbModule,
         FormsModule,
         TranslateModule,
         ComponentsModule,

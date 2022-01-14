@@ -3,7 +3,6 @@ import {
     Component,
     OnInit,
     OnDestroy,
-    ViewChild,
     Inject,
     PLATFORM_ID
 } from '@angular/core';
@@ -12,7 +11,6 @@ import {
     ActivationEnd,
     Router
 } from '@angular/router';
-import { NgbNav, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import * as isArray from 'core-js/features/array/is-array';
 import { Subscription } from 'rxjs';
@@ -53,8 +51,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     linkbase;
     private routerSubscription: Subscription;
 
-    @ViewChild('tabs', { static: false })
-    public tabs: NgbNav;
+    currentTab: string;
 
     private setupDefaults() {
         this.tabsVisible = false;
@@ -83,8 +80,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     filter(event => event instanceof ActivationEnd)
                 )
                 .subscribe((event: ActivationEnd) => {
-                    if (this.tabs && event.snapshot.params.type) {
-                        this.tabs.select(event.snapshot.params.type);
+                    if (event.snapshot.params.type) {
+                        this.currentTab = event.snapshot.params.type;
                     }
                 });
         }
@@ -115,31 +112,15 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.downloadsData[data.type] = this.activeBuilds;
                 }
 
-                this.pageService.pageTitle =
-                    new TitleCasePipe().transform(this.noteTypes[0]);
-                // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
+                this.pageService.pageTitle = new TitleCasePipe().transform(this.noteTypes[0]);
 
                 setTimeout(() => {
                     this.tabsVisible = true;
-                    if (this.tabs) {
-                        this.tabs.select(this.section);
-                    }
                 });
             }, this.pageService.show404
             )
             .finally(() => {
                 this.sub.unsubscribe();
-            });
-    }
-
-    public beforeChange($event: NgbNavChangeEvent) {
-        this.activeBuilds = this.downloadsData[$event.nextId];
-        this.pageService.pageTitle = new TitleCasePipe().transform($event.nextId);
-
-        this.uriService
-            .updateURI('/downloads/' + $event.nextId, {})
-            .catch(error => {
-                console.error(error);
             });
     }
 
@@ -195,6 +176,19 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 }
             }
         });
+    }
+
+    public switchTo(name: string) {
+        this.currentTab = name;
+        this.activeBuilds = this.downloadsData[name];
+        this.pageService.pageTitle = new TitleCasePipe().transform(name);
+
+        this.uriService
+            .updateURI('/downloads/' + name, {})
+            .catch(error => {
+                console.error(error);
+            });
+        return false;
     }
 
     ngOnDestroy() {}

@@ -28,7 +28,7 @@
 <div *ngFor="let platform of release.platforms" #card>
     <a href class="ml-3" (click)="$any(card).expanded = !$any(card).expanded; false">{{LANG.downloads.groups[platform.name].label() || platform.name}}</a>
 
-    <ul [ngbCollapse]="!$any(card).expanded">
+    <ul *ngIf="$any(card).expanded">
         <li *ngFor="let file of platform.files">
             <ng-container>{{file.niceName}}&nbsp;</ng-container>
             <a [href]="linkbase + '/' + build + '/' +file.path">{{file.fileName}}</a>
