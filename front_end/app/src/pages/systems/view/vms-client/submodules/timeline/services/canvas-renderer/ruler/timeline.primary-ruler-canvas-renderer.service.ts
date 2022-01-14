@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as df from 'dateformat';
 
-import { ms, int, px } from '@vms-client/utils/type-aliases';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { ms, int, px } from '@vms-client/utils/type-aliases';
+
 import cfg from '../../timeline.config';
 import TimelineService from '../../timeline.service';
 import primaryRulerSerifDrawingConfigs from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
@@ -19,7 +21,6 @@ import estimateIrregularLengthIntervalPessimistically
     from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
 import isAlignedByIrregularInterval from './intervals/utils/isAlignedByIrregularInterval';
 import getIntervalDiffDict from './utils/getIntervalDiffDict';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import percentageToHex from './utils/percentageToHex';
 
 const dateformat = df.default || df;

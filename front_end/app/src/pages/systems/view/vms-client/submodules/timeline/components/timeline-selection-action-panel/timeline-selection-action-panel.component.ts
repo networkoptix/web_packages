@@ -10,10 +10,10 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 
 import { NxAccountService } from '../../../../../../../../services/account.service';
 import { NxSystem, NxSystemService } from '../../../../../../../../services/system.service';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
 import TimeRange from '../../services/TimeRange';
 import {
     TimelineSelectionService,

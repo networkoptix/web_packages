@@ -226,6 +226,28 @@ module.exports = {
         'import/no-duplicates': 'error',
         'import/no-named-default': 'error',
         'import/no-webpack-loader-syntax': 'error',
+        'import/order': ['error', {
+            groups: [
+                'builtin',
+                'external',
+                'internal',
+                'parent',
+                'sibling',
+                'index'
+            ],
+            pathGroups: Object.keys(
+                require('./tsconfig.json').compilerOptions.paths
+            ).map(path => ({
+                pattern: `${path}*`,
+                // Assuming that tsconfig paths end with single
+                // asterisk so that the pattern here will end with
+                // double asterisk
+                group: 'internal'
+            })),
+            pathGroupsExcludedImportTypes: ['internal'],
+            'newlines-between': 'always',
+            alphabetize: { order: 'asc' }
+        }],
 
         'node/handle-callback-err': ['error', '^(err|error)$'],
         'node/no-deprecated-api': 'error',
@@ -234,7 +256,7 @@ module.exports = {
 
         'promise/param-names': 'error',
 
-        'standard/no-callback-literal': 'error'
+        'standard/no-callback-literal': 'error',
     },
     overrides: [
         {
@@ -243,50 +265,5 @@ module.exports = {
                 'dot-notation': 'off'
             }
         },
-        {
-            files: ['app/**/*.ts'],
-            // Remaining to be done
-            excludedFiles: [
-                // 'app/src/pages/systems/settings/*.ts',
-                // 'app/src/pages/systems/settings/admin/**/*.ts',
-                // 'app/src/pages/systems/settings/cloud-storage/**/*.ts',
-                // 'app/src/pages/systems/settings/licenses/**/*.ts',
-                // 'app/src/pages/systems/settings/servers/**/*.ts',
-                // 'app/src/pages/systems/settings/users/**/*.ts',
-                // 'app/src/pages/systems/view/*.ts',
-                // 'app/src/pages/systems/view/pages/**/*.ts',
-                // 'app/src/pages/systems/view/services/**/*.ts',
-                // 'app/src/pages/systems/view/vms-client/*.ts',
-                // 'app/src/pages/systems/view/vms-client/pages/**/*.ts',
-                // 'app/src/pages/systems/view/vms-client/submodules/playback/**/*.ts',
-                'app/src/pages/systems/view/vms-client/submodules/timeline/**/*.ts',
-                // 'app/src/pages/systems/view/vms-client/submodules/vms/**/*.ts',
-                'app/src/pages/systems/view/vms-client/utils/**/*.ts',
-            ],
-            rules: {
-                'import/order': ['error', {
-                    groups: [
-                        'builtin',
-                        'external',
-                        'internal',
-                        'parent',
-                        'sibling',
-                        'index'
-                    ],
-                    pathGroups: Object.keys(
-                        require('./tsconfig.json').compilerOptions.paths
-                    ).map(path => ({
-                        pattern: `${path}*`,
-                        // Assuming that tsconfig paths end with single
-                        // asterisk so that the pattern here will end with
-                        // double asterisk
-                        group: 'internal'
-                    })),
-                    pathGroupsExcludedImportTypes: ['internal'],
-                    'newlines-between': 'always',
-                    alphabetize: { order: 'asc' }
-                }],
-            }
-        }
     ]
 };

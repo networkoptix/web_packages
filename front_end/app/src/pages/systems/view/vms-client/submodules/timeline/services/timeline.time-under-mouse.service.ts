@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { ms, px } from '@vms-client/utils/type-aliases';
 import { NxUtilsService } from '@services/utils.service';
+import { ms, px } from '@vms-client/utils/type-aliases';
 
 import TimelineService from './timeline.service';
 
