@@ -19,6 +19,7 @@ Library      NoptixLibrary/ServerAPI.py
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/CloudAuth.py     ${ENV}
+Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
 
 *** Variables ***
@@ -108,15 +109,15 @@ Set Language Anonymous
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}
+    [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
+    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
     ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}
 
 Log In Cloud
-    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
-    IF    '${validate}' == 'True'
+    IF    '${validate}' == 'True' and '${2fa}' == 'False'    # adding 2fa to conditions as workaround since if 2fa active Get Account Language is failing on 401
         Check Language Logged In    ${email}    ${password}
     END
     Run Keyword Unless    '''${button}''' == "None"    Click Element    ${button}
@@ -139,7 +140,18 @@ Log In Cloud
     ELSE
         Wait Until Elements Are Visible    ${ACCOUNT DOES NOT EXIST}    ${YOU CAN CREATE AN ACCOUNT}
     END
-
+    IF    ${2fa} == ${True} and "${2fa backup code}" == "${EMPTY}"
+        ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+        Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
+        Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}
+        Click Element    ${2FA AUTH CODE LOG IN BTN}
+    ELSE IF    ${2fa} == ${True} and "${2fa backup code}" != "${EMPTY}"
+        Wait Until Element Is Visible    ${2FA BACKUP CODE BTN}
+        Click Element    ${2FA BACKUP CODE BTN}
+        Wait Until Element Is Visible    ${2FA BACKUP CODE FIELD}
+        Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA BACKUP CODE FIELD}   ${2fa backup code}
+        Click Element    ${2FA BACKUP CODE LOG IN BTN}
+    END
     IF    ${validate} == ${True}
         Validate Log In    ${email}    password=${password}
     END

@@ -90,6 +90,7 @@ ${LOG OUT BUTTON}                     //header//li[contains(@class, 'dropdown-it
 ${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
 ${ACCOUNT SETTINGS BUTTON}            //header//li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //header//li//a[@href = '/account/password']
+${SECURITY DROPDOWN}                  //header//li//a[@href = "/account/security"]
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
 ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button[contains(text(), "${OPEN IN NX WITNESS BUTTON TEXT}")]
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']

@@ -12,3 +12,4 @@ Resource     front-end-variables/ipvd-variables.robot
 Resource     front-end-variables/integrations-variables.robot
 Resource     front-end-variables/header-variables.robot
 Resource     front-end-variables/system-settings-menu-variables.robot
+Resource     front-end-variables/2fa-variables.robot
