@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgbModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -86,7 +86,8 @@ import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';
 import { NxSystemsListComponent } from './systems-list/list.component';
-import { ToastsContainer } from './toast/toast.component';
+import { NxToast } from './toast/toast.component';
+import { NxToastsContainer } from './toast/toast.container';
 import { NxVendorListComponent } from './vendor-list/vendor-list.component';
 import { NxAssetExplorerWidgetComponent } from './widgets/asset-explorer/asset-explorer-widget.component';
 import { NxBookmarksWidgetComponent } from './widgets/bookmarks/bookmarks-widget.component';
@@ -101,7 +102,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         TranslateModule,
         RouterModule,
         FormsModule,
-        NgbToastModule,
         NgbModule,
         DirectivesModule,
         PipesModule,
@@ -154,7 +154,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
         NxInfoBlockComponent,
-        ToastsContainer,
+        NxToastsContainer,
+        NxToast,
         NxSystemTileComponent,
         NxNavigationTileComponent,
         NxAdditionalSystemsTileComponent,
@@ -180,7 +181,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
-        UpdateWebadminSessionComponent
+        UpdateWebadminSessionComponent,
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -204,7 +205,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
-        ToastsContainer,
+        NxToastsContainer,
         NxInfoBlockComponent,
         NxOverlayModalComponent,
         NxDevelopersMenuComponent,
@@ -260,7 +261,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
-        ToastsContainer,
+        NxToastsContainer,
         NxInfoBlockComponent,
         NxSystemTileComponent,
         NxNavigationTileComponent,

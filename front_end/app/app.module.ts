@@ -21,7 +21,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {
-    NgbToast, NgbModal, NgbProgressbar
+    NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { InputTrimModule } from 'ng2-trim-directive';
@@ -113,9 +113,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CdkScrollableModule
     ],
     providers: [
-        NgbToast,
         NgbModal,
-        NgbProgressbar,
         Location,
         Title,
         CookieService,
