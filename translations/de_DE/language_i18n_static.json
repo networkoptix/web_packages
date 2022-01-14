@@ -626,9 +626,7 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "a_Please": "Bitte",
-        "b_Link": "anfrage abschicken",
-        "c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
+        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
     "ipvdTopXByVolume": "Top {value} nach Volumen:",
     "ipvdDisclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {vmsName} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {companyName} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",
@@ -1035,15 +1033,10 @@
     "additionalSystems": "{count, plural, =0{+ # Systeme} one{+ # System} other{+ # Systeme}}",
     "security": {
         "twoFa": {
-            "twoFADescription_a1": "Sie haben derzeit",
-            "twoFADescription_a2": "{count, plural, =0{# solcher Systeme} one{# solches System} other{# solcher Systeme}}",
+            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
             "systemsRemainder": "und {count} mehr...",
-            "v5Warning_a1": "Sie haben",
-            "v5Warning_a2": "{count, plural, =0{# Systeme} one{# System} other{# Systeme}}",
-            "v5Warning_a3": "mit einer Softwareversion kleiner als 5.0. {count, plural, =0{Diese Systeme sind} one{Dieses System ist} other{Diese Systeme sind}} nicht erreichbar über",
-            "v5Warning_a4": " %VMS_NAME%-Client ",
-            "v5Warning_a5": "da frühere Versionen von %VMS_NAME%-Client keine Zwei-Faktor-Authentifizierung unterstützen, können Sie keinen Verifizierungscode für Ihr %CLOUD_NAME%-Konto eingeben.",
-            "v5Warning_b": "{count, plural, =0{Diese Systeme werden} one{Dieses System wird} other{Diese Systeme werden}} vollständig zugänglich sein, sobald {count, plural, =0{sie} one{es} other{sie}} auf die Version 5.0 aktualisiert {count, plural, =0{werden} one{wird} other{werden}}.",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
+            "v5WarningExplanation": "{count, plural, =0{These systems} one{This system} other{These systems}} will be fully accessible as soon as {count, plural, =0{they are} one{it is} other{they are}} upgraded to the 5.0 version.",
             "disableWarning": "Sie haben {count, plural, one{# System, das} other{# Systeme, die}} eine Zwei-Faktor-Authentifizierung {count, plural, one{erfordert} other{erfordern}}. Sie können sich nicht bei {count, plural, one{diesem System} other{diesen Systemen}} anmelden."
         }
     },
@@ -1097,8 +1090,7 @@
         }
     },
     "maintenance": {
-        "description_a": "Wir arbeiten an einigen Verbesserungen",
-        "description_b": "und brandneuen Funktionen."
+        "description": "We are working on some improvements and brand new features."
     },
     "view": {
         "timeline": {

@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Resend activation email.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "ผู้ใช้ระบบคลาวด์ทั้งหมดจะถูกลบ",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "ระบบสามารถเข้าถึงได้ผ่านเครือข่ายท้องถิ่นด้วยบัญชีผู้ดูแลระบบภายใน",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "ป้อนรหัสผ่านเพื่อดำเนินการต่อ",
     "SYSTEM NO ACCESS TEXT": "ไม่สามารถเข้าถึงระบบ",
     "DISCONNECT FROM CLOUD TEXT": "ตัดการเชื่อมต่อจาก %PRODUCT_NAME%",

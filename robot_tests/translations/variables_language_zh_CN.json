@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Resend activation email.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "所有云用户将被删除。",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "系统将可通过本地网络的本地管理员帐户。",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "输入您的密码以继续",
     "SYSTEM NO ACCESS TEXT": "无法访问系统",
     "DISCONNECT FROM CLOUD TEXT": "从%PRODUCT_NAME%断开连接",

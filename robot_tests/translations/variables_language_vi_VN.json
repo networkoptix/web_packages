@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Resend activation email.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Tất cả các tài khoản đám mây sẽ bị xóa",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "Hệ thống sẽ được truy cập thông qua mạng cục bộ với tài khoản quản trị",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Nhập mật khẩu để tiếp tục",
     "SYSTEM NO ACCESS TEXT": "Không thể truy cập hệ thống",
     "DISCONNECT FROM CLOUD TEXT": "Ngắt kết nối từ %PRODUCT_NAME%",

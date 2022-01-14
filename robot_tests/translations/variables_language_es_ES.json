@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Resend activation email.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Se eliminarán todos los usuarios de la nube",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "El sistema será accesible a través de la red local con la cuenta del administrador local",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Introduzca la contraseña para continuar",
     "SYSTEM NO ACCESS TEXT": "Error al acceder al sistema",
     "DISCONNECT FROM CLOUD TEXT": "Desconectarse de %PRODUCT_NAME%",
