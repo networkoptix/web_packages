@@ -1,5 +1,6 @@
 import {
     Component,
+    OnDestroy,
     OnInit,
     ViewChild,
     ViewContainerRef
@@ -23,7 +24,7 @@ import { NxMenuService } from '@src/menu';
     styleUrls: ['password.component.scss']
 })
 
-export class NxAccountPasswordComponent implements OnInit {
+export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('passwordForm', { read: NgForm }) passwordForm;
 
@@ -103,5 +104,9 @@ export class NxAccountPasswordComponent implements OnInit {
                     });
                 }
             });
+    }
+
+    ngOnDestroy() {
+        this.applyService.removeWatchers();
     }
 }

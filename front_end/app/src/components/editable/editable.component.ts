@@ -109,11 +109,13 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
 
     // called when model is written to view. (model -> view)
     writeValue(value: string) {
-        this._initialValue = value;
-        this.el.nativeElement.textContent = value || '';
-        this.el.nativeElement.classList.add(this.initialClass);
-        !this._disabled && this.el.nativeElement.setAttribute('contenteditable', 'true');
-        this.checkError();
+        if (!this._initialValue && value || value) { // do not update before component is initialized
+            this._initialValue = value;
+            this.el.nativeElement.textContent = value || '';
+            this.el.nativeElement.classList.add(this.initialClass);
+            !this._disabled && this.el.nativeElement.setAttribute('contenteditable', 'true');
+            this.checkError();
+        }
     }
 
     registerOnChange(fn) {

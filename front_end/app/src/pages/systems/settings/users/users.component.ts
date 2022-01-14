@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import {
     Component,
+    OnDestroy,
     OnInit,
     ViewChild,
     ViewContainerRef,
@@ -34,7 +35,7 @@ import { NxSettingsService } from '../settings.service';
     styleUrls: ['users.component.scss']
 })
 
-export class NxSystemUsersComponent implements OnInit {
+export class NxSystemUsersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
@@ -176,6 +177,10 @@ export class NxSystemUsersComponent implements OnInit {
             });
 
         this.initProcesses();
+    }
+
+    ngOnDestroy() {
+        this.applyService.resetFormWatchers();
     }
 
     private initProcesses () {

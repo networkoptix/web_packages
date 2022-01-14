@@ -7,7 +7,7 @@ import {
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
-import { map, delay, retryWhen, take, takeUntil } from 'rxjs/operators';
+import { map, delay, retryWhen, take } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -54,8 +54,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
-
-    ngOnDestroy(): void {}
 
     ngOnInit() {
         this.settingsService.footerSubject.next(true);
@@ -120,6 +118,10 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         });
     }
 
+    ngOnDestroy() {
+        this.applyService.removeWatchers();
+    }
+
     canSee(key) {
         return ['number', 'text', 'password'].includes(
             this.CONFIG.settingsConfig[key]?.type
@@ -130,10 +132,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.system.updateOrGetSystemSettings()
             .toPromise()
             .then((response: any) => {
-                if (this.advancedFormWatcher) {
-                    this.applyService.removeFormWatcher('advancedSystemSettingsForm');
-                    this.reset$.next(true);
-                }
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
 
@@ -146,7 +144,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
                     this.advancedFormWatcher.valueSubject
                         .pipe(
-                            takeUntil(this.reset$),
                             untilDestroyed(this))
                         .subscribe((values) => {
                             if (values) {

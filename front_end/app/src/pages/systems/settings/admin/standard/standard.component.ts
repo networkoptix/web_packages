@@ -5,7 +5,8 @@ import {
     ViewChild,
     ElementRef,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -68,9 +69,10 @@ class AlexaSettings {
     styleUrls: ['standard.component.scss']
 })
 
-export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
+export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDestroy {
     @Input() settings;
     @Input() system: NxSystem;
+
     CONFIG: IConfig;
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
@@ -190,7 +192,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     }
 
     ngOnDestroy() {
-        // this.applyService.removeWatchers();
+        this.applyService.removeWatchers();
     }
 
     setValues(settings) {

@@ -131,15 +131,19 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private setNameAndTitle() {
-        this.systemName = this.system.info.systemName || this.system.info.name;
-        this.pageService.pageTitle = this.systemName;
+        const systemName = this.system.info.systemName || this.system.info.name;
+        if (this.systemName !== systemName) {
+            this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
+            this.systemName = this.system.info.systemName || this.system.info.name;
+            this.pageService.pageTitle = this.systemName;
 
-        setTimeout(() => {
-            this.systemNameFormWatcher = this.applyService.createFormWatcher(
-                'systemNameForm',
-                this.systemNameForm,
-                this.systemNameProcess);
-        });
+            setTimeout(() => {
+                this.systemNameFormWatcher = this.applyService.createFormWatcher(
+                    'systemNameForm',
+                    this.systemNameForm,
+                    this.systemNameProcess);
+            });
+        }
     }
 
     private updateSettings(forceMergeState?: boolean) {
@@ -177,8 +181,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.setupDefaults();
     }
-
-    ngOnDestroy() {}
 
     ngOnInit(): void {
         this.accountService.get()
@@ -258,6 +260,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.applyService.initPageFormsWatcher(this.pageApply);
     }
 
+    ngOnDestroy() {
+        this.applyService.resetFormWatchers();
+    }
+
     initProcesses() {
         this.systemNameProcess = this.processService.createProcess(() => {
             if (/^\s+$/.test(this.systemName)) {
@@ -266,6 +272,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             return (this.environment.isLocal ? this.system.mediaserver : this.cloudApiService)
                 .renameSystem(this.system.id, this.systemName.trim())
                 .then(() => {
+                    this.pageService.pageTitle = this.systemName;
                     return this.system.update();
                 }).catch(() => {
                     const options = {

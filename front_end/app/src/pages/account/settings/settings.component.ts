@@ -3,7 +3,8 @@ import {
     OnInit,
     ViewChild,
     ViewContainerRef,
-    Inject
+    Inject,
+    OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
@@ -28,7 +29,7 @@ import { NxMenuService } from '@src/menu';
     styleUrls: ['settings.component.scss']
 })
 
-export class NxAccountSettingsComponent implements OnInit {
+export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('accountForm', { read: NgForm }) accountForm;
     @ViewChild('langForm', { read: NgForm }) langForm;
@@ -125,6 +126,10 @@ export class NxAccountSettingsComponent implements OnInit {
             this.dialogs.notify(this.LANG.account.accountSavedSuccess(), 'success');
             this.storageService.langChanged = false;
         }
+    }
+
+    ngOnDestroy() {
+        this.applyService.removeWatchers();
     }
 
     changeLanguage(langCode: string) {

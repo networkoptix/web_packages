@@ -10,7 +10,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     BehaviorSubject,
     combineLatest as combineLatestFrom,
-    Subject
+    Subject,
+    Subscription,
 } from 'rxjs';
 import { isArray, isObject } from 'rxjs/internal-compatibility';
 import {
@@ -37,7 +38,8 @@ export type extNgForm = {
     save: Process,
     discard: () => void,
     hasChange: boolean,
-    changedFields: Set<string>
+    changedFields: Set<string>,
+    subscr: Subscription,
 }
 
 /**
@@ -388,14 +390,13 @@ export class NxApplyService {
         this.applyComponentInstance.forms && this.resetForms$.next();
         for (const id in this.applyComponentInstance.forms) {
             delete this.applyComponentInstance.forms[id];
-            delete this.forms[id];
         }
     }
 
     removeFormWatcher(id: string) {
         const watcher = this.applyComponentInstance.forms[id];
-        watcher?.form?.valueChanges && watcher.form.valueChanges.unsubscribe();
-        delete this.forms[id];
+        watcher?.subscr.unsubscribe();
+        delete this.applyComponentInstance.forms[id];
     }
 
     createFormWatcher(
@@ -491,9 +492,10 @@ export class NxApplyService {
                 discard: discardFunction,
                 hasChange: false,
                 changedFields: new Set(),
+                subscr: new Subscription(),
             };
 
-            extNgForm.form.valueChanges
+            extNgForm.subscr = extNgForm.form.valueChanges
                 .pipe(
                     takeUntil(this.resetForms$),
                     untilDestroyed(this))
