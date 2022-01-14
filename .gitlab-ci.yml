@@ -1,22 +1,22 @@
 image: nx/ci:1.12
 
 include:
-- project: "dev/ci"
-  file: "pipelines/infra-templates.yml"
-- local: "ci/Docker/**/.gitlab-ci.yml"
+  - project: "dev/ci"
+    file: "pipelines/infra-templates.yml"
+  - local: "ci/Docker/**/.gitlab-ci.yml"
 
 default:
   tags:
-  - service
+    - service
 
 variables:
   DOCKER_REGISTRY: docker.artifactory.lan.hdw.mx:80
   JENKINS_URL: http://jenkins.lan.hdw.mx
   JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
-  PIP_TRUSTED_HOST: 'artifactory.lan.hdw.mx'
-  PIP_INDEX_URL: 'http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-python3.8-alpine3.12/simple'
-  PIP_EXTRA_INDEX_URL: 'http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-remote/simple'
+  PIP_TRUSTED_HOST: "artifactory.lan.hdw.mx"
+  PIP_INDEX_URL: "http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-python3.8-alpine3.12/simple"
+  PIP_EXTRA_INDEX_URL: "http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-remote/simple"
 
 workflow:
   rules:
@@ -34,7 +34,31 @@ stages:
   - build
   - test
 
+.frontend-changes:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*
+
+.backend-changes:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/*
+
+.frontend-node:
+  extends: .frontend-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.frontend-test:
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
+
 .django-python:
+  extends: .backend-changes
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   services:
     - name: mysql:5.7
@@ -42,11 +66,11 @@ stages:
     - name: redis:3.2.8-alpine
       alias: redis
   variables:
-    TESTING: 'true'
-    MYSQL_DATABASE: 'cloudportal'
-    MYSQL_ROOT_PASSWORD: ''
-    MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    MYSQL_PASSWORD: ''
+    TESTING: "true"
+    MYSQL_DATABASE: "cloudportal"
+    MYSQL_ROOT_PASSWORD: ""
+    MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    MYSQL_PASSWORD: ""
   before_script:
     - cd cloud
     - echo "Waiting for mysql server to be ready"
@@ -68,28 +92,37 @@ stages:
 
         sleep 2
       done
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
-      when: never
+
+.django-unit-test:
+  extends: .django-python
+  stage: test
+  needs: ["django-checks"]
+  coverage: /^TOTAL.+?(\d+\%)$/
+  artifacts:
+    when: always
+    reports:
+      junit: cloud/report.xml
+      cobertura: cloud/coverage.xml
+  allow_failure: false
 
 django-checks:
-  extends: .django-python
+  extends: .backend-changes
+  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   stage: check
+  variables:
+    USE_SQLITE: "true"
   script:
+    - cd cloud
     - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
     - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
 
 nx-mentions-check:
+  extends: .frontend-changes
   stage: check
   script: ci/nx_mentions.sh
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS'
-      when: never
 
 language-check:
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  extends: .frontend-node
   stage: check
   script:
     - cd front_end
@@ -97,38 +130,33 @@ language-check:
     - npm run lang-ci-check
 
 frontend-lint-check:
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  extends: .frontend-node
   stage: check
   script:
     - cd front_end
     - npm install
-    - npm run lint:ci
+    - npm run lint:ci app
 
 fe-lint-tests-check:
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  extends: .frontend-test
   stage: check
   script:
     - cd front_end
     - npm install
-    - npm run lint:ci:tests
+    - npm run lint:ci:tests app
 
-django-unit-test:
-  extends: .django-python
-  stage: test
-  needs: ["django-checks"]
+django-unit-test-slow:
+  extends: .django-unit-test
   script:
-    - pytest -m "not integration" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
-  coverage: /^TOTAL.+?(\d+\%)$/
-  artifacts:
-    when: always
-    reports:
-      junit: cloud/report.xml
-      cobertura: cloud/coverage.xml
-  # Until all tests are passing reliably
-  allow_failure: false
+    - pytest -m "not integration" -m slow --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
+
+django-unit-test-fast:
+  extends: .django-unit-test
+  script:
+    - pytest -m "not integration" -m "not slow" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
 
 frontend-unit-test:
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  extends: .frontend-node
   needs: ["frontend-lint-check"]
   stage: test
   variables:
@@ -144,7 +172,7 @@ frontend-unit-test:
       cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
 
 authorization-unit-test:
-  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  extends: .frontend-node
   stage: test
   needs: ["frontend-lint-check"]
   variables:
@@ -160,10 +188,11 @@ authorization-unit-test:
       cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
 
 webadmin:
+  extends: .frontend-changes
   stage: build
   image: nx/ci
   script:
-  - runJenkinsJob.sh gitlab.vms.review.webadmin.build
+    - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
@@ -171,24 +200,19 @@ webadmin:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
-      ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
 
 frontend:
+  extends: .frontend-changes
   stage: build
   image: nx/ci
   script:
-  - runJenkinsJob.sh gitlab.cloud.frontend.review
-    "PUSH_TO_ARTIFACTORY=true"
-    "BRANCH=$CI_COMMIT_SHORT_SHA"
-    "BUILD_IDENTITY=$CI_PIPELINE_ID"
-    "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-    "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
-    "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
-    "GITLAB_JOB_ID=$CI_JOB_ID"
-    "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-    "GITLAB_JOB_URL=$CI_JOB_URL"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
-      ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+    - runJenkinsJob.sh gitlab.cloud.frontend.review
+      "PUSH_TO_ARTIFACTORY=true"
+      "BRANCH=$CI_COMMIT_SHORT_SHA"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"

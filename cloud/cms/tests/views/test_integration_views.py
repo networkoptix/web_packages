@@ -46,6 +46,7 @@ class TestIntegrations:
         assert response.status_code == status.HTTP_403_FORBIDDEN
         assert response.data == INTEGRATION_FORBIDDEN
 
+    @pytest.mark.slow
     def test_get_integrations_success(self, mocker, arf):
         self.patch_enabled(mocker)
         request = arf.get(f'/api/integrations')

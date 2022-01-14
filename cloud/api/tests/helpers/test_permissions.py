@@ -6,6 +6,7 @@ from api.helpers.permissions import *
 from cms.models import Asset, Customization
 
 
+@pytest.mark.slow
 def test_make_customization_visible_to_user(db, account_factory):
     customization_name = str(uuid4())
     customization = baker.make(Customization, name=customization_name)

@@ -72,6 +72,7 @@ class TestReleaseNotes:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data['data']) == self.release_notes_quantity
 
+    @pytest.mark.slow
     def test_get_release_notes_success_superuser(self, arf):
         response = self.get_release_notes(arf=arf, user=self.user)
         assert response.status_code == status.HTTP_200_OK

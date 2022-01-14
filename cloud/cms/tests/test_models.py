@@ -510,6 +510,7 @@ class TestMenuMethods:
         menu_cache_mock.__setitem__.assert_any_call('default', mocker.sentinel.default_struct)
         menu_cache_mock.__setitem__.assert_any_call('other', mocker.sentinel.other_struct)
 
+    @pytest.mark.slow
     def test_to_dict(self, menu_with_nodes, expected_menu_dict):
         menu = menu_with_nodes()
         # Assets are a list of uuids that have no guaranteed order, so they need to be sorted for comparison
@@ -518,6 +519,7 @@ class TestMenuMethods:
         expected_menu_dict['assets'].sort()
         assert menu_dict == expected_menu_dict
 
+    @pytest.mark.slow
     def test_from_dict(self, menu_import_dict, superuser, db):
         menu = baker.make('Menu')
         menu.from_dict(menu_import_dict, superuser)
@@ -1795,12 +1797,12 @@ class TestMaintenanceSchedulingAndCompletion:
         assert not PortalNotification.objects.filter(id=mc_notification_id).first()
         assert not MaintenanceScheduling.objects.filter(id=ms_id).first().portal_notification
         assert not MaintenanceCompletion.objects.filter(id=mc_id).first().portal_notification
-    
+
     class TestPortalNotification:
         def generate_version(self):
             as_float = PortalNotification.calc_build(f'{randint(1, 100)}.{randint(1, 100)}.{randint(1, 100)}.{randint(1, 99999)}1')
             return as_float, PortalNotification.parse_build(as_float)
-    
+
         def test_initializes_with_correct_build(self, db):
             expected_raw_build, build = self.generate_version()
             portal_notification = baker.make(PortalNotification, build=build)
@@ -1824,7 +1826,7 @@ class TestMaintenanceSchedulingAndCompletion:
                 'url': portal_notification.url,
                 'build': portal_notification.build,
             }
-        
+
         def test_build_property(self, db):
             initial_raw_build, initial_build = self.generate_version()
             updated_raw_build, updated_build = self.generate_version()
@@ -1846,7 +1848,7 @@ class TestOpenAPIJSON:
         self.version = str(uuid4())
         self.name = str(uuid4())
         self.model = baker.prepare('OpenAPIJSON', version=self.version, name=self.name)
-    
+
     def test_str(self):
         assert str(self.model) == f"{self.name} - {self.version}"
 
@@ -1864,7 +1866,7 @@ class TestOpenAPIJSON:
         content = self.model._meta.get_field('content')
         assert content.help_text == "API JSON"
         assert content.default == {}
-    
+
     def test_type(self):
         type = self.model._meta.get_field('type')
         assert type.choices == OpenAPIJSON.JSON_TYPES

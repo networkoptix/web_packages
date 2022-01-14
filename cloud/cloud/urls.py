@@ -105,7 +105,7 @@ urlpatterns = [
     url(r'^(?!static|preview|admin).*', app_view)
 ]
 
-if settings.LOCAL_ENVIRONMENT:
+if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
     urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
     urlpatterns.insert(0, url(r'^profiler/', include('silk.urls')))
 

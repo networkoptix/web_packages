@@ -27,6 +27,7 @@ class TestAssetFilters:
         response = self.client.get(f'{self.asset_list_path}{query_string}', follow=True)
         assert not response.redirect_chain
 
+    @pytest.mark.slow
     def test_filter_caching(self):
         """Test that asset filters are saved and cleared correctly"""
         # Test with no filters cache, should use default filter

@@ -457,7 +457,7 @@ def test_handle_publish_all_customizations(arf, account_factory, db, default_por
         id=asset_reviews[0].id).state
     assert review_state == AssetCustomizationReview.REVIEW_STATES.accepted
 
-
+@pytest.mark.slow
 def test_handle_revoke(arf, account_factory, db):
     user = account_factory()
     asset_review = baker.make(AssetCustomizationReview,

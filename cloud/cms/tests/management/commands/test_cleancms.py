@@ -8,6 +8,7 @@ from cms.models import DataRecord
 
 
 class TestCleanCMS:
+    @pytest.mark.slow
     def test_handle(self, mocker, db):
         instance = Command()
         mock_write_stdout = mocker.patch.object(

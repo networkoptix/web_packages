@@ -77,25 +77,30 @@ class TestDocumentation:
 
     # Testing Views
 
+    @pytest.mark.slow
     def test_get_page_200(self, arf):
         response = self.get_page_with(self.superuser, self.existing_asset_id)
         assert response.status_code == status.HTTP_200_OK
         assert response.data.get('id', None) == self.existing_asset_id
 
+    @pytest.mark.slow
     def test_get_page_403(self, arf):
         response = self.get_page_with(
             self.non_superuser, self.existing_asset_id, state='draft')
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
+    @pytest.mark.slow
     def test_get_page_404(self, arf):
         response = self.get_page_with(
             self.superuser, self.non_existing_asset_id)
         assert response.data.get('errorText', '') == PAGE_NOT_FOUND
 
+    @pytest.mark.slow
     def test_get_pages_200(self):
         response = self.get_pages_with(self.test_kb_name, self.superuser)
         assert response.status_code == status.HTTP_200_OK
 
+    @pytest.mark.slow
     def test_get_pages_404(self):
         response = self.get_pages_with(
             self.test_kb_non_existing, self.superuser)
@@ -103,6 +108,7 @@ class TestDocumentation:
         assert response.data.get(
             'errorText', '') == f'Knowledgebase {self.test_kb_non_existing} not found'
 
+    @pytest.mark.slow
     def test_kb_for_article_200(self):
         response = self.kb_for_article_with(
             self.existing_asset_id, self.superuser)
@@ -110,12 +116,14 @@ class TestDocumentation:
         assert response.data.get('kb_name', None) == self.test_kb_url
         assert response.data.get('base', None) == self.test_kb_base_url
 
+    @pytest.mark.slow
     def test_kb_for_article_404(self):
         response = self.kb_for_article_with(
             self.non_existing_asset_id, self.superuser)
         assert response.status_code == status.HTTP_404_NOT_FOUND
         assert response.data.get('errorText', '') == KB_NOT_FOUND
 
+    @pytest.mark.slow
     def test_menu_to_endpoint(self):
         request = self.arf.get(
             f'/api/documentation/struct/{self.test_struct_name}')
@@ -126,18 +134,21 @@ class TestDocumentation:
 
     # Testing other documentation view functions
 
+    @pytest.mark.slow
     def test_find_asset_knowledgebase(self):
         found_kb = find_asset_knowledgebase(
             self.kb_docs[0], self.test_kb_base_url)
         assert found_kb == self.test_kb_url
 
 
+    @pytest.mark.slow
     def test_populate_docs_from_knowledgebase(self, language_factory):
         docs_target = []
         docs_asset_ids = [{'asset_id': doc.id}for doc in self.kb_docs]
         populate_docs_from_knowledgebase(docs_asset_ids, docs_target)
         assert len(docs_target) == self.number_docs
 
+    @pytest.mark.slow
     def test_simple_filter(self, language_factory, asset_factory):
         match_term = 'findMe'
         num_title_matches = 3
@@ -153,5 +164,6 @@ class TestDocumentation:
         assert all(index in (doc['titleMatchStart'], doc['shortDescriptionMatchStart']) for index, doc in enumerate(filtered))
         assert all(index + len(match_term) in (doc['titleMatchEnd'], doc['shortDescriptionMatchEnd']) for index, doc in enumerate(filtered))
 
+    @pytest.mark.slow
     def test_find_article(self):
         assert find_article(self.kb_menu_nodes, self.existing_asset_id)

@@ -52,6 +52,7 @@ class BaseTestMakeAssetJSON:
         assert isinstance(asset_json, list)
         assert len(asset_json) == 0
 
+    @pytest.mark.slow
     def test_success(self):
         assets = self.make_assets(
             self.user, self.asset_count)
@@ -65,6 +66,7 @@ class BaseTestMakeAssetJSON:
             assert asset_jsons[ind]['review_id'] == None
             assert 'version' not in asset_jsons[ind]
 
+    @pytest.mark.slow
     def test_with_pending(self):
         pending_count = randint(1,10)
         assets = [
@@ -85,6 +87,7 @@ class BaseTestMakeAssetJSON:
         assert len(asset_json_pending) == pending_count
         assert all(asset['pending'] for asset in asset_json_pending)
 
+    @pytest.mark.slow
     def test_with_draft(self):
         assets = self.make_assets(self.user, self.asset_count)
         asset_json_draft = self.make_asset_json(
@@ -109,7 +112,7 @@ class TestGetContextsAndDatastructuresOfAssetType:
         contexts, datastructures = get_contexts_and_datastructures_of_asset_type(self.asset_type.type)
         assert self.context in contexts
         assert all(mock_datastructure in datastructures for mock_datastructure in self.datastructures)
-        
+
 
 class TestGenerateAssetStateDictionary:
     class MockAsset:
@@ -132,7 +135,7 @@ class TestGenerateAssetStateDictionary:
             last_modified, id), current_version, review_id, include_last_modified=True)
 
         # Even if include_last_modified is True, dont include if draft or pending is showing
-        assert 'lastModified' not in asset_dict 
+        assert 'lastModified' not in asset_dict
         assert asset_dict['version'] == current_version
         assert asset_dict['id'] == id
         assert asset_dict['review_id'] == review_id
@@ -165,7 +168,7 @@ class TestGetLatestDsValues:
                 assert self.mock_records[id] == context_dict[key]
 
     def test_s3_links_are_replaced(self):
-        external_image, external_file = self.datastructures[0:2]  
+        external_image, external_file = self.datastructures[0:2]
         external_image.type = DataStructure.DATA_TYPES.external_image
         external_image.save()
         self.mock_records[external_image.id] = f"Test {S3_LINK} Test"
@@ -184,7 +187,7 @@ class TestGetLatestDsValues:
         private_ds = self.datastructures[0]
         private_ds.public = False
         private_ds.save()
-        
+
         for context, context_dict in get_latest_ds_values(False, False, [self.context], self.datastructures, None, None):
             for key in context_dict:
                 assert key != private_ds.name
@@ -203,7 +206,7 @@ class TestGetLatestDsValues:
                 multiselect_ds_found = multiselect_ds_found or key == multiselect_ds.name
             assert multiselect_ds_found
 
-        
+
 class TestGetCurrentVersion:
     @pytest.fixture(autouse=True)
     def setup(self, db, mocker, language_factory):
@@ -247,7 +250,7 @@ class TestGetCurrentVersion:
                                                    return_value=review)
         has_version, current_version, lookup_key, review_id = get_current_version(
             self.language, self.state, self.versions, self.asset, show_pending=True)
-        
+
         assert mocked_get_pending_version.called_once_with(self.asset, self.current_version)
         assert has_version == True
         assert current_version == self.current_version
@@ -255,7 +258,7 @@ class TestGetCurrentVersion:
         assert review_id == review.id
 
     def test_pending_version_not_found(self, mocker):
-        mocker.patch('cms.controllers.asset_json.get_review_matching_current_version', 
+        mocker.patch('cms.controllers.asset_json.get_review_matching_current_version',
                       return_value=None)
         has_version, current_version, lookup_key, review_id = get_current_version(
             self.language, self.state, self.versions, self.asset, show_pending=True)

@@ -45,6 +45,7 @@ conf = get_config()
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 CI = os.getenv('CI', False)
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
+USE_SQLITE = os.getenv('USE_SQLITE', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 
@@ -220,6 +221,9 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             'zapier': None
         }
 
+    elif USE_SQLITE:
+        DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
@@ -356,7 +360,7 @@ if TESTING:
         cache['LOCATION'] = key
 
 
-if LOCAL_ENVIRONMENT:
+if LOCAL_ENVIRONMENT and not TESTING:
     INSTALLED_APPS += ('silk',)
     # MIDDLEWARE += ('silk.middleware.SilkyMiddleware',)
 

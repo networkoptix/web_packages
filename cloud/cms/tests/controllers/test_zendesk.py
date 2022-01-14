@@ -1659,7 +1659,7 @@ def test_process_node(mocker, db):
     mock_exporter.sync_article.assert_called_once_with(
         article, delete=True, sync_log=sync_log)
 
-
+@pytest.mark.slow
 def test_process_general_section_node(mocker, get_exporter_instance, db):
     top_level_assets = [
         baker.make(Asset)

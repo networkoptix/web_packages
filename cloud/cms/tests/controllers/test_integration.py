@@ -15,6 +15,7 @@ def can_edit_count(assets):
 class TestMakeIntegrationsJSON(BaseTestMakeAssetJSON):
     asset_type = INTEGRATION
 
+    @pytest.mark.slow
     def test_integration_properties(self):
         assets = self.make_assets(
             self.user, self.asset_count)
@@ -25,6 +26,7 @@ class TestMakeIntegrationsJSON(BaseTestMakeAssetJSON):
             assert asset_json['mine'] == True
             assert asset_json['canEdit'] == True
 
+    @pytest.mark.slow
     def test_superuser_can_edit_all(self, account_factory):
         additional_user = account_factory(
             email='user2@user.com', is_superuser=False)
@@ -88,13 +90,13 @@ class TestAddIntegrationProperties:
             self.asset.id: True
         }
         asset_dict = add_integration_properties({}, self.asset, self.user, user_assets)
-        
+
         assert asset_dict['mine'] == True
         assert asset_dict['canEdit'] == True # Because 'mine' is True
 
     def test_canEdit_is_true_if_superuser(self, account_factory):
         asset_dict = add_integration_properties({}, self.asset, self.user, {})
-        
+
         assert asset_dict['mine'] == False
         assert asset_dict['canEdit'] == True
 
