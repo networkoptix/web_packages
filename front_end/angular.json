@@ -150,6 +150,10 @@
             "webadmin": {
               "fileReplacements": [
                 {
+                  "replace": "app/index.html",
+                  "with": "app/webadmin-index.html"
+                },
+                {
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.webadmin.ts"
                 },
@@ -161,6 +165,10 @@
             },
             "webadmin-prod": {
               "fileReplacements": [
+                {
+                  "replace": "app/index.html",
+                  "with": "app/webadmin-index.html"
+                },
                 {
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.webadmin-prod.ts"
