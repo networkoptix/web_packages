@@ -208,7 +208,7 @@ export class NxSystemsListComponent implements OnInit {
                 url: this.menusService.getUrl(system.id, this.endpoint),
                 label: system.name
             });
-        } else if (this.needToConfigureTwoFactor(system)) {
+        } else if (this.needToConfigureTwoFactor(system) && !this.account.totpExistsForAccount) {
             this.chosenSystemName = system.name;
             this.show2faRequired = true;
         } else {
@@ -238,6 +238,6 @@ export class NxSystemsListComponent implements OnInit {
     }
 
     needToConfigureTwoFactor(system: NxSystemWithUserInfo): boolean {
-        return system.system2faEnabled && !this.account.account2faEnabled;
+        return system.system2faEnabled && !this.account?.account2faEnabled;
     }
 }

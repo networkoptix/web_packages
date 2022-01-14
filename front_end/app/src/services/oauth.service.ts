@@ -73,7 +73,8 @@ export class OauthService {
             detach: 'passwordDetach',
             renew: 'renewWeb',
             reset: 'passwordReset',
-            restart: 'passwordRestart'
+            restart: 'passwordRestart',
+            system2faAuth: 'system2faAuth'
         };
         const params = new URLSearchParams({
             client_type: clientTypes[state] || clientTypes.login,

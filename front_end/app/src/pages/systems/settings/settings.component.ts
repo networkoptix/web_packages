@@ -25,6 +25,7 @@ import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -140,6 +141,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
+        private oauthService: OauthService,
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
@@ -360,16 +362,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         .then(
                                             () => {},
                                             () => {
-                                                this.router.navigate(
-                                                    ['/authorize'],
-                                                    {
-                                                        queryParams: {
-                                                            client_type: 'system2faAuth',
-                                                            email: account.email,
-                                                            access_token: this.system.mediaserver.accessToken,
-                                                            redirect_url: this.document.location.href,
-                                                        },
-                                                    }
+                                                return this.oauthService.redirectOauth(
+                                                    'system2faAuth',
+                                                    account.email,
+                                                    undefined,
+                                                    this.system.mediaserver.accessToken
                                                 );
                                             }
                                         );
