@@ -33,29 +33,47 @@ stages:
   - check
   - build
   - test
+  - fail-fast
 
 .frontend-changes:
+  needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - front_end/**/*
 
+no-changes:
+  stage: check
+  # rules:
+  #   - if:
+  #     changes:
+  #       - front_end/**/*
+  #       - cloud/**/*
+  #     when: never
+  script:
+    - echo "If this is the only job that runs then no changes were made that requires the pipeline"
+
 .backend-changes:
+  needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - cloud/**/*
+
+.frontend-test-changes:
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
 
 .frontend-node:
   extends: .frontend-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .frontend-test:
+  extends: .frontend-test-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*.spec.ts
 
 .django-python:
   extends: .backend-changes
@@ -96,7 +114,6 @@ stages:
 .django-unit-test:
   extends: .django-python
   stage: test
-  needs: ["django-checks"]
   coverage: /^TOTAL.+?(\d+\%)$/
   artifacts:
     when: always
@@ -157,7 +174,6 @@ django-unit-test-fast:
 
 frontend-unit-test:
   extends: .frontend-node
-  needs: ["frontend-lint-check"]
   stage: test
   variables:
     CHROME_BIN: /usr/bin/google-chrome
@@ -174,7 +190,6 @@ frontend-unit-test:
 authorization-unit-test:
   extends: .frontend-node
   stage: test
-  needs: ["frontend-lint-check"]
   variables:
     CHROME_BIN: /usr/bin/google-chrome
   script:
@@ -216,3 +231,85 @@ frontend:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+
+.fail-on:
+  stage: fail-fast
+  variables:
+    CANCEL_ENDPOINT: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/cancel"
+    CANCEL_HEADER: "PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN"
+  script:
+    - echo "Canceling jobs still running on pipeline"
+    - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
+    - exit 1
+
+.fail-on-frontend:
+  extends: .fail-on
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*
+      when: on_failure
+
+.fail-on-frontend-test:
+  extends: .fail-on
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
+      when: on_failure
+
+.fail-on-backend:
+  extends: .fail-on
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/*
+      when: on_failure
+
+on-frontend-lint:
+  extends: .fail-on-frontend
+  needs: ["frontend-lint-check"]
+
+on-test-lint:
+  extends: .fail-on-frontend-test
+  needs: ["fe-lint-tests-check"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.spec.ts
+
+on-language-check:
+  extends: .fail-on-frontend
+  needs: ["language-check"]
+
+on-nx-mentions:
+  extends: .fail-on-frontend
+  needs: ["nx-mentions-check"]
+
+on-frontend-build:
+  extends: .fail-on-frontend
+  needs: ["frontend"]
+
+on-webadmin-build:
+  extends: .fail-on-frontend
+  needs: ["webadmin"]
+
+on-authorization-test:
+  extends: .fail-on-frontend
+  needs: ["authorization-unit-test"]
+
+on-frontend-test:
+  extends: .fail-on-frontend
+  needs: ["frontend-unit-test"]
+
+on-django-checks:
+  extends: .fail-on-backend
+  needs: ["django-checks"]
+
+on-django-tests-slow:
+  extends: .fail-on-backend
+  needs: ["django-unit-test-slow"]
+
+on-django-tests-fast:
+  extends: .fail-on-backend
+  needs: ["django-unit-test-fast"]
