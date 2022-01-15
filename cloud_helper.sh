@@ -386,14 +386,21 @@ do
             run_mediaserver $VERSION "$PORTS" "$CLOUD_HOST" $EMAIL $PASSWORD
             break
             ;;
-         stop_mediaserver)
+        stop_mediaserver)
             stop_mediaserver
             ;;
-         start_https_tunnel)
+        start_https_tunnel)
             start_https_tunnel
             ;;
-         dump_db)
+        dump_db)
             dump_db
+            ;;
+        run_local_servers)
+            VERSION=$2
+            PORTS="$3"
+            stop_mediaserver
+            build_mediaserver_image $VERSION.deb $VERSION
+            run_mediaserver $VERSION $PORTS
             ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
@@ -416,6 +423,7 @@ do
             echo 'list_mediaserver - List docker images build by this script'
             echo 'remove_mediaserver - Removes docker mediaserver images created by this script'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
+            echo 'run_local_servers -Stops all running mediaservers, builds a new docker image, and runs the images. Usage "./cloud_helper.sh {version} {ports}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
