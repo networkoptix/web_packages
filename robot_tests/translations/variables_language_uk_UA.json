@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Поле \"Ім'я\" обов'язкове до заповнення",
     "LAST NAME IS REQUIRED TEXT": "Поле Прізвище обов'язкове до заповнення",
     "EMAIL IS REQUIRED TEXT": "Електронна пошта обов'язкова",
-    "PASSWORD IS REQUIRED TEXT": "Необхідно вказати пароль"
+    "PASSWORD IS REQUIRED TEXT": "Необхідно вказати пароль",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

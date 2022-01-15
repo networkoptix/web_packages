@@ -6,14 +6,14 @@
     "CONTINUE BUTTON TEXT": "Continuer",
     "STAY LOGGED IN BUTTON TEXT": "Rester connecté",
     "RELEASE HISTORY BUTTON TEXT": "Autres versions, correctifs et versions bêta",
-    "RESET EMAIL SENT MESSAGE TEXT": "Please follow instructions there to reset your password and return here to log in again.",
+    "RESET EMAIL SENT MESSAGE TEXT": "Veuillez suivre les instructions pour réinitialiser votre mot de passe et revenir ici pour vous reconnecter.",
     "CREATE ACCOUNT BUTTON TEXT": "Créer un compte",
     "CREATE NEW ACCOUNT BUTTON TEXT": "Créer un nouveau compte",
     "TERMS AND CONDITIONS LINK TEXT": "Termes et conditions",
     "RESEND ACTIVATION LINK BUTTON TEXT": "Renvoyer l'e-mail d'activation.",
     "FORGOT PASSWORD TEXT": "Mot de passe oublié ?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Tous les utilisateurs du nuages seront supprimés",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "Le système ne sera accessible que par le réseau local.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Entrez mot de passe pour continuer",
     "SYSTEM NO ACCESS TEXT": "Impossible d'accéder au système",
     "DISCONNECT FROM CLOUD TEXT": "Se déconnecter de %PRODUCT_NAME%",
@@ -73,7 +73,7 @@
     "WRONG PASSWORD": "Mot de passe incorrect",
     "ACCOUNT NOT FOUND TEXT": "Compte introuvable",
     "ACCOUNT DOES NOT EXIST TEXT": "Compte n’existe pas.",
-    "YOU CAN CREATE ACCOUNT TEXT": "You can create an account with this email address or try to enter a different one.",
+    "YOU CAN CREATE ACCOUNT TEXT": "Vous pouvez créer un compte avec cette adresse e-mail ou essayer d'en saisir un autre.",
     "CANNOT SEND CONFIRMATION EMAIL": "Impossible d’envoyer courriel de confirmation:",
     "ACCOUNT ALREADY EXISTS": "Le compte existe déjà",
     "ACCOUNT DOES NOT EXIST": "Compte n’existe pas.",
@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Prénom requis",
     "LAST NAME IS REQUIRED TEXT": "Nom de famille requis",
     "EMAIL IS REQUIRED TEXT": "L'email est obligatoire",
-    "PASSWORD IS REQUIRED TEXT": "Mot de passe requis"
+    "PASSWORD IS REQUIRED TEXT": "Mot de passe requis",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

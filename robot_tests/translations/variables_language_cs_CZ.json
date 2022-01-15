@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Jméno je povinné",
     "LAST NAME IS REQUIRED TEXT": "Příjmení je povinné",
     "EMAIL IS REQUIRED TEXT": "Je vyžadován e-mail",
-    "PASSWORD IS REQUIRED TEXT": "Heslo je vyžadováno"
+    "PASSWORD IS REQUIRED TEXT": "Heslo je vyžadováno",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

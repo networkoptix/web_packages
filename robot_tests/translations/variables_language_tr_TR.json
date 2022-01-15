@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Ad girmek zorunludur",
     "LAST NAME IS REQUIRED TEXT": "Soyad girmek zorunludur",
     "EMAIL IS REQUIRED TEXT": "E-posta gerekiyor",
-    "PASSWORD IS REQUIRED TEXT": "Parola gerekmektedir"
+    "PASSWORD IS REQUIRED TEXT": "Parola gerekmektedir",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

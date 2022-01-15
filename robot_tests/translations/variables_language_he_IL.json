@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "נדרש שם פרטי",
     "LAST NAME IS REQUIRED TEXT": "נדרש שם משפחה",
     "EMAIL IS REQUIRED TEXT": "נדרש דוא\"ל",
-    "PASSWORD IS REQUIRED TEXT": "נדרשת סיסמא"
+    "PASSWORD IS REQUIRED TEXT": "נדרשת סיסמא",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

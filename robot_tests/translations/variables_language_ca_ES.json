@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "El nom és obligatori",
     "LAST NAME IS REQUIRED TEXT": "El cognom és obligatori",
     "EMAIL IS REQUIRED TEXT": "L'email és obligatori",
-    "PASSWORD IS REQUIRED TEXT": "La contrasenya és obligatòria"
+    "PASSWORD IS REQUIRED TEXT": "La contrasenya és obligatòria",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

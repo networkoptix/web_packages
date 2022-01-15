@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Skicka aktiveringsmail igen.",
     "FORGOT PASSWORD TEXT": "Glömt lösenordet?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Alla molnanvändare kommer raderas",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "Systemet kommer att vara tillgängligt via det lokala nätverket.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Ange lösenord för att fortsätta",
     "SYSTEM NO ACCESS TEXT": "Misslyckades med att komma åt system",
     "DISCONNECT FROM CLOUD TEXT": "Koppla från %PRODUCT_NAME%",
@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Förnamn krävs",
     "LAST NAME IS REQUIRED TEXT": "Efternamn krävs",
     "EMAIL IS REQUIRED TEXT": "E-postadress måste anges",
-    "PASSWORD IS REQUIRED TEXT": "Lösenord krävs"
+    "PASSWORD IS REQUIRED TEXT": "Lösenord krävs",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

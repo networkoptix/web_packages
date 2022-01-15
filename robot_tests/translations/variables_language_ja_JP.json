@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "認証メールを再送信",
     "FORGOT PASSWORD TEXT": "パスワードをお忘れですか？",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "クラウドのすべてのユーザーが削除されます",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "システムはローカルネットワークからのみアクセス可能になります。",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "パスワードを入力して続行",
     "SYSTEM NO ACCESS TEXT": "システムにアクセスできませんでした",
     "DISCONNECT FROM CLOUD TEXT": "%PRODUCT_NAME%から切断",
@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "名前を入力してください",
     "LAST NAME IS REQUIRED TEXT": "苗字を入力してください",
     "EMAIL IS REQUIRED TEXT": "メールアドレスが必要です",
-    "PASSWORD IS REQUIRED TEXT": "パスワードが必要です"
+    "PASSWORD IS REQUIRED TEXT": "パスワードが必要です",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

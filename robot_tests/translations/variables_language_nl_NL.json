@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Voornaam is verplicht",
     "LAST NAME IS REQUIRED TEXT": "Achternaam is verplicht",
     "EMAIL IS REQUIRED TEXT": "E-mail is verplicht",
-    "PASSWORD IS REQUIRED TEXT": "Wachtwoord is vereist"
+    "PASSWORD IS REQUIRED TEXT": "Wachtwoord is vereist",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }

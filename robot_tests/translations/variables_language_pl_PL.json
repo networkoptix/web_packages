@@ -520,5 +520,6 @@
     "FIRST NAME IS REQUIRED TEXT": "Imię jest wymagane",
     "LAST NAME IS REQUIRED TEXT": "Nazwisko jest wymagane",
     "EMAIL IS REQUIRED TEXT": "E-mail jest wymagany",
-    "PASSWORD IS REQUIRED TEXT": "Hasło jest wymagane"
+    "PASSWORD IS REQUIRED TEXT": "Hasło jest wymagane",
+    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
 }
