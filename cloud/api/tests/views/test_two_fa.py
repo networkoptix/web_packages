@@ -101,6 +101,7 @@ class TestTwoFAViews:
         mock_verify_backup_code = mocker.patch(self.auth_mock_path + 'verify_backup_code', return_value=True)
         code, verification_code = self.make_uuids(2)
         request = arf.get(f'/?code={code}&verification_code={verification_code}')
+        request.session = {}
         request.user = self.user
         view = BackupCode().as_view()
 

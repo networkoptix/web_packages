@@ -104,7 +104,7 @@
               "fileReplacements": [
                 {
                   "replace": "app/environments/environment.ts",
-                  "with": "app/environments/environment.cloud-test.ts"
+                  "with": "app/environments/environment.local.ts"
                 }
               ]
             },

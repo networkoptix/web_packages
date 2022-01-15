@@ -52,6 +52,9 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
             res = Auth.verify_2fa_code(data["verification_code"], data["code"])
         except APIInternalException:
             raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
+
+        if request.user and request.user.is_authenticated:
+            request.session["has2fa"] = True
         return api_success(res)
 
     def post(self, request, *args, **kwargs):
@@ -77,6 +80,10 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
             res = Auth.verify_backup_code(data["verification_code"], data["code"])
         except APIInternalException:
             raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
+
+        if request.user and request.user.is_authenticated:
+            request.session["has2fa"] = True
+
         return api_success(res)
 
     @method_decorator(swagger_auto_schema(
@@ -145,4 +152,9 @@ def add_2fa_to_session(request):
     """
     require_params(request, ("verification_code", ))
     verification_code = request.data.get("verification_code")
-    return api_success(Auth.verify_2fa_code(verification_code, request.session.get("access_token")))
+    res = Auth.verify_2fa_code(verification_code, request.session.get("access_token"))
+
+    if request.user and request.user.is_authenticated:
+        request.session["has2fa"] = True
+
+    return api_success(res)

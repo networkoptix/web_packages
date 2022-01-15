@@ -1,6 +1,7 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 import { Account } from '@services/account.service/account';
 import { NxLoginService } from '@services/login.service';
@@ -37,7 +38,8 @@ export class CloudAccount extends BaseAccount {
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
-        protected oauthService: OauthService
+        protected oauthService: OauthService,
+        protected cookieService: CookieService
     ) {
         super(
             configService,
@@ -55,7 +57,8 @@ export class CloudAccount extends BaseAccount {
             injector,
             nxSystemAPIService,
             loginService,
-            oauthService
+            oauthService,
+            cookieService
         );
     }
 
@@ -167,6 +170,7 @@ export class CloudAccount extends BaseAccount {
             .logout()
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
+                this.cookieService.deleteAll();
                 if (!doNotRedirect) {
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])

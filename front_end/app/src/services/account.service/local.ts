@@ -60,7 +60,8 @@ export class LocalAccount extends BaseAccount {
             injector,
             nxSystemAPIService,
             loginService,
-            oauthService
+            oauthService,
+            cookieService
         );
         this.mediaServerApi = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), true);

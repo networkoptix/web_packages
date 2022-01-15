@@ -283,7 +283,7 @@ def index(request):
     if request.user.is_authenticated:
         cdb_account = Account.get(request)
         cdb_account_security = Account.get_2fa_settings(request)
-    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
+    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False) or request.session.get("has2fa", False)
     data["totpExistsForAccount"] = cdb_account_security.get("totpExistsForAccount", False)
     return api_success(data)
 

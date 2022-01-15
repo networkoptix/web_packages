@@ -1,6 +1,7 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
@@ -83,7 +84,8 @@ export abstract class BaseAccount implements OnDestroy {
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
-        protected oauthService: OauthService
+        protected oauthService: OauthService,
+        protected cookieService: CookieService
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
