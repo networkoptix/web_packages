@@ -10,6 +10,8 @@ import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -226,15 +228,26 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     redirectOauthLogin(): void {
-        if (this.window.navigator.onLine) {
-            this.account.mediaServerApi.redirectOauth();
-        } else {
+        const displayCloudConnectionError = () => {
             this.simpleDialogService.notify(
                 this.LANG.toastMessage.noInternet(),
                 'warning',
                 true
             );
-        }
+        };
+
+        this.account.mediaServerApi.getModuleInfo()
+            .subscribe((data) => {
+                // Handles legacy and rest apis
+                if (data.reply) {
+                    data = data.reply;
+                }
+                if (this.window.navigator.onLine && data.serverFlags.includes('SF_HasPublicIP')) {
+                    this.account.mediaServerApi.redirectOauth();
+                } else {
+                    displayCloudConnectionError();
+                }
+            }, () => displayCloudConnectionError());
     }
 
     oauthLogin(code: string): void {

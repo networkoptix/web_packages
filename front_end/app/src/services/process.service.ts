@@ -278,6 +278,11 @@ export const formatError = (
         error = error.error;
         // Unpack nested error
     }
+    if (errorCodes && error?.errorString &&
+        (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
+    ) {
+        delete error.errorString;
+    }
     const errorCode =
         error?.data?.resultCode ||
         error?.resultCode ||
