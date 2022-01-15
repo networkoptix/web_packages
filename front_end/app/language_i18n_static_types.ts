@@ -358,48 +358,50 @@ export interface UsageLabels {
 }
 
 export interface DialogsMerge {
-    adminPasswordTitle:          any;
-    adminPasswordWrong:          any;
-    bothSystemsConnectedToCloud: any;
-    checking:                    any;
-    commonText:                  any;
-    connectToCloud:              any;
-    differentOwners:             any;
-    duplicateServers:            any;
-    enterSystemAddressTitle:     any;
-    latestBuild:                 any;
-    mergeConfirmation:           any;
-    mergeFailedTitle:            any;
-    mergeSuccess:                any;
-    mergeSystemsTitle:           any;
-    noServerFound:               any;
-    newSystemDisplayName:        any;
-    otherSystem:                 any;
-    ownerCanMergeText:           any;
-    passwordRequired:            any;
-    passwordWrong:               any;
-    primaryCannotMerge:          any;
-    primarySystemOffline:        any;
-    primarySystemUnavailable:    any;
-    recommendSupport:            RecommendSupport;
-    secondaryCannotMerge:        any;
-    secondarySystemUnavailable:  any;
-    serverAtUrl:                 any;
-    serverNotAvailable:          any;
-    serverNotYours:              any;
-    serverVersionOld:            any;
-    serverVersionNew:            any;
-    systemOffline:               any;
-    systemOfflineUrl:            any;
-    systemsIncompatible:         any;
-    systemVersionOld:            any;
-    systemVersionNew:            any;
-    systemVersionsNotMatch:      any;
-    targetSystemBoundToCloud:    any;
-    urlEmpty:                    any;
-    urlNotValid:                 any;
-    unknownError:                any;
-    warning:                     any;
+    adminPasswordTitle:                 any;
+    adminPasswordWrong:                 any;
+    knownBothSystemsConnectedToCloud:   any;
+    unknownBothSystemsConnectedToCloud: any;
+    checking:                           any;
+    cloud:                              any;
+    commonText:                         any;
+    connectToCloud:                     any;
+    differentOwners:                    any;
+    duplicateServers:                   any;
+    enterSystemAddressTitle:            any;
+    latestBuild:                        any;
+    mergeConfirmation:                  any;
+    mergeFailedTitle:                   any;
+    mergeSuccess:                       any;
+    mergeSystemsTitle:                  any;
+    noServerFound:                      any;
+    newSystemDisplayName:               any;
+    otherSystem:                        any;
+    ownerCanMergeText:                  any;
+    passwordRequired:                   any;
+    passwordWrong:                      any;
+    primaryCannotMerge:                 any;
+    primarySystemOffline:               any;
+    primarySystemUnavailable:           any;
+    recommendSupport:                   RecommendSupport;
+    secondaryCannotMerge:               any;
+    secondarySystemUnavailable:         any;
+    serverAtUrl:                        any;
+    serverNotAvailable:                 any;
+    serverNotYours:                     any;
+    serverVersionOld:                   any;
+    serverVersionNew:                   any;
+    systemOffline:                      any;
+    systemOfflineUrl:                   any;
+    systemsIncompatible:                any;
+    systemVersionOld:                   any;
+    systemVersionNew:                   any;
+    systemVersionsNotMatch:             any;
+    targetSystemBoundToCloud:           any;
+    urlEmpty:                           any;
+    urlNotValid:                        any;
+    unknownError:                       any;
+    warning:                            any;
 }
 
 export interface RecommendSupport {
@@ -1536,8 +1538,10 @@ const typeMap: any = {
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "any" },
         { json: "adminPasswordWrong", js: "adminPasswordWrong", typ: "any" },
-        { json: "bothSystemsConnectedToCloud", js: "bothSystemsConnectedToCloud", typ: "any" },
+        { json: "knownBothSystemsConnectedToCloud", js: "knownBothSystemsConnectedToCloud", typ: "any" },
+        { json: "unknownBothSystemsConnectedToCloud", js: "unknownBothSystemsConnectedToCloud", typ: "any" },
         { json: "checking", js: "checking", typ: "any" },
+        { json: "cloud", js: "cloud", typ: "any" },
         { json: "commonText", js: "commonText", typ: "any" },
         { json: "connectToCloud", js: "connectToCloud", typ: "any" },
         { json: "differentOwners", js: "differentOwners", typ: "any" },

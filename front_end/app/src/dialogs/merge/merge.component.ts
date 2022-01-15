@@ -76,7 +76,8 @@ export class MergeModalContent {
     readonly serverUrlErrors: string = 'serverUrlErrors';
     readonly confirmMerge: string = 'confirmMerge';
 
-    readonly bothSystemsConnectedToCloud: string = 'bothSystemsConnectedToCloud';
+    readonly knownBothSystemsConnectedToCloud: string = 'knownBothSystemsConnectedToCloud';
+    readonly unknownBothSystemsConnectedToCloud: string = 'unknownBothSystemsConnectedToCloud';
     readonly differentOwners: string = 'differentOwners';
     readonly duplicateServers: string = 'duplicateServers';
     readonly noServerFound: string = 'noServerFound';
@@ -719,7 +720,10 @@ export class MergeModalContent {
          * else = cloud-connected merge check
          */
         if (this.environment.isLocal && this.targetSystem.cloudOwnerId && this.system.moduleInfo.cloudOwnerId) {
-            throw Error(this.bothSystemsConnectedToCloud);
+            if (this.targetSystem?.name) {
+                throw Error(this.knownBothSystemsConnectedToCloud);
+            }
+            throw Error(this.unknownBothSystemsConnectedToCloud);
         }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true).toPromise()
@@ -828,6 +832,7 @@ export class MergeModalContent {
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible?.()}`;
         const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable?.()}`;
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline?.()}`;
+        const statusCloud        = ` - ${this.LANG.dialogs.merge.cloud?.()}`;
 
         let stateOfHealth = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.status || '';
@@ -856,6 +861,9 @@ export class MergeModalContent {
                 } else {
                     status = statusUnavailable;
                 }
+        }
+        if (environment.isLocal && !status && system.cloudSystemId) {
+            status = statusCloud;
         }
 
         let systemName: string;

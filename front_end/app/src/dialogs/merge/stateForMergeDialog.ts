@@ -61,7 +61,8 @@ export const State: {
             serverUrlInputValidationErrorText: ''
         },
         errorText: {
-            bothSystemsConnectedToCloud: '',
+            knownBothSystemsConnectedToCloud: '',
+            unknownBothSystemsConnectedToCloud: '',
             differentOwners: '',
             duplicateServers: '',
             noServerFound: '',
