@@ -2,6 +2,7 @@ import {
     Component,
     Input,
     OnInit,
+    SimpleChanges,
     ViewEncapsulation,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -72,6 +73,16 @@ export class NxPagePlaceholderComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.setupPlaceholder();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (!changes.data?.firstChange) {
+            this.setupPlaceholder();
+        }
+    }
+
+    setupPlaceholder(): void {
         if (this.type) {
             if (!this.preloader && !this.condition) {
                 this.preloader = false;
