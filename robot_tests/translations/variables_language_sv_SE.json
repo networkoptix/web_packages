@@ -521,5 +521,5 @@
     "LAST NAME IS REQUIRED TEXT": "Efternamn krävs",
     "EMAIL IS REQUIRED TEXT": "E-postadress måste anges",
     "PASSWORD IS REQUIRED TEXT": "Lösenord krävs",
-    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
+    "2FA BACKUP CODE BTN TEXT": "Ingen tillgång till autentiseringsapp?"
 }

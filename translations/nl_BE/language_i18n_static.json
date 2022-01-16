@@ -322,8 +322,10 @@
         "merge": {
             "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Wachtwoord voor admin gebruiker is onjuist",
-            "bothSystemsConnectedToCloud": "Kan twee systemen die zijn verbonden met de cloud niet samenvoegen. Ga naar %CLOUD_NAME% om deze systemen samen te voegen.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Controleren...",
+            "cloud": "Cloud",
             "commonText": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen met <strong>%CLOUD_NAME%</strong> of voeg lokaal samen met <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
