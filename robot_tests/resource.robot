@@ -1,20 +1,19 @@
 *** Settings ***
 Resource     variables.robot
-Resource     APIresource.robot
 Resource     ${variables_file}
 Resource     Resources/front-end-resources.robot
 Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
 # Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
-Library      SeleniumLibrary    run_on_failure=Failure Tasks
-Library      SSHLibrary
 Library      String
 Library      DateTime
 Library      Collections
 Library      OperatingSystem
+Library      SeleniumLibrary    run_on_failure=Failure Tasks
+Library      SSHLibrary
 Library      NoptixImapLibrary
-Library      NoptixLibrary
+Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/ServerAPI.py
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
@@ -94,7 +93,7 @@ Check Language Anonymous
 
 Check Language Logged In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}
-    ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
+    ${curr lang}=   Get Account Language    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
     Sleep    2
 
@@ -332,7 +331,7 @@ Get Email Link
 
 Activate
     [Arguments]    ${email}
-    ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
+    ${code}=   Get Code From Email    ${auth}    ${email}    activate_account
     Go To    ${ENV}/authorize/activate/${code}
     Wait Until Elements Are Visible
     ...    ${ACTIVATION SUCCESS}
@@ -355,7 +354,7 @@ Register And Activate Account
     Sleep    1
     Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
     Run Keyword If    '${act}'=='ui'     Activate    ${email}
-    Run Keyword If    '${act}'=='ui'     Login With Code    ${email}    ${password}
+    Run Keyword If    '${act}'=='ui'     API Log In    ${email}    ${password}
 
 Register and activate account with random email
     [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=api
@@ -365,7 +364,7 @@ Register and activate account with random email
 
 Disconnect all systems from account
     [Arguments]    ${email}     ${password}
-    ${systems}=   Get Account Systems    ${ENV}    ${email}    ${password}
+    ${systems}=   Get Account Systems    ${email}    ${password}
     FOR    ${sys}    IN    @{systems}
         Disconnect    ${ENV}    ${email}    ${password}    ${sys}
     END
@@ -401,13 +400,12 @@ Restore password
 
 Restore Password using API
     [Arguments]    ${email}    ${new password}
-    ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
-    Should Be Equal as Strings    ${resp}    200
-    ${code}=   Get Code From Email    ${ENV}    ${auth}    ${email}    restore_password
-    ${code}=   Convert Code    ${code}
-    ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${new password}
+    ${resp}=   API Restore Password    ${email}    None    None
     Should Be Equal As Strings    ${resp}    200
-    Login With Code    {email}    ${new password}
+    ${code}=   Get Code From Email    ${auth}    ${email}    restore_password
+    ${code}=   Convert Code    ${code}
+    ${resp}=   API Restore Password    ${email}    ${code}   ${new password}
+    Should Be Equal As Strings    ${resp}    200
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
@@ -1044,22 +1042,22 @@ Create Base System
 Delete Accounts
     [Arguments]    ${accounts}
     FOR    ${email}    IN   @{accounts}
-        Delete Account    ${ENV}    ${email}    ${base password}
+        Delete Account    ${email}    ${base password}
     END
 
 Delete Base System
     [Arguments]     ${system}
     [Documentation]    Wipe out all resources related to the system
-    Run Keyword If    $system['owner']    Disconnect    ${ENV}    ${system}[owner]    ${base password}    ${system}[cloud id]
+    Run Keyword If    $system['owner']    Disconnect    ${system}[owner]    ${base password}    ${system}[cloud id]
     Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
 
     Delete Docker Server    ${system}[id]
 
     # Delete user if he doesn't own any cloud systems
     Run Keyword If    not $system['owner']    Return From Keyword    True
-    ${systems}=    Get Account Systems    ${ENV}    ${system}[owner]    ${base password}
+    ${systems}=    Get Account Systems    ${system}[owner]    ${base password}
     ${num systems}=   Evaluate    len($systems)
-    Run Keyword If    ${num systems} == 0    Delete Account    ${ENV}    ${system}[owner]    ${base password}
+    Run Keyword If    ${num systems} == 0    Delete Account    ${system}[owner]    ${base password}
 
 
 Create Custom Network
@@ -1278,5 +1276,51 @@ Verify File Exists
     ${results}    Execute Command    find ${folder} -name ${file}    sudo=True    sudo_password=${QA BURBANK PASS}
     Close Connection
     Should Contain    ${results}    ${file}
+
+Create system and attach to cloud
+    [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}=${BASE PASSWORD}
+    @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
+    @{default auth}=    Create List    admin    admin
+    &{bind json}=    Bind System    ${cloud auth}    ${ENV}    name=${system name}
+    sleep    5
+    &{Setup Cloud System json}=    Setup Cloud System
+    ...    ${default auth}
+    ...    ${server url}:${server port}
+    ...    ${bind json["authKey"]}
+    ...    ${bind json["name"]}
+    ...    ${bind json["id"]}
+    ...    ${bind json["ownerAccountEmail"]}
+    [Return]    ${bind json["id"]}
     
+Connect System to Cloud
+    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
+    @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
+    &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
+    Sleep    5
+    ${Setup Cloud System json}=    Save Cloud System Credentials
+    ...    ${auth}
+    ...    ${server ip}
+    ...    ${bind json["authKey"]}
+    #...    ${bind json["name"]}
+    ...    ${bind json["id"]}
+    ...    ${bind json["ownerAccountEmail"]}
+    Return From Keyword    ${bind json["id"]}
     
+
+Log Out via API
+    [Arguments]    ${validate}=${True}
+    ${cookies}=   Get Cookies    as_dict = True
+    ${status}=   API Log Out    ${cookies}[sessionid]    ${cookies}[csrftoken]
+    Should Be Equal as Strings    ${status}    200
+    Sleep    2
+    Reload Page
+    Sleep    5
+    Go To    ${ENV}
+    Run Keyword If    ${validate}    Validate Log Out
+    [Return]    ${status}
+
+Remove Server From System
+    [Arguments]    ${system url}    ${system auth}    ${server url}    ${server auth}    ${server name}
+    Detach Server From System    ${server url}    ${server auth}
+    ${id}=    Get Server Id    ${system url}    ${system auth}    ${server name}
+    Remove Resource From System    ${system url}    ${system auth}    ${id}

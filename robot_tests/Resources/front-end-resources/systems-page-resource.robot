@@ -32,7 +32,7 @@ Systems Page Suite Teardown
     FOR    ${sys}    IN    @{offline systems}    ${system}    ${extra system}
         Delete Base System    ${sys}
     END
-    Delete Account    ${ENV}    ${no sys user}    ${base password}
+    Delete Account    ${no sys user}    ${base password}
     Close All Browsers
 
 Validate on Systems Page

@@ -61,7 +61,7 @@ Account Suite Tear Down
         Delete Base System    ${server ${i}}
     END
     Execute Command Remotely    docker rm -f ${server 4}[id] ${server 5}[id]
-    Delete Account    ${ENV}    ${delete}    ${base password}
+    Delete Account    ${delete}    ${base password}
     Close All Browsers
     
 *** Test Cases ***
@@ -569,5 +569,5 @@ Account Suite Tear Down
 
 28. Deletion attempt when Delete Account button is disabled (via API)
     [Tags]    C76389        delete_account
-    Delete Account    ${ENV}    ${server 1}[owner]    ${password}
+    Delete Account    ${server 1}[owner]    ${password}
     Log In    ${server 1}[owner]    ${password}

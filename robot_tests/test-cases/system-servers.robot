@@ -96,8 +96,9 @@ Cloud Suite Setup
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=120
+    Sleep    300
     Common Restart Logout    ${ENV}
-    Merge Cloud Systems    ${ENV}    ${server 1}[sysId]    ${server 2}[cloud id]    ${server 2}[owner]    ${password}
+    Merge Cloud Systems    ${server 1}[sysId]    ${server 2}[cloud id]    ${server 2}[owner]    ${password}
     Sleep    120
 
     ${users}=    Register and Activate Generic Users    password=${password}

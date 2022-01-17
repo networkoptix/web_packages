@@ -431,7 +431,7 @@ ${password}    ${BASE PASSWORD}
     ...    ${SEARCH RESULT ARROW}
 
     
-    ${viewer info}=   Get Account Info    ${system}[cloud users][viewer]
+    ${viewer info}=   Get Account Info    ${system}[cloud users][viewer]    ${password}
     ${viewer id}=   Set Variable    ${viewer info}[id]
     Set Suite Variable    ${viewer id}
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
@@ -574,7 +574,7 @@ ${password}    ${BASE PASSWORD}
     Log Out
 
     Log    Step 3 - Verify cloud API gets correct list of systems
-    ${viewer systems}=   Get Account Systems    ${ENV}    ${system}[cloud users][viewer]    ${base password}
+    ${viewer systems}=   Get Account Systems    ${system}[cloud users][viewer]    ${base password}
     Should Not Contain    ${viewer systems}    ${system}[cloud id]
 
     Log     C47020: checking that system is disconnected from cloud on the server side

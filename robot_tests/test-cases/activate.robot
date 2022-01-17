@@ -65,7 +65,7 @@ Open New Browser On Failure
     [Tags]    email    C41566
     ${email}=   Get Random Email    ${BASE EMAIL}
     Register Account    mark    hamill    ${email}    ${password}
-    ${code}=   Get Code From Email    ${url}    ${auth}    ${email}    activate_account
+    ${code}=   Get Code From Email    ${auth}    ${email}    activate_account
     Go To    ${url}/authorize/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
     Go To    ${url}/authorize/activate/${code}
@@ -74,7 +74,7 @@ Open New Browser On Failure
 8. Should save user data to user account correctly
     [Tags]    email
     ${email}=   Register and activate account with random email    mark    hamill    ${password}
-    ${user data}=   Get Account Data    ${url}    ${email}    ${password}
+    ${user data}=   Get Account Data    ${email}    ${password}
     Should be equal as strings    ${user data}[first_name]    mark
     Should be equal as strings    ${user data}[last_name]    hamill
 
@@ -82,7 +82,7 @@ Open New Browser On Failure
     [Tags]    email
     ${email}=   Get Random Email    ${BASE EMAIL}
     Register and activate account    ${300CHARS}    ${300CHARS}    ${email}    ${password}    reg=ui
-    ${user data}=   Get Account Data    ${url}    ${email}    ${password}
+    ${user data}=   Get Account Data    ${email}    ${password}
     Should be equal as strings    ${user data}[first_name]    ${255CHARS}
     Should be equal as strings    ${user data}[last_name]    ${255CHARS}
 
@@ -90,7 +90,7 @@ Open New Browser On Failure
     [Tags]    email
     ${email}=  Get Random Email    ${BASE EMAIL}
     Register and activate account    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    reg=ui
-    ${user data}=   Get Account Data    ${url}    ${email}    ${password}
+    ${user data}=   Get Account Data    ${email}    ${password}
     Should be equal as strings    ${user data}[first_name]    mark
     Should be equal as strings    ${user data}[last_name]    hamill
 
@@ -111,11 +111,11 @@ Open New Browser On Failure
     Skip    Not sure if this is necessary anymore.
     ${email1}=   Get Random Email    ${BASE EMAIL}
     Register Account    mark    hamill    ${email1}    ${password}
-    ${code1}=   Get Code From Email    ${url}    ${auth}    ${email1}    activate_account
+    ${code1}=   Get Code From Email    ${auth}    ${email1}    activate_account
 
     ${email2}=   Get Random Email    ${BASE EMAIL}
     Register Account   mark    hamill    ${email2}    ${password}
-    ${code2}=   Get Code From Email    ${url}    ${auth}    ${email2}    activate_account
+    ${code2}=   Get Code From Email    ${auth}    ${email2}    activate_account
 
     Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/authorize/activate/${code1}
@@ -140,7 +140,7 @@ Open New Browser On Failure
     [Tags]    email
     ${email}=    Get Random Email    ${BASE EMAIL}
     Register Account   mark    hamill    ${email}    ${password}
-    ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
+    ${code}=   Get Code From Email    ${auth}    ${email}    activate_account
     Should not be equal as strings    ${code}    Does not exist
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -149,5 +149,5 @@ Open New Browser On Failure
     Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element Is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Click Element    ${RESEND ACTIVATION LINK BUTTON}
-    ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
+    ${code}=   Get Code From Email    ${auth}    ${email}    activate_account
     Should not be equal as strings    ${code}    Does not exist

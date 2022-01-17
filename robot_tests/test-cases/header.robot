@@ -318,7 +318,7 @@ Force Tags        cloud
     Click Element    ${VIEW TAB}
     Run keyword and continue on failure    Check Header Items    True
 
-    ${systems}=   Get Account Systems    ${ENV}    ${many systems owner}    ${base password}
+    ${systems}=   Get Account Systems    ${many systems owner}    ${base password}
     ${system list count}=    Get Length     ${systems}
     Go To    ${ENV}/account
     Check Drop Menu Systems Grid System    ${system list count}

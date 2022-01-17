@@ -104,7 +104,7 @@ Reset
     Log Out
 
     Log    C41897: Step 2 - make sure viewer has no systems
-    ${systems}=   Get Account Systems    ${ENV}    ${user 2}    ${password}
+    ${systems}=   Get Account Systems    ${user 2}    ${password}
     Should Be Empty    ${systems}
     Log In   ${user 2}    ${password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
@@ -547,7 +547,7 @@ Reset
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${url}    ${server 1['cloud auth']}    ${random email}    system_invite
+    ${code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]

@@ -88,10 +88,10 @@ Test Password Invalid
 
 Restart
     Close Browser
-    Delete Account    ${url}    ${user}    ${password}
+    Delete Account    ${user}    ${password}
     Open Restore Password Dialog With Code
 
 Teardown
     Close Browser
-    Delete Account    ${url}    ${user}    ${password}
+    Delete Account    ${user}    ${password}
     Set Selenium Speed     ${speed normal}

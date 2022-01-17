@@ -62,7 +62,7 @@ Restore Pass Validation Setup
 
 Restore Pass Validation Teardown
     Close Browser
-    Delete Account    ${url}    ${user}    ${password}
+    Delete Account    ${user}    ${password}
 
 Restart
     Close Browser

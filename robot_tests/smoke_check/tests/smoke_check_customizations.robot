@@ -22,7 +22,7 @@ Check Customizations
         ...    //span[contains(@class, "login")]/..
         Run Keyword Unless   ${status}    Append To List    ${open portal failed}    ${host}
 
-        ${status}=   Run Keyword and return status    CloudPortalAPI.Log In     https://${host}    ${email customizations}    ${password}
+        ${status}=   Run Keyword and return status    API Log In     ${email customizations}    ${password}    env=https://${host}
         Run Keyword Unless   ${status}    Append To List    ${log in failed}    ${host}
 
     END

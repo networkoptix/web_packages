@@ -50,7 +50,7 @@ Portal - Share to not registered user
 
     Log    Step 2: Check email for the user
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${new portal user}    ${email password}    register
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${new portal user}    system_invite
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${new portal user}    system_invite
 
     Log    Step 3: Open Register Page
     Run Keyword If    'nxvms' in $env    Go To    ${link}
@@ -183,7 +183,7 @@ Client - Share to not registered user
 
     Log    Step 2: Check email for the user
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${new cloud user}    ${email password}    register
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${new cloud user}    system_invite
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${new cloud user}    system_invite
 
     Log    Step 3: Open Register Page
     Run Keyword If    'nxvms' in $env    Go To    ${link}
@@ -273,6 +273,6 @@ Client - Share to registered user
     Select user in users list    ${email existing user2}
     Log Out
 
-    ${users systems}=   Get Account Systems    ${ENV}    ${email existing user2}    ${password}
+    ${users systems}=   Get Account Systems    ${email existing user2}    ${password}
     ${ids}=   Evaluate    [sys['id'] for sys in $users_systems]
     Should Contain    ${ids}    ${system users}[cloud id]

@@ -1,7 +1,6 @@
 *** Settings ***
 Library    SSHLibrary
 Resource    ../../resource.robot
-Library    ../../NoptixLibrary/CloudPortalAPI.py
 *** Keywords ***
 Start up
     [Arguments]    ${url}

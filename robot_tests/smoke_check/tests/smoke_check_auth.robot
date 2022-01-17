@@ -33,7 +33,7 @@ Create Account
 
     Log    Step 2: Check email with Activation link
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${random email}    ${email password}    activate
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${ENV}    ${cloud auth}    ${random email}    activate_account
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${random email}    activate_account
 
     Log    Step 3: Click on Activation link
     Run Keyword If    'nxvms' in $env    Go To    ${link}

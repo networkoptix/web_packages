@@ -21,7 +21,6 @@ class ActivationError(Exception):
     def __str__(self):
         return str(self.msg)
 
-
 class LicenseManagement(object):
     def __init__(self, base_url, auth, login=True):
         self.base_url = base_url

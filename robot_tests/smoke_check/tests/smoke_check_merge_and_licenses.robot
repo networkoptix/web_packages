@@ -37,7 +37,7 @@ Merge Suite Setup
     Set To Dictionary    ${merge 2}    id=${cloud id}
 
     # Verify systems are connected to cloud
-    ${systems}=   Get Account Systems    ${ENV}    ${merge owner}    ${password}
+    ${systems}=   Get Account Systems    ${merge owner}    ${password}
     ${ids}=   Evaluate    [sys['id'] for sys in $systems]
     ${sys 1 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 1}[id]
     ${sys 2 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 2}[id]
@@ -108,7 +108,7 @@ Add users and licenses to the systems
     Activate License    ${local auth}    https://${merge 2}[ip]:${merge 2}[port]    ${saas client}
 
 Merge systems and check the users and the licenses
-    ${merge data}=   Merge Cloud Systems    ${ENV}    ${merge 1}[id]    ${merge 2}[id]    ${merge owner}    ${password}
+    ${merge data}=   Merge Cloud Systems    ${merge 1}[id]    ${merge 2}[id]    ${merge owner}    ${password}
     Should be equal as strings    ${merge data}[resultCode]    ok
 
     ${lic remained}=    License Is Activated    ${local auth}    https://${merge 1}[ip]:${merge 1}[port]    ${perm client}
