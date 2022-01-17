@@ -521,5 +521,5 @@
     "LAST NAME IS REQUIRED TEXT": "苗字を入力してください",
     "EMAIL IS REQUIRED TEXT": "メールアドレスが必要です",
     "PASSWORD IS REQUIRED TEXT": "パスワードが必要です",
-    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
+    "2FA BACKUP CODE BTN TEXT": "認証アプリにアクセスできませんか？"
 }
