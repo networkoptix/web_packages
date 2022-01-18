@@ -183,7 +183,7 @@ export class NxSwaggerComponent implements OnChanges {
         const authParamType = request.method === 'GET' ? 'authGet' : 'authPost';
         const authParam = systemMediaServerConnections[serverID][authParamType];
         const potentialAmpersand = Url.search ? '&' : '';
-        Url.search += potentialAmpersand + 'auth=' + systemMediaServerConnections[serverID][authParam];
+        Url.search += potentialAmpersand + 'auth=' + authParam;
         request.url = Url.toString();
     }
 

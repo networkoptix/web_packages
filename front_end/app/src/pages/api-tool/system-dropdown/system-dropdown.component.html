@@ -10,7 +10,7 @@
                [selected]="APIToolService.selectedSystem || {}">
        </nx-select>
        <nx-select
-               *ngIf="APIToolService.serversDropdown.length"
+               *ngIf="serverDropdownEnabled && APIToolService.serversDropdown.length" 
                [type]="'api-tool'"
                class="mt-2"
                [id]="'avail-systems'"

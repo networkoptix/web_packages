@@ -16,6 +16,7 @@ import { NxAPIToolService } from '../api-tool.service';
 })
 export class NxSystemDropdownComponent {
     readonly environment = environment;
+    serverDropdownEnabled = false; // Server dropdown is disabled permanently in the current design
 
     constructor(
         public APIToolService: NxAPIToolService,
