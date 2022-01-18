@@ -37,6 +37,8 @@
     text-align: center;
     overflow: hidden;
     white-space: nowrap; 
+    margin-left: 16px;
+    width: calc(100% - 32px);
 
     > span {
         @include typography.regular11light7;
