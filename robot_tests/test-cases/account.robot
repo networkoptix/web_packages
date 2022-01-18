@@ -14,6 +14,7 @@ ${CZECH ALERT}    Váš účet byl úspěšně uložen
 *** Keywords ***
 Restart
     Common Restart Logout    ${url}
+    Set Language Anonymous
     
 Reset DB and Open New Browser On Failure
     Set Account Name    ${url}    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
@@ -353,11 +354,7 @@ Account Suite Tear Down
     ...    Close Browser
 
     Open Browser and go to URL    ${url}
-    Go To    ${url}/restore_password
-    Wait Until Elements are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    Wait Until Element is Visible    ${RESET EMAIL SENT MESSAGE}
+    Send "Restore Password" Email   ${random email}
     Sleep    10
     Open Mailbox
     ...    host=${BASE HOST}
@@ -410,7 +407,7 @@ Account Suite Tear Down
     Check Language Logged In    ${no perm}    ${password}
 
 18. Should open account page in anonymous state
-    [tags]    anonymous    deb
+    [tags]    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/account    Authorization
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
@@ -429,13 +426,13 @@ Account Suite Tear Down
     Go To    ${url}/account
     Log In    ${server 1}[cloud users][cloudAdmin]    ${password}    button=None
     Verify in Account Page
-    Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
+    Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
     Log Out
     Go To    ${url}/account
     Log In    ${server 1}[cloud users][viewer]    ${password}    button=None
     Verify in Account Page
-    Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
+    Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
 21. Delete account button becomes enabled
     [Tags]    C69856        delete_account
@@ -483,7 +480,7 @@ Account Suite Tear Down
     Sleep    1    # Clicking the delete button too fast causes there to not be a message
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
-    Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD ERROR}    ${PASSWORD IS REQUIRED TEXT}
+#    Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD ERROR}    ${PASSWORD IS REQUIRED TEXT}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
     Validate Log In    ${random email}
 
@@ -550,7 +547,7 @@ Account Suite Tear Down
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
 27. After account deletion user can create account with the same email again
-    [Tags]    C69864    delete_account
+    [Tags]    C69864    delete_account      deb
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -565,7 +562,8 @@ Account Suite Tear Down
     Go To    ${url}/register
     Register    mark    hamil    ${random email}    ${password}    
     Activate    ${random email}
-    Log In    ${random email}    ${password}
+    Click Button      ${LOG IN BUTTON}
+    Log In    ${random email}    ${password}    button=None    reset=${True}
 
 28. Deletion attempt when Delete Account button is disabled (via API)
     [Tags]    C76389        delete_account

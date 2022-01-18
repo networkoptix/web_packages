@@ -5,8 +5,8 @@ Resource     variables/cms-variables.robot
 Resource     variables/cloud-merge-variables.robot
 
 *** Variables ***
-${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
-${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/button[contains(@class,'close') and @data-dismiss='alert']
+${ALERT}                              //div[contains(@class,'toast')]//span[contains(@class,'toast-content')]
+${ALERT CLOSE}                        //div[contains(@class,'toast')]/button[contains(@class,'close') and @data-dismiss='alert']
 
 ${BROWSER}                            Chrome
 
@@ -35,7 +35,7 @@ ${APPLY CHANGES CANCEL BUTTON}        //ngb-modal-window//
 
 #Log In Elements
 ${LOG IN MODAL}                       //nx-authorize-component/div[@class="authorize-main main-w"]
-${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit" and text()="${NEXT TEXT}" or text()="${LOG IN BUTTON TEXT}"]
+${LOG IN NEXT BUTTON}                 //nx-authorize-component//button[@type="submit"]
 ${EMAIL INPUT}                        //nx-authorize-component//input[@id='authorizeEmail']
 ${PASSWORD INPUT}                     //nx-authorize-component//input[@id='authorizePassword' and @name="password" and @type="password"]
 ${LOG IN BUTTON}                      //nx-authorize-component//button[@type="submit"]
@@ -201,7 +201,7 @@ ${ACCOUNT CANCEL}                     //nx-apply//nx-cancel-button/button[@type=
 
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
-${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
+${CAN NOT DELETE ACCOUNT TOOLTIP}     //nx-tooltip-component/div[contains(@class,"tooltip-body")]
 ${DELTE ACCOUNT DIALOG}               //nx-modal-delete-cloud-user-content
 ${DELETE ACCOUNT MODAL BUTTON}        ${DELTE ACCOUNT DIALOG}//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
 ${DELETE ACCOUNT CANCEL BUTTON}       ${DELTE ACCOUNT DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
