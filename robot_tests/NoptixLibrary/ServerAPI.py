@@ -20,7 +20,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class APIError(Exception):
     def __init__(self, msg):
         self.msg = msg
-        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
 
     def __str__(self):
         return str(self.msg)
@@ -40,7 +39,7 @@ class BearerAuth(AuthBase):
 @library
 class ServerAPI:
     def __init__(self):
-        pass
+        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
 
     def _login(self, server_url, username, password):
         data = {
