@@ -90,9 +90,9 @@
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
             </header>
-            <nx-section *ngIf="system.userManager.isOwner || system.userManager.isAdmin">
+            <nx-section *ngIf="system.userManager.isMine">
                 <div class="server-setting-buttons">
-                    <div *ngIf="system.userManager.isOwner" class="left setting-buttons">
+                    <div class="left setting-buttons">
                         <button
                             class="btn btn-default"
                             (click)="restartServer()"
@@ -101,7 +101,7 @@
                             <span class="ellipsis" translate>Restart</span>
                         </button>
                     </div>
-                    <div class="right setting-buttons" *ngIf="environment.isLocal && system.userManager.isOwner">
+                    <div class="right setting-buttons" *ngIf="environment.isLocal">
                         <button
                             class="btn btn-default"
                             (click)="detachServer()"
