@@ -337,7 +337,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             .then((res) => {
                 if (!res || res === 'cancel') {
                     this.system2faEnabled = !this.system2faEnabled;
-                    this.applyService.forms.securitySettingsForm.originalForm.system2faEnabled = this.system2faEnabled;
+                    this.applyService.forms.systemAndSecuritySettingsForm.originalForm.system2faEnabled = this.system2faEnabled;
                 }
             }).finally(() => {
                 this.is2faDialogActive = undefined;

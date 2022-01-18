@@ -52,7 +52,7 @@ export class Mandatory2faModalContent {
     cancel = () => this.activeModal.close('cancel');
 
     ngOnInit() {
-        this.showError = !this.accountService.account.account2faEnabled;
+        this.showError = !this.accountService.account.totpExistsForAccount;
         const options = {
             classname: this.CONFIG.toast.warning,
             autohide: true,
