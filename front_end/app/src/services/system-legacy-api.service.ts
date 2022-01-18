@@ -216,7 +216,7 @@ export class NxSystemAPI {
             params = params.append(key, paramsToAdd[key]);
         });
 
-        if (!environment.isLocal && this.authGet) {
+        if (!environment.isLocal && this.authPost) {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {

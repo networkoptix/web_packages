@@ -37,6 +37,26 @@ import {
 }                                       from '@components/info-block/info-block.component';
 import { NxUtilsService }               from '@services/utils.service';
 
+export interface ISelect {
+    name: string;
+    value: number | '' | StreamQuality;
+}
+
+export class Alert {
+    errors: string[] = [];
+    warnings: string[] = [];
+
+    constructor(public cameraId: string, alertInfo, prefix: string) {
+        Object.values(alertInfo.availability || {}).forEach((_: any[] = []) =>
+            _.forEach(item => {
+                if (item?.level && item.text && this[`${item.level}s`]) {
+                    this[`${item.level}s`].push(`${prefix} ${item.text}`);
+                }
+            })
+        );
+    }
+}
+
 @UntilDestroy()
 @Component({
     selector    : 'nx-cameras-component',
@@ -898,23 +918,4 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     //         e.preventDefault();
     //     }
     // }
-}
-
-export class Alert {
-    errors: string[] = [];
-    warnings: string[] = [];
-    constructor(public cameraId: string, alertInfo, prefix: string) {
-        Object.values(alertInfo.availability || {}).forEach((_: any[] = []) =>
-            _.forEach(item => {
-                if (item?.level && item.text && this[`${item.level}s`]) {
-                    this[`${item.level}s`].push(`${prefix} ${item.text}`);
-                }
-            })
-        );
-    }
-}
-
-export interface ISelect {
-    name: string;
-    value: number | '' | StreamQuality;
 }

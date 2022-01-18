@@ -5,6 +5,7 @@
     "ng": "ng",
     "serve": "npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --proxy-config proxy.conf.local.json",
     "serve-cloud-test": "npm run lang && npm run update-lang-types && ng serve --proxy-config proxy.conf.cloud-test.json",
+    "serve-stage": "npm run lang && npm run update-lang-types && ng serve --proxy-config proxy.conf.stage.json",
     "serve-dev2": "npm run lang && npm run update-lang-types && ng serve --proxy-config proxy.conf.dev2.json",
     "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.json",
     "serve-webadmin-ip": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.ip.json",
