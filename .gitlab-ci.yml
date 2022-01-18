@@ -35,7 +35,16 @@ stages:
   - test
   - fail-fast
 
+.retries:
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - scheduler_failure
+
 .frontend-changes:
+  extends: .retries
   needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -43,17 +52,13 @@ stages:
         - front_end/**/*
 
 no-changes:
+  extends: .retries
   stage: check
-  # rules:
-  #   - if:
-  #     changes:
-  #       - front_end/**/*
-  #       - cloud/**/*
-  #     when: never
   script:
     - echo "If this is the only job that runs then no changes were made that requires the pipeline"
 
 .backend-changes:
+  extends: .retries
   needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -61,6 +66,7 @@ no-changes:
         - cloud/**/*
 
 .frontend-test-changes:
+  extends: .retries
   needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
