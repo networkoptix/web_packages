@@ -521,5 +521,5 @@
     "LAST NAME IS REQUIRED TEXT": "Nachname ist erforderlich",
     "EMAIL IS REQUIRED TEXT": "Email ist erforderlich",
     "PASSWORD IS REQUIRED TEXT": "Passwort ist erforderlich",
-    "2FA BACKUP CODE BTN TEXT": "No access to authentication app?"
+    "2FA BACKUP CODE BTN TEXT": "Kein Zugang zur Authentifizierungs-App?"
 }
