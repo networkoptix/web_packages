@@ -509,6 +509,7 @@ class CloudPortalAPI(object):
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
         r = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)
+        self.api_log_in(email, password)
         return r.json()
 
     @keyword
