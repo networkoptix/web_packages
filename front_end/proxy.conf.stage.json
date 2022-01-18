@@ -1,0 +1,101 @@
+{
+  "/api/utils/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/admin/": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/api/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/web/api/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/ec2/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/web/ec2/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/web/media/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/503.html": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/lang_en_US/language_compiled.json": {
+    "target": "https://localhost:9000",
+    "pathRewrite": {
+      "^/static/lang_en_US/": ""
+    },
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/scripts/commonPasswordsList.json": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/lang_en_US/views/static/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/lang_en_US/*": {
+    "target": "https://localhost:9000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/static/lang_en_US/views": "/views"
+    }
+  },
+  "/static/lang_ru_RU/*": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/languages.json": {
+    "target": "https://stage.nxvms.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/*": {
+    "target": "https://localhost:9000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/static/": ""
+    }
+  }
+}
