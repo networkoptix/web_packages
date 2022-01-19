@@ -150,10 +150,6 @@
             "webadmin": {
               "fileReplacements": [
                 {
-                  "replace": "app/index.html",
-                  "with": "app/webadmin-index.html"
-                },
-                {
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.webadmin.ts"
                 },
@@ -161,14 +157,14 @@
                   "replace": "app/src/services/account.service/index.ts",
                   "with": "app/src/services/account.service/index.webadmin.ts"
                 }
-              ]
+              ],
+              "index": {
+                "input": "app/index.tagless.html",
+                "output": "index.html"
+              }
             },
             "webadmin-prod": {
               "fileReplacements": [
-                {
-                  "replace": "app/index.html",
-                  "with": "app/webadmin-index.html"
-                },
                 {
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.webadmin-prod.ts"
@@ -178,6 +174,10 @@
                   "with": "app/src/services/account.service/index.webadmin.ts"
                 }
               ],
+              "index": {
+                "input": "app/index.tagless.html",
+                "output": "index.html"
+              },
               "deployUrl": "static/",
               "optimization": true,
               "outputHashing": "all",
@@ -339,6 +339,10 @@
                   "with": "projects/authorization/src/environments/environment.prod.ts"
                 }
               ],
+              "index": {
+                "input": "app/index.tagless.html",
+                "output": "index.html"
+              },
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -361,6 +365,10 @@
               ]
             },
             "development": {
+              "index": {
+                "input": "app/index.tagless.html",
+                "output": "index.html"
+              },
               "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,

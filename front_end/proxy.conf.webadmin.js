@@ -10,7 +10,7 @@ const proxyTargetConfig = {
     },
     local: {
         host: 'https://localhost:7001',
-        cloud: 'https://dev3.cloud.hdw.mx'
+        cloud: defaultCloud
     },
     nuke: {
         host: 'https://10.1.5.210:7001',
