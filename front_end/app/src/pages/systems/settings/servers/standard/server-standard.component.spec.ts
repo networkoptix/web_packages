@@ -17,7 +17,10 @@ import { NxUriService } from '@services/uri.service';
 import { RouterLinkDirectiveStub } from '@src/_testing';
 import { NxMenuService } from '@src/menu';
 
-import { NxSystemStandardServerComponent } from './server-standard.component';
+import {
+    NxSystemStandardServerComponent,
+    DropdownStorage
+} from './server-standard.component';
 
 describe('NxSystemStandardServerComponent', () => {
     let component: NxSystemStandardServerComponent;
@@ -29,6 +32,69 @@ describe('NxSystemStandardServerComponent', () => {
     const routeMock = {
         queryParams: of({ state: undefined })
     };
+
+    const dropdownsMock: DropdownStorage[] = [
+        {
+            name: 'storage1',
+            id: 'storage1',
+            isOnline: true,
+            isUsedForWriting: true,
+            isWritable: true,
+            isNotSystem: true,
+            freeSpace: 1,
+
+            selected: false,
+            value: '',
+        },
+        {
+            name: 'storage2',
+            id: 'storage2',
+            isOnline: true,
+            isUsedForWriting: true,
+            isWritable: true,
+            isNotSystem: true,
+            freeSpace: 2,
+
+            selected: false,
+            value: '',
+        },
+        {
+            name: 'storage3',
+            id: 'storage3',
+            isOnline: true,
+            isUsedForWriting: true,
+            isWritable: true,
+            isNotSystem: true,
+            freeSpace: 30,
+
+            selected: false,
+            value: '',
+        },
+        {
+            name: 'storage4',
+            id: 'storage4',
+            isOnline: true,
+            isUsedForWriting: true,
+            isWritable: true,
+            isNotSystem: true,
+            freeSpace: 4,
+
+            selected: false,
+            value: '',
+        },
+        {
+            name: 'storage5',
+            id: 'storage5',
+            isOnline: true,
+            isUsedForWriting: true,
+            isWritable: true,
+            isNotSystem: true,
+            freeSpace: 5,
+
+            selected: false,
+            value: '',
+        }
+    ];
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -61,147 +127,52 @@ describe('NxSystemStandardServerComponent', () => {
 
     describe('Selecting Default Storage', () => {
         beforeEach(() => {
-            component.dropdownStorages = [
-                {
-                    name: 'storage1',
-                    isOnline: true,
-                    isUsedForWriting: true,
-                    isWritable: true,
-                    isNotSystem: true,
-                    freeSpace: 1
-                },
-                {
-                    name: 'storage2',
-                    isOnline: true,
-                    isUsedForWriting: true,
-                    isWritable: true,
-                    isNotSystem: true,
-                    freeSpace: 2
-                },
-                {
-                    name: 'storage3',
-                    isOnline: true,
-                    isUsedForWriting: true,
-                    isWritable: true,
-                    isNotSystem: true,
-                    freeSpace: 30
-                },
-                {
-                    name: 'storage4',
-                    isOnline: true,
-                    isUsedForWriting: true,
-                    isWritable: true,
-                    isNotSystem: true,
-                    freeSpace: 4
-                },
-                {
-                    name: 'storage5',
-                    isOnline: true,
-                    isUsedForWriting: true,
-                    isWritable: true,
-                    isNotSystem: true,
-                    freeSpace: 5
-                }
-            ];
+            component.dropdownStorages = JSON.parse(
+                JSON.stringify(dropdownsMock)
+            ) as DropdownStorage[];
         });
 
         it('should pick only storage if only one storage in dropdown storages', () => {
             component.dropdownStorages = component.dropdownStorages.slice(1, 2);
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage2',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 2
-            });
+            expect(component.selectDefaultStorage()).toEqual(dropdownsMock[1]);
         });
 
         it('should pick storage with the most free space if all NON-SYSTEM storages', () => {
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage3',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 30
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[2]);
         });
 
         it('should pick storage with most free space if all system storages', () => {
             component.dropdownStorages.forEach(store =>  { store.isNotSystem = false; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage3',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: false,
-                freeSpace: 30
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[2]);
         });
 
         it('should pick NON-SYSTEM storage if only one', () => {
             component.dropdownStorages.forEach(store => { store.isNotSystem = store.name === 'storage5'; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage5',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 5
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[4]);
         });
 
         it('should pick storage with the most free space if all storages USED FOR WRITING', () => {
             component.dropdownStorages[0].isNotSystem = false;
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage3',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 30
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[2]);
         });
 
         it('should pick storage with most free space if all storages NOT USED FOR WRITING', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].freeSpace = 40;
             component.dropdownStorages.forEach(store => { store.isUsedForWriting = false; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage2',
-                isOnline: true,
-                isUsedForWriting: false,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 40
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[1]);
         });
 
         it('should pick storage USED FOR WRITING if only one', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages.forEach(store => { store.isUsedForWriting = store.name === 'storage5'; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage5',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 5
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[4]);
         });
 
         it('should pick storage with the most free space if all storages are ONLINE', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].isUsedForWriting = false;
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage3',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 30
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[2]);
         });
 
         it('should pick storage with most free space if all storages ARE NOT ONLINE', () => {
@@ -209,42 +180,21 @@ describe('NxSystemStandardServerComponent', () => {
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages[3].freeSpace = 40;
             component.dropdownStorages.forEach(store => { store.isOnline = false; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage4',
-                isOnline: false,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 40
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[3]);
         });
 
         it('should pick ONLINE storage if only one', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages.forEach(store => { store.isOnline = store.name === 'storage5'; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage5',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 5
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[4]);
         });
 
         it('should pick storage with the most free space if all storages are WRITABLE', () => {
             component.dropdownStorages[0].isNotSystem = false;
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages[2].isOnline = false;
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage5',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 5
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[4]);
         });
 
         it('should pick storage with most free space if all storages are NOT WRITABLE', () => {
@@ -253,14 +203,7 @@ describe('NxSystemStandardServerComponent', () => {
             component.dropdownStorages[2].isOnline = false;
             component.dropdownStorages[4].freeSpace = 40;
             component.dropdownStorages.forEach(store => { store.isWritable = false; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage5',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: false,
-                isNotSystem: true,
-                freeSpace: 40
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[4]);
         });
 
         it('should pick WRITABLE storage if only one', () => {
@@ -268,14 +211,7 @@ describe('NxSystemStandardServerComponent', () => {
             component.dropdownStorages[1].isUsedForWriting = false;
             component.dropdownStorages[2].isOnline = false;
             component.dropdownStorages.forEach(store => { store.isOnline = store.name === 'storage5'; });
-            expect(component.selectDefaultStorage()).toEqual({
-                name: 'storage5',
-                isOnline: true,
-                isUsedForWriting: true,
-                isWritable: true,
-                isNotSystem: true,
-                freeSpace: 5
-            });
+            expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[4]);
         });
     });
 });

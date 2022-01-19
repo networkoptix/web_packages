@@ -265,5 +265,17 @@ module.exports = {
                 'dot-notation': 'off'
             }
         },
+        {
+            /* @typescript-eslint overrides */
+            files: ['**/*.ts'],
+            rules: {
+                'lines-between-class-members': 'off',
+                '@typescript-eslint/lines-between-class-members': ['error', {
+                    exceptAfterSingleLine: true
+                }],
+                'no-dupe-class-members': 'off',
+                '@typescript-eslint/no-dupe-class-members': 'error',
+            },
+        },
     ]
 };

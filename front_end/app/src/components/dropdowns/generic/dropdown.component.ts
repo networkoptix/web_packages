@@ -62,7 +62,7 @@ export class NxGenericDropdown extends BaseDropdown {
         width?: number,
         offsetTop?: number
     }
-    // eslint-disable-next-line lines-between-class-members
+
     @Input() allowHTML = false;
 
     @Output() onSelected = new EventEmitter<DropdownItem>();

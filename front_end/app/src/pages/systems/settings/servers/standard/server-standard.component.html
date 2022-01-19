@@ -5,16 +5,15 @@
         *ngIf="(isOffline || !system.isAvailable) && !selectedServer"
     ></nx-page-placeholder>
     <nx-alert-block
-            *ngIf="certError"
-            class="col-12"
-            type="error"
-            id="certificate-error"
-            [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
-            [line1]="'Server is offline due to certificate error' | translate">
+        *ngIf="certError"
+        class="col-12"
+        type="error"
+        id="certificate-error"
+        [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+        [line1]="'Server is offline due to certificate error' | translate">
     </nx-alert-block>
     <div
-        *ngIf="
-            serverOffline ||
+        *ngIf="serverOffline ||
             selectedServer?.internalStatus === CONFIG.servers.status.restarting ||
             checking"
         class="col-12"
@@ -65,24 +64,34 @@
             <nx-pre-loader ></nx-pre-loader>
         </div>
     </ng-template>
-    <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded; else preloader">
+    <div
+        class="col-12 server-info"
+        *ngIf="selectedServer && serverLoaded; else preloader"
+    >
         <nx-block header-style="extended">
             <header>
                 <div class="header-editable">
                     <nx-editable-heading
-                            name="serverName"
-                            [(editMode)]="editMode"
-                            [(nameWatcherValue)]="serverNameWatcher.value"
-                            [editEnabled]="enableEdit"></nx-editable-heading>
+                        name="serverName"
+                        [(editMode)]="editMode"
+                        [(nameWatcherValue)]="serverNameWatcher.value"
+                        [editEnabled]="enableEdit"
+                    ></nx-editable-heading>
                     <div *ngIf="!editMode" class="d-flex pb-2">
-                        <button *ngIf="system.canViewInfo()" class="server-buttons"
+                        <button
+                            *ngIf="system.canViewInfo()"
+                            class="server-buttons"
                             [routerLink]="fullInfoPath"
-                            [queryParams]="{id: parsedServerId}">
-                                <span>
-                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
-                                        [applyCss]="true"></svg-icon>
-                                </span>
-                                <span class="ml-1 header-button-span" translate>Detailed Info</span>
+                            [queryParams]="{ id: parsedServerId }"
+                        >
+                            <span>
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                                    [applyCss]="true"
+                                ></svg-icon>
+                            </span>
+                            <span class="ml-1 header-button-span" translate>Detailed Info</span>
                         </button>
                     </div>
                 </div>
@@ -101,7 +110,10 @@
                             <span class="ellipsis" translate>Restart</span>
                         </button>
                     </div>
-                    <div class="right setting-buttons" *ngIf="environment.isLocal && system.userManager.isOwner">
+                    <div
+                        class="right setting-buttons"
+                        *ngIf="environment.isLocal && system.userManager.isOwner"
+                    >
                         <button
                             class="btn btn-default"
                             (click)="detachServer()"
@@ -131,24 +143,35 @@
                     <div class="server-settings-port">
                         <div style="width: 85px;">
                             <nx-numeric
-                                    name="server-port"
-                                    [class]="'pl-2'"
-                                    [min]="CONFIG.servers.port.min"
-                                    [max]="CONFIG.servers.port.max"
-                                    [disabled]="portChangeDisabled || serverUnavailable"
-                                    [(ngModel)]="ipPortWatcher.value"
-                                    (onChange)="onPortChange($event)"
-                                    #serverPort="ngModel"
-                                    required></nx-numeric>
+                                name="server-port"
+                                [class]="'pl-2'"
+                                [min]="CONFIG.servers.port.min"
+                                [max]="CONFIG.servers.port.max"
+                                [disabled]="portChangeDisabled || serverUnavailable"
+                                [(ngModel)]="ipPortWatcher.value"
+                                (onChange)="onPortChange($event)"
+                                #serverPort="ngModel"
+                                required
+                            ></nx-numeric>
                         </div>
                         <div class="ml-2">
-                            <span class="input-error" *ngIf="portBusy"
-                                  translate>Port is busy</span>
-                            <span class="input-error" *ngIf="serverPort.invalid && serverPort.touched"
-                                  translate>Server port is required</span>
+                            <span
+                                *ngIf="portBusy"
+                                class="input-error"
+                                translate
+                            >Port is busy</span>
+                            <span
+                                *ngIf="serverPort.invalid && serverPort.touched"
+                                class="input-error"
+                                translate
+                            >Server port is required</span>
                         </div>
                     </div>
-                    <ng-container *ngIf="showAnalytics && ((dropdownStorages.length && !storagesLoading) || storagesLoading)">
+                    <ng-container *ngIf="showAnalytics && (
+                            (dropdownStorages.length && !storagesLoading) ||
+                            storagesLoading
+                        )"
+                    >
                         <span class="ellipsis text-column" translate>Analytics DB Storage</span>
                         <nx-select
                             id="system"
@@ -157,7 +180,8 @@
                             [stillLoading]="checkingForDataAnalytics || storagesLoading"
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
-                            (onSelected)="changeAnalyticsStorage($event)"></nx-select>
+                            (onSelected)="changeAnalyticsStorage($event)"
+                        ></nx-select>
                         <ng-container *ngIf="systemStorageChosen">
                             <span></span>
                             <div class="error-label">

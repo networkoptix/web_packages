@@ -1,4 +1,5 @@
-import { NxSystemWithUserInfo }     from '../../systems.service';
+import type { Params, GetStorages } from '../../system-api.types';
+import type { NxSystemWithUserInfo } from '../../systems.service';
 
 export * from './camera-manager/camera-manager-types';
 export * from './user-manager/user-manager-types';
@@ -8,25 +9,30 @@ export interface IParams<Value = any> {
 }
 
 export interface NxSystemServer {
-    addParams: string[];
+    addParams: Params;
     allowAutoRedundancy: boolean;
     authKey: string;
-    backupBitrate: number;
-    backupDaysOfTheWeek: string;
-    backupDuration: number;
-    backupStart: number;
-    backupType: string;
+    // backupBitrate: number;
+    // backupDaysOfTheWeek: string;
+    backupBitrateBytesPerSecond: unknown[]; // Doesn't appear anywhere
+    // backupDuration: number;
+    // backupStart: number;
+    backupType?: string;
     flags: string;
     id: string;
+    internalStatus: string;
     ip: string;
     maxCameras: number;
     metadataStorageId: string;
     name: string;
     networkAddresses: string;
     osInfo: string;
+    osName: string;
     parentId: string;
+    port: string;
+    shownStatus?: string;
     status: string;
-    storage: any[]; // TODO: Can probably remove
+    storages: GetStorages[];
     systemInfo: string;
     typeId: string;
     url: string;

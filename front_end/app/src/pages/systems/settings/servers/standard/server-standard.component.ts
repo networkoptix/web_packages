@@ -21,20 +21,20 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxApplyService, Watcher } from '@services/apply.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem } from '@services/system.service';
+import type { GetMediaServers } from '@services/system-api.types';
+import type { NxSystem, NxSystemServer } from '@services/system.service';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu';
 
-interface DropdownStorage {
+export interface DropdownStorage {
     name: string,
     id: string,
     isOnline: boolean,
-    isUsedForWriting: boolean,
+    isUsedForWriting?: boolean,
     isWritable: boolean,
     isNotSystem: boolean,
     selected: boolean,
@@ -50,30 +50,28 @@ interface DropdownStorage {
 })
 export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
-    @Input() selectedServer;
+    @Input() selectedServer: NxSystemServer;
     @Input() isOffline: boolean;
     @Output() loaded = new EventEmitter(false);
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    serverIdFromParams;
-
     editMode = false;
 
     saveSettings: Process;
-    ipPortWatcher: any = new Watcher<number>();
-    serverNameWatcher = new Watcher('');
+    ipPortWatcher = new Watcher<number>();
+    serverNameWatcher = new Watcher<string>('');
     previousInputValue: number;
     checking: boolean;
     _serverLoaded = false;
     portBusy: boolean;
 
-    dropdownStorages: any[] = [];
+    dropdownStorages: DropdownStorage[] = [];
     saveStorageWatcher = new Watcher<boolean>(false);
     systemStorageChosen = false;
-    currentAnalyticsDbId: any;
-    selectedStorage: Partial<DropdownStorage>;
+    currentAnalyticsDbId: string;
+    selectedStorage: DropdownStorage;
     checkingForDataAnalytics = false;
     storagesLoading = true;
     showAnalytics = false;
@@ -98,24 +96,24 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     readonly environment = environment;
 
-    set serverLoaded(value) {
+    set serverLoaded(value: boolean) {
         this._serverLoaded = value;
         this.loaded.emit(value);
     }
 
-    get serverLoaded() {
+    get serverLoaded(): boolean {
         return this._serverLoaded;
     }
 
-    get serverName() {
+    get serverName(): string {
         return this.serverNameWatcher.value;
     }
 
-    set serverName(value) {
+    set serverName(value: string) {
         this.serverNameWatcher.value = value;
     }
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.checking = false;
         this.serverOffline = false;
         this.certError = false;
@@ -136,7 +134,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private applyService: NxApplyService,
-        private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
         private route: ActivatedRoute,
         private dialogs: NxDialogsService,
@@ -182,7 +179,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.destroyRestartTake$.complete();
     }
 
-    setServer(isDifferentServer = false): void {
+    setServer(isDifferentServer: boolean = false): void {
         this.initForApplyService();
 
         this.applyService.setVisible(false);
@@ -235,8 +232,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 this.applyService.reset();
                 this.applyService.unsetInvalidField('port');
                 this.selectedStorage = this.dropdownStorages.find(
-                    ({ value: id }) =>
-                        id === this.currentAnalyticsDbId
+                    ({ value: id }) => id === this.currentAnalyticsDbId
                 ) || this.selectDefaultStorage();
                 this.setSystemStorageChosen(this.selectedStorage);
             }
@@ -250,7 +246,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.saveSettings = this.processService.createProcess(async() => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
-            let newPort;
+            let newPort: number;
 
             if (this.serverNameWatcher.changed) {
                 await this.system.renameServer(
@@ -327,7 +323,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         });
     }
 
-    setStatus(status) {
+    setStatus(status?: string): void {
         this.selectedServer.internalStatus = status
             ? this.CONFIG.servers.status[status]
             : '';
@@ -365,23 +361,19 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
     }
 
-    checkIfOnline = (serverId) => {
+    checkIfOnline(serverId: string): Promise<void> {
         return this.system.serverManager
             .getServers()
             .pipe(untilDestroyed(this))
             .toPromise()
             .then(res => {
                 if (res) {
-                    const servers: any[] =
-                        Object.entries(res).map(server => server[1]);
-                    this.setStatus(servers.find(server => {
-                        if (
+                    this.setStatus(
+                        res.find(server => (
                             NxUtilsService.cleanId(server.id) ===
                             NxUtilsService.cleanId(serverId)
-                        ) {
-                            return server;
-                        }
-                    }).status.toLowerCase());
+                        )).status.toLowerCase()
+                    );
                     this.applyService.setVisible(true);
                 }
             }, err => {
@@ -391,7 +383,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    checkStatus() {
+    checkStatus(): void {
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
 
@@ -405,11 +397,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     console.error(err);
                     return of(false);
                 }))
-            .subscribe(result => {
+            .subscribe((result: GetMediaServers[] | false) => {
                 if (result) {
-                    const servers: any[] =
-                        Object.entries(result).map(server => server[1]);
-                    const isOnline = servers.find(server =>
+                    const isOnline = result.find(server =>
                         server.id === this.selectedServer.id
                     ).status === 'Online';
                     this.setStatus(
@@ -422,11 +412,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    restartServer() {
+    restartServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
-            .then(res => {
+            .then((res: string) => {
                 this.system.isAvailable = false;
                 this.setStatus(res);
                 this.system.infoSubject
@@ -449,7 +439,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    detachServer() {
+    detachServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         const currentServerIndex = this.system.servers.findIndex((server) =>
             server.id === id
@@ -475,7 +465,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    resetServer() {
+    resetServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .resetServer(this.system, id, name)
@@ -486,7 +476,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    onPortChange(port) {
+    onPortChange(port: number): void {
         this.portBusy = false;
         if (
             port &&
@@ -506,14 +496,16 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.applyService.unsetInvalidField('port');
     }
 
-    private setSystemStorageChosen(storage) {
+    private setSystemStorageChosen(storage: DropdownStorage): void {
         const hasMultipleStorages = this.dropdownStorages.length > 1;
         this.systemStorageChosen = hasMultipleStorages &&
             storage &&
             !storage.isNotSystem;
     }
 
-    async changeAnalyticsStorage(newStorage) {
+    // Should be type DropdownStorage, but can't resolve with
+    // <nx-select (onSelected)="changeAnalyticsStorage($event)> right now
+    async changeAnalyticsStorage(newStorage): Promise<void> {
         this.setSystemStorageChosen(newStorage);
 
         if (newStorage.id === this.currentAnalyticsDbId) {
@@ -566,7 +558,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.checkingForDataAnalytics = false;
     }
 
-    getCurrentStorages(isDifferentServer = false) {
+    getCurrentStorages(isDifferentServer: boolean = false): void {
         if (isDifferentServer && this.storageSubscription) {
             this.storagesLoading = true;
             this.storageSubscription.unsubscribe();
@@ -574,77 +566,97 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             return;
         }
         this.storageSubscription = this.system.storageManager.storageState$.pipe(
-            filter(({ storageInfoLoaded, analyticsLoaded }) => storageInfoLoaded && analyticsLoaded)
-        ).subscribe(({
-            currentAnalyticsDbLocation,
-            analyticsDbTargetLocations,
-            hasAnalyticsData,
-            hasCompatibleAnalyticsPlugins
-        }) => {
-            this.currentAnalyticsDbId = currentAnalyticsDbLocation?.storageId;
-            this.dropdownStorages = analyticsDbTargetLocations.map(({
-                url,
-                isOnline,
-                storageStatus,
-                storageId,
-                isWritable,
-                freeSpace
+            filter(({ storageInfoLoaded, analyticsLoaded }) =>
+                storageInfoLoaded && analyticsLoaded
+            )
+        ).subscribe(
+            ({
+                currentAnalyticsDbLocation,
+                analyticsDbTargetLocations,
+                hasAnalyticsData,
+                hasCompatibleAnalyticsPlugins
             }) => {
-                const selected = this.currentAnalyticsDbId === storageId;
-                return {
-                    name: url,
+                this.currentAnalyticsDbId = currentAnalyticsDbLocation?.storageId;
+                this.dropdownStorages = analyticsDbTargetLocations.map(({
+                    url,
                     isOnline,
+                    storageStatus,
+                    storageId,
                     isWritable,
-                    isNotSystem: !storageStatus
-                        ? !this.systemStorageChosen
-                        : !storageStatus.includes('system'),
-                    selected,
-                    id: storageId,
-                    value: storageId,
                     freeSpace
-                };
-            });
-            if (!this.saveStorageWatcher.value) {
-                this.selectedStorage = this.dropdownStorages.find(store =>
-                    store.selected
-                ) || this.selectDefaultStorage();
-            }
-            this.storagesLoading = false;
-            this.showAnalytics = !!currentAnalyticsDbLocation ||
-                hasAnalyticsData ||
-                hasCompatibleAnalyticsPlugins;
+                }): DropdownStorage => {
+                    const selected = this.currentAnalyticsDbId === storageId;
+                    return {
+                        name: url,
+                        isOnline,
+                        isWritable,
+                        isNotSystem: !storageStatus
+                            ? !this.systemStorageChosen
+                            : !storageStatus.includes('system'),
+                        selected,
+                        id: storageId,
+                        value: storageId,
+                        freeSpace
+                    };
+                });
+                if (!this.saveStorageWatcher.value) {
+                    this.selectedStorage = this.dropdownStorages.find(store =>
+                        store.selected
+                    ) || this.selectDefaultStorage();
+                }
+                this.storagesLoading = false;
+                this.showAnalytics = !!currentAnalyticsDbLocation ||
+                    hasAnalyticsData ||
+                    hasCompatibleAnalyticsPlugins;
 
-            this.setSystemStorageChosen(this.selectedStorage);
+                this.setSystemStorageChosen(this.selectedStorage);
 
-            if (this.saveStorageWatcher.value === undefined) {
-                this.saveStorageWatcher.value = false;
+                if (this.saveStorageWatcher.value === undefined) {
+                    this.saveStorageWatcher.value = false;
+                }
+            },
+            () => {
+                this.currentAnalyticsDbId = null;
+                this.dropdownStorages = [];
+                this.storagesLoading = false;
             }
-        }, () => {
-            this.currentAnalyticsDbId = null;
-            this.dropdownStorages = [];
-            this.storagesLoading = false;
-        }
         );
     }
 
-    selectDefaultStorage() {
+    selectDefaultStorage(): DropdownStorage {
         const firstPass = this.selectDefaultStorageRecursion(
             this.dropdownStorages,
-            ['isNotSystem', 'isUsedForWriting', 'isOnline', 'isWritable']
+            [
+                'isNotSystem',
+                'isUsedForWriting',
+                'isOnline',
+                'isWritable'
+            ]
         );
-        return firstPass ||
-            this.selectDefaultStorageRecursion(
-                this.dropdownStorages,
-                ['isOnline', 'isWritable'],
-                true
-            );
+        return firstPass || this.selectDefaultStorageRecursion(
+            this.dropdownStorages,
+            ['isOnline', 'isWritable'],
+            true
+        );
     }
 
+    /* If lastSetOfCriteria = true, will always return a Dropdown storage,
+    otherwise may return false (see selectDefaultStorage() above) */
     selectDefaultStorageRecursion(
-        storages: Partial<DropdownStorage>[],
-        criteria: string[],
+        storages: DropdownStorage[],
+        criteria: (keyof DropdownStorage)[],
+        lastSetOfCriteria?: boolean
+    ): DropdownStorage | false;
+    selectDefaultStorageRecursion(
+        storages: DropdownStorage[],
+        criteria: (keyof DropdownStorage)[],
+        lastSetOfCriteria: true
+    ): DropdownStorage;
+    selectDefaultStorageRecursion(
+        storages: DropdownStorage[],
+        criteria: (keyof DropdownStorage)[],
         lastSetOfCriteria: boolean = false
-    ): Partial<DropdownStorage> | false {
+    ): DropdownStorage | false {
         const [curCriteria, ...remainingCriteria] = criteria;
         const filteredStorages = storages.filter(storage => storage[curCriteria]);
         if (filteredStorages.length === 1) {
@@ -666,10 +678,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
     }
 
-    highestFreeSpace(storage) {
-        return storage.reduce((max, next) => {
-            return +max.freeSpace >= +next.freeSpace ? max : next;
-        }, 0);
+    highestFreeSpace(storage: DropdownStorage[]): DropdownStorage {
+        return storage.reduce((currentHighest, currentStorage) => {
+            return currentHighest.freeSpace >= currentStorage.freeSpace
+                ? currentHighest
+                : currentStorage;
+        }, storage[0]);
     }
 
     // Breadcrumbs for beta swagger navigation:
