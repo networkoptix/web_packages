@@ -59,7 +59,8 @@ Restore Pass Validation Setup
     ${user}=   Get Random Email    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${user}    ${password}
     Set Suite Variable     ${user}    ${user}
-
+    Open Restore Password Dialog
+    
 Restore Pass Validation Teardown
     Close Browser
     Delete Account    ${user}    ${password}

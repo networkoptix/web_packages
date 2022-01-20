@@ -40,7 +40,7 @@ Discard Changes and Log Out
 
 Reset user password to base
     [Arguments]    ${email}    ${current password}
-    CLoudPortalAPI.Change Password    ${url}    ${email}    ${current password}    ${BASE PASSWORD}
+    Change Password    ${email}    ${current password}    ${BASE PASSWORD}
 
 Restart
     Common Restart Logout    ${url}
@@ -104,7 +104,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    API Log In    ${url}    ${email}    ${ALT PASSWORD}
+    API Log In    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
 
 4. password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
@@ -120,7 +120,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    API Log In    ${url}    ${email}    ${symbol password}
+    API Log In    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
 
 5. password with space in the middle is valid
@@ -136,7 +136,7 @@ Reset DB and Open New Browser On Failure
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    API Log In    ${url}    ${email}    ${space password}
+    API Log In    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
 
 6. more than 255 symbols can be entered in new password field and then are cut to 255
