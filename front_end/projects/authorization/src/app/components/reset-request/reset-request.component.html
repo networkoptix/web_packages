@@ -54,6 +54,7 @@
             </button>
             <nx-process-button
                 [clickFn]="sendEmail"
+                [form]="resetPasswordForm"
                 buttonText="{{ (confirm ? 'Log In' : 'Reset Password') | translate }}"
                 [buttonDisabled]="!!resetPasswordEmail?.errors"
                 [process]="confirm ? loginProcess : resetRequestProcess">
