@@ -508,7 +508,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.resetRequestProcess = this.processService.createProcess(
-            () => this.cloudService.restorePasswordRequest(this.resetPasswordEmail),
+            () => {
+                this.resetRequestErrorCode = '';
+                return this.cloudService.restorePasswordRequest(
+                    this.resetPasswordEmail
+                );
+            },
             { ignoreError: true, timeoutMs },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
@@ -516,6 +521,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.confirmRequest = true;
             },
             err => {
+                if (err.resultCode === 'notFound') {
+                    this.resetRequestErrorCode = 'accountDoesNotExist';
+                }
                 console.error('err in reset request process', err);
                 this.handleCloudConnectionError(err, this.resetRequestProcess);
             }
