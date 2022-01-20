@@ -181,7 +181,7 @@ class ServerAPI:
     def detach_server_from_cloud(self, serverUrl, auth):
         body= {
             "currentPassword":auth[1],
-            "password":self.password
+            "password":auth[1]
         }
         r = requests.post(f'{serverUrl}/api/detachFromCloud', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
@@ -297,7 +297,7 @@ class ServerAPI:
         return r.json()
 
     @keyword
-    def set_system_name(self, servrUrl, auth, newName):
+    def set_system_name(self, serverUrl, auth, newName):
         r = requests.get(f'{serverUrl}/api/systemSettings?systemName={newName}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
 
     @keyword
@@ -421,7 +421,7 @@ class ServerAPI:
 
     @keyword
     def set_system_settings_via_api(self, auth, serverUrl, settingKey, settingValue):
-        r = requests.get(f'{serverUrl}/api/systemsettings?{settingKey}={settingValue}', auth=HTTPBasicAuth('admin', 'qweasd 123'), verify=False)
+        r = requests.get(f'{serverUrl}/api/systemSettings?{settingKey}={settingValue}', auth=HTTPBasicAuth('admin', 'qweasd 123'), verify=False)
         return r.json()
 
     @keyword
@@ -439,7 +439,7 @@ class ServerAPI:
         for key, val in zip(settings.keys(), settings.values()):
             query = query+f'{key}={val}&'
         query = query[:-1]
-        r = requests.get(f'{serverUrl}/api/systemsettings?{query}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}/api/systemSettings?{query}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword
