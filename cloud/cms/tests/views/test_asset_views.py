@@ -1192,9 +1192,6 @@ def test_upload_image(mocker, arf, account_factory, db):
     mock_request.session = {}
     mock_ext_file.file.url = mock_location
 
-    mocker.patch.object(Image, 'open', return_value=mock_pil_image)
-    mock_content_file = mocker.patch.object(
-        base, 'ContentFile', return_value=mock_content_file_instance)
     mock_external_file_create = mocker.patch(
         'cms.models.ExternalFile.objects.create', return_value=mock_ext_file)
 
@@ -1203,10 +1200,8 @@ def test_upload_image(mocker, arf, account_factory, db):
 
     assert upload_image(mock_request, mock_asset.id, mock_ds.id,
                         content_uuid=content_uuid).data['location'] == mock_location
-    mock_content_file.assert_called_once_with(mock_file_content.encode(
-    ), name=f'{mock_ds.id}-{content_uuid}.' + mock_format.lower())
     mock_external_file_create.assert_called_once_with(
-        asset=mock_asset, data_structure=mock_ds, file=mock_content_file_instance)
+        asset=mock_asset, data_structure=mock_ds, file=mock_external_file_create.mock_calls[0].kwargs['file'])
 
 
 def test_get_asset_ids_by_asset_type(arf, account_factory, db):

@@ -1,6 +1,5 @@
 from functools import wraps
 from collections import defaultdict, OrderedDict
-from PIL import Image
 from django.core.files import base
 from django.db.models.expressions import OuterRef, Subquery
 from waffle import flag_is_active
@@ -979,9 +978,7 @@ def download_async_package(request, asset_id):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def upload_image(request, asset_id, ds_id, content_uuid=None):
     file = request.data.get('file')
-    pil_image = Image.open(file)
-    content_file = base.ContentFile(file.read(
-    ), name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + pil_image.format.lower())
+    content_file = base.File(file, name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + file.name.split('.')[-1].lower())
     asset = Asset.objects.filter(id=asset_id).first()
     ds = DataStructure.objects.filter(id=ds_id).first()
     ext_file = ExternalFile.objects.create(
