@@ -58,6 +58,13 @@ export class Mandatory2faModalContent {
             autohide: true,
             delay: this.CONFIG.alertTimeout
         };
+        const notAuthorizedHandler = () => {
+            this.notAuthorized = true;
+            this.mandatory2faForm.controls.verificationCode.markAsTouched();
+            this.mandatory2faForm.controls.verificationCode.setErrors({ invalid: true });
+            this.renderer.selectRootElement('#verificationCode').focus();
+        };
+
         this.mandatory2fa = this.processService
             .createProcess(() => {
                 return this.cloudApiService.toggle2faForSystem(
@@ -68,12 +75,8 @@ export class Mandatory2faModalContent {
                 ignoreUnauthorized: true,
                 ignoreError: true,
                 errorCodes: {
-                    badRequest: () => {
-                        this.notAuthorized = true;
-                        this.mandatory2faForm.controls.verificationCode.markAsTouched();
-                        this.mandatory2faForm.controls.verificationCode.setErrors({ invalid: true });
-                        this.renderer.selectRootElement('#verificationCode').focus();
-                    }
+                    notAuthorized: notAuthorizedHandler,
+                    badRequest: notAuthorizedHandler
                 }
             }, () => {
                 this.system.currentServerNotBusy = true;
