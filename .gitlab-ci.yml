@@ -121,11 +121,6 @@ no-changes:
   extends: .django-python
   stage: test
   coverage: /^TOTAL.+?(\d+\%)$/
-  artifacts:
-    when: always
-    reports:
-      junit: cloud/report.xml
-      cobertura: cloud/coverage.xml
 
 django-checks:
   extends: .backend-changes
@@ -169,13 +164,23 @@ fe-lint-tests-check:
 
 django-unit-test-slow:
   extends: .django-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: cloud/slow-report.xml
+      cobertura: cloud/slow-coverage.xml
   script:
-    - pytest -m "not integration" -m slow --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
+    - pytest -m "not integration" -m slow --create-db --junitxml=slow-report.xml --cov="." --cov-report xml:slow-coverage.xml --cov-report term
 
 django-unit-test-fast:
   extends: .django-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: cloud/fast-report.xml
+      cobertura: cloud/fast-coverage.xml
   script:
-    - pytest -m "not integration" -m "not slow" --create-db --junitxml=report.xml --cov="." --cov-report xml:coverage.xml --cov-report term
+    - pytest -m "not integration" -m "not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
 
 frontend-unit-test:
   extends: .frontend-node
@@ -204,8 +209,8 @@ authorization-unit-test:
     - npm run test:ci authorization
   artifacts:
     reports:
-      junit: front_end/reports/*.xml
-      cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
+      junit: authorization/reports/*.xml
+      cobertura: authorization/coverage/test-karma/cobertura-coverage.xml
 
 webadmin:
   extends: .frontend-changes
