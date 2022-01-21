@@ -83,6 +83,18 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/static/lang_ja_JP/*": {
+    "target": "https://cloud-test.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/lang_fr_FR/*": {
+    "target": "https://cloud-test.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/static/languages.json": {
     "target": "https://cloud-test.hdw.mx",
     "secure": false,

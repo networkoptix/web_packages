@@ -36,7 +36,10 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         private vms: VideoManagementSystemService,
         public playback: PlaybackService
     ) {
-        dateformat.i18n = languageService.loadTimelineTranslations();
+        const timeLineTranslations = languageService.loadTimelineTranslations();
+        if (timeLineTranslations) {
+            dateformat.i18n = timeLineTranslations;
+        }
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }

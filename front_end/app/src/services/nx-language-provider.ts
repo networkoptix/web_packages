@@ -97,7 +97,10 @@ export class NxLanguageProviderService {
 
     loadTimelineTranslations() {
         const reduceTranslations = (names, sortList) => sortList.map((key) => names[key]());
-        const timelineTranslations = this.translations.view.timeline;
+        const timelineTranslations = this.translations?.view?.timeline;
+        if (!timelineTranslations) {
+            return undefined
+        }
         const times = {
             "dayNames": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
             "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December"],
