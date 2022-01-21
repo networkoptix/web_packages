@@ -108,7 +108,7 @@ export class NxLoginService {
                 centered: true,
                 keyboard: false,
                 backdropClass: 'webadmin-backdrop',
-                windowClass: 'webadmin-window'
+                windowClass: 'webadmin-window no-scroll',
             });
         }
 

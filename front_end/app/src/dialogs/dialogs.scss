@@ -77,7 +77,7 @@ nx-modal-wizard {
     }
 }
 
-.modal-open .modal {
+.modal-open .modal:not(.no-scroll) {
     overflow-y: scroll;
 }
 
