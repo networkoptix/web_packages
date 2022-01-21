@@ -136,8 +136,9 @@ def test_get_doc_meta(mocker, db):
         'description': menu_description
     }
 
-
-def test_get_lang_meta(arf, db):
+@pytest.mark.no_db
+def test_get_lang_meta(arf, mocker):
+    mocker.patch('cloud.views.meta.detect_language_by_request')
     url = str(uuid4())
     request = arf.get(url)
     request.user = AnonymousUser()

@@ -36,7 +36,7 @@ class TestAddCloudAdmin:
         instance = Command()
         mock_write_stdout = mocker.patch.object(
             instance.stdout, 'write')
-    
+
         # Test missing email
         pytest.raises(
             ValueError,
