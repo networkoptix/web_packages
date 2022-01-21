@@ -339,10 +339,6 @@
                   "with": "projects/authorization/src/environments/environment.prod.ts"
                 }
               ],
-              "index": {
-                "input": "app/index.tagless.html",
-                "output": "index.html"
-              },
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -365,10 +361,6 @@
               ]
             },
             "development": {
-              "index": {
-                "input": "app/index.tagless.html",
-                "output": "index.html"
-              },
               "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,
