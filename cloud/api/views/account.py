@@ -75,6 +75,8 @@ def login_helper(request, token, user):
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
 
+    request.session["has2fa"] = Account.get(request).get("account2faEnabled", False)
+
     serializer = AccountSerializer(user, many=False)
     return api_success(serializer.data)
 
@@ -283,8 +285,9 @@ def index(request):
     if request.user.is_authenticated:
         cdb_account = Account.get(request)
         cdb_account_security = Account.get_2fa_settings(request)
-    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False) or request.session.get("has2fa", False)
+    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
     data["totpExistsForAccount"] = cdb_account_security.get("totpExistsForAccount", False)
+    data["sessionVerified"] = request.session.get("has2fa", False)
     return api_success(data)
 
 

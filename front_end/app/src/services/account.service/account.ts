@@ -21,6 +21,7 @@ export class Account {
     is_authenticated: boolean;
     cookie_reviewed: boolean;
     account2faEnabled: boolean;
+    sessionVerified: boolean;
     totpExistsForAccount: boolean;
 
     constructor({ email, fullName, id, permissions, name, isAdmin, isCloud }: User) {
@@ -51,6 +52,7 @@ export const DUMMY_ACCOUNT: Account = {
     is_authenticated: false,
     cookie_reviewed: false,
     account2faEnabled: false,
+    sessionVerified: false,
     totpExistsForAccount: false
 };
 

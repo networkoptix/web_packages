@@ -354,7 +354,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                                 if (
                                     system?.system2faEnabled &&
-                                    !this.account.account2faEnabled
+                                    !this.account?.sessionVerified
                                 ) {
                                     this.system.mediaserver
                                         .getMediaServers(false)

@@ -122,6 +122,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                             } else {
                                 this.account2faEnabled = (action === 'enabled');
                                 this.updateVerificationOriginal();
+                                this.accountService.get(true).catch((e) => {});
                             }
                         });
                 },
