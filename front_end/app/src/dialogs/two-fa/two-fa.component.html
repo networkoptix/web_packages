@@ -31,14 +31,17 @@
         </form>
     </div>
 
-    <div class="modal-footer justify-start">
-        <button class="btn btn-primary" (click)="next()">
-            <span translate>OK</span>
-        </button>
-        <div class="m-2"></div>
-        <button class="btn btn-default" (click)="closeWizard()">
-            <span translate>Cancel</span>
-        </button>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="changePasswordProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'OK' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="changePasswordProcess"
+            [discardFn]="closeWizard"
+        ></nx-cancel-button>
     </div>
 </ng-template>
 
@@ -147,10 +150,13 @@
     </div>
 
     <div class="modal-footer justify-end">
-        <button id="nextWizardQR" class="btn btn-primary btn-next" (click)="next()">
-            <span translate>Next</span>
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"></svg-icon>
-        </button>
+        <nx-process-button
+            [process]="loginProcess"
+            [form]="loginForm"
+            actionType="primary"
+            [buttonText]="'Next' | translate"
+            [svg]="{ src: 'arrow_right', width: '24', color: 'light1' }"
+        ></nx-process-button>
     </div>
 </ng-template>
 
@@ -234,9 +240,12 @@
         <button id="previousWizardQR" class="btn btn-default btn-back" (click)="prev()">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'"></svg-icon>
         </button>
-        <button id="nextWizardFinish" class="btn btn-primary btn-next" (click)="next()">
-            <span translate>Verify</span>
-        </button>
+        <nx-process-button
+            [process]="codeProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'Verify' | translate"
+        ></nx-process-button>
     </div>
 </ng-template>
 
@@ -322,15 +331,17 @@
         </form>
     </div>
 
-    <div class="modal-footer justify-start">
-        <button class="btn btn-primary" (click)="next()">
-            <span translate>Apply</span>
-        </button>
-        <div class="m-2"></div>
-        <!-- Margins on footer buttons are 0 !important -->
-        <button class="btn btn-default" (click)="closeWizard()">
-            <span translate>Cancel</span>
-        </button>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="verificationProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'Apply' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="verificationProcess"
+            [discardFn]="closeWizard"
+        ></nx-cancel-button>
     </div>
 </ng-template>
 
@@ -368,12 +379,16 @@
         </form>
     </div>
 
-    <div class="modal-footer normal-layout">
-        <button id="disableFinish" class="btn btn-danger" (click)="next()">
-            <span translate>Disable</span>
-        </button>
-        <button id="disableCancel" class="btn btn-default mr-2" (click)="closeWizard()">
-            <span translate>Cancel</span>
-        </button>
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="codeProcess"
+            [form]="codeForm"
+            actionType="danger"
+            [buttonText]="'Disable' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="codeProcess"
+            [discardFn]="closeWizard"
+        ></nx-cancel-button>
     </div>
 </ng-template>

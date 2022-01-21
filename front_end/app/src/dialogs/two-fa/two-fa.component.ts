@@ -5,7 +5,9 @@ import {
     ViewChild,
     Renderer2,
     TemplateRef,
-    AfterViewInit
+    AfterViewInit,
+    HostListener,
+    ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -100,6 +102,23 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     @ViewChild('disable2FaCode', { static: true }) disable2FaCodeTemplate: TemplateRef<any>;
 
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (
+            ['Enter', 'NumpadEnter'].includes(event.code) &&
+            document.activeElement.tagName === 'INPUT'
+        ) {
+            const processButton = this.elem.nativeElement
+                .querySelector<HTMLButtonElement>('.on-keypress-enter');
+            if (!processButton.classList.contains('processing')) {
+                processButton.click();
+            }
+            /* <nx-process-button> hides from user clicks when running its
+            process with visibility: hidden, but this doesn't hide from
+            .querySelector() or programmatic clicks */
+        }
+    }
+
     private resetDefaults() {
         this.newCodes = [];
         this.password = '';
@@ -146,6 +165,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private clipboardService: ClipboardService,
         private systemsService: NxSystemsService,
         private cloudApiService: NxCloudApiService,
+        private elem: ElementRef<HTMLElement>,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -468,7 +488,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.activeModal.close(action || 'changed');
     }
 
-    closeWizard(action?) {
+    /* Needs to be an arrow function to access this
+    when passed to <nx-cancel-button> as [discardFn] */
+    closeWizard = (action?) => {
         if (action === 'deactivate') {
             this.accountService.deactivate2FaKey()
                 .catch((err) => {
