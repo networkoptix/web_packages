@@ -1,3 +1,6 @@
+import type { Params } from '@angular/router';
+
+import type { SearchModel } from '@services/search.service';
 import type { NxSystem } from '@services/system.service';
 
 export interface Content {
@@ -44,7 +47,7 @@ export interface Level2Item {
     path?: string;
     isEnabled?: boolean;
     additionalText?: string;
-    query?: MenuModel;
+    query?: SearchModel;
     icon?: string;
 }
 
@@ -58,8 +61,7 @@ export interface Level3Item {
     id: string;
     label: string | string[];
     path: string;
-    query?: Record<string, string>;
-    // TODO: Make more specific
+    query?: Params;
 
     additionalLabel?: string | string[];
     additionalText?: string | string[];
@@ -81,15 +83,4 @@ export type SanitizedLevel3Item = Omit<
     label: string;
     additionalLabel?: string; // Sanitized
     additionalText?: string; // Sanitized
-}
-
-export interface MenuModel {
-    query: string
-
-    queryExactMatch?: string[];
-    queryEndsWith?: string[];
-    queryStartsWith?: string[];
-    queryOrMatch?: string[];
-    queryAndMatch?: string[];
-    // Don't appear to ever actually be assigned
 }

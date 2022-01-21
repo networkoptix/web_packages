@@ -7,70 +7,74 @@ export enum ButtonArrowType {
     down = 'DOWN',
 }
 
+export interface SearchModel {
+    query: string;
+    queryExactMatch?: '' | string[];
+    queryEndsWith?: '' | [string];
+    queryStartsWith?: '' | [string];
+    queryOrMatch?: '' | string[];
+    queryAndMatch?: '' | string[];
+}
+
 @UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root'
 })
 export class NxSearchService {
-    navDirectionSubject = new BehaviorSubject('');
-    navSelectionSubject = new Subject();
+    navDirectionSubject = new BehaviorSubject<ButtonArrowType>(null);
+    navSelectionSubject = new Subject<void>();
 
-    set navDirection(dir: string) {
+    set navDirection(dir: ButtonArrowType) {
         this.navDirectionSubject.next(dir);
     }
 
-    get navDirection(): string {
+    get navDirection(): ButtonArrowType {
         return this.navDirectionSubject.getValue();
     }
 
-    navSelected() {
+    navSelected(): void {
         this.navSelectionSubject.next();
     }
 
-    findMatch(searchFor, model) {
-        const _searchFor = searchFor && searchFor.toLowerCase();
-
-        if (!_searchFor) {
+    findMatch(searchFor: string, model: SearchModel): boolean {
+        if (!searchFor) {
             return false;
         }
 
         if (model.queryExactMatch) {
-            return model.queryExactMatch.every(queryTerm => {
-                return (searchFor.includes(queryTerm)); // case sensitive!
-            });
-        }
-
-        if (model.queryEndsWith) {
-            return (
-                _searchFor.indexOf(model.queryEndsWith) ===
-                _searchFor.length - model.queryEndsWith[0].length
-                // queryEndsWith have only one item
+            return model.queryExactMatch.every(queryTerm =>
+                searchFor.includes(queryTerm)
+                // case sensitive!
             );
         }
 
+        const searchForLower = searchFor.toLowerCase();
+
+        if (model.queryEndsWith) {
+            return searchForLower.endsWith(model.queryEndsWith[0]);
+        }
+
         if (model.queryStartsWith) {
-            return (_searchFor.startsWith(model.queryStartsWith));
-            // queryStartsWith have only one item
+            return searchForLower.startsWith(model.queryStartsWith[0]);
         }
 
         if (model.queryOrMatch) {
-            let isMatch = false;
-            model.queryOrMatch.forEach(queryTerm => {
-                isMatch = isMatch || (_searchFor.includes(queryTerm));
-            });
-            return isMatch;
+            return model.queryOrMatch.some(queryTerm =>
+                searchForLower.includes(queryTerm)
+            );
         }
 
         if (model.queryAndMatch) {
-            return model.queryAndMatch.every(queryTerm => {
-                return (_searchFor.includes(queryTerm));
-            });
+            return model.queryAndMatch.every(queryTerm =>
+                searchForLower.includes(queryTerm)
+            );
         }
 
         return false;
     }
 
-    getMatchPatterns(model) {
+    /* At least one of the query match properties will be converted to string[] */
+    getMatchPatterns(model: SearchModel): void {
         model.queryExactMatch = '';
         model.queryEndsWith = '';
         model.queryStartsWith = '';
@@ -78,9 +82,11 @@ export class NxSearchService {
         model.queryAndMatch = '';
 
         // "EXACT" match
-        let match = model.query.match(/"(.+?)"/g);
-        if (match) {
-            model.queryExactMatch = match.map((searchTerm) => searchTerm.replace(/"/g, ''));
+        const exactMatch = model.query.match(/"(.+?)"/g);
+        if (exactMatch) {
+            model.queryExactMatch = exactMatch.map((searchTerm) =>
+                searchTerm.replace(/"/g, '')
+            );
             return;
         }
 
@@ -90,34 +96,29 @@ export class NxSearchService {
             return;
         }
 
-        if (model.query.indexOf('*') === model.query.length - 1) {
+        if (model.query.endsWith('*')) {
             model.queryStartsWith = [model.query.slice(0, -1).toLowerCase()];
             return;
         }
 
         // "OR" match
         if (model.query.indexOf('|') > 0) { // not starting with pipe
-            match = model.query
-                .toLowerCase()
-                .match(/([\w-]+)/g);
-
-            model.queryOrMatch = match || '';
+            const orMatch = model.query.toLowerCase().match(/([\w-]+)/g);
+            model.queryOrMatch = orMatch || '';
             return;
         }
 
         // "AND" match (default)
-        match = model.query
+        const andMatch = model.query
             .trim()
             .toLowerCase()
             .replace(/\+/g, ' ')
             .split(/[\s,+]/g)
-            .filter((elm) => {
-                return elm !== '';
-            });
+            .filter((elm) => elm !== '');
         // if match is empty (i.e query is ",") there is nothing to filter by and will show all entries
-        if (!match.length) {
-            match.push(','); // add non-searchable char so 'Nothing found' will appear
+        if (!andMatch.length) {
+            andMatch.push(','); // add non-searchable char so 'Nothing found' will appear
         }
-        model.queryAndMatch = match;
+        model.queryAndMatch = andMatch;
     }
 }

@@ -63,7 +63,7 @@ export interface SearchTag {
 }
 
 export interface SearchFilter {
-    query?: string,
+    query: string,
     tags?: SearchTag[],
     selects?: any,
     multiselects?: any,
@@ -96,7 +96,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     public placeholderText: string;
     public numberFilters = 0;
     public filterSelected;
-    public localFilter: SearchFilter = {};
+    public localFilter: SearchFilter = { query: '' };
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

@@ -6,14 +6,14 @@ import {
     SimpleChanges,
     OnDestroy
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, Params } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxMenuService } from '@src/menu/menu.service';
 
-import type { Level3Item, MenuModel } from '../menu.types';
+import type { Level3Item } from '../menu.types';
 
 /* Usage
  */
@@ -36,7 +36,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     itemPath: string;
     isEnabled: boolean;
     menuNavItemId: string;
-    queryParams: Partial<MenuModel> = {};
+    queryParams: Params = {};
 
     navItemSubscription: SubscriptionLike;
 

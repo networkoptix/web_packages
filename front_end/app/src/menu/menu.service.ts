@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { isArray } from 'rxjs/internal-compatibility';
 
-import { NxSearchService } from '@services/search.service';
+import { NxSearchService, SearchModel } from '@services/search.service';
 import { NxUtilsService } from '@services/utils.service';
 
 import type {
@@ -10,7 +10,6 @@ import type {
     SanitizedLevel1Item,
     Level2Item,
     SanitizedLevel3Item,
-    MenuModel,
 } from './menu.types';
 
 @Injectable({
@@ -147,7 +146,7 @@ export class NxMenuService implements OnDestroy {
     }
 
     filterItemsBy(
-        model: MenuModel,
+        model: SearchModel,
         searchSubMenus: boolean = false
     ): SanitizedLevel1Item[] {
         let filteredContent: SanitizedLevel1Item[] = [];
@@ -199,7 +198,7 @@ export class NxMenuService implements OnDestroy {
     }
 
     filterNodesIntoHaveNode(
-        model: MenuModel,
+        model: SearchModel,
         filteredContent: SanitizedLevel1Item[],
         node: SanitizedLevel1Item,
         subNode?: Level2Item
@@ -267,12 +266,18 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    private setHighlightPattern(model: MenuModel) {
-        const pattern = (model.queryExactMatch ||
+    private setHighlightPattern(model: SearchModel) {
+        const pattern = (
+            model.queryExactMatch ||
             model.queryEndsWith ||
             model.queryStartsWith ||
             model.queryOrMatch ||
-            model.queryAndMatch).join('|');
+            model.queryAndMatch
+        /* Assuming that NxMenuService.setHighlightPattern() is only called
+        after NxSearchService.getMatchPatterns(), which will always make
+        one of the above type string[] */
+        // @ts-ignore
+        ).join('|');
 
         // query will be broken in tokens so attempted html/js injection will fail
         // pattern = NxUtilsService.escapeRegExp(pattern);

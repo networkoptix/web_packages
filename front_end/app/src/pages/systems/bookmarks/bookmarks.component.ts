@@ -28,7 +28,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
 
     allElements: Bookmark[];
     elements: Bookmark[];
-    filterModel: SearchFilter = {};
+    filterModel: SearchFilter = { query: '' };
     system: NxSystem;
     account: Account;
     restEndpointUsed = true;

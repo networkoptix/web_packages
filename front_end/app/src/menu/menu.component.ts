@@ -22,7 +22,7 @@ import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import { ButtonArrowType, NxSearchService, SearchModel } from '@services/search.service';
 import { NxSystem } from '@services/system.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
@@ -33,7 +33,6 @@ import type {
     Level1Item,
     Level2Item,
     Level2Button,
-    MenuModel,
 } from './menu.types';
 
 /* Usage
@@ -74,7 +73,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     toggle: boolean;
 
     menuContent: Level1Item[] = [];
-    menuModel: MenuModel = { query: '' };
+    menuModel: SearchModel = { query: '' };
     navItems: HTMLAnchorElement[] = [];
     navItemIdx: number;
     windowHeight: number;
@@ -341,7 +340,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return this.navItems[this.navItemIdx].id;
     }
 
-    modelChanged(model: MenuModel, resetLayout = true) {
+    modelChanged(model: SearchModel, resetLayout = true) {
         this.searchMode = (this.isSearchable && this.menuModel.query !== '');
         this.menuSearchMode.emit(this.searchMode);
         this.transition = true;

@@ -1,11 +1,15 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 
-import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import {
+    ButtonArrowType,
+    NxSearchService,
+    SearchModel
+} from '@services/search.service';
 
 describe('Search service', () => {
     let search: NxSearchService;
 
-    const modelMock = {
+    const modelMock: SearchModel = {
         query: '',
         queryExactMatch: '',
         queryAndMatch: '',
