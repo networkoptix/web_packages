@@ -13,4 +13,5 @@ Resource     front-end-resources/change-pass-form-validation-resource.robot
 Resource     front-end-resources/licenses-resource.robot
 Resource     front-end-resources/integrations-resource.robot
 Resource     front-end-resources/storage-resource.robot
+Resource     front-end-resources/2fa-resource.robot
 

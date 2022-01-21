@@ -140,16 +140,9 @@ Log In Cloud
         Wait Until Elements Are Visible    ${ACCOUNT DOES NOT EXIST}    ${YOU CAN CREATE AN ACCOUNT}
     END
     IF    ${2fa} == ${True} and "${2fa backup code}" == "${EMPTY}"
-        ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
-        Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
-        Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}
-        Click Element    ${2FA AUTH CODE LOG IN BTN}
+        Generate totp and login    ${email}
     ELSE IF    ${2fa} == ${True} and "${2fa backup code}" != "${EMPTY}"
-        Wait Until Element Is Visible    ${2FA BACKUP CODE BTN}
-        Click Element    ${2FA BACKUP CODE BTN}
-        Wait Until Element Is Visible    ${2FA BACKUP CODE FIELD}
-        Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA BACKUP CODE FIELD}   ${2fa backup code}
-        Click Element    ${2FA BACKUP CODE LOG IN BTN}
+        Type in backup code and login    ${2fa backup code}    ${email}
     END
     IF    ${validate} == ${True}
         Validate Log In    ${email}    password=${password}
