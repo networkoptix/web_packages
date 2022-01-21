@@ -15,8 +15,11 @@
             <div *ngIf="canSeeDetailInfo && currentStorageState?.locations.length" class="buttons">
                 <button class="server-buttons pr-0" [routerLink]="infoPath">
                     <span>
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
-                                  [applyClass]="true"></svg-icon>
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                            [applyClass]="true"
+                        ></svg-icon>
                     </span>
                     <span class="ml-1 header-button-span" translate>Detailed Info</span>
                 </button>
@@ -31,7 +34,12 @@
                 role="form"
                 name="storageSettings"
                 novalidate>
-                <table *ngIf="currentStorageState?.locations.length && !waitingForStorages; else noStorages" class="dropdown-override" [ngClass]="{'hasAction' : currentStorageState?.hasAction}">
+                <table
+                    *ngIf="currentStorageState?.locations.length && !waitingForStorages;
+                        else noStorages"
+                    class="dropdown-override"
+                    [ngClass]="{'hasAction' : currentStorageState?.hasAction}"
+                >
                     <thead>
                         <tr>
                             <th>Address</th>
@@ -47,33 +55,40 @@
                             <td [ngClass]="{'disabled-label' : checkDisabled(store) }"
                                 (resize)="!row && updateFirstColumnSize($event)">
                                 <svg-icon
-                                        nx-add-svg-src
-                                        class="mr-1"
-                                        [ngClass]="{'animate-rotation': updatingModes.includes(store.storageId)}"
-                                        [nxTooltip]="getStorageTypeTooltip(store.storageType)"
-                                        [src]="getIconSrc(store)"
+                                    nx-add-svg-src
+                                    class="mr-1"
+                                    [ngClass]="{'animate-rotation': updatingModes.includes(store.storageId)}"
+                                    [nxTooltip]="getStorageTypeTooltip(store.storageType)"
+                                    [src]="getIconSrc(store)"
                                 ></svg-icon>
                                 <span class="ellipsis">{{cleanUrl(store.url)}}</span>
                             </td>
-                            <td *ngIf="!updatingModes.includes(store.storageId) || reindexingStorages.includes(store.mode); else updatingMode" [ngClass]="{'px-0' : store.status === STATUS.IN_USE}" [style.width.px]="ddWidth">
+                            <td
+                                *ngIf="!updatingModes.includes(store.storageId) || reindexingStorages.includes(store.mode);
+                                    else updatingMode"
+                                [ngClass]="{'px-0' : store.status === STATUS.IN_USE}"
+                                [style.width.px]="ddWidth"
+                            >
                                 <ng-template #notReindexing>
                                     <ng-container [ngSwitch]="store.status">
                                         <div *ngSwitchCase="STATUS.RESERVED" class="disabled-label" >
                                             <span translate>Reserved</span>
-                                            <svg-icon nx-add-svg-src
-                                                      class="ml-1"
-                                                      [nxTooltip]="getStatusTooltip(store.statusTooltip)"
-                                                      [src]="CONFIG.icons.dirTextButtons + 'info.svg'">
-                                            </svg-icon>
+                                            <svg-icon
+                                                nx-add-svg-src
+                                                class="ml-1"
+                                                [nxTooltip]="getStatusTooltip(store.statusTooltip)"
+                                                [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                                            ></svg-icon>
                                         </div>
                                         <div *ngSwitchCase="STATUS.IN_USE" [style.minWidth.px]="ddWidth" [style.paddingLeft.px]="8" >
-                                            <nx-select [type]="'clear-fit force-position'"
+                                            <nx-select
+                                                [type]="'clear-fit force-position'"
                                                 [items]="getModes(store)"
                                                 [selected]="selectMode(store)"
                                                 (onSelected)="changeMode(store, $event)"
                                                 [forcePosition]="{left: dropdownOffsetCalc$ | async, width: ddWidth, offsetTop: 8}"
-                                                [hrMargin]="true">
-                                            </nx-select>
+                                                [hrMargin]="true"
+                                            ></nx-select>
                                             <svg-icon nx-add-svg-src
                                                 *ngIf="checkArchiveWarning(store)"
                                                 class="archive-warning"
@@ -85,7 +100,12 @@
                                         <div *ngSwitchDefault class="error-label" translate>Inaccessible</div>
                                     </ng-container>
                                 </ng-template>
-                                <div *ngIf="reindexingStorages.includes(store.mode) && store.isWritable else notReindexing" translate [style.margin-left.px]="16">Reindexing...</div>
+                                <div
+                                    *ngIf="reindexingStorages.includes(store.mode) && store.isWritable
+                                        else notReindexing"
+                                    translate
+                                    [style.margin-left.px]="16"
+                                >Reindexing...</div>
                             </td>
                             <ng-template #updatingMode>
                                 <td [ngClass]="{'px-0' : [STATUS.IN_USE, STATUS.BEING_CHECKED].includes(store.status)}" [style.width.px]="ddWidth">
@@ -102,31 +122,53 @@
                             </td>
                             <td *ngIf="currentStorageState?.hasAction" class="d-flex justify-content-end">
                                 <!-- Add settings button -->
-                                <button class="btn btn-text has-icon"
-                                        [disabled]="updatingModes.includes(store.storageId) || (store.isBackup && reindexingBackup) || (!store.isBackup && reindexingMain)"
-                                        [ngClass]="{'disabled-action': updatingModes.includes(store.storageId) || (store.isBackup && reindexingBackup) || (!store.isBackup && reindexingMain)}"
-                                        *ngIf="store.hasAction && store.storageType !== storageTypes.CLOUD"
-                                        (click)="deleteStorage(store)">
+                                <button
+                                    class="btn btn-text has-icon"
+                                    [disabled]="updatingModes.includes(store.storageId) ||
+                                        (store.isBackup && reindexingBackup) ||
+                                        (!store.isBackup && reindexingMain)"
+                                    [ngClass]="{'disabled-action': updatingModes.includes(store.storageId) ||
+                                        (store.isBackup && reindexingBackup) ||
+                                        (!store.isBackup && reindexingMain)
+                                    }"
+                                    *ngIf="store.hasAction && store.storageType !== storageTypes.CLOUD"
+                                    (click)="deleteStorage(store)"
+                                >
                                     <svg-icon
-                                            nx-add-svg-src
-                                            [src]="CONFIG.icons.dir + 'delete.svg'"></svg-icon>
+                                        nx-add-svg-src
+                                        [src]="CONFIG.icons.dir + 'delete.svg'"
+                                    ></svg-icon>
                                     <span class="ml-1" translate>Delete</span>
                                 </button>
                             </td>
                         </tr>
-                        <tr class="table-row-spacer" [ngClass]="{'hasAction' : currentStorageState?.hasAction}"></tr>
+                        <tr
+                            class="table-row-spacer"
+                            [ngClass]="{'hasAction' : currentStorageState?.hasAction}"
+                        ></tr>
                     </tbody>
                 </table>
             </form>
         </div>
     </nx-section>
     <nx-section>
-        <button class="btn btn-default" (click)="addExternalStorage()" [disabled]="!currentStorageState" translate>Add External Storage</button>
+        <button
+            class="btn btn-default"
+            (click)="addExternalStorage()"
+            [disabled]="!currentStorageState"
+            translate
+        >Add External Storage</button>
     </nx-section>
 </nx-block>
 
 <!-- Disable block if 4.3 system, updated implementation for that version pending -->
-<nx-block *ngIf="!this.system.useRest && !loading && (forceShowBackupBlock || currentStorageState?.onlineBackups)" type="mb-3" header-style="fixed">
+<nx-block
+    *ngIf="!this.system.useRest &&
+        !loading &&
+        (forceShowBackupBlock || currentStorageState?.onlineBackups)"
+    type="mb-3"
+    header-style="fixed"
+>
     <header>
         <div class="header-top-bar">
             <nx-switch
@@ -139,13 +181,18 @@
     </header>
     <nx-section *ngIf="backupState$ | async">
         <div class="archive-backup-container">
-            <ng-container *ngIf="(customSettings && (!system.useRest || isBackupOn.originalValue)); else defaultMessage">
+            <ng-container
+                *ngIf="customSettings && (!system.useRest || isBackupOn.originalValue);
+                    else defaultMessage"
+            >
                 <p translate>Archive mode and cameras to backup were set up with the desktop client.</p>
                 <p translate>You can reset backup settings to default to backup secondary streams from all cameras in real time.</p>
-                <button class="btn btn-default mt-3"
+                <button
+                    class="btn btn-default mt-3"
                     type="button"
                     (click)="resetBackupToDefault()"
-                    translate>Reset Backup Settings</button>
+                    translate
+                >Reset Backup Settings</button>
             </ng-container>
             <ng-template #defaultMessage>
                 <p translate>Secondary streams from all cameras on this server are being backed up in real time.</p>
@@ -155,7 +202,12 @@
     </nx-section>
 </nx-block>
 
-<nx-block id="reindex-archive-block" *ngIf="!loading && currentStorageState?.locations?.length && (doesModeExist(storageModes.MAIN) || doesModeExist(storageModes.BACKUP))">
+<nx-block
+    id="reindex-archive-block"
+    *ngIf="!loading &&
+        currentStorageState?.locations?.length &&
+        (doesModeExist(storageModes.MAIN) || doesModeExist(storageModes.BACKUP))"
+>
     <header>
         <div class="header-top-bar">
             <h4 translate>Reindex Archive</h4>
@@ -170,23 +222,33 @@
                 type="button"
                 [nxTooltip]="tooltipContent"
                 (click)="reindexingMain = true; reindexStorage(storageModes.MAIN)"
-                translate>Reindex Main Storage</button>
+                translate
+            >Reindex Main Storage</button>
             <ng-template #reindexMainProgress>
-                <section id="reindex-main" class="reindex-section mt-3" [ngClass]="{'mb-2': doesModeExist(storageModes.BACKUP)}">
+                <section
+                    id="reindex-main"
+                    class="reindex-section mt-3"
+                    [ngClass]="{'mb-2': doesModeExist(storageModes.BACKUP)}"
+                >
                     <div class="progress-bar-section mr-3">
                         <div class="progress-bar-header mb-1">
                             <div translate>Reindexing Main Storage...</div>
                             <span>{{ percentMainDone | percent: '1.0-0' : locale }}</span>
                         </div>
                         <div class="progress reindex-progress-container">
-                            <div class="progress-bar reindex-progress"
+                            <div
+                                class="progress-bar reindex-progress"
                                 role="progressbar"
                                 [ngStyle]="{ 'width': (percentMainDone * 100).toFixed() + '%' }"
                                 aria-valuemin="0"
-                                aria-valuemax="100"></div>
+                                aria-valuemax="100"
+                            ></div>
                         </div>
                     </div>
-                    <button class="btn btn-default" (click)="reindexingMain = false; cancelIndexing(storageModes.MAIN)">Cancel</button>
+                    <button
+                        class="btn btn-default"
+                        (click)="reindexingMain = false; cancelIndexing(storageModes.MAIN)"
+                    >Cancel</button>
                 </section>
             </ng-template>
             <ng-container *ngIf="doesModeExist(storageModes.BACKUP)">
@@ -205,14 +267,19 @@
                                 <span>{{ percentBackupDone | percent: '1.0-0' : locale }}</span>
                             </div>
                             <div class="progress reindex-progress-container">
-                                <div class="progress-bar reindex-progress"
+                                <div
+                                    class="progress-bar reindex-progress"
                                     role="progressbar"
                                     [ngStyle]="{ 'width': (percentBackupDone * 100).toFixed() + '%' }"
                                     aria-valuemin="0"
-                                    aria-valuemax="100"></div>
+                                    aria-valuemax="100"
+                                ></div>
                             </div>
                         </div>
-                        <button class="btn btn-default" (click)="reindexingBackup = false; cancelIndexing(storageModes.BACKUP)">Cancel</button>
+                        <button
+                            class="btn btn-default"
+                            (click)="reindexingBackup = false; cancelIndexing(storageModes.BACKUP)"
+                        >Cancel</button>
                     </section>
                 </ng-template>
             </ng-container>

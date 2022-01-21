@@ -1012,14 +1012,14 @@ export class NxSystem extends System {
         return this.serverManager.updateResource(id, params);
     }
 
-    setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string; }) {
+    setCameraUserSettings(serverId: string, id: string, params: Record<string, string>) {
         return this.serverManager.setCameraUserSettings(serverId, id, params);
     }
 
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    setServerUserSettings(id: string, params: { [key: string]: string; }) {
+    setServerUserSettings(id: string, params: Record<string, string>) {
         return this.serverManager.setServerUserSettings(id, params);
     }
 
