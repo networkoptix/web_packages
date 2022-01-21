@@ -409,7 +409,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             !environment.isLocal
                                         ) {
                                             this.uriService.updateURI(
-                                                this.CONFIG.featureFlags.dashboard || 'beta' in this.route.snapshot.queryParams
+                                                this.CONFIG.featureFlags.dashboardRedirect || 'beta' in this.route.snapshot.queryParams
                                                     ? '/dashboard'
                                                     : '/systems'
                                             );

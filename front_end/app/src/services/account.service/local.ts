@@ -7,6 +7,7 @@ import { tap, catchError } from 'rxjs/operators';
 
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';
+import { NxBootstrapProvider } from '../nx-bootstrap-provider';
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxConfigService } from '../nx-config';
 import { NxLanguageProviderService } from '../nx-language-provider';
@@ -42,7 +43,8 @@ export class LocalAccount extends BaseAccount {
         injector: Injector,
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
-        protected oauthService: OauthService
+        protected oauthService: OauthService,
+        protected bootstrapProviderService: NxBootstrapProvider
     ) {
         super(
             configService,
@@ -61,7 +63,8 @@ export class LocalAccount extends BaseAccount {
             nxSystemAPIService,
             loginService,
             oauthService,
-            cookieService
+            cookieService,
+            bootstrapProviderService
         );
         this.mediaServerApi = this.nxSystemAPIService
             .createConnection(undefined, undefined, undefined, () => of(''), true);

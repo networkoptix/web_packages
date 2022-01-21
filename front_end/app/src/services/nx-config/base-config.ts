@@ -171,7 +171,8 @@ const FeatureFlagKeys = [
     'bookmarks',
     'kbInstantSearch',
     'dashboard',
-    'archiveSelection'
+    'archiveSelection',
+    'dashboardRedirect'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
