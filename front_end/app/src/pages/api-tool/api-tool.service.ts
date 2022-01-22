@@ -1,7 +1,7 @@
-import { Injectable, ViewContainerRef } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import {
     delay,
     distinctUntilChanged,
@@ -12,13 +12,14 @@ import {
     take
 } from 'rxjs/operators';
 
-import {
+import type {
     ClickEvent, MenuNodeWithParent
-} from '@components/developers-menu/developers-menu.component';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+} from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { MenuNode } from '@services/menus.service.types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { OpenAPIJSON } from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { APIDocVersion, MenuStructure } from '@services/nx-config/base-config';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -41,7 +42,8 @@ import type {
     APIDropdownItem,
     APIInfo,
     APIInfoStore,
-    ServerDropdownItem
+    ServerDropdownItem,
+    SystemDropdownItem
 } from './api-tool-types';
 
 /** Provides the currently selected system and server. Also provides the content for the left menu.   */
@@ -51,8 +53,8 @@ export class NxAPIToolService {
     CONFIG: IConfig;
 
     systems: NxSystemWithUserInfo[];
-    systemsDropdown: DropdownItem[] = [];
-    _selectedSystem: DropdownItem;
+    systemsDropdown: SystemDropdownItem[] = [];
+    _selectedSystem: SystemDropdownItem;
     system: NxSystem;
     systemVersion: Number = 5.0;
     mediaServerUpdating = false;
@@ -65,6 +67,9 @@ export class NxAPIToolService {
     serversLoaded$ = new BehaviorSubject(false);
     private serverSubscription: Subscription;
 
+    displayedAPI: APIDoc;
+    isReadOnly = false;
+    readonlyAPIsEnabled = false;
     APIDropdown: APIDropdownItem[] = [];
     _selectedAPI: APIDropdownItem;
     queryParams: any;
@@ -100,14 +105,20 @@ export class NxAPIToolService {
         private headerService: NxHeaderService,
         private _route: ActivatedRoute,
         private router: Router,
+        private api: NxCloudApiService,
         private uri: NxUriService) {
+        this.readonlyAPIsEnabled = configService.flagsEnabled('readonlyAPIs');
         this.CONFIG = configService.getConfig();
         this.systems = this.systemsService.systems || [];
 
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
             this.queryParams = params;
         });
-
+        this.accountService.get().then(account => {
+            if (!account) {
+                this.getSystem();
+            }
+        });
         if (!this.systems.length) {
             this.systemsService.systemsSubject
                 .pipe(
@@ -136,7 +147,8 @@ export class NxAPIToolService {
 
     set selectedAPI(version: APIDropdownItem) {
         const queryParams = this.getQueryParams();
-        queryParams.version = version.name.toLowerCase();
+        queryParams.version = version?.name?.toLowerCase() || '';
+        this.queryParams = queryParams;
         this.uri.updateURI(this.uri.getURL(), queryParams);
         this._selectedAPI = version;
     }
@@ -145,10 +157,12 @@ export class NxAPIToolService {
         return this._selectedAPI;
     }
 
-    set selectedSystem(system: DropdownItem) {
+    set selectedSystem(system: SystemDropdownItem) {
         if (!environment.isLocal) {
             const queryParams = this.getQueryParams();
-            queryParams.system = system.value;
+            const id = NxUtilsService.isUUID(system.value) ? system.value : system.value.id;
+            queryParams.system = id;
+            this.queryParams = queryParams;
             this.uri.updateURI(this.uri.getURL(), queryParams);
         }
         this._selectedSystem = system;
@@ -194,33 +208,37 @@ export class NxAPIToolService {
     }
 
     setAPIInfo = () => {
-        this.selectedServer.apiDocFull.info = this.APIInfoStore[this.selectedAPI.value];
+        this.displayedAPI.info = this.APIInfoStore[this.selectedAPI.value];
     }
 
-    systemIsOnline = (system: NxSystemWithUserInfo) => {
-        return system.stateOfHealth === 'online';
-    }
+    systemIsOnline = (system: NxSystemWithUserInfo) => system.stateOfHealth === 'online';
 
     makeSystemName = (system) => {
-        const nameString = system.info?.name || system.name || 'System';
+        const name = system.info?.name || system.name || 'System';
         const version = system.info?.version || system.version || '';
         const versionString = version ? ' (' + version + ')' : '';
-        return nameString + versionString;
+        return name + versionString;
+    }
+
+    makeReadonlyAPIName = (api: OpenAPIJSON) => {
+        const name = api.name;
+        const version = api.version ? ' v. ' + api.version : '';
+
+        return name + version;
     }
 
     async getSystem() {
-        this.systems.forEach(system => {
-            if (system.name !== undefined) {
-                const onlineSystem = this.systemIsOnline(system);
-                const sysName = this.makeSystemName(system);
-                const displayName = onlineSystem ? sysName : sysName + ' - Offline';
-                this.systemsDropdown.push({ value: system.id, name: displayName, disabled: !onlineSystem, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' });
-                if (onlineSystem) {
-                    this.validSystems.push(system);
-                }
+        await this.generateSystemsDropdown();
+        if (this.queryParams.system && !NxUtilsService.isUUID(this.queryParams.system)) {
+            const readonlyAPI = this.systemsDropdown.find(item => {
+                return item.value.id === parseInt(this.queryParams.system);
+            });
+            if (readonlyAPI) {
+                this.selectedSystem = readonlyAPI;
+                this.makeReadOnlyAPI();
+                return;
             }
-        });
-
+        }
         const cachedSystem = this.systemService.getCurrentSystem();
         if (environment.isLocal) {
             await this.accountService.get().then((account) => {
@@ -241,10 +259,15 @@ export class NxAPIToolService {
                 validSystem = this.headerService.lastActive && this.systemIsOnline(this.headerService.lastActive)
                     ? this.headerService.lastActive : this.systems.find(system => this.systemIsOnline(system));
             }
-
             if (validSystem) {
                 this.system = await this.systemService.createSystem('', validSystem.id);
             } else {
+                const readonlyAPI = this.systemsDropdown.find(item => !NxUtilsService.isUUID(item.value) && item.name !== 'seperator');
+                if (readonlyAPI) {
+                    this.selectedSystem = readonlyAPI;
+                    this.makeReadOnlyAPI();
+                    return;
+                }
                 this.showError();
                 return;
             }
@@ -379,15 +402,16 @@ export class NxAPIToolService {
                                                 this.tryNextSystem();
                                             } else {
                                                 // Success
-                                                const mainAPIContent = createMenuContent(this.selectedServer.apiDocFull);
+                                                const APIDoc = this.selectedServer.apiDocFull;
+                                                const mainAPIContent = createMenuContent(APIDoc);
                                                 this.APIDropdown.push({
                                                     value: 'api_information',
                                                     name: 'Current Version',
                                                     menu: mainAPIContent,
                                                     disabled: false
                                                 });
-                                                this.addAPIDescription('api_information', this.selectedServer.apiDocFull.info);
-                                                await this.getLegacyAPIDocs(server.id, mainAPIContent, this.selectedServer.apiDocFull);
+                                                this.addAPIDescription('api_information', APIDoc.info);
+                                                await this.getLegacyAPIDocs(server.id, mainAPIContent, APIDoc);
                                                 if (this.queryParams?.version) {
                                                     const queryVersion = this.APIDropdown.find(item => item.name.toLowerCase() === this.queryParams.version);
                                                     if (queryVersion) {
@@ -395,12 +419,14 @@ export class NxAPIToolService {
                                                     }
                                                 }
                                                 if (!this.selectedAPI)  this.selectedAPI = this.APIDropdown[0];
+                                                this.displayedAPI = APIDoc;
                                                 this.setAPIInfo();
                                                 this.menuNodes = this.selectedAPI.menu;
                                                 this.navigateToNodeBasedOnURLPath();
                                                 if (!this.activeNode) {
                                                     this.activeNode = this.menuNodes[0];
                                                 }
+                                                this.isReadOnly = false;
                                             }
                                             this.mediaServerUpdating = false;
                                             this.serversLoaded$.next(true);
@@ -430,6 +456,56 @@ export class NxAPIToolService {
                 this.mediaServerUpdating = false;
             }
         }
+    }
+
+    async generateSystemsDropdown() {
+        this.systems.forEach(system => {
+            if (system.name !== undefined) {
+                const onlineSystem = this.systemIsOnline(system);
+                const sysName = this.makeSystemName(system);
+                const displayName = onlineSystem ? sysName : sysName + ' - Offline';
+                this.systemsDropdown.push({ value: system.id, name: displayName, disabled: !onlineSystem, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' });
+                if (onlineSystem) {
+                    this.validSystems.push(system);
+                }
+            }
+        });
+
+        if (!environment.isLocal && this.readonlyAPIsEnabled) {
+            const readOnlyJSONs = await this.api.getOpenAPIJSONs().toPromise();
+            if (this.systemsDropdown.length && readOnlyJSONs.data.length) {
+                this.systemsDropdown.push({ value: 'seperator', name: 'seperator' });
+            }
+            for (const API of readOnlyJSONs.data) {
+                try {
+                    removeProprietaryEndpoints(API.content);
+                    prepareSwaggerAPIDoc(API.content);
+                } catch (error) { // Invalid format, don't add to dropdown
+                    continue;
+                }
+                this.systemsDropdown.push({ value: API, name: this.makeReadonlyAPIName(API), icon: this.CONFIG.icons.dirNonStandard + 'api.svg', json: API.content });
+            }
+        }
+    }
+
+    makeReadOnlyAPI = () => {
+        const APIDoc = this.selectedSystem.json;
+        const mainAPIContent = createMenuContent(APIDoc);
+        this.APIDropdown.push({
+            value: 'api_information',
+            name: 'Current Version',
+            menu: mainAPIContent,
+            disabled: false
+        });
+        this.addAPIDescription('api_information', APIDoc.info);
+        this.systemVersion = 5.0;
+        this.serversLoaded$.next(true);
+        this.menuNodes = mainAPIContent;
+        this.displayedAPI = APIDoc;
+        this.isReadOnly = true;
+        this.selectedAPI = this.APIDropdown.slice(-1)[0];
+        this.activeNode = this.menuNodes[0];
+        this.navigateToNodeBasedOnURLPath();
     }
 
     async handleSystemChange() {

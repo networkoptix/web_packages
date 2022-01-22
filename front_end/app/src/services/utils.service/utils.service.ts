@@ -208,6 +208,11 @@ export class NxUtilsService {
         // URL.revokeObjectURL(objectUrl);
     }
 
+    static isUUID(value) {
+        const uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i');
+        return uuidRegex.test(value);
+    }
+
     // static timestamp methods
     public msFromNowToString(input: number, suffix = false): string {
         return this.momentWithLocale().subtract(input).fromNow(!suffix);

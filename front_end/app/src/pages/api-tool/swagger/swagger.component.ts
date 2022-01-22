@@ -15,9 +15,10 @@ import { v4 as uuid } from 'uuid';
 
 import {
     MenuNodeWithParent
-} from '@components/developers-menu/developers-menu.component';
+} from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
+import { NxUtilsService } from '@services/utils.service';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
 import { NxAPIToolService } from '../api-tool.service';
@@ -54,7 +55,6 @@ export class NxSwaggerComponent implements OnChanges {
     singleAPIRouteShowing = false;
     singleRoutePath: string;
     singleRouteMethod: string;
-    uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     customComponentsRendering = false;
     componentMap: componentMap = {} // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {} // textAreas innerHTMLs are preserved here to be reapplied to code blocks
@@ -79,11 +79,11 @@ export class NxSwaggerComponent implements OnChanges {
         const title = selection.slice(0, -2);
         let description;
         if (expand === 'list') {
-            description = this.APIToolService.selectedServer.apiDocFull.tags.find(item => item.name === selection)?.description || '';
+            description = this.APIToolService.displayedAPI.tags.find(item => item.name === selection)?.description || '';
         }
         if (expand === 'full') {
             const info = getPathAndMethodFromNodeName(node.name);
-            const path =  this.APIToolService.selectedServer.apiDocFull.paths[info.path];
+            const path =  this.APIToolService.displayedAPI.paths[info.path];
             // If the method is in the node's name, then use method. Otherwise, grab the first method and use that instead (only one should exist in this case)
             if (info.method) {
                 description = path[info.method?.toLowerCase()]?.description || path[Object.keys(path)[0]].description;
@@ -111,7 +111,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
                 plugins: [this.OnResponsesRenderPlugin],
-                spec: this.APIToolService.selectedServer.apiDocFull,
+                spec: this.APIToolService.displayedAPI,
                 filter: filter,
                 docExpansion: expand,
                 showExtensions: true,
@@ -136,6 +136,9 @@ export class NxSwaggerComponent implements OnChanges {
 
     // initSwagger methods
     private getSupportedMethods = () => {
+        if (this.APIToolService.isReadOnly) {
+            return [];
+        }
         // Trace requests are not truly supported,
         // but in the APIs that are below 5.0 there is only a single trace request that is handled differently.
         // The try it out button needs to be enabled for this handling
@@ -146,8 +149,8 @@ export class NxSwaggerComponent implements OnChanges {
 
     private handlePotentialRTSPRoute = (request) => {
         const urlPath = new URL(request.url).pathname.slice(1);
-        const isRTSP = this.uuidRegex.test(urlPath) ||  // The only route that starts with uuid is an RTSP route.
-                      (!this.APIToolService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 API, and it is RTSP
+        const isRTSP = NxUtilsService.isUUID(urlPath) ||  // The only route that starts with uuid is an RTSP route.
+                      (!this.APIToolService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
 
         if (isRTSP) {
             this.RTSPRequestShowing = true;
@@ -443,15 +446,14 @@ export class NxSwaggerComponent implements OnChanges {
                 const { path, method } = getPathAndMethodFromNodeName(node.name);
                 this.singleRoutePath = path;
                 this.singleRouteMethod = method;
-                const summary = this.APIToolService.selectedServer.apiDocFull.paths?.[path]?.[method.toLowerCase()]?.summary;
+                const summary = this.APIToolService.displayedAPI.paths?.[path]?.[method.toLowerCase()]?.summary;
                 if (summary) {
                     this.swaggerMenuDescription.title = summary;
                 }
             }
             this.singleAPIRouteShowing = isSingleView;
             if (this.VCR) {
-                // Destroys custom components
-                this.VCR.clear();
+                this.VCR.clear();  // Destroys custom components
                 this.componentMap = {};
                 this.textareaMap = {};
             }

@@ -1,5 +1,6 @@
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import type { APIDoc } from '@pages/api-tool/api-tool-types';
 
 /* eslint-disable camelcase */
 export interface ILanguage{
@@ -191,6 +192,17 @@ export interface Downloads {
     beta: boolean,
     dismissed: boolean,
     releaseUrl: string
+}
+
+export type OpenAPIJSONType = 'VMS'
+
+export interface OpenAPIJSON {
+    id: number,
+    type: OpenAPIJSONType,
+    name: string,
+    version: string,
+    content: APIDoc,
+    enabled: boolean
 }
 
 interface Installers {

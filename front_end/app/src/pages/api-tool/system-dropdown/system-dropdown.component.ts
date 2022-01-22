@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 
-import {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
 import { NxSystemService } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
-import { APIDropdownItem } from '../api-tool-types';
+import type { APIDropdownItem, SystemDropdownItem } from '../api-tool-types';
 import { NxAPIToolService } from '../api-tool.service';
 
 @Component({
@@ -23,13 +21,20 @@ export class NxSystemDropdownComponent {
         private systemService: NxSystemService
     ) {}
 
-    onSystemChange(system: DropdownItem) {
+    onSystemChange(system: SystemDropdownItem) {
         this.APIToolService.menuNodes = undefined;
-        this.APIToolService.system = this.systemService.createSystem('', system.value as string);
         this.APIToolService.APIDropdown = [];
         this.APIToolService.selectedSystem = system;
         this.APIToolService.outDatedSystem = false;
-        this.APIToolService.handleSystemChange();
+        if (NxUtilsService.isUUID(system.value)) {
+            this.APIToolService.system = this.systemService.createSystem('', system.value as string);
+            this.APIToolService.activeNode = null;
+            this.APIToolService.selectedAPI = null;
+            this.APIToolService.handleSystemChange();
+        } else {
+            this.APIToolService.makeReadOnlyAPI();
+            this.APIToolService.serversDropdown = [];
+        }
     }
 
     onServerChange(server) {

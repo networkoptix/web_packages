@@ -1,5 +1,5 @@
-import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
+import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 
 // Could make this type more accurate, but have to watch out for different/older versions of the API
 
@@ -35,6 +35,10 @@ export type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
 export interface ServerDropdownItem extends DropdownItem {
     apiDocFull   : APIDoc,
     incompatible : boolean
+}
+
+export interface SystemDropdownItem extends DropdownItem {
+    json?  : APIDoc
 }
 
 export enum requestTypes {

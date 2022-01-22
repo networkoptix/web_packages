@@ -45,7 +45,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
     }
 
     checkVisible = (value: boolean) => {
-        if (this.cachedLoading && value) { // Cache value to avoid doing a query select unnecessarily
+        if (this.cachedLoading && value) { // Cache value to avoid doing a queryselect unnecessarily
             const isOpen = this.opblock.classList.contains('is-open');
             this.isVisible = isOpen;
             this.cachedLoading = isOpen ? this.cachedLoading : null;

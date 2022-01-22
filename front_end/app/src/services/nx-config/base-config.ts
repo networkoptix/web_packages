@@ -172,6 +172,7 @@ const FeatureFlagKeys = [
     'kbInstantSearch',
     'dashboard',
     'archiveSelection',
+    'readonlyAPIs',
     'dashboardRedirect'
 ] as const;
 
