@@ -3,7 +3,6 @@
         <nx-select
                [id]="'avail-systems'"
                [type]="'api-tool'"
-               [hideSelectedItem] = 'true'
                [stillLoading]="!(APIToolService.serversLoaded$ | async)"
                [items]="APIToolService.systemsDropdown"
                (onSelected)="onSystemChange($event)"
