@@ -253,6 +253,7 @@ frontend:
     - cd cloud
     - /usr/local/bin/python -m pip install --upgrade pip
     - /usr/local/bin/python -m pip install discord.py
+    - cd bots
     - python y_u_no_pipeline_bot.py
     - echo "Canceling jobs still running on pipeline"
     - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
@@ -328,3 +329,25 @@ on-django-tests-slow:
 on-django-tests-fast:
   extends: .fail-on-backend
   needs: ["django-unit-test-fast"]
+
+.hooker:
+  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  variables:
+    CANCEL_ENDPOINT: "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/pipelines/$CI_PIPELINE_ID/cancel"
+    CANCEL_HEADER: "PRIVATE-TOKEN:$CANCEL_PIPELINE_ACCESS_TOKEN"
+  allow_failure: true
+  before_script:
+    - cd cloud
+    - /usr/local/bin/python -m pip install --upgrade pip
+    - /usr/local/bin/python -m pip install discord-webhook
+    - /usr/local/bin/python -m pip install gql
+    - /usr/local/bin/python -m pip install aiohttp
+    - cd bots
+
+y-u-no-review:
+  extends: .hooker
+  script:
+    - python y_u_no_review_bot.py
