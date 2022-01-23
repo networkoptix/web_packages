@@ -6,6 +6,7 @@ from gql.transport.aiohttp import AIOHTTPTransport
 
 from discord_users import user_lookup
 
+EXCLUDE_ZERO = os.get_env('EXCLUDE_ZERO')
 ACCESS_TOKEN = os.getenv('CANCEL_PIPELINE_ACCESS_TOKEN')
 DISCORD_WEBHOOK = os.getenv('DISCORD_WEBHOOK')
 CI_SERVER_URL = os.getenv('CI_SERVER_URL')
@@ -109,8 +110,8 @@ def to_message(user):
 
 
 content = "\n".join(map(to_message, filter(
-    lambda user: user['open'] or user['assigned'], summary.values())))
+    lambda user: user['open'] or user['assigned'] or not EXCLUDE_ZERO, summary.values())))
 
 webhook = DiscordWebhook(url=DISCORD_WEBHOOK, username=REVIEW_BOT_USERNAME,
-                         avatar_url=REVIEW_BOT_AVATAR, content=content, allowed_mentions={'users': [user_lookup['czach']]})
+                         avatar_url=REVIEW_BOT_AVATAR, content=content)
 response = webhook.execute()
