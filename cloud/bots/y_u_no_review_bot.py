@@ -6,7 +6,7 @@ from gql.transport.aiohttp import AIOHTTPTransport
 
 from discord_users import user_lookup
 
-EXCLUDE_ZERO = os.get_env('EXCLUDE_ZERO')
+EXCLUDE_ZERO = os.getenv('EXCLUDE_ZERO')
 ACCESS_TOKEN = os.getenv('CANCEL_PIPELINE_ACCESS_TOKEN')
 DISCORD_WEBHOOK = os.getenv('DISCORD_WEBHOOK')
 CI_SERVER_URL = os.getenv('CI_SERVER_URL')
