@@ -112,6 +112,10 @@ def to_message(user):
 content = "\n".join(map(to_message, filter(
     lambda user: user['open'] or user['assigned'] or not EXCLUDE_ZERO, summary.values())))
 
+allowed_mentions = [user['id'] for user in summary if user['open'] or user['assigned']]
+
+content = content or 'No merge requests pending approval'
+
 webhook = DiscordWebhook(url=DISCORD_WEBHOOK, username=REVIEW_BOT_USERNAME,
-                         avatar_url=REVIEW_BOT_AVATAR, content=content)
+                         avatar_url=REVIEW_BOT_AVATAR, content=content, allowed_mentions=allowed_mentions)
 response = webhook.execute()
