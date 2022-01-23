@@ -118,5 +118,5 @@ allowed_mentions = [user['id'] for user in values if user['open'] or user['assig
 content = content or 'No merge requests pending approval'
 
 webhook = DiscordWebhook(url=DISCORD_WEBHOOK, username=REVIEW_BOT_USERNAME,
-                         avatar_url=REVIEW_BOT_AVATAR, content=content, allowed_mentions=allowed_mentions)
+                         avatar_url=REVIEW_BOT_AVATAR, content=content, allowed_mentions={'users': allowed_mentions})
 response = webhook.execute()
