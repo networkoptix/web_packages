@@ -108,11 +108,12 @@ def to_message(user):
     num_assigned = user['assigned']
     return f"<@{user['id']}> has {styled(num_open)} open merge request and {styled(num_assigned)} assigned"
 
+values = summary.values()
 
 content = "\n".join(map(to_message, filter(
-    lambda user: user['open'] or user['assigned'] or not EXCLUDE_ZERO, summary.values())))
+    lambda user: user['open'] or user['assigned'] or not EXCLUDE_ZERO, values)))
 
-allowed_mentions = [user['id'] for user in summary if user['open'] or user['assigned']]
+allowed_mentions = [user['id'] for user in values if user['open'] or user['assigned']]
 
 content = content or 'No merge requests pending approval'
 
