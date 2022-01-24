@@ -512,11 +512,14 @@
 }
 
 .swagger-ui .model-box {
-	width: 100%;
-	background: #E1E7EA;
+	width: auto !important;
+	overflow-x: scroll !important;
+	background: $light2;
 	font-size: 12px;
+	border: 1px solid $light4;
 	color: $additional_dark1 !important;
 	.model {
+		table-layout: fixed !important;
 		font-family: robotomonoregular, monospace;
 		font-weight: 400;
 		.property-row td:nth-child(1) {
@@ -527,13 +530,31 @@
 	}
 	tr { 
 		td {
-    		width: auto !important;
+			&:first-of-type {
+				width: 160px !important;
+			}
+			p, li {
+				min-width: 160px;
+			}
+			span {
+				display: inline-block;
+				min-width: 50px;
+				&.pointer, &.model-toggle {
+					min-width: 0px;
+				}
+			}
+			span.pointer + span {
+				min-width: 0px;
+				> span {
+					min-width: 0px;
+				}
+			}
+			word-wrap: break-word !important;
 			.renderedMarkdown {
 				display: inline-block;
 				p {
 					margin-bottom: 0px;
 					font-family: robotomonoregular, monospace;
-					padding-left: 12px;
 				}
 			}
 			&:first-child {
@@ -547,6 +568,11 @@
 	.prop-type, .property.primitive, .prop-format, .model {
 		color: $additional_dark1 !important;
 		font-size: 12px;
+		font-style: normal;
+		margin-right: 12px;
+	}
+	.prop-format {
+		margin-left: -4px;
 	}
 }
 
@@ -638,7 +664,6 @@
 	min-width: 89px;
 
 	&.btn-dropdown-toggle {
-		max-width: initial;
 		justify-content: initial;
 	}
 
@@ -704,10 +729,10 @@
 
 
 .swagger-ui table {
-	width           : 100%;
 	padding         : 0 10px;
 	border-collapse : collapse;
 	&:not(.model) {
+		width           : 100%;
 		border          : 1px solid $light3;
 	}
 }
