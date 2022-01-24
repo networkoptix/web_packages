@@ -369,18 +369,23 @@ def review_generator(target_reviews):
 def manage_release_note_notification(asset_review):
     asset = asset_review.version.asset
     if asset.asset_type.type == AssetType.ASSET_TYPES.release_notes:
-        create_or_update_notification_for_release_note(asset, asset_review.version)
+        create_or_update_notification_for_release_note(
+            asset, asset_review.version)
+
 
 def create_or_update_notification_for_release_note(asset, version):
-    _, datastructures = get_contexts_and_datastructures_of_asset_type(AssetType.ASSET_TYPES.release_notes)
+    _, datastructures = get_contexts_and_datastructures_of_asset_type(
+        AssetType.ASSET_TYPES.release_notes)
     datastructures = DataStructure.find_actual_values(
-                    datastructures, asset=asset, version_id=version,
-                    customization_name=settings.CUSTOMIZATION, draft=True
-                )
+        datastructures, asset=asset, version_id=version,
+        customization_name=settings.CUSTOMIZATION, draft=True
+    )
 
-    build_ds = next(filter(lambda ds: ds.name == "%build%", datastructures.keys()))
+    build_ds = next(filter(lambda ds: ds.name ==
+                           "%build%", datastructures.keys()))
     build_raw = PortalNotification.calc_build(datastructures[build_ds])
-    portal_notification = PortalNotification.objects.filter(build_raw=build_raw).first() or PortalNotification()
+    portal_notification = PortalNotification.objects.filter(
+        build_raw=build_raw).first() or PortalNotification()
 
     # Do not create if all fields are blank
     if all(not datastructures[datastructure] or datastructure.name == '%build%' for datastructure in datastructures.keys()):
@@ -391,9 +396,9 @@ def create_or_update_notification_for_release_note(asset, version):
     updated_message = "Cloud Portal Has been Updated. See what’s new"
 
     notification_dict = {
-        'title' : updated_message,
-        'body'  : updated_message,
-        'build' : datastructures[build_ds],
+        'title': updated_message,
+        'body': updated_message,
+        'build': datastructures[build_ds],
         'max_ts': datetime.now() + timedelta(weeks=2)
     }
 
