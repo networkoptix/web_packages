@@ -77,7 +77,7 @@ Reset DB and Open New Browser On Failure
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
     Log Out
-    Delete Account    ${random user}    ${password}
+    CloudPortalApi.Delete Account    ${random user}    ${password}
 
 2. password can be changed
     Log In To Change Password Page
@@ -193,7 +193,7 @@ Reset DB and Open New Browser On Failure
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
-    Login With Code    ${email}    ${BASE PASSWORD}
+    Api Log In       ${email}    ${BASE PASSWORD}
 
 11. should open change password page in anonymous state
     [tags]    anonymous

@@ -17,7 +17,6 @@ Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/ServerAPI.py
 Library      NoptixLibrary/CloudPortalAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
-Library      NoptixLibrary/CloudAuth.py     ${ENV}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
 
@@ -94,7 +93,7 @@ Check Language Anonymous
 Check Language Logged In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language    ${email}    ${password}
-    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${email}    ${password}    ${LANGUAGE}
     Sleep    2
 
 Set Language Anonymous

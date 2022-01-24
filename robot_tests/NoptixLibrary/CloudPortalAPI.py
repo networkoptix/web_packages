@@ -14,6 +14,7 @@ import urllib3
 from robot.libraries.BuiltIn import BuiltIn
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
+from CloudSession import CloudSession
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -27,14 +28,9 @@ class CloudPortalAPI(object):
 
     @keyword
     def api_log_in(self, email, password, env=None):
-        env = env or self.env
-        s = requests.session()
-        r = s.post(f'{self.env}/api/account/login', json={'email': email, 'password': password})
-        
-        assert r.status_code == 200, f"Log In Failed {r.status_code}"
-        s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
-
-        return s
+        cloud_session = CloudSession(self.env, email, password)
+        cloud_session.login()
+        return cloud_session
 
     @keyword
     def api_log_out(self, session_id, csrftoken):
@@ -47,8 +43,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def merge_cloud_systems(self, master_id, slave_id, email, password):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             logger.trace(f'The headers are {s.headers}')
             data = {'master_system_id': master_id,  'password': password, 'slave_system_id': slave_id}
             r = s.post(f'{self.env}/api/systems/merge', data)
@@ -58,8 +53,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def change_password(self, email, old_password, new_password):
-        with self.api_log_in(email, old_password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, old_password) as s:
             data = {'old_password': old_password, 'new_password': new_password}
             r = s.post(f'{self.env}/api/account/changePassword', data)
             return r.status_code
@@ -81,60 +75,52 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_account_language(self, email, password):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             r = s.get(f'{self.env}/api/utils/language')
             return r.json()['language']
 
     @keyword
     def get_account_data(self, email, password):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             r = s.get(f'{self.env}/api/account/')
             return r.json()
 
     @keyword
     def get_account_systems(self, email, password):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             data = s.get(f'{self.env}/api/systems/')
             return data.json()
 
     @keyword
     def set_account_language(self, email, password, new_language='en_US'):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             r = s.post(f'{self.env}/api/utils/language/', json={'language': new_language})
             assert 200 == r.status_code, f"api/utils/language failed: {r.status_code}"
-
             return r.json()
 
     @keyword
     def set_account_name(self, email, password, first_name, last_name):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             r = s.post(f'{self.env}/api/account/', json={'first_name': first_name, 'last_name': last_name})
             return r.json()
 
     @keyword
     def disconnect(self, email, password, system_id):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             r = s.post(f'{self.env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
             assert r.status_code == 200
             return r.json()
 
     @keyword
     def delete_account(self, email, password):
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password, logout=False) as s:
             r = s.post(f'{self.env}/api/account/delete', json={'password': password})
+            logger.trace(r.json())
             return r.json()
 
     @keyword
     def get_code_from_email(self, auth, email, message_type):
-        with self.api_log_in(auth[0], auth[1]) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, auth[0], auth[1]) as s:
             r = s.post(f'{self.env}/api/robot/get_code', json={'email': email, 'type': message_type})
             return r.json()['code']
 
@@ -142,8 +128,7 @@ class CloudPortalAPI(object):
     def disconnect_from_account(self, email, password, system_id):
         """Doesn't completely remove user from system users, but sets their role to none instead.
         Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
-        with self.api_log_in(email, password) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, email, password) as s:
             r = s.post(f'{self.env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
 
@@ -413,8 +398,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def bind_system(self, auth, cloudUrl, name="API made system"):
-        with self.api_log_in(auth[0], auth[1]) as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+        with CloudSession(self.env, auth[0], auth[1]) as s:
             logger.trace(self.customization)
             body= {
                 "name": name,
@@ -466,6 +450,7 @@ class CloudPortalAPI(object):
     @keyword
     def get_cloud_system_users(self, auth, systemId):
         r = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+
         return r.json()['sharing']
 
     @keyword
