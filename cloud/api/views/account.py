@@ -389,7 +389,12 @@ class AccountSecurity(APIView):
 
         if action == SecurityAction.toggle.name:
             account = Account.get(request)
-            return api_success(Account.update_2fa_settings(request, totp, not account.get("account2faEnabled")))
+            account_2fa_enabled = not account.get("account2faEnabled")
+            res = Account.update_2fa_settings(request, totp, account_2fa_enabled)
+            if account_2fa_enabled:
+                Auth.verify_2fa_code(totp, request.session.get("access_token"))
+                request.session["has2fa"] = True
+            return api_success(res)
 
         if action == SecurityAction.activate.name:
             require_params(request, ("password",))

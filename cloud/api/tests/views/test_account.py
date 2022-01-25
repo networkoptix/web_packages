@@ -264,6 +264,7 @@ class TestAccountViews:
         req = self.request_security(active_user, "toggle")
         self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
         security_mock = self.mock_update_2fa(two_fa)
+        verify_mock = self.mocker.patch.object(Auth, 'verify_2fa_code')
         view = AccountSecurity().as_view()
 
         assert view(req).status_code == status.HTTP_200_OK

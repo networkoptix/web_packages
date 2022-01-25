@@ -28,11 +28,6 @@ INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
                           ErrorCodes.account_not_activated.value,
                           ErrorCodes.forbidden.value]
 
-REFRESH_EXEMPT_URLS = [
-    '/cdb/account/self',
-    '/oauth2/token'
-]
-
 
 # Todo: Once cloud_db supports basic and digest switch to true.
 def basic_digest_handler(use_basic_auth=False):
@@ -81,77 +76,83 @@ def lower_case_email(func):
     return validator
 
 
-def auto_refresh_token(func):
-    @wraps(func)
-    def _wrapper(request, *args, **kwargs):
-        if hasattr(request, "session"):
-            access_token = request.session.get("access_token")
-            refresh_token = request.session.get("refresh_token")
-        elif type(request) is dict:
-            access_token = request.get("access_token")
-            refresh_token = request.get("refresh_token")
-        else:
-            raise TypeError("Arg request should be of type request or dict")
+def auto_refresh_token(no_refresh=False):
+    def outer_wrapper(func):
+        @wraps(func)
+        def wrapper(request, *args, **kwargs):
+            if hasattr(request, "session"):
+                access_token = request.session.get("access_token")
+                refresh_token = request.session.get("refresh_token")
+            elif type(request) is dict:
+                access_token = request.get("access_token")
+                refresh_token = request.get("refresh_token")
+            else:
+                raise TypeError("Arg request should be of type request or dict")
 
-        ip = ""
-        if hasattr(request, "META"):
-            ip = get_client_ip(request)
+            ip = ""
+            if hasattr(request, "META"):
+                ip = get_client_ip(request)
 
-        if "headers" not in kwargs or not kwargs["headers"]:
-            kwargs["headers"] = {}
+            if "headers" not in kwargs or not kwargs["headers"]:
+                kwargs["headers"] = {}
 
-        if ip:
-            kwargs["headers"].update({
-                "X-Forwarded-For": ip
-            })
+            if ip:
+                kwargs["headers"].update({
+                    "X-Forwarded-For": ip
+                })
 
-        if access_token:
-            kwargs["headers"].update({
-                "Authorization": f"Bearer {access_token}"
-            })
-        res = None
-        try:
-            res = func(request, *args, **kwargs)
-            res.raise_for_status()
-            return res
-        except requests.exceptions.HTTPError as e:
-            response_data = res.headers.get('content-type') == 'application/json' and res.json()
-            if not refresh_token:
+            if access_token:
+                kwargs["headers"].update({
+                    "Authorization": f"Bearer {access_token}"
+                })
+            res = None
+            try:
+                res = func(request, *args, **kwargs)
+                res.raise_for_status()
+                return res
+            except requests.exceptions.HTTPError as e:
+                response_data = res.headers.get('content-type') == 'application/json' and res.json()
+                if not refresh_token:
+                    if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
+                        raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+                    else:
+                        raise e
+                elif no_refresh:
+                    raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+            try:
+                tokens = Auth.get_refresh_token(refresh_token, ip=ip)
+                access_token = tokens["access_token"]
+                if hasattr(request, "session"):
+                    request.session["access_token"] = access_token
+                    request.session["refresh_token"] = tokens["refresh_token"]
+
+                kwargs["headers"] = {
+                    "Authorization": f"Bearer {access_token}"
+                }
+                res = func(request, *args, **kwargs)
+                res.raise_for_status()
+                return res
+            # Handles error for refreshing token.
+            except (APINotAuthorisedException, APINotAuthorisedException, APINotAuthorisedException) as e:
+                kill_tokens(request, Auth.delete_token_no_refresh)
+                kill_session(request)
+                raise e
+
+            # Handles http error for wrapped request function.
+            except requests.exceptions.HTTPError as e:
+                response_data = res.headers.get('content-type') == 'application/json' and res.json()
                 if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
+                    kill_tokens(request, Auth.delete_token)
+                    kill_session(request)
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
-            elif response_data and res is not None and any(filter(lambda url: url in res.url, REFRESH_EXEMPT_URLS)):
-                raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
-        try:
-            tokens = Auth.get_refresh_token(refresh_token, ip=ip)
-            access_token = tokens["access_token"]
-            if hasattr(request, "session"):
-                request.session["access_token"] = access_token
-                request.session["refresh_token"] = tokens["refresh_token"]
+        return wrapper
 
-            kwargs["headers"] = {
-                "Authorization": f"Bearer {access_token}"
-            }
-            res = func(request, *args, **kwargs)
-            res.raise_for_status()
-            return res
-        # Handles error for refreshing token.
-        except (APINotAuthorisedException, APINotAuthorisedException, APINotAuthorisedException) as e:
-            kill_tokens(request, Auth.delete_token_no_refresh)
-            kill_session(request)
-            raise e
-
-        # Handles http error for wrapped request function.
-        except requests.exceptions.HTTPError as e:
-            response_data = res.headers.get('content-type') == 'application/json' and res.json()
-            if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
-                kill_tokens(request, Auth.delete_token)
-                kill_session(request)
-                raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
-            else:
-                raise e
-    return _wrapper
+    if callable(no_refresh):
+        return outer_wrapper(no_refresh)
+    else:
+        return outer_wrapper
 
 
 class TempLogin:
@@ -391,7 +392,7 @@ class System(object):
 
     @staticmethod
     @validate_response
-    @auto_refresh_token
+    @auto_refresh_token(no_refresh=True)
     def update(request, system_id, totp, require2fa, headers=None):
         data = {
             'system2faEnabled': require2fa,
@@ -482,7 +483,7 @@ class Account(object):
 
     @staticmethod
     @validate_response
-    @auto_refresh_token
+    @auto_refresh_token(no_refresh=True)
     def change_password(request, email, old_password, new_password, totp=None, headers=None):
         email = email.lower()
         params = {
@@ -581,7 +582,7 @@ class Account(object):
 
     @staticmethod
     @validate_response
-    @auto_refresh_token
+    @auto_refresh_token(no_refresh=True)
     def update_2fa_settings(request, totp, tfa_enabled, password=None, headers=None):
         data = {
             "account2faEnabled": tfa_enabled,
