@@ -1,34 +1,39 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { Location }                  from '@angular/common';
-import {
-    Component, OnDestroy, OnInit
-}                                    from '@angular/core';
-import { Router }                    from '@angular/router';
-import { UntilDestroy }              from '@ngneat/until-destroy';
-import { Subject, Subscription }     from 'rxjs';
-import { debounceTime }              from 'rxjs/operators';
+// import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { NxDialogsService }          from '@dialogs/dialogs.service';
-import { NxModalGenericComponent }   from '@dialogs/generic/generic.component';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+// import { NxModalGenericComponent } from '@dialogs/generic/generic.component';
 import { NxAccountService, Account } from '@services/account.service';
-import { NxMenusService }            from '@services/menus.service';
-import { NxConfigService, IConfig }  from '@services/nx-config';
-import { NxHeaderService }           from '@services/nx-header.service';
+import { NxMenusService } from '@services/menus.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService }             from '@services/page.service';
+import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUriService }              from '@services/uri.service';
-import { NxUtilsService }            from '@services/utils.service';
+import { NxUriService } from '@services/uri.service';
+import { NxUtilsService } from '@services/utils.service';
 
-interface SystemGroup {
+type SystemTile = NxSystemWithUserInfo & {
+    type: 'system';
+    name: string;
+}
+
+interface GroupTile {
+    type: 'group';
     id: string;
     name: string;
-    groups: SystemGroup[];
-    systems: NxSystemWithUserInfo[];
-    type: string;
+    groups: GroupTile[];
+    systems: SystemTile[];
 }
+
+type Tile = GroupTile | SystemTile
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -41,52 +46,47 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    groups: any = [
+    groups: GroupTile[] = [
         {
             id: '1',
-            name: 'Test',
+            name: 'Test Group 1',
             groups: [],
             systems: [],
             type: 'group'
-        }, {
+        },
+        {
             id: '2',
-            name: 'Test 2',
+            name: 'Test Group 2',
             groups: [],
             systems: [],
             type: 'group'
-        }];
+        }
+    ];
 
     systemInGroup = new Set<string>();
-    dropLists: any[];
+    dropLists: unknown[];
 
-    showSearch;
-    fetchComplete;
-    search;
+    showSearch: boolean = false;
+    fetchComplete: boolean = false;
+    search: { value: string } = { value: '' };
     gettingSystems: Process;
-    openClient;
-    systems;
-    filteredSystems: any[];
+    openClient: unknown;
+    tiles: Tile[] = [];
+    filteredTiles: Tile[] = [];
     account: Account;
-    endpoint: any = {};
+    endpoint: Record<string, boolean> = {};
     userEmail: string;
-    searchChanged = new Subject();
+    searchChanged = new Subject<void>();
     chosenSystemName: string;
-    show2faRequired = false;
+    show2faRequired: boolean = false;
     private searchSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
-
-        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
-    }
-
     constructor(
         configService: NxConfigService,
-        private utilsService: NxUtilsService,
+        // private utilsService: NxUtilsService,
         private language: NxLanguageProviderService,
-        private genericModal: NxModalGenericComponent,
+        // private genericModal: NxModalGenericComponent,
         private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
@@ -96,16 +96,15 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
         private menusService: NxMenusService,
         private dialogsService: NxDialogsService,
         private router: Router,
-        private location: Location
+        // private location: Location
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.language.translations;
+
+        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
     }
 
     ngOnInit(): void {
-        this.showSearch = false;
-        this.fetchComplete = false;
-        this.search = { value: '' };
-
         this.accountService.get()
             .then((account) => {
                 if (account?.email) {
@@ -115,29 +114,27 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
-            this.systems = systems;
-            if (this.systems === undefined) {
-                return;
-            }
-
-            this.systems.map((system) => {
-                // avoid html being interpreted
-                system.type = 'system';
-                system.name = NxUtilsService.htmlToEntity(system.name);
-            });
-            this.systems = [...this.groups, ...this.systems];
-
-            if (this.location.path().indexOf('/systems') === 0) {
-                if (this.systems.length === 1) {
-                    this.openSystem(this.systems[0]);
+        this.systemSubscription = this.systemsService.systemsSubject
+            .subscribe((systems) => {
+                if (systems === undefined) {
+                    return;
                 }
 
-                this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
+                this.tiles = [
+                    ...this.groups,
+                    ...systems.map(system => ({
+                        ...system,
+                        type: 'system',
+                        name: NxUtilsService.htmlToEntity(system.name)
+                        // avoid html being interpreted
+                    }) as SystemTile)
+                ];
 
-                this.searchSystems();
-            }
-        });
+                // this.showSearch = this.tiles.length >= this.CONFIG.search.minSystems;
+                this.showSearch = true; // For easier development, remove for release
+
+                this.searchTiles();
+            });
 
         this.gettingSystems = this.processService.createProcess(() => {
             this.fetchComplete = true;
@@ -150,132 +147,156 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
         this.searchSubscription = this.searchChanged
             .pipe(debounceTime(this.CONFIG.search.debounceTime))
             .subscribe(() => {
-                this.searchSystems();
+                this.searchTiles();
             });
     }
 
-    trackItem(index, item) {
+    trackItem(index: number, item: Tile): string | undefined {
         return item ? item.id : undefined;
     }
 
-    getSystemOwnerName(system, currentEmail) {
+    getSystemOwnerName(system: NxSystemWithUserInfo, currentEmail: string): string {
         return this.systemsService.getSystemOwnerName(system, currentEmail);
     }
 
-    hasMatch(str, search) {
-        return str.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+    hasMatch(str: string, search: string): boolean {
+        return str.toLowerCase().includes(search.toLowerCase());
     }
 
-    searchSystems() {
+    searchTiles(): void {
         const search = this.search.value;
 
         if (search) {
-            this.filteredSystems = this.systems
-                .filter(({ id }) => !this.systemInGroup.has(id))
-                .filter((system) => {
-                    return !search ||
-                            this.hasMatch(this.LANG.system.mySystemSearch?.(), search) && (system.ownerAccountEmail === this.accountService.email) ||
-                            this.hasMatch(system.name, search) ||
-                            this.hasMatch(system.ownerFullName, search) ||
-                            this.hasMatch(system.ownerAccountEmail, search);
+            this.filteredTiles = this.tiles
+                // .filter(({ id }) => !this.systemInGroup.has(id))
+                .filter(tile => {
+                    if (this.hasMatch(tile.name, search)) {
+                        return true;
+                    } else if (tile.type === 'group') {
+                        // TODO: Other possible search conditions
+                    } else if (tile.type === 'system') {
+                        return (
+                            this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
+                            tile.ownerAccountEmail === this.accountService.email
+                        ) ||
+                            this.hasMatch(tile.ownerFullName, search) ||
+                            this.hasMatch(tile.ownerAccountEmail, search);
+                    }
                 });
         } else {
-            this.filteredSystems = this.systems.filter(({ id }) => !this.systemInGroup.has(id));
+            // this.filteredSystems = this.systems.filter(({ id }) => !this.systemInGroup.has(id));
+            this.filteredTiles = this.tiles;
         }
     }
 
-    setSearch(value) {
-        this.search.value = value;
+    setSearch(model: { query: string }): void {
+        this.search.value = model.query;
         this.searchChanged.next();
     }
 
-    private isActive(val: string) {
-        return this.router.url.indexOf(val) >= 0;
+    private isActive(val: string): boolean {
+        return this.router.url.includes(val);
     }
 
-    updateEndpoint(id: string) {
+    updateEndpoint(id: string): void {
         this.endpoint.ipvd = this.isActive('/ipvd');
         this.endpoint.integrations = this.isActive('/integrations');
         this.endpoint.register = this.isActive('/register');
         this.endpoint.view = this.isActive('/view');
         this.endpoint.information = this.isActive('/health');
-        this.endpoint.settings = id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+        this.endpoint.settings = id &&
+            this.isActive('/systems') &&
+            !this.isActive('/view') &&
+            !this.isActive('/health');
     }
 
-    openSystem(system) {
-        return;
+    openGroup(group: GroupTile): void {
+        // TODO
+    }
+
+    openSystem(system: NxSystemWithUserInfo): void {
         if (this.needToConfigureTwoFactor(system)) {
             this.chosenSystemName = system.name;
             this.show2faRequired = true;
         } else {
             this.updateEndpoint(system.id);
             this.headerService.show$ = false;
-            this.uriService.updateURI(this.menusService.getUrl(system.id, this.endpoint))
-                .then(() => {
-                    const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
-                    this.menusService.updateActiveSystemMenu(activeSystem);
-                })
-                .catch(err => { console.error(err); });
+            this.uriService.updateURI(
+                this.menusService.getUrl(system.id, this.endpoint)
+            ).then(() => {
+                const activeSystem = this.headerService.activeSystem ||
+                    this.headerService.lastActive$.value ||
+                    this.tiles[0];
+                this.menusService.updateActiveSystemMenu(activeSystem);
+            }).catch(err => { console.error(err); });
         }
     }
 
-    canShowTag(system) {
-        return system.stateOfHealth !== this.CONFIG.system.status.online && this.LANG.systemStatuses;
+    canShowTag(system: NxSystemWithUserInfo): boolean {
+        return system.stateOfHealth !== this.CONFIG.system.status.online &&
+            !!this.LANG.systemStatuses;
     }
 
-    canShowButton(system) {
+    canShowButton(system: NxSystemWithUserInfo): boolean {
         return this.LANG.system &&
             system.stateOfHealth === this.CONFIG.system.status.online &&
             !this.needToConfigureTwoFactor(system);
     }
 
-    needToConfigureTwoFactor(system) {
+    needToConfigureTwoFactor(system: NxSystemWithUserInfo): boolean {
         return system.system2faEnabled && !this.account.account2faEnabled;
     }
 
-    addGroup() {
-        console.log(this.filteredSystems);
-        this.dialogsService.createSystemGroup().then((res: SystemGroup) => {
+    newGroup(): void {
+        this.dialogsService.createSystemGroup().then((res: GroupTile) => {
             this.groups.push(res);
             let lastIndex = -1;
-            this.filteredSystems.forEach((item, index) => {
+            this.filteredTiles.forEach((item, index) => {
                 if (item.type === 'group') {
                     lastIndex = index;
                 }
             });
-            const filteredSystems = this.filteredSystems;
-            filteredSystems.splice(lastIndex > -1 ? lastIndex + 1 : 0, 0, res);
-            this.filteredSystems = filteredSystems;
+            const { filteredTiles } = this;
+            filteredTiles.splice(lastIndex > -1 ? lastIndex + 1 : 0, 0, res);
+            this.filteredTiles = filteredTiles;
         }, () => {
             // Handle cancel
         });
     }
 
-    drop(event: CdkDragDrop<any>) {
-        const getIndex = (id) => this.filteredSystems.findIndex((tile) => tile.id === id);
-        const previousTile: any = event.item.data;
-        const currentTile = event.container.data;
-        const previousIndex = getIndex(previousTile.id);
-        let currentIndex = getIndex(currentTile.id);
+    getTileIndex(id: string): number {
+        return this.filteredTiles.findIndex(tile => tile.id === id);
+    }
+
+    drop(event: CdkDragDrop<Tile>): void {
+        const previousTile: Tile = event.item.data; // Dragged tile
+        const currentTile = event.container.data; // Dropped onto tile
+        const previousIndex = this.getTileIndex(previousTile.id);
+        let currentIndex = this.getTileIndex(currentTile.id);
         if (!event.isPointerOverContainer || currentTile.id === previousTile.id) {
             return;
         }
         if (currentTile.type === 'group') {
-            this.filteredSystems.splice(previousIndex, 1);
+            this.filteredTiles.splice(previousIndex, 1);
             if (previousIndex < currentIndex) {
                 currentIndex += -1;
             }
-            if (currentIndex >= this.filteredSystems.length) {
-                currentIndex = this.filteredSystems.length - 1;
+            if (currentIndex >= this.filteredTiles.length) {
+                currentIndex = this.filteredTiles.length - 1;
             }
 
+            const targetGroupTile = this.filteredTiles[currentIndex] as GroupTile;
             if (previousTile.type === 'system') {
-                this.filteredSystems[currentIndex].systems.push(currentTile);
+                // Add system to group
+                targetGroupTile.systems.push(previousTile);
             } else {
-                this.filteredSystems[currentIndex].groups.push(currentTile);
+                // Nest group inside another group
+                targetGroupTile.groups.push(previousTile);
             }
-            const groupIndex = this.groups.findIndex((group) => group.id === currentTile.id);
-            this.groups[groupIndex] = { ...this.filteredSystems[currentIndex] };
+            const groupIndex = this.groups.findIndex((group) =>
+                group.id === currentTile.id
+            );
+            this.groups[groupIndex] = { ...targetGroupTile };
             this.systemInGroup.add(previousTile.id);
         }
     }

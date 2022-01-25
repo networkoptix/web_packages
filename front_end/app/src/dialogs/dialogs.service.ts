@@ -9,7 +9,6 @@ import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ModalContent } from '@components/console-table/console-table.component.types';
 // import { WidgetCard } from '@components/widgets/helper-classes';
-import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.component';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -28,6 +27,8 @@ import { ChangePasswordModalContent } from './change-password/change-password.co
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
+import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
+import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DialogConfig } from './dialog-config';
@@ -59,8 +60,8 @@ import {
     UpdateCameraCredentialsModalContent
 } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
+
 import '@dialogs/dialogs.scss';
-import { CreateSystemGroupModalContent } from '@dialogs/create-system-group/create-system-group.component';
 
 interface IParams<Value = any> {
     [key: string]: Value;

@@ -47,6 +47,7 @@ export interface LanguageI18NStaticTypes {
     serverTabTitles:       ServerTabTitles;
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
+    tile:                  Tile;
     toastMessage:          ToastMessage;
     headerLabels:          HeaderLabels;
     license:               License;
@@ -824,6 +825,7 @@ export interface Search {
     selected:          any;
     vendor:            any;
     vendors:           any;
+    resultsFound:      any;
 }
 
 export interface Security {
@@ -981,6 +983,11 @@ export interface SystemStatuses {
     offline:      any;
     online:       any;
     unavailable:  any;
+}
+
+export interface Tile {
+    groupCount:  any;
+    systemCount: any;
 }
 
 export interface ToastMessage {
@@ -1264,6 +1271,7 @@ const typeMap: any = {
         { json: "serverTabTitles", js: "serverTabTitles", typ: r("ServerTabTitles") },
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
+        { json: "tile", js: "tile", typ: r("Tile") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
         { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
         { json: "license", js: "license", typ: r("License") },
@@ -1966,6 +1974,7 @@ const typeMap: any = {
         { json: "selected", js: "selected", typ: "any" },
         { json: "vendor", js: "vendor", typ: "any" },
         { json: "vendors", js: "vendors", typ: "any" },
+        { json: "resultsFound", js: "resultsFound", typ: "any" },
     ], false),
     "Security": o([
         { json: "twoFa", js: "twoFa", typ: r("SecurityTwoFa") },
@@ -2105,6 +2114,10 @@ const typeMap: any = {
         { json: "offline", js: "offline", typ: "any" },
         { json: "online", js: "online", typ: "any" },
         { json: "unavailable", js: "unavailable", typ: "any" },
+    ], false),
+    "Tile": o([
+        { json: "groupCount", js: "groupCount", typ: "any" },
+        { json: "systemCount", js: "systemCount", typ: "any" },
     ], false),
     "ToastMessage": o([
         { json: "cloudUnavailable", js: "cloudUnavailable", typ: "any" },

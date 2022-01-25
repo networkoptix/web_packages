@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
@@ -58,8 +59,6 @@ import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { AppComponent } from './app.component';
-
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {

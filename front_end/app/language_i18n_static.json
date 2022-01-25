@@ -762,7 +762,8 @@
         "search_ipvd": "Search by model or manufacturer",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Manufacturer",
-        "vendors": "Manufacturers"
+        "vendors": "Manufacturers",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
@@ -866,6 +867,10 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "unavailable"
+    },
+    "tile": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

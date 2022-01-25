@@ -21,6 +21,7 @@ import { ChangeStorageModalContent } from './change-storage/change-storage.compo
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
+import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { NxDialogsService } from './dialogs.service';
@@ -44,7 +45,6 @@ import {
     UpdateCameraCredentialsModalContent
 } from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
-import { CreateSystemGroupModalContent } from '@dialogs/create-system-group/create-system-group.component';
 
 @NgModule({
     imports: [
