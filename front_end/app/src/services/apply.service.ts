@@ -547,7 +547,7 @@ export class NxApplyService {
 
             this.applyComponentInstance.save = this.processService.createProcess(() => {
                 return runFormProcesses();
-            }, { ignoreError: true }, (result) => {
+            }, { ignoreError: true, ignoreUnauthorized: true }, (result) => {
                 if (result) {
                     updateOriginalForm();
                 }

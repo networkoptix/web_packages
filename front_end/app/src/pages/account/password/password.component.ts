@@ -69,10 +69,17 @@ export class NxAccountPasswordComponent implements OnInit {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.changePassword = this.processService.createProcess(() => {
+            const verifySession = () => this.dialogs.passwordVerificationCode(
+                this.pass.newPassword, this.pass.password
+            );
             return this.account.account2faEnabled
-                ? this.dialogs.passwordVerificationCode(
-                    this.pass.newPassword, this.pass.password
-                )
+                ? this.cloudApiService.verify(this.pass.password)
+                    .then(
+                        () => verifySession(),
+                        ({ error }) => error?.resultCode === 'forbidden'
+                            ? verifySession()
+                            : Promise.reject(error)
+                    )
                 : this.cloudApiService.changePassword(
                     this.pass.newPassword, this.pass.password
                 );
