@@ -7,7 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { ComponentsModule } from '@components/components.module';
@@ -100,7 +101,7 @@ describe('NxConsoleTableComponent', () => {
     const perPage = Math.round(Math.random() * 5 + 3);
     const minItemsAdvanced = Math.round(Math.random() * 5 + perPage);
 
-    const addItemToComponent = (items = 1) => {
+    const addItemToComponent = async (items = 1) => {
         const manifest = nxConfig.manifest[section];
         const mockItem = () => manifest.contexts.reduce((
             values, { name, type: inputType }
@@ -110,8 +111,16 @@ describe('NxConsoleTableComponent', () => {
         const mockItems = [...new Array(items)].map(mockItem);
         const { data } = new ListSerializer(section, manifest, mockItems);
         component.displayedColumns = (component.selectedManifest?.contexts || []).map(({ name }) => name);
+
+        // There seems to be some weird edge case that causes 'paginator should show correct number of pages' to fail intermittently
+        // Seems to be really rare, it only seems to happen a couple times a week.
+        // If the failure for this case still happens in the future then these changes should be reverted.
+        const updated = component.selectedData.connect().pipe(takeUntil(timer(10))).toPromise();
+
         component.selectedData.updateBaseData(data);
+        await updated;
         fixture.detectChanges();
+        await fixture.whenStable();
         return mockItems as any;
     };
 
@@ -171,7 +180,7 @@ describe('NxConsoleTableComponent', () => {
     });
 
     it('should not show placeholder when items', async () => {
-        addItemToComponent();
+        await addItemToComponent();
 
         await fixture.whenStable();
         const placeholder = el.nativeElement.querySelector('.table-content-placeholder');
@@ -179,7 +188,7 @@ describe('NxConsoleTableComponent', () => {
     });
 
     it('should show the correct data for item', async () => {
-        const [mockItem] = addItemToComponent();
+        const [mockItem] = await addItemToComponent();
 
         await fixture.whenStable();
         const items = el.nativeElement.querySelectorAll('.cdk-row.data-row');
@@ -189,7 +198,7 @@ describe('NxConsoleTableComponent', () => {
 
     it('should show advanced mode when many items', async () => {
         const numItems = Math.round(Math.random() * 30) + minItemsAdvanced;
-        addItemToComponent(numItems);
+        await addItemToComponent(numItems);
 
         await fixture.whenStable();
         const paginator = el.nativeElement.querySelectorAll('nx-paginator');
@@ -199,7 +208,7 @@ describe('NxConsoleTableComponent', () => {
     it('paginator should show correct number of pages', async () => {
         const numItems = Math.round(Math.random() * 30) + minItemsAdvanced;
         const expectedPages = Math.ceil(numItems / perPage);
-        addItemToComponent(numItems);
+        await addItemToComponent(numItems);
 
         await fixture.whenStable();
         const paginator = el.nativeElement.querySelector('nx-paginator');
