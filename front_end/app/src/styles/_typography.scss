@@ -167,6 +167,10 @@ p {
     @include font-source($font-family-regular, $font-size-base, $light10);
 }
 
+@mixin regular13light16 {
+    @include font-source($font-family-regular, $font-size-base, $light16);
+}
+
 @mixin regular13nocolor {
     @include font-source($font-family-regular, $font-size-base);
 }
@@ -279,6 +283,10 @@ p {
 
 @mixin medium13light13{
     @include font-source($font-family-medium, $font-size-base, $light13);
+}
+
+@mixin medium13light16{
+    @include font-source($font-family-medium, $font-size-base, $light16);
 }
 
 @mixin medium13nocolor {

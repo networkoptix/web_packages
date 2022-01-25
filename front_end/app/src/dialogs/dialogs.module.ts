@@ -14,7 +14,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
-import { AddWidgetModalContent }          from './add-widget/add-widget.component';
+import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ApplyModalContent, NxModalApplyComponent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
@@ -39,6 +39,7 @@ import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range/select-time-range.component';
+import { TransferOwnershipModalContent } from './transfer-ownership/transfer-ownership.component';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import {
     UpdateCameraCredentialsModalContent
@@ -91,7 +92,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         Mandatory2faModalContent,
         AddWidgetModalContent,
         ConnectCloudModalContent,
-        SelectTimeRangeModalContent
+        SelectTimeRangeModalContent,
+        TransferOwnershipModalContent
     ],
     providers: [
         NxDialogsService,
