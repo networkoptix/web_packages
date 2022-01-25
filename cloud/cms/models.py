@@ -2926,8 +2926,8 @@ class PortalNotification(models.Model):
         self.build_raw = PortalNotification.calc_build(value)
 
     def get_serialized(self):
-        attributes = ['title', 'id', 'body', 'url', 'build']
-        return {attribute: getattr(self, attribute, '') for attribute in attributes}
+        from cms.serializers import PortalNotificationSerializer
+        return PortalNotificationSerializer(self).data
 
     @staticmethod
     def parse_build(build_version: float) -> str:

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from cms.controllers.integration import make_integrations_json
 from cms.controllers.modify_db import save_unrevisioned_records
 
-from cms.models import Asset, Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON
+from cms.models import Asset, Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON, PortalNotification
 import re
 
 from util.helpers import get_language_object_from_request
@@ -510,3 +510,29 @@ class IntegrationSerializer(serializers.Serializer):
 
 class IntegrationsListSerializer(serializers.Serializer):
     data = IntegrationSerializer(many=True)
+class PortalNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PortalNotification
+        fields = 'title', 'id', 'body', 'url', 'build'
+
+
+class PortalNotificationIdSerializer(serializers.Serializer):
+    notificationIds = serializers.ListField(child=serializers.IntegerField(), label="Notifications to mark as read")
+
+    def validate_notificationIds(self, notifications):
+        if not isinstance(notifications, list):
+            raise serializers.ValidationError('Must be a list')
+
+        if non_integer := [notification for notification in notifications if not isinstance(notification, int)]:
+            raise serializers.ValidationError(
+                f'All values must be integers, the following are invalid: {non_integer}')
+
+        return notifications
+
+class PortalNotificationListSerializer(serializers.Serializer):
+    currentBuild = serializers.SerializerMethodField('get_version', label="Current Cloud Portal build")
+    notifications = PortalNotificationSerializer(many=True, label="Currently active notifications for user.")
+    markedRead = PortalNotificationSerializer(many=True, default=[], label='Notifications marked as read')
+
+    def get_version(self, obj):
+        return settings.VERSION
