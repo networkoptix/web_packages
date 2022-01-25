@@ -35,7 +35,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 import { NxSafePipe } from '@src/pipes/nx-safe';
 
 import { NxAccountSecurityComponent } from './security.component';

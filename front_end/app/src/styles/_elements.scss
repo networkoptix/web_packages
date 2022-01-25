@@ -165,4 +165,28 @@ span.marked {
     cursor: pointer;
 }
 
+.overlay-backdrop {
+    z-index: 1050 !important;
+    background-color: rgba($dark15, 0.2);
+}
 
+.cdk-global-overlay-wrapper {
+    position       : fixed !important;
+    display        : block !important;
+    z-index        : 1050 !important;
+    pointer-events : auto !important;
+    overflow-y     : auto;
+}
+
+.cdk-overlay-pane.modal-holder {
+    position         : relative !important;
+    margin           : 100px auto 1.75rem;
+    width            : 500px;
+    background-color : typography.$light1;
+    max-width        : none;
+    max-height       : none;
+    
+    > * {
+        width : 100%;
+    }
+}

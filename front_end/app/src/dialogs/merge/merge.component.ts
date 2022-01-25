@@ -2,11 +2,11 @@ import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef, Inject
 } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -15,7 +15,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystemService } from '@services/system.service';
+import { NxSystem, NxSystemService } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
@@ -29,15 +29,16 @@ import StateMachine from './stateMachine';
     styleUrls: ['merge.component.scss']
 })
 export class MergeModalContent {
-    @Input() system;
-    @Input() systems;
-    @Input() systemName;
-    @Input() closable;
-    @Input() user;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
     readonly environment = environment;
+
+    user;
+    system;
+    systems: NxSystem[];
     account: NxAccountService;
     checkMergeabilityFunction;
     checkMergeabilityProcess: Process;
@@ -104,7 +105,6 @@ export class MergeModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private cloudApi: NxCloudApiService,
         private cdRef: ChangeDetectorRef,
         private loginService: NxLoginService,
@@ -114,6 +114,8 @@ export class MergeModalContent {
         private systemsService: NxSystemsService,
         private translate: TranslateService,
         private ribbonService: NxRibbonService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
@@ -121,6 +123,8 @@ export class MergeModalContent {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system', 'systems', 'user'], this);
+
         this.machine = new StateMachine(this.checkMerge, State);
         this.init();
     }
@@ -134,7 +138,7 @@ export class MergeModalContent {
             await this.getPeerSystems();
             this.account = await this.user.get();
             await Promise.all(
-                this.systems.map(async system => {
+                this.systems.map(async (system: any) => {
                     if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
                         const tempSystemService = this.systemService.createSystem(this.account.email, system.id, undefined, true, true);
                         try {
@@ -319,7 +323,7 @@ export class MergeModalContent {
 
     getPeerSystems() {
         return this.system.getPeerSystems().toPromise()
-            .then(res => {
+            .then((res: any) => {
                 this.peerSystems = res.reply
                     .filter(peer => this.environment.isLocal ? this.system.id !== peer.localSystemId : !peer.cloudSystemId)
                     .map(peer => {
@@ -394,7 +398,7 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
                 this.checking = true;
-                return this.precheckSystemMerge();
+                return this.preCheckSystemMerge();
             }, { ignoreError: true })
             .then(
                 res => {
@@ -660,8 +664,8 @@ export class MergeModalContent {
                 this.systems = systems;
             })
             .finally(() => {
-                const system = this.systems.find(system => system.id === this.primarySystem.id);
-                const stateOfHealth = system && system.stateOfHealth || this.primarySystem.stateOfHealth;
+                const system: any = this.systems.find(system => system.id === this.primarySystem.id);
+                const stateOfHealth = system?.stateOfHealth || this.primarySystem.stateOfHealth;
                 err.failedSystemName = stateOfHealth === 'online'
                     ? err.secondarySystemName
                     : err.primarySystemName;
@@ -671,7 +675,7 @@ export class MergeModalContent {
                     err.errorText = errorText === 'Bad Gateway' ? 'systemUnavailable' : 'mergedSystemIsOffline';
                 }
 
-                this.activeModal.dismiss(err);
+                this.close(err);
                 this.clearTemplate();
             });
     }
@@ -681,7 +685,7 @@ export class MergeModalContent {
         return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, password, adminPassword, takeRemoteSettings);
     }
 
-    async precheckSystemMerge() {
+    async preCheckSystemMerge() {
         const isNew = { isNew: true };
         this.getSecondaryName();
         this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
@@ -704,7 +708,7 @@ export class MergeModalContent {
                 await this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
                 // means dryRun is still not available after primary system update
                 if (this.system.info.capabilities.merge_systems >= 1) {
-                    const res = await this.precheckSystemMerge();
+                    const res = await this.preCheckSystemMerge();
                     return res;
                 }
                 return this.systemMergeable ? 'canceled' : { error: '0' }; // systemMergeable === '' = mergeable
@@ -772,8 +776,8 @@ export class MergeModalContent {
             const [sys1, sys2] = systems;
             if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
                 const [servers, target] = await Promise.all([
-                    this.system.mediaserver.getMediaServers().toPromise(),
-                    this.targetSystemService.mediaserver.getMediaServers().toPromise()
+                    this.system.mediaserver.getMediaServers(false).toPromise(),
+                    this.targetSystemService.mediaserver.getMediaServers(false).toPromise()
                 ]);
                 const serverIds = {};
                 servers.forEach(server => {
@@ -977,10 +981,10 @@ export class MergeModalContent {
         this.updateShow(showUpdate, templateUpdates);
     }
 
-    close(data?) {
+    close(msg?) {
         this.remotePassword = undefined;
         this.clearTemplate();
-        this.activeModal.close(data);
+        this.dialogRef.close(msg);
     }
 
     clearTemplate() {

@@ -1,11 +1,13 @@
+import { Overlay, ComponentType } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import {
     ComponentFactoryResolver,
     ComponentRef,
     Injectable,
+    Injector,
     ViewContainerRef
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     BehaviorSubject,
@@ -24,13 +26,15 @@ import {
 
 import { NxApplyComponent } from '@components/apply/apply.component';
 import { ApplyModalContent } from '@dialogs/apply/apply.component';
+import { DialogConfig } from '@dialogs/dialog-config';
+import {
+    DIALOG_DATA,
+    defaultConfig,
+    DialogRef
+} from '@dialogs/dialog-ref';
 
 import { NxProcessService, Process } from './process.service';
 import { NxUtilsService } from './utils.service';
-
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
 
 export type extNgForm = {
     form: NgForm,
@@ -243,7 +247,8 @@ export class NxApplyService {
     constructor(
         private factoryResolver: ComponentFactoryResolver,
         private processService: NxProcessService,
-        private modalService: NgbModal
+        private overlay: Overlay,
+        private injector: Injector,
     ) {}
 
     get locked() {
@@ -617,26 +622,58 @@ export class NxApplyService {
         return sectionWatcher;
     }
 
-    createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any>(
-        modal: Modal, options: Options, inputs: Inputs
-    ): Promise<Result> {
-        const modalRef = this.modalService.open(modal, options);
-        Object.assign(modalRef.componentInstance, inputs);
-        return modalRef.result;
+    open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
+        const positionStrategy = this.overlay
+            .position()
+            .global()
+            .centerHorizontally()
+            .centerVertically();
+
+        const overlayRef = this.overlay.create({
+            positionStrategy,
+            hasBackdrop: config.hasBackdrop,
+            backdropClass: config.backdropClass,
+            panelClass: config.panelClass,
+            width: config.width,
+        });
+
+        // Create dialogRef to return
+        const dialogRef = new DialogRef(overlayRef);
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [
+                { provide: DialogRef, useValue: dialogRef },
+                { provide: DIALOG_DATA, useValue: config.data },
+            ]
+        });
+
+        const portal = new ComponentPortal(component, null, injector);
+        overlayRef.attach(portal);
+
+        return dialogRef;
     }
 
-    applyDialog(applyFunc: Process, discardFunc: () => void, form: NgForm) {
+    applyDialog(
+        applyFunc: Process,
+        discardFunc: () => void,
+        form: NgForm
+    ) {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }
 
-        const options: any = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
+        const config: Partial<DialogConfig> = {
+            data: {
+                applyFunc,
+                discardFunc,
+                form
+            }
         };
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });
+        return this.open(ApplyModalContent, dialogConfig)
+            .afterClosed();
     }
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.

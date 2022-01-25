@@ -24,7 +24,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

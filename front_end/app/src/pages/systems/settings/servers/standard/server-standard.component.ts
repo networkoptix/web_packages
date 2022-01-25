@@ -28,7 +28,7 @@ import type { GetMediaServers } from '@services/system-api.types';
 import type { NxSystem, NxSystemServer } from '@services/system.service';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 export interface DropdownStorage {
     name: string,

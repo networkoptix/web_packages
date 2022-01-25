@@ -9,7 +9,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { MenuModule } from '@src/menu';
+import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { AuthGuard, SystemGuard } from '@src/routeGuards';
 

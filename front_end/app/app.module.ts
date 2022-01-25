@@ -52,7 +52,7 @@ import { NxConfigService } from '@services/nx-config';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
-import { MenuModule } from '@src/menu';
+import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import {
     AuthGuard,

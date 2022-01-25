@@ -24,7 +24,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -364,10 +364,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     private _onPasswordChanged = (result) => {
         if (!result) {
-            // console.log('password change cancelled')
             return;
         }
-        // console.log('password changed')
         this.passwordChanged = true;
     }
 

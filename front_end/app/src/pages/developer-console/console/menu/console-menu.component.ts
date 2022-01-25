@@ -50,7 +50,7 @@ export class NxDevConsoleMenuComponent {
         for (const section in this.CONFIG.manifest) {
             const sectionConfig = this.menu.find(({ url }) => url === section);
             if (sectionConfig) {
-                const cmsTitle = parentNode.nodes.find(({ url }) =>
+                const cmsTitle = parentNode?.nodes.find(({ url }) =>
                     (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`
                 )?.name;
                 sectionConfig.title = cmsTitle || sectionConfig.title;

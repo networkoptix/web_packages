@@ -1,14 +1,15 @@
-import { Component, Input, Renderer2, ViewChild } from '@angular/core';
+import { Component, Inject, Input, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 import { NxToastService } from '../toast.service';
 
@@ -18,12 +19,13 @@ import { NxToastService } from '../toast.service';
     styleUrls: []
 })
 export class Mandatory2faModalContent {
-    @Input() system2faEnabled: boolean;
-    @Input() system: NxSystem;
-    @Input() closable;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    system: NxSystem;
+    system2faEnabled: boolean;
     mandatory2fa: Process;
     verificationCode: string;
     showError = false;
@@ -38,20 +40,21 @@ export class Mandatory2faModalContent {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        public activeModal: NgbActiveModal,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private renderer: Renderer2,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
-    cancel = () => this.activeModal.close('cancel');
-
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system2faEnabled', 'system'], this);
+
         this.showError = !this.accountService.account.account2faEnabled;
         const options = {
             classname: this.CONFIG.toast.warning,
@@ -77,7 +80,7 @@ export class Mandatory2faModalContent {
                 }
             }, () => {
                 this.system.currentServerNotBusy = true;
-                this.activeModal.close('success');
+                this.close('success');
                 options.classname = this.CONFIG.toast.success;
                 const successMessage = this.system2faEnabled
                     ? this.LANG.dialogs.message.system2faEnabled()
@@ -92,7 +95,9 @@ export class Mandatory2faModalContent {
             });
     }
 
-    close() {
-        this.activeModal.close();
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
+
+    cancel = () => this.close('cancel');
 }

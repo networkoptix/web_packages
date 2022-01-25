@@ -15,6 +15,7 @@ export interface NxSystemUser {
     canBeEdited: boolean;
     cryptSha512Hash: string;
     digest: string;
+    password: string;
     email: string;
     fullName: string;
     hash: string;

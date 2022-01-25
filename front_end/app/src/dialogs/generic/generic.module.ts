@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import {
     GenericModalContent,
-    NxModalGenericComponent
 } from './generic.component';
 
 @NgModule({
@@ -12,15 +11,12 @@ import {
     ],
     providers: [
         GenericModalContent,
-        NxModalGenericComponent
     ],
     declarations: [
         GenericModalContent,
-        NxModalGenericComponent
     ],
     exports: [
         GenericModalContent,
-        NxModalGenericComponent
     ]
 })
 export class GenericDialogModule {

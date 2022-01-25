@@ -1,8 +1,8 @@
 import { Component, Inject, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -18,6 +18,7 @@ import {
     NxSystemRestAPI
 } from '@services/system-api.service';
 import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -26,15 +27,17 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: []
 })
 export class DisconnectModalContent {
-    @Input() account: NxAccountService;
-    @Input() system: NxSystem;
-    @Input() closable: boolean;
+    // @Input() account: NxAccountService;
+    // @Input() system: NxSystem;
+    @Input() closable: boolean = true;
 
     readonly environment: IEnvironment = environment;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     needsUpdate: boolean;
     disconnect: Process;
+    account: NxAccountService;
+    system: NxSystem;
     // password: string;
     // wrongPassword: boolean;
     // auth = {
@@ -50,13 +53,13 @@ export class DisconnectModalContent {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private loginService: NxLoginService,
         private simpleDialogService: NxSimpleDialogsService,
-        // private renderer: Renderer2,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {
         this.LANG = language.translations;
@@ -64,6 +67,8 @@ export class DisconnectModalContent {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['account', 'system'], this);
+
         // const passwordError = () => {
         //     this.wrongPassword = true;
         //     this.auth.password = '';
@@ -97,7 +102,7 @@ export class DisconnectModalContent {
             // },
             // errorPrefix        : this.LANG.errorCodes.cantDisconnectSystemPrefix()
         }, res => {
-            this.activeModal.close(true);
+            this.close(true);
             const options = {
                 classname: this.CONFIG.toast.success,
                 autohide: true,
@@ -124,8 +129,8 @@ export class DisconnectModalContent {
         });
     }
 
-    close() {
-        this.activeModal.close();
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 
     private disconnectLocal() {

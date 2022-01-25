@@ -6,12 +6,14 @@ import {
     ViewChild
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { NxAccountService } from '@services/account.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 
 export interface MessageParams {
@@ -33,14 +35,14 @@ interface Subject {
     styleUrls: []
 })
 export class MessageModalContent implements OnInit {
-    @Input() account;
-    @Input() messageType;
-    @Input() data;
-    @Input() closable;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    account: NxAccountService;
+    messageType: string;
+    data: any;
     placeholder: string;
     sendMessage: Process;
     userName: string;
@@ -58,9 +60,10 @@ export class MessageModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        @Inject(WINDOW) private window: Window
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.placeholder = '';
         this.subject = '';
@@ -71,6 +74,8 @@ export class MessageModalContent implements OnInit {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['account', 'messageType', 'data'], this);
+
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
@@ -85,12 +90,12 @@ export class MessageModalContent implements OnInit {
         }, {
             successMessage: this.LANG.dialogs.message.sent?.()
         }).then(() => {
-            this.activeModal.close(true);
+            this.close(true);
         });
     }
 
-    close() {
-        this.activeModal.close();
+    close = (msg: string | boolean = false) => {
+        this.dialogRef.close(msg);
     }
 
     initForm() {

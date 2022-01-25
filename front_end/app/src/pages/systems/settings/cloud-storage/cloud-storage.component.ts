@@ -21,7 +21,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -287,7 +287,15 @@ export class NxCloudStorageComponent implements OnInit {
         this.dialogService.cloudStorageMove(
             this.system$,
             this.handleCloudStorageDisabled
-        );
+        ).then(result => {
+            if (result !== 'noOtherSystemsError') {
+                this.dialogService.confirm(
+                    this.LANG.dialogs.cloudStorage.noOtherSystemsError.message?.(),
+                    this.LANG.dialogs.cloudStorage.title?.(),
+                    this.LANG.dialogs.buttons.ok?.()
+                );
+            }
+        });
     }
 
     // Callback for disabled or moved storage

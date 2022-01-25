@@ -1,11 +1,5 @@
 @use "../../styles/theme_variables" as *;
 
-.cdk-overlay-container {
-    // At the moment we don't use backdrop and we need header to be over overlay
-    // some modifications will be needed when we replace ngbModal (introducing overlay with backdrop)
-    z-index: 4 !important;
-}
-
 .cdk-overlay-pane {
     border        : none;
     border-radius : 2px;

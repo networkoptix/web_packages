@@ -237,6 +237,7 @@ nx-modal-wizard {
 
     &-footer {
         & {
+            background-color : $light1 !important;
             justify-content: flex-start !important;
             align-items: center !important;
             padding: 1rem !important;

@@ -5,7 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
-import { MenuModule } from '@src/menu';
+import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 

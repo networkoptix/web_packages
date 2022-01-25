@@ -21,7 +21,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxStorageService } from '@services/storage.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'nx-account-settings-component',

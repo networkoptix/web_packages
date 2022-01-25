@@ -33,7 +33,7 @@ import { ICamera, NxSystem, NxSystemService } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 import type { Content, Level3Item } from '@src/menu/menu.types';
 
 import { NxSettingsService } from './settings.service';

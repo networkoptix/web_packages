@@ -1,12 +1,18 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import {
+    Component, Inject,
+    Input,
+    ViewChild
+} from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-add-user-content',
@@ -14,13 +20,13 @@ import { NxProcessService, Process } from '@services/process.service';
     styleUrls: []
 })
 export class AddUserModalContent {
-    @Input() system;
-    @Input() closable;
+    @Input() closable = true;
     @ViewChild('addUserForm') form: NgForm;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    system: NxSystem;
     hideErrors: boolean = true;
     alreadyExists: string;
     addUser: Process;
@@ -31,8 +37,9 @@ export class AddUserModalContent {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -76,6 +83,8 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system'], this);
+
         this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists()
             .replace(
                 '%systemName%',
@@ -105,12 +114,17 @@ export class AddUserModalContent {
             } else {
                 return this.saveUser();
             }
-        })
-            .then((user) => {
-                if (user) {
-                    this.hideErrors = true;
-                    this.activeModal.close(user.id);
-                }
-            });
+        },
+        {},
+        (user) => {
+            if (user) {
+                this.hideErrors = true;
+                this.close(user.id);
+            }
+        });
+    }
+
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 }

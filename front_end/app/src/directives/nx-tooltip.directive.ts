@@ -1,5 +1,6 @@
 import {
     ConnectedPosition,
+    FlexibleConnectedPositionStrategy,
     Overlay, OverlayPositionBuilder,
     OverlayRef
 } from '@angular/cdk/overlay';
@@ -29,8 +30,15 @@ import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     private overlayRef: OverlayRef;
     private destroy$ = new Subject();
+    private positionStrategy: FlexibleConnectedPositionStrategy;
 
     @Input('nxTooltip') content: string | TemplateRef<any>;
+
+    private close() {
+        this.destroy$.next();
+        this.overlayRef?.detach();
+        this.overlayRef = undefined;
+    }
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
@@ -57,25 +65,20 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
             offsetY: 6,
             panelClass: ['bottom', 'center'],
         }];
-        const positionStrategy = this.overlayPositionBuilder
+        this.positionStrategy = this.overlayPositionBuilder
             .flexibleConnectedTo(this.elementRef)
             .withPositions(positions);
-
-        this.overlayRef = this.overlay.create({
-            positionStrategy,
-            scrollStrategy: this.overlay.scrollStrategies.reposition(),
-        });
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.text) {
-            this.hide();
+            this.close();
             changes.text.currentValue && this.show();
         }
     }
 
     ngOnDestroy() {
-        this.hide();
+        this.close();
     }
 
     @HostListener('mouseenter')
@@ -83,6 +86,15 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         timer(300).pipe(
             takeUntil(this.destroy$),
         ).subscribe(() => {
+            if (!this.content) {
+                return;
+            }
+
+            this.overlayRef = this.overlay.create({
+                positionStrategy: this.positionStrategy,
+                scrollStrategy: this.overlay.scrollStrategies.reposition(),
+            });
+
             const tooltipPortal = new ComponentPortal(NxTooltipComponent);
             const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;
             if (this.content instanceof TemplateRef) {
@@ -100,7 +112,6 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     @HostListener('mouseout')
     hide() {
-        this.overlayRef?.detach();
-        this.destroy$.next();
+        this.close();
     }
 }

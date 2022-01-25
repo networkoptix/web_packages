@@ -3,17 +3,17 @@
         <h1 class="modal-title" translate>Can't enable mandatory two-factor authentication</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.close()" *ngIf="closable">
+                (click)="close()" *ngIf="closable">
             <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>
 
     <div class="modal-body">
         <p translate>You can enable mandatory two-factor authentication for cloud users only if two-factor authentication is enabled for your account.</p>
-        <p><span translate>Enable it in your</span>&nbsp;<a routerLink="/account/security" (click)="activeModal.close()" translate>account settings</a></p>
+        <p><span translate>Enable it in your</span>&nbsp;<a routerLink="/account/security" (click)="close()" translate>account settings</a></p>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" (click)="activeModal.close()" translate>OK</button>
+        <button class="btn btn-primary" (click)="close()" translate>OK</button>
     </div>
 </ng-template>
 
@@ -26,7 +26,7 @@
 
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.close()" *ngIf="closable">
+                (click)="close()" *ngIf="closable">
             <span class="close-content"><span class="close-icon"></span></span>
         </button>
     </div>

@@ -5,10 +5,10 @@ import {
     ViewChild,
     Renderer2,
     TemplateRef,
-    AfterViewInit
+    AfterViewInit,
+    Inject
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 
@@ -18,6 +18,7 @@ import {
     InfoBlockSection,
     InfoBlockSize
 } from '@components/info-block/info-block.component';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { Account, NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -46,15 +47,21 @@ export enum T_FA_STEPS {
     styleUrls: ['two-fa.component.scss']
 })
 export class TwoFAModalContent implements OnInit, AfterViewInit {
-    @Input() type: string;
-    @Input() cancellable: boolean;
-    @Input() closable: boolean;
-    @Input() newPassword: string;
-    @Input() oldPassword: string;
-    @Input() num2FaSystems: number;
+    @Input() closable: boolean = true;
+    // @Input() type: string;
+    // @Input() cancellable: boolean;
+    // @Input() newPassword: string;
+    // @Input() oldPassword: string;
+    // @Input() num2FaSystems: number;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    type: string;
+    cancellable: boolean;
+    newPassword: string;
+    oldPassword: string;
+    num2FaSystems: number;
     infoBlockSizeEnum = InfoBlockSize;
 
     account: Account;
@@ -141,11 +148,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private processService: NxProcessService,
         private renderer: Renderer2,
         private accountService: NxAccountService,
-        public activeModal: NgbActiveModal,
         private toastService: NxToastService,
         private clipboardService: ClipboardService,
         private systemsService: NxSystemsService,
         private cloudApiService: NxCloudApiService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -154,6 +162,15 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(
+            this.dialogData,
+            [
+                'type', 'oldPassword', 'newPassword',
+                'num2FaSystems', 'cancellable',
+            ],
+            this
+        );
+
         this.loginProcess = this.processService.createProcess(() => {
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
@@ -287,7 +304,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
             if (response.account2faEnabled === false) {
                 this.resetDefaults();
-                this.activeModal.close('disabled');
+                this.close('disabled');
             }
         });
 
@@ -356,14 +373,14 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         }, (response) => {
             if (response.account2faEnabled) {
-                this.activeModal.close('enabled');
+                this.close('enabled');
             }
 
             if (response.account2faEnabled === false) {
                 this.account.account2faEnabled = false;
                 this.account.totpExistsForAccount = false;
                 this.resetDefaults();
-                this.activeModal.close('disabled');
+                this.close('disabled');
             }
         });
 
@@ -390,7 +407,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 }
             }
         }, (res) => {
-            this.activeModal.close(res);
+            this.close(res);
         });
     }
 
@@ -442,7 +459,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.newCodes = response.map(code => code.backup_code);
                     this.setTemplate(T_FA_STEPS.Code);
                 }, () => {
-                    this.activeModal.close();
+                    this.close();
                     const options = {
                         classname: this.CONFIG.toast.danger,
                         autohide: true,
@@ -460,9 +477,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
-    close(action?) {
+    close = (action?) => {
         this.resetDefaults();
-        this.activeModal.close(action || 'changed');
+        this.dialogRef.close(action || 'changed');
     }
 
     closeWizard(action?) {
@@ -473,7 +490,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 });
         }
         this.resetDefaults();
-        this.activeModal.close('canceled');
+        this.close('canceled');
     }
 
     next() {
@@ -494,7 +511,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.codeProcess.run();
                 break;
             case T_FA_STEPS.WizardFinish:
-                this.activeModal.close('enabled');
+                this.close('enabled');
                 break;
             case T_FA_STEPS.VerificationToggle:
                 this.verificationProcess.run();

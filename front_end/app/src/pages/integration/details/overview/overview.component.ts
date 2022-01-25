@@ -4,7 +4,7 @@ import { SubscriptionLike } from 'rxjs';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxPageService } from '@services/page.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { IntegrationService } from '../../integration.service';
 

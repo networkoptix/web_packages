@@ -5,8 +5,8 @@ import { environment } from '@environments/environment';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import type { NxSystem } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
+import { NxMenuService } from '@src/menu/menu.service';
 
-import { NxMenuService } from '../menu.service';
 import type { Level2Button } from '../menu.types';
 
 @Component({

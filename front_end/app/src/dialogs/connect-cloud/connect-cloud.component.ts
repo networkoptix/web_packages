@@ -1,19 +1,22 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
 import * as t from '@services/nx-cloud-api.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -22,16 +25,16 @@ import { NxProcessService, Process } from '@services/process.service';
     styleUrls: []
 })
 export class ConnectCloudModalContent implements OnInit {
-    @Input() account;
-    @Input() system;
-    @Input() closable;
+    @Input() closable = true;
     @ViewChild('connectForm', { static: true }) connectForm: NgForm;
 
-    readonly isLocal: boolean;
-    CONFIG: IConfig;
-    readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    readonly isLocal: boolean;
+    readonly environment = environment;
 
+    account: NxAccountService;
+    system;
     cloudTokens: any;
     codeExists: boolean;
     codeSubscription: Subscription;
@@ -46,15 +49,28 @@ export class ConnectCloudModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private http: HttpClient,
         private oauthService: OauthService,
         private processService: NxProcessService,
         private renderer: Renderer2,
-        private storage: LocalStorageService
+        private storage: LocalStorageService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+    }
+
+    ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['account', 'system'], this);
+
+        this.setupProcess();
+        this.setupAuth();
+
+        this.codeSubscription = this.storage.observe(this.CONFIG.oauthStore.code)
+            .subscribe((code) => this.handleCode(code));
+
+        window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
 
     private connect(systemName, email, accessToken) {
@@ -119,7 +135,7 @@ export class ConnectCloudModalContent implements OnInit {
             return this.oauthService.logoutTokens(
                 this.cloudTokens.access_token,
                 this.cloudTokens.refresh_token
-            ).then(() => this.activeModal.close(false));
+            ).then(() => this.close(false));
         };
         const errorHandler = () => {};
         const settings = {
@@ -142,16 +158,6 @@ export class ConnectCloudModalContent implements OnInit {
         }, settings, successHandler, errorHandler);
     }
 
-    ngOnInit() {
-        this.setupProcess();
-        this.setupAuth();
-
-        this.codeSubscription = this.storage.observe(this.CONFIG.oauthStore.code)
-            .subscribe((code) => this.handleCode(code));
-
-        window.open('/#/cloud-authorize?state=connect', '_blank').focus();
-    }
-
     cancel = () => {
         let close = Promise.resolve({});
         if (this.cloudTokens) {
@@ -161,6 +167,10 @@ export class ConnectCloudModalContent implements OnInit {
             );
         }
 
-        close.finally(() => this.activeModal.dismiss(true));
+        close.finally(() => this.close(true));
+    }
+
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 }

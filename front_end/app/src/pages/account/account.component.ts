@@ -6,7 +6,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
 
 @UntilDestroy({ checkProperties: true })

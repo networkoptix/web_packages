@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -14,20 +14,21 @@ import { NxSystem } from '@services/system.service';
     templateUrl: 'change-storage.component.html'
 })
 export class ChangeStorageModalContent {
-    @Input() system: NxSystem;
-    @Input() closable: boolean;
+    @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    system: NxSystem;
     deleteAnalyticsData: Process;
     keepAnalyticsData: Process;
 
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -38,10 +39,10 @@ export class ChangeStorageModalContent {
             .createProcess(
                 () => this.deleteAnalyticsDataProcess(),
                 { ignoreError: true },
-                () => { this.activeModal.close('changeOk'); },
+                () => { this.close('changeOk'); },
                 err => {
                     console.error(err);
-                    this.activeModal.close('error');
+                    this.close('error');
                 }
             );
 
@@ -49,10 +50,10 @@ export class ChangeStorageModalContent {
             .createProcess(
                 () => this.keepAnalyticsDataProcess(),
                 { ignoreError: true },
-                () => { this.activeModal.close('changeOk'); },
+                () => { this.close('changeOk'); },
                 err => {
                     console.error(err);
-                    this.activeModal.close('error');
+                    this.close('error');
                 }
             );
     }
@@ -89,7 +90,11 @@ export class ChangeStorageModalContent {
         }
     }
 
-    close = () => {
-        this.activeModal.close('cancel');
+    dismiss = () => {
+        this.close('cancel');
+    }
+
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 }

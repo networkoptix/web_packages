@@ -7,11 +7,11 @@ import {
     tick,
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockModule, MockProvider } from 'ng-mocks';
 import { QrCodeModule } from 'ng-qrcode';
 
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -62,7 +62,8 @@ describe('TwoFAModalContent', () => {
                 MockProvider(NxProcessService),
                 MockProvider(Renderer2),
                 MockProvider(NxAccountService),
-                MockProvider(NgbActiveModal),
+                MockProvider(DialogRef),
+                MockProvider(DIALOG_DATA),
                 MockProvider(NxToastService),
                 MockProvider(NxSystemsService),
                 MockProvider(NxCloudApiService),
@@ -81,7 +82,10 @@ describe('TwoFAModalContent', () => {
         nextStepSpy = spyOn(component, 'next');
         prevStepSpy = spyOn(component, 'prev');
 
-        component.type = '';
+        component['dialogData'] = {
+            type: 'wizard',
+        };
+        component.ngOnInit();
         component.ngAfterViewInit();
     }));
 

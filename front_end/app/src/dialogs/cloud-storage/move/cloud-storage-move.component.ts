@@ -4,22 +4,22 @@ import {
     Renderer2,
     ViewChild,
     Input,
-    OnInit
+    OnInit,
+    Inject
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import * as t from '@services/nx-cloud-api.types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
-
-import { NxModalGenericComponent } from '../../generic/generic.component';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-cloud-storage-move-content',
@@ -27,12 +27,13 @@ import { NxModalGenericComponent } from '../../generic/generic.component';
     styleUrls: ['cloud-storage-move.component.scss']
 })
 export class CloudStorageMoveModalContent implements OnInit {
-    @Input() system$: BehaviorSubject<NxSystem>;
-    @Input() updateCallback: () => void;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    system$: BehaviorSubject<NxSystem>;
+    updateCallback: () => void;
     targetSystems: DropdownItem[];
     errorText: string;
     move: Process;
@@ -48,12 +49,12 @@ export class CloudStorageMoveModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         public renderer: Renderer2,
         private http: HttpClient,
         private systemsService: NxSystemsService,
         private processService: NxProcessService,
-        private genericModal: NxModalGenericComponent
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -73,6 +74,8 @@ export class CloudStorageMoveModalContent implements OnInit {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system$', 'updateCallback'], this);
+
         this.system$.subscribe(system => {
             if (!system || !system.id) {
                 return;
@@ -93,17 +96,8 @@ export class CloudStorageMoveModalContent implements OnInit {
                 this.setTargetSystem(this.targetSystems[0]);
                 if (systems && this.targetSystems.length < 2) {
                     // Display noOtherSystemsError when current system is the only system
-                    this.close();
-                    const {
-                        dialogs: {
-                            cloudStorage: {
-                                noOtherSystemsError: { message },
-                                moveCloudStorage: { title }
-                            },
-                            buttons: { ok }
-                        }
-                    } = this.LANG;
-                    this.genericModal.openConfirm(message?.(), title?.(), ok?.());
+                    // Removed dialog open within dialog ... bad practice --TT
+                    this.close('noOtherSystemsError');
                 }
             });
         });
@@ -145,8 +139,8 @@ export class CloudStorageMoveModalContent implements OnInit {
     }
 
     // Other instance methods
-    close() {
-        this.activeModal.close();
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 
     setTargetSystem({ value, state }: DropdownItem) {

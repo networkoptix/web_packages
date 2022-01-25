@@ -1,23 +1,25 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Inject, Input, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-delete-cloud-user-content',
     templateUrl: 'delete-cloud-user.component.html'
 })
 export class DeleteCloudUserModalContent {
-    @Input() cloudApi;
-    @Input() closable;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    cloudApi: NxCloudApiService;
     deleteCloudUser: Process;
     passwordForUser: string = '';
     passwordError: string = '';
@@ -25,16 +27,19 @@ export class DeleteCloudUserModalContent {
     @ViewChild('deleteCloudUserForm') deleteForm: NgForm;
 
     constructor(
-        public activeModal: NgbActiveModal,
         private configService: NxConfigService,
         private language: NxLanguageProviderService,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['cloudApi'], this);
+
         this.deleteCloudUser = this.processService
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
@@ -53,9 +58,13 @@ export class DeleteCloudUserModalContent {
                 })
             .then(res => {
                 if (res.resultCode === 'ok') {
-                    this.activeModal.close(res);
+                    this.close(res);
                 }
             });
+    }
+
+    close = (msg: string | boolean = false) => {
+        this.dialogRef.close(msg);
     }
 
     clearErrors() {

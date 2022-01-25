@@ -1,19 +1,22 @@
 import {
     Component,
+    Inject,
     Input,
     Renderer2,
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService } from '@services/process.service';
+import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemAPI } from '@services/system-api.service';
+import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-remove-model-content',
@@ -21,13 +24,14 @@ import { NxSystemAPI } from '@services/system-api.service';
     styleUrls: []
 })
 export class RemoveSystemModalContent {
-    @Input() system;
-    @Input() disconnectFromAccount;
-    @Input() closable;
+    @Input() closable = true;
 
-    isLocal: boolean;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    disconnectFromAccount: Process;
+    system: NxSystem;
+    isLocal: boolean;
     password: string;
     wrongPassword: boolean;
     auth = {
@@ -43,10 +47,11 @@ export class RemoveSystemModalContent {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private renderer: Renderer2,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -62,13 +67,15 @@ export class RemoveSystemModalContent {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system'], this);
+
         this.auth.username = this.system.userManager.currentUserEmail;
         this.auth.password = '';
 
         this.disconnectFromAccount = this.processService.createProcess(() => {
             this.disconnectAccountForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
-            return this.system.deleteFromCurrentAccount(this.auth.password);
+            return this.system.deleteFromCurrentAccount(this.auth.password).toPromise();
         }, {
             ignoreUnauthorized: true,
             errorCodes: {
@@ -77,7 +84,7 @@ export class RemoveSystemModalContent {
             },
             errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
         }, () => {
-            this.activeModal.close(true);
+            this.close(true);
             const options = {
                 classname: this.CONFIG.toast.success,
                 autohide: true,
@@ -90,7 +97,7 @@ export class RemoveSystemModalContent {
         }, err => console.error(err));
     }
 
-    close() {
-        this.activeModal.close();
+    close = (withResult?) => {
+        this.dialogRef.close(withResult);
     }
 }

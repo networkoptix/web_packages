@@ -25,7 +25,7 @@ import { NxSystem, NxSystemService } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
 
 import { NxHealthService } from '../health.service';

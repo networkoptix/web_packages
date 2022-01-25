@@ -23,6 +23,7 @@ front_end/**/*.js.map
 front_end/app/src/**/*.js
 front_end/app/language_compiled.json
 front_end/coverage
+front_end/reports
 translations/**/language_compiled.json
 
 

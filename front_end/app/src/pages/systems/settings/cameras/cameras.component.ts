@@ -54,7 +54,7 @@ import {
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
 

@@ -4,7 +4,7 @@ import {
     DataStructureMeta
 } from '../../pages/developer-console/console/edit/console-edit.component.types';
 import {
-    ContentSettings
+    ContentSettings, ContextManifest
 } from '../../services/nx-cloud-api.types';
 import {
     DropdownItem
@@ -93,7 +93,10 @@ export interface ModalContent {
     id?: number,
     modal: ModalType,
     heading?: string,
-    values?: Record<string, any>
+    values?: Record<string, any>,
+    manifest?: ModalManifest,
+    settings?: ContentSettings,
+    contextList?: ContextManifest[]
 }
 
 export enum ConsoleSection {

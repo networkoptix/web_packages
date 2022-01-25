@@ -18,7 +18,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystem } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';

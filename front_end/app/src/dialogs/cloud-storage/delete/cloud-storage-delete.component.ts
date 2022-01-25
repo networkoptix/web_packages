@@ -4,18 +4,20 @@ import {
     Input,
     Renderer2,
     ViewChild,
-    OnInit
+    OnInit,
+    Inject
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import * as t from '@services/nx-cloud-api.types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-cloud-storage-delete-content',
@@ -23,10 +25,10 @@ import { NxSystem } from '@services/system.service';
     styleUrls: []
 })
 export class CloudStorageDeleteModalContent implements OnInit {
-    @Input() system$: BehaviorSubject<NxSystem>;
-    @Input() updateCallback: () => void;
-    @Input() closable: boolean;
+    @Input() closable: boolean = true;
 
+    system$: BehaviorSubject<NxSystem>;
+    updateCallback: () => void;
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     wrongPassword: boolean;
@@ -42,10 +44,11 @@ export class CloudStorageDeleteModalContent implements OnInit {
     constructor(
         config: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private http: HttpClient,
         private processService: NxProcessService,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.LANG = language.translations;
         this.CONFIG = config.getConfig();
@@ -59,11 +62,13 @@ export class CloudStorageDeleteModalContent implements OnInit {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system$', 'updateCallback'], this);
+
         this.auth.password = '';
         this.system$.subscribe(system => {
             if (system?.id) {
                 this.systemId = system.id;
-            };
+            }
         });
 
         this.delete = this.processService.createProcess(() => {
@@ -93,11 +98,11 @@ export class CloudStorageDeleteModalContent implements OnInit {
             errorPrefix: this.LANG.dialogs.cloudStorage.remove.errorPrefix?.()
         }).then(() => {
             this.updateCallback();
-            this.activeModal.close(true);
+            this.close(true);
         });
     }
 
-    close() {
-        this.activeModal.close();
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 }

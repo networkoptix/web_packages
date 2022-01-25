@@ -1,10 +1,16 @@
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+    Component,
+    Inject,
+    Input
+} from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem, NxSystemUser } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-remove-user-content',
@@ -12,13 +18,13 @@ import { NxProcessService, Process } from '@services/process.service';
     styleUrls: []
 })
 export class RemoveUserModalContent {
-    @Input() system;
-    @Input() user;
-    @Input() closable;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    system: NxSystem;
+    user: NxSystemUser;
     removeUserProcess: Process;
     dialogTitle: string;
     dialogButtonText: string;
@@ -26,14 +32,17 @@ export class RemoveUserModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system', 'user'], this);
+
         const msg = this.user.isCloud ? 'remove' : 'delete';
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`]?.();
         this.dialogButtonText = this.LANG.dialogs.buttons[msg]?.();
@@ -45,11 +54,11 @@ export class RemoveUserModalContent {
         }, {
             errorPrefix: this.LANG.errorCodes.cantSharePrefix?.()
         }).then(() => {
-            this.activeModal.close(true);
+            this.dialogRef.close(true);
         });
     }
 
-    close() {
-        this.activeModal.close();
+    close = () => {
+        this.dialogRef.close();
     }
 }

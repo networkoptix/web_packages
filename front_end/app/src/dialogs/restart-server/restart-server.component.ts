@@ -1,5 +1,4 @@
 import { Component, Input, Injector, Inject } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { timer } from 'rxjs';
 import {
     delayWhen,
@@ -11,6 +10,7 @@ import {
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
@@ -19,6 +19,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -27,13 +28,14 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: []
 })
 export class RestartServerModalContent {
-    @Input() system: NxSystem;
-    @Input() serverName: string;
-    @Input() serverId: string;
-    @Input() closable: boolean;
+    @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    system: NxSystem;
+    serverName: string;
+    serverId: string;
     needsUpdate: boolean;
     restartServer: Process;
     private applyService: NxApplyService
@@ -41,14 +43,15 @@ export class RestartServerModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private loginService: NxLoginService,
         private processService: NxProcessService,
         private simpleDialogService: NxSimpleDialogsService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
-        injector: Injector
+        injector: Injector,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -58,7 +61,9 @@ export class RestartServerModalContent {
     }
 
     ngOnInit() {
-        const options      = {
+        NxUtilsService.pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
+
+        const options = {
             classname: this.CONFIG.toast.warning,
             autohide: true,
             delay: this.CONFIG.alertTimeout
@@ -234,7 +239,7 @@ export class RestartServerModalContent {
             });
     }
 
-    close(msg) {
-        this.activeModal.close(msg);
+    close = (msg?: string) => {
+        this.dialogRef.close(msg);
     }
 }

@@ -6,7 +6,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { IntegrationService } from '../../integration.service';
 

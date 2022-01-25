@@ -15,7 +15,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
 import { AddWidgetModalContent }          from './add-widget/add-widget.component';
-import { ApplyModalContent, NxModalApplyComponent } from './apply/apply.component';
+import { ApplyModalContent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
@@ -74,7 +74,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         RemoveUserModalContent,
         EmbedModalContent,
         ApplyModalContent,
-        NxModalApplyComponent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
@@ -97,7 +96,6 @@ import { WizardModalContent } from './wizard/wizard.component';
     ],
     providers: [
         NxDialogsService,
-        NxModalApplyComponent
     ],
     exports: [
         GenericDialogModule

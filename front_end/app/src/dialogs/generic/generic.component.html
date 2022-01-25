@@ -1,7 +1,7 @@
 <div class="modal-header" *ngIf="title">
     <button type="button" class="close"
             data-dismiss="modal" aria-label="Close"
-            (click)="activeModal.close()" *ngIf="closable">
+            (click)="close()" *ngIf="closable">
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
     <h1 class="modal-title" [ngClass]="{'closable': closable}">
@@ -19,7 +19,7 @@
             translate>Close</button>
     <button type="button" class="btn"
             [ngClass]="buttonClass" *ngIf="!cancellable"
-            (click)="ok()"><ng-container>{{actionLabel}}</ng-container>
+            (click)="close(true)"><ng-container>{{actionLabel}}</ng-container>
     </button>
     <button type="button" class="btn btn-default"
             *ngIf="!cancellable && cancelLabel"

@@ -18,7 +18,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
 
 import { IntegrationService } from '../integration.service';

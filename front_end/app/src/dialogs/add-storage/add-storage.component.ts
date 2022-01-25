@@ -1,15 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import {
     FormGroup,
     FormControl,
     Validators
 } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -27,15 +27,15 @@ import { NxToastService } from '../toast.service';
     styleUrls: ['add-storage.component.scss']
 })
 export class AddStorageModalContent {
-    @Input() serverId: string;
-    @Input() storageManager: StorageManager;
-    @Input() cancelPolls: () => any
-    @Input() closable: boolean;
-    storageForm: FormGroup;
+    @Input() closable: boolean = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    serverId: string;
+    storageManager: StorageManager;
+    storageForm: FormGroup;
+    cancelPolls: () => any
     storageFormValueSubscription: Subscription;
 
     addStorage: Process;
@@ -49,9 +49,10 @@ export class AddStorageModalContent {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -92,6 +93,8 @@ export class AddStorageModalContent {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
+
         this.storageForm = new FormGroup({
             url: new FormControl(
                 null,
@@ -141,7 +144,7 @@ export class AddStorageModalContent {
                     message = this.LANG.storage.success();
                 }
                 this.storageForm.reset();
-                this.activeModal.close(res.id && this.CONFIG.responseOk);
+                this.close(res.id && this.CONFIG.responseOk);
                 this.toastService.show(message, options);
             },
             err => {
@@ -251,8 +254,8 @@ export class AddStorageModalContent {
         this.alreadyCheckedAndExists = false;
     }
 
-    close = () => {
+    close = (msg?) => {
         this.storageForm.reset();
-        this.activeModal.close();
+        this.dialogRef.close(msg);
     }
 }

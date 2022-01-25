@@ -17,7 +17,7 @@ import { environment } from '@environments/environment';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';

@@ -460,4 +460,27 @@ export class NxUtilsService {
         target.classList.add('pseudo-anchor');
         target.addEventListener(eventType, (event) => clickHandler(event));
     }
+
+    /*
+    * Helper function to initialize local variables from object properties named in "keys".
+    *
+    * USAGE: NxUtilsService.pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
+    *
+    * @param {Record<any, any>} source An object with targeted properties
+    * @param {string[]} keys An array with key names to be targeted
+    * @param {Record<any, any> = {}} target Specifies the object to be updated with extracted properties
+    * @param {boolean = true} updateTarget
+    * */
+    static pickFrom = (
+        source: Record<any, any>,
+        keys: string[],
+        target: Record<any, any> = {},
+        updateTarget = true
+    ) => keys.reduce((acc, key) => {
+        if (updateTarget) {
+            acc[key] = source[key];
+            return acc;
+        }
+        return { ...acc, key: source[key] };
+    }, target);
 }

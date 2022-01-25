@@ -23,7 +23,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { delayInitial } from '@services/utils.service';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 const HR_MINS = 60;
 const DAY_HRS = 24;

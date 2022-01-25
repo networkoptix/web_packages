@@ -1,19 +1,18 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
     ConfigType,
-    ModalContent,
     ModalManifest,
     ModalType
 } from '@components/console-table/console-table.component.types';
 import {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import {
     ConsoleMode
 } from '@pages/developer-console/console/console.component.types';
@@ -26,6 +25,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxUtilsService } from '@services/utils.service';
 
 import { NxToastService } from '../toast.service';
 
@@ -43,13 +43,13 @@ export const manifestLookupByType = (config: IConfig, type: ModalType) => {
     templateUrl: 'edit.component.html',
     styleUrls: ['edit.component.scss']
 })
-export class EditModalContent implements ModalContent {
-    @Input() heading: string;
-    @Input() modal: ModalType;
-    @Input() values: Record<string, any>;
-    @Input() manifest: ModalManifest;
-    @Input() settings: ContentSettings;
-    @Input() contextList: ContextManifest[] = [];
+export class EditModalContent {
+    heading: string;
+    modal: ModalType;
+    values: Record<string, any>;
+    manifest: ModalManifest;
+    settings: ContentSettings;
+    contextList: ContextManifest[] = [];
 
     STRUCTURE_TYPE = ConfigType
     errors: Record<string, string[]> = {};
@@ -70,20 +70,30 @@ export class EditModalContent implements ModalContent {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private toastService: NxToastService,
         private cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private translate: TranslateService,
         private router: Router,
-        private consoleService: NxConsoleService
+        private consoleService: NxConsoleService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.config;
         this.LANG = language.translations;
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(
+            this.dialogData,
+            [
+                'heading', 'modal', 'values',
+                'manifest', 'settings', 'contextList',
+            ],
+            this
+        );
+
         this.values = this.values
             ? { ...this.values }
             : this.manifest.fields.reduce((
@@ -210,7 +220,7 @@ export class EditModalContent implements ModalContent {
     }
 
     close = (result?) => {
-        this.activeModal.close(result);
+        this.dialogRef.close(result);
     }
 
     clearError = (field) => {

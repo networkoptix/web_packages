@@ -3,7 +3,7 @@
         <h1 class="modal-title" translate>Delete Account?</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.close()"  (mousedown)="clearErrors()" *ngIf="closable">
+                (click)="close()"  (mousedown)="clearErrors()" *ngIf="closable">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
@@ -16,7 +16,7 @@
             <input class="form-control"
                 #password="ngModel"
                 id="password"
-                name="password" 
+                name="password"
                 type="password"
                 required
                 (ngModelChange)="setPassword(password)"
@@ -31,6 +31,6 @@
             [form]="deleteCloudUserForm"
             actionType="danger"
             [buttonText]="LANG.dialogs.buttons.delete()"></nx-process-button>
-        <button type="button" class="btn btn-default" (click)="activeModal.close()" (mousedown)="clearErrors()">{{ LANG.dialogs.buttons.cancel() }}</button>
+        <button type="button" class="btn btn-default" (click)="close()" (mousedown)="clearErrors()">{{ LANG.dialogs.buttons.cancel() }}</button>
     </div>
 </form>

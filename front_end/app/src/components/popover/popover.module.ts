@@ -3,8 +3,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { NxPopoverService } from '@components/popover/popover.service';
-
+import { NxPopoverService } from './popover.service';
 import { NxPopoverComponent } from './popover/popover.component';
 
 @NgModule({

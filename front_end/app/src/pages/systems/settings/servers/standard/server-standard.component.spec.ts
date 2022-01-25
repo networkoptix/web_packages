@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -15,7 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
 import { RouterLinkDirectiveStub } from '@src/_testing';
-import { NxMenuService } from '@src/menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import {
     NxSystemStandardServerComponent,
@@ -103,13 +104,13 @@ describe('NxSystemStandardServerComponent', () => {
             providers: [
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
-                NxApplyService,
-                { provide: NxCloudApiService, useValue: {} },
-                { provide: NxProcessService, useValue: {} },
                 { provide: ActivatedRoute, useValue: routeMock },
-                { provide: NxDialogsService, useValue: {} },
+                MockProvider(NxApplyService),
+                MockProvider(NxCloudApiService),
+                MockProvider(NxProcessService),
+                MockProvider(NxDialogsService),
+                MockProvider(NxUriService),
                 NxMenuService,
-                { provide: NxUriService, useValue: {} },
                 NxToastService
             ]
         }).compileComponents()

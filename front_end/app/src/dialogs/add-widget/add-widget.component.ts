@@ -1,20 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { WidgetCard } from '@components/widgets/helper-classes';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { environment } from '@environments/environment';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { delayInitial, NxUtilsService } from '@services/utils.service';
-
-import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'nx-modal-add-widget-content',
@@ -22,13 +21,14 @@ import { environment } from '../../../environments/environment';
     styleUrls: ['add-widget.component.scss']
 })
 export class AddWidgetModalContent {
-    @Input() widgets: WidgetCard[];
-    @Input() gridSize: number;
-    @Input() gridGap: number;
-    @Input() closable: boolean;
-    @Input() dashboardMenu: DashboardConfiguration[];
-    @Input() activeDashboard: DashboardConfiguration;
-    @Input() updateSelectedDashboard: (id: string, dashboard: DashboardConfiguration) => void;
+    @Input() closable: boolean = true;
+
+    widgets: WidgetCard[];
+    gridSize: number;
+    gridGap: number;
+    dashboardMenu: DashboardConfiguration[];
+    activeDashboard: DashboardConfiguration;
+    updateSelectedDashboard: (id: string, dashboard: DashboardConfiguration) => void;
 
     addWidget: Process;
     selectedWidget: DropdownItem<WidgetCard>;
@@ -66,11 +66,12 @@ export class AddWidgetModalContent {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private cd: ChangeDetectorRef,
         private route: ActivatedRoute,
-        private http: HttpClient
+        private http: HttpClient,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.config;
         this.LANG = language.translations;
@@ -85,6 +86,16 @@ export class AddWidgetModalContent {
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(
+            this.dialogData,
+            [
+                'widgets', 'gridSize', 'gridGap',
+                'dashboardMenu', 'activeDashboard',
+                'updateSelectedDashboard',
+            ],
+            this
+        );
+
         this.dashboardOptions = this.dashboardMenu.map(({ dashboardName: name, id: value }) => ({ name, value }));
         const { dashboardName: name, id: value } = this.activeDashboard || {};
         this.selectedDashboard = { name, value };
@@ -100,7 +111,11 @@ export class AddWidgetModalContent {
         this.addWidget = this.processService.createProcess(
             () => new Promise((resolve) => setTimeout(resolve, 100)),
             {},
-            () => this.activeModal.close(this.selectedWidget.value)
+            () => this.close(this.selectedWidget.value)
         );
+    }
+
+    close = (msg?) => {
+        this.dialogRef.close(msg);
     }
 }

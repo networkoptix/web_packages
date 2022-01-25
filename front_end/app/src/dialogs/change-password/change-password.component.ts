@@ -1,16 +1,19 @@
 import {
     Component,
+    Inject,
     Input,
     Renderer2,
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NxSystem, NxSystemUser } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-change-password',
@@ -18,12 +21,13 @@ import { NxProcessService, Process } from '@services/process.service';
     styleUrls: []
 })
 export class ChangePasswordModalContent {
-    @Input() system;
-    @Input() user;
-    @Input() closable;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    system: NxSystem;
+    user: NxSystemUser;
     changePassword: Process;
     newPasswordForUser: string;
     currentPasswordForUser: string;
@@ -35,11 +39,12 @@ export class ChangePasswordModalContent {
     @ViewChild('changePasswordForm') changePasswordForm: NgForm;
 
     constructor(
-        public activeModal: NgbActiveModal,
         private renderer: Renderer2,
         private language: NxLanguageProviderService,
         private processService: NxProcessService,
-        private configService: NxConfigService
+        private configService: NxConfigService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
@@ -52,11 +57,9 @@ export class ChangePasswordModalContent {
         return this.user.isLocalOwner && this.user.isMe;
     }
 
-    public closeModal = (result: boolean = false) => {
-        return this.activeModal.close(result);
-    }
-
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system', 'user'], this);
+
         this.changePassword = this.processService
             .createProcess(() => {
                 this.user.password = this.newPasswordForUser;
@@ -75,7 +78,7 @@ export class ChangePasswordModalContent {
                     ).toPromise().then(() => {
                         return this.system
                             .saveUser(this.user, this.user.role)
-                            .then(() => this.closeModal(true));
+                            .then(() => this.close(true));
                     }, () => {
                         this.changePasswordForm.controls.currentPassword.setErrors({ wrongPassword: true });
                         this.renderer.selectRootElement('#currentPassword').focus();
@@ -85,7 +88,7 @@ export class ChangePasswordModalContent {
 
                 return this.system
                     .saveUser(this.user, this.user.role)
-                    .then(() => this.closeModal(true));
+                    .then(() => this.close(true));
             }, {
                 errorCodes: {
                     notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
@@ -97,5 +100,9 @@ export class ChangePasswordModalContent {
                 errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
                 ignoreUnauthorized: true
             });
+    }
+
+    close = (msg: string | boolean = false) => {
+        this.dialogRef.close(msg);
     }
 }

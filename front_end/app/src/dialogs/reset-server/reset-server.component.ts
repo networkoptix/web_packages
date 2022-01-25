@@ -1,12 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -29,13 +29,14 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: []
 })
 export class ResetServerModalContent {
-    @Input() system: NxSystem;
-    @Input() serverName: string;
-    @Input() serverId: string;
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
+
+    system: NxSystem;
+    serverName: string;
+    serverId: string;
     needsUpdate: boolean;
     resetServer: Process;
     password: string;
@@ -44,7 +45,6 @@ export class ResetServerModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private appState: NxAppStateService,
         private loginService: NxLoginService,
         private processService: NxProcessService,
@@ -52,14 +52,18 @@ export class ResetServerModalContent {
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
         private router: Router,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
-        @Inject(DOCUMENT) private document: Document
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
+
         const options = {
             classname: this.CONFIG.toast.warning,
             autohide: true,
@@ -74,7 +78,7 @@ export class ResetServerModalContent {
             this.toastService.show(this.LANG.servers.resetFailed?.(), options);
             return false;
         };
-        const isResetingCurrentServer = (): boolean => {
+        const isResettingCurrentServer = (): boolean => {
             const currentServer = this.system.serverManager.servers
                 .find(server => server.id === this.serverId);
             return currentServer.networkAddresses.includes(this.document.location.host) ||
@@ -105,11 +109,11 @@ export class ResetServerModalContent {
             }, async() => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;
                 if (environment.isLocal && numberOfServers) {
-                    this.activeModal.close();
+                    this.close();
                     if (numberOfServers === 1) {
                         this.localStorage.store('resetServer', true);
                         setTimeout(() => window.location.reload(), 2000);
-                    } else if (isResetingCurrentServer()) {
+                    } else if (isResettingCurrentServer()) {
                         this.appState.systemAvailable$.next(false);
                     } else {
                         routeToNextServer();
@@ -125,7 +129,7 @@ export class ResetServerModalContent {
                         return handleResetFailError('getModuleInfo', err);
                     } else if (environment.isLocal) {
                         // If we failed to get module info the system probably has only one server.
-                        this.activeModal.close();
+                        this.close();
                         this.appState.systemAvailable$.next(false);
                     }
                 }
@@ -152,7 +156,7 @@ export class ResetServerModalContent {
                                 () => {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
-                                    this.activeModal.close();
+                                    this.close();
                                     const successMessage = NxLanguageProviderService.translate(
                                         this.LANG.servers.resetSuccessful?.(),
                                         { serverName: this.serverName }
@@ -186,7 +190,7 @@ export class ResetServerModalContent {
             });
     }
 
-    close() {
-        this.activeModal.close();
+    close = (msg? : string) => {
+        this.dialogRef.close(msg);
     }
 }

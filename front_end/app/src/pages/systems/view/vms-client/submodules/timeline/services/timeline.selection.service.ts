@@ -442,7 +442,7 @@ export class TimelineSelectionService {
                 this.handleMouseMove(this._lastMouseMove);
                 break;
             case SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR:
-                // false-posibively buggy =(
+                // false-positively buggy =(
                 if (this.leftEdgeScrollingSpeed && !this.scroll.canScrollLeft) {
                     return;
                 }

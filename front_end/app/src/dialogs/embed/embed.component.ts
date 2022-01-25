@@ -4,14 +4,15 @@ import {
     Input,
     ViewChild,
     OnDestroy,
-    AfterViewInit
+    AfterViewInit,
+    Inject
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
@@ -26,9 +27,7 @@ interface IParams<Value = any> {
     styleUrls: []
 })
 export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
-    @Input() systemId;
-    @Input() disconnect;
-    @Input() closable;
+    @Input() closable = true;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -42,7 +41,8 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        public activeModal: NgbActiveModal
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.params = {
             authString: '',
@@ -102,7 +102,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
             '</iframe>';
     }
 
-    close() {
-        this.activeModal.close();
+    close = () => {
+        this.dialogRef.close();
     }
 }

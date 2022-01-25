@@ -1,34 +1,32 @@
-import { Location } from '@angular/common';
 import {
     Component,
-    Input,
-    ViewEncapsulation
+    Inject,
+    OnInit,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
-import {
-    NgbActiveModal,
-    NgbModal,
-    NgbModalRef
-} from '@ng-bootstrap/ng-bootstrap';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { Process } from '@services/process.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'nx-modal-apply-content',
     templateUrl: 'apply.component.html',
     styleUrls: []
 })
-export class ApplyModalContent<Apply extends Process, Discard extends Function> {
-    @Input() applyFunc: Apply;
-    @Input() discardFunc: Discard;
-    @Input() form: NgForm;
+export class ApplyModalContent<Apply extends Process, Discard extends Function> implements OnInit {
+    applyFunc: Apply;
+    discardFunc: Discard;
+    form: NgForm;
 
     constructor(
-        public activeModal: NgbActiveModal
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
+    }
+
+    ngOnInit() {
+        NxUtilsService.pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);
     }
 
     apply = () => {
@@ -36,56 +34,18 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
             this.form.form.markAllAsTouched();
         }
         this.applyFunc.then(() => {
-            this.activeModal.close('applied');
+            this.close('applied');
         }, () => {
-            this.activeModal.close('canceled');
+            this.close('canceled');
         });
     };
 
-    close = () => {
-        this.activeModal.dismiss('canceled');
+    close = (msg: string = 'canceled') => {
+        this.dialogRef.close(msg);
     }
 
     discard = () => {
-        this.activeModal.close('discarded');
+        this.dialogRef.close('discarded');
         return this.discardFunc?.();
-    }
-}
-
-@Component({
-    selector: 'nx-modal-apply',
-    template: '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: []
-})
-
-export class NxModalApplyComponent {
-    modalRef: NgbModalRef;
-    LANG: LanguageI18NStaticTypes;
-
-    constructor(
-        private domSanitizer: DomSanitizer,
-        private location: Location,
-        private modalService: NgbModal,
-        private language: NxLanguageProviderService
-    ) {
-        this.LANG = this.language.translations;
-    }
-
-    private dialog(applyFunc, discardFunc) {
-        this.modalRef = this.modalService.open(ApplyModalContent,
-            {
-                windowClass: 'modal-holder',
-                backdrop: 'static'
-            });
-        this.modalRef.componentInstance.applyFunc = applyFunc;
-        this.modalRef.componentInstance.discardFunc = discardFunc;
-
-        return this.modalRef;
-    }
-
-    open(applyFunc, discardFunc) {
-        return this.dialog(applyFunc, discardFunc)
-            .result;
     }
 }
