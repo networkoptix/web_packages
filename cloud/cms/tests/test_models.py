@@ -1860,7 +1860,8 @@ class TestOpenAPIJSON:
     def test_version(self):
         version = self.model._meta.get_field('version')
         assert version.help_text == 'API version'
-        assert version.max_length == 20
+        assert version_validator in version.validators
+        assert version.max_length == 13
 
     def test_content(self):
         content = self.model._meta.get_field('content')

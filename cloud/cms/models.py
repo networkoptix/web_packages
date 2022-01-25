@@ -11,6 +11,7 @@ from functools import reduce
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta
 from distutils.util import strtobool
+from django.core.validators import RegexValidator
 
 from django.db.models.aggregates import Count
 from util.base_cache import BaseCache
@@ -3039,6 +3040,7 @@ class MaintenanceCompletion(models.Model):
         if portal_notification:
             portal_notification.maintenancecompletion_set.add(self)
 
+version_validator = RegexValidator(r"^(\d)\.(\d){1,2}\.(\d){1,2}\.(\d){5}$", "Version should be in a valid format. ex: 5.12.11.11111")
 
 class OpenAPIJSON(models.Model):
     class Meta:
@@ -3047,7 +3049,7 @@ class OpenAPIJSON(models.Model):
     JSON_TYPES = Choices((0, "VMS", "VMS"))
 
     name = models.CharField(help_text="API display name", max_length=36)
-    version = models.CharField(help_text="API version", max_length=20)
+    version = models.CharField(help_text="API version", max_length=13, validators=[version_validator])
     content = JSONField(help_text="API JSON", default={})
     type = models.IntegerField(
         choices=JSON_TYPES, default=JSON_TYPES.VMS)

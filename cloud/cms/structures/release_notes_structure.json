@@ -14,7 +14,10 @@
                 "value": "",
                 "description": "Cloud portal full version",
                 "type": "text",
-                "optional": false
+                "optional": false,
+                "meta": {
+                  "regex": "^(\\d)\\.(\\d){1,2}\\.(\\d){1,2}\\.(\\d){5}$"
+                }
               },
               {
                 "label": "Warnings",
