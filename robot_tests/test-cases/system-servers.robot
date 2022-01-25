@@ -98,7 +98,7 @@ Cloud Suite Setup
     Verify on Servers Page    timeout=120
     Sleep    300
     Common Restart Logout    ${ENV}
-    Merge Cloud Systems    ${server 1}[sysId]    ${server 2}[cloud id]    ${server 2}[owner]    ${password}
+    cdb Merge Cloud Systems    ${server 1}[sysId]    ${server 2}[cloud id]    ${server 2}[owner]    ${password}
     Sleep    120
 
     ${users}=    Register and Activate Generic Users    password=${password}
@@ -140,7 +140,7 @@ Server Settings Suite Tear Down
     Execute Command Remotely     docker container rm -f ${server 1}[contId] ${server 2}[id] ${server 3}[id]
 
     FOR    ${user}    IN    ${admin}    ${viewer}    ${live viewer}    ${adv viewer}    ${custom}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}    ${password}
+        Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}    ${password}
     END
 
     Close All Connections

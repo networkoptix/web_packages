@@ -52,6 +52,11 @@ class CloudPortalAPI(object):
             return r.json()
 
     @keyword
+    def cdb_merge_cloud_systems(self, master_id, slave_id, email, password):
+        r = requests.post(f'{self.env}/cdb/system/{master_id}/merged_systems/', auth=HTTPBasicAuth(email, password), json={"systemId":slave_id}, verify=False)
+        return r.json()
+
+    @keyword
     def change_password(self, email, old_password, new_password):
         with CloudSession(self.env, email, old_password) as s:
             data = {'old_password': old_password, 'new_password': new_password}
