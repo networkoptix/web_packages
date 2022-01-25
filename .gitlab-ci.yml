@@ -253,6 +253,7 @@ frontend:
     - cd cloud
     - /usr/local/bin/python -m pip install --upgrade pip
     - /usr/local/bin/python -m pip install discord.py
+    - cd bots
     - python y_u_no_pipeline_bot.py
     - echo "Canceling jobs still running on pipeline"
     - curl --request POST --header $CANCEL_HEADER $CANCEL_ENDPOINT
