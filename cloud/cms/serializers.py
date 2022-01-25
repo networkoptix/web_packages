@@ -520,7 +520,8 @@ class PortalNotificationSerializer(serializers.ModelSerializer):
 
 
 class PortalNotificationIdSerializer(serializers.Serializer):
-    notificationIds = serializers.ListField(child=serializers.IntegerField(), label="Notifications to mark as read")
+    notificationIds = serializers.ListField(
+        child=serializers.IntegerField(), label="Notifications to mark as read")
 
     def validate_notificationIds(self, notifications):
         if not isinstance(notifications, list):
@@ -532,10 +533,14 @@ class PortalNotificationIdSerializer(serializers.Serializer):
 
         return notifications
 
+
 class PortalNotificationListSerializer(serializers.Serializer):
-    currentBuild = serializers.SerializerMethodField('get_version', label="Current Cloud Portal build")
-    notifications = PortalNotificationSerializer(many=True, label="Currently active notifications for user.")
-    markedRead = PortalNotificationSerializer(many=True, default=[], label='Notifications marked as read')
+    currentBuild = serializers.SerializerMethodField(
+        'get_version', label="Current Cloud Portal build")
+    notifications = PortalNotificationSerializer(
+        many=True, label="Currently active notifications for user.")
+    markedRead = PortalNotificationSerializer(
+        many=True, default=[], label='Notifications marked as read')
 
     def get_version(self, obj):
         return settings.VERSION
@@ -549,3 +554,60 @@ class AgreementSerializer(serializers.Serializer):
     review_id = serializers.IntegerField()
     preview = serializers.BooleanField()
     accepted = serializers.BooleanField()
+
+
+class FieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataStructure
+        fields = 'name', 'label', 'type', 'description', 'optional'
+
+
+class AssetContextSerializer(serializers.Serializer):
+    class Meta:
+        model = Context
+        fields = 'name', 'label', 'is_global'
+
+    fields = FieldSerializer(many=True)
+
+
+class ManifestSerializer(serializers.Serializer):
+    contexts = AssetContextSerializer(many=True)
+
+
+class AssetManifestSerializer(serializers.Serializer):
+    type = serializers.IntegerField()
+    name = serializers.CharField()
+    manifest = ManifestSerializer()
+
+    def generate(asset_types: AssetType, validate=False):
+        many = not isinstance(asset_types, AssetType)
+        asset_types = asset_types if many else [asset_types]
+        data = [{
+            'type': asset_type.id,
+            'name': str(asset_type),
+            'manifest': {
+                'contexts': [
+                    {
+                        'name': context.name,
+                        'label': context.label,
+                        'is_global': context.is_global,
+                        'fields': [
+                            {
+                                attr: getattr(ds, attr, '')
+                                for attr in ['name', 'label', 'type', 'description', 'optional']
+                            }
+                            for ds in context.datastructure_set.all()
+                        ]
+                    }
+                    for context in asset_type.context_set.all()
+                ]
+            }
+        } for asset_type in asset_types]
+
+        serializer = AssetManifestSerializer(
+            data=data if many else data[0], many=many)
+
+        if validate:
+            serializer.is_valid()
+
+        return serializer

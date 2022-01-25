@@ -37,7 +37,7 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import AssetSerializer, ContextManifestSerializer, CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
+from cms.serializers import AssetManifestSerializer, AssetSerializer, ContextManifestSerializer, CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
     CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
 from cms import tasks
 
@@ -1351,40 +1351,6 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
         return response_attachment(package['file'], file_name, 'application/zip', attachment=True)
 
 
-def generate_manifest(asset_type: AssetType):
-    return {
-        'type': asset_type.id,
-        'name': str(asset_type),
-        'manifest': {
-            'contexts': [
-                {
-                    'name': context.name,
-                    'label': context.label,
-                    'global': context.is_global,
-                    'fields': [
-                        {
-                            attr: getattr(ds, attr, '')
-                            for attr in ['name', 'label', 'type', 'description', 'optional']
-                        }
-                        for ds in context.datastructure_set.all()
-                    ]
-                }
-                for context in asset_type.context_set.all()
-            ]
-        }
-    }
-
-
-def generate_manifest_for_asset_type(asset_type: AssetType = None):
-    if asset_type:
-        return api_success(generate_manifest(asset_type))
-
-    return api_success([
-        generate_manifest(asset_type)
-        for asset_type in AssetType.objects.all()
-    ])
-
-
 class AssetViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
     serializer_class = AssetSerializer
@@ -1408,14 +1374,14 @@ class AssetViewSet(ModelViewSet):
     def partial_update(self, *args, **kwargs):
         return self.save_asset(*args, **kwargs)
 
-    @action(detail=False)
+    @action(detail=False, serializer_class=AssetManifestSerializer)
     def manifests(self, request):
         asset_type_id = request.query_params.get('id', None)
         asset_type = asset_type_id and get_object_or_404(
             AssetType, id=asset_type_id)
-        return generate_manifest_for_asset_type(asset_type)
+        return api_success(AssetManifestSerializer.generate(asset_type or AssetType.objects.all(), True).data)
 
-    @action(detail=True)
+    @action(detail=True, serializer_class=AssetManifestSerializer)
     def manifest(self, request, pk=None):
         asset = self.get_object()
-        return generate_manifest_for_asset_type(asset.asset_type)
+        return api_success(AssetManifestSerializer.generate(asset.asset_type, True).data)
