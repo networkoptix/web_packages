@@ -490,7 +490,8 @@ class IntegrationSerializer(serializers.Serializer):
     instructions = InstructionsSerializer()
     support = SupportSerializer()
     downloadFiles = serializers.DictField()
-    downloadFilesOrder = serializers.DictField(child=serializers.IntegerField())
+    downloadFilesOrder = serializers.DictField(
+        child=serializers.IntegerField())
     requirementsAndCompatability = RequirementsAndCompatibilitySerializer(
         required=False)
     versionDetails = serializers.DictField()
@@ -510,6 +511,8 @@ class IntegrationSerializer(serializers.Serializer):
 
 class IntegrationsListSerializer(serializers.Serializer):
     data = IntegrationSerializer(many=True)
+
+
 class PortalNotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = PortalNotification
@@ -536,3 +539,13 @@ class PortalNotificationListSerializer(serializers.Serializer):
 
     def get_version(self, obj):
         return settings.VERSION
+
+
+class AgreementSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    shortDescription = serializers.CharField()
+    body = serializers.CharField()
+    id = serializers.IntegerField()
+    review_id = serializers.IntegerField()
+    preview = serializers.BooleanField()
+    accepted = serializers.BooleanField()
