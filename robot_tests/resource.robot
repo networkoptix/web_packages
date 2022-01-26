@@ -1,6 +1,6 @@
 *** Settings ***
 Resource     variables.robot
-Resource     ${variables_file}
+Resource     variables-env.robot
 Resource     Resources/front-end-resources.robot
 Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
@@ -14,8 +14,8 @@ Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
 Library      NoptixImapLibrary
 Library      NoptixLibrary/GenericKeywords.py
-Library      NoptixLibrary/ServerAPI.py
-Library      NoptixLibrary/CloudPortalAPI.py
+Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL}
+Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib

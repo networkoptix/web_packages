@@ -37,9 +37,10 @@ class BearerAuth(AuthBase):
         return r
 
 @library
-class ServerAPI:
-    def __init__(self):
-        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
+class ServerAPI(object):
+    
+    def __init__(self, image):
+        self.image = image
 
     def _login(self, server_url, username, password):
         data = {
@@ -402,7 +403,7 @@ class ServerAPI:
         header = {"X-Server-guid":serverId}
         body = {"port":newPort}
         r = requests.post(f'{serverUrl}/api/configure', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, headers=header, verify=False)
-        return r.json()
+        return r
 
     @keyword
     def disable_stat_reports(self, auth, serverUrl):

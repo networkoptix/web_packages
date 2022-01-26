@@ -20,12 +20,13 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 @library
 class CloudPortalAPI(object):
-    def __init__(self):
-        self.env = BuiltIn().get_variable_value('${ENV}', None)
-        self.customization = BuiltIn().get_variable_value('${customization}', None)
-        self.password = BuiltIn().get_variable_value('${BASE PASSWORD}', None)
-        self.baseEmail = BuiltIn().get_variable_value('${BASE EMAIL}', None)
-
+    
+    def __init__(self, env, customization, password, email):
+        self.env = env
+        self.customization = customization
+        self.password = password
+        self.baseEmail = email
+        
     @keyword
     def api_log_in(self, email, password, env=None):
         cloud_session = CloudSession(self.env, email, password)

@@ -200,14 +200,14 @@ Web Admin Test Teardown
     Select Server By Name    server 1
     Verify Server Buttons Are Enabled
     Change System Name    server 1 name changed    save=True
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
     Reload Page
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Wait Until Element is Visible    //header//nx-text-editable[contains(text(),"server 1 name changed")]
     Wait Until Element is Visible    //nx-level-3-item//a//span[contains(text(),"server 1 name changed")]     
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
     Reload Page
-    Wait Until Element Is Visible    //header//h2[contains(text(),"server 1")]/..
+    Wait Until Element Is Visible    //header//nx-text-editable[contains(text(),"server 1")]
 
 2. Server name changed via API updates on cloud
     [Tags]    C70961    cloud    webadmin
@@ -222,8 +222,8 @@ Web Admin Test Teardown
     Reload Page
     Sleep   5
     Select Server By Name    server 1 name changed
-    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
-
+    #Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]/..
+    Element Text Should Be    ${SYSTEM NAME}    server 1 name changed
     Log    Reset the name to server 1
     Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]
 
@@ -312,7 +312,7 @@ Web Admin Test Teardown
     Press Keys    ${PORT INPUT}    0
     Sleep    1
     ${current port}=    Get Value    ${PORT INPUT}
-    Should Be Equal    ${current port}    ${EMPTY}
+    Should Be Equal    ${current port}    1
     Element Should Be Disabled     ${SAVE BUTTON}
 
     Log    Step 3
@@ -355,7 +355,7 @@ Web Admin Test Teardown
     Verify on Servers Page
     Verify Server Buttons Are Enabled
     Change Port To    7002
-    @{auth}=    Create List    ${user in charge}    ${password}
+    @{auth}=    Create List    admin    ${password}
     Get Cameras    ${auth}    https://${QA BURBANK IP}:${extra port}
     Change server port via API    ${auth}    https://${QA BURBANK IP}:${extra port}    ${7001}    ${server 1}[serverId]
     Log To Console    port changed back
@@ -417,7 +417,7 @@ Web Admin Test Teardown
     
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"server 1")]
+    Wait Until Element is Visible    ${HM DETAILS PANEL}//table//td[@title="server 1"]
     Execute Command Remotely    docker container stop ${server 2}[id]
 
 14. Offline system 1 server settings
