@@ -160,7 +160,7 @@ class ServerAPI:
 
     @keyword
     def restart_server(self, serverUrl, auth):
-        r = requests.get(f'{serverUrl}/api/restart', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}/api/restart', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword
@@ -229,9 +229,9 @@ class ServerAPI:
     @keyword
     def activate_license(self, auth, serverUrl, license):
         body= {
-            "key":license
+            "licenseKey":license
         }
-        r = requests.post(f'{serverUrl}/ec2/activateLicense', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{serverUrl}/api/activateLicense', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
