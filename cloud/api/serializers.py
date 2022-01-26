@@ -169,7 +169,7 @@ class MenusSerializer(serializers.ModelSerializer):
         fields = 'type', 'base_url', 'id', 'title', 'description', 'nodes'
 
 
-class SettingsSerializer(serializers.Serializer):
+class SettingsSerializer(CustomizationCacheSerializer):
     cloudMerge = serializers.BooleanField(required=False)
     showAllBetas = serializers.BooleanField(required=False)
     menus = serializers.DictField(child=MenusSerializer())
@@ -215,6 +215,8 @@ class SettingsSerializer(serializers.Serializer):
                     UserGroupsToAssetPermissions.check_customization_permission(
                         request.user, settings.CUSTOMIZATION, 'api.custom_clients'):
                 kwargs['data']['customClientsEnabled'] = True
+            if not kwargs['data'].get('trafficRelayHost', False):
+                kwargs['data']['trafficRelayHost'] = settings.TRAFFIC_RELAY_HOST
 
         super().__init__(*args, **kwargs)
 

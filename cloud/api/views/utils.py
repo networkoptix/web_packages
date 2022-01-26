@@ -55,9 +55,9 @@ def get_cloud_capabilities_from_cache():
 def get_settings_from_cache():
     customization_cache = cloud_portal_customization_cache(
         settings.CUSTOMIZATION, 'config')
-    test_serializer = CustomizationCacheSerializer(data=customization_cache)
-    test_serializer.is_valid()
-    return test_serializer.data
+    serializer = CustomizationCacheSerializer(data=customization_cache)
+    serializer.is_valid()
+    return serializer.data
 
 
 def filter_releases(releases):
@@ -368,8 +368,9 @@ def get_feature_flags(request):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def get_settings(request):
+    data = get_settings_from_cache()
     serializer = SettingsSerializer(
-        data=get_settings_from_cache(), request=request)
+        data=data, request=request)
     serializer.is_valid()
     return Response(serializer.data)
 
