@@ -6,6 +6,7 @@ from json.decoder import JSONDecodeError
 from django.conf import settings
 from rest_framework import serializers
 from cms.controllers.integration import make_integrations_json
+from api.serializers import MenuNodeSerializer
 from cms.controllers.modify_db import save_unrevisioned_records
 from cms.controllers.release_notes import make_release_notes_json
 from django.db.models import Q

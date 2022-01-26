@@ -33,7 +33,7 @@ def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings)
 
 def test_get_settings_from_cache(mocker, customization_config, settings_from_cache, settings):
     cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache')
-    cache_mock.return_value = customization_config
+    cache_mock.return_value = settings_from_cache
 
     settings_dict = utils.get_settings_from_cache()
     cache_mock.assert_called_with(settings.CUSTOMIZATION, 'config')
@@ -360,7 +360,7 @@ class TestGetSettings:
         assert response.data['cloudMerge']
 
     def test_show_all_betas_removed(self):
-        self.settings_mock.return_value['showAllBetas'] = True
+        self.settings_mock.return_value['showAllBetas'] = False
         response = self.make_request()
         assert response.status_code == status.HTTP_200_OK
         assert response.data
@@ -413,12 +413,20 @@ class TestGetSettings:
 
 class TestIPVD:
     def test_post(self, arf, mocker):
-        cache_mock = mocker.patch.object(utils.cache, 'set')
+        cache_mock = mocker.patch.object(utils.cache, 'delete', return_value=True)
         request = arf.post('/api/ipvd')
+
+        # Test cache cleared
         response = utils.get_ipvd(request)
         assert response.status_code == status.HTTP_200_OK
-        assert response.data == {'IPVD cache cleared'}
-        cache_mock.assert_called_with('ipvd', {})
+        assert response.data == {utils.IPVD_CACHE_CLEARED}
+        cache_mock.assert_called_with('ipvd')
+
+        # Test no cached IPVD
+        cache_mock.return_value = False
+        response = utils.get_ipvd(request)
+        assert response.status_code == status.HTTP_202_ACCEPTED
+        assert response.data == {utils.IPVD_CACHE_NOT_CLEARED}
 
     def test_get(self, arf, mocker, ipvd_data, ipvd_data_processed):
         ipvd_mock = mocker.patch.object(utils.requests, 'get')
