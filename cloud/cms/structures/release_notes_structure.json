@@ -4,7 +4,7 @@
     "single_customization": false,
     "contexts": [
         {
-            "name": "Release Notes",
+            "name": "releaseNotes",
             "label": "Release Notes",
             "description": "Release notes for version",
             "values": [
@@ -14,10 +14,7 @@
                 "value": "",
                 "description": "Cloud portal full version",
                 "type": "text",
-                "optional": false,
-                "meta": {
-                  "regex": "^(\\d)\\.(\\d){1,2}\\.(\\d){1,2}\\.(\\d){5}$"
-                }
+                "optional": false
               },
               {
                 "label": "Warnings",
