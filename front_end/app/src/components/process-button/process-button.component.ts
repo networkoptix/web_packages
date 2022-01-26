@@ -26,6 +26,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() clickFn: () => void;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
+    @Input() buttonDisabledInProgress: boolean;
     @Input() actionType: string;
     @Input() form;
     @Input() customClass: unknown = '';

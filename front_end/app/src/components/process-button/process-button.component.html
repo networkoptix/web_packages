@@ -1,6 +1,6 @@
 <div class="process-button" [ngClass]="customClass">
-    <div *ngIf="!textOnly && process && process.processing" [ngClass]="buttonClass"
-         class="btn active focus loading {{customButtonClass}} {{process && process.processing && 'disabled'}}">
+    <div *ngIf="!textOnly && (process?.processing || buttonDisabledInProgress)" [ngClass]="{ 'disabledInProgress': buttonDisabledInProgress }"
+         class="btn active focus loading {{buttonClass}} {{customButtonClass}} {{process?.processing && 'disabled'}}">
         <div>
             <span class="dot1"></span><span class="dot2"></span><span class="dot3"></span>
         </div>
