@@ -1,5 +1,6 @@
 @use "../styles/typography";
 @use "../../../styles/theme_variables" as *;
+@use "bootstrap_utils" as bootstrap;
 
 :host {
   display: grid;
@@ -331,5 +332,50 @@ nx-editable-heading {
   100% {
     width: 240px;
     opacity: 1;
+  }
+}
+
+.sidebar-toggling-ear--wrapper {
+  position: fixed;
+  top: calc(50% - 40px / 2);
+  transform: translateX(-12px);
+  width: 16px;
+  height: 40px;
+  z-index: 100;
+
+  @include bootstrap.media-breakpoint-down(md) {
+    top: calc(50% - 70px / 2);
+    width: 50px;
+    height: 70px;
+  }
+
+  &.open {
+    .sidebar-toggling-ear {
+      transform: rotate(0deg);
+      border-radius: 0 2px 2px 0;
+    }
+  }
+
+  .sidebar-toggling-ear {
+    width: 16px;
+    height: 40px;
+    background-color: var(--additional_light2);
+    background-image: url("arrow-left.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    cursor: pointer;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    @include bootstrap.media-breakpoint-down(md) {
+      margin-top: 15px;
+    }
+
+    transform: rotate(180deg);
+    border-radius: 2px 0 0 2px;
   }
 }

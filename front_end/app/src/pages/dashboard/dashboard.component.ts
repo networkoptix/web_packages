@@ -95,6 +95,7 @@ export class NxDashboardComponent implements DashboardGroup {
     hidePreview = false;
     editingTitle = false;
     showSettings = false;
+    showSidePanel = true;
     downloadFileName;
     activeAction;
 
@@ -170,9 +171,17 @@ export class NxDashboardComponent implements DashboardGroup {
         this.activeCellIndex = index;
     }
 
+    toggleSidePanel() {
+        this.gridSize = 0;
+        this.showSidePanel = !this.showSidePanel;
+        setTimeout(() => {
+            this.loading = false;
+        });
+    }
+
     adjustGridHeight({ width }: any) {
         const calculatedColumns = Math.floor(width / this.MIN_GRID_SIZE / this.MIN_COLUMNS) * this.MIN_COLUMNS;
-        this.gridColumns = Math.min(Math.max(calculatedColumns, this.MIN_COLUMNS), this.MAX_COLUMNS);
+        this.gridColumns = Math.min(Math.max(this.showSidePanel ? calculatedColumns : calculatedColumns - 4, this.MIN_COLUMNS), this.MAX_COLUMNS);
         this.gridSize = Math.ceil((width - (this.gridColumns * (this.GRID_GAP || 1))) / this.gridColumns);
     }
 

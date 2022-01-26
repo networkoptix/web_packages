@@ -15,6 +15,7 @@
 </div>
 
 <div *ngIf="menu && activeDashboard && !loading" class="px-3" id="dashboard-heading">
+  <!-- <button *ngIf="!loading" (click)="toggleSidePanel()">toggle</button> -->
   <nx-editable-heading name="dashboardName" [nameWatcherValue]="activeDashboard.dashboardName"
     (nameWatcherValueChange)="activeDashboard.dashboardName = $event; updatePersistedConfig()"
     [editEnabled]="dragEnabled" [(editMode)]="editingTitle"></nx-editable-heading>
@@ -27,7 +28,7 @@
   <nx-pre-loader></nx-pre-loader>
 </ng-template>
 
-<div *ngIf="menu.length" id="dashboard-menu">
+<div *ngIf="showSidePanel && menu.length" id="dashboard-menu">
   <div *ngIf="dragEnabled && showSettings" class="settings-menu">
     <div class="settings-wrap">
       <div class="settings-heading">
@@ -91,6 +92,9 @@
       'grid-auto-rows': gridSize + 'px',
       'grid-template-columns': 'repeat(' + gridColumns + ', [col-start] ' + gridSize + 'px)'
     }">
+  <div class="sidebar-toggling-ear--wrapper" [ngClass]="{ 'open': showSidePanel }" (click)="toggleSidePanel()">
+    <div class="sidebar-toggling-ear"></div>
+  </div>
   <ng-container *ngFor="let card of cards; let i = index">
     <div cdkDropList *ngIf="isFirstPartyWidget(card.identifier)" [cdkDropListDisabled]="!dragEnabled"
       [cdkDropListData]="i" [cdkDropListSortingDisabled]="true" [ngStyle]="{
