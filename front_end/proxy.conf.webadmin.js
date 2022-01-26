@@ -40,7 +40,10 @@ const PROXY_CONFIG = [
             '/rest',
             '/static/customization',
             '/static/lang_ru_RU',
+            '/static/lang_ja_JP',
             '/static/images/logo.png',
+            // '/static/supported_languages.json',
+            '/static/languages.json',
             '/swagger-ui',
             '/web'
         ],
@@ -49,6 +52,7 @@ const PROXY_CONFIG = [
         secure: false
     }, {
         context: [
+            '/static/supported_languages.json',
             '/static/lang_en_US',
             '/static'
         ],

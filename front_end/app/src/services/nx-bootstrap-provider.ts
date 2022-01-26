@@ -50,21 +50,22 @@ export class NxBootstrapProvider {
     load(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.CONFIG = this.configService.getConfig();
-            this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
-            return Promise.all([
-                this.configService.getSettings(),
-                this.languageService.loadLanguage(),
-                this.checkLocalIfNew()
-            ]).then((result: any) => {
+            return this.configService.getSettings().then((settings: any) => {
                 // this language will be used as a fallback when a translation
                 // isn't found in the current language
+                this.setSettings(settings);
                 this.languageService.defaultLanguage = this.CONFIG.defaultLanguage;
-                this.setSettings(result[0]);
-                this.setLanguage(result[1]);
 
-                if (result[2].reply) {
-                    this.setLocalInfo(result[2].reply);
-                    this.isNewSystem = result[2].reply.serverFlags.includes('SF_NewSystem');
+                return Promise.all([
+                    this.languageService.loadLanguage(),
+                    this.checkLocalIfNew()
+                ]);
+            }).then(([language, moduleInfo]: any) => {
+                this.setLanguage(language);
+
+                if (moduleInfo.reply) {
+                    this.setLocalInfo(moduleInfo.reply);
+                    this.isNewSystem = moduleInfo.reply.serverFlags.includes('SF_NewSystem');
                 }
 
                 this.isLoaded = true;
@@ -119,7 +120,7 @@ export class NxBootstrapProvider {
     setSettings(data) {
         if (this.environment.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
-            const { description, webadminConfig, supportedLanguages } = data;
+            const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;
             this.CONFIG.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = {
                     title: name,
@@ -137,7 +138,6 @@ export class NxBootstrapProvider {
                 },
                 name: description.companyName
             };
-            this.CONFIG.defaultLanguage = description.defaultLanguage;
             this.CONFIG.licenseTypes = webadminConfig.licenseTypes;
             // Fallback in case licenseTypes from webadmin_config.json is made a string in the cms
             if (typeof webadminConfig.licenseTypes === 'string') {
@@ -145,13 +145,8 @@ export class NxBootstrapProvider {
             }
             this.CONFIG.trialLicenseKey = description.desktop.trialLicenseKey;
 
-            let languages = supportedLanguages.length ? supportedLanguages : [description.defaultLanguage];
-            if (description?.customLanguages?.length) {
-                languages = description.customLanguages;
-            } else if (webadminConfig?.supportedLanguages?.length) {
-                languages = webadminConfig.supportedLanguages;
-            }
-            this.CONFIG.supportedLanguages = languages;
+            this.CONFIG.defaultLanguage = defaultLanguage || description.defaultLanguage || this.CONFIG.defaultLanguage;
+            this.CONFIG.supportedLanguages = supportedLanguages.length ? supportedLanguages : [this.CONFIG.defaultLanguage];
         } else if (!this.environment.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once

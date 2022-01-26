@@ -37,10 +37,11 @@ export class NxConfigService {
             const descriptionRequest =
                 this.http.get('/static/customization/description.json').toPromise();
             const supportedLanguagesRequest =
-                this.http.get('/static/languages.json').toPromise();
+                this.http.get('/static/supported_languages.json').toPromise();
             return Promise.all([webadminConfigRequest, descriptionRequest, supportedLanguagesRequest])
-                .then(([webadminConfig, description, supportedLanguages]: [Object, Object, Object[]]) => ({
-                    supportedLanguages: supportedLanguages.map((lang: any) => lang.language),
+                .then(([webadminConfig, description, supportedLanguages]: [Object, Object, any]) => ({
+                    defaultLanguage: supportedLanguages.default,
+                    supportedLanguages: supportedLanguages.supported,
                     webadminConfig,
                     description
                 }));
