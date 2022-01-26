@@ -1,6 +1,6 @@
-<ng-container *ngIf="!APIToolService.outDatedSystem">
-    <ng-container  #swagger *ngIf="APIToolService.menuNodes; else preloader">
-        <div *ngIf="APIToolService.activeNode" [class.single-api-route-showing]="singleAPIRouteShowing" [ngClass]="{'api-info': APIToolService.APIInfoNodes[APIToolService.activeNode.name]}">
+<ng-container *ngIf="!(APIToolSystemService.outDatedSystem$ | async)">
+    <ng-container  #swagger *ngIf="openAPIJSONService.menuNodes; else preloader">
+        <div *ngIf="openAPIJSONService.activeNode" [class.single-api-route-showing]="singleAPIRouteShowing" [ngClass]="{'api-info': openAPIJSONService.isInfoNode}">
             <div style="padding: 0 1rem 1rem" class="swagger-description">
                 <h2>{{ this.swaggerMenuDescription.title }}</h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">

@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, ViewChild 
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 
-import { NxAPIToolService } from '@pages/api-tool/api-tool.service';
+import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system.service';
 import { WINDOW } from '@services/window-provider';
 
 import { findLine, focusPositionMarker, highlightAllCode, highlightLine, setCodeBlockHTML } from '../swagger-utils';
@@ -24,7 +24,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
 
     constructor(@Inject(WINDOW) private window: any,
                 @Inject(DOCUMENT) private document: Document,
-                private APIToolService: NxAPIToolService,
+                private APIToolService: NxAPIToolSystemService,
                 private elementRef: ElementRef) { }
 
     ngOnInit() {

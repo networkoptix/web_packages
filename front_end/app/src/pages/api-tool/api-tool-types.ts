@@ -1,8 +1,3 @@
-import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
-import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-
-// Could make this type more accurate, but have to watch out for different/older versions of the API
-
 export interface MethodInfo {
     description: string,
     parameters: Array<object>,
@@ -17,6 +12,12 @@ export interface MethodInfo {
 
 export type method = [string, MethodInfo]
 
+export interface APIInfo {
+    title: string,
+    description: string,
+    version: string
+}
+
 export interface APIDoc {
     info? : APIInfo,
     tags  : {
@@ -30,13 +31,6 @@ export interface APIDoc {
     servers?: { url: string}[]
 }
 
-export type placeHolderSelections = 'api_information' | 'legacy' | 'deprecated'
-
-export interface ServerDropdownItem extends DropdownItem {
-    apiDocFull   : APIDoc,
-    incompatible : boolean
-}
-
 export enum requestTypes {
     GET = 'get',
     POST = 'post',
@@ -45,17 +39,4 @@ export enum requestTypes {
     DELETE = 'delete',
     PATCH = 'patch',
     OPTIONS = 'options'
-}
-
-export interface APIInfo {
-    title: string,
-    description: string,
-    version: string
-}
-export interface APIInfoStore {
-    [key: string]: APIInfo
-}
-
-export interface APIDropdownItem extends DropdownItem {
-    menu     : MenuNodeWithParent[]
 }

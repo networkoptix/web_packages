@@ -277,7 +277,7 @@ class SanitizeHTMLSerializer(serializers.Serializer):
 
 class OpenAPIJSONSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='get_type_display')
-
+    content = serializers.JSONField()
     class Meta:
         model = OpenAPIJSON
         fields = ('__all__')

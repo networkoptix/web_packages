@@ -14,13 +14,14 @@ import {
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config';
-import type { APIDocVersion } from './nx-config/base-config';
+import type { APIDocType } from './nx-config/base-config';
 import * as t from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import { IParams } from './system.service';
@@ -483,8 +484,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
     }
 
-    getApiDoc(type: APIDocVersion = 'main') {
-        return this.get(this.CONFIG.apiDocURL[type]).toPromise();
+    getApiDoc(type: APIDocType = 'main') {
+        return this.get<APIDoc>(this.CONFIG.apiDocURL[type]).toPromise();
     }
 
     backupControl(action?: 'start' | 'stop') {

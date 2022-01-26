@@ -60,7 +60,8 @@ class SWITCHES(metaclass=_FlagType):
     landing_page = ('Landing Page', 'landingPage')
     kb_instant_search = ('KnowledgeBase Instant Search', 'kbInstantSearch')
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
-    landing_page = ('Archive Selection', 'archiveSelection')
+    archive_selection = ('Archive Selection', 'archiveSelection')
+    readonly_apis = ('Readonly APIs', 'readonlyAPIs')
 
 
 

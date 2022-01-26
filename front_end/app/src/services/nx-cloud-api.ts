@@ -264,6 +264,11 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    @staffSWBypass
+    getOpenAPIJSONs() {
+        return this.http.get<{data: t.OpenAPIJSON[]}>(this.CONFIG.apiBase + '/openapi_jsons');
+    }
+
     // not used, except in debug
     reloadIPVD() {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});

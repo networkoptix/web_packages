@@ -17,14 +17,16 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
-import { NxAPIToolService } from './api-tool.service';
+import { NxAPIToolSystemService } from './services/api-tool-system.service';
+import { NxOpenAPIJSONService } from './services/openapi-json.service';
+import { NxReadonlyAPIService } from './services/readonly-api.service';
 
 @UntilDestroy()
 @Component({
     selector: 'nx-api-tool',
     styleUrls: ['api-tool.component.scss'],
     templateUrl: 'api-tool.component.html',
-    providers: [NxAPIToolService],
+    providers: [NxAPIToolSystemService, NxOpenAPIJSONService, NxReadonlyAPIService],
     encapsulation: ViewEncapsulation.None
 })
 export class NxAPIToolComponent {
@@ -35,29 +37,31 @@ export class NxAPIToolComponent {
     menuOffset: number = 0;
 
     constructor(
-        configService: NxConfigService,
-        languageService: NxLanguageProviderService,
-        pageService: NxPageService,
-        public APIToolService: NxAPIToolService,
+        private configService: NxConfigService,
+        private languageService: NxLanguageProviderService,
+        private pageService: NxPageService,
         private appStateService: NxAppStateService,
-        private scrollMechanicsService: NxScrollMechanicsService
+        private scrollMechanicsService: NxScrollMechanicsService,
+        public APIToolService: NxAPIToolSystemService,
+        public APIJSONService: NxOpenAPIJSONService,
     ) {
-        this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
-
-        pageService.pageTitle = this.LANG.pageTitles.apiTool();
+        this.LANG = this.languageService.translations;
+        this.CONFIG = this.configService.getConfig();
+        this.pageService.pageTitle = this.LANG.pageTitles.apiTool();
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
         this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this), debounceTime(25)).subscribe(({ width }) => {
             if (width >= 768) {
                 this.setHeaderHeight();
-                if (this.developersMenuRef.nativeElement) {
+                if (this.developersMenuRef?.nativeElement) {
                     this.setMenuOffset();
                 }
             }
         });
+    }
 
-        this.APIToolService.serversLoaded$.pipe(untilDestroyed(this), filter(loaded => loaded)).subscribe(loaded => {
+    ngOnInit() {
+        this.APIToolService.serversLoading$.pipe(untilDestroyed(this), filter(loading => !loading)).subscribe(() => {
             this.setMenuOffset();
         });
     }

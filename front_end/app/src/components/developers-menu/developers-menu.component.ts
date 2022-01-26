@@ -19,15 +19,7 @@ import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 
-export interface RelatedLinks {
-    type: string,
-    nodes: MenuNodeWithParent[]
-}
-
-export interface ClickEvent {
-    node: MenuNodeWithParent,
-    clearSearch: boolean
-}
+import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-menu-types';
 
 @UntilDestroy()
 @Component({
@@ -281,5 +273,3 @@ export class NxDevelopersMenuComponent implements OnInit {
         });
     }
 };
-
-export type MenuNodeWithParent = MenuNode & {parentNode?: MenuNode};

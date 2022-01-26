@@ -3,7 +3,7 @@ import {
     Component, ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
-    Inject, Input, OnChanges, Renderer2, SimpleChanges,
+    Inject, Input, OnChanges, OnInit, Renderer2, SimpleChanges,
     ViewChild,
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
@@ -13,14 +13,17 @@ import { take } from 'rxjs/operators';
 import SwaggerUI from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
-import {
+import type {
     MenuNodeWithParent
-} from '@components/developers-menu/developers-menu.component';
+} from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
+import { NxUtilsService } from '@services/utils.service';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
-import { NxAPIToolService } from '../api-tool.service';
+import { APIDoc } from '../api-tool-types';
+import { NxAPIToolSystemService } from '../services/api-tool-system.service';
+import { NxOpenAPIJSONService } from '../services/openapi-json.service';
 
 import {
     NxCopyToClipboardComponent
@@ -40,11 +43,12 @@ import { highlightAllCode, setCodeBlockHTML } from './swagger-utils';
     templateUrl: './swagger.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class NxSwaggerComponent implements OnChanges {
+export class NxSwaggerComponent implements OnChanges, OnInit {
     @ViewChild('viewContainerRef', { read: ViewContainerRef }) VCR: ViewContainerRef;
     @ViewChild('swaggerDescription') swaggerDescriptionRef: ElementRef;
     @Input() activeNode: MenuNodeWithParent;
 
+    currentAPIDoc: APIDoc;
     swagger: SwaggerUI;
     swaggerLoading$ = new BehaviorSubject(false);
     swaggerMenuDescription = { title: '', description: '' }
@@ -54,15 +58,21 @@ export class NxSwaggerComponent implements OnChanges {
     singleAPIRouteShowing = false;
     singleRoutePath: string;
     singleRouteMethod: string;
-    uuidRegex = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', 'i')
     customComponentsRendering = false;
     componentMap: componentMap = {} // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {} // textAreas innerHTMLs are preserved here to be reapplied to code blocks
 
-    constructor(public APIToolService: NxAPIToolService,
+    constructor(public APIToolSystemService: NxAPIToolSystemService,
+                public openAPIJSONService: NxOpenAPIJSONService,
                 private renderer2: Renderer2,
                 private componentFactoryResolver: ComponentFactoryResolver,
                 @Inject(DOCUMENT) private document: Document) {
+    }
+
+    ngOnInit() {
+        this.openAPIJSONService.currentAPIDoc$.pipe(untilDestroyed(this)).subscribe(doc => {
+            this.currentAPIDoc = doc;
+        });
     }
 
     /** Check if node is a leaf node.
@@ -70,7 +80,9 @@ export class NxSwaggerComponent implements OnChanges {
      */
     isAPIRouteNode = (node: MenuNodeWithParent) => {
         const { method } = getPathAndMethodFromNodeName(node.name);
-        return !this.APIToolService.APIInfoStore[node.name] && !node.nodes.length && method;
+        // TODO: new way to get API info store info
+        // return !this.APIToolService.APIInfoStore[node.name] && !node.nodes.length && method;
+        return !node.nodes.length && method;
     }
 
     private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list') {
@@ -79,11 +91,11 @@ export class NxSwaggerComponent implements OnChanges {
         const title = selection.slice(0, -2);
         let description;
         if (expand === 'list') {
-            description = this.APIToolService.selectedServer.apiDocFull.tags.find(item => item.name === selection)?.description || '';
+            description = this.openAPIJSONService.currentAPIDoc.tags.find(item => item.name === selection)?.description || '';
         }
         if (expand === 'full') {
             const info = getPathAndMethodFromNodeName(node.name);
-            const path =  this.APIToolService.selectedServer.apiDocFull.paths[info.path];
+            const path =  this.openAPIJSONService.currentAPIDoc.paths[info.path];
             // If the method is in the node's name, then use method. Otherwise, grab the first method and use that instead (only one should exist in this case)
             if (info.method) {
                 description = path[info.method?.toLowerCase()]?.description || path[Object.keys(path)[0]].description;
@@ -111,7 +123,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
                 plugins: [this.OnResponsesRenderPlugin],
-                spec: this.APIToolService.selectedServer.apiDocFull,
+                spec: this.currentAPIDoc,
                 filter: filter,
                 docExpansion: expand,
                 showExtensions: true,
@@ -126,7 +138,7 @@ export class NxSwaggerComponent implements OnChanges {
                     return request;
                 }
             });
-            if (this.APIToolService.isAPIInfoMenuNode(this.APIToolService.activeNode)) {
+            if (this.openAPIJSONService.isInfoNode) {
                 this.modifyCodeBlocksAndTextareas();
             }
             this.addSpinner(this.singleAPIRouteShowing);
@@ -136,18 +148,21 @@ export class NxSwaggerComponent implements OnChanges {
 
     // initSwagger methods
     private getSupportedMethods = () => {
+        if (this.openAPIJSONService.isReadOnly) {
+            return [];
+        }
         // Trace requests are not truly supported,
         // but in the APIs that are below 5.0 there is only a single trace request that is handled differently.
         // The try it out button needs to be enabled for this handling
-        return this.APIToolService.isRestAPI()
+        return this.APIToolSystemService.isRestAPI()
             ? ['get', 'put', 'post', 'delete', 'options', 'head', 'patch'] // 5.0
             : ['get', 'trace', 'post', 'delete', 'options', 'head', 'patch']; // below 5.0
     }
 
     private handlePotentialRTSPRoute = (request) => {
         const urlPath = new URL(request.url).pathname.slice(1);
-        const isRTSP = this.uuidRegex.test(urlPath) ||  // The only route that starts with uuid is an RTSP route.
-                      (!this.APIToolService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 API, and it is RTSP
+        const isRTSP = NxUtilsService.isUUID(urlPath) ||  // The only route that starts with uuid is an RTSP route.
+                      (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
 
         if (isRTSP) {
             this.RTSPRequestShowing = true;
@@ -163,7 +178,7 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private authenticateRequest = (request) => {
-        const headers = this.APIToolService.system.serverManager.mediaserverConnections[this.APIToolService.selectedServer.value].generateHeaders();
+        const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections[this.APIToolSystemService.currentServerId].generateHeaders();
         if (headers) {
             // 5.0 and up
             for (const key of headers.keys()) {
@@ -176,14 +191,13 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private setAuthParam = (request) => {
-        const systemMediaServerConnections = this.APIToolService.system.serverManager.mediaserverConnections;
-        const serverID = this.APIToolService.selectedServer.value;
-
+        const systemMediaServerConnections = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections;
+        const serverID = this.APIToolSystemService.currentServerId;
         const Url = new URL(request.url);
         const authParamType = request.method === 'GET' ? 'authGet' : 'authPost';
         const authParam = systemMediaServerConnections[serverID][authParamType];
         const potentialAmpersand = Url.search ? '&' : '';
-        Url.search += potentialAmpersand + 'auth=' + systemMediaServerConnections[serverID][authParam];
+        Url.search += potentialAmpersand + 'auth=' + authParam;
         request.url = Url.toString();
     }
 
@@ -192,8 +206,8 @@ export class NxSwaggerComponent implements OnChanges {
         wrapComponents: {
             responses: (Responses, { React }) => (props) => {
                 const responses = React.createElement(Responses, props);
-                if (this.APIToolService.preventNextChangeDetection) {
-                    this.APIToolService.preventNextChangeDetection = false;
+                if (this.APIToolSystemService.preventNextChangeDetection) {
+                    this.APIToolSystemService.preventNextChangeDetection = false;
                 } else if (!this.customComponentsRendering) {
                     this.addCustomChanges();
                 }
@@ -436,22 +450,21 @@ export class NxSwaggerComponent implements OnChanges {
             const isSingleView = this.isAPIRouteNode(node);
             const expand = isSingleView ? 'full' : 'list';
 
-            if (!this.APIToolService.isAPIInfoMenuNode(node)) {
+            if (!this.openAPIJSONService.determineIsInfoNode(node)) {
                 this.setSwaggerDescription(node, expand);
             }
             if (isSingleView) {
                 const { path, method } = getPathAndMethodFromNodeName(node.name);
                 this.singleRoutePath = path;
                 this.singleRouteMethod = method;
-                const summary = this.APIToolService.selectedServer.apiDocFull.paths?.[path]?.[method.toLowerCase()]?.summary;
+                const summary = this.currentAPIDoc.paths?.[path]?.[method.toLowerCase()]?.summary;
                 if (summary) {
                     this.swaggerMenuDescription.title = summary;
                 }
             }
             this.singleAPIRouteShowing = isSingleView;
             if (this.VCR) {
-                // Destroys custom components
-                this.VCR.clear();
+                this.VCR.clear();  // Destroys custom components
                 this.componentMap = {};
                 this.textareaMap = {};
             }

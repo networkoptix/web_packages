@@ -10,8 +10,8 @@ from util.base_cache import BaseCache
 INTEGRATION_CACHE = BaseCache(cache_key='integrations')
 INTEGRATION = AssetType.ASSET_TYPES.integration
 
-def make_integrations_json(assets, language,
-                    show_pending=False, show_drafts=False, user=None):
+
+def make_integrations_json(assets, language, user=None, show_pending=False, show_drafts=False):
     if not assets:
         return []
 
@@ -60,9 +60,8 @@ def make_integrations_json(assets, language,
             # Create a copy to remove the version key.
             asset_dict_copy = asset_dict.copy()
             del asset_dict_copy['version']
-
-            asset_dict_copy = add_integration_properties(asset_dict_copy, asset,
-                                                                 user, user_assets)
+            
+            asset_dict_copy = add_integration_properties(asset_dict_copy, asset, user, user_assets)
             response_asset_json.append(asset_dict_copy)
 
     return response_asset_json

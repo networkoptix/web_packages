@@ -1,7 +1,7 @@
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import type { APIDocVersion } from '@services/nx-config/base-config';
+import type { APIDocType } from '@services/nx-config/base-config';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxCloudApiService } from '../../../nx-cloud-api';
@@ -201,7 +201,7 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
-    getApiDoc(serverId: string, type: APIDocVersion = 'main') {
+    getApiDoc(serverId: string, type: APIDocType = 'main') {
         return this.mediaserverConnections[serverId].getApiDoc(type);
     }
 

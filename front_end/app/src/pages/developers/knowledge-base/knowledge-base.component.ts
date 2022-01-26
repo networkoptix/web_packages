@@ -27,11 +27,11 @@ import {
 } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import {
+import type {
     ClickEvent,
     MenuNodeWithParent,
     RelatedLinks
-} from '@components/developers-menu/developers-menu.component';
+} from '@components/developers-menu/developers-menu-types';
 import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
 import { SearchFilter } from '@components/search/search.component';
 import { MenuNode } from '@services/menus.service.types';

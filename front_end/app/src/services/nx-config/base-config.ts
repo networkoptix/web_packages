@@ -171,7 +171,8 @@ const FeatureFlagKeys = [
     'bookmarks',
     'kbInstantSearch',
     'dashboard',
-    'archiveSelection'
+    'archiveSelection',
+    'readonlyAPIs'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -185,7 +186,7 @@ export type FeatureFlags = {
     [key in FeatureFlagType]?: boolean
 }
 
-export type APIDocVersion = 'main' | 'legacy' | 'deprecated'
+export type APIDocType = 'main' | 'legacy' | 'deprecated'
 export interface APIDocURL {
     main: string;
     legacy: string;

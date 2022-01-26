@@ -10,12 +10,13 @@ import { ComponentsModule } from '@components/components.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
+import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';
 import { NxCopyToClipboardComponent } from './swagger/copy-to-clipboard/copy-to-clipboard.component';
 import { NxSwaggerDropdownComponent } from './swagger/swagger-dropdown/swagger-dropdown.component';
 import { NxSwaggerSpinnerComponent } from './swagger/swagger-spinner/swagger-spinner.component';
 import { NxSwaggerTextareaComponent } from './swagger/swagger-textarea/swagger-textarea.component';
 import { NxSwaggerComponent } from './swagger/swagger.component';
-import { NxSystemDropdownComponent } from './system-dropdown/system-dropdown.component';
+import { NxVersionMessageComponent } from './version-message/version-message.component';
 
 const appRoutes: Routes = [
     {
@@ -43,12 +44,13 @@ const appRoutes: Routes = [
     providers: [],
     declarations: [
         NxAPIToolComponent,
+        NxVersionMessageComponent,
         NxSwaggerComponent,
-        NxSystemDropdownComponent,
+        NxAPIToolDropdownsComponent,
         NxCopyToClipboardComponent,
         NxSwaggerDropdownComponent,
         NxSwaggerTextareaComponent,
-        NxSwaggerSpinnerComponent
+        NxSwaggerSpinnerComponent,
     ],
     bootstrap: [],
     entryComponents: [

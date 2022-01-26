@@ -13,12 +13,13 @@ import {
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 
 import { Account } from './account.service';
 import { NxAppStateService } from './nx-app-state.service';
 import { NxConfigService, IConfig } from './nx-config';
-import type { APIDocVersion } from './nx-config/base-config';
+import type { APIDocType } from './nx-config/base-config';
 import { IParams, ResourceParam } from './system-api.service';
 import * as t from './system-api.types';
 import { User } from './system-api.types';
@@ -403,11 +404,11 @@ export class NxSystemAPI {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    getApiDoc(type: APIDocVersion) {
+    getApiDoc(type: APIDocType) {
         // return this.get<JSON>('/static/api.json'); // current API
         // mock response
         if (type === 'main') {
-            return this.get<JSON>('/static/openapi_legacy.json').toPromise();
+            return this.get<APIDoc>('/static/openapi_legacy.json').toPromise();
         }
     }
 

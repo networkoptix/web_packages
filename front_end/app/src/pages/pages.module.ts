@@ -26,8 +26,7 @@ import {
 const lazyRoutes: Routes = [
     {
         path: 'doc/developers/api-tool',
-        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule),
-        canActivate: [AuthGuard]
+        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
     },
     {
         path: '',

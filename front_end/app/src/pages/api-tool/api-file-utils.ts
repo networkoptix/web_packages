@@ -1,8 +1,8 @@
-import { MenuNodeWithParent } from '@components/developers-menu/developers-menu.component';
+import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 
-import type { APIDocVersion } from '../../services/nx-config/base-config';
+import type { APIDocType } from '../../services/nx-config/base-config';
 
 import type { APIDoc, method } from './api-tool-types';
 
@@ -11,7 +11,7 @@ import type { APIDoc, method } from './api-tool-types';
 const RTSPRoute = '/{deviceId}';
 const RTSPMethod = 'rtsp';
 
-export const getTagModifier = (type: APIDocVersion) => {
+export const getTagModifier = (type: APIDocType) => {
     switch (type) {
         case 'deprecated':
             return '-D';
@@ -58,27 +58,23 @@ const checkMethodResponseDescription = (method) => {
     }
 };
 
-export const modifyPathTags = (api: APIDoc, type: APIDocVersion = 'main') => {
+export const addAPITypeToTags = (api: APIDoc, type: APIDocType = 'main') => {
     // We have to change the tags on apis
     // so that swagger can properly differentiate tags with the same name coming from multiple different API files
     const tagModifier = getTagModifier(type);
+    api.tags.forEach(tag => {
+        tag.name = tag.name + getTagModifier(type);
+    });
 
     Object.keys(api.paths).forEach(endpoint => {
         const endpointObj = Object.entries(api.paths[endpoint]);
-        endpointObj.forEach((method: any) => {
+        endpointObj.forEach(method => {
             const modifiedTag = api.paths[endpoint][method[0]].tags[0] + tagModifier;
             checkMethodResponseDescription(method[1]);
             api.paths[endpoint][method[0]].tags[0] = modifiedTag;
             // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
             api.paths[endpoint][method[0]].tags.push(generateAPIRouteName(endpoint, endpoint === RTSPRoute ? RTSPMethod : method[0]));
         });
-    });
-    return api;
-};
-
-export const modifyTagNames = (api: APIDoc, type: APIDocVersion) => {
-    api.tags.forEach((tag: any) => {
-        tag.name = tag.name + getTagModifier(type);
     });
     return api;
 };
@@ -112,13 +108,16 @@ export const removeProprietaryEndpoints = (api: APIDoc) => {
             }
         });
     });
-    return api;
 };
 
-export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
-    modifyPathTags(APIDoc);
-    modifyTagNames(APIDoc, 'main');
-    return APIDoc;
+export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: APIDocType) => {
+    removeProprietaryEndpoints(APIDoc);
+    addAPITypeToTags(APIDoc, type);
+};
+
+export const mergeAPIDocs = (mainAPI: APIDoc, mergingAPI: APIDoc) => {
+    mainAPI.tags = [...mainAPI.tags, ...mergingAPI.tags];
+    mainAPI.paths = Object.assign(mainAPI.paths,  mergingAPI.paths);
 };
 
 /**
@@ -136,7 +135,7 @@ export const createMenuContent = (API: APIDoc) => {
 /**
     Adds an API file to the main developers-menu content with a seperator
  */
-export const addSeperatedAPI = (API: APIDoc, menuNodes: MenuNodeWithParent[], seperator: string) => {
+export const addSeperatedAPIMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[], seperator: string) => {
     menuNodes.push(new MenuNode(`${seperator}-seperator`, '', seperator));
 
     generateMenuNodesFromCategoryTags(API, menuNodes);
@@ -182,6 +181,6 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
 
 const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[]) => {
     if (API.info && API.info.description) {
-        menuNodes.push(new MenuNode('api_information', appendBaseAPIToolRoute('main'), 'API Information'));
+        menuNodes.push(new MenuNode('API Information', appendBaseAPIToolRoute('main'), 'API Information'));
     }
 };
