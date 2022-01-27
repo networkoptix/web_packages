@@ -18,6 +18,7 @@ import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
@@ -57,7 +58,7 @@ const SCROLL_AREA_LIMIT = 120;
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
     @Input() content: Partial<Content>;
-    @Input() searchable: boolean | '';
+    @IBool() @Input() searchable: CoercedBoolInput;
     @Input() autoFit: boolean = false;
 
     @Output() menuSearchMode = new EventEmitter<boolean>();

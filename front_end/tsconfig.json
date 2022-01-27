@@ -19,6 +19,7 @@
     "baseUrl": "app",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@decorators/*": ["src/decorators/*"],
       "@directives/*": ["src/directives/*"],
       "@dialogs/*": ["src/dialogs/*"],
       "@environments/*": ["environments/*"],

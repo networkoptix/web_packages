@@ -9,6 +9,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -37,10 +38,10 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() iconClass: string;
     @Input() placeholderTitle: string;
     @Input() message: string;
-    @Input() preloader: boolean;
-    @Input() condition: boolean;
-    @Input() withFooter: boolean | '';
-    @Input() constrainWidth: boolean;
+    @IBool() @Input() preloader: CoercedBoolInput;
+    @IBool() @Input() condition: CoercedBoolInput;
+    @IBool() @Input() withFooter: CoercedBoolInput;
+    @IBool() @Input() constrainWidth: CoercedBoolInput;
     @Input() data: { systemName: string };
     @Input() showMainButton = false;
     @Input() addPadding = true;

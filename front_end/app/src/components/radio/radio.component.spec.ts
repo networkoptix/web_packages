@@ -22,10 +22,6 @@ describe('NxRadioComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should handle @Input(disabled)', () => {
-        expect(component.disabled).toBeFalse();
-    });
-
     it('should have defined states', () => {
         expect(component['_rbxStates']).toEqual({
             rbFalse: 'unchecked',

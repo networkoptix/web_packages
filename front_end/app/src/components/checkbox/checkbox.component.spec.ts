@@ -28,10 +28,6 @@ describe('NxCheckboxComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should handle @Input(required)', () => {
-        expect(component.required).toBeFalse();
-    });
-
     it('should handle @Input(description)', () => {
         expect(component.description).toBeUndefined();
     });

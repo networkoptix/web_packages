@@ -7,6 +7,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
+
 /* Usage
 <nx-section>
     <header>
@@ -28,7 +30,7 @@ import {
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
-    @Input() nonPadded;
+    @IBool() @Input() nonPadded: CoercedBoolInput;
 
     haveSubheader: boolean;
 
@@ -40,7 +42,6 @@ export class NxContentBlockSectionComponent implements OnInit {
 
     ngOnInit() {
         this.type = this.type || '';
-        this.nonPadded = (this.nonPadded !== undefined);
         this.haveSubheader =
             (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
     }

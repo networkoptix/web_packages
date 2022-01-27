@@ -40,7 +40,7 @@
                                     class="bookmark-thumbnail">
                                 <div *ngIf="bookmark.description as content" class="bookmark-content">{{content}}</div>
                                 <div *ngIf="isModal && bookmark.tags.length" class="tags-wrapper">
-                                    <nx-tag *ngFor="let tag of bookmark.tags" static type="info">{{tag}}</nx-tag>
+                                    <nx-tag *ngFor="let tag of bookmark.tags" locked type="info">{{tag}}</nx-tag>
                                 </div>
                             </div>
                         </ng-template>

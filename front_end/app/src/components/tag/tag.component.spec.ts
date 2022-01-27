@@ -29,19 +29,19 @@ describe('NxTagComponent', () => {
 
     it('should init component (DEFAULT)', () => {
         fixture.detectChanges();
-        expect(component.static).toBeFalse();
+        expect(component.locked).toBeUndefined();
         expect(component.size).toBe('small');
         expect(component.element).toBe('badge');
         expect(component.badgeType).toBe('badge');
     });
 
     it('should init component (w/ OPTIONS)', () => {
-        component.static = ''; // not undefined
+        component.locked = ''; // not undefined
         component.element = 'btn';
         component.type = 'success';
         fixture.detectChanges();
 
-        expect(component.static).toBeTrue();
+        expect(component.locked).toBeTrue();
         expect(component.element).toBe('btn');
         expect(component.badgeType).toBe('badge-success');
     });
@@ -59,9 +59,9 @@ describe('NxTagComponent', () => {
         expect(component.onClick.emit).toHaveBeenCalledWith(true);
     });
 
-    it('should not change state when clicked if static', () => {
+    it('should not change state when clicked if locked', () => {
         component.type = 'success';
-        component.static = ''; // not undefined
+        component.locked = ''; // not undefined
         fixture.detectChanges();
 
         const tag = el.nativeElement.querySelector('a');

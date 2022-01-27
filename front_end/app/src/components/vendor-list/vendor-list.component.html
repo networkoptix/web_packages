@@ -12,7 +12,7 @@
             <nx-tag element="btn"
                     size="large"
                     link="/ipvd"
-                    static
+                    locked
                     [linkParam]="{vendors: vendor.name}"
                     [value]="null">{{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
             </nx-tag>

@@ -9,13 +9,15 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
+
 /* Usage
  <nx-tag
      type?="default | danger | info | brand | success | warning" -> default - "badge"
      element?="btn" -> default - "badge"
      size?="large"
      name?="tagName" id?="tagId"
-     static?       -> if true the tag is not selectable
+     locked?       -> if true the tag is not selectable
      [value]?="tag.selected"
      (click)?="onClick($event)">
      [clickable]="boolean" | defaults to true
@@ -37,11 +39,11 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string;
     @Input() size: string = 'small';
-    @Input() clickable: boolean = true;
-    @Input() static;
+    @IBool() @Input() clickable: CoercedBoolInput = true;
+    @IBool() @Input() locked: CoercedBoolInput;
     @Input() link;
     @Input() linkParam;
-    @Input('value') selected: boolean;
+    @IBool() @Input('value') selected: CoercedBoolInput;
 
     @Output() onClick = new EventEmitter<boolean>();
 
@@ -53,7 +55,6 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit() {
-        this.static = (this.static !== undefined);
         this.element = this.element || 'badge';
         this.badgeType = this.type !== undefined ? `badge-${this.type}` : 'badge';
         if (this.selected) {
@@ -80,7 +81,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     deselectTag() {
-        if (this.static) {
+        if (this.locked) {
             return;
         }
         this.selected = false;
@@ -89,7 +90,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     selectTag() {
-        if (this.static) {
+        if (this.locked) {
             return;
         }
         this.selected = true;

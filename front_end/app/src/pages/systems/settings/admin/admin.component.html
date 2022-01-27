@@ -69,9 +69,9 @@
         <nx-block header-style="extended" *ngIf="environment.isLocal">
             <header>
                 <div class="system-cloud-tag float-right">
-                    <nx-tag static type="success"
+                    <nx-tag locked type="success"
                             *ngIf="CONFIG.cloudSystemId">{{LANG.system.connected() | uppercase}}</nx-tag>
-                    <nx-tag static *ngIf="!CONFIG.cloudSystemId">{{LANG.system.not_connected() | uppercase}}</nx-tag>
+                    <nx-tag locked *ngIf="!CONFIG.cloudSystemId">{{LANG.system.not_connected() | uppercase}}</nx-tag>
                 </div>
                 <div class="float-left">
                     <h2 class="system-name mb-2" translate>%CLOUD_NAME%</h2>

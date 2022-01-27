@@ -13,8 +13,11 @@ import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
     NG_VALIDATORS,
-    FormControl, Validator
+    FormControl,
+    Validator
 } from '@angular/forms';
+
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 
 /* Usage
  <nx-checkbox
@@ -47,9 +50,9 @@ import {
 })
 export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAccessor, Validator {
     @Input() componentId: string;
-    @Input() required;
-    @Input() checked;
-    @Input() disabled;
+    @IBool() @Input() required: CoercedBoolInput;
+    @IBool() @Input() checked: CoercedBoolInput;
+    @IBool() @Input() disabled: CoercedBoolInput;
     @Input() description: string;
     @Input() color: string;
     @Output() onClick = new EventEmitter<string>();
@@ -95,7 +98,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     }
 
     ngOnInit() {
-        this.required = (this.required !== undefined);// optional param
         this.description = this.description || undefined;
 
         setTimeout(() => {

@@ -20,6 +20,7 @@ import { isArray } from 'rxjs/internal-compatibility';
 import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -87,8 +88,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Input() layout;
     @Input() layoutMod; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder;
-    @Input() instant;
-    @Input() dataLoaded: boolean;
+    @IBool() @Input() instant: CoercedBoolInput;
 
     @Output() onFocus: EventEmitter<any> = new EventEmitter();
     @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
@@ -142,9 +142,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     ngOnInit() {
-        this.dataLoaded = this.dataLoaded === undefined ? true : this.dataLoaded;
         this.placeholderText = (typeof this.placeholder === 'function') ? this.placeholder() : ''; // optional param
-        this.debounceTime = (this.instant !== undefined) ? 0 : this.CONFIG.search.debounceTime; // optional param
+        this.debounceTime = this.instant ? 0 : this.CONFIG.search.debounceTime; // optional param
         this.layout = (this.layout !== undefined) ? this.layout : 'full';
         this.showAdvancedOptions = !(this.layout === 'full'); // hide advanced search in "full" layout
         this.filterSelected = '';

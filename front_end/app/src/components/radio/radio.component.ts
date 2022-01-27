@@ -15,6 +15,8 @@ import {
     Validator
 } from '@angular/forms';
 
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
+
 /* Usage
  <nx-radio
      [name]="groupName" componentId="groupID"
@@ -43,7 +45,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() name: string;
     @Input() label: string;
     @Input() value: string | number;
-    @Input() disabled;
+    @IBool() @Input() disabled: CoercedBoolInput;
     @Output() onClick = new EventEmitter<string>();
 
     @ViewChild('inputRadioFocus') inputRadio: HTMLFormElement;
@@ -67,7 +69,6 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     }
 
     ngOnInit() {
-        this.disabled = (this.disabled === undefined) ? false : this.disabled;
         this.state = this._rbxStates.rbFalse; // 'unchecked'
     }
 

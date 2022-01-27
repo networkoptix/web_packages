@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
@@ -42,8 +43,8 @@ import { BaseDropdown } from '../injDropdown';
 export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     @Input() id: string;
     @Input('items') itemsOrig: Item[];
-    @Input() canSelectAll: any;
-    @Input() canSearch: boolean;
+    @IBool() @Input() canSelectAll: CoercedBoolInput;
+    @IBool() @Input() canSearch: CoercedBoolInput;
 
     public items: Item[] = [];
     public filter: string;
@@ -61,8 +62,6 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
 
     ngOnInit(): void {
         this.id = this.id || 'multiSelect';
-        this.canSelectAll = (this.canSelectAll !== undefined);
-        this.canSearch = (this.canSearch !== undefined);
     }
 
     clearSelected() {

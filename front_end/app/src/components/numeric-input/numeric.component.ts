@@ -14,6 +14,8 @@ import {
     Validator
 } from '@angular/forms';
 
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
+
 /* Usage
  <nx-numeric
      id?="remember"
@@ -52,8 +54,8 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     @Input() min: number;
     @Input() max: number;
     @Input() step: number;
-    @Input() disabled;
-    @Input() required;
+    @IBool() @Input() disabled: CoercedBoolInput;
+    @IBool() @Input() required: CoercedBoolInput;
     @Input() placeholder: string | number = '- -';
 
     @Output() onChange = new EventEmitter<number>();
@@ -93,7 +95,6 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     ngOnInit() {
         this.componentId = (this.id || this.name || 'generic') + '-numeric';
-        this.required = (this.required !== undefined);// optional param
     }
 
     /**
