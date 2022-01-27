@@ -40,7 +40,10 @@ export class TimelinePrimaryRulerCanvasRendererService {
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService
     ) {
-        dateformat.i18n = languageService.loadTimelineTranslations();
+        const timeLineTranslations = languageService.loadTimelineTranslations();
+        if (timeLineTranslations) {
+            dateformat.i18n = timeLineTranslations;
+        }
     }
 
     protected _prevIntervals: Array<IrregularLengthInterval> = []

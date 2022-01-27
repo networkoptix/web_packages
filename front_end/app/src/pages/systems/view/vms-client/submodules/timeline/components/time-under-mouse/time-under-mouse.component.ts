@@ -41,7 +41,10 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         private timeline: TimelineService,
         public timeUnderMouse: TimelineTimeUnderMouseService
     ) {
-        dateformat.i18n = languageService.loadTimelineTranslations();
+        const timeLineTranslations = languageService.loadTimelineTranslations();
+        if (timeLineTranslations) {
+            dateformat.i18n = timeLineTranslations;
+        }
         this.self.nativeElement.style.opacity = 0.0;
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
