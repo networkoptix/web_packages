@@ -617,16 +617,13 @@ export class NxDialogsService {
     }
 
     public transferOwnership(system: NxSystem) {
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
+        const config: Partial<DialogConfig> = {
+            data: {
+                system
+            }
         };
-
-        const params: IParams = {
-            system,
-            closable: true
-        };
-
-        return this.createModal(TransferOwnershipModalContent, options, params);
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(TransferOwnershipModalContent, dialogConfig)
+            .afterClosed();
     }
 }
