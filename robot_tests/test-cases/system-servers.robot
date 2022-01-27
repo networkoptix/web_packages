@@ -247,7 +247,7 @@ Web Admin Test Teardown
 
 5. Restart server as owner
     [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
-    [Tags]    C70968    cloud    webadmin
+    [Tags]    C70968    webadmin    # cloud
     Skip If     '''${mode}'''=='''cloud'''
     Verify on Servers Page
     Verify Server Buttons Are Enabled
@@ -266,7 +266,7 @@ Web Admin Test Teardown
 
 6. Restart server as administrator
     [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
-    [Tags]    C70968    cloud    webadmin
+    [Tags]    C70968    webadmin    # cloud
     [Setup]    Server Settings Test Setup    user=${admin}
     Skip If    '''${mode}'''=='''cloud'''
     Verify on Servers Page

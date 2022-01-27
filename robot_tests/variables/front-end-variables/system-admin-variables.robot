@@ -165,7 +165,7 @@ ${ADVANCED SETTINGS WARNING}            //span[text()='${ADVANCED SETTINGS WARNI
 ...    ${ADVANCED SETTINGS ALERT}
 ...    ${ADVANCED SETTINGS WARNING}
 
-${SUCCESS DIALOG}                           //ngb-modal-window[@role="dialog"]//div[@class="modal-content"]
+${SUCCESS DIALOG}                           //nx-modal-generic-content
 ${SUCCESS DIALOG TEXT}                      ${SUCCESS DIALOG}//p[contains(text(), "${SETTINGS SAVED TEXT}")]
 ${SUCCESS DIALOG HEADER}                    ${SUCCESS DIALOG}//h1/span[contains(text(), "${SUCCESS TEXT}")]
 ${SUCCESS DIALOG X BUTTON}                  ${SUCCESS DIALOG}//button[@data-dismiss="modal" and contains(@class, "close")]

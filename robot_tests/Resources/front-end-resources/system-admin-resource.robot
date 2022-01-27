@@ -1,5 +1,6 @@
 *** Settings ***
 Library    String
+Library    Collections
 *** Keywords ***
 
 # Setups and teardowns
@@ -335,7 +336,7 @@ Connect To Cloud
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    Dictionary should contain item    ${settings}    ${key}    ${expected value}
+    Dictionary should contain item    ${settings}[reply][settings]    ${key}    ${expected value}
 
 Evaluate Log Level via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${value}
