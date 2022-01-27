@@ -30,7 +30,8 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
 
     static BASE_CONFIG = {
         source: '',
-        editSource: ''
+        editSource: '',
+        devMode: false
     }
 
     static MAX_SIZE = 250000;

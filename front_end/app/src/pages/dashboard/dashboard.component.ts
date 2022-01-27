@@ -259,7 +259,7 @@ export class NxDashboardComponent implements DashboardGroup {
      * Retrieves existing dashboard from cloud
      */
     getPersistedConfig = async () => {
-        const { widgetUrl, dashboardUrl } = this.route.snapshot.queryParams;
+        const { widgetUrl, dashboardUrl, devServer } = this.route.snapshot.queryParams;
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
         const currentDashboard = DashboardGroup.validateDashboard(
             await this.cloudApi.getCustomAccountProperty(this.CUSTOM_PROPERTY_KEY).toPromise().catch(_ => ({})),
@@ -285,7 +285,7 @@ export class NxDashboardComponent implements DashboardGroup {
             this.updatePersistedConfig();
         }
 
-        if (widgetUrl) {
+        if (widgetUrl || devServer) {
             setTimeout(() => this.addWidget());
         }
     }

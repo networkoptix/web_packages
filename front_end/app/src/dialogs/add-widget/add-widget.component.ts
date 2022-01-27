@@ -77,11 +77,16 @@ export class AddWidgetModalContent {
         this.LANG = language.translations;
     }
 
-    downloadWidget = async (widgetUrl) => {
+    downloadWidget = async (widgetUrl, isDevServer = false) => {
         // To handle cors issue when developing locally
         widgetUrl = this.environment.isLocal ? widgetUrl : widgetUrl.split(this.environment.cloudHost).reverse()[0];
+        const devEditSource = `${widgetUrl}/edit`;
         this.downloadingThirdParty = true;
-        this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise();
+        if (isDevServer) {
+            Object.assign(this.selectedWidget.value.config, { editMode: false, devSource: widgetUrl, devEditSource });
+        } else {
+            this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise();
+        }
         this.downloadingThirdParty = false;
     }
 
@@ -99,11 +104,11 @@ export class AddWidgetModalContent {
         this.dashboardOptions = this.dashboardMenu.map(({ dashboardName: name, id: value }) => ({ name, value }));
         const { dashboardName: name, id: value } = this.activeDashboard || {};
         this.selectedDashboard = { name, value };
-        const { widgetUrl } = this.route.snapshot.queryParams;
+        const { widgetUrl, devServer = false } = this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map((widget) => ({ name: widget.title, value: { ...widget, editMode: true } }));
-        if (widgetUrl) {
+        if (widgetUrl || devServer) {
             this.selectedWidget = NxUtilsService.deepCopy(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
-            this.downloadWidget(widgetUrl);
+            this.downloadWidget(devServer || widgetUrl, !!devServer);
         } else {
             this.selectedWidget = NxUtilsService.deepCopy(this.widgetDropdownOptions[0]);
         }

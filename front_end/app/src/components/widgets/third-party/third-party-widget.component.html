@@ -14,7 +14,14 @@
 </ng-template>
 
 <div class="third-party-wrapper">
-    <ng-container *ngIf="card.config.source; else uploadMode">
-        <iframe #widgetFrame [srcdoc]="(card.editMode ? card.config.editSource : card.config.source) | safe:'html'" (load)="passStateToIframe(widgetFrame)"></iframe>
+    <ng-container *ngIf="card.config.source || card.config.devSource; else uploadMode">
+        <ng-template #devFrame>
+            <iframe #widgetFrame
+                [src]="((card.editMode && card.config.devEditSource) || card.config.devSource) | safe:'resourceUrl'"
+                (load)="passStateToIframe(widgetFrame)"></iframe>
+        </ng-template>
+        <iframe *ngIf="card.config.source; else devFrame" #widgetFrame
+            [srcdoc]="(card.editMode ? card.config.editSource : card.config.source) | safe:'html'"
+            (load)="passStateToIframe(widgetFrame)"></iframe>
     </ng-container>
 </div>
