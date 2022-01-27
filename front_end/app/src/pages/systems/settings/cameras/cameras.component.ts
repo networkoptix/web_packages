@@ -379,15 +379,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set motionEnabled(enabled) {
-        this.motionEnabledWatcher.value = (
-            !enabled
-                ? MotionType.noMotion
-                : ![MotionType.noMotion, MotionType.none].includes(
+        this.motionEnabledWatcher.value = !enabled
+            ? MotionType.noMotion
+            : ![MotionType.noMotion, MotionType.none].includes(
                 this.motionEnabledWatcher.originalValue as MotionType
-                )
-        )
-            ? this.motionEnabledWatcher.originalValue
-            : this.getSupportedMotion();
+            )
+                ? this.motionEnabledWatcher.originalValue
+                : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
             ...mode,
