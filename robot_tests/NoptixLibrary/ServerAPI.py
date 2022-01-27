@@ -41,7 +41,6 @@ class ServerAPI(object):
 
     def __init__(self, image):
         self.image = image
-        # self.image = BuiltIn().get_variable_value('${IMAGE}', None) // TODO: Added by nick. wasnt sure which is actual.
 
     def _login(self, server_url, username, password):
         data = {
