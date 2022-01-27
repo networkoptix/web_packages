@@ -15,10 +15,19 @@ import { NxSystemGroupsListComponent } from './list.component';
 
 const appRoutes: Routes = [
     {
-        path: '', component: NxSystemsListComponent, canActivate: [AuthGuard],
+        path: '',
+        component: NxSystemsListComponent,
+        canActivate: [AuthGuard],
     },
     {
-        path: 'groups', component: NxSystemGroupsListComponent, canActivate: [AuthGuard]
+        path: 'groups',
+        component: NxSystemGroupsListComponent,
+        canActivate: [AuthGuard],
+    },
+    {
+        path: 'groups/:groupId',
+        component: NxSystemGroupsListComponent,
+        canActivate: [AuthGuard],
     }
 ];
 

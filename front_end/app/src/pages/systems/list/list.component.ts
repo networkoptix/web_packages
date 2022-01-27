@@ -1,7 +1,7 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 // import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -15,22 +15,37 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxProcessService, Process } from '@services/process.service';
+// import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxUtilsService } from '@services/utils.service';
 
-type SystemTile = NxSystemWithUserInfo & {
-    type: 'system';
+interface SystemTile extends NxSystemWithUserInfo {
+    readonly type: 'system';
     name: string;
 }
 
-interface GroupTile {
-    type: 'group';
-    id: string;
-    name: string;
-    groups: GroupTile[];
-    systems: SystemTile[];
+class GroupTile {
+    readonly type = 'group';
+
+    constructor(
+        public id: string,
+        public name: string,
+        public readonly groups: GroupTile[] = [],
+        public readonly systems: SystemTile[] = [],
+    ) {}
+
+    get tiles(): Tile[] {
+        return [...this.groups, ...this.systems];
+    }
+
+    addGroup(group: GroupTile): void {
+        this.groups.push(group);
+    }
+
+    addSystem(system: SystemTile): void {
+        this.systems.push(system);
+    }
 }
 
 type Tile = GroupTile | SystemTile
@@ -47,20 +62,8 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     groups: GroupTile[] = [
-        {
-            id: '1',
-            name: 'Test Group 1',
-            groups: [],
-            systems: [],
-            type: 'group'
-        },
-        {
-            id: '2',
-            name: 'Test Group 2',
-            groups: [],
-            systems: [],
-            type: 'group'
-        }
+        new GroupTile('1', 'Test Group 1', [new GroupTile('3', 'Test Group 3')]),
+        new GroupTile('2', 'Test Group 2'),
     ];
 
     systemInGroup = new Set<string>();
@@ -69,9 +72,9 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     showSearch: boolean = false;
     fetchComplete: boolean = false;
     search: { value: string } = { value: '' };
-    gettingSystems: Process;
     openClient: unknown;
-    tiles: Tile[] = [];
+    systems: SystemTile[];
+    currentIndexes: number[] = []
     filteredTiles: Tile[] = [];
     account: Account;
     endpoint: Record<string, boolean> = {};
@@ -79,8 +82,10 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     searchChanged = new Subject<void>();
     chosenSystemName: string;
     show2faRequired: boolean = false;
+    show404: boolean = false;
     private searchSubscription: Subscription;
     private systemSubscription: Subscription;
+    private routerParamsSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -90,13 +95,14 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
         private pageService: NxPageService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
-        private processService: NxProcessService,
+        // private processService: NxProcessService,
         private uriService: NxUriService,
         private headerService: NxHeaderService,
         private menusService: NxMenusService,
         private dialogsService: NxDialogsService,
         private router: Router,
-        // private location: Location
+        // private location: Location,
+        private route: ActivatedRoute,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
@@ -120,28 +126,64 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                this.tiles = [
-                    ...this.groups,
-                    ...systems.map(system => ({
-                        ...system,
-                        type: 'system',
-                        name: NxUtilsService.htmlToEntity(system.name)
-                        // avoid html being interpreted
-                    }) as SystemTile)
-                ];
+                this.systems = systems.map(system => ({
+                    ...system,
+                    type: 'system',
+                    name: NxUtilsService.htmlToEntity(system.name)
+                    // avoid html being interpreted
+                }) as SystemTile);
 
                 // this.showSearch = this.tiles.length >= this.CONFIG.search.minSystems;
                 this.showSearch = true; // For easier development, remove for release
 
-                this.searchTiles();
+                // this.searchTiles();
             });
 
-        this.gettingSystems = this.processService.createProcess(() => {
-            this.fetchComplete = true;
-            return this.systemsService.forceUpdateSystems().toPromise();
-        }, {
-            errorPrefix: this.LANG.errorCodes.cantGetSystemsListPrefix?.(),
-            logoutForbidden: true
+        function findTargetAddress(
+            targetId: string,
+            currentLevel: GroupTile[],
+            addressBase: number[] = [],
+            targetAddress: number[] = [],
+        ): number[] {
+            for (let i = 0; i < currentLevel.length; i++) {
+                if (targetAddress.length) {
+                    break;
+                }
+
+                const currentGroup = currentLevel[i];
+                const currentAddress = [...addressBase, i];
+                if (currentGroup.id === targetId) {
+                    targetAddress.push(...currentAddress);
+                    break;
+                }
+
+                findTargetAddress(
+                    targetId,
+                    currentGroup.groups,
+                    currentAddress,
+                    targetAddress,
+                );
+            }
+            return targetAddress;
+        }
+
+        this.routerParamsSubscription = this.route.params.subscribe(params => {
+            this.show404 = false;
+            const { groupId } = params;
+
+            if (!groupId) {
+                this.filteredTiles = this.tiles;
+                return;
+            }
+
+            const targetAddress = findTargetAddress(groupId, this.groups);
+
+            if (targetAddress.length) {
+                this.currentIndexes = targetAddress;
+                this.filteredTiles = this.currentTiles;
+            } else {
+                this.show404 = true;
+            }
         });
 
         this.searchSubscription = this.searchChanged
@@ -163,11 +205,27 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
         return str.toLowerCase().includes(search.toLowerCase());
     }
 
+    get tiles(): Tile[] {
+        return [...this.groups, ...this.systems];
+    }
+
+    private get currentTiles(): Tile[]  {
+        if (!this.currentIndexes.length) {
+            return this.tiles;
+        } else {
+            let currentGroup = { groups: this.groups } as GroupTile;
+            for (const index of this.currentIndexes) {
+                currentGroup = currentGroup.groups[index];
+            }
+            return currentGroup.tiles;
+        }
+    }
+
     searchTiles(): void {
         const search = this.search.value;
 
         if (search) {
-            this.filteredTiles = this.tiles
+            this.filteredTiles = this.currentTiles
                 // .filter(({ id }) => !this.systemInGroup.has(id))
                 .filter(tile => {
                     if (this.hasMatch(tile.name, search)) {
@@ -185,7 +243,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
                 });
         } else {
             // this.filteredSystems = this.systems.filter(({ id }) => !this.systemInGroup.has(id));
-            this.filteredTiles = this.tiles;
+            this.filteredTiles = this.currentTiles;
         }
     }
 
@@ -210,8 +268,12 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
             !this.isActive('/health');
     }
 
+    backToTopLevel(): void {
+        this.router.navigate(['../'], { relativeTo: this.route });
+    }
+
     openGroup(group: GroupTile): void {
-        // TODO
+        this.router.navigate(['systems', 'groups', group.id]);
     }
 
     openSystem(system: NxSystemWithUserInfo): void {
@@ -288,15 +350,11 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
             const targetGroupTile = this.filteredTiles[currentIndex] as GroupTile;
             if (previousTile.type === 'system') {
                 // Add system to group
-                targetGroupTile.systems.push(previousTile);
+                targetGroupTile.addSystem(previousTile);
             } else {
                 // Nest group inside another group
-                targetGroupTile.groups.push(previousTile);
+                targetGroupTile.addGroup(previousTile);
             }
-            const groupIndex = this.groups.findIndex((group) =>
-                group.id === currentTile.id
-            );
-            this.groups[groupIndex] = { ...targetGroupTile };
             this.systemInGroup.add(previousTile.id);
         }
     }
