@@ -172,7 +172,9 @@ const FeatureFlagKeys = [
     'kbInstantSearch',
     'dashboard',
     'archiveSelection',
-    'readonlyAPIs'
+    'readonlyAPIs',
+    'dashboardRedirect',
+    'cloudOwnershipTransfer',
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

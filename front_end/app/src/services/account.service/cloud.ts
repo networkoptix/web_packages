@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { Account } from '@services/account.service/account';
 import { NxLoginService } from '@services/login.service';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { OauthService } from '@services/oauth.service';
 
 import { NxAppStateService } from '../nx-app-state.service';
@@ -39,7 +40,8 @@ export class CloudAccount extends BaseAccount {
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
-        protected cookieService: CookieService
+        protected cookieService: CookieService,
+        protected bootstrapProviderService: NxBootstrapProvider
     ) {
         super(
             configService,
@@ -58,7 +60,8 @@ export class CloudAccount extends BaseAccount {
             nxSystemAPIService,
             loginService,
             oauthService,
-            cookieService
+            cookieService,
+            bootstrapProviderService
         );
     }
 

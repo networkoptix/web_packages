@@ -27,6 +27,13 @@
                             <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </ng-container>
                     </span>
+                    <span
+                        *ngIf="ownershipTransferEnabled && !environment.isLocal && system.userManager.isMine"
+                        id="change-ownership"
+                        class="ml-1"
+                        (click)="transferOwnership()"
+                        translate
+                    >(change)</span>
                 </span>
             </header>
 

@@ -1,0 +1,6 @@
+@use '../../styles/typography';
+
+#successBody #newOwner {
+    @include typography.medium13light16;
+    line-height: 25px; // Match SVG icon height
+}

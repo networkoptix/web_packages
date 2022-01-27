@@ -7,10 +7,17 @@ import {
     tick,
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockModule, MockProvider } from 'ng-mocks';
 import { QrCodeModule } from 'ng-qrcode';
 
+import {
+    NxProcessButtonComponent
+} from '@components/process-button/process-button.component';
+import {
+    NxProcessCancelButtonComponent
+} from '@components/process-cancel-Button/process-cancel-button.component';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxAccountService } from '@services/account.service';
@@ -54,7 +61,9 @@ describe('TwoFAModalContent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                TwoFAModalContent
+                TwoFAModalContent,
+                NxProcessButtonComponent,
+                NxProcessCancelButtonComponent,
             ],
             providers: [
                 MockProvider(NxConfigService),
@@ -72,6 +81,7 @@ describe('TwoFAModalContent', () => {
                 FormsModule,
                 MockModule(AngularSvgIconModule),
                 MockModule(QrCodeModule),
+                MockModule(TranslateModule),
             ]
         }).compileComponents();
 
@@ -108,12 +118,6 @@ describe('TwoFAModalContent', () => {
             const formInput = el.querySelector<HTMLInputElement>(
                 'div.modal-body form div.form-group input'
             );
-            const buttonText = el.querySelector<HTMLSpanElement>(
-                'div.modal-footer button span'
-            );
-            const buttonIcon = el.querySelector(
-                'div.modal-footer button svg-icon'
-            );
 
             const { wizardLogin: wizardLoginText } = templateText;
 
@@ -128,9 +132,6 @@ describe('TwoFAModalContent', () => {
                 component.CONFIG
                     .credentialsValidation.passwordRequirements.requiredRegex
             );
-
-            expect(buttonText.innerText).toBe(wizardLoginText.buttonText);
-            expect(buttonIcon).toBeDefined();
         });
     });
 
@@ -221,9 +222,9 @@ describe('TwoFAModalContent', () => {
         });
 
         it('should proceed to next step', () => {
-            el.querySelector<HTMLButtonElement>('#nextWizardFinish')
+            el.querySelector<HTMLButtonElement>('.process-button')
                 .dispatchEvent(new MouseEvent('click'));
-            expect(nextStepSpy).toHaveBeenCalled();
+            expect(component.templateType === component.wizardFinishTemplate);
         });
     });
 

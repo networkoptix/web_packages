@@ -15,7 +15,7 @@ import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 
 import { Account } from './account.service/account';
-import * as t from './nx-cloud-api.types';
+import type * as t from './nx-cloud-api.types';
 import { InstantSearchOptions } from './nx-cloud-api.types';
 import { NxConfigService, IConfig } from './nx-config';
 import { NxUriCacheService } from './uri-cache.service';

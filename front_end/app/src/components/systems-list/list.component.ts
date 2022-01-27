@@ -238,6 +238,6 @@ export class NxSystemsListComponent implements OnInit {
     }
 
     needToConfigureTwoFactor(system: NxSystemWithUserInfo): boolean {
-        return system.system2faEnabled && !this.account?.account2faEnabled;
+        return system.system2faEnabled && !this.account?.sessionVerified;
     }
 }

@@ -75,6 +75,8 @@ def login_helper(request, token, user):
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
 
+    request.session["has2fa"] = Account.get(request).get("account2faEnabled", False)
+
     serializer = AccountSerializer(user, many=False)
     return api_success(serializer.data)
 
@@ -283,8 +285,9 @@ def index(request):
     if request.user.is_authenticated:
         cdb_account = Account.get(request)
         cdb_account_security = Account.get_2fa_settings(request)
-    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False) or request.session.get("has2fa", False)
+    data["account2faEnabled"] = cdb_account.get("account2faEnabled", False)
     data["totpExistsForAccount"] = cdb_account_security.get("totpExistsForAccount", False)
+    data["sessionVerified"] = request.session.get("has2fa", False)
     return api_success(data)
 
 
@@ -386,7 +389,12 @@ class AccountSecurity(APIView):
 
         if action == SecurityAction.toggle.name:
             account = Account.get(request)
-            return api_success(Account.update_2fa_settings(request, totp, not account.get("account2faEnabled")))
+            account_2fa_enabled = not account.get("account2faEnabled")
+            res = Account.update_2fa_settings(request, totp, account_2fa_enabled)
+            if account_2fa_enabled:
+                Auth.verify_2fa_code(totp, request.session.get("access_token"))
+                request.session["has2fa"] = True
+            return api_success(res)
 
         if action == SecurityAction.activate.name:
             require_params(request, ("password",))

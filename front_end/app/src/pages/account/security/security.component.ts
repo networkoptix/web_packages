@@ -3,6 +3,7 @@ import {
     AfterViewInit,
     Component,
     ElementRef,
+    HostListener,
     Inject,
     OnDestroy,
     OnInit,
@@ -122,6 +123,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                             } else {
                                 this.account2faEnabled = (action === 'enabled');
                                 this.updateVerificationOriginal();
+                                this.accountService.get(true).catch((e) => {});
                             }
                         });
                 },
@@ -187,6 +189,14 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 panelClass: 'system-popover',
             },
             this._viewContainerRef);
+    }
+
+    @HostListener('document:click', ['$event.target'])
+    onMouseClick(targetElement) {
+        if (targetElement.className !== 'pseudo-anchor') {
+            this.popover?.close();
+            this.popover = undefined;
+        }
     }
 
     ngOnDestroy() {

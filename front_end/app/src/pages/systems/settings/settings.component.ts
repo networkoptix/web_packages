@@ -354,7 +354,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                                 if (
                                     system?.system2faEnabled &&
-                                    !this.account.account2faEnabled
+                                    !this.account?.sessionVerified
                                 ) {
                                     this.system.mediaserver
                                         .getMediaServers(false)
@@ -409,7 +409,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             !environment.isLocal
                                         ) {
                                             this.uriService.updateURI(
-                                                this.CONFIG.featureFlags.dashboard || 'beta' in this.route.snapshot.queryParams
+                                                this.CONFIG.featureFlags.dashboardRedirect || 'beta' in this.route.snapshot.queryParams
                                                     ? '/dashboard'
                                                     : '/systems'
                                             );
@@ -474,8 +474,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .subscribe(res => {
                 const { mergeInProgress } = res?.reply || res;
                 if (environment.isLocal) {
-                    if (!mergeInProgress && this.system.isOnline) {
-                        this.systemsService.checkMerge(this.system);
+                    if (!mergeInProgress && this.system.isOnline && !this.systemsService.checkMerge(this.system)) {
                         this.ribbonService.hide();
                     }
                 } else {
@@ -756,7 +755,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (scheduleEnabled && !['Online', 'Recording'].includes(status)) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
         }
-        return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
+        return this.CONFIG.menus.systemSettings.cameras.statusIcons[
+            status.toLowerCase()
+        ];
     }
 
     getServerStatusIcon({ status }) {

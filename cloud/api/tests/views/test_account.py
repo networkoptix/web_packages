@@ -30,6 +30,7 @@ def test_login_helper(arf, mocker, django_user_model):
     now = time.time()
     mocker.patch.object(timezone, 'now', return_value=timezone_now)
     mocker.patch.object(time, 'time', return_value=now)
+    mocker.patch.object(Account, 'get', return_value={'account2faEnabled': True})
 
     resp = login_helper(req, token, user)
     assert req.session['access_token'] == 'acc_token'
@@ -38,6 +39,12 @@ def test_login_helper(arf, mocker, django_user_model):
     assert user.activated_date == timezone_now
     assert req.session['time'] == now
     assert resp.data == AccountSerializer(user).data
+    assert req.session['has2fa'] is True
+
+    mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
+
+    login_helper(req, token, user)
+    assert req.session['has2fa'] is False
 
 
 class TestAccountViews:
@@ -121,6 +128,8 @@ class TestAccountViews:
         expected_data = AccountSerializer(req.user).data
         expected_data['account2faEnabled'] = True
         expected_data['totpExistsForAccount'] = True
+        expected_data['sessionVerified'] = False
+
         assert resp.data == expected_data
 
         # Test with totp doesn't exist
@@ -139,6 +148,7 @@ class TestAccountViews:
         expected_data = AccountUpdateSerializer(req.user).data
         expected_data['account2faEnabled'] = True
         expected_data['totpExistsForAccount'] = True
+        expected_data['sessionVerified'] = False
         assert resp.data == expected_data
         assert resp.status_code == status.HTTP_200_OK
         assert account_update_mock.call_args.args[1] == 'new name'
@@ -254,6 +264,7 @@ class TestAccountViews:
         req = self.request_security(active_user, "toggle")
         self.mocker.patch.object(Account, 'get', return_value={'account2faEnabled': False})
         security_mock = self.mock_update_2fa(two_fa)
+        verify_mock = self.mocker.patch.object(Auth, 'verify_2fa_code')
         view = AccountSecurity().as_view()
 
         assert view(req).status_code == status.HTTP_200_OK

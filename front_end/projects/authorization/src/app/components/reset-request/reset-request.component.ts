@@ -1,13 +1,22 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild
-}                       from '@angular/core';
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    OnChanges,
+    ViewChild
+} from '@angular/core';
+import type { NgForm, NgModel } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
+import { Process } from '@services/process.service';
+
 import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -32,7 +41,8 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendEmail: any;
-    @ViewChild('resetPasswordForm', { static: false }) resetPasswordForm: HTMLFormElement;
+    @ViewChild('resetPasswordForm', { static: false }) resetPasswordForm: NgForm;
+    @ViewChild('email', { static: false }) resetPasswordEmail: NgModel;
 
     constructor(
         language: NxLanguageProviderService,
@@ -52,8 +62,12 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.errorCode) {
-            this.resetPasswordForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
+        if (changes.errorCode?.currentValue) {
+            setTimeout(() => {
+                this.resetPasswordForm?.controls.resetPasswordEmail.setErrors({
+                    [changes.errorCode.currentValue]: true
+                });
+            });
         }
     }
 

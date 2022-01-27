@@ -51,6 +51,7 @@ class FLAGS(metaclass=_FlagType):
     alexa_integration = ('Alexa Integration', 'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
     bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
+    dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
 
     def __getattribute__(self, name):
         return dict(FLAGS).get(name)

@@ -323,7 +323,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         if (this.clientType === 'system2faAuth') {
             this.localStorageService.store(this.CONFIG.oauthStore.verify2fa, code);
         }
-        const params = link.includes('?') && new URLSearchParams(
+        const params = link?.includes('?') && new URLSearchParams(
             link.match(/.*(\?.*)/i)[1]
         );
 
@@ -333,7 +333,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             code = params.get('code');
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
-        if (link.includes('redirect-oauth')) {
+        // undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
+        // @ts-ignore
+        if (link?.includes('redirect-oauth') || (this.window.nativeClient && !link)) {
             const { client_id, client_type, access_code, access_token } = this.initialData;
             // @ts-ignore
             if (this.window.nativeClient &&
@@ -508,7 +510,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.resetRequestProcess = this.processService.createProcess(
-            () => this.cloudService.restorePasswordRequest(this.resetPasswordEmail),
+            () => {
+                this.resetRequestErrorCode = '';
+                return this.cloudService.restorePasswordRequest(
+                    this.resetPasswordEmail
+                );
+            },
             { ignoreError: true, timeoutMs },
             () => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
@@ -516,6 +523,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.confirmRequest = true;
             },
             err => {
+                if (err.resultCode === 'notFound') {
+                    this.resetRequestErrorCode = 'accountDoesNotExist';
+                }
                 console.error('err in reset request process', err);
                 this.handleCloudConnectionError(err, this.resetRequestProcess);
             }

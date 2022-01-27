@@ -6,7 +6,9 @@ import {
     Renderer2,
     TemplateRef,
     AfterViewInit,
-    Inject
+    Inject,
+    HostListener,
+    ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -107,6 +109,23 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     @ViewChild('disable2FaCode', { static: true }) disable2FaCodeTemplate: TemplateRef<any>;
 
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (
+            ['Enter', 'NumpadEnter'].includes(event.code) &&
+            document.activeElement.tagName === 'INPUT'
+        ) {
+            const processButton = this.elem.nativeElement
+                .querySelector<HTMLButtonElement>('.on-keypress-enter');
+            if (!processButton.classList.contains('processing')) {
+                processButton.click();
+            }
+            /* <nx-process-button> hides from user clicks when running its
+            process with visibility: hidden, but this doesn't hide from
+            .querySelector() or programmatic clicks */
+        }
+    }
+
     private resetDefaults() {
         this.newCodes = [];
         this.password = '';
@@ -152,6 +171,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private clipboardService: ClipboardService,
         private systemsService: NxSystemsService,
         private cloudApiService: NxCloudApiService,
+        private elem: ElementRef<HTMLElement>,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {
@@ -384,6 +404,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         });
 
+        const invalidCredentialHandler = () => {
+            this.notAuthorized = true;
+            this.codeForm.controls.tfaCodeInput.markAsTouched();
+            this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
+            this.renderer.selectRootElement('#tfaCodeInput').focus();
+        };
+
         this.changePasswordProcess = this.processService.createProcess(() => {
             return this.cloudApiService.changePassword(this.newPassword, this.oldPassword, this.tfaCode);
         }, {
@@ -399,12 +426,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.codeForm.controls.tfaCodeInput.setErrors({ required: true });
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
                 },
-                notAuthorized: () => {
-                    this.notAuthorized = true;
-                    this.codeForm.controls.tfaCodeInput.markAsTouched();
-                    this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
-                    this.renderer.selectRootElement('#tfaCodeInput').focus();
-                }
+                notAuthorized: invalidCredentialHandler,
+                wrongOldPassword: invalidCredentialHandler
             }
         }, (res) => {
             this.close(res);
@@ -482,7 +505,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.dialogRef.close(action || 'changed');
     }
 
-    closeWizard(action?) {
+    /* Needs to be an arrow function to access this
+    when passed to <nx-cancel-button> as [discardFn] */
+    closeWizard = (action?) => {
         if (action === 'deactivate') {
             this.accountService.deactivate2FaKey()
                 .catch((err) => {

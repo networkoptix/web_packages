@@ -25,10 +25,6 @@ import {
 
 const lazyRoutes: Routes = [
     {
-        path: 'doc/developers/api-tool',
-        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
-    },
-    {
         path: '',
         loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule),
         pathMatch: 'full'
@@ -73,6 +69,10 @@ const lazyRoutes: Routes = [
     {
         path: 'sandbox',
         loadChildren: () => import('./sandbox/sandbox.module').then(m => m.SandboxModule)
+    },
+    {
+        path: 'doc/developers/api-tool',
+        loadChildren: () => import('./api-tool/api-tool.module').then(m => m.NxApiToolModule)
     },
     {
         path: 'docs',

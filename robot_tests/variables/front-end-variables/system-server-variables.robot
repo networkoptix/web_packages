@@ -14,7 +14,7 @@ ${SERVER 1 LIST MENU NAME}          //nx-level-3-item//a//span[contains(text(),"
 ${SERVER OFFLINE ALERT}             //nx-alert-block//span[contains(text(),'${SERVER OFFLINE TEXT}')]
 ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"${RENAME}")]/..
 ${RESTART SERVER BUTTON}            //nx-section//button/span[contains(text(),"${RESTART}")]/..
-${RESTART SERVER FORM}              //form[@name="restartServerForm"]
+${RESTART SERVER FORM}              //nx-modal-restart-server-content
 ${RESTART DIALOG CLOSE BUTTON}      ${RESTART SERVER FORM}//button[contains(@class,"close")]
 ${RESTART DIALOG CANCEL BUTTON}     ${RESTART SERVER FORM}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${RESTART DIALOG RESTART BUTTON}    ${RESTART SERVER FORM}//button[@type="submit"]

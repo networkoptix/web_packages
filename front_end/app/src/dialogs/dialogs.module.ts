@@ -14,8 +14,8 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';
-import { AddWidgetModalContent }          from './add-widget/add-widget.component';
-import { ApplyModalContent } from './apply/apply.component';
+import { AddWidgetModalContent } from './add-widget/add-widget.component';
+import { ApplyModalContent, NxModalApplyComponent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
@@ -38,9 +38,8 @@ import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
-// import { SelectTimeRangeModalContent } from './select-time-range-datetime-local/select-time-range.component';
-import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
-// import { SelectTimeRangeModalContent } from './select-time-range-full-fallback/select-time-range.component';
+import { SelectTimeRangeModalContent } from './select-time-range/select-time-range.component';
+import { TransferOwnershipModalContent } from './transfer-ownership/transfer-ownership.component';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import {
     UpdateCameraCredentialsModalContent
@@ -92,7 +91,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         Mandatory2faModalContent,
         AddWidgetModalContent,
         ConnectCloudModalContent,
-        SelectTimeRangeModalContent
+        SelectTimeRangeModalContent,
+        TransferOwnershipModalContent
     ],
     providers: [
         NxDialogsService,

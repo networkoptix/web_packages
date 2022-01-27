@@ -102,6 +102,14 @@ header {
         }
     }
 
+    &.display-only {
+        pointer-events: none;
+        .arrow-flip {
+            display: none;
+        }
+    }
+
+
     .dropdown-toggle {
         display          : flex !important;
         justify-content  : flex-start;

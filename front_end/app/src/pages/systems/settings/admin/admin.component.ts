@@ -47,6 +47,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
+    ownershipTransferEnabled: boolean = false;
+
     user: NxSystemUser;
     system: NxSystem;
     systems;
@@ -175,6 +177,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+
+        this.ownershipTransferEnabled = configService.flagsEnabled(
+            'cloudOwnershipTransfer'
+        );
 
         this.setupDefaults();
     }
@@ -314,6 +320,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.system.getInfo(true, false);
                 }
             });
+    }
+
+    transferOwnership() {
+        this.dialogs.transferOwnership(this.system);
     }
 
     connectLocalToCloud() {

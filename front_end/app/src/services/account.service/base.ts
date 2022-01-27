@@ -10,6 +10,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { OauthService } from '@services/oauth.service';
 
 import { NxApplyService } from '../apply.service';
@@ -85,7 +86,8 @@ export abstract class BaseAccount implements OnDestroy {
         protected nxSystemAPIService: NxSystemAPIService,
         protected loginService: NxLoginService,
         protected oauthService: OauthService,
-        protected cookieService: CookieService
+        protected cookieService: CookieService,
+        protected bootstrapProviderService: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
@@ -170,6 +172,7 @@ export abstract class BaseAccount implements OnDestroy {
             if (!loginState || loginState !== login) {
                 this.sessionService.loginState = login || null;
             }
+            this.bootstrapProviderService.load();
         }
     }
 

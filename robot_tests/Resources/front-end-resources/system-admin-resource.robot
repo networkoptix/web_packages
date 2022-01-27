@@ -91,15 +91,17 @@ Validate Success Dialog
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
     Click Element    ${SYSTEM NAME}
-    Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
+    Input Text    ${SYSTEM NAME}    ${new name}
+    #Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
     Press Keys    ${SYSTEM NAME}    ENTER
     Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Run Keyword If    ${save}    Run Keywords
-        ...    Click Button    ${SAVE BUTTON}    AND
-        ...    Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    AND
-        ...    Wait until element is visible    ${NO UNSAVED CHANGES}    AND
-        ...    Sleep    1
-
+    IF    ${save}
+        Click Button    ${SAVE BUTTON}
+        Wait Until Elements Are Not Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
+        Wait until element is visible    ${NO UNSAVED CHANGES}
+        Sleep    1
+    END
+    
 Change Input for Advanced Setting
     [Arguments]    ${locator}    ${value}
     Input Text    ${locator}    ${value}

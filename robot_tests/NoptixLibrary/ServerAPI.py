@@ -37,9 +37,11 @@ class BearerAuth(AuthBase):
         return r
 
 @library
-class ServerAPI:
-    def __init__(self):
-        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
+class ServerAPI(object):
+
+    def __init__(self, image):
+        self.image = image
+        # self.image = BuiltIn().get_variable_value('${IMAGE}', None) // TODO: Added by nick. wasnt sure which is actual.
 
     def _login(self, server_url, username, password):
         data = {
@@ -137,7 +139,7 @@ class ServerAPI:
     def setup_local_system(self, serverUrl, newPassword, systemName):
         logger.trace("4.2")
         body= {
-            "password":newPassword, 
+            "password":newPassword,
             "systemName":systemName
         }
         r = requests.post(f"{serverUrl}/api/setupLocalSystem", auth=HTTPBasicAuth("admin","admin"), json=body, verify=False)
@@ -160,7 +162,7 @@ class ServerAPI:
 
     @keyword
     def restart_server(self, serverUrl, auth):
-        r = requests.get(f'{serverUrl}/api/restart', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}/api/restart', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword
@@ -229,9 +231,9 @@ class ServerAPI:
     @keyword
     def activate_license(self, auth, serverUrl, license):
         body= {
-            "key":license
+            "licenseKey":license
         }
-        r = requests.post(f'{serverUrl}/ec2/activateLicense', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{serverUrl}/api/activateLicense', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
@@ -265,7 +267,7 @@ class ServerAPI:
                 return True
         else:
             return False
-    
+
     @keyword
     def change_license_portal_host(self, auth, serverUrl, newHost):
         r = requests.get(f'{serverUrl}/api/systemSettings?licenseServer={newHost}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
@@ -325,17 +327,17 @@ class ServerAPI:
         return r.json()
 
     @keyword
-    def save_user(self, 
-        auth, 
-        serverUrl, 
-        name, 
-        permissions, 
-        email, 
-        fullName, 
-        password, 
-        userId=None, 
-        userRoleId=None, 
-        isEnabled=True, 
+    def save_user(self,
+        auth,
+        serverUrl,
+        name,
+        permissions,
+        email,
+        fullName,
+        password,
+        userId=None,
+        userRoleId=None,
+        isEnabled=True,
         isCloud=True
         ):
         body= {
@@ -402,7 +404,7 @@ class ServerAPI:
         header = {"X-Server-guid":serverId}
         body = {"port":newPort}
         r = requests.post(f'{serverUrl}/api/configure', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, headers=header, verify=False)
-        return r.json()
+        return r
 
     @keyword
     def disable_stat_reports(self, auth, serverUrl):

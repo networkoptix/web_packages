@@ -939,6 +939,7 @@ export class NxSystem extends System {
 
     /**
      * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * Note: userManager.isAdmin() is a function with one required argument, not a getter
      */
     get isAdmin() {
         return this.userManager.permissions.isAdmin;
@@ -946,6 +947,7 @@ export class NxSystem extends System {
 
     /**
      * @deprecated Method should be refrenced from userManager instead of directly from system.
+     * Note: userManager.isOwner() is a function with one required argument, not a getter
      */
     get isOwner() {
         return this.userManager.isOwner(this.userManager.currentUser);

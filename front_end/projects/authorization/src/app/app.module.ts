@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { AppComponent } from './app.component';
 
@@ -49,7 +50,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         }),
 
         NgxWebstorageModule.forRoot(),
-
+        OverlayModule,
         GenericDialogModule,
         NxOAuthRedirectModule,
         NxAuthorizeModule

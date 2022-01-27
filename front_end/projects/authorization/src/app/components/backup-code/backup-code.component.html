@@ -67,6 +67,7 @@
             </button>
             <nx-process-button
                 buttonText="{{ 'Log In' | translate }}"
+                [form]="backupCodeForm"
                 [clickFn]="sendCode"
                 [process]="checkBackupCodeProcess">
             </nx-process-button>

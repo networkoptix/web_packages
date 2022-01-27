@@ -1,5 +1,5 @@
 <div class="dropdown {{dropdownType}}"
-    [ngClass]="{'dropdown-show': show }"
+    [ngClass]="{'dropdown-show': show, 'display-only': items.length == 1 || stillLoading  }"
     (nxClickElsewhere)="show = false">
 
     <button class="btn btn-dropdown-toggle dropdown-toggle"

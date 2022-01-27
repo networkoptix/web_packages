@@ -1,6 +1,6 @@
 *** Settings ***
 Resource     variables.robot
-Resource     ${variables_file}
+Resource     variables-env.robot
 Resource     Resources/front-end-resources.robot
 Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
@@ -14,10 +14,9 @@ Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
 Library      NoptixImapLibrary
 Library      NoptixLibrary/GenericKeywords.py
-Library      NoptixLibrary/ServerAPI.py
-Library      NoptixLibrary/CloudPortalAPI.py
+Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL}
+Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
-Library      NoptixLibrary/CloudAuth.py     ${ENV}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
 
@@ -94,7 +93,7 @@ Check Language Anonymous
 Check Language Logged In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language    ${email}    ${password}
-    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${email}    ${password}    ${LANGUAGE}
     Sleep    2
 
 Set Language Anonymous
@@ -140,16 +139,9 @@ Log In Cloud
         Wait Until Elements Are Visible    ${ACCOUNT DOES NOT EXIST}    ${YOU CAN CREATE AN ACCOUNT}
     END
     IF    ${2fa} == ${True} and "${2fa backup code}" == "${EMPTY}"
-        ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
-        Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
-        Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}
-        Click Element    ${2FA AUTH CODE LOG IN BTN}
+        Generate totp and login    ${email}
     ELSE IF    ${2fa} == ${True} and "${2fa backup code}" != "${EMPTY}"
-        Wait Until Element Is Visible    ${2FA BACKUP CODE BTN}
-        Click Element    ${2FA BACKUP CODE BTN}
-        Wait Until Element Is Visible    ${2FA BACKUP CODE FIELD}
-        Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA BACKUP CODE FIELD}   ${2fa backup code}
-        Click Element    ${2FA BACKUP CODE LOG IN BTN}
+        Type in backup code and login    ${2fa backup code}    ${email}
     END
     IF    ${validate} == ${True}
         Validate Log In    ${email}    password=${password}

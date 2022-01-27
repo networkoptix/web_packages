@@ -224,7 +224,9 @@ export class NxSystemsService implements OnDestroy {
                 this.ribbonService.hide();
             }
             this.removeFromMergeList(system.id);
+            return false;
         }
+        return true;
     }
 
     private sortSystems(systems: NxSystemWithUserInfo[], currentUserEmail: string): NxSystemWithUserInfo[] {

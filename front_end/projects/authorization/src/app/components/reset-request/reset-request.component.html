@@ -35,7 +35,7 @@
         <ng-template #resetConfirm>
             <div class="email-sent">
                 <svg-icon nx-add-svg-src
-                    [src]="CONFIG.icons.dirSectionPlaceholder + 'mail' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'" 
+                    [src]="CONFIG.icons.dirSectionPlaceholder + 'mail' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'"
                     [svgStyle]="{'width.px': '280', 'height.px': '120'}"
                     [applyClass]="true"></svg-icon>
                 <h3 class="authorize-header" translate>We've sent you an email</h3>
@@ -54,7 +54,9 @@
             </button>
             <nx-process-button
                 [clickFn]="sendEmail"
+                [form]="resetPasswordForm"
                 buttonText="{{ (confirm ? 'Log In' : 'Reset Password') | translate }}"
+                [buttonDisabled]="!!resetPasswordEmail?.errors"
                 [process]="confirm ? loginProcess : resetRequestProcess">
             </nx-process-button>
         </div>

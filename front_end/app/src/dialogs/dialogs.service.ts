@@ -50,8 +50,13 @@ import { RestartServerModalContent } from './restart-server/restart-server.compo
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
 // import { SelectTimeRangeModalContent } from './select-time-range-full-fallback/select-time-range.component';
 import { NxToastService } from './toast.service';
+import {
+    TransferOwnershipModalContent
+} from './transfer-ownership/transfer-ownership.component';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
-import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
+import {
+    UpdateCameraCredentialsModalContent
+} from './update-camera-credentials/update-camera-credentials.component';
 import { WizardModalContent } from './wizard/wizard.component';
 import '@dialogs/dialogs.scss';
 
@@ -609,5 +614,19 @@ export class NxDialogsService {
 
         return this.open(SelectTimeRangeModalContent, dialogConfig)
             .afterClosed();
+    }
+
+    public transferOwnership(system: NxSystem) {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {
+            system,
+            closable: true
+        };
+
+        return this.createModal(TransferOwnershipModalContent, options, params);
     }
 }

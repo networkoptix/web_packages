@@ -17,8 +17,8 @@ Restart
     Set Language Anonymous
     
 Reset DB and Open New Browser On Failure
-    Set Account Name    ${url}    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-    Set Account Name    ${url}    ${server 1}[cloud users][viewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${server 1}[cloud users][viewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     ${server auth}=   Create List    admin    ${BASE PASSWORD}
 #    @{auth}=    Create List    ${delete}    ${BASE PASSWORD}
     Disconnect Server via API    ${server auth}   ${server 3}[cloud id]    ${BASE PASSWORD}    ${EMAIL DELETE USER}
@@ -224,7 +224,7 @@ Account Suite Tear Down
         ...    Should Be Equal As Strings    ${user}[fullName]    nameChanged nameChanged
         ...    AND     Exit For Loop
     END
-    Set Account Name    ${url}    ${server 1}[cloud users][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
+    Set Account Name    ${server 1}[cloud users][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
 
 11. SPACE for first name is not valid
     [Tags]    C41573
@@ -398,7 +398,7 @@ Account Suite Tear Down
     Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    validate=False    button=None
-    Set Account Language    ${ENV}    ${no perm}    ${password}    ${lang}
+    Set Account Language     ${no perm}    ${password}    ${lang}
     Sleep    5
     Reload Page
     Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
@@ -459,6 +459,7 @@ Account Suite Tear Down
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
     Verify in Account Page
+    Wait Until Element Is Enabled    ${DELETE ACCOUNT BUTTON}
     Click Button    ${DELETE ACCOUNT BUTTON}
     Verify Delete User Dialog
     Click Button    ${ DELETE ACCOUNT CANCEL BUTTON}

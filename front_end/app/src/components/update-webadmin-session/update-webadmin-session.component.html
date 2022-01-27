@@ -31,11 +31,15 @@
         </ng-template>
     </div>
     <div class="modal-footer">
-        <nx-process-button buttonText="{{ 'Continue' | translate }}"
+        <nx-process-button
+            buttonText="{{ 'Continue' | translate }}"
             [form]="loginForm"
             [process]="login"
-            [buttonDisabled]="isCloud">
-        </nx-process-button>
-        <nx-cancel-button [process]="login" [discardFn]="close"></nx-cancel-button>
+            [buttonDisabledInProgress]="isCloud"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="login"
+            [discardFn]="close"
+        ></nx-cancel-button>
     </div>
 </form>
