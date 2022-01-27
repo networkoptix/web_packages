@@ -1,5 +1,6 @@
 *** Settings ***
 Library    SeleniumLibrary
+Resource    ../../resource.robot
 
 *** Keywords ***
 Verify on Servers Page
