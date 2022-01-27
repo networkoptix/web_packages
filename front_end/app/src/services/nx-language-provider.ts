@@ -95,7 +95,7 @@ export class NxLanguageProviderService {
         const reduceTranslations = (names, sortList) => sortList.map((key) => names[key]());
         const timelineTranslations = this.translations?.view?.timeline;
         if (!timelineTranslations) {
-            return undefined
+            return undefined;
         }
         const times = {
             dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
