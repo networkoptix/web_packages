@@ -124,9 +124,8 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         });
 
         this.APIToolSystemService.currentSystemId$.pipe(untilDestroyed(this), filter(systemId => !!systemId)).subscribe(() => {
-            // TODO: Allow system to be changed before server loading is complete
-            // const systemToFind = this.APIToolSystemService.currentSystemId ||  this.readonlyAPIService.currentReadonlyAPI?.api?.id;
-            // this.system = findExistingItem(this.systems, systemToFind);
+            const systemToFind = this.APIToolSystemService.currentSystemId ||  this.readonlyAPIService.currentReadonlyAPI?.api?.id;
+            this.system = findExistingItem(this.systems, systemToFind);
             this.resetDropdowns();
         });
 
@@ -144,6 +143,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
 
     onSystemChange(system: DropdownItem) {
         if (NxUtilsService.isUUID(system.value)) {
+            this.APIToolSystemService.manualSystemChange = true;
             this.APIToolSystemService.currentSystemId = system.value;
         } else {
             this.readonlyAPIService.setReadonlyAPI(parseInt(system.value));

@@ -27,6 +27,7 @@ export class NxAPIToolSystemService {
     systemVersion: Number = 5.0;
     systemEmitter$ = new Subject<EmitInfo<NxSystem>>()
     validSystems: NxSystemWithUserInfo[] = []; // Used for trying all possible systems before showing an error
+    manualSystemChange = false;
 
     mediaServer = {
         updating: false,
@@ -198,9 +199,10 @@ export class NxAPIToolSystemService {
                     return err.pipe(delay(1000), take(7));
                 }),
                 finalize(() => {
-                    if (this.serversLoading$.value) {
+                    if (this.serversLoading$.value && !this.manualSystemChange) {
                         this.tryNextSystem();
                     }
+                    this.manualSystemChange = false;
                 })
             )
             .subscribe(_system => {
@@ -234,7 +236,7 @@ export class NxAPIToolSystemService {
                                         const typeOfError = err.status === 404 ? 'Incompatible' : 'Error';
                                         this.emitServer(server, {} as APIDoc, true, typeOfError);
                                     }).finally(() => {
-                                        const isLastServer = this.currentSystem.serverManager.servers.slice(-1)[0].id === server.id;
+                                        const isLastServer = this.currentSystem.serverManager.servers.slice(-1)[0]?.id === server.id;
                                         if (isLastServer) {
                                             this.serversFinishedLoading();
                                         }

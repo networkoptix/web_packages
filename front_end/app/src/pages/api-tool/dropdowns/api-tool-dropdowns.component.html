@@ -3,7 +3,7 @@
         <nx-select
                [id]="'avail-systems'"
                [type]="'api-tool'"
-               [stillLoading]="!this.system"
+               [stillLoading]="!this.systems.length"
                [items]="systems"
                [selected]="system"
                (onSelected)="onSystemChange($event)">
