@@ -29,5 +29,6 @@
     </div>
     <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
                                 (loginSuccess)="needsUpdate = false; disconnect.run()"
+                                [noConnectionMsg]="'Failed to disconnect system from %CLOUD_NAME%.' | translate"
                                 [system]="system"></nx-update-webadmin-session>
 </form>

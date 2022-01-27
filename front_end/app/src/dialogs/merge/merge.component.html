@@ -75,6 +75,7 @@
     </div>
     <nx-update-webadmin-session *ngIf="updateSession"
                                 (loginSuccess)="updateSession = false; checkMergeabilityProcess.run()"
+                                [noConnectionMsg]="'Failed to check if the systems can merge.' | translate"
                                 [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'adminPassword'" #adminPasswordForm="ngForm" name="adminPasswordForm">
@@ -121,6 +122,7 @@
     </div>
     <nx-update-webadmin-session *ngIf="updateSession"
                                 (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+                                [noConnectionMsg]="'Failed to the check current system\'s password.' | translate"
                                 [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
@@ -141,6 +143,7 @@
     </div>
     <nx-update-webadmin-session *ngIf="updateSession"
                                 (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+                                [noConnectionMsg]="'Failed to check the target system\'s password.' | translate"
                                 [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">
@@ -221,5 +224,6 @@
     </div>
     <nx-update-webadmin-session *ngIf="updateSession"
                                 (loginSuccess)="updateSession = false; mergingProcess.run()"
+                                [noConnectionMsg]="'Failed to merge {primarySystem} and {secondarySystem}.' | translate: { primarySystem: primaryName, secondarySystem: secondaryName }"
                                 [system]="system"></nx-update-webadmin-session>
 </form>
