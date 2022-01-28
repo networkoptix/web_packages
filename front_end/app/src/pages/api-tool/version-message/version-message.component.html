@@ -1,4 +1,4 @@
-<div *ngIf="!outdatedSystem && APIToolSystemService.systemVersion >= 4 && APIToolSystemService.systemVersion < 4.3"
+<div *ngIf="!outdatedSystem && isLegacy"
     class="mt-2 system-message-warning"
     translate>
         The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.

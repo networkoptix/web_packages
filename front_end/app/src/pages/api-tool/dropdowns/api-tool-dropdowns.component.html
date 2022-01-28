@@ -28,5 +28,5 @@
                 [stillLoading]="APIToolSystemService.loading$ | async"
                 [ngClass]="environment.isLocal? 'mb-3' : 'mt-2'">
         </nx-select>
-        <nx-version-message></nx-version-message>
+        <nx-version-message *ngIf="!(APIToolSystemService.loading$ | async)"></nx-version-message>
 </div>

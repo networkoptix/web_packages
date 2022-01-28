@@ -119,7 +119,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                 const systemToFind = this.APIToolSystemService.currentSystemId ||  this.readonlyAPIService.currentReadonlyAPI?.api?.id;
                 this.system = findExistingItem(this.systems, systemToFind);
                 this.server = findExistingItem(this.servers, this.APIToolSystemService.currentServerId);
-                this.type   = findExistingItem(this.types, this.openAPIJSONService.currentType || 'main');
+                this.type   = findExistingItem(this.types, this.openAPIJSONService.currentType || 'main') || this.types[0];
             }
         });
 

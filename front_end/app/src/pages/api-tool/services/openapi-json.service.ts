@@ -148,7 +148,9 @@ export class NxOpenAPIJSONService {
 
     changeServer(serverID: string) {
         const API = this.APIStore[serverID];
-        const type = this.APIToolService.queryParams?.type || this.APITypes.main.type;
+        const queryType = this.APIToolService.queryParams?.type;
+        const type = API.menus[queryType] ? queryType : this.APITypes.main.type;
+        this.APIToolService.setQueryParams('type', type);
         this.currentType = type;
         this.currentAPIDoc = API.json;
         this.setMenuNodes(API.menus[type]);

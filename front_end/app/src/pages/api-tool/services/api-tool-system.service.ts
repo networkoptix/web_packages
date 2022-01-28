@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { delay, distinctUntilChanged, filter, finalize, map, retryWhen, take } from 'rxjs/operators';
 
@@ -24,8 +25,8 @@ import { NxReadonlyAPIService } from './readonly-api.service';
 export class NxAPIToolSystemService {
     _currentSystem: NxSystem;
     currentSystemId$ = new BehaviorSubject<string>(null);
-    systemVersion: Number = 5.0;
-    systemEmitter$ = new Subject<EmitInfo<NxSystem>>()
+    systemVersion$ = new BehaviorSubject<string>(null);
+    systemEmitter$ = new Subject<EmitInfo<NxSystem>>();
     validSystems: NxSystemWithUserInfo[] = []; // Used for trying all possible systems before showing an error
     manualSystemChange = false;
 
@@ -70,6 +71,9 @@ export class NxAPIToolSystemService {
         }
     }
 
+    get systemVersion() { return this.systemVersion$.value; }
+    set systemVersion(version: string) { this.systemVersion$.next(version); }
+
     constructor(
         private systemService: NxSystemService,
         private readonlyAPIService: NxReadonlyAPIService,
@@ -78,6 +82,7 @@ export class NxAPIToolSystemService {
         private _route: ActivatedRoute,
         private router: Router,
         private uri: NxUriService,
+        private localStorage: LocalStorageService,
         private systemsService: NxSystemsService,
     ) {
         this.initializeAPITool();
@@ -96,7 +101,7 @@ export class NxAPIToolSystemService {
         });
 
         this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(({ api }) => {
-            this.systemVersion = parseFloat(api.version);
+            this.systemVersion = api.version;
             this.setQueryParams('system', api.id.toString());
             this.loading$.next(false);
         });
@@ -153,8 +158,8 @@ export class NxAPIToolSystemService {
     async handleSystemChange() {
         if (environment.isLocal) {
             const systemInfo = await this.currentSystem.serverManager.getModuleInfo().toPromise();
-            const version = parseFloat(systemInfo?.reply?.version);
-            if (!version || version < 4) {
+            const version = systemInfo?.reply?.version;
+            if (!version || parseFloat(version) < 4) {
                 this.markSystemOutdated();
             } else {
                 this.systemVersion = version;
@@ -169,9 +174,9 @@ export class NxAPIToolSystemService {
             if (system.info && !system.info.version) {
                 this.outDatedSystem$.next(true);
             } else {
-                this.systemVersion = parseFloat(system.info.version);
+                this.systemVersion = system.info.version;
             }
-            if (this.outDatedSystem$.value || this.systemVersion < 4) {
+            if (this.outDatedSystem$.value || parseFloat(this.systemVersion) < 4) {
                 // System version is too old
                 this.markSystemOutdated();
                 return;
@@ -217,32 +222,46 @@ export class NxAPIToolSystemService {
     }
 
     private getServersAndJSONs() {
+        let validServerFound = false;
         this.mediaServer.updating = true;
+        const cachedJSON = this.retrieveJSONFromLocalStorage('main');
         if (this.currentSystem.currentServerNotBusy) {
             if (this.currentSystem?.serverManager.servers?.length) {
                 this.currentSystem.serverManager
                     .initSystemMediaServers()
                     .then(() => {
-                        // TODO: Rework to stop early when a single valid server is found
                         this.currentSystem.serverManager.servers.forEach((server) => {
-                            if (server.status !== 'Offline') {
-                                this.getAPIDoc(server.id, 'main')
-                                    .then((response: APIDoc) => {
-                                        const json = response;
-                                        this.setRequestURL(json, server.id);
-                                        this.currentServerId = this.currentServerId || server.id;
-                                        this.emitServer(server, json);
-                                    }).catch(err => {
-                                        const typeOfError = err.status === 404 ? 'Incompatible' : 'Error';
-                                        this.emitServer(server, {} as APIDoc, true, typeOfError);
-                                    }).finally(() => {
-                                        const isLastServer = this.currentSystem.serverManager.servers.slice(-1)[0]?.id === server.id;
-                                        if (isLastServer) {
-                                            this.serversFinishedLoading();
-                                        }
-                                    });
-                            } else {
-                                this.emitServer(server, {} as APIDoc, true, 'Offline');
+                            if (!validServerFound) { // Loop skips all other servers after a single valid server is found
+                                if (server.status !== 'Offline') {
+                                    if (cachedJSON) {
+                                        this.setRequestURL(cachedJSON, server.id);
+                                        this.currentServerId = server.id;
+                                        this.emitServer(server, cachedJSON);
+                                        validServerFound = true;
+                                        this.serversFinishedLoading();
+                                    } else {
+                                        this.getAPIDoc(server.id, 'main')
+                                            .then((response: APIDoc) => {
+                                                const json = response;
+                                                this.storeJSONInLocalStorage(json, 'main');
+                                                this.setRequestURL(json, server.id);
+                                                this.currentServerId = this.currentServerId || server.id;
+                                                this.emitServer(server, json);
+                                                validServerFound = true;
+                                            }).catch(err => {
+                                                const typeOfError = err.status === 404 ? 'Incompatible' : 'Error';
+                                                this.emitServer(server, {} as APIDoc, true, typeOfError);
+                                            }).finally(() => {
+                                                // For reference, if server dropdown ever needs to be displayed and we have to get all servers:
+                                                // const isLastServer = this.currentSystem.serverManager.servers.slice(-1)[0]?.id === server.id;
+                                                if (validServerFound) {
+                                                    this.serversFinishedLoading();
+                                                }
+                                            });
+                                    }
+                                } else {
+                                    this.emitServer(server, {} as APIDoc, true, 'Offline');
+                                }
                             }
                         });
                     })
@@ -289,15 +308,20 @@ export class NxAPIToolSystemService {
         }
     }
 
-    async getLegacyAPIDocs(serverID) {
+    async getLegacyAPIDocs(serverID: string) {
         let legacyAPI: APIDoc;
         let deprecatedAPI: APIDoc;
 
+        legacyAPI = this.retrieveJSONFromLocalStorage('legacy');
+        deprecatedAPI = this.retrieveJSONFromLocalStorage('deprecated');
+
         // Optional chaining here because getApiDoc returns undefined if system version is below 5.0
-        const legacyAPICall = this.getAPIDoc(serverID, 'legacy')?.then(response => {
+        const legacyAPICall = legacyAPI || this.getAPIDoc(serverID, 'legacy')?.then(response => {
+            this.storeJSONInLocalStorage(response, 'legacy');
             legacyAPI = response;
         });
-        const deprecatedAPICall = this.getAPIDoc(serverID, 'deprecated')?.then(response => {
+        const deprecatedAPICall = deprecatedAPI || this.getAPIDoc(serverID, 'deprecated')?.then(response => {
+            this.storeJSONInLocalStorage(response, 'deprecated');
             deprecatedAPI = response;
         });
         await legacyAPICall;
@@ -384,5 +408,26 @@ export class NxAPIToolSystemService {
     private getAPIDoc(serverId: string, type: APIDocType) {
         return this.currentSystem.serverManager
             .getApiDoc(serverId, type);
+    }
+
+    private makeLSKey = (systemId: string, type: APIDocType) => {
+        return systemId + ' api-tool JSON ' + type;
+    }
+
+    private retrieveJSONFromLocalStorage = (type: APIDocType): APIDoc => {
+        if (this.queryParams.disableCache) return null;
+
+        const version = this.systemVersion;
+        const cachedItem = this.localStorage.retrieve(this.makeLSKey(this.currentSystemId, type));
+        if (version !== cachedItem?.version) return null; // invalidate cache if system version changes
+        return cachedItem?.json;
+    }
+
+    private storeJSONInLocalStorage = (json: APIDoc, type: APIDocType) => {
+        if (this.queryParams.disableCache) return null;
+
+        const version = this.systemVersion;
+        const cacheObject = { version, json };
+        this.localStorage.store(this.makeLSKey(this.currentSystemId, type), cacheObject);
     }
 }
