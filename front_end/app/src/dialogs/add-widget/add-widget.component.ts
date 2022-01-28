@@ -80,10 +80,11 @@ export class AddWidgetModalContent {
     downloadWidget = async (widgetUrl, isDevServer = false) => {
         // To handle cors issue when developing locally
         widgetUrl = this.environment.isLocal ? widgetUrl : widgetUrl.split(this.environment.cloudHost).reverse()[0];
-        const devEditSource = `${widgetUrl}/edit`;
+        const devSource = `${widgetUrl}/widget.html`;
+        const devEditSource = `${widgetUrl}/edit.html`;
         this.downloadingThirdParty = true;
         if (isDevServer) {
-            Object.assign(this.selectedWidget.value.config, { editMode: false, devSource: widgetUrl, devEditSource });
+            Object.assign(this.selectedWidget.value.config, { editMode: false, devSource, devEditSource });
         } else {
             this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise();
         }
