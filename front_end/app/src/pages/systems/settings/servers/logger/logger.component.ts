@@ -51,8 +51,7 @@ export class NxServerLoggerComponent implements OnChanges {
         this.showLoggers = false;
 
         this.saveLoggers = this.processService.createProcess(() => {
-            return this.system
-                .serverManager
+            return this.system.serverManager
                 .setLogLevels(this.serverId, this.loggersToBeSaved())
                 .then((response: any) => {
                     if (
@@ -140,7 +139,7 @@ export class NxServerLoggerComponent implements OnChanges {
     }
 
     init = () => {
-        this.system
+        this.system.serverManager
             .logLevel(this.serverId)
             .then(response => {
                 this.settingsToBeDisplayedOrUpdated(response.reply);

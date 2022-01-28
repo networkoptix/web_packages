@@ -72,7 +72,7 @@ export class DetachServerModalContent {
                     window.location.reload();
                     // may need to remove & update system eventually
                     // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
-                    // return this.system.removeMediaserver(anotherServerId, this.serverId).toPromise();
+                    // return this.system.serverManager.removeMediaserver(anotherServerId, this.serverId).toPromise();
                     // return this.system.update().subscribe()
                 },
                 (err) => {

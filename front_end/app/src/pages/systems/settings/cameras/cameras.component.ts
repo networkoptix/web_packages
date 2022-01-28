@@ -649,7 +649,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             return Promise.all([
                 this.system.updateRecordingSettings(updatedTask, cameraSettings),
-                this.system.updateResource(cameraSettings.id, {
+                this.system.serverManager.updateResource(cameraSettings.id, {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 })
             ]).then(_ => {

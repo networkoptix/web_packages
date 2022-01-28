@@ -1010,49 +1010,6 @@ export class NxSystem extends System {
         return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
     }
 
-    updateResource(id: string, params: IParams) {
-        return this.serverManager.updateResource(id, params);
-    }
-
-    setCameraUserSettings(serverId: string, id: string, params: Record<string, string>) {
-        return this.serverManager.setCameraUserSettings(serverId, id, params);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    setServerUserSettings(id: string, params: Record<string, string>) {
-        return this.serverManager.setServerUserSettings(id, params);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    getServers() {
-        return this.serverManager.getServers();
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    getForceServers() {
-        return this.serverManager.getForceServers(false);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    getModuleInfo(serverId?: string) {
-        return this.serverManager.getModuleInfo(serverId);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    changeServerPort(port: number, serverId: string) {
-        return this.serverManager.changeServerPort(port, serverId);
-    }
-
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
@@ -1072,37 +1029,6 @@ export class NxSystem extends System {
                 this.currentServerNotBusy = true;
                 return Promise.reject(err);
             });
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    detachFromSystem(serverId: string, currentPassword: string) {
-        this.currentServerNotBusy = false;
-        return this.serverManager.detachFromSystem(serverId, currentPassword).pipe(
-            tap(() => {}, () => {
-                this.currentServerNotBusy = true;
-            })
-        );
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    removeMediaserver(anotherServerId: string, currentServerId: string) {
-        return this.serverManager.removeMediaserver(anotherServerId, currentServerId);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    restoreFactorySettings(serverId: string, currentPassword: string) {
-        this.currentServerNotBusy = false;
-        return this.serverManager.restoreFactorySettings(serverId, currentPassword).pipe(
-            tap(() => {}, () => {
-                this.currentServerNotBusy = true;
-            })
-        );
     }
 
     /**
@@ -1136,35 +1062,5 @@ export class NxSystem extends System {
      */
     get moduleInfo() {
         return this.serverManager.moduleInfo;
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    getServerApiDoc(serverId: string) {
-        return this.serverManager
-            .getApiDoc(serverId)
-            .catch(err => Promise.reject(err));
-    };
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    logLevel(serverId: string) {
-        return this.serverManager.logLevel(serverId);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    setLogLevels(serverId: string, loggers: IParams) {
-        return this.serverManager.setLogLevels(serverId, loggers);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    activateLicense(serverId, key) {
-        return this.serverManager.activateLicense(serverId, key);
     }
 }

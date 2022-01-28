@@ -275,10 +275,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 if (!port.value) {
                     port.value = port.originalValue;
                 } else if (port.value !== port.originalValue) {
-                    const portReturn = await this.system.changeServerPort(
-                        port.value,
-                        serverId
-                    );
+                    const portReturn = await this.system.serverManager
+                        .changeServerPort(
+                            port.value,
+                            serverId
+                        );
                     switch (portReturn.error) {
                         case '0':
                             await this.system.update();
@@ -296,7 +297,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         metadataStorageId: this.selectedStorage.id
                     };
                     try {
-                        await this.system.updateResource(
+                        await this.system.serverManager.updateResource(
                             this.selectedServer.id,
                             params
                         );
@@ -391,7 +392,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.serversSubscription.unsubscribe();
         }
         // adding time to avoid server status flashing "Checking..." if system is offline
-        this.serversSubscription = this.system.getForceServers()
+        this.serversSubscription = this.system.serverManager.getForceServers(false)
             .pipe(
                 catchError(err => {
                     console.error(err);
@@ -527,7 +528,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         const params = {
                             metadataStorageId: this.selectedStorage.id
                         };
-                        await this.system.updateResource(
+                        await this.system.serverManager.updateResource(
                             this.selectedServer.id,
                             params
                         );

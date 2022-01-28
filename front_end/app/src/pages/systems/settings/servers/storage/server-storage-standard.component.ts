@@ -405,7 +405,11 @@ export class NxSystemStorageComponent implements OnInit {
                 })
             );
             await Promise.all(cameras.map(({ id, ...changes }) =>
-                this.system.setCameraUserSettings(this.serverId, id, changes)
+                this.system.serverManager.setCameraUserSettings(
+                    this.serverId,
+                    id,
+                    changes
+                )
             ));
         }
         await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'start');
@@ -427,8 +431,9 @@ export class NxSystemStorageComponent implements OnInit {
                             console.error(`save retry attempt ${5 - retries} for ${camera.id} camera `);
                         }
                         retries--;
-                        return this.system.setCameraUserSettings(
-                            this.serverId, camera.id,
+                        return this.system.serverManager.setCameraUserSettings(
+                            this.serverId,
+                            camera.id,
                             { backupType: 'CameraBackupLowQuality' }
                         ).catch(() => retries ? update() : console.error('failed to save camera.id'));
                     };
@@ -455,12 +460,24 @@ export class NxSystemStorageComponent implements OnInit {
         this.isBackupOn.originalValue = !retries;
         this.isBackupOn.value = !retries;
         this.backupState = !retries;
-        await this.system.serverManager.setServerUserSettings(this.serverId, { backupType: 'BackupManual' });
+        await this.system.serverManager.setServerUserSettings(
+            this.serverId,
+            { backupType: 'BackupManual' }
+        );
         if (this.system.useRest) {
-            const cameras: Record<string, string>[] = this.system.cameraManager.cameras.map(({ id }) => ({ id, backupPolicy: 'off' }));
-            await Promise.all(cameras.map(({ id, ...changes }) => this.system.setCameraUserSettings(this.serverId, id, changes)));
+            const cameras: Record<string, string>[] = this.system
+                .cameraManager.cameras
+                .map(({ id }) => ({ id, backupPolicy: 'off' }));
+            await Promise.all(cameras.map(({ id, ...changes }) =>
+                this.system.serverManager.setCameraUserSettings(
+                    this.serverId,
+                    id,
+                    changes
+                )
+            ));
         }
-        const backupControlRes = await this.system.storageManager.updateOrGetBackupControl(this.serverId, 'stop');
+        const backupControlRes = await this.system.storageManager
+            .updateOrGetBackupControl(this.serverId, 'stop');
         const state = backupControlRes && backupControlRes.reply?.state;
         // backupControlRes?.reply in this case is bad - updateOrGetBackupControl is called if backupControlRes is undefined
         if (!this.system.useRest && state !== 'BackupState_None') {

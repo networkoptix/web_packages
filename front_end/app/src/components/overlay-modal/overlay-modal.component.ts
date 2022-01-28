@@ -177,7 +177,7 @@ export class NxOverlayModalComponent implements OnInit {
     }
 
     getServers() {
-        this.system.getServers().toPromise()
+        this.system.serverManager.getServers().toPromise()
             .then(res => {
                 this.servers = res
                     ? Object.entries(res)

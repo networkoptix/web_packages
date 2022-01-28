@@ -65,7 +65,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
             ) {
                 return Promise.resolve();
             }
-            return this.system.updateResource(
+            return this.system.serverManager.updateResource(
                 this.camera.id,
                 { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` }
             ).then(this.updateCallback);

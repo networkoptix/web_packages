@@ -66,7 +66,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 });
             } else {
                 this.system.serverManager.initSystemMediaServers();
-                return this.system
+                return this.system.serverManager
                     .activateLicense(this.selectedServer.value, this.formatLicenseKey(this.license))
                     .then((response: any) => {
                         if (response.reply) {

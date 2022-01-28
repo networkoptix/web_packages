@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
@@ -7,6 +7,7 @@ import {
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockModule, MockProvider, MockComponent } from 'ng-mocks';
 
 import {
     NxContentBlockComponent
@@ -19,51 +20,44 @@ import {
 } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
-import { NxSystem } from '@services/system.service';
+import {
+    ServerManager
+} from '@services/system.service/system/server-manager/server-manager';
 
 import { NxLicenseTrialComponent } from './trial.component';
 
 describe('Licenses (Trial)', () => {
     let component: NxLicenseTrialComponent;
     let fixture: ComponentFixture<NxLicenseTrialComponent>;
-    let el: DebugElement;
+    let el: ElementRef<HTMLDivElement>;
 
-    const translateMock = {
-        translations: {}
-    };
-    const configMock = { getConfig: () => nxConfig };
+    let form: HTMLFormElement;
+    let button: HTMLButtonElement;
 
-    let form;
-    let button;
-
-    let systemSpy: jasmine.SpyObj<NxSystem>;
-    let processServiceSpy: jasmine.SpyObj<NxProcessService>;
+    let serverManagerSpy: jasmine.SpyObj<ServerManager>;
     let dialogsServiceSpy: jasmine.SpyObj<NxDialogsService>;
 
     beforeEach(waitForAsync(() => {
-        const spyCreateProcess = jasmine.createSpyObj('NxProcessService', ['createProcess']);
-        const spySystem = jasmine.createSpyObj('NxSystem', ['activateLicense']);
-        const spyDialogs = jasmine.createSpyObj('NxDialogsService', ['notify']);
-
         TestBed.configureTestingModule({
             declarations: [
-                NxLicenseTrialComponent, NxContentBlockComponent,
-                NxContentBlockSectionComponent, NxProcessButtonComponent
+                NxLicenseTrialComponent,
+                MockComponent(NxContentBlockComponent),
+                MockComponent(NxContentBlockSectionComponent),
+                NxProcessButtonComponent,
             ],
             imports: [
-                CommonModule,
-                FormsModule,
-                TranslateModule.forRoot()
+                MockModule(CommonModule),
+                MockModule(FormsModule),
+                TranslateModule.forRoot(),
             ],
             providers: [
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxSystem, useValue: spySystem },
-                { provide: NxProcessService, useValue: spyCreateProcess },
-                { provide: NxDialogsService, useValue: spyDialogs }
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
+                MockProvider(NxProcessService),
+                MockProvider(NxDialogsService),
+                MockProvider(ServerManager),
             ]
         }).compileComponents()
             .then(() => {
@@ -71,8 +65,7 @@ describe('Licenses (Trial)', () => {
                 component = fixture.componentInstance;
                 el = fixture.debugElement;
 
-                systemSpy = TestBed.inject(NxSystem) as jasmine.SpyObj<NxSystem>;
-                processServiceSpy = TestBed.inject(NxProcessService) as jasmine.SpyObj<NxProcessService>;
+                serverManagerSpy = TestBed.inject(ServerManager) as jasmine.SpyObj<ServerManager>;
                 dialogsServiceSpy = TestBed.inject(NxDialogsService) as jasmine.SpyObj<NxDialogsService>;
             })
             .catch(err => console.error(err));
@@ -80,10 +73,6 @@ describe('Licenses (Trial)', () => {
 
     it('should create the component', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('should call getConfig', () => {
-        expect(configMock.getConfig).toBeTruthy();
     });
 
     describe('Have registered trial key', () => {
@@ -126,14 +115,13 @@ describe('Licenses (Trial)', () => {
 
             it('should have button w/ caption', () => {
                 expect(button).toBeTruthy();
-                // nx-process-button caption will contain extra html which at this point is commented out
-                expect(button.innerHTML.replace(/<!--(.*?)-->/g, '')).toBe('Activate Trial License');
+                expect(button.innerText).toBe('Activate Trial License');
             });
         });
 
         it('should proceed if successful registration (response.reply)', () => {
-            systemSpy.activateLicense.and.resolveTo({ response: { reply: 'ok' } });
-            systemSpy.activateLicense('{serverId}', 'license_key').then((response) => {
+            serverManagerSpy.activateLicense.and.resolveTo({ response: { reply: 'ok' } });
+            serverManagerSpy.activateLicense('{serverId}', 'license_key').then((response) => {
                 component.haveTrialLicense = true;
                 fixture.detectChanges();
                 dialogsServiceSpy.notify('Test', 'success');
@@ -144,8 +132,8 @@ describe('Licenses (Trial)', () => {
         });
 
         it('should proceed if unsuccessful registration (response.error)', () => {
-            systemSpy.activateLicense.and.resolveTo({ response: { error: '1' } });
-            systemSpy.activateLicense('{serverId}', 'license_key').then((response) => {
+            serverManagerSpy.activateLicense.and.resolveTo({ response: { error: '1' } });
+            serverManagerSpy.activateLicense('{serverId}', 'license_key').then((response) => {
                 fixture.detectChanges();
                 dialogsServiceSpy.notify('Error', 'danger');
 
@@ -154,8 +142,8 @@ describe('Licenses (Trial)', () => {
         });
 
         it('should proceed if request fail', () => {
-            systemSpy.activateLicense.and.rejectWith({ error: { type: 'error' } });
-            systemSpy.activateLicense('{serverId}', 'license_key').catch((response) => {
+            serverManagerSpy.activateLicense.and.rejectWith({ error: { type: 'error' } });
+            serverManagerSpy.activateLicense('{serverId}', 'license_key').catch((response) => {
                 fixture.detectChanges();
                 if (response.error.type === 'error') {
                     dialogsServiceSpy.notify('Error', 'danger');

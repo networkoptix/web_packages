@@ -67,7 +67,7 @@ export class ServerManager {
         return this.getForceServers(true, servers);
     }
 
-    getForceServers(useCache, servers?) {
+    getForceServers(useCache: boolean, servers?: NxSystemServer[]) {
         if (!servers) {
             const serverSubscription = this.mediaserver.getMediaServers(useCache);
             serverSubscription.subscribe((res: any) => {
@@ -88,11 +88,11 @@ export class ServerManager {
         return this.mediaserver.previewUrl(cameraId, time, width, height, rotate, auth);
     }
 
-    setCameraUserSettings(serverId: string, id: string, params: { [key: string]: string; }) {
+    setCameraUserSettings(serverId: string, id: string, params: Record<string, string>) {
         return this.mediaserverConnections[serverId].saveCameraUserSettings(id, params);
     }
 
-    setServerUserSettings(serverId: string, params: { [key: string]: string; }) {
+    setServerUserSettings(serverId: string, params: Record<string, string>) {
         return this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
     }
 
@@ -152,7 +152,7 @@ export class ServerManager {
             });
     };
 
-    activateLicense(serverId, key) {
+    activateLicense(serverId: string, key: string) {
         if (!this.mediaserverConnections) {
             return this.initSystemMediaServers()
                 .then(() => {
