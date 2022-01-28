@@ -429,6 +429,7 @@ Account Suite Tear Down
     Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
 
     Log Out
+    Sleep   2
     Go To    ${url}/account
     Log In    ${server 1}[cloud users][viewer]    ${password}    button=None
     Verify in Account Page
@@ -442,12 +443,12 @@ Account Suite Tear Down
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${server 5}[port]    ${server 5}[cloud auth]
+    Detach Server From Cloud    https://${QA BURBANK IP}:${server 5}[port]    ${server 5}[local auth]
     Reload page
     Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${server 4}[port]    ${server 4}[cloud auth]
+    Detach Server From Cloud    https://${QA BURBANK IP}:${server 4}[port]    ${server 4}[local auth]
     Sleep    20
     Reload page
     Wait Until Element Is Visible    ${DELETE ACCOUNT BUTTON}
