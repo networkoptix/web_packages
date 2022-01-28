@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Resource    ../Resources/front-end-resources/2fa-resource.robot
 Suite Setup       Setup
 Test Setup        Restart
-Test Teardown     Turn off 2fa Functionality    ${login user}    ${password}
+Test Teardown     2fa Test Teardown
 Suite Teardown    2fa Suite Teardown
 Force Tags        Threaded
 
@@ -37,6 +37,10 @@ Restart
 2fa Suite Teardown
     Close All Browsers
     Delete Base System    ${system}
+
+2fa Test Teardown
+    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    Toggle 2fa Off Api    ${login user}    ${password}    verification_code=${totp}
 
 *** Test Cases ***
 1. Enable and perform login with 2fa
@@ -118,6 +122,7 @@ Restart
     Checkbox Should Be Selected    ${2FA VERIFICATION CHECKBOX ID}
     Page Should Not Contain    ${2FA SECURITY PAGE SAVE BTN}
     Page Should Not Contain    ${2FA SECURITY PAGE CANCEL BTN}
+    Sleep    1
     
 9. Unsuccessful cloud authorization with 2FA using expired code from app
     [Tags]    C94715
@@ -126,7 +131,7 @@ Restart
     Wait Until Element Is Visible    ${2FA SWITCH ENABLED}
     Log Out
     Wait Until Element Is Visible    ${LOG IN NAV BAR}
-    Sleep    .5
+    Sleep    1
     Click Element    ${LOG IN NAV BAR}
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${login user}
@@ -139,12 +144,17 @@ Restart
     Generate totp wait for a minute and try to login    ${login user}
     Go To    ${ENV}
 
-#10. 2fa login with api call
-#    Log In    ${login user}    ${password}
-#    Turn on 2fa Functionality
-#    Wait Until Element Is Visible    ${2FA SWITCH ENABLED}
-#    Log Out
-#    Login With Code    username=${login user}    password=${password}    verification_code=${2FA KEY VALUE}
-#    Go To    https://cloud-test.hdw.mx/systems
-#    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
-#    Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
+10. 2fa api call login with totp token
+    ${2fa key value}=    Toggle 2fa On API    ${login user}    ${password}
+    Set Global Variable    ${2FA KEY VALUE}    ${2fa key value}
+    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    Api Log In    email=${login user}    password=${password}    verification_code=${totp}
+
+11. 2fa api call login with backout code
+    ${2fa key value}=    Toggle 2fa On API    ${login user}    ${password}
+    Set Global Variable    ${2FA KEY VALUE}    ${2fa key value}
+    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    Generate 2fa Backup Codes API    email=${login user}    password=${password}    verification_code=${totp}
+    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${backup code}=    Get 2fa Backup Codes API    email=${login user}    password=${password}    verification_code=${totp}
+    Api Log In    email=${login user}    password=${password}    backup_code=${backup code}

@@ -12,6 +12,7 @@ Turn on 2fa Functionality
     Click Element    ${2FA SWITCH}
     Wait Until Element Is Visible    ${2FA PASSWORD MODAL FIELD}
     Input Text    ${2FA PASSWORD MODAL FIELD}    ${BASE PASSWORD}
+    Wait Until Element Is Visible    ${2FA PASSWORD MODAL NEXT BTN}
     Click Element    ${2FA PASSWORD MODAL NEXT BTN}
     IF    "${2fa link method}"=="without qr scan"
         Wait Until Element Is Visible    ${2FA QA CODE BTN}
@@ -25,11 +26,12 @@ Turn on 2fa Functionality
     ${totp}=    Get 2fa Verification Code    ${key}
     Wait Until Element Is Visible    ${2FA TOTP FIELD}
     Input Text    ${2FA TOTP FIELD}    ${totp}
+    Wait Until Element Is Visible    ${2FA VERIFY BTN}
     Click Element    ${2FA VERIFY BTN}
     Wait Until Element Is Visible    ${2FA COPY ALL BTN}
     # Get random login code from the list and save to variable
     ${random integer}=    Evaluate    random.randint(1,8)
-    ${random one time backup code}=    Get Text    //ngb-modal-window//span[text()="${random integer}"]/..
+    ${random one time backup code}=    Get Text    //two-fa-modal-content//span[text()="${random integer}"]/..
     ${random one time backup code}=    Get Substring    ${random one time backup code}    1
     Click Element    ${2FA OK BTN}
     Set Global Variable    ${2FA KEY VALUE}    ${key}
@@ -41,6 +43,7 @@ Turn off 2fa Functionality
     IF    "${logged in}" == "False"
         Log In    ${login user}    ${password}    2fa=${True}
     END
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Click Element    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${SECURITY DROPDOWN}
     Click Link    ${SECURITY DROPDOWN}
@@ -52,7 +55,7 @@ Turn off 2fa Functionality
     Disable two factor authentication form validations
     ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
     Input Text    ${2FA TOTP FIELD}    ${totp}
-    Click Element    ${2FA DISABLE}
+    Click Element    ${2FA DISABLE MODAL BTN}
     Wait Until Element Is Visible    ${2FA SWITCH DISABLED}
     END
 

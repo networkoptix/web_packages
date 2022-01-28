@@ -8,6 +8,7 @@ import re
 import string
 import os
 import Encode
+import random
 from robot.api.deco import keyword, library
 import urllib3
 
@@ -15,6 +16,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
 from CloudSession import CloudSession
+from Cloud2fa import Cloud2fa
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -28,8 +30,8 @@ class CloudPortalAPI(object):
         self.baseEmail = email
         
     @keyword
-    def api_log_in(self, email, password, env=None):
-        cloud_session = CloudSession(self.env, email, password)
+    def api_log_in(self, email, password, env=None, backup_code=None, verification_code=None):
+        cloud_session = CloudSession(self.env, email, password, backup_code, verification_code)
         cloud_session.login()
         return cloud_session
 
@@ -507,3 +509,43 @@ class CloudPortalAPI(object):
             "email":email
         }
         r = requests.post(f'{self.env}/api/systems/disconnect', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+
+    @keyword
+    def toggle_2fa_on_api(self, email, password, backup_code=None, verification_code=None):
+        with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            verificationRes = s.post(f'{self.env}/api/2fa/verification', data=None)
+            dataString = str(verificationRes.json().get("keyUrl"))
+            splitString = dataString.split("secret=")
+            secretKey = splitString[1]
+            api2fa = Cloud2fa()
+            totp = api2fa.get_2fa_verification_code(secretKey)
+            body = {"action":"toggle", "totp":totp}
+            securityRes = s.post(f'{self.env}/api/account/security', data=body)
+            assert securityRes.status_code == 200 , 'Toggle 2fa on failed'
+            return secretKey
+    
+    @keyword
+    def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
+        with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            body = {"action":"deactivate", "totp":verification_code}
+            securityRes = s.post(f'{self.env}/api/account/security', data=body)
+
+    @keyword
+    def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
+        with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            backupPostRes = s.post(f'{self.env}/api/2fa/backup', data={"count": "8"})
+            assert backupPostRes.status_code == 200 , 'Generate backup codes failed'
+            backupList = backupPostRes.json()
+            backupDict = backupList[random.randint(0, 7)]
+            backupCode = backupDict.get("backup_code")
+            return backupCode
+
+    @keyword
+    def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
+        with CloudSession(self.env, email, password, backup_code, verification_code) as s:
+            backupGetRes = s.get(f'{self.env}/api/2fa/backup/codes', data=None)
+            assert backupGetRes.status_code == 200 , 'Get backup codes failed'
+            backupList = backupGetRes.json()
+            backupDict = backupList[random.randint(0, 7)]
+            backupCode = backupDict.get("backup_code")
+            return backupCode
