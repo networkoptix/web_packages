@@ -255,6 +255,17 @@ function start_https_tunnel() {
     stunnel 'etc/stunnel_dev.conf'
 }
 
+function install_cli() {
+    export CLOUD_PORTAL_DIR=$(pwd)
+    pushd cloud_helper
+    npm install
+    npm run build
+    npm link
+    echo 'cloud-helper CLI installed'
+    cloud-helper
+    popd
+}
+
 for command in $@
 do
     case "$command" in
@@ -402,6 +413,9 @@ do
             build_mediaserver_image $VERSION.deb $VERSION
             run_mediaserver $VERSION $PORTS
             ;;
+        install_cli)
+            install_cli
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -428,7 +442,16 @@ do
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
+            echo 'install_cli - Installs cloud-helper CLI command globally'
             echo ''
+            if ! command -v cloud-helper &> /dev/null
+            then
+                echo "cloud-helper CLI not installed. Installing now."
+                install_cli
+            else
+                cloud-helper
+            fi
+
             ;;
     esac
 done
