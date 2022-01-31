@@ -78,7 +78,15 @@ export class BookmarkService implements OnDestroy {
     }
 
     getBookmarks() {
-        return this.system.mediaserver.getBookmarks();
+        return this.system.mediaserver.getBookmarks()
+            .pipe(
+                map((bookmarks: Bookmark[]) => bookmarks.map((bookmark: Bookmark) => ({
+                    ...bookmark,
+                    thumbnail: this.system.serverManager.getPreviewUrl(
+                        bookmark.deviceId, bookmark.startTimeMs, 700, 400, 0
+                    )
+                })))
+            );
     }
 
     ngOnDestroy() {}
