@@ -513,7 +513,7 @@
 
 .swagger-ui .model-box {
 	width: auto !important;
-	overflow-x: scroll !important;
+	overflow-x: auto;
 	background: $light2;
 	font-size: 12px;
 	border: 1px solid $light4;
