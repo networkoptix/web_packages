@@ -18,6 +18,7 @@ urllib3==1.24.2
 websocket-client==0.56.0
 pyotp==2.6.0
 PyQRCode==1.2.1
+qrcode[pil]
 pyzbar==0.1.8
 pypng==0.0.21
 image==1.5.33
