@@ -109,7 +109,7 @@ export class NxAdvancedFilterComponent {
     }
 
     sortCallbackFactory = (forceAsc = false) => (a, b) => {
-        const sanitizeSortValue = (value) => {
+        const sanitizeSortValue = value => {
             if (this.filter.sortable === SortOptions.TEXT) {
                 return value.toLowerCase();
             }
@@ -155,15 +155,13 @@ export class NxAdvancedFilterComponent {
         return aDate.getTime() === bDate.getTime();
     }
 
-    generateFilter = (): AdditionalFilter => (data) => {
+    generateFilter = (): AdditionalFilter => data => {
         if (this.filter.sortable && this.currentState.sort) {
             data = data.sort(this.sortCallbackFactory());
         }
 
         if (this.currentState.selections.some(({ value })  => value)) {
-            data = data.filter((
-                values
-            ) => this.currentState.selections.find(({
+            data = data.filter(values => this.currentState.selections.find(({
                 name, value
             }) => value && this.groupCompare(name, values[this.field])));
         }

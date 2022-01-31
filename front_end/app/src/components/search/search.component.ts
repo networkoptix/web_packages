@@ -150,7 +150,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
-        this._route.queryParams.subscribe((params) => {
+        this._route.queryParams.subscribe(params => {
             this.params = params;
             this.updateFilter(undefined, false);
         });
@@ -213,8 +213,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             if (this.params.tags) {
                 this.params.tags
                     .split(',')
-                    .forEach((tagName) => {
-                        this.localFilter.tags.find((tag) => {
+                    .forEach(tagName => {
+                        this.localFilter.tags.find(tag => {
                             if (tag.id === tagName) {
                                 tag.value = true;
                             }
@@ -229,10 +229,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         ) {
             this.localFilter
                 .selects
-                .find((select) => {
+                .find(select => {
                     if (this.params[select.id]) {
                         select.selected =
-                            select.items.find((item) =>
+                            select.items.find(item =>
                                 item.value === this.params[select.id]);
                     } else {
                         if (!select.selected) {
@@ -248,7 +248,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         ) {
             this.localFilter
                 .multiselects
-                .find((select) => {
+                .find(select => {
                     if (this.params[select.id]) {
                         select.selected = isArray(this.params[select.id])
                             ? this.params[select.id]
@@ -318,7 +318,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         let multiSelectsSelected = '';
 
         if (this.localFilter.tags) {
-            this.localFilter.tags.forEach((filter) => {
+            this.localFilter.tags.forEach(filter => {
                 if (filter.value) {
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
@@ -332,7 +332,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.localFilter.selects && this.localFilter.selects.length) {
-            this.localFilter.selects.forEach((select) => {
+            this.localFilter.selects.forEach(select => {
                 if (select.selected && select.selected.value !== '0') { // not default value
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
@@ -346,7 +346,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
-            this.localFilter.multiselects.forEach((select) => {
+            this.localFilter.multiselects.forEach(select => {
                 this.numberFilters += select.selected.length;
 
                 if (select.selected.length > 0) {
@@ -390,19 +390,19 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     clearFilters() {
         if (this.localFilter.tags) {
-            this.localFilter.tags.forEach((filter) => {
+            this.localFilter.tags.forEach(filter => {
                 filter.value = false;
             });
         }
 
         if (this.localFilter.selects) {
-            this.localFilter.selects.forEach((filter) => {
+            this.localFilter.selects.forEach(filter => {
                 filter.selected = filter.items[0];
             });
         }
 
         if (this.localFilter.multiselects) {
-            this.localFilter.multiselects.forEach((filter) => {
+            this.localFilter.multiselects.forEach(filter => {
                 filter.selected = [];
             });
         }
@@ -436,9 +436,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         let selectedTags;
         queryParams.tags = undefined;
         if (this.localFilter.tags && this.localFilter.tags.length) {
-            selectedTags = this.localFilter.tags.filter((tag) => tag.value);
+            selectedTags = this.localFilter.tags.filter(tag => tag.value);
             if (selectedTags.length) {
-                queryParams.tags = selectedTags.map((elm) => elm.id).join(',');
+                queryParams.tags = selectedTags.map(elm => elm.id).join(',');
             }
         }
 
@@ -448,7 +448,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.localFilter.selects && this.localFilter.selects.length) {
-            this.localFilter.selects.forEach((select) => {
+            this.localFilter.selects.forEach(select => {
                 queryParams[select.id] = undefined;
                 if (select.selected && +select.selected.value !== 0) {
                     queryParams[select.id] = select.selected.value;
@@ -457,7 +457,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
-            this.localFilter.multiselects.forEach((select) => {
+            this.localFilter.multiselects.forEach(select => {
                 queryParams[select.id] = undefined;
                 if (select.selected?.length) {
                     queryParams[select.id] = select.selected.join(',');

@@ -27,8 +27,8 @@ export class NxSwCacheService {
                     if (allKeys && cacheName.startsWith('ngsw:/:1:data:dynamic')) return true;
                     if (nameCacheParam === cacheName) return true;
                 }).map(cacheName => {
-                    return caches.open(cacheName).then((c) => {
-                        return c.keys().then((keys) => {
+                    return caches.open(cacheName).then(c => {
+                        return c.keys().then(keys => {
                             return Promise.all(
                                 keys.map(key => {
                                     return c.delete(key);
@@ -42,12 +42,12 @@ export class NxSwCacheService {
     }
 
     private clearCacheByUrl(nameCache: string, url: string) {
-        return caches.open(nameCache).then((c) => {
-            return c.keys().then((keys) => {
+        return caches.open(nameCache).then(c => {
+            return c.keys().then(keys => {
                 return Promise.all(
-                    keys.filter((p) => {
+                    keys.filter(p => {
                         return p.url.includes(url);
-                    }).map((keySearched) => {
+                    }).map(keySearched => {
                         return c.delete(keySearched);
                     })
                 );

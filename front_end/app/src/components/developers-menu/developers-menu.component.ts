@@ -144,8 +144,8 @@ export class NxDevelopersMenuComponent implements OnInit {
             pushCurrent(current);
             return nodeNames;
         };
-        const nodesFromRoot = (rootNodeName) => getRootNode(rootNodeName).reduce(getChildNodes, []);
-        const filterTree = (rootNodeName) => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
+        const nodesFromRoot = rootNodeName => getRootNode(rootNodeName).reduce(getChildNodes, []);
+        const filterTree = rootNodeName => nodeToCheck => !nodesFromRoot(rootNodeName).includes(nodeToCheck);
         const name = node.name || node.display_name;
         if (!this.openNodes.includes(name)) {
             this.openNodes.push(name);
@@ -260,7 +260,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             this.updateActive(id, this.service.activeAssetState);
         });
 
-        this.searchQuery$.pipe(untilDestroyed(this)).subscribe((query) => {
+        this.searchQuery$.pipe(untilDestroyed(this)).subscribe(query => {
             if (query !== '') {
                 this.filterMenuItems(query);
             } else {

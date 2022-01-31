@@ -77,7 +77,7 @@ export class Process {
         this.success = false;
         this.finished = false;
         this.canceled = false;
-        const chain = (first, second) => (data) => {
+        const chain = (first, second) => data => {
             first(data);
             second(data);
         };
@@ -98,7 +98,7 @@ export class Process {
 
     // Handler method wrappers
 
-    public onSuccess = async (res) => {
+    public onSuccess = async res => {
         if (this.canceled) { return; }
         const data = await res;
         const error = this.checkResponseHasError(data);
@@ -118,7 +118,7 @@ export class Process {
         }
     };
 
-    public onError = (error) => {
+    public onError = error => {
         if (error && error.error) {
             error = error.error;
         }

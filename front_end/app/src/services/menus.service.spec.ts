@@ -19,7 +19,7 @@ describe('Menus service', () => {
     let menu: NxMenusService;
 
     const translateMock = {
-        instant: (text) => text
+        instant: text => text
     };
 
     const sessionMock = {
@@ -62,7 +62,7 @@ describe('Menus service', () => {
             nodes: headerNodes
         };
         sessionMock.loginStateSubject.next('');
-        menu.getMenu('header', false).subscribe((filtered) => {
+        menu.getMenu('header', false).subscribe(filtered => {
             expect(filtered).toBeDefined();
             expect(filtered.nodes.length).toBe(1);
 
@@ -83,7 +83,7 @@ describe('Menus service', () => {
         const systemMock = setupTest41System();
         menu.updateActiveSystemMenu(systemMock);
 
-        menu.currentSystemNode$.subscribe((activeSystemNode) => {
+        menu.currentSystemNode$.subscribe(activeSystemNode => {
             expect(activeSystemNode.name).toBe(systemMock.info.name);
             expect(activeSystemNode.url).toBe(`/systems/${systemMock.id}`);
             expect(activeSystemNode.nodes.length).toBe(2);

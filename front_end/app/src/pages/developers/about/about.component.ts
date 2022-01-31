@@ -95,9 +95,7 @@ export class NxAboutComponent {
         });
     }
 
-    private getMenuNameFromConfig = (
-        baseName
-    ) => {
+    private getMenuNameFromConfig = baseName => {
         this.aboutStructure = null;
         if (!baseName) {
             return;
@@ -153,9 +151,7 @@ export class NxAboutComponent {
         node: this.mapToAboutNode(node)
     });
 
-    private mapDocToNodes = (
-        state
-    ) => ({
+    private mapDocToNodes = state => ({
         nodes: about, id
     }) => {
         this.aboutStructure = (about || []).map(this.mapToAboutStructure);

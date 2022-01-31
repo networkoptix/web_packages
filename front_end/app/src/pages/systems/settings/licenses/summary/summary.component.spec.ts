@@ -133,7 +133,7 @@ describe('Licenses (Summary)', () => {
         }));
 
         it('should render legacy info', inject([NxSettingsService], (settingsService: NxSettingsService) => {
-            settingsService.systemSubject.subscribe((system) => {
+            settingsService.systemSubject.subscribe(system => {
                 executeSharedTests();
             });
         }));
@@ -174,9 +174,9 @@ describe('Licenses (Summary)', () => {
                 }
             });
 
-            settingsService.systemSubject.subscribe((system) => {
+            settingsService.systemSubject.subscribe(system => {
                 systemSpy.getLicenseSummaries()
-                    .then((response) => {
+                    .then(response => {
                         component.setLicenses(response);
                     })
                     .finally(() => {

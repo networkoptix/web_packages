@@ -91,7 +91,7 @@ export class AddUserModalContent {
                 this.system.info.systemName || this.system.info.name
             );
 
-        const defaultRole = this.system.accessRoles.find((role) =>
+        const defaultRole = this.system.accessRoles.find(role =>
             role.name === this.CONFIG.accessRoles.default
         );
 
@@ -116,7 +116,7 @@ export class AddUserModalContent {
             }
         },
         {},
-        (user) => {
+        user => {
             if (user) {
                 this.hideErrors = true;
                 this.close(user.id);
@@ -124,7 +124,7 @@ export class AddUserModalContent {
         });
     }
 
-    close = (msg?) => {
+    close = (msg?: string) => {
         this.dialogRef.close(msg);
     }
 }

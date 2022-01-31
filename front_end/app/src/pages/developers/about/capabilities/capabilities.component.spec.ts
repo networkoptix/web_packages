@@ -26,7 +26,7 @@ xdescribe('NxCapabilitiesComponent', () => {
 
     const configMock = { config: nxConfig };
 
-    const getFirstBlockContent = (el) => {
+    const getFirstBlockContent = el => {
         const detailBlock = el.nativeElement.querySelector('.capability-card');
         const header = detailBlock.querySelector('header');
         const introLine = header.querySelector('.intro-line').innerText;

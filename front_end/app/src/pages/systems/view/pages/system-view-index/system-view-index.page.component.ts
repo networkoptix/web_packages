@@ -150,7 +150,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             .pipe(
                 untilDestroyed(this),
                 distinctUntilChanged())
-            .subscribe((systems) => {
+            .subscribe(systems => {
                 if (systems.length) {
                     this.systems = systems;
                 }
@@ -176,7 +176,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             .subscribe(this._onUxStateChange);
         this.onResize({ target: { innerWidth: window.innerWidth } });
 
-        this.accountService.get().then((account) => {
+        this.accountService.get().then(account => {
             if (
                 account &&
                 !environment.isLocal &&
@@ -255,7 +255,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.vms.reset();
 
         const createSystem = () => {
-            return this.accountService.get().then((account) => {
+            return this.accountService.get().then(account => {
                 if (!account) {
                     this._warn('accountService returned no account');
                     return Promise.reject();
@@ -299,12 +299,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
         });
 
-        const mediaServerChanged = (mediaServers) => {
+        const mediaServerChanged = mediaServers => {
             if (mediaServers.length !== cachedMediaServers.length) {
                 return true;
             } else {
-                return mediaServers.some((server) => {
-                    const matchServer = cachedMediaServers.find((_server) =>
+                return mediaServers.some(server => {
+                    const matchServer = cachedMediaServers.find(_server =>
                         _server.id === server.id
                     );
                     if (!matchServer || server.status !== matchServer.status) {
@@ -313,9 +313,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         if (server.cameras.length !== matchServer.cameras.length) {
                             return true;
                         } else {
-                            return server.cameras.some((camera) => {
+                            return server.cameras.some(camera => {
                                 const matchCamera = matchServer.cameras.find(
-                                    (_camera) => _camera.id === camera.id
+                                    _camera => _camera.id === camera.id
                                 );
 
                                 return (
@@ -458,7 +458,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     const findCamerasWithArchive = () => {
                         return this.system.getCameraHistoryItems().toPromise()
-                            .then((result) => {
+                            .then(result => {
                                 if (!result?.length) {
                                     return;
                                 }

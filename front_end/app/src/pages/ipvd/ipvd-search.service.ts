@@ -53,7 +53,7 @@ export class IpvdSearchService {
                 result = lowerNoDashes(c.vendor).includes(queryLowerNoDashes);
                 result = result || lowerNoDashes(c.model).includes(queryLowerNoDashes);
 
-                result = result || c.analyticsEvents.find((event) => {
+                result = result || c.analyticsEvents.find(event => {
                     return event.toLowerCase().includes(queryLowerNoDashes);
                 });
             }

@@ -138,7 +138,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
             'startTimeMs'
         ];
         const searchBy = (item: Bookmark | string[], query: string) => {
-            return Object.keys(item).some((key) => {
+            return Object.keys(item).some(key => {
                 if (!item[key] || IGNORE_KEYS.includes(key)) {
                     return false;
                 }

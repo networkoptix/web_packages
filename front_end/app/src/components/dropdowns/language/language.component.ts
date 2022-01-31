@@ -95,10 +95,10 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.instantReload = this.instantReload !== undefined;
         this.instantApply = this.instantApply !== undefined;
 
-        this.cloudApi.getLanguages().then((data) => {
+        this.cloudApi.getLanguages().then(data => {
             this.languages = this.CONFIG?.supportedLanguages?.length === 0
                 ? data
-                : data.filter((language) =>
+                : data.filter(language =>
                     this.CONFIG.supportedLanguages?.includes(language.language));
             this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
                 return lang.language;

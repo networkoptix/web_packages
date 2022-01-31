@@ -68,7 +68,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
             (Date.now() - this.healthService.lastUpdate) / minute | 0;
         this.timerSubscription = timer(0, minute)
             .pipe(startWith(currentHmAge))
-            .subscribe((minutes) => {
+            .subscribe(minutes => {
                 if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
                     this.ribbonService.show(
                         this.LANG.common.viewingOutdatedReport(),

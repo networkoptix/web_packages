@@ -91,7 +91,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     private sortAlertsFunc() {
-        return (elm) => {
+        return elm => {
             const isError = (elm._.alarm.icon === 'error');
             switch (elm.metric) {
                 // We can adjust sorting here
@@ -143,7 +143,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.countAlerts();
 
         if (this.params.id && this.params.metric) {
-            const alarm = this.alerts.find((alert) => {
+            const alarm = this.alerts.find(alert => {
                 return alert.entity === this.params.id && alert.metric === this.params.metric;
             });
             this.setActiveEntity(alarm, false);
@@ -171,7 +171,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 const params = { ...this.route.snapshot.queryParams };
 
                 if (params.id) {
-                    const alarm = this.healthService.alertsValues.find((alert) => {
+                    const alarm = this.healthService.alertsValues.find(alert => {
                         return (alert.metric === params.metric && alert.entity === params.id);
                     });
 
@@ -213,7 +213,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject
             .pipe(delay(0))
-            .subscribe((className) => {
+            .subscribe(className => {
                 this.fixedLayoutClass = className;
             });
 
@@ -256,7 +256,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     resetFilterModel() {
         if (this.filterModel.selects) {
-            this.filterModel.selects.forEach((filter) => {
+            this.filterModel.selects.forEach(filter => {
                 filter.selected = filter.items[0];
             });
         }
@@ -272,7 +272,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             { value: 'error', name: 'Only Errors' }
         ];
 
-        const selected = alertItems.filter((item) => {
+        const selected = alertItems.filter(item => {
             return this.params.alertType === item.value;
         })[0];
 
@@ -379,7 +379,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }, {});
         this.healthService.alertsValues.filter((value: any) => {
             return value.metric !== 'systems';
-        }).forEach((item) => {
+        }).forEach(item => {
             if (alarmTypes[item.metric]) {
                 alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
             }

@@ -120,9 +120,9 @@ export class IntegrationService implements OnDestroy {
 
     private formatScreenshots(section) {
         if (section) {
-            section.screenshots = Object.keys(section).filter((element) => {
+            section.screenshots = Object.keys(section).filter(element => {
                 return element.match(/screenshot[\d]+/i) && section[element];
-            }).map((key) => {
+            }).map(key => {
                 const match = key.match(/([\d]+)/i);
                 return { id: key, value: section[key], sortKey: parseInt(match[0], 10) };
             });
@@ -144,7 +144,7 @@ export class IntegrationService implements OnDestroy {
             return;
         }
 
-        Object.entries(plugin.overview).forEach((item) => {
+        Object.entries(plugin.overview).forEach(item => {
             const matchScreenshot = item[0].match(/Screenshot([\d]+)$/);
 
             if (matchScreenshot) {
@@ -156,11 +156,11 @@ export class IntegrationService implements OnDestroy {
             }
         });
 
-        Object.entries(plugin.overview).forEach((item) => {
+        Object.entries(plugin.overview).forEach(item => {
             const matchCaption = item[0].match(/Screenshot[\d]+caption$/);
 
             if (matchCaption) {
-                processed.find((i) => {
+                processed.find(i => {
                     if (i.id === matchCaption[0].replace('caption', '')) {
                         i.caption = item[1];
                     }

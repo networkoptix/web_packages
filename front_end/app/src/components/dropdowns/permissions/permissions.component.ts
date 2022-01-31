@@ -75,7 +75,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
 
     private processAccessRoles() {
         this.accessRoles = [];
-        this.roles.forEach((role) => {
+        this.roles.forEach(role => {
             if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
                 const extendedRole = { ...role };
                 extendedRole.optionLabel =
@@ -107,7 +107,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             ? role.optionLabel()
             : role.optionLabel;
 
-        const selectedRole = this.accessRoles.find((accessRole) =>
+        const selectedRole = this.accessRoles.find(accessRole =>
             accessRole.name === role.name
         );
         this.onChangeCallback(selectedRole);

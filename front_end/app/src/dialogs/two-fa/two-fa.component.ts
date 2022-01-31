@@ -229,7 +229,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
                 }
             }
-        }, (response) => {
+        }, response => {
             if (response?.keyUrl) {
                 this.setTemplate(T_FA_STEPS.WizardQR);
                 this.valueQR = response.keyUrl;
@@ -246,7 +246,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         }, {
             ignoreUnauthorized: true,
             ignoreError: true
-        }, (response) => {
+        }, response => {
             if (response.result.success) {
                 this.setTemplate(T_FA_STEPS.WizardCode);
             }
@@ -273,7 +273,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.newCodes = response.map(code => code.backup_code);
 
                     return this.refreshSession()
-                        .then((result) => {
+                        .then(result => {
                             if (result.resultCode === 'ok') {
                                 return this.accountService.update2fa(
                                     this.password,
@@ -283,7 +283,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                             }
 
                             return Promise.reject({ resultCode: result.errorText });
-                        }, (err) => {
+                        }, err => {
                             return Promise.reject({ resultCode: err.error.resultCode });
                         });
                 });
@@ -317,7 +317,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
                 }
             }
-        }, (response) => {
+        }, response => {
             if (response.account2faEnabled) {
                 this.setTemplate(T_FA_STEPS.WizardFinish);
             }
@@ -347,7 +347,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.newCodes = response.map(code => code.backup_code);
 
                     return this.refreshSession()
-                        .then((result) => {
+                        .then(result => {
                             if (result.resultCode === 'ok') {
                                 return this.accountService.update2fa(
                                     '',
@@ -357,7 +357,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                             }
 
                             return Promise.reject({ resultCode: result.errorText });
-                        }, (err) => {
+                        }, err => {
                             return Promise.reject({ resultCode: err.error.resultCode });
                         });
                 });
@@ -391,7 +391,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
                 }
             }
-        }, (response) => {
+        }, response => {
             if (response.account2faEnabled) {
                 this.close('enabled');
             }
@@ -429,7 +429,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 notAuthorized: invalidCredentialHandler,
                 wrongOldPassword: invalidCredentialHandler
             }
-        }, (res) => {
+        }, res => {
             this.close(res);
         });
     }
@@ -500,17 +500,17 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
-    close = (action?) => {
+    close = (action?: string) => {
         this.resetDefaults();
         this.dialogRef.close(action || 'changed');
     }
 
     /* Needs to be an arrow function to access this
     when passed to <nx-cancel-button> as [discardFn] */
-    closeWizard = (action?) => {
+    closeWizard = (action?: string) => {
         if (action === 'deactivate') {
             this.accountService.deactivate2FaKey()
-                .catch((err) => {
+                .catch(err => {
                     console.error('2FA cleanup failed ->', err);
                 });
         }

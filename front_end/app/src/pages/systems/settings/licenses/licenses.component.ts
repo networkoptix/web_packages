@@ -40,7 +40,7 @@ export class NxSystemLicensesComponent implements OnInit {
     private setupDefaults() {
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined && data.id !== this.system?.id))
-            .subscribe((system) => {
+            .subscribe(system => {
                 this.system = system;
 
                 this.getLicenses();
@@ -118,7 +118,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
         item.licenseBlock
             .split('\n')
-            .map((property) => {
+            .map(property => {
                 const prop = property.split('=');
                 item.info[prop[0].toLowerCase()] = prop[1];
             });
@@ -221,7 +221,7 @@ export class NxSystemLicensesComponent implements OnInit {
                                         this.licenseSummaries = [];
 
                                         if (hardwareIds.length) {
-                                            result.forEach((item) => {
+                                            result.forEach(item => {
                                                 this.createLicenseInfo(item);
 
                                                 const boundServer = hardwareIds.find((server: { hardwareIds: string[], serverId: string }) => {
@@ -229,7 +229,7 @@ export class NxSystemLicensesComponent implements OnInit {
                                                 });
 
                                                 const server: NxSystemServer | any = (boundServer)
-                                                    ? this.system.servers.find((server) => server.id === boundServer.serverId)
+                                                    ? this.system.servers.find(server => server.id === boundServer.serverId)
                                                     : {};
 
                                                 if (Object.keys(server).length) {

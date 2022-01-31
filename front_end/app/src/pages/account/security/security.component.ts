@@ -123,7 +123,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                             } else {
                                 this.account2faEnabled = (action === 'enabled');
                                 this.updateVerificationOriginal();
-                                this.accountService.get(true).catch((e) => {});
+                                this.accountService.get(true).catch(e => {});
                             }
                         });
                 },
@@ -217,7 +217,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         if (targetState) {
             this.dialogs
                 .wizard2FA()
-                .then((action) => {
+                .then(action => {
                     const newState = (action === 'enabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
@@ -227,7 +227,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         } else {
             this.dialogs
                 .off2FA(this.twoFaSystems.length)
-                .then((action) => {
+                .then(action => {
                     const newState = !(action === 'disabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;

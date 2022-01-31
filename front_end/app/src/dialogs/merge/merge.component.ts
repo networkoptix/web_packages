@@ -378,7 +378,7 @@ export class MergeModalContent {
         this.updateSession = true;
         this.loginService.currentSystem = this.system;
         this.loginService.updateSession('passwordMerge')
-            .then((ready) => {
+            .then(ready => {
                 this.updateSession = !ready;
                 if (ready) {
                     process.run();
@@ -426,7 +426,7 @@ export class MergeModalContent {
                     if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
                     }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                        return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
+                        return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                     }
                     if (err !== 'canceled') {
                         this.checking = false;
@@ -481,7 +481,7 @@ export class MergeModalContent {
                     ).toPromise();
                 }
             }, { ignoreError: true },
-            (res) => {
+            res => {
                 if (!res) {
                     return;
                 }
@@ -512,11 +512,11 @@ export class MergeModalContent {
                         urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
                     });
                 }
-            }, (err) => {
+            }, err => {
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
                 }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
+                    return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                 }
                 console.error(err);
                 if (this.machine.currentState !== this.serverUrlErrors) {
@@ -609,11 +609,11 @@ export class MergeModalContent {
                     res.resultCode = res.errorString.toLowerCase();
                     this.handleMergeError(res);
                 }
-            }, (error) => {
+            }, error => {
                 if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.mergingProcess);
                 } else if (error.status === 403 || error.errorId === this.CONFIG.servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
+                    return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                 }
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data?.resultCode);

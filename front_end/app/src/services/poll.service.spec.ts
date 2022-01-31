@@ -26,7 +26,7 @@ describe('Poll service', () => {
 
         const pollTest = poll.createPoll(() => of(test), 1000);
         // interval delay is irrelevant- just sync with ticks -- TT
-        const subscr = pollTest.subscribe((call) => {
+        const subscr = pollTest.subscribe(call => {
             call();
         });
 

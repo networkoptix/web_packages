@@ -126,7 +126,7 @@ export class AddStorageModalContent {
                 ) || [];
                 const storageExistsOnSystem = !this.alreadyCheckedAndExists &&
                     systemStorages.find(
-                        (s) => s.url.replace('smb:', '')
+                        s => s.url.replace('smb:', '')
                             .replace('//', '')
                             .split('@')
                             .reverse()[0] === url.replace('//', '')
@@ -254,7 +254,7 @@ export class AddStorageModalContent {
         this.alreadyCheckedAndExists = false;
     }
 
-    close = (msg?) => {
+    close = (msg?: string) => {
         this.storageForm.reset();
         this.dialogRef.close(msg);
     }

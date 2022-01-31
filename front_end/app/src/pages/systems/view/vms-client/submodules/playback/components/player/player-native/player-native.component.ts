@@ -98,7 +98,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
                         default:
                             break;
                     }
-                }, (error) => {
+                }, error => {
                     if (error.status !== 0) {
                         this.playback.setError(error.message);
                     }

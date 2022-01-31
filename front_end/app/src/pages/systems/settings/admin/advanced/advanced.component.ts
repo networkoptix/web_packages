@@ -145,7 +145,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
                     this.advancedFormWatcher.valueSubject
                         .pipe(
                             untilDestroyed(this))
-                        .subscribe((values) => {
+                        .subscribe(values => {
                             if (values) {
                                 Object.entries(values).forEach(([key, current]) => {
                                     const original = this.systemSettings[key];
@@ -168,7 +168,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             : key;
     }
 
-    settingsToBeDisplayedOrUpdated = (settings) => {
+    settingsToBeDisplayedOrUpdated = settings => {
         Object.entries(settings).reduce((systemSettings, [key, value]) => {
             // CLOUD-6350: Refactor advanced global settings page
             if (this.CONFIG.settingsConfig[key]?.hiddenInAdvanced) {

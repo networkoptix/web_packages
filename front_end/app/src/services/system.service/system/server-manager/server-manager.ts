@@ -37,7 +37,7 @@ export class ServerManager {
                 let unauthorizedCallback = () => Promise.resolve(true);
                 if (!environment.isLocal) {
                     unauthorizedCallback = this.system.useRest
-                        ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then((tokens) => {
+                        ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then(tokens => {
                             (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
                             return Promise.resolve(true);
                         })
@@ -139,7 +139,7 @@ export class ServerManager {
     setLogLevels(serverId: string, loggers: IParams) {
         const promises = [];
 
-        loggers.forEach((logger) => {
+        loggers.forEach(logger => {
             promises.push(this.mediaserverConnections[serverId].logLevel(undefined, logger.key, logger.value).toPromise());
         });
 
@@ -147,7 +147,7 @@ export class ServerManager {
             .then(() => {
                 return Promise.resolve({});
             })
-            .catch((error) => {
+            .catch(error => {
                 return Promise.reject(new Error(error));
             });
     };

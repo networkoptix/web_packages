@@ -50,7 +50,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
       ).pipe(
           startWith(IntersectionStatus.NotVisible),
           takeUntil(this.destroy$)
-      ).subscribe((status) => {
+      ).subscribe(status => {
           this.nxOnIntersect.emit(status);
       });
   }
@@ -89,7 +89,7 @@ export const fromIntersectionObserver = (
             .pipe(
                 debounceTime(debounce)
             )
-            .subscribe(async(state) => {
+            .subscribe(async state => {
                 const isEntryVisible = state && await isVisible(state?.entry.target as HTMLElement);
 
                 if (isEntryVisible) {

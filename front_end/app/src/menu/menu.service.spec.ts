@@ -236,7 +236,7 @@ describe('NxMenuService', () => {
     it('should set section', () => {
         expect(menuService.section).toBe(''); // init value
         menuService.section = 'General';
-        menuService.selectedSectionSubject.subscribe((section) => {
+        menuService.selectedSectionSubject.subscribe(section => {
             expect(section).toBe('General');
         });
     });
@@ -244,7 +244,7 @@ describe('NxMenuService', () => {
     it('should set detail', () => {
         expect(menuService.detail).toBe(''); // init value
         menuService.detail = 'General';
-        menuService.selectedDetailsSection.subscribe((section) => {
+        menuService.selectedDetailsSection.subscribe(section => {
             expect(section).toBe('General');
         });
     });

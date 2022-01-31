@@ -111,7 +111,7 @@ export class NxSystemsService implements OnDestroy {
             return of([]);
         }
 
-        return this._getSystems().pipe(tap((systems) => {
+        return this._getSystems().pipe(tap(systems => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
         }));
@@ -154,7 +154,7 @@ export class NxSystemsService implements OnDestroy {
     getSystem(systemId: string, useCache = true): Observable<NxSystemWithUserInfo> {
         let system;
         if (this.systems && this.systems.length > 0) {
-            system = this.systems.find((system) => {
+            system = this.systems.find(system => {
                 return system.id === systemId;
             });
         }
@@ -162,7 +162,7 @@ export class NxSystemsService implements OnDestroy {
         if (system && useCache) { // Cache success
             return of(system);
         } else { // Cache miss
-            return this._getSystems(systemId).pipe(map((systems) => {
+            return this._getSystems(systemId).pipe(map(systems => {
                 return systems[0];
             }));
         }
@@ -199,14 +199,14 @@ export class NxSystemsService implements OnDestroy {
 
     private processSystems(systems: NxSystemWithUserInfo[]) {
         this.systems = this.sortSystems(systems, this.currentUser);
-        this.systems.forEach((system) => {
+        this.systems.forEach(system => {
             system.name = system.name || system.systemName;
             system.isMine = system.ownerAccountEmail === this.currentUser || system.currentUser?.isLocalOwner;
             system.canMerge = system.isMine &&
             (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
-            system.useRest = Object.keys(system.capabilities).some((capability) => capability.includes(this.restVersion));
+            system.useRest = Object.keys(system.capabilities).some(capability => capability.includes(this.restVersion));
 
             this.checkMerge(system);
         });

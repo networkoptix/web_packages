@@ -19,7 +19,7 @@ export class NxAppStateService {
     altBackground = false;
 
     constructor() {
-        this.headerContainerHeight$.pipe(debounceTime(50)).subscribe((value) => {
+        this.headerContainerHeight$.pipe(debounceTime(50)).subscribe(value => {
             this.appContainerHeight = `calc(100% - ${value}px)`;
         });
     }

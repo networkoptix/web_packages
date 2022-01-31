@@ -132,7 +132,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
-            .subscribe((system) => {
+            .subscribe(system => {
                 this.system = system;
                 if (!this.environment.isLocal) {
                     this.pageService.pageTitle = this.system.info.name;
@@ -241,7 +241,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.locked[user.email] = true;
         this._calcNextUserId();
 
-        this.dialogs.removeUser(this.system, user).then((result) => {
+        this.dialogs.removeUser(this.system, user).then(result => {
             if (result) {
                 delete this.locked[user.email];
                 this.paramUser = this.nextUserId;
@@ -262,7 +262,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     protected _calcNextUserId () {
-        const currentUserIndex = this.system.users.findIndex((user) => {
+        const currentUserIndex = this.system.users.findIndex(user => {
             return user.id === this.selectedUser.id;
         });
         const incIndex = currentUserIndex + 1;
@@ -362,7 +362,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         dialog.then(this._onPasswordChanged);
     }
 
-    private _onPasswordChanged = (result) => {
+    private _onPasswordChanged = result => {
         if (!result) {
             return;
         }

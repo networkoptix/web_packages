@@ -67,7 +67,7 @@ export class NxContentComponent implements OnInit {
         ) || {};
 
         // Clear staticContent on reload so we can try to fetch from db again
-        window.onbeforeunload = (event) => {
+        window.onbeforeunload = event => {
             this.sessionStorage.clear('staticContent');
         };
 
@@ -98,7 +98,7 @@ export class NxContentComponent implements OnInit {
     }
 
     subscribeParams() {
-        this.route.paramMap.subscribe((paramMap) => {
+        this.route.paramMap.subscribe(paramMap => {
             this.agreement =
                 this.route.snapshot.parent.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
@@ -170,7 +170,7 @@ export class NxContentComponent implements OnInit {
         this.cloudApiService
             .getStatic(templateUrl)
             .toPromise()
-            .then((result) => {
+            .then(result => {
                 this.body = result;
                 const parser = new DOMParser();
                 const content = parser.parseFromString(result, 'text/html');
@@ -185,7 +185,7 @@ export class NxContentComponent implements OnInit {
                     'staticContent',
                     JSON.stringify(this.staticContent)
                 );
-            }).catch((e) => {
+            }).catch(e => {
                 if (e.status === 404) {
                     this.pageService.show404();
                 }

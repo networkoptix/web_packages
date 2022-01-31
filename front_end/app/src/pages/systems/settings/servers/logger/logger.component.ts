@@ -162,10 +162,10 @@ export class NxServerLoggerComponent implements OnChanges {
         this.systemLoggers[key].selected = selected;
     }
 
-    settingsToBeDisplayedOrUpdated = (loggers) => {
+    settingsToBeDisplayedOrUpdated = loggers => {
         this.formWatcher = new FormWatcher(this.logLevelsForm);
         const reset = () => {
-            Object.keys(loggers).forEach((key) => {
+            Object.keys(loggers).forEach(key => {
                 const value = loggers[key];
                 const { name, help } = this.loggerOptions.filter(level => {
                     return level.value === value;
@@ -199,7 +199,7 @@ export class NxServerLoggerComponent implements OnChanges {
     loggersToBeSaved() {
         const loggers = [];
 
-        Object.keys(this.systemLoggers).forEach((key) => {
+        Object.keys(this.systemLoggers).forEach(key => {
             if (
                 this.systemLoggers[key].value !==
                 this.systemLoggers[key].originalValue

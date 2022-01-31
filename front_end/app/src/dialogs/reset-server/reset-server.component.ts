@@ -173,24 +173,24 @@ export class ResetServerModalContent {
                             );
                     })
                     .catch(err => handleResetFailError('restartServer', err));
-            }, (err) => {
+            }, err => {
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('reset')
-                        .then((ready) => {
+                        .then(ready => {
                             this.needsUpdate = !ready;
                             if (ready) {
                                 this.resetServer.run();
                             }
                         });
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
+                    return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                 }
             });
     }
 
-    close = (msg? : string) => {
+    close = (msg?: string) => {
         this.dialogRef.close(msg);
     }
 }

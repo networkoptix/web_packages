@@ -74,7 +74,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                                     .notify(response.errorString, 'danger');
                         }
                     }
-                }, (fail) => {
+                }, fail => {
                     if (fail.error.type === 'error') {
                         this.dialogsService
                             .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
@@ -97,7 +97,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.licenses && changes.licenses.currentValue) {
-            this.haveTrialLicense = changes.licenses.currentValue.find((lic) => {
+            this.haveTrialLicense = changes.licenses.currentValue.find(lic => {
                 return lic.key === this.trialLicense;
             }) || false;
         }

@@ -111,7 +111,7 @@ export class NxCloudApiService {
                 return {
                     list: (...args) => new BehaviorSubject([]),
                     getManifest: () => new BehaviorSubject({ manifest: { contexts: {} } }),
-                    retrieve: (id) => new BehaviorSubject({})
+                    retrieve: id => new BehaviorSubject({})
                 };
         }
     }
@@ -302,7 +302,7 @@ export class NxCloudApiService {
     renameSystem(systemId: string, systemName: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
-        }).toPromise().then((result) => {
+        }).toPromise().then(result => {
             // this.systems('clearCache');
             return result;
         });
@@ -701,7 +701,7 @@ export class CustomClientAPI {
         return this.http.post<t.CustomClient>(this.apiBase, body);
     }
 
-    retrieve = (id) => {
+    retrieve = id => {
         return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
     }
 
@@ -721,7 +721,7 @@ export class CustomClientAPI {
         return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
     }
 
-    destroy = (id) => {
+    destroy = id => {
         return this.http.delete(`${this.apiBase}${id}/`);
     }
 

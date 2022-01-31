@@ -192,7 +192,7 @@ export class NxHeaderService {
         target: Record<any, any> = {},
         removeFirstBreadcrumb = true
     ) {
-        return (startingNodes) => {
+        return startingNodes => {
             const nodes = [...startingNodes];
             for (let i = 0; i < nodes.length; i++) {
                 const parentNode = nodes[i];
@@ -249,7 +249,7 @@ export class NxHeaderService {
             window.open(serializedUrl, '_blank');
         } else {
             this.router.navigate([url], { queryParamsHandling })
-                .catch((ex) => {
+                .catch(ex => {
                     console.error(ex);
                 });
         }

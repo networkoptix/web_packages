@@ -137,7 +137,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             default:
                         }
-                    }, (fail) => {
+                    }, fail => {
                         if (fail.name === 'HttpErrorResponse' || fail.error && fail.error.type === 'error') {
                             this.dialogsService
                                 .notify(this.LANG.errorCodes.licenseFail?.(), 'danger');
@@ -177,7 +177,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             this.serverOptions = [];
 
             if (changes.servers.currentValue.length) {
-                changes.servers.currentValue.forEach((server) => {
+                changes.servers.currentValue.forEach(server => {
                     const option: any = {
                         name: NxUtilsService.htmlToEntity(server.name),
                         value: server.id,
@@ -192,12 +192,12 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 });
 
                 // prevent server change
-                const serverMatch = this.serverOptions.filter((server) => {
+                const serverMatch = this.serverOptions.filter(server => {
                     return server.value === this.selectedServer.value;
                 });
 
                 if (!serverMatch.length) {
-                    this.selectedServer = this.serverOptions.filter((server) => {
+                    this.selectedServer = this.serverOptions.filter(server => {
                         return server.status === 'Online';
                     })[0] || {};
                 }
@@ -237,7 +237,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     };
 
     private isActivated(license): boolean {
-        return this.licenses.find((lic) => {
+        return this.licenses.find(lic => {
             return lic.key === this.formatLicenseKey(license);
         });
     }

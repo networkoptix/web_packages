@@ -29,7 +29,7 @@ nxConfig.company.name = 'Nx Cloud';
 
 const localStorageMockStore = {};
 
-const parseStaticTranslations = (staticLangNode) => Object.entries(
+const parseStaticTranslations = staticLangNode => Object.entries(
     staticLangNode
 ).reduce((
     parsed, [key, value]
@@ -91,7 +91,7 @@ ngMocks.defaultMock(NxSessionService, () => ({
 }));
 
 ngMocks.defaultMock(TranslateService, () => ({
-    instant: (text) => text
+    instant: text => text
 }));
 
 // @ts-ignore

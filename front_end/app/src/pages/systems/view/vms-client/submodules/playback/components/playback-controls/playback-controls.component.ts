@@ -60,7 +60,7 @@ export class PlaybackControlsComponent implements OnInit {
                 // @ts-ignore
                 return this.state?.mode === curr.mode && (curr.paused === undefined || this.state?.paused === curr.paused);
             }))
-            .subscribe((state) => {
+            .subscribe(state => {
                 this.onSubjectChange(state);
             });
     }

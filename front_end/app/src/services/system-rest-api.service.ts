@@ -226,11 +226,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
                             return of('');
                         } else if (refreshToken && error.status < 500) {
                             return this.refreshTokens(refreshToken, true).pipe(
-                                catchError((error) => {
+                                catchError(error => {
                                     this.clearTokens();
                                     return throwError(error);
                                 }),
-                                switchMap((res) => {
+                                switchMap(res => {
                                     this.setTokens(res, true);
                                     return of('');
                                 })
@@ -273,7 +273,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
 
-        Object.entries(customHttpHeaders).forEach((entry) => {
+        Object.entries(customHttpHeaders).forEach(entry => {
             headers = headers.set(...entry);
         });
         return headers;
@@ -293,9 +293,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.delete<ResponseType>(fullUrl, { headers, params }).pipe(
-            retryWhen((request) => this.retryHandler(request)),
+            retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
-            tap(undefined, (error) => {
+            tap(undefined, error => {
                 if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
@@ -317,9 +317,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
-            retryWhen((request) => this.retryHandler(request)),
+            retryWhen(request => this.retryHandler(request)),
             timeout(requestTimeout),
-            tap(undefined, (error) => {
+            tap(undefined, error => {
                 if (environment.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
                 }
@@ -341,7 +341,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
 
         let params = new HttpParams();
-        Object.keys(paramsToAdd).forEach((key) => {
+        Object.keys(paramsToAdd).forEach(key => {
             params = params.append(key, paramsToAdd[key]);
         });
 
@@ -350,7 +350,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.http
             .post<ResponseType>(fullUrl, data, { params, headers })
             .pipe(
-                retryWhen((request) => this.retryHandler(request)),
+                retryWhen(request => this.retryHandler(request)),
                 timeout(customTimeout)
             );
     }
@@ -385,7 +385,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 .then((result: any) => {
                     return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
                 })
-                .then((result) => {
+                .then(result => {
                     // Todo: convert result to match getCurrentUser result.
                     this.currentUser = result[0];
                     return this.currentUser;
@@ -409,7 +409,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             return of(false);
         }
         return this.get(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
-            switchMap((res) => {
+            switchMap(res => {
                 return of(res.ageS < this.CONFIG.sessionFreshnessSec);
             }));
     }
@@ -429,7 +429,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         };
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
             .pipe(
-                switchMap((tokens) => {
+                switchMap(tokens => {
                     if (skipSetting) {
                         return of(tokens);
                     }
@@ -437,7 +437,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     // @ts-ignore
                     return this.refreshTokens(tokens.refresh_token, true);
                 }),
-                tap((systemTokens) => {
+                tap(systemTokens => {
                     !skipSetting && this.setTokens(systemTokens, true);
                 })
             );
@@ -583,7 +583,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post<t.RestartServer>(
             `/rest/v1/servers/${serverId || 'this'}/restart `
         ).toPromise()
-            .catch((err) => Promise.reject(err));
+            .catch(err => Promise.reject(err));
     }
 
     restoreFactorySettings(password?: string, serverId?: string) {

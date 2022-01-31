@@ -77,7 +77,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
         this.saveLang = this.processService.createProcess(() => {
             return this.cloudApiService.changeLanguage(this.langCode);
-        }, {}).then((result) => {
+        }, {}).then(result => {
             this.storageService.langChanged = true;
             this.window.location.reload();
         });
@@ -96,7 +96,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
         this.accountService
             .get(true)
-            .then((account) => {
+            .then(account => {
                 if (account?.email) {
                     this.account = account;
                     if (!environment.isLocal && !this.systemsService.isPolling) {

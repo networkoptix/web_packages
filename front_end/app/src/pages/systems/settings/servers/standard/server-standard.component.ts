@@ -442,7 +442,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     detachServer(): Promise<void> {
         const { id, name } = this.selectedServer;
-        const currentServerIndex = this.system.servers.findIndex((server) =>
+        const currentServerIndex = this.system.servers.findIndex(server =>
             server.id === id
         );
         const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length
@@ -520,7 +520,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
             this.dialogs.changeStorage(this.system)
-                .then(async(closeRes) => {
+                .then(async closeRes => {
                     if (closeRes === 'changeOk') {
                         this.selectedStorage = newStorage;
                         this.saveStorageWatcher.originalValue = false;

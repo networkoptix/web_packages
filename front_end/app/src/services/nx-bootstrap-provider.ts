@@ -98,7 +98,7 @@ export class NxBootstrapProvider {
             '%SUPPORT_LINK%': this.CONFIG.company.link,
             '%COMPANY_NAME%': this.CONFIG.company.name
         };
-        const processLanguage = (language) => {
+        const processLanguage = language => {
             Object.entries(language).forEach(([key, phrase]) => {
                 if (typeof phrase === 'string') {
                     language[key] = Object.entries(customStrings)

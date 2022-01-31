@@ -99,7 +99,7 @@ export class NxSystemsListComponent implements OnInit {
         this.fetchComplete = false;
         this.search = { value: '' };
 
-        this.accountService.get().then((account) => {
+        this.accountService.get().then(account => {
             if (account?.email) {
                 this.account = account;
                 this.userEmail = account.email;
@@ -109,14 +109,14 @@ export class NxSystemsListComponent implements OnInit {
 
         this.systemsService.systemsSubject.pipe(
             untilDestroyed(this)
-        ).subscribe((systems) => {
+        ).subscribe(systems => {
             this.systems = systems;
             this.availableSystems.emit(systems);
             if (this.systems === undefined) {
                 return;
             }
 
-            this.systems.map((system) => {
+            this.systems.map(system => {
                 // avoid html being interpreted
                 system.name = NxUtilsService.htmlToEntity(system.name);
             });
@@ -168,7 +168,7 @@ export class NxSystemsListComponent implements OnInit {
         const search = this.search.value;
 
         if (search) {
-            this.filteredSystems = this.systems.filter((system) => {
+            this.filteredSystems = this.systems.filter(system => {
                 return !search ||
                     this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
                         (system.ownerAccountEmail === this.accountService.email) ||

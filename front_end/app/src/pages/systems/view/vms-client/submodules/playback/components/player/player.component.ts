@@ -71,8 +71,8 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
         this.handleClick = generateClickDubleClickPair(
-            (e) => this.onClick(e),
-            (e) => this.onDblClick(e)
+            e => this.onClick(e),
+            e => this.onDblClick(e)
         );
     }
 
@@ -189,7 +189,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
                         default:
                             break;
                     }
-                }, (error) => {
+                }, error => {
                     if (error.name !== 'HttpErrorResponse') {
                         this.playback.setError(error.message);
                     }

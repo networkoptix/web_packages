@@ -59,7 +59,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
 
     ngOnInit() {
         this.accountSubscription = this.accountService.accountSubject
-            .subscribe((account) => {
+            .subscribe(account => {
                 if (account) {
                     this.settings = {
                         name: account.name,

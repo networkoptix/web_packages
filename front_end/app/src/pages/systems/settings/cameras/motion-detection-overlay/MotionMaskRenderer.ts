@@ -92,11 +92,11 @@ export class MotionMaskRenderer {
         this.brandColor = getComputedStyle(canvas.nativeElement).color;
         this.initInteractions(canvas.nativeElement);
         this.renderer = this.maskZones.pipe(takeUntil(this.unsub$))
-            .subscribe((maskZones) => {
+            .subscribe(maskZones => {
                 this.updateRenderMask(maskZones);
             });
         this.selectionRenderer = this.selectionZones.pipe(takeUntil(this.unsub$))
-            .subscribe((selectionZones) => {
+            .subscribe(selectionZones => {
                 this.updateSelection(selectionZones);
             });
     };
@@ -120,7 +120,7 @@ export class MotionMaskRenderer {
         ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove'].map(track);
 
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
-            (event) => this.isMobile
+            event => this.isMobile
                 ? EMPTY
                 : <Observable<KeyboardEvent>>fromEvent(window, event)
         );
@@ -564,7 +564,7 @@ export class MotionMaskRenderer {
     private renderMask = () =>
         this.maskRenderInstructions.forEach(instruction => instruction());
 
-    private updateSelection = (selectionZones) => {
+    private updateSelection = selectionZones => {
         this.selectionRenderInstructions.push(() =>
             this.selectionCtx.clearRect(0, 0, this.width, this.height)
         );

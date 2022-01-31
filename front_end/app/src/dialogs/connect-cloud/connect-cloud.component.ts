@@ -68,7 +68,7 @@ export class ConnectCloudModalContent implements OnInit {
         this.setupAuth();
 
         this.codeSubscription = this.storage.observe(this.CONFIG.oauthStore.code)
-            .subscribe((code) => this.handleCode(code));
+            .subscribe(code => this.handleCode(code));
 
         window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
@@ -85,7 +85,7 @@ export class ConnectCloudModalContent implements OnInit {
 
     private handleCode(code) {
         return this.system.mediaserver.loginOauth(code, true).toPromise()
-            .then((res) => {
+            .then(res => {
                 this.codeExists = !!code;
                 this.cloudTokens = res;
             });
@@ -118,7 +118,7 @@ export class ConnectCloudModalContent implements OnInit {
         this.auth.password = '';
         this.account
             .get()
-            .then((account) => {
+            .then(account => {
                 this.auth.username = account.first_name || account.email;
             });
     }
@@ -170,7 +170,7 @@ export class ConnectCloudModalContent implements OnInit {
         close.finally(() => this.close(true));
     }
 
-    close = (msg?) => {
+    close = (msg?: boolean) => {
         this.dialogRef.close(msg);
     }
 }

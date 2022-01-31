@@ -38,7 +38,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
             .pipe(
                 untilDestroyed(this),
                 filter(data => data !== undefined && data.id !== this.system?.id))
-            .subscribe((system) => {
+            .subscribe(system => {
                 this.system = system;
 
                 if (this.system.useRest) {
@@ -67,8 +67,8 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     setLicenses (response) {
-        this.licenses = Object.keys(response).map((licence) => {
-            const title = this.CONFIG.licenseTypes.find((item) =>
+        this.licenses = Object.keys(response).map(licence => {
+            const title = this.CONFIG.licenseTypes.find(item =>
                 item.name === licence
             ).title || licence.charAt(0).toUpperCase() + licence.slice(1);
             return {

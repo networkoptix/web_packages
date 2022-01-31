@@ -133,7 +133,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(updated);
     }
 
-    private updateSearchResults = (results) => {
+    private updateSearchResults = results => {
         this.searchResults$.next([
             ...this.searchResults$.value,
             ...this.parseResults(results)
@@ -322,7 +322,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         ).subscribe();
     }
 
-    private updateDisplayedDoc = (firstNode?) => {
+    private updateDisplayedDoc = (firstNode?: any) => {
         const { state, assetId, assetParam } = this.parseAssetDetails(firstNode);
 
         if (!state && assetId && !this.kbService.assetIds.includes(assetId)) {
@@ -342,7 +342,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    private renderDoc = (state) =>
+    private renderDoc = state =>
         ({
             title: originalTitle,
             blocks,
@@ -495,7 +495,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateAssetIdsForMenu = (menu) => {
+    private updateAssetIdsForMenu = menu => {
         if (!this.kbService.assetIds.length) {
             const getAllIds = (nodes: MenuNode[]) => {
                 nodes.forEach(node => {
@@ -553,7 +553,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 });
             }),
             untilDestroyed(this)
-        ).subscribe((results) => {
+        ).subscribe(results => {
             this.totalSearchResultPages = results.totalPages;
             this.searchLoading = false;
             this.searchResults$.next(this.parseResults(results));

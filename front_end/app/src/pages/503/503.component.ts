@@ -37,10 +37,10 @@ export class Nx503Component implements OnInit {
         this.apiService
             .getStatic('/static/503.html')
             .toPromise()
-            .then((result) => {
+            .then(result => {
                 this.compTemplate =
                     this.sanitizer.bypassSecurityTrustHtml(result);
-            }).catch((ex) => { console.error(ex); });
+            }).catch(ex => { console.error(ex); });
     }
 
     ngAfterViewInit() {

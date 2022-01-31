@@ -182,7 +182,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         this.initializeAlarms();
 
         const menu = { ...this.menu };
-        Object.keys(this.healthService.manifest).forEach((asset) => {
+        Object.keys(this.healthService.manifest).forEach(asset => {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
             if (
                 this.healthService.values[asset] &&
@@ -216,7 +216,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     colorHeaderGroups(metric) {
         let counter = 0;
-        metric.values = metric.values.map((group) => {
+        metric.values = metric.values.map(group => {
             if (group.id !== '_') {
                 group.colorClass = `group-${counter++ % 6 + 1}`;
             }
@@ -430,7 +430,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
 
     processManifestHeaders(displayFilter: string) {
         const headers = {};
-        Object.values(this.healthService.manifest).forEach((metricValue) => {
+        Object.values(this.healthService.manifest).forEach(metricValue => {
             const metric: any = NxUtilsService.deepCopy(metricValue);
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {

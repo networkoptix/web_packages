@@ -62,9 +62,9 @@ describe('Process service', () => {
     it('should create process and run successful', () => {
         process.createProcess(() => {
             return Promise.resolve('success');
-        }, {}).then((response) => {
+        }, {}).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toBe('fail');
         }).run();
     });
@@ -73,9 +73,9 @@ describe('Process service', () => {
     it('should create process and fail w/ LANG defined error ', fakeAsync(() => {
         process.createProcess(() => {
             return Promise.reject('fail');
-        }, {}).then((response) => {
+        }, {}).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toBe('fail');
         }).run();
 
@@ -91,9 +91,9 @@ describe('Process service', () => {
                 forbidden: 'failed forbidden'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toBe('forbidden');
         }).run();
 
@@ -109,9 +109,9 @@ describe('Process service', () => {
                 forbidden: 'failed forbidden'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toBe('blah-blah');
         }).run();
 
@@ -124,9 +124,9 @@ describe('Process service', () => {
         process.createProcess(() => {
             return Promise.reject({ error: { resultMessage: 'boom' } });
         }, {
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ resultMessage: 'boom' });
         }).run();
 
@@ -142,9 +142,9 @@ describe('Process service', () => {
                 boom: 'Boom!'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ resultCode: 'boom' });
         }).run();
 
@@ -160,9 +160,9 @@ describe('Process service', () => {
                 boom: 'Boom!'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ errorText: 'boom' });
         }).run();
 
@@ -178,9 +178,9 @@ describe('Process service', () => {
                 boom: 'Boom!'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ errorId: 'boom' });
         }).run();
 
@@ -196,9 +196,9 @@ describe('Process service', () => {
                 boom: 'Boom!'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ data: { resultCode: 'boom' } });
         }).run();
 
@@ -214,9 +214,9 @@ describe('Process service', () => {
                 networkConnection: 'Network Connection Fail'
             },
             holdAlerts: false
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ type: 'error' });
         }).run();
 
@@ -228,9 +228,9 @@ describe('Process service', () => {
         process.createProcess(() => {
             return Promise.reject({ error: { errorText: 'second_factor_required' } });
         }, {
-        }).then((response) => {
+        }).then(response => {
             expect(response).toBe('success');
-        }, (error) => {
+        }, error => {
             expect(error).toEqual({ errorText: 'second_factor_required' });
         }).run();
 

@@ -71,7 +71,7 @@ describe('Scroll mechanics service', () => {
 
     it('should set window  subject', () => {
         scroll.setWindowSize(800, 1280);
-        scroll.windowSizeSubject.subscribe((dimensions) => {
+        scroll.windowSizeSubject.subscribe(dimensions => {
             expect(dimensions).toEqual({ height: 800, width: 1280 });
         });
     });

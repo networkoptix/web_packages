@@ -1,6 +1,6 @@
 import AnimatedInteger from './AnimatedInteger';
 
-const sleep = (t) => new Promise(resolve => {
+const sleep = t => new Promise(resolve => {
     setTimeout(resolve, t);
 });
 

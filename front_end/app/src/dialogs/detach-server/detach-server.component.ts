@@ -75,7 +75,7 @@ export class DetachServerModalContent {
                     // return this.system.serverManager.removeMediaserver(anotherServerId, this.serverId).toPromise();
                     // return this.system.update().subscribe()
                 },
-                (err) => {
+                err => {
                     if (
                         err.errorId ===
                         this.CONFIG.servers.errors.oldSessionErrorId
@@ -83,14 +83,14 @@ export class DetachServerModalContent {
                         this.needsUpdate = true;
                         this.loginService.currentSystem = this.system;
                         this.loginService.updateSession('detach')
-                            .then((ready) => {
+                            .then(ready => {
                                 this.needsUpdate = !ready;
                                 if (ready) {
                                     this.detachServer.run();
                                 }
                             });
                     } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                        return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
+                        return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                     }
                     this.system.currentServerNotBusy = true;
                     this.toastService.show(

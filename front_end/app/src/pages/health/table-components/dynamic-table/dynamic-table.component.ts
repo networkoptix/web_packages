@@ -439,14 +439,14 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         function sortFunc() {
             switch (paramId) {
                 case 'alarm':
-                    return (elm) => {
+                    return elm => {
                         return (
                             elm[groupId]?.[paramId] &&
                             ALARM_ORDER[elm[groupId][paramId].icon]
                         ) || '';
                     };
                 case 'resolution':
-                    return (elm) => {
+                    return elm => {
                         if (elm[groupId]?.[paramId]?.value) {
                             const res = elm[groupId][paramId]
                                 .value.toLowerCase().split('x');
@@ -461,7 +461,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                         }
                     };
                 case 'displayAddress':
-                    return (elm) => {
+                    return elm => {
                         if (!(elm[groupId]?.[paramId])) {
                             return Number.NEGATIVE_INFINITY;
                             // metric does not exist - visual representation is "-"
@@ -470,7 +470,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                         return parseInt(value.replace(/\./g, '')) || 0;
                     };
                 default:
-                    return (elm) => {
+                    return elm => {
                         if (!(elm[groupId]?.[paramId])) {
                             return Number.NEGATIVE_INFINITY;
                             // metric does not exist - visual representation is "-"

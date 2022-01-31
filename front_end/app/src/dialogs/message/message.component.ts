@@ -118,7 +118,7 @@ export class MessageModalContent implements OnInit {
             );
         }
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType]
-            .map((subject) => {
+            .map(subject => {
                 return {
                     value: subject,
                     name: NxLanguageProviderService.translate(
@@ -132,7 +132,7 @@ export class MessageModalContent implements OnInit {
 
         this.account
             .get()
-            .then((account) => {
+            .then(account => {
                 if (account) {
                     this.userName = `${account.first_name} ${account.last_name}`;
                     this.userEmail = account.email;

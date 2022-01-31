@@ -154,7 +154,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                         .navigate(
                             [`${this.content.base}/${item.path}`],
                             { queryParams: { search: this.menuModel.query } }
-                        ).catch((ex) => {
+                        ).catch(ex => {
                             console.error(ex);
                         });
                 }

@@ -17,10 +17,10 @@ export class HelperMockProvider<Provider, Value> {
 
 export const sanitizerMock = {
     sanitize: (_, val) => val,
-    bypassSecurityTrustHtml: (val) => val
+    bypassSecurityTrustHtml: val => val
 };
 
-const parseStaticTranslations = (staticLangNode) => Object.entries(
+const parseStaticTranslations = staticLangNode => Object.entries(
     staticLangNode
 ).reduce((
     parsed, [key, value]
@@ -45,7 +45,7 @@ const buildMapped = (overrides, mappedTarget, nodes = []) => {
     });
 };
 
-const mapOverrides = (overrides) => {
+const mapOverrides = overrides => {
     const mapped = [];
     buildMapped(overrides, mapped);
     return mapped;
@@ -78,7 +78,7 @@ const applyOverrides = (target, mapped) => {
  *
  * @param overrides - Accepts an object with overrides
  */
-export const getMockTranslations = (overrides?) => {
+export const getMockTranslations = (overrides?: any) => {
     const translations = parseStaticTranslations(staticLang);
     if (overrides) {
         const overrideMapping = mapOverrides(overrides);

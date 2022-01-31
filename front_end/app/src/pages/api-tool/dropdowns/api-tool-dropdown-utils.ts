@@ -1,7 +1,7 @@
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { OpenAPIJSON } from '@services/nx-cloud-api.types';
 
-export const makeSystemName = (system) => {
+export const makeSystemName = system => {
     const name = system.info?.name || system.name || 'System';
     const version = system.info?.version || system.version || '';
     const versionString = version ? ' (' + version + ')' : '';

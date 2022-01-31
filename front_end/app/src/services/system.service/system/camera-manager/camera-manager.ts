@@ -43,7 +43,7 @@ export class CameraManager {
         if (!serverTimes || !cameras) {
             await this.serverManager.mediaserver
                 .getCamerasWithSeverTime().toPromise()
-                .then((response) => {
+                .then(response => {
                     if (!response) {
                         cameras = [];
                         return;

@@ -87,7 +87,7 @@ export class NxAPIToolSystemService {
     ) {
         this.initializeAPITool();
 
-        this._route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
+        this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.queryParams = params;
         });
 
@@ -230,7 +230,7 @@ export class NxAPIToolSystemService {
                 this.currentSystem.serverManager
                     .initSystemMediaServers()
                     .then(() => {
-                        this.currentSystem.serverManager.servers.forEach((server) => {
+                        this.currentSystem.serverManager.servers.forEach(server => {
                             if (!validServerFound) { // Loop skips all other servers after a single valid server is found
                                 if (server.status !== 'Offline') {
                                     if (cachedJSON) {
@@ -277,7 +277,7 @@ export class NxAPIToolSystemService {
     }
 
     getLocalSystem() {
-        this.accountService.get().then((account) => {
+        this.accountService.get().then(account => {
             if (!account) {
                 this.router.navigate(['/']);
             }
@@ -370,7 +370,7 @@ export class NxAPIToolSystemService {
                 .pipe(
                     distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b)),
                     untilDestroyed(this))
-                .subscribe((systems) => {
+                .subscribe(systems => {
                     this.initSystems(systems);
                 });
         } else {

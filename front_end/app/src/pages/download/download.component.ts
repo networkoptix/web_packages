@@ -169,14 +169,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 this.downloadsData = response;
 
                 // Sorts platforms based on order defined in nx-config service
-                Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform) => {
+                Object.values(this.CONFIG.downloads.groups).forEach(checkPlatform => {
                     const platform = this.downloadsData?.platforms.find(
-                        (downloadsPlatform) => downloadsPlatform.name === checkPlatform.name
+                        downloadsPlatform => downloadsPlatform.name === checkPlatform.name
                     );
                     if (platform) {
-                        platform.files = platform.files.filter((installer) => {
+                        platform.files = platform.files.filter(installer => {
                             return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
-                        }).map((installer) => {
+                        }).map(installer => {
                             if (!installer.niceName) {
                                 const translatedPlatform = this.LANG.downloads.platforms[installer.platform]();
                                 const translatedAppType = this.LANG.downloads.appTypes[installer.appType]();

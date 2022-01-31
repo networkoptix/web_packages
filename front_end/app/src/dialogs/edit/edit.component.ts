@@ -219,11 +219,11 @@ export class EditModalContent {
             }, err => { console.error(err); });
     }
 
-    close = (result?) => {
+    close = (result?: { id: string; action: string }) => {
         this.dialogRef.close(result);
     }
 
-    clearError = (field) => {
+    clearError = field => {
         if (field in this.errors) {
             delete this.errors[field];
         }

@@ -88,7 +88,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     private getAvailableDownloadTypes(data) {
-        this.noteTypes = Object.keys(data || {}).filter((noteType) => {
+        this.noteTypes = Object.keys(data || {}).filter(noteType => {
             return isArray(data[noteType]) && data[noteType].length;
         }).reverse();
     }

@@ -81,7 +81,7 @@ describe('NxRibbonService', () => {
 
             service.show(context.message, context.actions, context.type, context.updateFunction);
 
-            service.contextSubject.subscribe((serviceContext) => {
+            service.contextSubject.subscribe(serviceContext => {
                 expect(serviceContext).toEqual(context);
             });
         })
@@ -100,7 +100,7 @@ describe('NxRibbonService', () => {
 
             service.hide();
 
-            service.contextSubject.subscribe((message) => {
+            service.contextSubject.subscribe(message => {
                 expect(message).toEqual(context);
             });
         })

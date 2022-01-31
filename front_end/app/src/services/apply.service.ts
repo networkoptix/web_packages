@@ -165,7 +165,7 @@ export class FormWatcher {
         public owner: any = null,
         identifier = 'Form Watcher'
     ) {
-        form.valueChanges.subscribe((change) => {
+        form.valueChanges.subscribe(change => {
             if (
                 !this.originalValue ||
                 Object.keys(this.originalValue).length < Object.keys(change).length
@@ -269,7 +269,7 @@ export class NxApplyService {
      */
     reset(hardReset = false) {
         if (this.watchers) {
-            this.watchers.forEach((watcher) => {
+            this.watchers.forEach(watcher => {
                 hardReset ? watcher.value = undefined : watcher.reset();
             });
         }
@@ -301,7 +301,7 @@ export class NxApplyService {
         (prevPromise, process, index) => {
             return prevPromise.then(prevRes => {
                 return new Promise((resolve, reject) => {
-                    process.run((res) => resolve(res || prevRes), (res) => reject(res || prevRes));
+                    process.run(res => resolve(res || prevRes), res => reject(res || prevRes));
                 }).catch(res => Promise.reject(res));
             }).catch(res => Promise.reject(res));
         }, Promise.resolve({ result: 'ok' })
@@ -339,7 +339,7 @@ export class NxApplyService {
             {
                 ignoreError: true
             },
-            (res) => {
+            res => {
                 this.reset();
                 return res;
             }
@@ -414,13 +414,13 @@ export class NxApplyService {
         const updateOriginalForm = () => {
             const forms = this.applyComponentInstance.forms;
             Object.keys(forms)
-                .forEach((key) => {
+                .forEach(key => {
                     const item = forms[key];
                     item.hasChange = false;
                     item.changedFields.clear();
 
                     const form = item.form.form;
-                    Object.keys(form.controls).forEach((key) => {
+                    Object.keys(form.controls).forEach(key => {
                         item.originalForm[key] = form.controls[key].value;
                         form.controls[key].markAsPristine();
                         form.controls[key].markAsUntouched();
@@ -435,13 +435,13 @@ export class NxApplyService {
         const revertOriginalValues = () => {
             const forms = this.applyComponentInstance.forms;
             Object.keys(forms)
-                .forEach((key) => {
+                .forEach(key => {
                     const item = forms[key];
                     if (item.hasChange) {
                         item.hasChange = false;
                         item.changedFields.clear();
 
-                        Object.keys(item.originalForm).forEach((key) => {
+                        Object.keys(item.originalForm).forEach(key => {
                             item.form.form.controls[key].setValue(item.originalForm[key]);
                         });
 
@@ -467,8 +467,8 @@ export class NxApplyService {
                     return prevPromise.then(prevRes => {
                         return new Promise((resolve, reject) => {
                             process.run(
-                                (res) => resolve(res || prevRes),
-                                (res) => reject(res || prevRes)
+                                res => resolve(res || prevRes),
+                                res => reject(res || prevRes)
                             );
                         }).catch(res => Promise.reject(res));
                     }).catch(res => Promise.reject(res));
@@ -504,7 +504,7 @@ export class NxApplyService {
                 .pipe(
                     takeUntil(this.resetForms$),
                     untilDestroyed(this))
-                .subscribe((change) => {
+                .subscribe(change => {
                     // Init phase ... in some cases form doesn't provide initial controls
                     // but valueChanges triggers on every control init
                     if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
@@ -554,7 +554,7 @@ export class NxApplyService {
 
             this.applyComponentInstance.save = this.processService.createProcess(() => {
                 return runFormProcesses();
-            }, { ignoreError: true, ignoreUnauthorized: true }, (result) => {
+            }, { ignoreError: true, ignoreUnauthorized: true }, result => {
                 if (result) {
                     updateOriginalForm();
                 }
@@ -704,9 +704,9 @@ export class NxApplyService {
     }
 
     canMove(): Promise<boolean> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             if (this.locked) {
-                this.showDialog().then((state) => {
+                this.showDialog().then(state => {
                     resolve(state);
                 });
             } else {
@@ -802,7 +802,7 @@ export class NxApplyService {
         this.watchers = existingUniqueWatchers;
         const changedWatchers$ = Object.values(
             this.watchers
-        ).map((watcher) => watcher.valueSubject.pipe(
+        ).map(watcher => watcher.valueSubject.pipe(
             map(current => {
                 if (isObject(current)) {
                     // Form watcher

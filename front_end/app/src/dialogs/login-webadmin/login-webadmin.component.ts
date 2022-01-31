@@ -178,7 +178,7 @@ export class LoginWebadminModalContent implements OnInit {
         }, {
             ignoreUnauthorized: true,
             errorCodes
-        }, (result) => {
+        }, result => {
             this.activeModal.close(result);
             if (this.blockNavigation) {
                 return;
@@ -222,7 +222,7 @@ export class LoginWebadminModalContent implements OnInit {
                         });
                 });
             }
-        }, (error) => {
+        }, error => {
             console.error(error);
         });
     }
@@ -237,7 +237,7 @@ export class LoginWebadminModalContent implements OnInit {
         };
 
         this.account.mediaServerApi.getModuleInfo()
-            .subscribe((data) => {
+            .subscribe(data => {
                 // Handles legacy and rest apis
                 if (data.reply) {
                     data = data.reply;

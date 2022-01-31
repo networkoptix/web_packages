@@ -60,7 +60,7 @@ export class NxPageService {
         return { ...baseLangMeta, type, image: this.getRoot() + image };
     }
 
-    findMatchingMeta = (url) => (lookupDict): Record<string, any> => Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {}
+    findMatchingMeta = url => (lookupDict): Record<string, any> => Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {}
 
     getPathMeta(url) {
         const findIn = this.findMatchingMeta(url);

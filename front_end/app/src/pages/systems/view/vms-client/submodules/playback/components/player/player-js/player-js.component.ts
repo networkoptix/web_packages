@@ -96,11 +96,11 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             this.videoEnded.emit(true);
         });
 
-        this.player.on('error', (err) => {
+        this.player.on('error', err => {
             this.videoError.emit(err);
         });
 
-        this.player.on('abort', (err) => {
+        this.player.on('abort', err => {
             this.hasPlayed = false;
             !this.paused && this.videoError.emit(err);
         });
@@ -195,7 +195,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             return;
         }
 
-        if (!['m3u8', 'webm'].some((transport) => sourceUrl.includes(transport))) {
+        if (!['m3u8', 'webm'].some(transport => sourceUrl.includes(transport))) {
             this._warn('wrong source format', sourceUrl);
             return;
         }

@@ -84,7 +84,7 @@ export class NxSearchService {
         // "EXACT" match
         const exactMatch = model.query.match(/"(.+?)"/g);
         if (exactMatch) {
-            model.queryExactMatch = exactMatch.map((searchTerm) =>
+            model.queryExactMatch = exactMatch.map(searchTerm =>
                 searchTerm.replace(/"/g, '')
             );
             return;
@@ -114,7 +114,7 @@ export class NxSearchService {
             .toLowerCase()
             .replace(/\+/g, ' ')
             .split(/[\s,+]/g)
-            .filter((elm) => elm !== '');
+            .filter(elm => elm !== '');
         // if match is empty (i.e query is ",") there is nothing to filter by and will show all entries
         if (!andMatch.length) {
             andMatch.push(','); // add non-searchable char so 'Nothing found' will appear

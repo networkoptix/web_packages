@@ -48,7 +48,7 @@ describe('Session service', () => {
         session.language = 'en_US';
         expect(session.language).toBe('en_US');
 
-        session.language$.subscribe((value) => {
+        session.language$.subscribe(value => {
             expect(value).toBe('en_US');
         });
     });
@@ -57,7 +57,7 @@ describe('Session service', () => {
         session.loginState = 'roadrunner@acme.com';
         expect(session.loginState).toBe('roadrunner@acme.com');
 
-        session.loginStateSubject.subscribe((value) => {
+        session.loginStateSubject.subscribe(value => {
             expect(value).toBe('roadrunner@acme.com');
         });
     });
@@ -71,7 +71,7 @@ describe('Session service', () => {
         expect(session['session'].retrieve('loginState')).toBeNull();
         expect(session['session'].retrieve('loginRegister')).toBeFalse();
 
-        session.loginStateSubject.subscribe((value) => {
+        session.loginStateSubject.subscribe(value => {
             expect(value).toBeNull();
         });
     });

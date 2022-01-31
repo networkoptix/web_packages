@@ -63,7 +63,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
             this.newlyAddedLicense = this.formatLicenseKey(
                 this.system.licensesModified
             );
-            this.licenses.forEach((lic) => {
+            this.licenses.forEach(lic => {
                 this.orderedDetails(lic.info);
             });
 

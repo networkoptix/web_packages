@@ -63,7 +63,7 @@ export class SelectTimeRangeModalContent {
         this.LANG = this.language.translations;
     }
 
-    public closeModal = ($event) => {
+    public closeModal = $event => {
         $event.preventDefault();
         return this.activeModal.close(false);
     }
@@ -80,7 +80,7 @@ export class SelectTimeRangeModalContent {
         }
     }
 
-    public save = ($event) => {
+    public save = $event => {
         $event.preventDefault();
         const start = this.start.date.getTime();
         const end = this.end.date.getTime();

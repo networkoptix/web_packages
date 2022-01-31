@@ -173,7 +173,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
                         ).catch(error => {
                             console.error(error);
                         });
-                }).then((res) => {
+                }).then(res => {
                     this.updateWatchers();
                     Promise.resolve(res);
                 });
@@ -198,7 +198,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     ngOnDestroy() {}
 }
 
-export const toParams = (serverId) =>
+export const toParams = serverId =>
     ({
         totalSpace,
         isBackup,
@@ -222,7 +222,7 @@ export const toParams = (serverId) =>
         usedForWriting: isUsedForWriting.value
     });
 
-export const mapStorages = (storages) => storages.map(({
+export const mapStorages = storages => storages.map(({
     freeSpace: free,
     reservedSpace: reserved,
     totalSpace,

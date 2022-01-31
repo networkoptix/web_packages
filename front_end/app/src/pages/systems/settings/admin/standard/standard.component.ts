@@ -48,15 +48,15 @@ class AlexaSettings {
         public eventRulesSetup = false
     ) {}
 
-    static clean = (selectedSystem) =>
-        (input) => new AlexaSettings(
+    static clean = selectedSystem =>
+        input => new AlexaSettings(
             input.enabled || false,
             input.selectedSystem || selectedSystem,
             input.accountLinked || false,
             input.eventRulesSetup || false
         )
 
-    static cleanObservable = (selectedSystem) => map(
+    static cleanObservable = selectedSystem => map(
         AlexaSettings.clean(selectedSystem),
         AlexaSettings.clean(selectedSystem)
     )
@@ -174,7 +174,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
 
         this.system2faEnabled = this.systemsService.systems
-            .find((system) => system.id === this.system.id)?.system2faEnabled;
+            .find(system => system.id === this.system.id)?.system2faEnabled;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -336,7 +336,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         // @ts-ignore
         this.is2faDialogActive = await this.dialogService
             .toggleSystem2fa(this.system, this.system2faEnabled)
-            .then((res) => {
+            .then(res => {
                 if (!res || res === 'cancel') {
                     this.system2faEnabled = !this.system2faEnabled;
                     this.applyService.forms.systemAndSecuritySettingsForm.originalForm.system2faEnabled = this.system2faEnabled;

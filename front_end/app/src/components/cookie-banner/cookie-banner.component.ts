@@ -30,7 +30,7 @@ export class NxCookieBannerComponent implements OnInit {
 
         this.accountService.accountSubject
             .pipe(first(value => value !== undefined), untilDestroyed(this))
-            .subscribe((account) => {
+            .subscribe(account => {
                 if (account) {
                     if (account.cookie_reviewed) {
                         this.localStorage.store('cookiereviewed', true);

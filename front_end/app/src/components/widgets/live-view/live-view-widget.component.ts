@@ -95,7 +95,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
     refreshThumbnail = () => this.thumbnailsUpdater$.next(Date.now());
 
     camerasDropdownItems$ = this.updater$.pipe(
-        switchMap(async(_) => {
+        switchMap(async _ => {
             if (!this.system) {
                 return [];
             }
@@ -132,7 +132,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         this.updater$.next('update');
     }
 
-    updateContainerSize = (size) => {
+    updateContainerSize = size => {
         this.size = size;
     }
 

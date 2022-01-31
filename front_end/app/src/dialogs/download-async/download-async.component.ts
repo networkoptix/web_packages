@@ -56,10 +56,10 @@ export class PackageHandler {
         checkPackageHandler: CheckPackageHandler,
         packageDownloadHandler: PackageDownloadHandler,
         private window: Window,
-        notifyDownload = (downloadPath) => console.info(
+        notifyDownload = downloadPath => console.info(
             `Download ready: ${downloadPath}`
         ),
-        notifyError = (errors) => console.error(errors)
+        notifyError = errors => console.error(errors)
     ) {
         generatePackage(
             this.id
@@ -173,7 +173,7 @@ export class DownloadAsyncModalContent implements ModalContent {
         console.log(this);
     }
 
-    close = (result?) => {
+    close = (result?: string) => {
         this.activeModal.close(result);
     }
 }

@@ -90,7 +90,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.connectToCloudProcess = this.processService.createProcess(
             () => this.connectLocalToCloud(),
             { ignoreError: true },
-            (skip) => {
+            skip => {
                 if (skip === true) {
                     return;
                 }
@@ -108,7 +108,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.route.queryParams.subscribe((params) => {
+        this.route.queryParams.subscribe(params => {
             this.advanced = (this.router.url.includes('/advanced') ||
                 this.route.snapshot.routeConfig.path === 'advanced' ||
                 params.advanced !== undefined);
@@ -187,7 +187,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.accountService.get()
-            .then((account) => {
+            .then(account => {
                 // @ts-ignore
                 this.user = account;
             });
@@ -203,7 +203,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .pipe(distinctUntilChanged())
-            .subscribe((system) => {
+            .subscribe(system => {
                 if (!system) {
                     this.system = undefined;
                     return;
@@ -251,7 +251,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     if (response.reply) {
                                         this.settingsForSystem = response.reply.settings;
                                     }
-                                }, (err) => {
+                                }, err => {
                                     this.settingsForSystem = false;
                                     console.error(err);
                                 });
@@ -348,7 +348,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
         const handleDisconnect = () => this.dialogs
             .disconnect(this.accountService, this.system)
-            .then((result) => {
+            .then(result => {
                 if (result) {
                     if (this.environment.isLocal) {
                         // give the user chance to read the toaster
@@ -377,7 +377,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
                 this.dialogs
                     .disconnect(this.accountService, this.system)
-                    .then((result) => {
+                    .then(result => {
                         if (result) {
                             if (NxConfigService.isLocal && this.system.currentUser?.isCloud) {
                                 this.accountService.logout();
@@ -415,7 +415,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             // User is not owner. Deleting means he'll lose access to it
             if (this.environment.isLocal) {
                 return this.dialogs.removeSystem(this.system)
-                    .then((response) => {
+                    .then(response => {
                         if (response) {
                             setTimeout(() => {
                                 this.accountService.logout();
@@ -429,7 +429,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.removeSystem.action(),
                 'btn-danger',
                 this.LANG.dialogs.buttons.cancel()
-            ).then((result) => {
+            ).then(result => {
                 if (result === true) {
                     return this.system.deleteFromCurrentAccount().subscribe(res => {
                         this.toastService.show(
@@ -477,7 +477,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.systemsService.processMerge(mergeInfo);
                     this.system.systemInfo = this.system;
                 }
-            }, (error) => {
+            }, error => {
                 if (!error.primarySystemName && !error.secondarySystemName) {
                     return;
                 }

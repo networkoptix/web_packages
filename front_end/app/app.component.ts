@@ -155,7 +155,7 @@ export class AppComponent {
 
             if (majorVersion < browserMatchVersion) {
                 this.router.navigate(['/browser'])
-                    .catch((error) => console.error(error))
+                    .catch(error => console.error(error))
                     .finally(() => {
                         this.CONFIG.browserNotSupported = true;
                         this.appStateService.ready = true;
@@ -167,7 +167,7 @@ export class AppComponent {
         if (!bootstrapProvider.loaded) {
             if (!this.environment.isLocal) {
                 this.router.navigate(['/503'])
-                    .catch((error) => console.error(error))
+                    .catch(error => console.error(error))
                     .finally(() => {
                         this.appStateService.ready = true;
                     });

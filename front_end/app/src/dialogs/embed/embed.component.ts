@@ -69,7 +69,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         this.formChangesSubscription = this.embedForm.form.valueChanges
-            .subscribe((changes) => {
+            .subscribe(changes => {
                 this.createEmbedUrl(changes);
             });
     }

@@ -208,16 +208,16 @@ export class NxSystemAPI {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
 
-        Object.entries(customHttpHeaders).forEach((entry) => {
+        Object.entries(customHttpHeaders).forEach(entry => {
             headers = headers.set(...entry);
         });
         const fullUrl = `${this.urlBase}${url}`;
         return this.http
             .get<ResponseType>(fullUrl, { headers, params })
             .pipe(
-                retryWhen((request) => this.retryHandler(request)),
+                retryWhen(request => this.retryHandler(request)),
                 timeout(requestTimeout),
-                tap(undefined, (error) => {
+                tap(undefined, error => {
                     // 'Gateway Timeout' is added for 'local' testing of webadmin
                     if (
                         environment.isLocal && (error.name === 'TimeoutError' ||
@@ -240,7 +240,7 @@ export class NxSystemAPI {
         const fullUrl = `${this.urlBase}${url}`;
         data = data || {};
 
-        Object.keys(paramsToAdd).forEach((key) => {
+        Object.keys(paramsToAdd).forEach(key => {
             params = params.append(key, paramsToAdd[key]);
         });
 
@@ -259,7 +259,7 @@ export class NxSystemAPI {
         return this.http
             .post<ResponseType>(fullUrl, data, { params, headers })
             .pipe(
-                retryWhen((request) => this.retryHandler(request)),
+                retryWhen(request => this.retryHandler(request)),
                 timeout(customTimeout)
             );
     }
@@ -293,7 +293,7 @@ export class NxSystemAPI {
     protected getRequestAggregator<AggregatedType>(requests: string[]) {
         const concatRequests = encodeURI(
             requests
-                .map((request) => {
+                .map(request => {
                     return `exec_cmd=${request}`;
                 })
                 .join('&')
@@ -375,7 +375,7 @@ export class NxSystemAPI {
                 customHeaders
             )
                 .toPromise()
-                .then((result) => {
+                .then(result => {
                     this.currentUser = result;
                     return this.currentUser;
                 });
@@ -476,7 +476,7 @@ export class NxSystemAPI {
     getSystemSettings() {
         return this.get<t.Params[]>('/ec2/getSettings')
             .toPromise()
-            .then((params) => {
+            .then(params => {
                 return new t.SystemConfigSettings(params);
             });
     }
@@ -583,7 +583,7 @@ export class NxSystemAPI {
     checkInternet(reload = true) {
         return this.getModuleInfo()
             .toPromise()
-            .then((res) => res.reply.serverFlags.includes('SF_HasPublicIP'));
+            .then(res => res.reply.serverFlags.includes('SF_HasPublicIP'));
     }
 
     checkLocalIfNew(reload = true) {
@@ -780,7 +780,7 @@ export class NxSystemAPI {
     }
 
     changePort(port: number) {
-        return this.configureServer({ port }).catch((err) =>
+        return this.configureServer({ port }).catch(err =>
             Promise.reject(err)
         );
     }
@@ -815,7 +815,7 @@ export class NxSystemAPI {
     restartServer(serverId?: string) {
         return this.post<t.RestartServer>('/api/restart')
             .toPromise()
-            .catch((err) => Promise.reject(err));
+            .catch(err => Promise.reject(err));
     }
 
     getModuleInfo() {
@@ -873,7 +873,7 @@ export class NxSystemAPI {
             name,
             value
         };
-        Object.keys(params).forEach((key) => {
+        Object.keys(params).forEach(key => {
             if (params[key] === undefined) {
                 delete params[key];
             }
@@ -1033,7 +1033,7 @@ export class NxSystemAPI {
             >
         >(routes).pipe(
             map(({ reply }) => {
-                return routes.map((route) => {
+                return routes.map(route => {
                     if (
                         [
                             '/api/moduleInformation',

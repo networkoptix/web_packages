@@ -27,7 +27,7 @@ describe('NxGetStartedComponent', () => {
 
     const configMock = { config: nxConfig };
 
-    const getFirstStepContent = (el) => {
+    const getFirstStepContent = el => {
         const detailBlock = el.nativeElement.querySelector('.detail-block');
         const stepText = detailBlock.querySelector('.step-text');
         const title = stepText.querySelector('h3').innerText;

@@ -33,8 +33,8 @@ export class NxSessionService {
         this.session.store('loginState', null);
         this.session.store('loginRegister', false);
         this.loginStateSubject.next(this.loginState);
-        this.cloudUserCaches.forEach((cacheName) => {
-            this.nxCache.clearByName(cacheName).catch((error) => console.error(error));
+        this.cloudUserCaches.forEach(cacheName => {
+            this.nxCache.clearByName(cacheName).catch(error => console.error(error));
         });
     }
 

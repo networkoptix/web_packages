@@ -106,7 +106,7 @@ export class AddWidgetModalContent {
         const { dashboardName: name, id: value } = this.activeDashboard || {};
         this.selectedDashboard = { name, value };
         const { widgetUrl, devServer = false } = this.route.snapshot.queryParams;
-        this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map((widget) => ({ name: widget.title, value: { ...widget, editMode: true } }));
+        this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
             this.selectedWidget = NxUtilsService.deepCopy(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
             this.downloadWidget(devServer || widgetUrl, !!devServer);
@@ -115,13 +115,13 @@ export class AddWidgetModalContent {
         }
 
         this.addWidget = this.processService.createProcess(
-            () => new Promise((resolve) => setTimeout(resolve, 100)),
+            () => new Promise(resolve => setTimeout(resolve, 100)),
             {},
             () => this.close(this.selectedWidget.value)
         );
     }
 
-    close = (msg?) => {
+    close = (msg?: WidgetCard) => {
         this.dialogRef.close(msg);
     }
 }

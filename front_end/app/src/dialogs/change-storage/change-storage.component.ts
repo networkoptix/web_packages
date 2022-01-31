@@ -94,7 +94,7 @@ export class ChangeStorageModalContent {
         this.close('cancel');
     }
 
-    close = (msg?) => {
+    close = (msg?: string) => {
         this.dialogRef.close(msg);
     }
 }

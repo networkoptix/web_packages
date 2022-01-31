@@ -168,8 +168,8 @@ export class NxHealthLayoutService {
             }
         });
 
-        this.tableWidthSubject.subscribe((width) => this.setSearchWidth(width));
-        this.activeEntitySubject.subscribe((entity) => {
+        this.tableWidthSubject.subscribe(width => this.setSearchWidth(width));
+        this.activeEntitySubject.subscribe(entity => {
             this.setTableDimensions();
         });
     }

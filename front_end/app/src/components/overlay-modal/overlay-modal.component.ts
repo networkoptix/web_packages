@@ -71,7 +71,7 @@ export class NxOverlayModalComponent implements OnInit {
         if (this.localStorage.retrieve('resetServer') === true) {
             setTimeout(() => window.location.reload(), 2000);
         }
-        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async (state) => {
+        this.systemAvailableSubscription = this.appState.systemAvailable$.subscribe(async state => {
             if (!state && this.system?.serverManager.servers.length > 1) {
                 // mainServer.status is unreliable ...
                 // if system availability state was changed to FALSE -> check if current server is available
@@ -84,7 +84,7 @@ export class NxOverlayModalComponent implements OnInit {
             }
         });
 
-        this.checkingSubscription = this.checking$.subscribe((state) => {
+        this.checkingSubscription = this.checking$.subscribe(state => {
             this.refreshMessage = this.LANG?.servers[state ? 'refreshing' : 'refresh']();
         });
 

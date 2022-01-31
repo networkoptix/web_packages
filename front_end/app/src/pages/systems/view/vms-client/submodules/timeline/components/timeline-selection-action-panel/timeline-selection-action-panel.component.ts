@@ -82,7 +82,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
             .pipe(map(_ => this.duration))
             .pipe(distinctUntilChanged());
 
-        this.accountService.get().then((account) => {
+        this.accountService.get().then(account => {
             if (!account) {
                 return Promise.reject();
             }

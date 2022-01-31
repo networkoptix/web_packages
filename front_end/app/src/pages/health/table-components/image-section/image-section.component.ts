@@ -50,7 +50,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
         this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
         this.fromEventSubscription = fromEvent(window, 'resize')
             .pipe(debounceTime(10))
-            .subscribe((e) => {
+            .subscribe(e => {
                 this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
             });
     }
@@ -87,7 +87,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
 
     showPreloader() {
         setTimeout(() => {
-            this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded);
+            this.ready = this.thumbnails.every(thumbnail => thumbnail.loaded);
         });
     }
 }

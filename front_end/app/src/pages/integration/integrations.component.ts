@@ -109,7 +109,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     setTags() {
-        const found = this.allElements.find((elm) => elm.mine);
+        const found = this.allElements.find(elm => elm.mine);
         const haveMyIntegration = (found && found.mine) || false;
 
         this.CONFIG.integration.filter.items.forEach(item => {
@@ -138,7 +138,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
             'mine'
         ];
         const searchBy = (item, query) => {
-            return Object.keys(item).find((key) => {
+            return Object.keys(item).find(key => {
                 // Ignore values that are undefined or that dont help the search.
                 if (!item[key] || IGNORE_KEYS.includes(key)) {
                     return false;
@@ -158,10 +158,10 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         }
 
         if (this.filterModel.tags?.length) {
-            const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
+            const hasTagSelection = this.filterModel.tags.some(tag => tag.value);
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {
-                    return item.information.type.find((type) => {
+                    return item.information.type.find(type => {
                         return this.filterModel.tags.some(tag => {
                             if (tag.id === type.id && tag.value) {
                                 return item;

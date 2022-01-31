@@ -168,11 +168,11 @@ export class PushComponent implements OnInit, OnDestroy {
         }
         this.tokenSubscription = this.afMessaging.tokenChanges
             .subscribe(
-                (token) => {
+                token => {
                     this.deviceToken = token;
                     this.updateSubStates();
                 },
-                (error) => {
+                error => {
                     this.deviceToken = error;
                 }
             );

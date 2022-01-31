@@ -166,7 +166,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
             disabled: stateOfHealth !== 'online',
             value
         }))),
-        tap(async (systems) => {
+        tap(async systems => {
             if (!systems.length) {
                 return;
             }

@@ -65,14 +65,14 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
 
     bookmarks$ = this.updater$.pipe(
         tap(this.toggleLoading),
-        switchMap(async (_) => {
+        switchMap(async _ => {
             if (!this.system.mediaserver.authGet) {
                 await this.system.updateSystemAuth();
             }
         }),
         switchMap(_ => this.system.getBookmarks()),
         // map(getMockBookmarks), Use in case you want to demo when no bookmarks
-        switchMap(async (bookmarks) => bookmarks.map(bookmark => {
+        switchMap(async bookmarks => bookmarks.map(bookmark => {
             const thumbnail = this.system.serverManager.getPreviewUrl(bookmark.deviceId, bookmark.startTimeMs, 800, 800, 0, this.system.mediaserver.authGet);
             return { ...bookmark, thumbnail };
         })
@@ -87,7 +87,7 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
             disabled: stateOfHealth !== 'online',
             value
         }))),
-        tap(async (systems) => {
+        tap(async systems => {
             if (!systems.length) {
                 return;
             }

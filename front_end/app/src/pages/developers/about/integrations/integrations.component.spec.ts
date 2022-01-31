@@ -49,7 +49,7 @@ describe('NxIntegrationsComponent', () => {
         getIntegrationsCount: () => new BehaviorSubject(integrations)
     };
 
-    const getInfoBlock = (el) => {
+    const getInfoBlock = el => {
         const block = el.nativeElement.querySelector('.info-block');
         const title = block.querySelector('h3').innerText;
         const content = block.querySelector('p').innerText;
@@ -57,7 +57,7 @@ describe('NxIntegrationsComponent', () => {
         return { title, content, button };
     };
 
-    const getPluginsBlock = (el) => {
+    const getPluginsBlock = el => {
         const block = el.nativeElement.querySelector('.integrations-block');
         const title = block.querySelector('h3').innerText;
         const button = block.querySelector('button').innerText;

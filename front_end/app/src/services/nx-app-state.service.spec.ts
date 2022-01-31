@@ -19,7 +19,7 @@ describe('AppState Service', () => {
     });
 
     it('should have setter and getter (footerVisibility)', () => {
-        appStateService.footerVisibleSubject.subscribe((visible) => {
+        appStateService.footerVisibleSubject.subscribe(visible => {
             expect(appStateService.footerVisibility).toBe(visible);
         });
 
@@ -27,7 +27,7 @@ describe('AppState Service', () => {
     });
 
     it('should have setter and getter (headerVisibility)', () => {
-        appStateService.headerVisibleSubject.subscribe((visible) => {
+        appStateService.headerVisibleSubject.subscribe(visible => {
             expect(appStateService.headerVisibility).toBe(visible);
         });
 
@@ -35,7 +35,7 @@ describe('AppState Service', () => {
     });
 
     it('should have setter and getter (ribbonVisibility)', () => {
-        appStateService.ribbonSubject.subscribe((visible) => {
+        appStateService.ribbonSubject.subscribe(visible => {
             expect(appStateService.ribbonVisibility).toBe(visible);
         });
 
@@ -43,7 +43,7 @@ describe('AppState Service', () => {
     });
 
     it('should have setter and getter (ready)', () => {
-        appStateService.readySubject.subscribe((visible) => {
+        appStateService.readySubject.subscribe(visible => {
             expect(appStateService.ready).toBe(visible);
         });
 
@@ -51,7 +51,7 @@ describe('AppState Service', () => {
     });
 
     it('should have setter and getter (canManuallyAccess)', () => {
-        appStateService.manualAccessSubject$.subscribe((canAccess) => {
+        appStateService.manualAccessSubject$.subscribe(canAccess => {
             expect(appStateService.canManuallyAccess).toBe(canAccess);
         });
 

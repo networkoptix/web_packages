@@ -226,14 +226,14 @@ export class RestartServerModalContent {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('restart')
-                        .then((ready) => {
+                        .then(ready => {
                             this.needsUpdate = !ready;
                             if (ready) {
                                 this.restartServer.run();
                             }
                         });
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then((res) => this.window.location.reload(res));
+                    return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                 }
                 this.toastService.show(message, options);
             });

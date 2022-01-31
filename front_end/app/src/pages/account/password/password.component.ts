@@ -98,7 +98,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
 
         this.accountService
             .get()
-            .then((account) => {
+            .then(account => {
                 if (account) {
                     this.account = account;
 

@@ -89,7 +89,7 @@ export class NxOpenAPIJSONService {
             }
         });
 
-        this.APIToolService.currentServerId$.pipe(untilDestroyed(this), filter(serverID => !!serverID)).subscribe((serverID) => {
+        this.APIToolService.currentServerId$.pipe(untilDestroyed(this), filter(serverID => !!serverID)).subscribe(serverID => {
             this.isReadOnly = false;
             if (this.APIStore[serverID]) {
                 this.changeServer(serverID);
@@ -105,7 +105,7 @@ export class NxOpenAPIJSONService {
             this.menuNodes = undefined; // trigger preloader
         });
 
-        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe((api) => {
+        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(api => {
             this.setReadonlyAPI(api);
         });
     }

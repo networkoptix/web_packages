@@ -31,7 +31,7 @@ export class NxUrlProtocolService {
         const search = this.window.location.search.replace('?', '').split('&');
 
         let fromLocation = '';
-        const from = search.find((param) => {
+        const from = search.find(param => {
             return param.includes('from');
         });
         if (from) {
@@ -39,7 +39,7 @@ export class NxUrlProtocolService {
         }
 
         let contextParam = '';
-        const context = search.find((param) => {
+        const context = search.find(param => {
             return param.includes('context');
         });
         if (context) {
@@ -105,7 +105,7 @@ export class NxUrlProtocolService {
         }
 
         const uri = [];
-        Object.keys(getParams).forEach((param) => {
+        Object.keys(getParams).forEach(param => {
             uri.push(`${param}=${getParams[param]}`);
         });
 
@@ -126,7 +126,7 @@ export class NxUrlProtocolService {
             ? this.cloudApiService.getCode('*').toPromise()
             : this.accountService.authKey();
 
-        return auth.then((data) => {
+        return auth.then(data => {
             if (linkSettings.useOauth) {
                 linkSettings.code = data.code;
             } else {
@@ -198,7 +198,7 @@ export class NxUrlProtocolService {
                     () => {
                         this.accountService
                             .checkVisitedKey(authKey)
-                            .then((visited) => {
+                            .then(visited => {
                                 // On windows chrome actually fails so we can use the protocol error handler
                                 this.window.onblur = undefined;
                                 this.window.onfocus = undefined;
@@ -212,7 +212,7 @@ export class NxUrlProtocolService {
                         setTimeout(() => {
                             this.accountService
                                 .checkVisitedKey(authKey)
-                                .then((visited) => {
+                                .then(visited => {
                                     this.window.onblur = undefined;
                                     this.window.onfocus = undefined;
                                     /* How the check works

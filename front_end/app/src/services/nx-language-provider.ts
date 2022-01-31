@@ -95,7 +95,7 @@ export class NxLanguageProviderService {
     }
 
     loadTimelineTranslations() {
-        const reduceTranslations = (names, sortList) => sortList.map((key) => names[key]());
+        const reduceTranslations = (names, sortList) => sortList.map(key => names[key]());
         const timelineTranslations = this.translations?.view?.timeline;
         if (!timelineTranslations) {
             return undefined;
@@ -149,6 +149,6 @@ export class NxLanguageProviderService {
         this.cacheService.clearData();
         this.swCacheService
             .clearAllCache()
-            .catch((err) => console.error(err));
+            .catch(err => console.error(err));
     }
 }

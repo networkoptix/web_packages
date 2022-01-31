@@ -133,7 +133,7 @@ export class ListSerializer<Initial, Serialized> {
         this.data = this.#serializer(data);
     }
 
-    #customClientsSerializer = (data) => {
+    #customClientsSerializer = data => {
         const createHash = (values: Record<any, any>) =>
             md5(
                 JSON.stringify(

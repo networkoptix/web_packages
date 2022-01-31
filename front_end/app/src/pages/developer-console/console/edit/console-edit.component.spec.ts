@@ -100,7 +100,7 @@ describe('NxDevConsoleEditComponent', () => {
     };
 
     const getSection =
-        (field) => el.nativeElement.querySelector(`.section-${field.name}`);
+        field => el.nativeElement.querySelector(`.section-${field.name}`);
 
     beforeEach(waitForAsync(() => {
         TestBed

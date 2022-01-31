@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
             return false;
         }
 
-        return this.accountService.requireLogin().then((account) => {
+        return this.accountService.requireLogin().then(account => {
             return account !== undefined;
         });
     }

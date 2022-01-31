@@ -84,7 +84,7 @@ export class NxDevConsoleComponent {
         });
     }
 
-    mapRoute = (params) => {
+    mapRoute = params => {
         const { section, mode, id, context } = params;
         const sections = Object.values(
             this.CONFIG.manifest

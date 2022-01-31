@@ -21,7 +21,7 @@ export class NxLandingDisplayComponent implements OnInit {
         this.apiService
             .getStaticLanding()
             .toPromise()
-            .then((result) => {
+            .then(result => {
                 this.compTemplate = this.sanitizer.bypassSecurityTrustHtml(result);
             });
     }

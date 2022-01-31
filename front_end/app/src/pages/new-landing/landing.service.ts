@@ -49,7 +49,7 @@ export class NxLandingService {
 
         this.backgroundGraphicFinishedLoading$
             .pipe(take(2), untilDestroyed(this))
-            .subscribe((value) => {
+            .subscribe(value => {
                 if (value) {
                     setTimeout(() => {
                         this.introAnimationFinished$.next(true);

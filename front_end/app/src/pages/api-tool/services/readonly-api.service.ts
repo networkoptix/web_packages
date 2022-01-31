@@ -34,7 +34,7 @@ export class NxReadonlyAPIService {
         private api: NxCloudApiService,
                 private _route: ActivatedRoute) {
         this.isEnabled = this.configService.flagsEnabled('readonlyAPIs');
-        this._route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
+        this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.queryParams = params;
         });
     }

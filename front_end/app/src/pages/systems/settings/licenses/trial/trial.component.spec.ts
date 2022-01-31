@@ -121,7 +121,7 @@ describe('Licenses (Trial)', () => {
 
         it('should proceed if successful registration (response.reply)', () => {
             serverManagerSpy.activateLicense.and.resolveTo({ response: { reply: 'ok' } });
-            serverManagerSpy.activateLicense('{serverId}', 'license_key').then((response) => {
+            serverManagerSpy.activateLicense('{serverId}', 'license_key').then(response => {
                 component.haveTrialLicense = true;
                 fixture.detectChanges();
                 dialogsServiceSpy.notify('Test', 'success');
@@ -133,7 +133,7 @@ describe('Licenses (Trial)', () => {
 
         it('should proceed if unsuccessful registration (response.error)', () => {
             serverManagerSpy.activateLicense.and.resolveTo({ response: { error: '1' } });
-            serverManagerSpy.activateLicense('{serverId}', 'license_key').then((response) => {
+            serverManagerSpy.activateLicense('{serverId}', 'license_key').then(response => {
                 fixture.detectChanges();
                 dialogsServiceSpy.notify('Error', 'danger');
 
@@ -143,7 +143,7 @@ describe('Licenses (Trial)', () => {
 
         it('should proceed if request fail', () => {
             serverManagerSpy.activateLicense.and.rejectWith({ error: { type: 'error' } });
-            serverManagerSpy.activateLicense('{serverId}', 'license_key').catch((response) => {
+            serverManagerSpy.activateLicense('{serverId}', 'license_key').catch(response => {
                 fixture.detectChanges();
                 if (response.error.type === 'error') {
                     dialogsServiceSpy.notify('Error', 'danger');

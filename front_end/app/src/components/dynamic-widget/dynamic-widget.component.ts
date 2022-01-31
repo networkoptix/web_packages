@@ -44,7 +44,7 @@ export class NxDynamicWidgetComponent {
      * @param identifier string
      * @returns FirstPartyWidget Class
      */
-    static findWidget = (identifier) => {
+    static findWidget = identifier => {
         return NxDynamicWidgetComponent.WIDGETS.find(({ IDENTIFIER }) => IDENTIFIER === identifier);
     }
 
@@ -74,7 +74,7 @@ export class NxDynamicWidgetComponent {
         this.card.editMode = editMode;
     }
 
-    showAction = (action) => this.openAction.emit(action);
+    showAction = action => this.openAction.emit(action);
 
     ngAfterViewInit() {
         this.initializeWidget();

@@ -90,7 +90,7 @@ export class Mandatory2faModalContent {
                     : this.LANG.dialogs.message.system2faDisabled();
                 this.toastService.show(successMessage, options);
             // });
-            }, (err) => {
+            }, err => {
                 if (!err.resultCode) {
                     this.system.currentServerNotBusy = true;
                     this.showError = true;
@@ -98,7 +98,7 @@ export class Mandatory2faModalContent {
             });
     }
 
-    close = (msg?) => {
+    close = (msg?: string) => {
         this.dialogRef.close(msg);
     }
 

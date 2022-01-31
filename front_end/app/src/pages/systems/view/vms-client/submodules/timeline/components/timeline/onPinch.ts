@@ -3,7 +3,7 @@ export function onPinch (el: HTMLElement, onPinchMove: Function = () => {}) {
     let scale = 1.0;
     let offset = 0.5;
 
-    const onTouchMove = (event) => {
+    const onTouchMove = event => {
         if (event.touches.length === 2) {
             const currentDistance = Math.hypot(
                 (event.touches[0].pageX - event.touches[1].pageX),

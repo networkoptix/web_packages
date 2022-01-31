@@ -197,7 +197,7 @@ export class NxHealthService {
             const query = filter.query.toLowerCase();
             const queryTerms = query.trim()
                 .split(/[\s\+]+/)
-                .filter((elm) => {
+                .filter(elm => {
                     return elm !== '';
                 });
 

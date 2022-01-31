@@ -26,6 +26,7 @@ module.exports = {
     rules: {
         'accessor-pairs': 'off',
         'array-bracket-spacing': ['error', 'never'],
+        'arrow-parens': ['error', 'as-needed'],
         'arrow-spacing': ['error', { before: true, after: true }],
         'block-spacing': ['error', 'always'],
         'brace-style': ['error', '1tbs', { allowSingleLine: true }],

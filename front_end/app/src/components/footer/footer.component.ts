@@ -61,7 +61,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
 
         this.footerSubscription =
             this.appState.footerVisibleSubject
-                .subscribe((visible) => {
+                .subscribe(visible => {
                     this.viewFooter = visible;
                 });
     }

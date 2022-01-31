@@ -84,7 +84,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
                         [this.itemPath],
                         { queryParams: { search: this.item.query } }
                     )
-                    .catch((ex) => console.error(ex));
+                    .catch(ex => console.error(ex));
             }
         } else {
             this.toggleNode();

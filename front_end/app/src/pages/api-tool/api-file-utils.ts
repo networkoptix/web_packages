@@ -52,7 +52,7 @@ export const generateSubMenuNodeURL = (tagName: string) => {
 /**
  * Add placeholder if description is blank
 */
-const checkMethodResponseDescription = (method) => {
+const checkMethodResponseDescription = method => {
     if (method.responses?.default?.description === '') {
         method.responses.default.description = 'succesful operation';
     }

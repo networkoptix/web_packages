@@ -14,11 +14,11 @@ export class NxVersionMessageComponent {
     isLegacy = false;
 
     constructor(private APIToolSystemService: NxAPIToolSystemService) {
-        this.APIToolSystemService.outDatedSystem$.pipe(untilDestroyed(this)).subscribe((isOutdated) => {
+        this.APIToolSystemService.outDatedSystem$.pipe(untilDestroyed(this)).subscribe(isOutdated => {
             this.outdatedSystem = isOutdated;
         });
 
-        this.APIToolSystemService.systemVersion$.pipe(untilDestroyed(this)).subscribe((version) => {
+        this.APIToolSystemService.systemVersion$.pipe(untilDestroyed(this)).subscribe(version => {
             const versionAsFloat = parseFloat(version);
             this.isLegacy = versionAsFloat >= 4 && versionAsFloat < 4.3;
         });

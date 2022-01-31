@@ -79,7 +79,7 @@ export class NxDebugComponent {
         this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
         this.pageService.pageTitle = this.LANG.pageTitles.debug?.();
-        this.accountService.get().then((acc) => {
+        this.accountService.get().then(acc => {
             this.init();
         });
     }
@@ -143,9 +143,9 @@ export class NxDebugComponent {
         }, {
             successMessage: 'Success!',
             errorPrefix: 'Fail!'
-        }).then((res) => {
+        }).then(res => {
             console.log(res);
-        }, (error) => {
+        }, error => {
             console.error(error);
         });
 
@@ -168,10 +168,10 @@ export class NxDebugComponent {
         } else {
             request = this.http.post(this.debugProxyUrl(), { data });
         }
-        request.subscribe((result) => {
+        request.subscribe(result => {
             this.debugProxySettings.success = true;
             this.debugProxySettings.result = JSON.stringify(result, undefined, 2);
-        }, (error) => {
+        }, error => {
             this.debugProxySettings.success = false;
             this.debugProxySettings.result = JSON.stringify(error, undefined, 2);
         });
@@ -200,9 +200,9 @@ export class NxDebugComponent {
     }
 
     getTempKey() {
-        this.accountService.authKey().then((authKey) => {
+        this.accountService.authKey().then(authKey => {
             this.linkSettings.auth = authKey;
-        }, (noAccount) => {
+        }, noAccount => {
             console.error(`Couldn't retrieve temporary auth_key from cloud_portal ${noAccount}`);
             this.linkSettings.auth = 'couldn\'t retrieve temporary auth_key from cloud_portal';
         });
@@ -214,9 +214,9 @@ export class NxDebugComponent {
             this.mergeSettings.masterSystemId,
             this.mergeSettings.slaveSystemId,
             this.password
-        ).then((success) => {
+        ).then(success => {
             this.mergeSettings.result = JSON.stringify(success, undefined, 2);
-        }, (error) => {
+        }, error => {
             this.mergeSettings.result = JSON.stringify(error, undefined, 2);
         });
     }

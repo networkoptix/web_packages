@@ -144,7 +144,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                 filter(event => event instanceof ActivationEnd)
             )
             .subscribe((event: ActivationEnd) => {
-                this.filter.multiselects.find((select) => {
+                this.filter.multiselects.find(select => {
                     if (select.id === 'vendors') {
                         select.selected.push(event.snapshot.queryParams.vendors);
                     }
@@ -228,7 +228,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         const queryParams: Params = {};
 
         if (filter.select) {
-            this.filter.selects.find((select) => {
+            this.filter.selects.find(select => {
                 if (select.id === filter.select.id) {
                     select.selected = select.items.find(item => {
                         return item.value === filter.select.value;
@@ -248,7 +248,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (filter.multiselect) {
-            this.filter.multiselects.find((select) => {
+            this.filter.multiselects.find(select => {
                 if (select.id === filter.multiselect.id) {
                     select.selected.push(
                         select.items.find(item =>

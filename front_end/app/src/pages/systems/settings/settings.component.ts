@@ -312,7 +312,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.settingsService.system = undefined;
         this.accountService
             .get(true)
-            .then((account) => {
+            .then(account => {
                 if (account) {
                     this.account = account;
                     if (!environment.isLocal) {
@@ -326,8 +326,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.systemSubscription.unsubscribe();
                         }
                         this.systemSubscription = this.systemsService.systemsSubject
-                            .subscribe((systems) => {
-                                const system = systems.find((system) =>
+                            .subscribe(systems => {
+                                const system = systems.find(system =>
                                     system.id === this.systemId
                                 );
                                 if (system === undefined) {
@@ -503,7 +503,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         </div>`;
                     } else if (secondary?.id === this.system.id) {
                         this.mergeTargetSystem = this.systemsService.systems
-                            .find((system) => primary.id === system.id) ||
+                            .find(system => primary.id === system.id) ||
                                 { name: this.LANG.system.mergeUnknownName?.() };
                         this.secondaryMerge = true;
                     } else if (mergeInProgress) {
@@ -528,7 +528,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     contentToggle(event) {
-        this.content.level1.find((node) => {
+        this.content.level1.find(node => {
             if (node.id === event.nodeId) {
                 node.toggle = event.state;
             }
@@ -545,7 +545,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
 
         if (this.system.userManager.permissions.editCameras) {
-            let camerasNode = this.content.level1.find((node) =>
+            let camerasNode = this.content.level1.find(node =>
                 node.id === this.CONFIG.menus.systemSettings.cameras.id
             );
             if (!camerasNode) {
@@ -675,7 +675,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         if (this.system.userManager.permissions.isAdmin) {
-            let serversNode = this.content.level1.find((node) =>
+            let serversNode = this.content.level1.find(node =>
                 node.id === this.CONFIG.menus.systemSettings.servers.id
             );
             if (!serversNode) {

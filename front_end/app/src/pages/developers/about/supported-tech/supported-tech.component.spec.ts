@@ -76,7 +76,7 @@ describe('For Developers Landing - Supported Tech Node', () => {
     it('should show the language and tech sections in the correct order', () => {
         const sections = [
             ...el.nativeElement.querySelectorAll('.supported-tech > div')
-        ].map((el) => el.className);
+        ].map(el => el.className);
         const expectedSections = supportedTechNode.nodes.map(({ title }) =>
             title === 'Icon Links'
                 ? 'tech-wrapper'

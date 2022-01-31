@@ -54,7 +54,7 @@ export class NxSystemService {
     ) {
         const id = systemId || serverId;
         const cloudSystemInfo: any =
-            (this.systemsService.systems || []).find((system) => system.id === id);
+            (this.systemsService.systems || []).find(system => system.id === id);
         let system;
         if (id in this.systemsCache) {
             system = this.systemsCache[id];

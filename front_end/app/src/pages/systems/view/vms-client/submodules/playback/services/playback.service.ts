@@ -50,7 +50,7 @@ export class PlaybackService implements OnDestroy {
                 const transports = Object.keys(transportsAndResolutions);
                 if (transports.length > 1) {
                     const parsedQuality = quality === 'hi' ? 'high' : 'low';
-                    const nonHlsTransport = transports.find((_transport) =>
+                    const nonHlsTransport = transports.find(_transport =>
                         _transport !== 'hls' &&
                             parsedQuality in transportsAndResolutions[_transport]
                     );

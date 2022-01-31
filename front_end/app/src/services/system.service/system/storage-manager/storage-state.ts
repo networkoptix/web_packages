@@ -58,10 +58,10 @@ export class StorageState extends BaseManager {
     #updateOn = (trigger: UpdateTriggers) => this.#updater$.pipe(startWith(trigger), filter(updater => updater === trigger), switchMap(() => this.serverId$))
 
     // State update handlers - These need to be arrow functions because "this" is fun.
-    #getStorageInfoHandler = (id) => this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(startWith(false), map(info => typeof info === 'boolean' ? info : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))));
-    #getStorageStatsHandler = (id) => this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
-    #getStorageMetricsHandler = (id) => this.serverManager.getServerStats(id).pipe(startWith(false));
-    #getAnalyticsHandler = (id) => this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
+    #getStorageInfoHandler = id => this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(startWith(false), map(info => typeof info === 'boolean' ? info : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))));
+    #getStorageStatsHandler = id => this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
+    #getStorageMetricsHandler = id => this.serverManager.getServerStats(id).pipe(startWith(false));
+    #getAnalyticsHandler = id => this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
 
     /**
      * StateManagers:
@@ -101,7 +101,7 @@ export class StorageState extends BaseManager {
         takeUntil(this.refresh$),
         filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
-        map((cur) => {
+        map(cur => {
             if (
                 this.storageState &&
                 (this.storageState.storageStatsLoaded && this.storageState.vmsSpaceLoaded) &&
@@ -143,7 +143,7 @@ export class StorageState extends BaseManager {
             takeUntil(this.refresh$),
             filter((res: any) => res[2]),
             map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
-            map((cur) => {
+            map(cur => {
                 if (
                     this.storageState &&
                     (this.storageState.storageStatsLoaded && this.storageState.vmsSpaceLoaded) &&

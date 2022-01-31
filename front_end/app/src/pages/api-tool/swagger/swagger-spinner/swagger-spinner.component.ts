@@ -25,7 +25,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit () {
-        this.classMutationObserver = new MutationObserver((mutations) => {
+        this.classMutationObserver = new MutationObserver(mutations => {
             mutations.forEach((mutation: MutationRecord) => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                     const el = mutation.target as HTMLElement;
@@ -39,7 +39,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
         });
         this.isVisible = this.initialIsVisible && this.opblock.classList.contains('is-open');
 
-        this.swaggerLoading.pipe(untilDestroyed(this)).subscribe((value) => {
+        this.swaggerLoading.pipe(untilDestroyed(this)).subscribe(value => {
             this.checkVisible(value);
         });
     }

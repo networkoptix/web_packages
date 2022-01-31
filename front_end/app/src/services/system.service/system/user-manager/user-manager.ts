@@ -111,7 +111,7 @@ export class UserManager {
     deleteUser(removedUser: NxSystemUser) {
         return this.mediaserver.deleteUser(removedUser.id).toPromise()
             .then(data => {
-                this.users = this.users.filter((user) => {
+                this.users = this.users.filter(user => {
                     return user.id !== data.id;
                 });
             })
@@ -159,7 +159,7 @@ export class UserManager {
             const userRoles = data['ec2/getUserRoles'];
             const predefinedRoles = data['ec2/getPredefinedRoles'];
             const accessRights = data['ec2/getAccessRights'];
-            return new Promise((resolve) => {
+            return new Promise(resolve => {
                 this.updateAccessRoles(predefinedRoles, userRoles);
                 return resolve(this.processUsers(users, accessRights));
             });
@@ -182,7 +182,7 @@ export class UserManager {
             return obj;
         }, {}) : {};
         // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
-        this.users = users.map((user) => {
+        this.users = users.map(user => {
             // @ts-ignore: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
             if (user.accountFullName && !user.fullName) {
                 // @ts-ignore TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
@@ -250,7 +250,7 @@ export class UserManager {
         }
 
         if (!user.id) {
-            let existingUser: Partial<NxSystemUser> = this.users.find((u) => {
+            let existingUser: Partial<NxSystemUser> = this.users.find(u => {
                 return user.email === u.email;
             });
             if (!existingUser) { // user not found - create a new one

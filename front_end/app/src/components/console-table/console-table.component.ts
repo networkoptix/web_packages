@@ -221,7 +221,7 @@ export class NxConsoleTableComponent {
             contextList: this.contextList
         };
 
-        const actions = (modal) => ({
+        const actions = modal => ({
             [ModalType.CLIENT_CREATE]: () => this.dialogService.edit(createClientModalContent),
             [ModalType.CLIENT_EDIT]: () => this.dialogService.edit(modalContent)
             // [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
@@ -237,18 +237,18 @@ export class NxConsoleTableComponent {
     asyncErrors = {};
     cancelHandlers = {}
 
-    handleAsync = async(asyncSettings) => {
+    handleAsync = async asyncSettings => {
         const apiLookup: Partial<Record<ModalType, ConsoleSection>> = {
             [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS
         };
 
-        const buildDownloadToast = (url) => asyncSettings.manifest.fields[0].meta.options.toastMessage.replace(
+        const buildDownloadToast = url => asyncSettings.manifest.fields[0].meta.options.toastMessage.replace(
             '%NAME%', asyncSettings.values.name
         ).replace(
             '%URL%', url
         );
 
-        const notifyDownload = (url) => {
+        const notifyDownload = url => {
             const options = {
                 classname: this.CONFIG.toast.success,
                 showHTML: true
@@ -276,7 +276,7 @@ export class NxConsoleTableComponent {
             this.asyncInProgress[asyncSettings.lookupKey] = false;
             packageHandler.cancelProcess();
         };
-        packageHandler.state$.pipe(untilDestroyed(this)).subscribe((state) => {
+        packageHandler.state$.pipe(untilDestroyed(this)).subscribe(state => {
             switch (state.packageState) {
                 case PackageProgress.PACKAGE_ERROR:
                     this.asyncErrors[asyncSettings.lookupKey] = state.errors;
@@ -400,7 +400,7 @@ class TableDataSource extends DataSource<any> {
         currentPage = 1,
         search = '',
         displayedColumns = [],
-        private updatePageParam = (page) => console.error(`Missing param handler ${page}`)
+        private updatePageParam = page => console.error(`Missing param handler ${page}`)
     ) {
         super();
         this.minItemsAdvanced = minItemsAdvanced;

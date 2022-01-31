@@ -19,7 +19,7 @@ describe('NxExternalVideoComponent', () => {
     let el: DebugElement;
 
     const domMock = {
-        bypassSecurityTrustResourceUrl: (link) => link
+        bypassSecurityTrustResourceUrl: link => link
     };
     const configMock = { getConfig: () => nxConfig };
 

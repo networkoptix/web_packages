@@ -182,7 +182,7 @@ export class NxSystem extends System {
            We try to update nonce and auth on the server again
            Other cases are not distinguishable
         */
-        const unauthorizedCallback = this.useRest ? (force) => this.updateToken(force) : (force) => this.updateSystemAuth(force);
+        const unauthorizedCallback = this.useRest ? force => this.updateToken(force) : force => this.updateSystemAuth(force);
         if (!this.mediaserver) {
             this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, unauthorizedCallback, this.useRest);
         }
@@ -228,7 +228,7 @@ export class NxSystem extends System {
             return Promise.resolve(true);
         }
 
-        return this.cloudApi.getSystemToken(this.id).toPromise().then((tokens) => {
+        return this.cloudApi.getSystemToken(this.id).toPromise().then(tokens => {
             (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
             return Promise.resolve(true);
         }).catch(() => {
@@ -297,7 +297,7 @@ export class NxSystem extends System {
                             this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
-                }, (err) => console.error('getSystemSettings: ', err)) // catch api error
+                }, err => console.error('getSystemSettings: ', err)) // catch api error
                 .catch(err => console.error('getInfoAndPermissions: ', err)) // catch result processing error
                 .finally(() => {
                     return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
@@ -349,7 +349,7 @@ export class NxSystem extends System {
         }
         if (!this.infoPromise) {
             this.infoPromise = (!environment.isLocal && this.mediaserver.unauthorizedCallback(false) || Promise.resolve(true)).then(() => {
-                return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
+                return this.getInfoAndPermissions(useCache, suppressUpdate).then(res => {
                     return res;
                 });
             });
@@ -393,7 +393,7 @@ export class NxSystem extends System {
                 .then(() => this.cameraManager.getCameras())
                 .then(() => this.getUsers(true))
                 .then(() => this.filterCamerasFromUserPermissions())
-                .catch((error) => {
+                .catch(error => {
                     if (error?.offline) {
                         this.isOnline = false;
                         this.ribbonService.show(this.LANG.ribbon.systemOffline?.(), [], 'alert', undefined, true);
@@ -606,7 +606,7 @@ export class NxSystem extends System {
                                 serverId: i.serverId.slice(1, i.serverId.length - 1),
                                 timeZoneOffset: parseInt(i.timeZoneOffset)
                             }));
-                        }, (err) => {
+                        }, err => {
                             if (err.name === 'TimeoutError' && this.attempts < this.CONFIG.apiRequestAttempts) {
                                 this.attempts++;
                                 return this.getServerTimes();
@@ -802,7 +802,7 @@ export class NxSystem extends System {
             if (data && data.resultCode === 'forbidden') {
                 return Promise.reject(data);
             }
-            data.forEach((user) => {
+            data.forEach(user => {
                 user.isCloud = true;
                 user.permissions = this.userManager.normalizePermissionString(user.customPermissions);
                 user.email = user.accountEmail;
@@ -823,7 +823,7 @@ export class NxSystem extends System {
                     this.isAvailable = true;
                 }).catch(() => {
                     if (this.isAdmin) {
-                        return this.getUsersCachedInCloud().then((users) => {
+                        return this.getUsersCachedInCloud().then(users => {
                             this.userManager.processUsers(users);
                             return Promise.resolve();
                         });
@@ -832,7 +832,7 @@ export class NxSystem extends System {
                     }
                 });
             } else if (this.isAdmin) { // or we get old cached data from the cloud
-                usersPromise = this.getUsersCachedInCloud().then((users) => {
+                usersPromise = this.getUsersCachedInCloud().then(users => {
                     return this.userManager.processUsers(users);
                 });
             } else {

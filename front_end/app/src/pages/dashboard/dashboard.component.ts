@@ -198,7 +198,7 @@ export class NxDashboardComponent implements DashboardGroup {
      * Triggers saving changes to cloud. Subject is used to rate limit saves
      */
     updatePersistedConfig() {
-        this.menu = this.menu.map((dashboard) => dashboard.id === this.activeDashboard.id ? this.activeDashboard : dashboard);
+        this.menu = this.menu.map(dashboard => dashboard.id === this.activeDashboard.id ? this.activeDashboard : dashboard);
         this.updatePersisted$.next('updated');
         return this.updated$.toPromise();
     }
@@ -458,7 +458,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.cards = [];
         const settingsFile = files.item(0);
         const fileReader = new FileReader();
-        fileReader.onload = (e) => {
+        fileReader.onload = e => {
             const { menu, dragEnabled, dashboardGroupName, activeId } = JSON.parse(fileReader.result as string);
             if (!menu) {
                 return;

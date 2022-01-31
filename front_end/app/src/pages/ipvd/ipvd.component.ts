@@ -266,7 +266,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     findVendorForCamera(name) {
-        const camera = this.cameras.find((camera) => {
+        const camera = this.cameras.find(camera => {
             return camera.model === name;
         });
 
@@ -300,10 +300,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 const tags = {};
                 this.params.tags
                     .split(',')
-                    .forEach((tagName) => {
+                    .forEach(tagName => {
                         tags[tagName] = true;
                     });
-                this.filterModel.tags.forEach((tag) => {
+                this.filterModel.tags.forEach(tag => {
                     if (tags[tag.id]) {
                         tag.value = true;
                     }
@@ -313,9 +313,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         if (this.filterModel.selects && this.filterModel.selects.length) {
             this.filterModel.selects
-                .forEach((select) => {
+                .forEach(select => {
                     if (this.params[select.id]) {
-                        select.selected = select.items.find((item) =>
+                        select.selected = select.items.find(item =>
                             item.value === this.params[select.id]
                         );
                     } else {
@@ -328,7 +328,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         if (this.filterModel.multiselects && this.filterModel.multiselects.length) {
             this.filterModel.multiselects
-                .forEach((select) => {
+                .forEach(select => {
                     if (this.params[select.id]) {
                         select.selected = isArray(this.params[select.id])
                             ? this.params[select.id]
@@ -354,19 +354,19 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     resetFilterModel() {
         this.filterModel.search = '';
         if (this.filterModel.tags) {
-            this.filterModel.tags.forEach((filter) => {
+            this.filterModel.tags.forEach(filter => {
                 filter.value = false;
             });
         }
 
         if (this.filterModel.selects) {
-            this.filterModel.selects.forEach((filter) => {
+            this.filterModel.selects.forEach(filter => {
                 filter.selected = filter.items[0];
             });
         }
 
         if (this.filterModel.multiselects) {
-            this.filterModel.multiselects.forEach((filter) => {
+            this.filterModel.multiselects.forEach(filter => {
                 filter.selected = [];
             });
         }
@@ -406,7 +406,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     setActiveCamera() {
         if (this.params.camera) {
             this.uri.pageOffset = window.pageYOffset;
-            const selectedCamera = this.cameras.find((camera) =>
+            const selectedCamera = this.cameras.find(camera =>
                 camera.model === this.params.camera
             );
             this.activateCamera(selectedCamera);
@@ -417,7 +417,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
 
         if (!this.showAnalytics) {
-            this.filterModel.tags = this.filterModel.tags.filter((tag) =>
+            this.filterModel.tags = this.filterModel.tags.filter(tag =>
                 tag.id !== 'isAnalyticsSupported'
             );
         }
@@ -612,7 +612,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        const selectedCamera = this.cameras.find((camera) => {
+        const selectedCamera = this.cameras.find(camera => {
             return camera.sortKey ===
                 (elementSelected.sortKey || elementSelected.value.sortKey);
         });

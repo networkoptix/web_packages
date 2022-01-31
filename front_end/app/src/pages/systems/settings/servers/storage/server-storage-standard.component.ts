@@ -180,7 +180,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.system.storageManager.serverId$.pipe(untilDestroyed(this)).subscribe(() => {
             this.saveSettings = null;
         });
-        this.system.storageManager.storageState$.pipe(untilDestroyed(this)).subscribe(async(state) => {
+        this.system.storageManager.storageState$.pipe(untilDestroyed(this)).subscribe(async state => {
             const { analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded } = state;
             const sources = [analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded];
             if (
@@ -192,7 +192,7 @@ export class NxSystemStorageComponent implements OnInit {
                     return;
                 }
                 this.currentStorageState = state;
-                this.currentStorageState.locations.forEach((store) => {
+                this.currentStorageState.locations.forEach(store => {
                     const reservedOrBeingChecked = [STORAGE_STATUS.RESERVED, STORAGE_STATUS.BEING_CHECKED].includes(store.status);
                     const storageId = store.storageId;
                     this.cachedSizes[storageId] ||= { vms: 0, total: 0 };
@@ -267,7 +267,7 @@ export class NxSystemStorageComponent implements OnInit {
                     triggerUpdate(UpdateTriggers.STATS)
                         .pipe(untilDestroyed(this))
                         .subscribe(state => {
-                            this.currentStorageState.locations = (state?.locations || []).map((location) => {
+                            this.currentStorageState.locations = (state?.locations || []).map(location => {
                                 if (location.storageStatus.includes(STORAGE_STATUS.BEING_CHECKED)) {
                                     location.status = STORAGE_STATUS.INACCESSIBLE;
                                     location.storageStatus = `${location.storageStatus.replace(STORAGE_STATUS.BEING_CHECKED, '')} | ${STORAGE_STATUS.INACCESSIBLE}`;
@@ -444,7 +444,7 @@ export class NxSystemStorageComponent implements OnInit {
             if (cameraSettingsToSave.length) {
                 await of(...cameraSettingsToSave).pipe(
                     bufferCount(30),
-                    concatMap((saveSettings) => Promise.all(saveSettings.map(save => save())))
+                    concatMap(saveSettings => Promise.all(saveSettings.map(save => save())))
                 ).toPromise();
             }
             await this.system.update();
@@ -712,12 +712,12 @@ export class NxSystemStorageComponent implements OnInit {
             this.LANG.dialogs.buttons.delete(),
             'btn-danger',
             this.LANG.dialogs.buttons.cancel()
-        ).then((response) => {
+        ).then(response => {
             if (response === true) {
                 this.system
                     .removeStorage({ id: storage.storageId })
                     .toPromise()
-                    .then(async(response) => {
+                    .then(async response => {
                         if (response.id) {
                             this.currentStorageState.locations = this.currentStorageState.locations
                                 .filter(({ storageId }) =>

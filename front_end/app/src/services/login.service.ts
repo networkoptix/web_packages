@@ -116,14 +116,14 @@ export class NxLoginService {
             // handle how the dialog was closed
             // required if we need to have dismissible dialog otherwise
             // will raise a JS error ( Uncaught [in promise] )
-            .then((result) => {
+            .then(result => {
                 this.closeResult = `Closed with: ${result}`;
 
                 if (redirectClose && result === 'canceled') {
                     return this.router.navigate([this.CONFIG.redirect.unauthorised]);
                 }
                 return result;
-            }, (reason) => {
+            }, reason => {
                 this.closeResult = 'Dismissed';
                 return reason;
             });
@@ -141,7 +141,7 @@ export class NxLoginService {
                 .pipe(
                     takeUntil(this.done$),
                     take(1),
-                    switchMap((code) => this.handleCode(code))).toPromise();
+                    switchMap(code => this.handleCode(code))).toPromise();
         }
         return Promise.resolve(false);
     }

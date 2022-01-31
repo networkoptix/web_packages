@@ -61,14 +61,14 @@ export class SystemGuard implements CanActivate {
 
         return systemId && currentRoute && this.accountService
             .get()
-            .then((account) => {
+            .then(account => {
                 if (account) {
                     let currSystem = this.systemService.getCurrentSystem();
                     if (!this.settingsService.system) {
                         this.settingsService.system = currSystem;
                     }
 
-                    return new Promise((resolve) => {
+                    return new Promise(resolve => {
                         if (currSystem) {
                             currSystem.update().then(_ => {
                                 resolve(checkPermissionsFor(currSystem));

@@ -70,8 +70,8 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
 
         // Listen to the original select element's 'disabled' attribute
         // to see if the nx-select should be disabled or not
-        this.disabledMutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
+        this.disabledMutationObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
                     this.isDisabled = mutation.oldValue !== '';
                 }

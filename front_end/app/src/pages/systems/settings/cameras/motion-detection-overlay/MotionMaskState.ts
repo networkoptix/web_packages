@@ -62,9 +62,9 @@ export class MotionMaskState {
 
     // Init Methods
     private initialToMaskZones(initial: string, rotate): Area[] {
-        const zones = initial.split(';').map((area) => {
+        const zones = initial.split(';').map(area => {
             const areaTuples = <AreaTuple>(
-                area.split(',').map((numString) => parseInt(numString))
+                area.split(',').map(numString => parseInt(numString))
             );
             return new Area(...areaTuples);
         });
@@ -97,17 +97,17 @@ export class MotionMaskState {
     }
 
     initSensitivityButtons = () => {
-        this.selectionZones.pipe(takeUntil(this.unsub$)).subscribe((zones) => {
+        this.selectionZones.pipe(takeUntil(this.unsub$)).subscribe(zones => {
             if (zones.length && this.sensitivityButtons$.value === false) {
                 this.sensitivityButtons$.next(!!zones.length);
             }
         });
         this.sensitivityButtons$
             .pipe(takeUntil(this.unsub$))
-            .subscribe((sensitivity) => {
+            .subscribe(sensitivity => {
                 const selection = this.selectionZones.value;
                 if (typeof sensitivity === 'number') {
-                    const updatedZones = selection.map((area) => {
+                    const updatedZones = selection.map(area => {
                         area.sensitivity = sensitivity;
                         area.currentSelection = false;
                         return area;
@@ -159,7 +159,7 @@ export class MotionMaskState {
 
     public matrixToZones(maskMatrix: Mask): Area[] {
         const matrix = <(number | false)[][]>(
-            [...maskMatrix].map((row) => [...row])
+            [...maskMatrix].map(row => [...row])
         );
         const zones: Area[] = [];
         const updateZones = (row: number, column: number, sensitivity) => {
@@ -177,7 +177,7 @@ export class MotionMaskState {
                 row + height < maskMatrix.length &&
                 matrix[row + height]
                     .slice(column, column + width)
-                    .every((cell) => cell !== false && cell === sensitivity)
+                    .every(cell => cell !== false && cell === sensitivity)
             ) {
                 // Find height where sensitivity still matches for all cells
                 for (let x = column; x < column + width; x++) {
@@ -200,7 +200,7 @@ export class MotionMaskState {
     }
 
     public addZone(zone: Area, mask: Mask, toggle = false): Mask {
-        const maskCopy = [...mask.map((row) => [...row])];
+        const maskCopy = [...mask.map(row => [...row])];
         const { sensitivity, x, y, width, height, currentSelection } = zone;
         for (let row = y; row < y + height; row++) {
             for (let column = x; column < x + width; column++) {
@@ -240,10 +240,10 @@ export class MotionMaskState {
                 groupPointer++
             ) {
                 const borderingZones = sorted
-                    .filter((zone) => zone.borders(group[groupPointer]));
+                    .filter(zone => zone.borders(group[groupPointer]));
                 group = [...group, ...borderingZones];
                 sorted = sorted.filter(
-                    (zone) => !zone.borders(group[groupPointer])
+                    zone => !zone.borders(group[groupPointer])
                 );
             }
             zoneGroups.push(group);
@@ -259,5 +259,5 @@ export class MotionMaskState {
      * Used for placing sensitivity number indicators.
      */
     public findStartZones = (zones: Area[]) =>
-        this.findZoneGroups(zones).map((group) => group[0]);
+        this.findZoneGroups(zones).map(group => group[0]);
 }

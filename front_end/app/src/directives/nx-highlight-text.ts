@@ -9,12 +9,12 @@ export class HighlightPipe implements PipeTransform {
 
         // eslint-disable-next-line no-useless-escape
         let pattern = search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-        pattern = pattern.split(',').filter((t) => {
+        pattern = pattern.split(',').filter(t => {
             return t.length > 0;
         }).join('|');
 
         const regex = new RegExp(pattern, 'gi');
 
-        return text.replace(regex, (match) => `<span class="highlighted">${match}</span>`);
+        return text.replace(regex, match => `<span class="highlighted">${match}</span>`);
     }
 }

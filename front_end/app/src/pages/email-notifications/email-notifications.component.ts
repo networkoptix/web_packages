@@ -12,7 +12,7 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 
-const getTestEvents = (systemId?) => [
+const getTestEvents = (systemId?: string) => [
     {
         name: 'Custom',
         value: { subject: '', messageHtml: '', messageText: '', attachments: [] }
@@ -169,13 +169,13 @@ export class EmailNotificationsComponent {
         });
     }
 
-    usersToCheckboxes = (users) => users.filter(({
+    usersToCheckboxes = users => users.filter(({
         isEnabled
     }) => isEnabled).map(({
         accountFullName: label, accountEmail: id
     }) => ({ label, id, value: id === this.accountService.email }))
 
-    handleFileDrop = (files) => {
+    handleFileDrop = files => {
         files.forEach(({ fileEntry }) => {
             let filename;
             let mimetype;

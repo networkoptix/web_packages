@@ -129,7 +129,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 showExtensions: true,
                 supportedSubmitMethods: this.getSupportedMethods(), // determines which methods can: make requests/show try it out button
                 maxDisplayedTags: expand === 'full' ? 1 : undefined,
-                requestInterceptor: (request) => {
+                requestInterceptor: request => {
                     this.authenticateRequest(request);
                     if (environment.isLocal) {
                         request.curlOptions = ['--insecure']; // CLOUD-7904
@@ -159,7 +159,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             : ['get', 'trace', 'post', 'delete', 'options', 'head', 'patch']; // below 5.0
     }
 
-    private handlePotentialRTSPRoute = (request) => {
+    private handlePotentialRTSPRoute = request => {
         const urlPath = new URL(request.url).pathname.slice(1);
         const isRTSP = NxUtilsService.isUUID(urlPath) ||  // The only route that starts with uuid is an RTSP route.
                       (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
@@ -172,12 +172,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     }
 
-    private handleRTSPRequest = (request) => {
+    private handleRTSPRequest = request => {
         // replace http with rtsp (for display only, does not actually send an rtsp request)
         request.url = 'rtsp' + request.url.slice(5);
     }
 
-    private authenticateRequest = (request) => {
+    private authenticateRequest = request => {
         const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections[this.APIToolSystemService.currentServerId].generateHeaders();
         if (headers) {
             // 5.0 and up
@@ -190,7 +190,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     }
 
-    private setAuthParam = (request) => {
+    private setAuthParam = request => {
         const systemMediaServerConnections = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections;
         const serverID = this.APIToolSystemService.currentServerId;
         const Url = new URL(request.url);
@@ -204,7 +204,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     // swagger-ui plugin system
     private OnResponsesRenderPlugin = () => ({
         wrapComponents: {
-            responses: (Responses, { React }) => (props) => {
+            responses: (Responses, { React }) => props => {
                 const responses = React.createElement(Responses, props);
                 if (this.APIToolSystemService.preventNextChangeDetection) {
                     this.APIToolSystemService.preventNextChangeDetection = false;
@@ -235,7 +235,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }, 0);
     }
 
-    private addSpinner = (singleAPIRoute) => {
+    private addSpinner = singleAPIRoute => {
         const opblocks = this.document.querySelectorAll('.opblock-summary');
         for (const opblock of opblocks as any) {
             if (opblock.nextElementSibling.tagName !== 'NX-SWAGGER-SPINNER') {

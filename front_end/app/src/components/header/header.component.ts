@@ -265,7 +265,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateBreadcrumbSizes = (wrapper) => this.breadcrumbWidth$.next(
+    updateBreadcrumbSizes = wrapper => this.breadcrumbWidth$.next(
         <number[]>Array.from(
             wrapper.children
         ).map((
@@ -290,7 +290,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
-        this.headerSubscription = this.appState.headerVisibleSubject.subscribe((visible) => {
+        this.headerSubscription = this.appState.headerVisibleSubject.subscribe(visible => {
             this.viewHeader = visible || this.bootstrapProvider.newSystem;
         });
 
@@ -362,7 +362,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.systemCounter = 1;
                     this.system.infoSubject
                         .pipe(untilDestroyed(this))
-                        .subscribe((system) => {
+                        .subscribe(system => {
                             this.systems = [system];
                             this.updateActiveSystem();
                             this.updateActive();
@@ -371,7 +371,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 });
             });
         } else {
-            this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
+            this.systemSubscription = this.systemsService.systemsSubject.subscribe(systems => {
                 if (!systems) {
                     return;
                 }
@@ -442,7 +442,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (this.singleSystem || this.environment.isLocal) { // Special case for a single system - it always active
             this.headerService.activeSystem = this.systems[0];
         } else if (this.systemId) {
-            this.headerService.activeSystem = this.systems.find((system) => {
+            this.headerService.activeSystem = this.systems.find(system => {
                 return this.systemId === system.id;
             });
         } else {

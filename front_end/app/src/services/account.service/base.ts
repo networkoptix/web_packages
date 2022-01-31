@@ -90,7 +90,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected bootstrapProviderService: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
-        languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
+        languageService.translateSubject.subscribe(lang => { this.LANG = lang; });
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;
@@ -99,13 +99,13 @@ export abstract class BaseAccount implements OnDestroy {
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
             .pipe(debounceTime(500), distinctUntilChanged())
-            .subscribe((loginState) => {
+            .subscribe(loginState => {
                 if (!this.loggingOut && loginState === null) {
                     return this.dialogs.expiredSession()
-                        .then((res) => this.logout(res));
+                        .then(res => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
                     this.get()
-                        .then((account) => {
+                        .then(account => {
                             // prevent stale loginState
                             if (account) {
                                 this.startAccountPoll();
@@ -132,7 +132,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.localStorage = injector.get(LocalStorageService);
         this.localStorage.observe(this.CONFIG.oauthStore.verify2fa).pipe(
             filter(() => !!this.tokens)
-        ).subscribe((accessToken) => {
+        ).subscribe(accessToken => {
             if (this.tokens.access_token !== accessToken) {
                 return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
             }
@@ -339,7 +339,7 @@ export abstract class BaseAccount implements OnDestroy {
                             undefined,
                             cancelLabel,
                             ''
-                        ).then((result) => {
+                        ).then(result => {
                             if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
                                 this.logout(true, skipReload);
                                 return true;
@@ -364,7 +364,7 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    private handleCodeError = async (e) => {
+    private handleCodeError = async e => {
         const data = e.error;
         if (data?.error === 'second_factor_required') {
             this.tokens = data;
@@ -382,13 +382,13 @@ export abstract class BaseAccount implements OnDestroy {
         const account = await this.get();
         if (!account || !account.is_authenticated) {
             return this.cloudApi.loginCode(code)
-                .then((res) => {
+                .then(res => {
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
                     this.window.location.reload();
                 })
-                .catch((e) => this.handleCodeError(e)
-                    .then((reload) => reload && this.window.location.reload())
+                .catch(e => this.handleCodeError(e)
+                    .then(reload => reload && this.window.location.reload())
                 ).finally(() => {
                     this.appStateService.ready = true;
                 });
@@ -468,7 +468,7 @@ export abstract class BaseAccount implements OnDestroy {
     protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError((ex) => {
+            catchError(ex => {
                 this.logoutHelper(false);
                 return of(undefined);
             })

@@ -246,7 +246,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 this.setPage(this.params.page || 1, true);
 
                 if (this.params.camera) {
-                    const camera = this.pagedItems.find((camera) => {
+                    const camera = this.pagedItems.find(camera => {
                         return camera.model === this.params.camera;
                     });
                     this.setClickedRow(camera);
@@ -393,7 +393,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         } else if (param === 'isFisheye' ||
                 param === 'isMdSupported' ||
                 param === 'isIoSupported') {
-            byParam = NxUtilsService.byParam((elm) => {
+            byParam = NxUtilsService.byParam(elm => {
                 if (elm[param]) {
                     return 0;
                 }
@@ -435,7 +435,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }
             }, this.sortOrderASC);
         } else {
-            byParam = NxUtilsService.byParam((elm) => {
+            byParam = NxUtilsService.byParam(elm => {
                 return (typeof elm[param] === 'string')
                     ? elm[param].toLowerCase()
                     : elm[param];
@@ -455,10 +455,10 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     filterAllowedParams(arrHeaders, arrParams) {
         // filter 'service' params
-        this.allowedParameters = this.allowedParameters.filter((el) => {
+        this.allowedParameters = this.allowedParameters.filter(el => {
             return !arrParams.includes(el);
         });
-        this.cameraHeaders = this.cameraHeaders.filter((el) => {
+        this.cameraHeaders = this.cameraHeaders.filter(el => {
             return !arrHeaders.includes(el);
         });
         this.showHeaders = this.cameraHeaders;

@@ -67,7 +67,7 @@ export class NxUtilsService {
         if (obj instanceof Map) {
             Array.from(obj, ([key, val]) => result.set(NxUtilsService.deepCopyWithCircularReference(key, hash),
                 NxUtilsService.deepCopyWithCircularReference(val, hash)));
-        } else if (obj instanceof Set) { Array.from(obj, (key) => result.add(NxUtilsService.deepCopyWithCircularReference(key, hash))); }
+        } else if (obj instanceof Set) { Array.from(obj, key => result.add(NxUtilsService.deepCopyWithCircularReference(key, hash))); }
         hash.set(obj, result);
         return Object.assign(result, ...Object.keys(obj).map(
             key => ({ [key]: NxUtilsService.deepCopyWithCircularReference(obj[key], hash) })));
@@ -448,7 +448,7 @@ export class NxUtilsService {
             id: `${target.id}`,
             target: target,
             eventType,
-            handler: (event) => handler(template, event.target)
+            handler: event => handler(template, event.target)
         };
         targetArr.push(newTarget);
         NxUtilsService.createPseudoAnchor(target, eventType, newTarget.handler);
@@ -463,7 +463,7 @@ export class NxUtilsService {
 
     private static createPseudoAnchor(target: HTMLElement, eventType: string, clickHandler: Function) {
         target.classList.add('pseudo-anchor');
-        target.addEventListener(eventType, (event) => clickHandler(event));
+        target.addEventListener(eventType, event => clickHandler(event));
     }
 
     /*

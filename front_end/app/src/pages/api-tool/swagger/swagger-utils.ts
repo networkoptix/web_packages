@@ -109,7 +109,7 @@ const highlight = (line: HTMLElement) => {
 /**
   * Find the line the element is contained in in a code-block/swagger-textarea
  */
-export const findLine = (element) => {
+export const findLine = element => {
     if (element?.classList?.contains('line')) {
         return element;
     }

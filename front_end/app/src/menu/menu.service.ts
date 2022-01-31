@@ -145,7 +145,7 @@ export class NxMenuService implements OnDestroy {
         if (model.query) {
             this.setHighlightPattern(model);
 
-            this.content.forEach((node) => {
+            this.content.forEach(node => {
                 if (searchSubMenus && node.level2?.length) {
                     node.level2.forEach(subNode => {
                         if (subNode.level3?.length) {
@@ -202,7 +202,7 @@ export class NxMenuService implements OnDestroy {
         node: SanitizedLevel1Item,
         subNode?: Level2Item
     ): SanitizedLevel1Item {
-        let haveNode = filteredContent.find((filtered) =>
+        let haveNode = filteredContent.find(filtered =>
             filtered.id === (subNode || node).id
         );
 
@@ -241,7 +241,7 @@ export class NxMenuService implements OnDestroy {
 
     sanitizeContent(content: Level1Item[]): SanitizedLevel1Item[] {
         const clean = NxUtilsService.deepCopy(content);
-        return clean.map((node) => {
+        return clean.map(node => {
             if (node.level3?.length) {
                 node.level3.forEach(item => {
                     if (item.label) {
@@ -265,7 +265,7 @@ export class NxMenuService implements OnDestroy {
 
     cleanMenuContent(content: Level1Item[]): Level1Item[] {
         const clean = NxUtilsService.deepCopy(content);
-        return clean.map((node) => {
+        return clean.map(node => {
             delete node.toggle;
             return node;
         });
@@ -294,14 +294,14 @@ export class NxMenuService implements OnDestroy {
         if (item.label) {
             item.label = item.label.replace(
                 this.regex,
-                (match) => `<span class="highlighted">${match}</span>`
+                match => `<span class="highlighted">${match}</span>`
             );
         }
 
         if (item.additionalText) {
             item.additionalText = item.additionalText.replace(
                 this.regex,
-                (match) => `<span class="highlighted">${match}</span>`
+                match => `<span class="highlighted">${match}</span>`
             );
         }
 

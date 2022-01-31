@@ -88,7 +88,7 @@ describe('NxRibbonComponent', () => {
             );
             fixture.detectChanges();
 
-            service.contextSubject.subscribe((serviceContext) => {
+            service.contextSubject.subscribe(serviceContext => {
                 expect(serviceContext).toEqual(context);
             });
 
@@ -114,7 +114,7 @@ describe('NxRibbonComponent', () => {
             service.hide();
             fixture.detectChanges();
 
-            service.contextSubject.subscribe((serviceContext) => {
+            service.contextSubject.subscribe(serviceContext => {
                 expect(serviceContext).toEqual(context);
             });
 

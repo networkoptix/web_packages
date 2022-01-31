@@ -188,11 +188,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             .pipe(throttle(ev => interval(TIMESTAMP_UPDATE_THROTTLE_MS)))
             .subscribe(this.onPlaybackChange);
         this._routeSubscription = this.route.params
-            .subscribe((params) => this._onRouteChange(params));
+            .subscribe(params => this._onRouteChange(params));
         this._vmsStateSubscription = this.vms.subject
-            .subscribe((vmsState) => this._onVmsStateChange(vmsState));
+            .subscribe(vmsState => this._onVmsStateChange(vmsState));
         this._uxStateSubscription = this.ux.subject
-            .subscribe((clientUxState) => this._onUxStateChange(clientUxState));
+            .subscribe(clientUxState => this._onUxStateChange(clientUxState));
 
         this._animationFrameRequestHandler =
             requestAnimationFrame(() => this._onAnimationFrame());
@@ -214,7 +214,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.$self.classList.add('animated');
         this.availableTransportsAndResolutions$
-            .pipe(filter((TaR) => TaR !== undefined))
+            .pipe(filter(TaR => TaR !== undefined))
             .subscribe((
                 transportsAndResolutions: AvailableTransportsAndResolutions
             ) => {
@@ -230,7 +230,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 const isHlsSupported = Hls.isSupported();
                 this.transports = <PlaybackTransport[]>Object.keys(
                     transportsAndResolutions
-                ).filter((transport) => (
+                ).filter(transport => (
                     transport === 'hls' && !this.isMobile
                         ? isHlsSupported
                         : video.canPlayType(
@@ -239,7 +239,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 ));
             });
 
-        this.transports$.subscribe((transports) => {
+        this.transports$.subscribe(transports => {
             if (!transports.length) {
                 this.selectedTransport = undefined;
                 this.qualities = undefined;
@@ -251,7 +251,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             ];
         });
 
-        this.qualities$.subscribe((qualities) => {
+        this.qualities$.subscribe(qualities => {
             if (!qualities[this.selectedQuality]) {
                 this.selectedQuality = undefined;
             } else {
@@ -278,7 +278,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private set transports (transports) {
-        this.transports$.next(transports.filter((transport) => ['hls', 'webm'].includes(transport)) || []);
+        this.transports$.next(transports.filter(transport => ['hls', 'webm'].includes(transport)) || []);
     }
 
     get selectedTransport (): PlaybackTransport {
@@ -304,7 +304,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         qualities = qualities || {};
         const qualityKeys = Object.keys(qualities);
         this.visibleQualities$.next(
-            qualityKeys.map((quality) => this.qualityToVerbose(quality)) || []
+            qualityKeys.map(quality => this.qualityToVerbose(quality)) || []
         );
         const lowIndex = qualityKeys.includes('low');
         const highIndex = qualityKeys.includes('high');
@@ -392,7 +392,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     protected _restorePlayback (archiveAvailable: boolean = false) {
-        const getQueryParam = (q) => {
+        const getQueryParam = q => {
             // return (this.location.path().match(new RegExp('[?&]' + q + '=([^&]+)')) || [, null])[1];
             return (new URLSearchParams(this.location.path().split('?')[1] || '')).get(q);
         };
@@ -441,7 +441,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this._initSelectedCamera();
             this._restorePlayback();
         } else {
-            this.system.getCameraRecords(this.id, 0, now, 1).then(async (ar) => {
+            this.system.getCameraRecords(this.id, 0, now, 1).then(async ar => {
                 const records = this._extractPeriodsFromServerResponse(ar);
                 this._log('got camera archive range', this.id, ar);
                 if (!ar.error || ar.error !== '0' || !records.length) {
@@ -521,7 +521,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             const now = Date.now();
             const cameraId = this.id;
             this._log('requesting new records', since, now, cameraId, now - since);
-            this.system.getCameraRecords(this.id, since, now, 1).then(async (ar) => {
+            this.system.getCameraRecords(this.id, since, now, 1).then(async ar => {
                 const records = this._extractPeriodsFromServerResponse(ar);
                 if (!ar.error || ar.error !== '0' || !records.length) {
                     this._log('no newly recorded', ar);

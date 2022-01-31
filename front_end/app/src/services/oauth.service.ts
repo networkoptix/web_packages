@@ -54,7 +54,7 @@ export class OauthService {
 
     redirectOauth(state?: string, email?: string, code?: string, accessToken?: string) {
         const { href } = this.window.location;
-        const cleanRedirect = (url) => {
+        const cleanRedirect = url => {
             const [baseUrl, query] = url.split('?');
             const params = new URLSearchParams(query);
             if (params.has('code')) {

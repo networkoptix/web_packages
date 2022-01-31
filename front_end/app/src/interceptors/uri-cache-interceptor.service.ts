@@ -53,7 +53,7 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
         const requestHandle = handler
             .handle(httpRequest)
             .pipe(share())
-            .do((stateEvent) => {
+            .do(stateEvent => {
                 if (stateEvent instanceof HttpResponse) {
                     this.cacheRegistrationService.setData(
                         httpRequest.urlWithParams,

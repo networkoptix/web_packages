@@ -134,7 +134,7 @@ function pasteHandleImages(pasteEvent, editor) {
     let clipContent = pasteEvent.clipboardData.getData('text/html');
     const file = [...pasteEvent.clipboardData.items].find(({ type }) => type === 'image/png');
 
-    const addBase64Image = (b64Image) => {
+    const addBase64Image = b64Image => {
         if (b64Image) {
             const srcAttr = /src="(.*?)"/igm.exec(clipContent);
             const imageSrc = srcAttr ? srcAttr[1] : '';

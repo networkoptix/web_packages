@@ -78,7 +78,7 @@ export class NxDevConsoleEditComponent {
                     this.asset
                 ),
             { ignoreError: true },
-            (res) => {
+            res => {
                 const tempId = this.asset.id;
                 this.asset = res;
                 const isUUID = isNaN(parseInt(tempId) - tempId);

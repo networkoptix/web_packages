@@ -93,8 +93,8 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
             highlightAllCode(element);
         });
 
-        this.attributeMutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
+        this.attributeMutationObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
                 if (mutation.type === 'attributes') {
                     if (mutation.attributeName === 'disabled') {
                         // Listen to the original element's 'disabled' attribute
