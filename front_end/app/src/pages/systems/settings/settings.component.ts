@@ -52,6 +52,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     plugin;
     content: Partial<Content> = {};
+    menuSearchable: boolean;
 
     account: Account;
     system: NxSystem|any;
@@ -196,11 +197,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.menuSearchable = false;
         this.content = {
-            searchableResults: false,
             selectedSection: '', // updated by selectedSectionSubject
             selectedSubSection: '', // updated by selectedSubSectionSubject
-            system: {} as NxSystem, // updated by getSystemInfo
             base: this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
             level1: [
                 {
@@ -424,7 +424,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                                 .subscribe();
                                         }
 
-                                        this.updateMenu(this.system);
+                                        this.updateMenu();
                                     });
 
                                 if (this.connectionSubscription) {
@@ -458,7 +458,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 this.system.infoSubject.subscribe(() => {
                                     this.systemReady();
                                     this.updateAlert();
-                                    this.updateMenu(this.system);
+                                    this.updateMenu();
                                 });
                         });
                     }
@@ -541,10 +541,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    async updateMenu(system: NxSystem) {
+    async updateMenu() {
         this.systemNoAccess = false;
 
-        this.content.system = this.system;
         if (this.system.userManager.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) =>
                 node.id === this.CONFIG.menus.systemSettings.cameras.id
@@ -564,18 +563,20 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return camera.name;
                 }, NxUtilsService.sortASC);
                 this.system.cameras.sort(byParam);
-                camerasNode.level3 = this.system.cameras.map(camera => ({
-                    id: camera.id.replace(/\s|\{|\}/g, ''),
-                    svgIcon: this.getCameraStatusIcon(camera),
-                    isEnabled: camera.status !== 'Offline' &&
-                        camera.status !== 'Unauthorized',
-                    label: camera.name,
-                    indent: true,
-                    path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                    additionalLabel: camera.url.match(
-                        /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
-                    )
-                }));
+                camerasNode.level3 = this.system.cameras.map(
+                    (camera): Level3Item => ({
+                        id: camera.id.replace(/\s|\{|\}/g, ''),
+                        svgIcon: this.getCameraStatusIcon(camera),
+                        disabled: camera.status === 'Offline' ||
+                        camera.status === 'Unauthorized',
+                        label: camera.name,
+                        indent: true,
+                        path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                        additionalLabel: camera.url.match(
+                            /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
+                        )
+                    })
+                );
             } else {
                 camerasNode.level3 = [];
             }
@@ -586,9 +587,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         if (this.system.userManager.permissions.editUsers) {
-            let usersNode = this.content.level1.filter((node) =>
+            let usersNode = this.content.level1.find(node =>
                 node.id === this.CONFIG.menus.systemSettings.users.id
-            )[0];
+            );
 
             if (!usersNode) {
                 usersNode = {
@@ -623,13 +624,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const {
                     cloudUsers,
                     localUsers
+                }: {
+                    cloudUsers: Level3Item[];
+                    localUsers: Level3Item[];
                 } = this.system.users.reduce((result, user) => {
                     const id = NxUtilsService.cleanId(user.id);
                     const node: Level3Item = {
                         additionalLabel: this.LANG.accessRoles[user.role.name]?.label?.() ||
                             user.role.name,
                         id,
-                        isEnabled: user.isEnabled,
+                        disabled: !user.isEnabled,
                         label: user.name || user.email,
                         path: 'users/' + id,
                         svgIcon: 'user'
@@ -708,14 +712,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${NxUtilsService.cleanId(serversNode.level3[0]?.id || '')}`;
             }
         } else {
-            this.content.level1 = this.content.level1.filter((node: any) =>
+            this.content.level1 = this.content.level1.filter(node =>
                 node.id !== this.CONFIG.menus.systemSettings.servers.id
             );
         }
 
-        const adminNode = this.content.level1.filter((node) =>
+        const adminNode = this.content.level1.find(node =>
             node.id === this.CONFIG.menus.systemSettings.admin.id
-        )[0];
+        );
 
         adminNode.level3 = [{
             id: this.CONFIG.menus.systemSettings.general.id,
@@ -743,7 +747,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
-        this.content.searchableResults = (
+        this.menuSearchable = (
             this.system.userManager.permissions.editCameras &&
             this.system.userManager.permissions.isAdmin &&
             this.system.userManager.permissions.editUsers

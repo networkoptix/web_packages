@@ -76,27 +76,22 @@ export class NxMenuService implements OnDestroy {
         return this.selectedSubSectionSubject.getValue();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.selectedSectionSubject.unsubscribe();
         this.selectedSubSectionSubject.unsubscribe();
         this.selectedDetailsSection.unsubscribe();
         this.contentSubject.unsubscribe();
     }
 
-    getItemBy(id: string): SanitizedLevel3Item {
+    getItemBy(id: string): SanitizedLevel3Item | void {
         for (const node of this.content) {
             if (node.level3?.length) {
-                const match = node.level3.filter((item) => {
-                    return item.id === id;
-                });
-
-                if (match.length) {
-                    return match[0];
+                const match = node.level3.find(item => item.id === id);
+                if (match) {
+                    return match;
                 }
             }
         }
-
-        return undefined;
     }
 
     getAdditionalText<T = any>(label: unknown): T {
@@ -136,10 +131,7 @@ export class NxMenuService implements OnDestroy {
         return this.content.map(c => {
             const node = newContent.find(nC => nC.id === c.id)?.level3;
             if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
-                c.level3 = c.level3.map(menuItem => {
-                    const { additionalText, ...item } = menuItem;
-                    return item;
-                });
+                c.level3.forEach(menuItem => delete menuItem.additionalText);
             }
             return c;
         });
@@ -158,11 +150,15 @@ export class NxMenuService implements OnDestroy {
                     node.level2.forEach(subNode => {
                         if (subNode.level3?.length) {
                             const haveNode = this.filterNodesIntoHaveNode(
-                                model, filteredContent, node, subNode
+                                model,
+                                filteredContent,
+                                node,
+                                subNode
                             );
                             if (haveNode?.level3?.length) {
                                 this.addHaveNodeToFilteredContent(
-                                    haveNode, filteredContent
+                                    haveNode,
+                                    filteredContent
                                 );
                             }
                         }
@@ -170,11 +166,14 @@ export class NxMenuService implements OnDestroy {
                 }
                 if (node.level3?.length) {
                     const haveNode = this.filterNodesIntoHaveNode(
-                        model, filteredContent, node
+                        model,
+                        filteredContent,
+                        node
                     );
                     if (haveNode?.level3?.length) {
                         this.addHaveNodeToFilteredContent(
-                            haveNode, filteredContent
+                            haveNode,
+                            filteredContent
                         );
                     }
                 }
@@ -189,7 +188,7 @@ export class NxMenuService implements OnDestroy {
     addHaveNodeToFilteredContent(
         haveNode: Level1Item,
         filteredContent: Level1Item[]
-    ) {
+    ): void {
         // remove separator if last in search result
         if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
             haveNode.level3.pop();
@@ -203,15 +202,21 @@ export class NxMenuService implements OnDestroy {
         node: SanitizedLevel1Item,
         subNode?: Level2Item
     ): SanitizedLevel1Item {
-        let haveNode = filteredContent.find((filtered) => filtered.id === (subNode || node).id);
+        let haveNode = filteredContent.find((filtered) =>
+            filtered.id === (subNode || node).id
+        );
 
         (subNode || node).level3.forEach(item => {
             if (item.id) {
-                const additional = this.getAdditionalText<string>(item.additionalLabel);
+                const additional = this.getAdditionalText<string>(
+                    item.additionalLabel
+                );
 
                 let searchAggregate = item.label || '';
-                searchAggregate += (additional) ? ' ' + additional : '';
-                searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
+                searchAggregate += additional ? ' ' + additional : '';
+                searchAggregate += (model.query.length > 10 && item.id)
+                    ? ' ' + item.id
+                    : '';
 
                 if (this.searchService.findMatch(searchAggregate, model)) {
                     if (!haveNode) {
@@ -266,7 +271,7 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    private setHighlightPattern(model: SearchModel) {
+    private setHighlightPattern(model: SearchModel): void {
         const pattern = (
             model.queryExactMatch ||
             model.queryEndsWith ||

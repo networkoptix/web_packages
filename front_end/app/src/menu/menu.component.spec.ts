@@ -1,65 +1,35 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-    DebugElement,
-    Component,
-    Input,
-    Output,
-    EventEmitter
-} from '@angular/core';
+import { ElementRef } from '@angular/core';
 import {
     ComponentFixture,
     inject,
     TestBed,
     waitForAsync
 } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider } from 'ng-mocks';
-import { BehaviorSubject } from 'rxjs';
+import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 
+import { NxSearchComponent } from '@components/search/search.component';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config';
-import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSearchService } from '@services/search.service';
 import { WINDOW } from '@services/window-provider';
-import {
-    getMockTranslations,
-    HelperMockProvider
-} from '@src/_mocks/helpers.test';
 import { NxSafePipe } from '@src/pipes/nx-safe';
 
 import { NxLevel1ItemComponent } from './level-1/level-1-item.component';
 import { NxLevel3ItemComponent } from './level-3/level-3-item.component';
 import { NxMenuComponent } from './menu.component';
 import { NxMenuService } from './menu.service';
-
-@Component({
-    selector: 'nx-search',
-    template: '<div></div>'
-})
-class MockSearchComponent {
-    @Output() ngModelChange = new EventEmitter();
-    @Input() ngModel;
-    @Output() onFocus = new EventEmitter();
-    @Output() onFocusOut = new EventEmitter();
-}
+import type { Content } from './menu.types';
 
 describe('NxMenuComponent', () => {
     let component: NxMenuComponent;
     let fixture: ComponentFixture<NxMenuComponent>;
-    let el: DebugElement;
+    let el: ElementRef<HTMLElement>;
 
-    const configMock = { getConfig: () => nxConfig };
-    const langMock = getMockTranslations();
-
-    const routeMock = {
-        queryParams: new BehaviorSubject({})
-    };
-
-    const menuContent = {
+    const menuContent: Content = {
         base: '/systems/23325fac-434e-4fe5-b254-8d7e4f7522d0',
         level1: [
             {
@@ -73,11 +43,13 @@ describe('NxMenuComponent', () => {
                         id: 'general',
                         label: 'General',
                         path: '/'
-                    }, {
+                    },
+                    {
                         id: 'licenses',
                         label: 'Licenses',
                         path: 'licenses'
-                    }]
+                    }
+                ]
             },
             {
                 id: 'cameras',
@@ -110,13 +82,12 @@ describe('NxMenuComponent', () => {
                 level3: []
             }
         ],
-        searchableResults: true,
         selectedDetailsSection: 'general',
         selectedSection: 'admin',
         selectedSubSection: ''
     };
 
-    const menuContentFull = {
+    const menuContentFull: Content = {
         base: '/systems/23325fac-434e-4fe5-b254-8d7e4f7522d0',
         level1: [
             {
@@ -130,11 +101,13 @@ describe('NxMenuComponent', () => {
                         id: 'general',
                         label: 'General',
                         path: '/'
-                    }, {
+                    },
+                    {
                         id: 'licenses',
                         label: 'Licenses',
                         path: 'licenses'
-                    }]
+                    }
+                ]
             },
             {
                 id: 'cameras',
@@ -145,8 +118,8 @@ describe('NxMenuComponent', () => {
                     {
                         id: 'f2265688-130d-2535-0e25-5d5437ffe6bc',
                         svgIcon: 'camera_unauthorized',
-                        isEnabled: false,
-                        label: '🐛 ',
+                        disabled: true,
+                        label: '🐛',
                         indent: true,
                         path: 'cameras/f2265688-130d-2535-0e25-5d5437ffe6bc',
                         additionalLabel: ['192.168.5.100']
@@ -154,7 +127,7 @@ describe('NxMenuComponent', () => {
                     {
                         id: '28211a91-4d61-e6b9-da49-172c127da68b',
                         svgIcon: 'camera_recording',
-                        isEnabled: true,
+                        disabled: false,
                         label: '💉',
                         indent: true,
                         path: 'cameras/28211a91-4d61-e6b9-da49-172c127da68b',
@@ -163,7 +136,7 @@ describe('NxMenuComponent', () => {
                     {
                         id: '786086a2-0cef-a2db-7c76-eba5207927ea',
                         svgIcon: '',
-                        isEnabled: true,
+                        disabled: false,
                         label: '😷',
                         indent: true,
                         path: 'cameras/786086a2-0cef-a2db-7c76-eba5207927ea',
@@ -172,7 +145,7 @@ describe('NxMenuComponent', () => {
                     {
                         id: '162ff0a3-32fd-e049-f037-2ee378df5a8b',
                         svgIcon: 'camera_unauthorized',
-                        isEnabled: false,
+                        disabled: true,
                         label: '🦆',
                         indent: true,
                         path: 'cameras/162ff0a3-32fd-e049-f037-2ee378df5a8b',
@@ -181,7 +154,7 @@ describe('NxMenuComponent', () => {
                     {
                         id: 'b9544f11-e84a-9c1d-c58d-320d6898f9bd',
                         svgIcon: 'camera_recording',
-                        isEnabled: true,
+                        disabled: false,
                         label: '🦠',
                         indent: true,
                         path: 'cameras/b9544f11-e84a-9c1d-c58d-320d6898f9bd',
@@ -190,7 +163,7 @@ describe('NxMenuComponent', () => {
                     {
                         id: '2375d7f9-4372-adc2-07a4-ade8ff55052e',
                         svgIcon: 'camera_unauthorized',
-                        isEnabled: false,
+                        disabled: true,
                         label: '🪲',
                         indent: true,
                         path: 'cameras/2375d7f9-4372-adc2-07a4-ade8ff55052e',
@@ -199,7 +172,7 @@ describe('NxMenuComponent', () => {
                     {
                         id: '1b8be533-0015-766a-9587-06af266b5881',
                         svgIcon: 'camera_unauthorized',
-                        isEnabled: false,
+                        disabled: true,
                         label: '🪳',
                         indent: true,
                         path: 'cameras/1b8be533-0015-766a-9587-06af266b5881',
@@ -225,7 +198,7 @@ describe('NxMenuComponent', () => {
                     {
                         additionalLabel: 'Administrator',
                         id: '2ab67cb3-002a-4ab9-abb3-80978a7f6dff',
-                        isEnabled: true,
+                        disabled: false,
                         label: 'ckang@networkoptix.com',
                         path: 'users/2ab67cb3-002a-4ab9-abb3-80978a7f6dff',
                         svgIcon: '',
@@ -234,7 +207,7 @@ describe('NxMenuComponent', () => {
                     {
                         additionalLabel: 'Administrator',
                         id: '19334c4c-7dd6-49e9-bbec-efd484ce3d3e',
-                        isEnabled: true,
+                        disabled: false,
                         label: 'czach@networkoptix.com',
                         path: 'users/19334c4c-7dd6-49e9-bbec-efd484ce3d3e',
                         svgIcon: '',
@@ -243,7 +216,7 @@ describe('NxMenuComponent', () => {
                     {
                         additionalLabel: 'Administrator',
                         id: '9a37fa8c-7603-458b-819a-4087c49c046f',
-                        isEnabled: true,
+                        disabled: false,
                         label: 'iartemchuk@networkoptix.com',
                         path: 'users/9a37fa8c-7603-458b-819a-4087c49c046f',
                         svgIcon: '',
@@ -252,7 +225,7 @@ describe('NxMenuComponent', () => {
                     {
                         additionalLabel: 'Administrator',
                         id: 'fe193403-3358-4996-a3bd-6622870a45df',
-                        isEnabled: true,
+                        disabled: false,
                         label: 'nhartleb@networkoptix.com',
                         path: 'users/fe193403-3358-4996-a3bd-6622870a45df',
                         svgIcon: '',
@@ -261,7 +234,7 @@ describe('NxMenuComponent', () => {
                     {
                         additionalLabel: 'Administrator',
                         id: '921e06e2-592f-45dd-8605-35e054d0de11',
-                        isEnabled: true,
+                        disabled: false,
                         label: 'rbarsegian@networkoptix.com',
                         path: 'users/921e06e2-592f-45dd-8605-35e054d0de11',
                         svgIcon: '',
@@ -270,7 +243,7 @@ describe('NxMenuComponent', () => {
                     {
                         additionalLabel: 'Owner',
                         id: 'c5720c31-97d8-442b-9583-da050cb6ce8c',
-                        isEnabled: true,
+                        disabled: false,
                         label: 'ttsolov@networkoptix.com',
                         path: 'users/c5720c31-97d8-442b-9583-da050cb6ce8c',
                         svgIcon: '',
@@ -294,7 +267,6 @@ describe('NxMenuComponent', () => {
                 }]
             }
         ],
-        searchableResults: true,
         selectedDetailsSection: 'general',
         selectedSection: 'admin',
         selectedSubSection: ''
@@ -304,26 +276,24 @@ describe('NxMenuComponent', () => {
         TestBed
             .configureTestingModule({
                 imports: [
-                    AngularSvgIconModule.forRoot(),
-                    HttpClientTestingModule,
+                    MockModule(AngularSvgIconModule),
                     RouterTestingModule,
-                    TranslateModule.forRoot()
+                    TranslateModule.forRoot(),
                 ],
                 declarations: [
                     NxMenuComponent,
                     NxLevel1ItemComponent,
                     NxLevel3ItemComponent,
                     NxSafePipe,
-                    MockSearchComponent
+                    MockComponent(NxSearchComponent),
                 ],
                 providers: [
-                    new HelperMockProvider(ActivatedRoute, routeMock),
-                    new HelperMockProvider(NxApplyService, {}),
-                    new HelperMockProvider(NxConfigService, configMock),
-                    new HelperMockProvider(NxLanguageProviderService, langMock),
+                    MockProvider(NxApplyService),
+                    MockProvider(NxConfigService),
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(WINDOW),
                     NxSearchService,
                     NxMenuService,
-                    MockProvider(WINDOW),
                 ]
             })
             .compileComponents();
@@ -342,29 +312,10 @@ describe('NxMenuComponent', () => {
     });
 
     it('should show placeholder', () => {
-        const placeholder = el.nativeElement.querySelector('.nx-menu-placeholder');
+        const placeholder = el.nativeElement
+            .querySelector<HTMLDivElement>('.nx-menu-placeholder');
         expect(placeholder).toBeTruthy();
-        expect(placeholder.innerHTML).toBe('Nothing found');
-    });
-
-    it('should detect missing searchable input', () => {
-        component.searchable = undefined;
-        component.ngOnInit();
-        expect(component.isSearchable).toBeFalse();
-
-        // *******************************************
-        component.searchable = false;
-        component.ngOnInit();
-        expect(component.isSearchable).toBeFalse();
-    });
-
-    it('should set searchable', () => {
-        component.searchable = true;
-        component.ngOnInit();
-        expect(component.isSearchable).toBeTrue();
-
-        fixture.detectChanges();
-        expect(el.nativeElement.querySelector('nx-search')).toBeTruthy();
+        expect(placeholder.innerText).toBe('Nothing found');
     });
 
     describe('with full menu content', () => {
@@ -403,7 +354,7 @@ describe('NxMenuComponent', () => {
                     const adminNodeIcon = adminNodeContainer.querySelector('nx-level-1-item a .menu-level-1-icon svg-icon');
 
                     expect(adminNodeLink.className).toContain('ellipsis selected');
-                    expect(adminNodeText.innerHTML.replace(/<!--(.*?)-->/g, '')).toBe('System Administration');
+                    expect(adminNodeText.innerText).toBe('System Administration');
                     expect(adminNodeIcon).toBeTruthy();
                 });
 
@@ -418,20 +369,24 @@ describe('NxMenuComponent', () => {
                     const adminNodeContainer = el.nativeElement.querySelector('.nx-menu .level-1-container');
                     const adminNodeLevel3 = adminNodeContainer.querySelectorAll('nx-level-3-item');
                     const general = adminNodeLevel3[0].querySelector('a');
+                    const { innerText: label } = general
+                        .querySelector<HTMLSpanElement>('.menu-level-3-label');
 
                     expect(general.className).toContain('selected');
                     expect(general.id).toBe('general');
-                    expect(general.querySelector('.menu-level-3-label').innerHTML).toBe('General');
+                    expect(label).toBe('General');
                 });
 
                 it('should have level3 "Licenses"', () => {
                     const adminNodeContainer = el.nativeElement.querySelector('.nx-menu .level-1-container');
                     const adminNodeLevel3 = adminNodeContainer.querySelectorAll('nx-level-3-item');
                     const licenses = adminNodeLevel3[1].querySelector('a');
+                    const { innerText: label } = licenses
+                        .querySelector<HTMLSpanElement>('.menu-level-3-label');
 
                     expect(licenses.className).not.toContain('selected');
                     expect(licenses.id).toBe('licenses');
-                    expect(licenses.querySelector('.menu-level-3-label').innerHTML).toBe('Licenses');
+                    expect(label).toBe('Licenses');
                 });
 
                 it('should filter items',
@@ -439,7 +394,7 @@ describe('NxMenuComponent', () => {
                         component.searchable = true;
                         component.menuModel.query = '192.168.5.10';
                         component.searchMode = true;
-                        component.isSearchable = true;
+                        component.searchable = true;
                         searchService.getMatchPatterns(component.menuModel);
                         component.modelChanged(component.menuModel);
 

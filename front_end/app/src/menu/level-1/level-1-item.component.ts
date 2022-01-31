@@ -45,19 +45,17 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.itemPath = this.base;
-        this.itemPath += (this.item.path !== '')
-            ? '/' + this.item.path
-            : '';
+        this.itemPath += (this.item.path !== '') ? `/${this.item.path}` : '';
         this._toggle = this.item.toggle || false;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges): void {
         if (changes.base?.currentValue) {
             this.itemPath = changes.base.currentValue;
             this.itemPath += (this.item.path !== '')
-                ? '/' + this.item.path
+                ? `/${this.item.path}`
                 : '';
         }
 
@@ -69,19 +67,23 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
         if (changes.item?.currentValue) {
             if (this.searchMode) {
-                this._searchableItemsLength =
-                    changes.item.currentValue.level3.filter((itm) => !itm.horizontal).length;
+                this._searchableItemsLength = changes.item.currentValue.level3
+                    .filter(itm => !itm.horizontal)
+                    .length;
                 this._toggle = changes.item.currentValue.toggle;
             }
         }
     }
 
-    menuClick(sectionId: string) {
+    menuClick(sectionId: string): void {
         if (!this.searchMode) {
             this.menuService.section = sectionId;
             if (this.itemPath) {
                 this.router
-                    .navigate([this.itemPath], { queryParams: { search: this.item.query } })
+                    .navigate(
+                        [this.itemPath],
+                        { queryParams: { search: this.item.query } }
+                    )
                     .catch((ex) => console.error(ex));
             }
         } else {
@@ -89,7 +91,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
         }
     }
 
-    toggleNode() {
+    toggleNode(): void {
         this._type = this._toggle ? 'arrow_collapse' : 'arrow_expand';
         this._toggle = !this._toggle;
         this.toggle.emit(this._toggle);

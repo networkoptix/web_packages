@@ -3,10 +3,10 @@ import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { NxSearchService } from '@services/search.service';
 
 import { NxMenuService } from './menu.service';
-import type { SanitizedLevel3Item } from './menu.types';
+import type { SanitizedLevel1Item, SanitizedLevel3Item } from './menu.types';
 
 describe('NxMenuService', () => {
-    const menuContent = [
+    const menuContent: SanitizedLevel1Item[] = [
         {
             id: 'admin',
             svg: 'systems',
@@ -35,7 +35,7 @@ describe('NxMenuService', () => {
             level3: [{
                 id: 'f2265688-130d-2535-0e25-5d5437ffe6bc',
                 svgIcon: 'camera_unauthorized',
-                isEnabled: false,
+                disabled: true,
                 label: '🐛 ',
                 indent: true,
                 path: 'cameras/f2265688-130d-2535-0e25-5d5437ffe6bc',
@@ -44,7 +44,7 @@ describe('NxMenuService', () => {
             {
                 id: '28211a91-4d61-e6b9-da49-172c127da68b',
                 svgIcon: 'camera_recording',
-                isEnabled: true,
+                disabled: false,
                 label: '💉',
                 indent: true,
                 path: 'cameras/28211a91-4d61-e6b9-da49-172c127da68b',
@@ -53,7 +53,7 @@ describe('NxMenuService', () => {
             {
                 id: '786086a2-0cef-a2db-7c76-eba5207927ea',
                 svgIcon: '',
-                isEnabled: true,
+                disabled: false,
                 label: '😷',
                 indent: true,
                 path: 'cameras/786086a2-0cef-a2db-7c76-eba5207927ea',
@@ -62,7 +62,7 @@ describe('NxMenuService', () => {
             {
                 id: '162ff0a3-32fd-e049-f037-2ee378df5a8b',
                 svgIcon: 'camera_unauthorized',
-                isEnabled: false,
+                disabled: true,
                 label: '🦆',
                 indent: true,
                 path: 'cameras/162ff0a3-32fd-e049-f037-2ee378df5a8b',
@@ -71,7 +71,7 @@ describe('NxMenuService', () => {
             {
                 id: 'b9544f11-e84a-9c1d-c58d-320d6898f9bd',
                 svgIcon: 'camera_recording',
-                isEnabled: true,
+                disabled: false,
                 label: '🦠',
                 indent: true,
                 path: 'cameras/b9544f11-e84a-9c1d-c58d-320d6898f9bd',
@@ -80,7 +80,7 @@ describe('NxMenuService', () => {
             {
                 id: '2375d7f9-4372-adc2-07a4-ade8ff55052e',
                 svgIcon: 'camera_unauthorized',
-                isEnabled: false,
+                disabled: true,
                 label: '🪲',
                 indent: true,
                 path: 'cameras/2375d7f9-4372-adc2-07a4-ade8ff55052e',
@@ -89,7 +89,7 @@ describe('NxMenuService', () => {
             {
                 id: '1b8be533-0015-766a-9587-06af266b5881',
                 svgIcon: 'camera_unauthorized',
-                isEnabled: false,
+                disabled: true,
                 label: '🪳',
                 indent: true,
                 path: 'cameras/1b8be533-0015-766a-9587-06af266b5881',
@@ -112,7 +112,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Owner',
                     id: '99cbc715-539b-4bfe-856f-799b45b69b1e',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'admin',
                     path: 'users/99cbc715-539b-4bfe-856f-799b45b69b1e',
                     svgIcon: 'user'
@@ -120,7 +120,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Live Viewer',
                     id: 'fed50f90-c3a1-4178-9786-9e10a64d3eb6',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'liveviewer',
                     path: 'users/fed50f90-c3a1-4178-9786-9e10a64d3eb6',
                     svgIcon: 'user'
@@ -129,7 +129,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Administrator',
                     id: 'a7e2631e-389d-01e7-131f-9ecdee4e0aad',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'ckang@networkoptix.com',
                     path: 'users/a7e2631e-389d-01e7-131f-9ecdee4e0aad',
                     svgIcon: '',
@@ -138,7 +138,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Administrator',
                     id: '329a88b1-df06-2871-5cde-15a50be17743',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'czach@networkoptix.com',
                     path: 'users/329a88b1-df06-2871-5cde-15a50be17743',
                     svgIcon: '',
@@ -147,7 +147,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Administrator',
                     id: '992b3a08-8823-aa10-fef0-5c6abe8b58fc',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'iartemchuk@networkoptix.com',
                     path: 'users/992b3a08-8823-aa10-fef0-5c6abe8b58fc',
                     svgIcon: '',
@@ -156,7 +156,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Administrator',
                     id: '1ba9a833-0885-9649-8f1f-8400edf48868',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'nhartleb@networkoptix.com',
                     path: 'users/1ba9a833-0885-9649-8f1f-8400edf48868',
                     svgIcon: '',
@@ -165,7 +165,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Administrator',
                     id: 'f6209ae5-2047-a99a-b4e8-a0e2d76ef25c',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'rbarsegian@networkoptix.com',
                     path: 'users/f6209ae5-2047-a99a-b4e8-a0e2d76ef25c',
                     svgIcon: '',
@@ -174,7 +174,7 @@ describe('NxMenuService', () => {
                 {
                     additionalLabel: 'Owner',
                     id: 'ab4a824b-3f71-324a-652e-62b71c3265c1',
-                    isEnabled: true,
+                    disabled: false,
                     label: 'ttsolov@networkoptix.com',
                     path: 'users/ab4a824b-3f71-324a-652e-62b71c3265c1',
                     svgIcon: '',

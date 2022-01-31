@@ -6,7 +6,7 @@ import {
     SimpleChanges,
     OnDestroy
 } from '@angular/core';
-import { Router, Params } from '@angular/router';
+import { Params } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
@@ -34,7 +34,6 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
 
     itemPath: string;
-    isEnabled: boolean;
     menuNavItemId: string;
     queryParams: Params = {};
 
@@ -44,34 +43,29 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        private router: Router,
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
-        this.navItemSubscription = this.menuService.navItemSubject.subscribe(() => {
-            this.menuNavItemId = this.menuService.navItemId;
-        });
+    ngOnInit(): void {
+        this.navItemSubscription = this.menuService.navItemSubject.subscribe(
+            () => { this.menuNavItemId = this.menuService.navItemId; }
+        );
     }
 
     ngOnDestroy(): void {}
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges): void {
         if (changes.base?.currentValue) {
             this.itemPath = this.base;
         }
         if (changes.item?.currentValue) {
             this.itemPath = this.base;
             this.itemPath += (changes.item.currentValue.path !== '')
-                ? '/' + changes.item.currentValue.path
+                ? `/${changes.item.currentValue.path}`
                 : '';
             this.queryParams = changes.item.currentValue.query;
-            this.isEnabled =
-                (changes.item.currentValue.isEnabled === undefined)
-                    ? true
-                    : changes.item.currentValue.isEnabled;
 
             if (!changes.item.currentValue.additionalText) {
                 this.item.additionalText = this.menuService.getAdditionalText(
@@ -81,7 +75,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    setNavIdx(item: Partial<Level3Item>) {
+    setNavIdx(item: Partial<Level3Item>): void {
         this.menuService.hoverItemId = item.id;
     }
 }

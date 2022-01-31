@@ -2,7 +2,7 @@
     class="menu-level-3 alternative"
     [ngClass]="{
         'selected': selected,
-        'item-disabled': !isEnabled,
+        'item-disabled': item.disabled,
         'focus': menuNavItemId === item.id
     }"
     tabindex="{{ selected ? '-1': undefined }}"
@@ -29,18 +29,12 @@
             class="menu-level-3-label user"
             [innerHTML]="item.label | safe: 'html'"
             [ngClass]="{
-                'indent': item.indent && !item.icon && !item.svgIcon,
-                'disabled': item.disabled
+                'indent': item.indent && !item.icon && !item.svgIcon
             }"
         ></span>
-        <span
-            class="menu-level-3-additional"
-            *ngIf="item.additionalText"
-            [innerHTML]="(
-                '<span class=\'ml-1 mr-1\'>&ndash;</span>' +
-                item.additionalText
-            ) | safe: 'html'"
-            [ngClass]="{ 'disabled': item.disabled }"
-        ></span>
+        <span *ngIf="item.additionalText" class="menu-level-3-additional">
+            <span class="ml-1 mr-1">&ndash;</span>
+            <span [outerHTML]="item.additionalText | safe: 'html'"></span>
+        </span>
     </div>
 </a>

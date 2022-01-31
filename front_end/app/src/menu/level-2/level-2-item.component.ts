@@ -18,22 +18,16 @@ export class NxLevel2ItemComponent implements OnInit {
     @Input() selected: boolean;
 
     itemPath: string;
-    isEnabled: boolean;
 
-    constructor(private menuService: NxMenuService) {
-    }
+    constructor(private menuService: NxMenuService) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.itemPath = this.base;
-        this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
-        this.isEnabled = this.item.isEnabled === undefined
-            ? true
-            : this.item.isEnabled;
+        this.itemPath += (this.item.path !== '') ? `/${this.item.path}` : '';
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges): void {
         if (changes.item?.currentValue) {
-            this.isEnabled = changes.item.currentValue.isEnabled;
             this.item.additionalText = this.menuService.getAdditionalText(
                 changes.item.currentValue.additionalLabel
             );

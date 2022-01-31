@@ -1,5 +1,5 @@
 <nx-search
-    *ngIf="isSearchable"
+    *ngIf="searchable"
     (ngModelChange)="modelChanged($event)"
     [ngModel]="menuModel.query"
     (onFocusOut)="resetNav()"

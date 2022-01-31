@@ -1,7 +1,6 @@
 import type { Params } from '@angular/router';
 
 import type { SearchModel } from '@services/search.service';
-import type { NxSystem } from '@services/system.service';
 
 export interface Content {
     base: string;
@@ -9,9 +8,6 @@ export interface Content {
     selectedSubSection?: string;
     selectedDetailsSection?: string;
     level1: Level1Item[];
-
-    searchableResults?: boolean;
-    system?: NxSystem;
 }
 
 export interface Level1Item {
@@ -34,7 +30,7 @@ interface Alert {
 }
 
 // NxMenuService.sanitizeContent()
-export type SanitizedLevel1Item = Omit<Level1Item, 'level3'> & {
+export interface SanitizedLevel1Item extends Level1Item {
     level3?: SanitizedLevel3Item[];
 }
 
@@ -45,7 +41,7 @@ export interface Level2Item {
     level3?: SanitizedLevel3Item[];
 
     path?: string;
-    isEnabled?: boolean;
+    disabled?: boolean;
     additionalText?: string;
     query?: SearchModel;
     icon?: string;
@@ -66,21 +62,19 @@ export interface Level3Item {
     additionalLabel?: string | string[];
     additionalText?: string | string[];
     subNode?: Level1Item | Level2Item;
-    horizontal?: boolean;
     icon?: string;
     svgIcon?: string;
     indent?: boolean;
-    disabled?: boolean;
     svg?: string;
-    isEnabled?: boolean;
+    disabled?: boolean;
+
+    horizontal?: true;
+    // Used to get a horizontal divider (See menu.component.html)
 }
 
 // NxMenuService.sanitizeContent()
-export type SanitizedLevel3Item = Omit<
-    Level3Item,
-    'label' | 'additionalLabel' | 'additionalText'
-> & {
+export interface SanitizedLevel3Item extends Level3Item {
     label: string;
-    additionalLabel?: string; // Sanitized
-    additionalText?: string; // Sanitized
+    additionalLabel?: string;
+    additionalText?: string;
 }
