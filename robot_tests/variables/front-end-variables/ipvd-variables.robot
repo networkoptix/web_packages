@@ -82,8 +82,8 @@ ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
 #IPVD Export
 ${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
-${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
-${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//span[@id="request"]
+${IPVD SUBMIT A REQUEST}              //ipvd//span[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
 ${IPVD SEND DEVICE FEEDBACK}          //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']
 ${IPVD FEEDBACK TITLE}                ${IPVD FEEDBACK}//h1

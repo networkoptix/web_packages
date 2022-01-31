@@ -60,7 +60,7 @@ Force Tags        Threaded
     Validate on IPVD page
 
     Log    Step 6 - Verify IPVD feedback link opens correct dialog
-    Click Link    ${IPVD SUBMIT A REQUEST LINK}
+    Click Element    ${IPVD SUBMIT A REQUEST LINK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
 
 4. Text search correctly finds Manufacturers
