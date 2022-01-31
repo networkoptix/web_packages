@@ -8,12 +8,12 @@ import {
     fakeAsync
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { describe, expect, jest, beforeEach, it } from '@jest/globals';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxGenericDropdown } from './dropdown.component';
 
@@ -66,16 +66,16 @@ describe('NxGenericDropdown', () => {
             }
         };
         const configSpy = {
-            getConfig: jest.fn(() => {
+            getConfig: () => {
                 return {
                     icons: {
                         dirSectionPlaceholder: '/static/images/placeholders/section/'
                     }
                 };
-            })
+            }
         };
         TestBed.configureTestingModule({
-            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule],
+            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule, PipesModule],
             declarations: [NxGenericDropdown, NxArrowNavDirective],
             providers: [
                 { provide: NxLanguageProviderService, useValue: translateSpy },
@@ -86,6 +86,7 @@ describe('NxGenericDropdown', () => {
                 fixture = TestBed.createComponent(NxGenericDropdown);
                 component = fixture.componentInstance;
                 component.items = dropdownItems.slice();
+                component.allowHTML = true;
                 el = fixture.debugElement;
             })
             .catch(err => console.error(err));
@@ -166,6 +167,15 @@ describe('NxGenericDropdown', () => {
         const helpClass = el.queryAll(By.css('.additional-help'));
         expect(helpClass.length).toBe(0);
     });
+
+    it('should set show to true on dropdown button click', fakeAsync(() => {
+        component.show = false;
+        const btnDropdownToggle = el.queryAll(By.css('.btn-dropdown-toggle'));
+        click(btnDropdownToggle[0]);
+        fixture.detectChanges();
+        tick();
+        expect(component.show).toBeTruthy();
+    }));
 
     it('should show dropdown-menu if show = true', () => {
         component.show = true;
