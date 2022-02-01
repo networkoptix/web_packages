@@ -61,6 +61,7 @@
               "app/language_i18n.json",
               "app/language.json",
               "app/languages.json",
+              "app/supported_languages.json",
               "app/robots.txt"
             ],
             "styles": [

@@ -31,9 +31,9 @@ loop expanders
     Wait Until Element Is Visible    ${RELEASE NUMBER}
     ${first number}    Get Text    ${RELEASE NUMBER}
     #create an element to reference that will always refer to elements in the first section of each tab
-    ${first section}    Set Variable If    ${FULL}==False    //div[contains(@class,"active")]//h1[contains(text(),'${first number}')]
+    ${first section}    Set Variable If    ${FULL}==False    //div//h1[contains(text(),'${first number}')]
     #get all or just first section
-    ${expandables}    Run Keyword If    ${FULL}==True    Get WebElements    //div[contains(@class,"active")]//div/a
+    ${expandables}    Run Keyword If    ${FULL}==True    Get WebElements    //nx-release//div/a
     ...    ELSE    Get WebElements    ${first section}/../..//div/a
     Run Keyword Unless    ${expandables}    Fail    Expandables was empty
     #open the expanders

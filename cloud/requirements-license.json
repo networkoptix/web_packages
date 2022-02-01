@@ -278,7 +278,7 @@
     },
     "Django": {
         "name": "Django",
-        "version": "2.2.25",
+        "version": "2.2.26",
         "webLinks": [
             "https://www.djangoproject.com/",
             "https://github.com/django/django"
@@ -919,7 +919,7 @@
     },
     "numpy": {
         "name": "NumPy",
-        "version": "1.16.6",
+        "version": "1.22.0",
         "webLinks": [
             "https://numpy.org/"
         ],
@@ -965,7 +965,7 @@
     },
     "Pillow": {
         "name": "Pillow",
-        "version": "8.2.0",
+        "version": "9.0.0",
         "webLinks": [
             "https://python-pillow.org/",
             "https://github.com/python-pillow/Pillow"

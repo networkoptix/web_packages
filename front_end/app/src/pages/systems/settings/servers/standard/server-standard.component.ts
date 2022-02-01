@@ -486,15 +486,15 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         ) {
             this.ipPortWatcher.value = port;
         }
+        this.applyService.unsetInvalidField('port');
         if (this.ipPortWatcher.value === null) {
             this.applyService.setInvalidField('port');
-            return;
         } else if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
+            this.applyService.setInvalidField('port');
             this.applyService.setWarn(this.LANG.servers.portWarning?.());
         } else {
             this.applyService.setWarn('');
         }
-        this.applyService.unsetInvalidField('port');
     }
 
     private setSystemStorageChosen(storage: DropdownStorage): void {

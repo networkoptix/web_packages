@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Storage Suite Setup
 #Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
 Test Teardown     Restart
-Suite Teardown    Storage Suite Teardown
+Suite Teardown    Run Keyword and Warn on Failure   Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***

@@ -224,7 +224,7 @@ function build_webadmin_locally() {
 
 function local_build() {
     VERSION=$1
-    PORT=$2
+    PORTS="$2"
     COPY=$3
     CLOUD_HOST=$4
     BUILD_DIR=~/Desktop/build
@@ -239,10 +239,14 @@ function local_build() {
     echo "Build mediaserver"
     build_mediaserver_image $VERSION.deb $VERSION $COPY
     echo "Run mediaserver"
-    echo "Starting mediaserver $PORT"
-    run_mediaserver $VERSION $PORT $CLOUD_HOST
-    sleep 10
-    open https://localhost:$PORT
+
+    for PORT in $PORTS
+    do
+        echo "Starting mediaserver $PORT"
+        run_mediaserver $VERSION $PORT $CLOUD_HOST
+        sleep 10
+        open https://localhost:$PORT
+    done
 }
 
 function start_https_tunnel() {
@@ -409,9 +413,23 @@ do
         run_local_servers)
             VERSION=$2
             PORTS="$3"
-            stop_mediaserver
-            build_mediaserver_image $VERSION.deb $VERSION
-            run_mediaserver $VERSION $PORTS
+            LOCAL=$4
+            SKIP_BUILD=$5
+            CLOUD_HOST="cloud-test.hdw.mx"
+
+            if [ "$LOCAL" == "true" ]; then
+                build_webadmin_locally
+                local_build $VERSION "$PORTS" copy $CLOUD_HOST
+            else
+                stop_mediaserver
+                if [ "$SKIP_BUILD" != "true" ]; then
+                    build_mediaserver_image $VERSION.deb $VERSION
+                fi
+                run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
+            fi
+
+            python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
+            break
             ;;
         install_cli)
             install_cli

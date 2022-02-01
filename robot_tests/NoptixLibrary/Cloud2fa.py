@@ -4,7 +4,7 @@ from pyotp import *
 from PIL import Image
 from pyzbar.pyzbar import decode
 
-class Cloud2fa(object):
+class Cloud2fa:
     def get_2fa_verification_code(self, key):
         totp = TOTP(key)
         token = totp.now()

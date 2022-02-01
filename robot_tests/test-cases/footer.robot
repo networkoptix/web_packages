@@ -1,5 +1,4 @@
 *** Settings ***
-Library           ../NoptixLibrary/__init__.py
 Resource          ../resource.robot
 Suite Setup       Footer Suite Setup
 Test Setup        Footer Test Setup

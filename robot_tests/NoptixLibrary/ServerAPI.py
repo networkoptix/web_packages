@@ -203,7 +203,7 @@ class ServerAPI(object):
     def get_server_id(self, serverUrl, auth, serverName=None):
         r = requests.get(f'{serverUrl}/ec2/getMediaServersEx', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
         if not serverName:
-            return r.json()[0][id]
+            return r.json()[0]['id']
         else:
             for server in r.json():
                 if serverName == server['name']:

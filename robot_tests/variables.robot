@@ -247,7 +247,7 @@ ${RELEASE NOTES HEADER}               //h1[contains(text(), "${RELEASE NOTES TEX
 ${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='${RELEASES TAB TEXT}']/..
 ${PATCHES TAB}                        //span[contains(@class,'tab-heading') and text()='${PATCHES TAB TEXT}']/..
 ${BETAS TAB}                          //span[contains(@class,'tab-heading') and text()='${BETAS TAB TEXT}']/..
-${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
+${RELEASE NUMBER}                     //div//h1[contains(@class,"title")]
 
 
 #Footer
@@ -279,13 +279,13 @@ ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'
 ${DISABLED}                           \[@disabled]
 
 #Password badges
-${PASSWORD BADGE}                     //nx-tag//a[contains(@class,"badge")]
-${PASSWORD IS WEAK BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
-${PASSWORD IS FAIR BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
-${PASSWORD IS GOOD BADGE}             //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
-${PASSWORD IS TOO SHORT BADGE}        //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
-${PASSWORD IS TOO COMMON BADGE}       //nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
-${PASSWORD INCORRECT BADGE}           //nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
+${PASSWORD BADGE}                     //nx-password-input-tag-validation
+${PASSWORD IS WEAK BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
+${PASSWORD IS FAIR BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
+${PASSWORD IS GOOD BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
+${PASSWORD IS TOO SHORT BADGE}        ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
+${PASSWORD IS TOO COMMON BADGE}       ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
+${PASSWORD INCORRECT BADGE}           ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 ${PASSWORD BADGE TOOLTIP}             //ngb-tooltip-window[@role="tooltip"]
 
 #Already logged in modal

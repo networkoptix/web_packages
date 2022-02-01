@@ -35,7 +35,10 @@ export class NxLanguageProviderService {
         @Inject(WINDOW) private window: Window
     ) {
         if (environment.isLocal) {
-            this.currentLang = this.sessionService.language;
+            // Fixes circular dependency with local-system-status-interceptor.
+            setTimeout(() => {
+                this.currentLang = this.sessionService.language;
+            });
         }
 
         this.storageService.observe('language').subscribe(_ => {

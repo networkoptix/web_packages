@@ -10,25 +10,20 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
-    LANG: LanguageI18NStaticTypes;
     isDialogActive = false;
 
     constructor(
-        languageProvider: NxLanguageProviderService,
         private appState: NxAppStateService,
         private dialogService: NxSimpleDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
-        languageProvider.translateSubject.subscribe((lang) => { this.LANG = lang; });
     }
 
     public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {

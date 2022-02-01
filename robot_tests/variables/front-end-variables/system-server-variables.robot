@@ -82,7 +82,7 @@ ${STORAGE DISABLED NOT IN USE ADDRESS}   ${STORAGE DISK 2}
 ${STORAGE DISABLED INACCESSIBLE ADDRESS}   ${STORAGE DISK INVALID} 
 ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
 ${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/info.svg"]
-${STORAGE RESERVED TOOLTIP}         ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
+${STORAGE RESERVED TOOLTIP}         //div[contains(@class, "tooltip-body") and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
 ${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0-numeric"]
@@ -104,9 +104,9 @@ ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNI
 ${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
 ${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/loading.svg"]
 ${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
-${STORAGE DELETION ALERT TOOLTIP}   ${STORAGE DELETION ALERT ICON}/following-sibling::*[@role="tooltip"]/div[@class="tooltip-inner" and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
+${STORAGE DELETION ALERT TOOLTIP}   //div[contains(@class, "tooltip-body") and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
 ${STORAGE SMB ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_smb.svg"]
-${STORAGE SMB TOOLTIP}              ${STORAGE LOCATIONS BLOCK}//div[@class="tooltip-inner" and contains(text(), "${SMB TOOLTIP TEXT}")]
+${STORAGE SMB TOOLTIP}              //div[contains(@class, "tooltip-body") and contains(text(), "${SMB TOOLTIP TEXT}")]
 ${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static/images/icons/standard/delete.svg"]   
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
 ${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
@@ -142,7 +142,7 @@ ${AS MODAL PASSWORD REQUIRED}       ${AS MODAL PASSWORD INPUT}/parent::div/follo
 ${AS MODAL PASSWORD INVALID}        ${AS MODAL PASSWORD INPUT}/parent::div/following-sibling::div/span[contains(text(), "${LOGIN OR PASSWORD INCORRECT TEXT}")]
 ${AS MODAL SUBMIT BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-process-button//button
 ${AS MODAL CANCEL BUTTON}           ${ADD STORAGE MODAL}/div[contains(@class, "modal-footer")]/nx-cancel-button//button
-${AS FAILED TO ADD TOAST}           //app-toasts//ngb-toast/div[@class="toast-body"]/span[contains(text(), "${FAILED TO ADD STORAGE TEXT}")]
+${AS FAILED TO ADD TOAST}           //app-toasts//nx-toast/div[contains(@class, "alert")]/span[contains(text(), "${FAILED TO ADD STORAGE TEXT}")]
 ${AS MODAL STORAGE ADDED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//*[contains(text(), "${STORAGE PATH ALREADY ADDED TEXT}")]
 ${AS MODAL STORAGE USED BY ANOTHER SERVER}    ${ADD STORAGE MODAL}//*[contains(text(), "${STORAGE PATH ALREADY USED TEXT}")]
 ${AS MODAL NOT RECOMMENEDED}        ${ADD STORAGE MODAL}//*[contains(text(), "${NOT RECOMMENDED DIFFERENT SERVERS TEXT}")]
@@ -154,8 +154,8 @@ ${STORAGE REINDEX ARCHIVE HEADER}   //h4[contains(text(), "${REINDEX ARCHIVE TEX
 ${STORAGE REINDEX ARCHIVE MSG}      //p[contains(text(), "${REINDEX ARCHIVE MSG TEXT}")]
 ${STORAGE REINDEX MAIN BUTTON}      ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX MAIN STORAGE TEXT}")]
 ${STORAGE REINDEX BACKUP BUTTON}    ${STORAGE REINDEXING BLOCK}//button[contains(text(), "${REINDEX BACKUP STORAGE TEXT}")]
-${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
-${STORAGE REINDEX TOOLTIP SECOND}   ${STORAGE REINDEXING BLOCK}//div[contains(@class, "tooltip-inner")]//p[contains(text(), "${REINDEX TOOLTIP SECOND}")]
+${STORAGE REINDEX TOOLTIP FIRST}    //div[contains(@class, "tooltip-body")]/p[contains(text(), "${REINDEX TOOLTIP FIRST}")]
+${STORAGE REINDEX TOOLTIP SECOND}   //div[contains(@class, "tooltip-body")]//p[contains(text(), "${REINDEX TOOLTIP SECOND}")]
 ${STORAGE REINDEXING MAIN}          ${STORAGE REINDEXING BLOCK}//section[@id="reindex-main"]//div[contains(text(), "${REINDEXING MAIN}")]
 ${REINDEXING MAIN PERCENT}          ${STORAGE REINDEXING MAIN}/following-sibling::span
 ${REINDEXING MAIN CANCEL BUTTON}    ${STORAGE REINDEXING BLOCK}//section[@id="reindex-main"]/button[contains(text(), "${CANCEL BUTTON TEXT}")]

@@ -72,11 +72,14 @@ const highlight = (line: HTMLElement) => {
                 text = text.slice(0, i).concat(startingTag, text[i], endingTag,  text.slice(i + 1));
                 i = i + 2;
             } else if (text[i] === '"') {
-                const addTag = beforeColon;
+                let addTag = beforeColon;
                 const { startingTag, endingTag } = createSpan('key-text');
                 let j = i + 1;
                 while (j < text.length && text[j] !== '"') {
                     j++;
+                }
+                if (text[j + 1] !== ':') {
+                    addTag = false;
                 }
                 if (addTag) {
                     text = text.slice(0, i).concat(startingTag, text.slice(i, j + 1), endingTag, text.slice(j + 1));
@@ -90,7 +93,7 @@ const highlight = (line: HTMLElement) => {
                 // Number
                 const { startingTag, endingTag } = createSpan('value-number');
                 const startInd = i;
-                while (i < text.length && parseInt(text[i]) && text[i] !== ',') {
+                while (i < text.length && !isNaN(parseInt(text[i])) && text[i] !== ',') {
                     i++;
                 }
                 text = text.slice(0, startInd).concat(startingTag, text.slice(startInd, i), endingTag, text.slice(i));

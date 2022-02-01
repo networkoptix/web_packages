@@ -74,6 +74,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.withFooter = this.withFooter || this.withFooter === '';
         this.setupPlaceholder();
     }
 
