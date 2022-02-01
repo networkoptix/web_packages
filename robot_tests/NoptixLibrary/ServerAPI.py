@@ -307,7 +307,7 @@ class ServerAPI(object):
             "cameraId":cameraId,
             f"{attribute}":value
         }
-        r = requests.post(f'{serverUrl}/ex2/saveCameraUserAttributes', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{serverUrl}/ec2/saveCameraUserAttributes', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
@@ -376,7 +376,7 @@ class ServerAPI(object):
             "name":name,
             "permissions":permissions
         }
-        r = requests.post(f'{serverUrl}/ec2/saveUserRole', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{serverUrl}/ec2/saveUserRole', auth=HTTPDigestAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
@@ -386,7 +386,7 @@ class ServerAPI(object):
 
     @keyword
     def get_cameras(self, auth, serverUrl):
-        r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword

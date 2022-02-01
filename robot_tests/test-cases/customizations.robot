@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Teardown     Restart
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded    Customizations
 
 *** Variables ***

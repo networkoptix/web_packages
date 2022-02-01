@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Merge Suite Setup
 Test Setup        Merge Test Setup
 Test Teardown     Merge Test Teardown
-Suite Teardown    Merge Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Merge Suite Teardown
 Force Tags        merge
 
 *** Test Cases ***

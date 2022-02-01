@@ -3,7 +3,7 @@ Resource          ../resource.robot
 # Suite Setup       Clear Emails
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded    activate
 
 *** Variables ***

@@ -4,7 +4,7 @@ Resource    ../Resources/front-end-resources/2fa-resource.robot
 Suite Setup       Setup
 Test Setup        Restart
 Test Teardown     2fa Test Teardown
-Suite Teardown    2fa Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    2fa Suite Teardown
 Force Tags        Threaded
 
 *** Variables ***

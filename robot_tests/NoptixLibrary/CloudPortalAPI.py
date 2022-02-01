@@ -347,6 +347,8 @@ class CloudPortalAPI(object):
         logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         logger.trace(r.status_code)
+        logger.trace(r.text)
+        assert r.status_code == 200
         return r.text
 
     #@keyword

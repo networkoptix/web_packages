@@ -2,7 +2,7 @@
 Resource    ../resource.robot
 Suite Setup    LM Suite Set Up
 Test Teardown    Run Keyword If Test Failed    LM Test Restart
-Suite Teardown    LM Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    LM Suite Teardown
 Force Tags    Threaded    Licenses
 
 *** Test Cases ***

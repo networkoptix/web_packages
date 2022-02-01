@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       System Offline Suite Setup
 Test Setup        Restart
-Suite Teardown    System Offline Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    System Offline Suite Teardown
 Force Tags        system
 
 *** Keywords ***

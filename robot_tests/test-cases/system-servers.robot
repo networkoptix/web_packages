@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Server Settings Suite Setup
 Test Setup        Server Settings Test Setup
 Test Teardown     Server Settings Test Teardown
-Suite Teardown    Server Settings Suite Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Server Settings Suite Tear Down
 Force Tags        system    
 
 *** Variables ***

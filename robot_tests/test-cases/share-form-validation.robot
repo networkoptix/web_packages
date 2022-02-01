@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Open Share Dialog
 Test Template     Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Share Form Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Share Form Tear Down
 Force Tags        email    form    Threaded
 
 *** Variables ***

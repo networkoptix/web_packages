@@ -4,7 +4,7 @@ Resource          ../resource.robot
 Suite Setup       Users Suite Setup
 Test Setup        Skip If Irrelevant
 Test Teardown     Users Test Tear Down
-Suite Teardown    users Teardown
+Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded
 
 *** Variables ***

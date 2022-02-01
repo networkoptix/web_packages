@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Restart
 Test Teardown     Run Keyword If Test Failed    Restart
 Test Template     Test Login Invalid
-Suite Teardown    Close Browser
+Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        form    Threaded 
 
 *** Variables ***

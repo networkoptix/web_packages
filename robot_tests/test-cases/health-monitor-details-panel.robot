@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Start
 Test Template     Check Details Panel Alerts
 #Test Teardown     Run Keyword If Test Failed    Start
-Suite Teardown    Health Monitor Details Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Health Monitor Details Tear Down
 Force Tags        email    form    Threaded    hm
 
 *** Variables ***

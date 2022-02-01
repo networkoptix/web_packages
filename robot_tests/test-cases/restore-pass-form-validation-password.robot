@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Open Restore Password Dialog With Code
 Test Template     Test Password Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Close Browser
+Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        email    form
 
 *** Variables ***

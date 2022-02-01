@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart
-Suite Teardown    System Admin Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    threaded
 
 *** Variables ***

@@ -4,7 +4,7 @@ Library           DateTime
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
 Test Setup        Restart
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded 
 
 *** Test Cases ***

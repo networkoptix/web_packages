@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/authorize?client_type=create
 Test Template     Test Register Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Close Browser
+Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        form    Threaded
 
 *** Variables ***
