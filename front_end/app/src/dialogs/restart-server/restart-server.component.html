@@ -19,5 +19,6 @@
     </div>
     <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
                                 (loginSuccess)="needsUpdate=false; restartServer.run()"
+                                [noConnectionMsg]="'Failed to restart server.' | translate"
                                 [system]="system"></nx-update-webadmin-session>
 </div>
