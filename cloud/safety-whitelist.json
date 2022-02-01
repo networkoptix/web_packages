@@ -31,7 +31,15 @@
     "note": "Celery 5.2.0 updates 'kombu' to v5.2.1, which includes dependencies updates that resolve security issues."
   },
   "43738": {
-      "name": "celery",
-      "note": "Celery 5.2.2 includes a fix for CVE-2021-23727: Celery before 5.2.2. by default trusts the messages and metadata stored in backends (result stores). When reading task metadata from the backend, the data is deserialized. Given that an attacker can gain access to, or somehow manipulate the metadata within a celery backend, they could trigger a stored command injection vulnerability and potentially gain further access to the system. https://github.com/celery/celery/blob/master/Changelog.rst#522"
+    "name": "celery",
+    "note": "Celery 5.2.2 includes a fix for CVE-2021-23727: Celery before 5.2.2. by default trusts the messages and metadata stored in backends (result stores). When reading task metadata from the backend, the data is deserialized. Given that an attacker can gain access to, or somehow manipulate the metadata within a celery backend, they could trigger a stored command injection vulnerability and potentially gain further access to the system. https://github.com/celery/celery/blob/master/Changelog.rst#522"
+  },
+  "43975": {
+    "name": "urllib3",
+    "note": "Urllib3 1.26.5 includes a fix for CVE-2021-33503: An issue was discovered in urllib3 before 1.26.5. When provided with a URL containing many @ characters in the authority component, the authority regular expression exhibits catastrophic backtracking, causing a denial of service if a URL were passed as a parameter or redirected to via an HTTP redirect. https://github.com/advisories/GHSA-q2q7-5pp4-w6pg"
+  },
+  "44715": {
+    "name": "numpy",
+    "note": "All versions of Numpy are affected by CVE-2021-41495: A null Pointer Dereference vulnerability exists in numpy.sort, in the PyArray_DescrNew function due to missing return-value validation, which allows attackers to conduct DoS attacks by repetitively creating sort arrays. https://github.com/numpy/numpy/issues/19038"
   }
 }
