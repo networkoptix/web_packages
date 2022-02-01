@@ -352,3 +352,31 @@ y-u-no-review:
   extends: .hooker
   script:
     - python y_u_no_review_bot.py
+
+check-python-licenses:
+  image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
+  stage: check
+  needs: []
+  artifacts:
+    paths:
+      - cloud/ci-license.json
+    when: on_failure
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/requirements.txt
+        - build_scripts/**/requirements.txt
+  script:
+    - /usr/local/bin/python -m pip install -r cloud/requirements.txt
+    - /usr/local/bin/python -m pip install pip-licenses
+    - ./cloud_helper.sh update_requirements_licenses
+
+fail-on-python-license-check:
+  extends: .fail-on
+  needs: [check-python-licenses]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/requirements.txt
+        - build_scripts/**/requirements.txt
+      when: on_failure

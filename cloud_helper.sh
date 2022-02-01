@@ -270,6 +270,50 @@ function install_cli() {
     popd
 }
 
+function check_licenses() {
+    # pip-licenses --format=json --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);"
+    pip-licenses --format=json --with-urls --allow-only="MIT License;BSD License;GNU General Public License v3 (GPLv3);Python Software Foundation License;GNU General Public License (GPL);Apache Software License;Apache License 2.0;GNU Lesser General Public License v3 or later (LGPLv3+);MPL2;Historical Permission Notice and Disclaimer (HPND);BSD;MIT;Public Domain;GNU Library or Lesser General Public License (LGPL);Mozilla Public License 2.0 (MPL 2.0)"
+}
+
+function update_requirements_licenses() {
+    CI_OUTPUT=cloud/ci-license.json
+    UPDATE_OUTPUT=cloud/requirements-license.json
+
+    if [[ $CI_PIPELINE_SOURCE = *[!\ ]* ]]
+    then
+        LICENSE_OUTPUT_FILE=$CI_OUTPUT
+    else
+        LICENSE_OUTPUT_FILE=$UPDATE_OUTPUT
+    fi
+
+    echo "results will be output to $CI_OUTPUT"
+
+    check_licenses > "$LICENSE_OUTPUT_FILE"
+
+    if [ -s $LICENSE_OUTPUT_FILE ]
+    then
+        if [[ $CI_PIPELINE_SOURCE = *[!\ ]* ]]
+        then
+            echo "checking $UPDATE_OUTPUT against $CI_OUTPUT"
+
+            DIFF=$(diff $UPDATE_OUTPUT $CI_OUTPUT)
+
+            if [ "$DIFF" != "" ]
+            then
+                echo "Please update $UPDATE_OUTPUT before trying to merge"
+                exit 1
+            else
+                echo "python licenses up to date"
+            fi
+        else
+            echo "updated $UPDATE_OUTPUT"
+        fi
+    else
+        exit 1
+    fi
+
+}
+
 for command in $@
 do
     case "$command" in
@@ -431,6 +475,9 @@ do
             python tools/scripts/setup_system.py https://localhost "$PORTS" qweasd1234
             break
             ;;
+        update_requirements_licenses)
+            update_requirements_licenses
+            ;;
         install_cli)
             install_cli
             ;;
@@ -460,6 +507,7 @@ do
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
+            echo 'update_requirements_licenses - Updates requirements-license.json when run locally else checks if updated when CI'
             echo 'install_cli - Installs cloud-helper CLI command globally'
             echo ''
             if ! command -v cloud-helper &> /dev/null
