@@ -10,8 +10,8 @@ from util.helpers import get_language_object_from_request
 
 
 class IntegrationTypeSerializer(serializers.Serializer):
-    id = serializers.CharField()
-    label = serializers.CharField()
+    id = serializers.CharField(required=False)
+    label = serializers.CharField(required=False)
 
 
 class InformationSerializer(serializers.Serializer):
@@ -62,22 +62,22 @@ class RequirementsAndCompatibilitySerializer(serializers.Serializer):
 
 
 class IntegrationSerializer(serializers.Serializer):
-    information = InformationSerializer()
-    overview = OverviewSerializer()
-    instructions = InstructionsSerializer()
-    support = SupportSerializer()
-    downloadFiles = serializers.DictField()
+    information = InformationSerializer(required=False)
+    overview = OverviewSerializer(required=False)
+    instructions = InstructionsSerializer(required=False)
+    support = SupportSerializer(required=False)
+    downloadFiles = serializers.DictField(required=False)
     downloadFilesOrder = serializers.DictField(
-        child=serializers.IntegerField())
+        child=serializers.IntegerField(), required=False)
     requirementsAndCompatability = RequirementsAndCompatibilitySerializer(
         required=False)
-    versionDetails = serializers.DictField()
-    lastModified = serializers.CharField()
-    review_id = serializers.IntegerField()
-    id = serializers.IntegerField()
-    mine = serializers.BooleanField()
-    canEdit = serializers.BooleanField()
-    urlified = serializers.CharField()
+    versionDetails = serializers.DictField(required=False)
+    lastModified = serializers.CharField(required=False)
+    review_id = serializers.IntegerField(required=False)
+    id = serializers.IntegerField(required=False)
+    mine = serializers.BooleanField(required=False)
+    canEdit = serializers.BooleanField(required=False)
+    urlified = serializers.CharField(required=False)
 
     @staticmethod
     def generate(integrations, request):
