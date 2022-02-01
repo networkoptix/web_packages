@@ -286,7 +286,7 @@ ${PASSWORD IS GOOD BADGE}             ${PASSWORD BADGE}//nx-tag//a[contains(@cla
 ${PASSWORD IS TOO SHORT BADGE}        ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO SHORT BADGE TEXT}')]
 ${PASSWORD IS TOO COMMON BADGE}       ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),'${PASSWORD IS TOO COMMON BADGE TEXT}')]
 ${PASSWORD INCORRECT BADGE}           ${PASSWORD BADGE}//nx-tag//a[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
-${PASSWORD BADGE TOOLTIP}             //ngb-tooltip-window[@role="tooltip"]
+${PASSWORD BADGE TOOLTIP}             //nx-tooltip-component
 
 #Already logged in modal
 ${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]

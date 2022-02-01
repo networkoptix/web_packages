@@ -39,7 +39,7 @@ System Settings Menu Suite Setup
     END
 
     FOR    ${i}    IN RANGE    2    4
-        Merge Cloud Systems    ${system 1}[cloud id]    ${system ${i}}[cloud id]    ${system 1}[cloud auth][0]    ${system 1}[cloud auth][1]
+        cdb Merge Cloud Systems    ${system 1}[cloud id]    ${system ${i}}[cloud id]    ${system 1}[cloud auth][0]    ${system 1}[cloud auth][1]
         Sleep    60
     END
 
