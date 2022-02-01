@@ -112,7 +112,9 @@ export class NxBootstrapProvider {
         this.languageService.setTranslations(data.language, processLanguage(data));
         this.LANG = this.languageService.translations;
         this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
-        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        if (!this.pageService.pageTitle) {
+            this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        }
 
         this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
     }
