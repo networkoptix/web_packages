@@ -1,3 +1,4 @@
+from cms.controllers.asset_json import find_actual_values, get_contexts_and_datastructures_of_asset_type, map_ds_attribute_to_actual_value
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -85,26 +86,9 @@ def get_article(request, url_param, **kwargs):
 
         # If version is 0, then article has no acceptable version and the request isn't for a draft
         if version != 0:
-            article_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.article)
-
-            # Get values for title and body of article for this version
-            title = article_structures.filter(name='title').first().find_actual_value(
-                asset=article, language=language, version_id=version, draft=draft or review,
-                customization_name=settings.CUSTOMIZATION
-            )
-            body = article_structures.filter(name='body').first().find_actual_value(
-                asset=article, language=language, version_id=version, draft=draft or review,
-                customization_name=settings.CUSTOMIZATION
-            )
-            short_description = article_structures.filter(name='description').first().find_actual_value(
-                asset=article, language=language, version_id=version, draft=draft or review,
-                customization_name=settings.CUSTOMIZATION
-            )
-            article_dict = {
-                "title": title,
-                "shortDescription": short_description,
-                "body": body
-            }
+            _, datastructures = get_contexts_and_datastructures_of_asset_type(AssetType.ASSET_TYPES.article)
+            actual_values = find_actual_values(datastructures, article, version, draft, review, ['title','body'])
+            article_dict  = map_ds_attribute_to_actual_value(actual_values, 'name')
 
             # Get global contexts and fill any matching variables in datarecords
             cloud_portal = get_cloud_portal_asset()
