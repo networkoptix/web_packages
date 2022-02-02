@@ -46,12 +46,15 @@ class _FlagType(type):
 
 class FLAGS(metaclass=_FlagType):
     # python_name = ('Human-readable and actual name', 'jsonKey', 'global_data_structure')
-    custom_clients = ('Custom Clients', 'customClients', '%PUBLIC_CUSTOM_CLIENTS%')
+    custom_clients = ('Custom Clients', 'customClients',
+                      '%PUBLIC_CUSTOM_CLIENTS%')
     zendesk_sync = ('Zendesk Sync', 'zendeskSync', '%ZENDESK_SYNC%')
-    alexa_integration = ('Alexa Integration', 'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
+    alexa_integration = ('Alexa Integration',
+                         'alexaIntegration', '%ALEXA_INTEGRATION_ENABLED%')
     bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
-    dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
+    dashboard_redirect = ('Dashboard Redirect',
+                          'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
 
     def __getattribute__(self, name):
         return dict(FLAGS).get(name)
@@ -63,7 +66,6 @@ class SWITCHES(metaclass=_FlagType):
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
     archive_selection = ('Archive Selection', 'archiveSelection')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
-
 
 
 class SAMPLES(metaclass=_FlagType):

@@ -4,6 +4,8 @@ from functools import wraps
 import random
 import string
 import logging
+import re
+import ast
 
 import requests
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
@@ -56,7 +58,8 @@ def basic_digest_handler(use_basic_auth=False):
             res = None
 
             try:
-                res = (basic_auth_handler if use_basic_auth else digest_auth_handler)(email, password, *args, **kwargs)
+                res = (basic_auth_handler if use_basic_auth else digest_auth_handler)(
+                    email, password, *args, **kwargs)
                 res.raise_for_status()
                 return res
             except requests.HTTPError:
@@ -87,7 +90,8 @@ def auto_refresh_token(no_refresh=False):
                 access_token = request.get("access_token")
                 refresh_token = request.get("refresh_token")
             else:
-                raise TypeError("Arg request should be of type request or dict")
+                raise TypeError(
+                    "Arg request should be of type request or dict")
 
             ip = ""
             if hasattr(request, "META"):
@@ -111,14 +115,17 @@ def auto_refresh_token(no_refresh=False):
                 res.raise_for_status()
                 return res
             except requests.exceptions.HTTPError as e:
-                response_data = res.headers.get('content-type') == 'application/json' and res.json()
+                response_data = res.headers.get(
+                    'content-type') == 'application/json' and res.json()
                 if not refresh_token:
                     if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
-                        raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+                        raise APINotAuthorisedException(
+                            response_data["errorText"], response_data["resultCode"])
                     else:
                         raise e
                 elif no_refresh:
-                    raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+                    raise APINotAuthorisedException(
+                        response_data["errorText"], response_data["resultCode"])
             try:
                 tokens = Auth.get_refresh_token(refresh_token, ip=ip)
                 access_token = tokens["access_token"]
@@ -140,11 +147,13 @@ def auto_refresh_token(no_refresh=False):
 
             # Handles http error for wrapped request function.
             except requests.exceptions.HTTPError as e:
-                response_data = res.headers.get('content-type') == 'application/json' and res.json()
+                response_data = res.headers.get(
+                    'content-type') == 'application/json' and res.json()
                 if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                     kill_tokens(request, Auth.delete_token)
                     kill_session(request)
-                    raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+                    raise APINotAuthorisedException(
+                        response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
         return wrapper
@@ -162,7 +171,8 @@ class TempLogin:
         self.access_token = tokens['access_token']
         self.refresh_token = tokens['refresh_token']
         if error := tokens.get('error'):
-            raise APINotAuthorisedException(error, ErrorCodes.not_authorized.value)
+            raise APINotAuthorisedException(
+                error, ErrorCodes.not_authorized.value)
 
     def __enter__(self):
         return self
@@ -196,12 +206,52 @@ def salt_machine(char_pool=string.ascii_lowercase + string.digits, size=15):
     return ''.join(random.choice(char_pool) for _ in range(size))
 
 
+SANITIZED_FIELDS = {
+    'password': '*****',
+    'new_password': '****',
+    'old_password': '***',
+    'auth_key': '**'
+}
+
+
+def sanitize_data(to_sanitize, sanitized_fields=None):
+    sanitized_fields = sanitized_fields or SANITIZED_FIELDS
+    if isinstance(to_sanitize, list):
+        return [sanitize_data(value, sanitized_fields) for value in to_sanitize]
+
+    if isinstance(to_sanitize, dict):
+        for key in to_sanitize:
+            if sanitized := sanitized_fields.get(key, None):
+                to_sanitize[key] = sanitized
+
+    return to_sanitize
+
+
+def sanitize_log(message):
+    matched_json = re.findall(r"{.+[:,].+}|\[.+[,:].+\]", message)
+    for json_string in matched_json:
+        data = ast.literal_eval(json_string)
+        message = message.replace(json_string, str(sanitize_data(data)))
+    return message
+
+
+def cdb_logger(response, message, headers=None):
+    is_error = response.status_code >= 400
+    status_logger = logger.error if is_error else logger.info
+    from_response = f'\nCDB RESPONSE: {response.text}' if is_error else ""
+    request_headers = f'\nREQUEST HEADERS: {headers}' if is_error and headers else ""
+    sanitized_message = sanitize_log(
+        f'{message} {from_response} {request_headers}'.strip())
+
+    status_logger(sanitized_message)
+    return response
+
+
 @basic_digest_handler()
 def delete_wrapper(url, auth=None, headers=None):
     default_params = {'salt': salt_machine()}
-    logger.info(f'\nDELETE: {url}\n Query Parameters: {default_params}')
 
-    return requests.delete(url, auth=auth, headers=headers)
+    return cdb_logger(requests.delete(url, auth=auth, headers=headers), f'\nDELETE: {url} \n Query Parameters: {default_params}', headers)
 
 
 @basic_digest_handler()
@@ -211,9 +261,7 @@ def get_wrapper(url, params=None, auth=None, headers=None):
     if params:
         default_params.update(params)
 
-    logger.info(f'\nGET: {url}\n Query Parameters: {default_params}')
-
-    return requests.get(url, params=default_params, auth=auth, headers=headers)
+    return cdb_logger(requests.get(url, params=default_params, auth=auth, headers=headers), f'\nGET: {url} \n Query Parameters: {default_params}', headers)
 
 
 @basic_digest_handler()
@@ -223,9 +271,7 @@ def post_wrapper(url, params=None, auth=None, data=None, json=None, headers=None
     if params:
         default_params.update(params)
 
-    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}\nData: {data}')
-
-    return requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers)
+    return cdb_logger(requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers), f'\nPOST: {url} \nQuery Parameters: {default_params} \nJson: {json} \nData: {data}', headers)
 
 
 @basic_digest_handler()
@@ -235,8 +281,7 @@ def put_wrapper(url, params=None, auth=None, json=None, headers=None):
     if params:
         default_params.update(params)
 
-    logger.info(f'\nPUT: {url}\nQuery Parameters: {default_params}\nJson: {json}')
-    return requests.put(url, params=default_params, auth=auth, json=json, headers=headers)
+    return cdb_logger(requests.put(url, params=default_params, auth=auth, json=json, headers=headers), f'\nPUT: {url}\nQuery Parameters: {default_params}\nJson: {json}')
 
 
 @validate_response
@@ -372,8 +417,10 @@ class System(object):
             refresh_token = request.session.get("refresh_token")
         else:
             refresh_token = request.get("refresh_token")
-        masterToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={master_system_id}")["access_token"]
-        slaveToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={slave_system_id}")["access_token"]
+        masterToken = Auth.get_refresh_token(
+            refresh_token, scope=f"cloudSystemId={master_system_id}")["access_token"]
+        slaveToken = Auth.get_refresh_token(
+            refresh_token, scope=f"cloudSystemId={slave_system_id}")["access_token"]
         params = {
             "systemId": slave_system_id,
             "masterSystemAccessToken": masterToken,
@@ -405,11 +452,14 @@ class Account(object):
     @staticmethod
     def extract_temp_credentials(code):
         try:
-            (temp_password, email) = base64.b64decode(code + "===").decode('utf-8').split(":")
+            (temp_password, email) = base64.b64decode(
+                code + "===").decode('utf-8').split(":")
         except TypeError:
-            raise APIRequestException(f"Activation code has wrong structure - TypeError: {code}", ErrorCodes.wrong_code)
+            raise APIRequestException(
+                f"Activation code has wrong structure - TypeError: {code}", ErrorCodes.wrong_code)
         except ValueError:
-            raise APIRequestException(f"Activation code has wrong structure - ValueError: {code}", ErrorCodes.wrong_code)
+            raise APIRequestException(
+                f"Activation code has wrong structure - ValueError: {code}", ErrorCodes.wrong_code)
 
         if not email or not temp_password:
             raise APIRequestException(f"Activation code has wrong structure - no email or temp_password: {code}",
@@ -438,17 +488,20 @@ class Account(object):
         @validate_response
         def _update(login, password, params):
             request = CLOUD_DB_URL + '/account/update'
-            logger.debug('cloud_api.Account.register - making request: ' + request)
+            logger.debug(
+                'cloud_api.Account.register - making request: ' + request)
             return post_wrapper(request, json=params, auth={"email": login, "password": password}, headers=headers)
 
         @validate_response
         def _register(params):
             request = CLOUD_DB_URL + '/account/register'
-            logger.debug('cloud_api.Account.register - making request: ' + request)
+            logger.debug(
+                'cloud_api.Account.register - making request: ' + request)
             return post_wrapper(request, json=params, headers=headers)
 
         customization = settings.CLOUD_CONNECT['customization']
-        password_ha1, password_ha1_sha256 = Account.encode_password(email, password)
+        password_ha1, password_ha1_sha256 = Account.encode_password(
+            email, password)
 
         params = {
             'email': email,
@@ -463,12 +516,14 @@ class Account(object):
         else:
             temp_password, code_email = Account.extract_temp_credentials(code)
             if email != code_email:
-                raise APIRequestException('Activation code doesn\'t match email:' + code, ErrorCodes.wrong_code)
+                raise APIRequestException(
+                    'Activation code doesn\'t match email:' + code, ErrorCodes.wrong_code)
 
             try:
                 data = _update(code_email, temp_password, params)
             except APINotAuthorisedException:
-                raise APIRequestException('Activation code was already used', ErrorCodes.wrong_code)
+                raise APIRequestException(
+                    'Activation code was already used', ErrorCodes.wrong_code)
             return data
 
     @staticmethod
@@ -517,7 +572,8 @@ class Account(object):
             if auto_prolongation_enabled:
                 params['timeouts']['autoProlongationEnabled'] = auto_prolongation_enabled
             if prolongation_period:
-                params['timeouts']['prolongationPeriod'] = str(prolongation_period)
+                params['timeouts']['prolongationPeriod'] = str(
+                    prolongation_period)
 
         return post_wrapper(f'{CLOUD_DB_URL}/account/createTemporaryCredentials', json=params, headers=headers)
 
@@ -683,7 +739,8 @@ class Storage(object):
         logger.debug(f"Delete storage for system.\t SystemId: {system_id}")
         for storage in storages:
             storage_id = storage.get('id')
-            logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
+            logger.debug(
+                f"Removing storage: {storage_id} from the system {system_id}")
             Storage._remove_from_system(request, system_id, storage_id)
             Storage._delete(request, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
@@ -707,26 +764,31 @@ class Storage(object):
     @validate_response
     def move(request, destination_system_id, source_system_id):
         try:
-            source_storages = Storage.list_system_storages(request, source_system_id)
+            source_storages = Storage.list_system_storages(
+                request, source_system_id)
         except APINotFoundException:
-            raise APIRequestException('Source System has no storages', ErrorCodes.bad_request)
+            raise APIRequestException(
+                'Source System has no storages', ErrorCodes.bad_request)
 
         try:
-            destination_storages = Storage.list_system_storages(request, destination_system_id)
+            destination_storages = Storage.list_system_storages(
+                request, destination_system_id)
         except APINotFoundException:
             destination_storages = []
 
         if not destination_storages:
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(request, source_system_id, storage_id)
+                Storage._remove_from_system(
+                    request, source_system_id, storage_id)
                 Storage._move(request, destination_system_id, storage_id)
 
         else:
             destination_storage_id = destination_storages[0]['id']
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(request, source_system_id, storage_id)
+                Storage._remove_from_system(
+                    request, source_system_id, storage_id)
                 Storage._merge(request, destination_storage_id, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
