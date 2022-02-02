@@ -863,6 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Det gick inte att ändra {type} namn",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% är tillfälligt otillgänglig. Vänligen försök igen senare.",
         "userChangesFail": "Det gick inte att tillämpa ändringar",
         "reviewAccepted": "Avtal har accepterats",

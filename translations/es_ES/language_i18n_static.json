@@ -863,6 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Algo salió mal. Por favor, actualiza la página en unos 30 segundos.",
         "nameFail": "Error al cambiar el nombre de {type}",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "La revisión ha sido aceptada",
