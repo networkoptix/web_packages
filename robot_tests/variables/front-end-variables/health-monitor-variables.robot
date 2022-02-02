@@ -27,7 +27,7 @@ ${HM TABLE}                              //div[@id="nx-table"]
 ${HM SINGLE ENTITY}                      //nx-single-entity
 ${FIRST CARD HEADER}                     ${HM SINGLE ENTITY}//header
 
-${HM DETAILS PANEL}                      //nx-dynamic-table
+${HM DETAILS PANEL}                      //nx-info-block
 
 ${HM ALERTS TOTAL}                       ${HM TABLE}/div[contains(@class,"table-header")]
 ${HM CAMERA TABLE ERRORS}                ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
