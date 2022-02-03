@@ -863,7 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "%CLOUD_NAME% 과의 연결을 복원하고 다시 시도하십시오.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",

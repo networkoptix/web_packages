@@ -863,7 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "nameFail": "{type} 名の変更に失敗しました。",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "%CLOUD_NAME% への接続を復旧した後、再度お試しください。",
         "noInternet": "%CLOUD_NAME% は現在利用できません。後ほど再度お試しください。",
         "userChangesFail": "変更の適用に失敗しました",
         "reviewAccepted": "レビューが承認されました。",
