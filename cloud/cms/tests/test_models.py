@@ -1876,3 +1876,200 @@ class TestOpenAPIJSON:
         enabled = self.model._meta.get_field('enabled')
         assert enabled.default == True
 
+
+class TestDataStructure:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.ds: DataStructure = baker.prepare('DataStructure')
+
+    def test_str(self):
+        name = 'nice data structure'
+        self.ds.name = name
+        assert str(self.ds) == name
+
+    def test_is_protected_true(self, mocker):
+        asset = mocker.MagicMock()
+        asset.version_id.return_value = 4
+        self.ds.protected = True
+        assert self.ds.is_protected(asset)
+
+    def test_is_protected_false(self, mocker):
+        asset = mocker.MagicMock()
+
+        # Not accepted version
+        asset.version_id.return_value = 0
+        self.ds.protected = True
+        assert not self.ds.is_protected(asset)
+
+        # Not protected
+        asset.version_id.return_value = 4
+        self.ds.protected = False
+        assert not self.ds.is_protected(asset)
+
+        # Not protected and not accepted version
+        asset.version_id.return_value = 0
+        self.ds.protected = False
+        assert not self.ds.is_protected(asset)
+
+    def test_cast_value_check_box(self):
+        self.ds.type = DataStructure.DATA_TYPES.check_box
+        assert DataStructure.cast_value(self.ds, 'True') is True
+        assert DataStructure.cast_value(self.ds, 'False') is False
+
+    def test_cast_value_integer(self):
+        self.ds.type = DataStructure.DATA_TYPES.integer
+        assert DataStructure.cast_value(self.ds, '') == 0
+        assert DataStructure.cast_value(self.ds, '0') == 0
+        assert DataStructure.cast_value(self.ds, '5') == 5
+
+    def test_cast_value_object(self):
+        self.ds.type = DataStructure.DATA_TYPES.object
+
+        assert DataStructure.cast_value(self.ds, '') == {}
+        assert DataStructure.cast_value(self.ds, '{}') == {}
+
+        obj = {'key': 2}
+        obj_str = json.dumps(obj)
+        assert DataStructure.cast_value(self.ds, obj_str) == obj
+
+    def test_cast_value_array(self):
+        self.ds.type = DataStructure.DATA_TYPES.array
+
+        assert DataStructure.cast_value(self.ds, '') == []
+        assert DataStructure.cast_value(self.ds, '[]') == []
+
+        arr = ['el1', 'el2']
+        arr_str = json.dumps(arr)
+        assert DataStructure.cast_value(self.ds, arr_str) == arr
+
+    def test_cast_value_multiselect_array(self):
+        self.ds.type = DataStructure.DATA_TYPES.multiselect
+        self.ds.meta_settings['options'] = ['opt1', 'opt2', 'opt3']
+
+        assert DataStructure.cast_value(self.ds, '') == []
+        assert DataStructure.cast_value(self.ds, '[]') == []
+        opts = ['opt2', 'opt3']
+        opts_str = json.dumps(opts)
+        assert DataStructure.cast_value(self.ds, opts_str) == opts
+
+    def test_cast_value_multiselect_dict(self):
+        self.ds.type = DataStructure.DATA_TYPES.multiselect
+        self.ds.meta_settings['options'] = [
+            {'id': 'id1', 'label': 'val1'},
+            {'id': 'id2', 'label': 'val2'},
+            {'id': 'id3', 'label': 'val3'}
+        ]
+
+        assert DataStructure.cast_value(self.ds, '') == []
+        assert DataStructure.cast_value(self.ds, '[]') == []
+
+        opts = ['val1', 'val3']
+        opts_str = json.dumps(opts)
+
+        assert DataStructure.cast_value(self.ds, opts_str) == [
+            {'id': 'id1', 'label': 'val1'},
+            {'id': 'id3', 'label': 'val3'}
+        ]
+
+    def test_cast_value_other(self):
+        self.ds.type = DataStructure.DATA_TYPES.text
+        assert DataStructure.cast_value(self.ds, '') == ''
+        assert DataStructure.cast_value(self.ds, 'some str') == 'some str'
+
+    # TODO: FAV functions are too complex to properly unit test now.
+    # Refactor into smaller units for better coverage and easier mocking.
+
+    @pytest.fixture()
+    def setup_accepted_review(self, default_customization, asset_type_factory):
+        integration_type = asset_type_factory(AssetType.ASSET_TYPES.integration)
+        asset: Asset = baker.make('Asset', customizations=[default_customization], asset_type=integration_type)
+        version: ContentVersion = baker.make('ContentVersion', asset=asset)
+        review: AssetCustomizationReview = baker.make('AssetCustomizationReview', version=version,
+                                                      customization=default_customization,
+                                                      state=AssetCustomizationReview.REVIEW_STATES.accepted)
+        return asset, version, review
+
+    def test_find_actual_value(self, setup_accepted_review):
+        asset, version, review = setup_accepted_review
+        ds: DataStructure = baker.make(
+            'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text', translatable=False
+        )
+
+        # Test default value
+        assert ds.find_actual_value(asset) == ds.default
+
+        dr = baker.make('DataRecord', data_structure=ds, version=version, value='new value', asset=asset)
+        assert ds.find_actual_value(asset) == dr.value
+
+    def test_find_actual_values(self, setup_accepted_review):
+        asset, version, review = setup_accepted_review
+        data_structures = baker.make(
+            'DataStructure', type=DataStructure.DATA_TYPES.text, default='default text', translatable=False,
+            _quantity=3, name=seq('%ds_', suffix='%'),
+        )
+
+        for idx, ds in enumerate(data_structures):
+            baker.make('DataRecord', version=version, data_structure=ds, asset=asset, value=f'val_{idx + 1}')
+
+        values = DataStructure.find_actual_values(data_structures, asset)
+        for idx, ds in enumerate(data_structures):
+            assert values[ds] == f'val_{idx + 1}'
+
+        assert len(values) == len(data_structures)
+
+    def test_to_string_str(self):
+        ds = baker.prepare('DataStructure')
+        value = 'test str'
+        assert DataStructure.to_string(ds, value) == value
+
+    def test_to_string_json(self):
+        ds = baker.prepare('DataStructure', type=DataStructure.DATA_TYPES.array)
+        value = ["array", "here"]
+        assert DataStructure.to_string(ds, value) == '["array", "here"]'
+
+    def test_to_string_other(self):
+        ds = baker.prepare('DataStructure', type=DataStructure.DATA_TYPES.integer)
+        value = 5
+        assert DataStructure.to_string(ds, value) == '5'
+
+    def test_get_type_by_name(self):
+        assert DataStructure.get_type_by_name('text') == DataStructure.DATA_TYPES.text
+        assert DataStructure.get_type_by_name('Text') == DataStructure.DATA_TYPES.text
+        assert DataStructure.get_type_by_name('External File') == DataStructure.DATA_TYPES.external_file
+        assert DataStructure.get_type_by_name('Nonexistant type') == DataStructure.DATA_TYPES.text
+
+    def test_is_file_or_image(self):
+        assert not DataStructure.is_file_or_image('text')
+        assert DataStructure.is_file_or_image('image')
+        assert DataStructure.is_file_or_image('file')
+        assert not DataStructure.is_file_or_image(DataStructure.DATA_TYPES.text)
+        assert DataStructure.is_file_or_image(DataStructure.DATA_TYPES.image)
+        assert DataStructure.is_file_or_image(DataStructure.DATA_TYPES.file)
+
+    def test_is_string(self):
+        for typ in ['text', 'long_text', 'guid', 'html', 'select']:
+            assert DataStructure.is_string(getattr(DataStructure.DATA_TYPES, typ))
+
+        assert not DataStructure.is_string(DataStructure.DATA_TYPES.check_box)
+
+    def test_is_image(self):
+        ds: DataStructure = baker.prepare(DataStructure)
+        ds.type = DataStructure.DATA_TYPES.image
+        assert ds.is_image
+        ds.type = DataStructure.DATA_TYPES.external_image
+        assert ds.is_image
+        ds.type = DataStructure.DATA_TYPES.file
+        assert not ds.is_image
+
+    def test_has_image_field(self):
+        ds: DataStructure = baker.prepare(DataStructure, type=DataStructure.DATA_TYPES.image)
+        assert ds.has_image_field
+
+    def test_has_file_field(self):
+        ds: DataStructure = baker.prepare(DataStructure)
+        ds.type = DataStructure.DATA_TYPES.file
+        assert ds.has_file_field
+        ds.type = DataStructure.DATA_TYPES.external_image
+        assert ds.has_file_field
+        ds.type = DataStructure.DATA_TYPES.external_file
+        assert ds.has_file_field
