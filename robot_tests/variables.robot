@@ -96,7 +96,7 @@ ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//but
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
-${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]
+${ANONYMOUS BODY}                     //body[contains(@class,'anonymous')]//landing-display-component/div
 ${CREATE ACCOUNT HEADER}              //header//a[@href='/authorize?client_type=create']
 ${CREATE ACCOUNT BODY}                //landing-component//a[@href='/authorize?client_type=create']
 
@@ -342,6 +342,9 @@ ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
 ${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="${CANCEL BUTTON TEXT}"]
 ${USER CANCEL}                        //nx-apply//nx-cancel-button/button[@type="reset"]
+${ACCOUNT CREATION EMAIL SUCCESS}     //nx-authorize-component//nx-authorize-activate-account-component//main//h3
+${ACTIVATE MODAL LOGIN BTN}           //nx-authorize-component//nx-authorize-activate-account-component//main//nx-process-button//button[@type="submit"]
+${LOCAL USER NAME HEADER}             //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
 
 #svg icons
 ${USERS ICON}                      *[name()="svg-icon" and @data-src="/static/images/icons/standard/users.svg"]

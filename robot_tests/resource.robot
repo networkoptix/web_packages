@@ -401,7 +401,7 @@ Restore Password using API
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
-    Click Element    ${USERS LIST LINK}
+    Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
 
 Go to System Administration
     Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
@@ -414,7 +414,7 @@ Go to Servers
 Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}    timeout=60
     Sleep    1
     Click Button    ${ADD USER BUTTON SYSTEMS}
@@ -822,7 +822,7 @@ Create Local Users via API
     &{liveViewer} =    Create Dictionary
     &{viewer} =    Create Dictionary
     FOR    ${user}    IN    @{locals}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
         Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
         Set To Dictionary    ${local users}    ${user}=&{${user}}
     END

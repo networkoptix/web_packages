@@ -185,7 +185,7 @@ Reset
         Click Link    ${USERS LIST LINK}
         Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
         Sleep    1
-        Click Button    ${ADD USER BUTTON SYSTEMS}
+        Wait Until Keyword Succeeds    10    0.5    Click Button    ${ADD USER BUTTON SYSTEMS}
         Wait Until Element is Visible    ${ADD USER MODAL}
         Click Button    ${ADD USER CLOSE}
         Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
@@ -477,7 +477,7 @@ Reset
     [Tags]    email    C41888    cloud
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
-    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
+    Set Account Language    ${random email}    ${password}    ${LANGUAGE}
     Append to List    ${TMP USERS}    ${random email}
     Verify In System    ${server 1['name']}
     ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
@@ -550,7 +550,7 @@ Reset
     ${code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
-    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
+    ${text}=   Get Text    ${LOCAL USER NAME HEADER}
     Should Be Empty    ${text}
     Log Out
     
@@ -584,7 +584,7 @@ Reset
     ...    ${REGISTER LAST NAME INPUT}
     ...    ${REGISTER PASSWORD INPUT}
     ...    ${CREATE ACCOUNT BUTTON}
-    ...    ${REGISTER EMAIL INPUT LOCKED} 
+    ...    ${REGISTER EMAIL INPUT LOCKED}
 
     ${populated email}=   Get Value    ${REGISTER EMAIL INPUT LOCKED} 
     Should be equal as strings    ${populated email}    ${random email}
@@ -593,19 +593,43 @@ Reset
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
-    # New user gets logged in right away
-    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-    Wait Until Element is Visible    ${SYSTEM NAME}
-    Element Text Should Be    ${SYSTEM NAME}    ${server 1['name']}
-    Log    Step 7 skipped thick client login
-    Log    Step 8
-    Log Out
-    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    # Modifying the flow according to CLOUD-8444, user will no longer login automatically after account creation, Activation of the account is needed first
+    #Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    #Wait Until Element is Visible    ${SYSTEM NAME}
+    #Element Text Should Be    ${SYSTEM NAME}    ${server 1['name']}
+    #Log    Step 7 skipped thick client login
+    #Log    Step 8
+    #Log Out
+    #Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    Wait Until Element Is Visible    ${ACCOUNT CREATION EMAIL SUCCESS}
+    ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
+    Sleep    5
+    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email text}    Get Email Body    ${email}
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
+    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
+    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
+    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
+    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
+    Check Email Subject    ${email}    Activate your account   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    ${activation link}    Get Links From Email    ${email}
+    @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/authorize/activate
+    FOR    ${link}  IN  @{activation link}
+        check in list    ${expected links}    ${link}
+    END
+    ${activation code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    activate_account
+    Delete Email    ${email}
+    Close Mailbox
+    Go To    ${url}/authorize/activate/${activation code}
+    Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
+    Go To    ${ENV}/systems/${server 1['cloud id']}
     Go To Users List
-    Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
-    Click Element    //span[contains(text(),"${random email}")]
-    ${text}=   Get Text    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
-    Element Text Should Be    //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]    ${TEST FIRST NAME} ${TEST LAST NAME}
+    Wait Until Element Is Visible     //nx-menu//span[contains(text(),"${random email}")]
+    Click Element    //nx-menu//span[contains(text(),"${random email}")]
+    ${text}=   Get Text    ${LOCAL USER NAME HEADER}
+    Element Text Should Be    ${LOCAL USER NAME HEADER}    ${TEST FIRST NAME} ${TEST LAST NAME}
 
 19. Share System with the same user twice
     [Tags]    C41892    cloud
@@ -645,7 +669,7 @@ Reset
     ...    ${BASE PORT}
     Delete email    ${email}
 
-    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
+    Set Account Language    ${random email}    ${password}    ${LANGUAGE}
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
@@ -1380,8 +1404,8 @@ Reset
         ...    noptixautoqa+local_advancedViewer@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
+        ...    userId=${id}    
+        ...    isCloud=${False}    
         Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=65
         Log    Step 5
         Save User    
@@ -1392,8 +1416,8 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
+        ...    userId=${id}    
+        ...    isCloud=${False}    
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
         Log    Step 6
         Save User    
@@ -1404,8 +1428,8 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
+        ...    userId=${id}    
+        ...    isCloud=${False}    
         Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
         Log    Step 7
         Save User    
@@ -1416,9 +1440,9 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}    
-        ...    is enabled=${False}
+        ...    userId=${id}    
+        ...    isCloud=${False}    
+        ...    isEnabled=${False}
         Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 8
         Save User    
@@ -1429,8 +1453,8 @@ Reset
         ...    noptixautoqa+local_apichanged@gmail.com    
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
-        ...    user id=${id}    
-        ...    is cloud=${False}
+        ...    userId=${id}    
+        ...    isCloud=${False}
         Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 9
         Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
@@ -1445,7 +1469,7 @@ Reset
         ...    noptixautoqa+local_advancedViewer@gmail.com    
         ...    New Api   
         ...    ${BASE PASSWORD}    
-        ...    is cloud=${False}      
+        ...    isCloud=${False}      
         Wait Until Elements Are Visible    
         ...    //span[text()="Local+newApiUser"]    
         ...    //span[text()="Local+newApiUser"]//preceding-sibling::${LOCAL USER ICON}
@@ -1485,7 +1509,7 @@ Reset
     FOR    ${user}    IN    @{local users}
         Element Should Not Be Visible    //span[text()="local+${user}"]
     END    
-    Log    Step 2   
+    Log    Step 2
     ${results}    Execute Command    docker container start ${server 2['name']}
     FOR    ${user}    IN    @{local users}
         Wait Until Element Is Visible   //span[text()="Local+${user}"]    125

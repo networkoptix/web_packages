@@ -347,11 +347,10 @@ class ServerAPI(object):
             "isEnabled":isEnabled,
             "password":password
         }
-        if userId:
+        if userId is not None:
             body["id"]=userId
-        if isCloud:
-            body["fullName"]=fullName
-        if userRoleId:
+        body["fullName"]=fullName
+        if userRoleId is not None:
             body["id"]=userRoleId
         r = requests.post(f'{serverUrl}/ec2/saveUser', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
