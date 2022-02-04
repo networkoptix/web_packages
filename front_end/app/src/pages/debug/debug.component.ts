@@ -63,7 +63,7 @@ export class NxDebugComponent {
     system: NxSystemWithUserInfo;
     systems: NxSystemWithUserInfo[];
     type = 'activate_account';
-    userEmail = 'ebalashov@networkoptix.com';
+    userEmail = '';
     constructor(@Inject(WINDOW) private window: Window,
                 private http: HttpClient,
                 private accountService: NxAccountService,

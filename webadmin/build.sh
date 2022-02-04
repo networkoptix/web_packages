@@ -69,6 +69,8 @@ do
     npm run setSkin $SKIN
     pushd inline-wizard
         npm run build
+        # Removed these files because it overrode webadmins version of them
+        rm -rf dist/{fonts,robots.txt,language.json,languages.json}
         mkdir -p ../static/setup_$SKIN
         cp -r dist/* ../static/setup_$SKIN
 

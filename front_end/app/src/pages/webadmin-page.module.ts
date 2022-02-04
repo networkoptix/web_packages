@@ -9,7 +9,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { Nx500Module } from './500/500.module';
-import { NxDebugModule } from './debug/debug.module';
+// import { NxDebugModule } from './debug/debug.module';
 import {
     NonSupportedBrowserModule
 } from './non-supported-browser/non-supported-browser.module';
@@ -69,7 +69,7 @@ const lazyRoutes: Routes = [
         PipesModule,
         NonSupportedBrowserModule,
         Angular2CsvModule,
-        NxDebugModule,
+        // NxDebugModule,
         Nx500Module,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation: true,
@@ -89,7 +89,7 @@ const lazyRoutes: Routes = [
     exports: [
         NonSupportedBrowserModule,
         Angular2CsvModule,
-        NxDebugModule,
+        // NxDebugModule,
         Nx500Module,
         RouterModule
     ]
