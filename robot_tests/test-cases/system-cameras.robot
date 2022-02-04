@@ -105,7 +105,7 @@ Camera Test Setup
     Log in to user and system    ${user}    ${system}
     Sleep    5
     Go To Cameras
-    
+
 Offline Server Test Setup
     Stop Docker Server    ${system3}[name]
     Camera Test Setup    user=${system3}[owner]    system=${system3}[cloud id]
@@ -175,7 +175,7 @@ Set Radio Value
     Log Out
 
 3. Camera settings is not available by direct link to any viewers
-    [Tags]    C76255    debug
+    [Tags]    C76255
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    id
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
@@ -224,7 +224,7 @@ Set Radio Value
     ...    ${NO CAMERAS MESSAGE}       
 
 6. Camera status match server
-    [Tags]    C76256    debug
+    [Tags]    C76256
     @{auth}=   Create List    admin    ${BASE PASSWORD}
 
     Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
@@ -246,7 +246,7 @@ Set Radio Value
     Should Be Equal As Strings    ${value}    Offline
 
 7. Warning dialog appears when changes are made on navigating away and works correctly
-    [Tags]    C76416    debug
+    [Tags]    C76416
     Log    Step 1
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -497,7 +497,7 @@ Set Radio Value
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOX}//label[@disabled]
 
 16. No image placeholder shows for offline and unauthorized cameras
-    [Tags]    C76275    debug
+    [Tags]    C76275
     Verify on Cameras Page
     Select Camera by Name    unauth cam
     Wait Until Elements are Visible    
@@ -735,7 +735,7 @@ Set Radio Value
     Set All Camera Attributes    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
 
 26. Disabled Motion With Recording
-    [Tags]    C78983    debug
+    [Tags]    C78983
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    motionType    8
@@ -919,9 +919,9 @@ Set Radio Value
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
     Log Out
-    
+    Sleep   5
     Log in to user and system    ${system3}[cloud users][cloudAdmin]    ${system3}[cloud id]
-    Wait Until Element is Visible    ${CAMERAS LINK}
+    Wait Until Element is Visible    ${CAMERAS LINK}    timeout=5
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
     ...    ${OFFLINE PLACEHOLDER IAMGE}

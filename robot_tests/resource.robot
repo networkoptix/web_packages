@@ -1133,10 +1133,11 @@ Execute Command Remotely
     Acquire Lock    exec_cmd_lock
     Open Connection    ${host ip}
     SSHLibrary.Login    ${host user}    ${host password}
-    ${result}=   Execute Command    ${command}
+    ${result}=   Execute Command    ${command}     return_rc=${True}
+    Should Be Equal As Integers     ${result}[1]    0
     Close Connection
     Release Lock    exec_cmd_lock
-    [Return]    ${result}
+    [Return]    ${result}[0]
 
 Wait Until Element is Visible with Retry
     [Arguments]    ${element}    ${timeout}=120

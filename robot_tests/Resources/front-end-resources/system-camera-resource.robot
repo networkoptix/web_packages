@@ -146,4 +146,4 @@ Take Camera Offline
 Bring Camera Online
     [Documentation]    Brings the camera back online by removing the blacklisting of its IP on the docker server
     [Arguments]    ${docker name}    ${Camera IP}
-    Execute Command Remotely    docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
+    Execute Command Remotely   docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
