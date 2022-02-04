@@ -8,6 +8,8 @@ import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
+import { ClipModule } from '../../../../components/clip/clip.module';
+
 import { NxBookmarksListComponent } from './list.component';
 
 @NgModule({
@@ -18,7 +20,8 @@ import { NxBookmarksListComponent } from './list.component';
         PipesModule,
         NgbModule,
         TranslateModule,
-        ComponentsModule
+        ComponentsModule,
+        ClipModule
     ],
     providers: [],
     declarations: [

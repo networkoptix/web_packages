@@ -1131,12 +1131,13 @@ export class NxSystemAPI {
 
     public getExportUrl ({ transport, cameraId, pos, endPos, duration }) {
         let url = '';
+        cameraId = cameraId?.replace(/{|}/g, '');
         switch (transport) {
             case 'hls':
-                url = `/hls/${cameraId}.mkv`;
+                url = `/web/hls/${cameraId}.mkv`;
                 break;
             default:
-                url = `/media/${cameraId}.${transport}`;
+                url = `/web/media/${cameraId}.${transport}`;
         }
         const params = {
             auth: this.authGet,
