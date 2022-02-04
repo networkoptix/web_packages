@@ -135,13 +135,17 @@ class ServerAPI(object):
         return r.json()
 
     @keyword
-    def setup_local_system(self, serverUrl, newPassword, systemName):
+    def setup_local_system(self, server_url, new_password, system_name):
         logger.trace("4.2")
         body= {
-            "password":newPassword, 
-            "systemName":systemName
+            "password": new_password,
+            "systemName": system_name
         }
-        r = requests.post(f"{serverUrl}/api/setupLocalSystem", auth=HTTPBasicAuth("admin","admin"), json=body, verify=False)
+        r = requests.post(f"{server_url}/api/setupLocalSystem", auth=HTTPBasicAuth("admin", "admin"), json=body, verify=False)
+
+        auth = ("admin", new_password)
+        self.set_system_settings(auth, server_url, {"statisticsAllowed": 'false'})
+
         return r.json()
 
     @keyword
@@ -437,9 +441,9 @@ class ServerAPI(object):
     def set_system_settings(self, auth, serverUrl, settings):
         query = "/api/systemSettings?"
         for key, val in zip(settings.keys(), settings.values()):
-            query = query+f'{key}={val}&'
+            query = query + f'{key}={val}&'
         query = query[:-1]
-        r = requests.get(f'{serverUrl}/api/systemSettings?{query}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}{query}', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword
