@@ -8,6 +8,7 @@ import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { AppComponent } from './app.component';
 
@@ -48,7 +49,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 useClass: TranslateMessageFormatCompiler
             }
         }),
-
+        DeviceDetectorModule.forRoot(),
         NgxWebstorageModule.forRoot(),
         OverlayModule,
         GenericDialogModule,
