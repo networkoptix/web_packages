@@ -1,8 +1,4 @@
-@use '../../../../styles/theme_variables' as *;
-
-.st0 {
-    fill: $dark9 !important;
-}
+@use "../../../../styles/theme_variables" as *;
 
 .dropdown-menu {
     width          : auto !important;
@@ -13,7 +9,7 @@
 .dropdown {
     position: relative !important;
     height: 41px;
-    margin: 3px 3px 3px 0px;
+    margin: 3px 3px 3px 0;
     &-menu {
         top: 42px !important;
     }
@@ -22,9 +18,15 @@
     }
 
     & > button {
+        background-color : var(--btn-header-main-bg);
+        color            : var(--btn-header-main-color);
         border: 1px solid transparent;
         height: 100% !important;
         border-radius: 4px;
+    
+        svg-icon svg .st0 {
+            fill : var(--btn-header-main-color);
+        }
     }
 
     &.show {
@@ -69,13 +71,13 @@
 }
 
 #accountSettingsSelect {
-    padding-left: 0px !important;
+    padding-left: 0 !important;
     padding-right: 16px !important;
     min-width: 41px;
     flex-shrink: 0;
 
     &.small-icon-overrides {
-        padding-right: 0px !important;
+        padding-right: 0 !important;
         width: 41px !important;
     }
 }

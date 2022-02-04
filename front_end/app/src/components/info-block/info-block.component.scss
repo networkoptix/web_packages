@@ -1,5 +1,5 @@
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/typography';
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/typography";
 
 .remove-top-margin {
     &:first-child {
@@ -14,7 +14,7 @@
 .block {
     margin-top: 16px;
     & > h6 {
-        color: $dark9 !important;
+        color: var(--card-header-text) !important;
         line-height: 24px;
     }
 
@@ -34,6 +34,7 @@
 
             p {
                 @include typography.regular13dark9;
+                color : var(--label-color) !important;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
@@ -48,7 +49,7 @@
                     position: relative;
                     display: inline-block;
                     margin: 0 8px 4px 4px;
-                    border-bottom: 1px dotted rgba($light16, .3);
+                    border-bottom: 1px dotted rgba(var(--label-color), .3);
                     z-index: 1;
                     flex-basis: 1;
                     flex-grow: 1;
@@ -68,8 +69,10 @@
             word-wrap     : break-word;
             word-break    : break-word;
             hyphens       : auto;
+            
             p {
                 @include typography.medium13dark9;
+                color : var(--label-color) !important;
                 display: flex;
                 align-items: flex-end;
                 line-height: 16px;

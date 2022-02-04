@@ -1,19 +1,26 @@
-@use '../../../../styles/typography';
-@use '../../../../styles/mixins';
-@use '../../../../../styles/theme_variables' as theme_vars;
+@use "../../../../styles/typography";
+@use "../../../../styles/mixins";
+@use "../../../../../styles/theme_variables" as theme_vars;
 
 .user-name {
     @include mixins.ellipsis;
-    @include typography.regular13dark9;
+    @include typography.regular13nocolor;
+    color : var(--card-header-text);
 }
 
 .header-users {
     display: flex;
     flex-direction: column;
     width: 100%;
+    
+    h2 {
+        color : var(--card-header-text) !important;
+    }
+    
     .header-username {
         display: flex;
         align-items: center;
+        
         .heading-style {
             font-family: theme_vars.$font-family-medium;
             line-height: 40px;
@@ -25,6 +32,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        
         .user-status-switch-wrapper {
             display: flex;
             align-items: center;
@@ -39,6 +47,7 @@
 .header-title {
     text-align: left !important;
     position: relative;
+    
     h2 {
         @extend .heading-style;
     }

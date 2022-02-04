@@ -1,7 +1,7 @@
 @use "../../../../../styles/typography";
 @use "../../../../../styles/mixins" as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 form.form-horizontal {
     overflow: auto auto !important;
@@ -42,14 +42,14 @@ form.form-horizontal {
         text-overflow : ellipsis;
         white-space   : nowrap;
     }
-
+    
     th {
-        @include typography.medium13dark9;
+        @include typography.medium13nocolor;
+        color            : var(--card-header-text);
         padding          : 5px 0 5px 16px;
-        background-color : var(--additional_light1);
-        border-bottom    : 1px solid var(--light3);
-        height: 32px !important;
-
+        background-color : var(--card-header-bg);
+        border-bottom    : 1px solid var(--border-color);
+        height           : 32px !important;
     }
 
     th:last-child {
@@ -57,10 +57,11 @@ form.form-horizontal {
     }
 
     td {
-        @include typography.regular13dark9;
-        max-height: 24px !important;
+        @include typography.regular13nocolor;
+        color            : var(--card-header-text);
+        max-height       : 24px !important;
         padding          : 5px 0 5px 16px;
-        background-color : var(--light1);
+        background-color : var(--card-body-bg);
         display          : flex;
         align-items      : center;
 
@@ -147,7 +148,8 @@ form.form-horizontal {
 
 .reindex-container {
     p {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
+        color : var(--label-color);
     }
 
     .tooltip-text {

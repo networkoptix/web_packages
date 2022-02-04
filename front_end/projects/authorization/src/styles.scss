@@ -4,11 +4,11 @@
 
 * {
     .mainContainer {
-        background-color: $additional_light2;
+        background-color: var(--body-bg);
     }
 
     .altMainBackground {
-        background-color: $light1 !important;
+        background-color: var(--alt-body-bg) !important;
     }
 
     .desktopBackground, .desktopBackground .auth-overlay {

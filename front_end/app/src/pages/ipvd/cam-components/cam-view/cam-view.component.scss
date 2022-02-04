@@ -1,10 +1,10 @@
-@use '../../../../styles/typography';
-@use '../../../../styles/mixins';
+@use "../../../../styles/typography";
+@use "../../../../styles/mixins";
 @use "styles/theme_variables" as theme_vars;
 
 .camview {
     padding          : 0;
-    background-color : var(--light4);
+    background-color : var(--card-body-bg);
     border-top       : 1px solid transparent;
 
     &.view-scroll-fixed-top {

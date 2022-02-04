@@ -1,9 +1,9 @@
-@use '../../../../styles/mixins';
+@use "../../../../styles/mixins";
 @use "styles/theme_variables" as theme_vars;
 
 .panel {
     padding          : 0;
-    background-color : var(--light4);
+    background-color : var(--grey-section-bg);
     border-top       : 1px solid transparent;
 
     h2 {

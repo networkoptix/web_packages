@@ -1,11 +1,12 @@
 /* Here we override some default bootstrap styles and behavior for our purposes */
-@use '_theme_variables';
-@import '~sass-rem/rem';
+@use "_theme_variables";
+@import "~sass-rem/rem";
 
 $font-size-a-bit-large : ceil(theme_variables.$font-size-base * 1.15); //~16px - we just need 16px sometimes :-)
 
 body {
-    color : theme_variables.$text-color;
+    color : var(--body-text-color);
+    background-color: var(--body-bg);
 }
 
 .container-fluid {
@@ -177,13 +178,13 @@ hr {
 
 select {
     position            : relative;
-    background-image    : url('/static/images/arrow_down.png') !important;
+    background-image    : url("/static/images/arrow_down.png") !important;
     background-repeat   : no-repeat;
     background-size     : 16px 16px;
     background-position : right 8px center;
 
     @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/arrow_down@2x.png') !important;
+        background-image : url("/static/images/arrow_down@2x.png") !important;
     }
 }
 

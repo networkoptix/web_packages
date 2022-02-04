@@ -34,7 +34,7 @@
         ></span>
         <span *ngIf="item.additionalText" class="menu-level-3-additional">
             <span class="ml-1 mr-1">&ndash;</span>
-            <span [outerHTML]="item.additionalText | safe: 'html'"></span>
+            <span [innerHTML]="item.additionalText | safe: 'html'"></span>
         </span>
     </div>
 </a>

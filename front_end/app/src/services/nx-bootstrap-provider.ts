@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
+// do not use barrel file for the next import - it breaks auth app
+import { NxSystemRole } from '@services/system.service/system/user-manager/user-manager-types';
 
 import { IConfig, NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPageService } from './page.service';
-import {
-    NxSystemRole
-} from './system.service/system/user-manager/user-manager-types';
 
 @Injectable({
     providedIn: 'root'
@@ -26,7 +25,7 @@ export class NxBootstrapProvider {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private pageService: NxPageService,
-        private http: HttpClient
+        private http: HttpClient,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.isLoaded = false;

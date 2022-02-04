@@ -1,4 +1,4 @@
-@use '../../../styles/theme_variables' as *;
+@use "../../../styles/theme_variables" as *;
 
 .placeholder-text {
     color  : $light13;
@@ -10,8 +10,8 @@
 }
 
 .unsaved-changes {
-    background: $additional_light2;
-    border-top: 1px solid $light4;
+    background: var(--body-bg);
+    border-top: 1px solid var(--border-color);
     margin: -1px 0 -16px 0;
     position: sticky;
     bottom: 0;

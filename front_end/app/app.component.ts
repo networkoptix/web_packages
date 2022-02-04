@@ -102,10 +102,22 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
+
+        // TODO: Replace with IU... temporary mechanism for switching between themes
+        const queryParams = new URLSearchParams(this.window.location.href.split('?')[1]);
+        const hasDarkTheme = (this.localStorageService.retrieve('theme') === 'dark');
+        if (
+            hasDarkTheme ||
+            (queryParams.get('beta') &&
+             queryParams.get('theme') === 'dark')
+        ) {
+            !hasDarkTheme && this.localStorageService.store('theme', 'dark');
+            this.window.document.documentElement.setAttribute('data-theme', 'dark');
+        }
 
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
@@ -189,6 +201,7 @@ export class AppComponent {
             this.dialogsService.wizard();
             return;
         }
+
         // in case user switches to a different system before setting up reset system again
         this.localStorageService.store('resetServer', false);
         this.scrollMechanicsService.setWindowSize(
@@ -234,6 +247,7 @@ export class AppComponent {
                 if ('debug' in event.snapshot.queryParams) {
                     this.CONFIG.allowDebugMode = true;
                 }
+
                 this.uriService.queryParams = event.snapshot.queryParams;
                 if (this.mainContainer?.nativeElement) {
                     this.mainContainer.nativeElement.scrollTop = 0;

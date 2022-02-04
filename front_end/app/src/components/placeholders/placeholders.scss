@@ -70,12 +70,13 @@ $preloader_small_circle_distance : 8px;
 
 .placeholder {
     &-wrapper {
-        min-height      : 200px;
-        height          : auto;
-        position        : relative;
-        display         : flex;
-        align-items     : center;
-        justify-content : center;
+        min-height       : 200px;
+        height           : auto;
+        position         : relative;
+        display          : flex;
+        align-items      : center;
+        justify-content  : center;
+        background-color : var(--body-bg);
     }
 
     &-section {

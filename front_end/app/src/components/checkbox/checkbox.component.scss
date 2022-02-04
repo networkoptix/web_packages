@@ -162,7 +162,7 @@ nx-checkbox {
     }
 
     :not(.desktop) .tick {
-        @include checkboxSvgColor($dark9, var(--brand-core));
+        @include checkboxSvgColor(var(--label-color), var(--brand-core));
     }
 
     .tick {

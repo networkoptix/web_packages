@@ -1,11 +1,13 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/mixins';
+@use "../../styles/typography";
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/mixins";
 
 .menu-level-3 {
-    @include typography.medium13dark9;
+    @include typography.medium13nocolor;
     position         : relative;
-    background-color : $light5;
+    background-color : var(--left-menu-l3-bg);
+    color            : var(--left-menu-l3-color);
+    opacity          : var(--left-menu-l3-opacity);
     border-radius    : 0;
     text-decoration  : none;
     padding-left     : .75rem;
@@ -46,14 +48,12 @@
 
     &.selected {
         &, * {
-            color            : $light1 !important;
-            fill             : $light1 !important;
-            background-color : $light16 !important;
+            color            : var(--left-menu-l3-selected-color) !important;
+            fill             : var(--left-menu-l3-selected-color) !important;
+            stroke           : var(--left-menu-l3-selected-color) !important;
+            background-color : var(--left-menu-l3-selected-bg) !important;
             min-height       : auto;
-        }
-
-        .menu-level-3-icon {
-            background-position : -123px -135px;
+            opacity          : 1;
         }
 
         .menu-level-3-additional {
@@ -80,7 +80,7 @@
     .top-shadow-cover {
         left: 0;
         position: absolute;
-        background: $light5;
+        background: var(--left-menu-l3-shadow);
         width: 100%;
         height: 4px;
         z-index: 2;
@@ -102,7 +102,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-left: -3px;
+        margin-left: -2px;
     }
 
     &.item-disabled {
@@ -128,6 +128,11 @@
             width: 26px;
             height: 26px;
             pointer-events: none;
+            
+            .st0 {
+                fill   : var(--left-menu-l3-color);
+                stroke : var(--left-menu-l3-color);
+            }
         }
     }
 }
@@ -135,10 +140,6 @@
 .menu-level-3-additional {
     color : $light16;
     font-family: $font-family-regular;
-}
-
-.menu-level-3.selected .menu-level-3-icon.glyphicon-cloud {
-    background-position : -123px -135px;
 }
 
 .indent {

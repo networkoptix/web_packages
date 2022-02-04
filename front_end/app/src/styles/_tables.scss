@@ -1,4 +1,4 @@
-@use '../styles/typography' as *;
+@use "../styles/typography" as *;
 // @import '../../../app/styles/native-theme/theme_palette';
 // @import '../../../app/styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
@@ -10,11 +10,12 @@
     margin-bottom : 0;
 
     thead {
-        background-color : $additional_light1;
-        border-bottom    : 1px solid $light3;
+        background-color : var(--card-header-bg);
+        border-bottom    : 1px solid var(--border-color);
 
         th {
             @include medium13dark9;
+            color : var(--card-header-text) !important;
             //display        : inline-block;
             white-space    : normal;
             padding        : .5rem 0;
@@ -48,12 +49,12 @@
                     bottom   : 0;
 
                     &:after {
-                        content : ' ';
+                        content : " ";
                     }
 
                     &.asc {
                         &:after {
-                            content : '+';
+                            content : "+";
                         }
                     }
                 }
@@ -62,24 +63,28 @@
     }
 
     tbody {
-        background-color: $light1;
+        background-color: var(--card-body-bg);
 
         tr {
             //display: block;
             height : rem(24px);
 
             &:hover {
-                color      : $dark9;
-                background : var(--brand-core-t90);
+                td {
+                    color      : var(--card-header-text) !important;;
+                    background : var(--brand-core-t90);
+                }
             }
 
             &.spacer {
                 height           : .5rem;
-                background-color : white;
+                background-color : var(--card-body-bg);
             }
 
             td {
-                @include regular13dark9;
+                @include regular13nocolor;
+                color : var(--label-color) !important;
+                background-color: var(--card-body-bg);;
                 display        : table-cell;
                 vertical-align : middle;
                 padding        : rem(4px) 1rem rem(4px) 0;
@@ -95,9 +100,10 @@
 
     &-header {
         @include regular13dark9;
+        color : var(--card-header-text) !important;
         padding          : 0.5rem 1rem;
-        background-color : $additional_light1;
-        border           : 1px solid $light3;
+        background-color : var(--card-header-bg);
+        border           : 1px solid var(--border-color);
         border-bottom    : none;
         line-height      : 16px;
         text-transform   : none;
@@ -114,14 +120,15 @@
 .table-wrapper {
       overflow-x       : scroll;
       box-shadow       : none;
-      border           : 1px solid $light4;
-      background-color : $light1;
+      border           : 1px solid var(--border-color);
+      background-color : var(--body-bg);
 
     &::-webkit-scrollbar-track {
-        background-color : $light1 !important;
+        background-color : var(--scrollbar-thumb-border-color);
     }
 
     &::-webkit-scrollbar-thumb {
-        border : 2px solid $light1 !important;
+        background-color: var(--scrollbar-thumb-bg);;
+        border : 2px solid var(--scrollbar-thumb-border-color) !important;
     }
 }

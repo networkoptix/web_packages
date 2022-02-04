@@ -1,6 +1,6 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/mixins';
+@use "../../styles/typography";
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/mixins";
 
 $logo-height               : 32px;
 $line-height               : 44px;
@@ -32,11 +32,12 @@ $header-collapsing-width-1 : 1px;
     border-left   : none;
     border-right  : none;
     border-radius : 0;
-    border-bottom : 1px solid $light4;
+    border-bottom : 1px solid var(--header-border-color);
     padding-right : 1rem !important;
     // Position relative and z-index are needed for the landing page, the expanding svgs on the landing page will not respect the stacking context of a position:static element.
     position: relative;
     z-index: 5;
+    background-color: var(--header-bg) !important;
 
     &.navbar-default {
         background-color : #fff;

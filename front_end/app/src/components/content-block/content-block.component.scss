@@ -1,13 +1,14 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../styles/typography";
+@use "../../../styles/theme_variables" as *;
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .card {
     box-shadow   : none;
-    border-color : $light4;
+    border-color : var(--border-color);
+    background-color : var(--card-body-bg);
 
     .sticky1rem {
-        box-shadow: 0 -14px 0 2px $additional_light2;
+        box-shadow: 0 -14px 0 2px var(--body-bg);
         position: sticky;
         top: 1rem;
         z-index: 99;
@@ -23,9 +24,9 @@
         height           : 3rem;
         display          : flex;
         align-items      : center;
-        background-color : $additional_light1;
+        background-color : var(--card-header-bg);
         padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid $light3;
+        border-bottom    : 1px solid var(--border-color);
         position         : relative;
 
         @include media-breakpoint-down(md) {
@@ -37,6 +38,7 @@
 
             h4 {
                 margin : 0;
+                color: var(--card-header-text) !important;
             }
         }
 
@@ -65,7 +67,7 @@
 
     &--body {
         padding          : 1rem;
-        background-color : $light1;
+        background-color : var(--card-body-bg);
 
         img {
             max-width : 100%;
@@ -150,7 +152,8 @@
         }
 
         .table-row-spacer {
-            height  : .5rem;
+            height        : 4px;
+            border-bottom : 8px solid var(--card-body-bg);
             //grid-column-end : span 6; <- set this in your component
             display : grid;
         }
@@ -170,9 +173,10 @@
 
         th {
             @include typography.medium13dark9;
+            color : var(--card-header-text) !important;
             padding          : 5px 15px;
-            background-color : $additional_light1;
-            border-bottom    : 1px solid $light3;
+            background-color : var(--card-header-bg);
+            border-bottom    : 1px solid var(--border-color);
         }
 
         th:last-child {
@@ -181,8 +185,8 @@
 
         td {
             padding          : 5px 15px;
-            background-color : $light1;
-            color            : $dark9;
+            background-color : var(--card-body-bg);
+            color            : var(--card-header-text);
             display          : flex;
             align-items      : center;
         }
@@ -201,8 +205,8 @@
         width            : 100%;
         bottom           : 0;
         padding          : .5rem 1rem 1rem;
-        background-color : $light1;
-        box-shadow       : 0px -22px 22px -6px rgb(255, 255, 255);
+        background-color : var(--card-body-bg);
+        box-shadow       : 0px -22px 22px -6px var(--card-body-bg);
 
         footer {
             // overwrite standard footer properties
@@ -211,7 +215,7 @@
             width            : 100%;
             border           : none;
             padding          : 0;
-            background-color : $light1;
+            background-color : var(--card-body-bg);
             z-index          : 9;
         }
     }
@@ -223,22 +227,22 @@
     }
 
     &.gray {
-        background-color : $light4;
-        border           : 1px solid $light4;
+        background-color : var(--grey-section-bg);
+        border           : 1px solid var(--grey-section-bg);
         border-bottom    : none;
 
         .card--header {
-            background-color    : $light4;
-            border-bottom-color : $light6;
+            background-color    : var(--grey-section-bg);
+            border-bottom-color : var(--grey-section-sep-color);
         }
 
         .card--body {
-            background-color : $light4;
-            border-top       : 1px solid $light6;
+            background-color : var(--grey-section-bg);
+            border-top       : 1px solid var(--grey-section-sep-color);
         }
 
         .card--footer {
-            background-color : $light4;
+            background-color : var(--grey-section-bg);
         }
     }
 

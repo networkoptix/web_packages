@@ -1,9 +1,9 @@
-@use '../../../styles/theme_variables' as *;
+@use "../../../styles/theme_variables" as *;
 
 nx-radio {
     label {
         &.disabled {
-            color: $dark9 !important;
+            color: var(--card-header-text) !important;
             opacity: 0.3 !important;
         }
         &:hover:not([disabled]) {
@@ -11,7 +11,7 @@ nx-radio {
         }
 
         &:active:not([disabled]) {
-            color : $dark9 !important;
+            color : var(--card-header-text) !important;
         }
     }
 
@@ -24,7 +24,7 @@ nx-radio {
             }
 
             svg path.circle {
-                fill : $dark9 !important;
+                fill : var(--card-header-text) !important;
             }
         }
         .check {
@@ -44,36 +44,42 @@ nx-radio {
             position : absolute;
             opacity  : 0;
         }
-
-        input:hover ~ .check {
+    
+        input ~ .check {
             svg path.circle {
-                fill : $dark1;
-            }
-        }
-
-        input:active ~ .check {
-            svg path.circle {
-                fill : $dark9 !important;
+                fill : var(--card-header-text);
             }
         }
 
         input:hover ~ .check {
             svg path.circle {
-                fill : $dark1;
-            }
-
-            & ~ .text {
-                color : $dark1;
+                fill : var(--card-header-text);
             }
         }
 
         input:active ~ .check {
             svg path.circle {
-                fill : $dark9 !important;
+                fill : var(--card-header-text) !important;
+            }
+        }
+
+        input:hover ~ .check {
+            svg path.circle {
+                fill : var(--card-header-text);
             }
 
             & ~ .text {
-                color : $dark9 !important;
+                color : var(--card-header-text);
+            }
+        }
+
+        input:active ~ .check {
+            svg path.circle {
+                fill : var(--card-header-text) !important;
+            }
+
+            & ~ .text {
+                color : var(--card-header-text) !important;
             }
         }
     }

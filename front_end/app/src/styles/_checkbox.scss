@@ -1,4 +1,4 @@
-@use '../../styles/theme_variables';
+@use "../../styles/theme_variables";
 
 /* Customize the label (the container) */
 .checkbox {
@@ -18,7 +18,7 @@
     .text {
         font-family : theme_variables.$font-family-regular;
         user-select : none;
-        color       : theme_variables.$dark9
+        color       : var(--label-color);
     }
 
     /* Hide the browser's default checkbox */
@@ -56,11 +56,11 @@
     & input:active ~ .checkmark {
         svg polygon.box,
         svg polyline.box {
-            stroke : theme_variables.$dark9 !important;
+            stroke : var(--label-color) !important;
         }
 
         & ~ .text {
-            color : theme_variables.$dark9 !important;
+            color : var(--label-color) !important;
         }
     }
 }
@@ -76,7 +76,7 @@
 
     & svg polygon.box {
         fill              : none;
-        stroke            : theme_variables.$dark9;
+        stroke            : var(--label-color);
         stroke-linecap    : round;
         stroke-linejoin   : round;
         stroke-miterlimit : 10;
@@ -84,7 +84,7 @@
 
     & svg polyline.box {
         fill              : none;
-        stroke            : theme_variables.$dark9;
+        stroke            : var(--label-color);
         stroke-linecap    : round;
         stroke-linejoin   : round;
         stroke-miterlimit : 10;

@@ -1,23 +1,27 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as theme_vars;
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables" as theme_vars;
 
 .feed .bookmark-card {
     width: 100%;
-    background-color: var(--light1);
+    background-color: var(--card-header-bg);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     margin-bottom: 20px;
+    
     header {
-        background-color: var(--additional_light1);
+        background-color: var(--card-header-bg);
         padding: 18px 20px 15px 20px;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
         border-radius: 10px 10px 0 0;
+        
         .name {
             font-family: theme_vars.$font-family-bold;
             font-size: theme_vars.$font-size-lg;
         }
     }
+    
     main {
         min-height: 400px;
         min-width: 700px;

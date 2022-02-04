@@ -1,8 +1,8 @@
-@use '../../../../../styles/theme_variables' as *;
-@use '../../../../components/tag/tag.component' as *;
-@use '../../../../styles/typography';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../../../styles/theme_variables" as *;
+@use "../../../../components/tag/tag.component" as *;
+@use "../../../../styles/typography";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 nx-cam-table {
     .table-scroll-fixed {
@@ -38,7 +38,8 @@ nx-cam-table {
       min-width : 1045px;
 
       .table-row-spacer {
-        height : .5rem;
+        height        : 4px;
+        border-bottom : 8px solid var(--card-body-bg);
       }
 
       thead {
@@ -96,18 +97,12 @@ nx-cam-table {
 
       tbody {
         tr {
-          min-height : rem(24px);
-
-          &:hover {
-            color      : var(--dark9);
-            background : var(--brand-core-t90);
-          }
+          min-height : 24px;
 
           &.selected, &:active, &:focus {
-            background : var(--light16);
-
             td {
               color : var(--light1) !important;
+              background-color : var(--light16);
 
               .icon-negative {
                 color : var(--light1);
@@ -116,7 +111,6 @@ nx-cam-table {
           }
 
           td {
-            @include typography.regular13dark9;
             padding      : 4px 4px 4px 0;
             line-height  : 1rem;
             border       : none;

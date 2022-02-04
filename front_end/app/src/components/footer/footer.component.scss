@@ -12,7 +12,7 @@ footer {
     margin-top: 16px;
     position: relative;
     width: 100%;
-    border-top: 1px solid $light5;
+    border-top: 1px solid var(--border-color);
     padding-top: 15px;
 
     .row {

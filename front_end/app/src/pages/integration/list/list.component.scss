@@ -50,7 +50,8 @@
         }
 
         &-descr {
-            @include typography.regular13dark9;
+            @include typography.regular13nocolor;
+            color : var(--label-color);
             margin-top  : .5rem;
         }
     }

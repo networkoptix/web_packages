@@ -6,4 +6,5 @@ svg-icon {
 
 span {
   @include typography.regular13dark9;
+  color : var(--label-color) !important;
 }

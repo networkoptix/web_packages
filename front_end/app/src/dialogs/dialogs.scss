@@ -109,21 +109,22 @@ nx-modal-wizard {
     }
 
     &-header {
-        background-color : $additional_light1;
+        background-color : var(--card-header-bg);
         border-top       : 1px solid transparent !important;
-        border-bottom    : 1px solid $light3 !important;
+        border-bottom    : 1px solid var(--border-color) !important;
         padding          : $modal-title-padding 1rem !important;
         border-radius    : 2px 2px 0 0 !important;
 
         .modal-title {
             @include typography.medium14dark9;
+            color       : var(--card-header-text) !important;
             line-height : $modal-title-line-height !important;
             margin      : 0 !important;
             padding     : 0 !important;
         }
 
         .close {
-            color           : $dark9 !important;
+            color           : var(--card-header-text) !important;
             opacity         : 1 !important;
             width           : 40px !important;
             height          : 40px !important;
@@ -143,7 +144,7 @@ nx-modal-wizard {
                 content          : " ";
                 height           : 16px;
                 width            : 1px;
-                background-color : $dark9;
+                background-color : var(--card-header-text);
             }
 
             .close-content {
@@ -184,7 +185,7 @@ nx-modal-wizard {
 
     &-body {
         padding          : 1rem 1rem 0 !important;
-        background-color : $light1 !important;
+        background-color : var(--card-body-bg) !important;
 
         label {
             margin  : 0 0 .5rem !important;
@@ -214,7 +215,7 @@ nx-modal-wizard {
         .help-block {
             display          : block;
             background-color : transparent;
-            color            : $light16;
+            color            : var(--label-color);
             padding          : .5rem 0 0;
         }
 
@@ -237,10 +238,11 @@ nx-modal-wizard {
 
     &-footer {
         & {
-            background-color : $light1 !important;
+            background-color : var(--card-body-bg) !important;
             justify-content: flex-start !important;
             align-items: center !important;
             padding: 1rem !important;
+            border-radius : 2px 2px 0 0 !important;
         }
 
         & > * {

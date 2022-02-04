@@ -82,9 +82,10 @@
     gap: 8px;
     grid-template-columns: min-content auto;
     align-items: center;
-
+    
     .text-column {
-        text-align: right;
+        text-align : right;
+        color      : var(--label-color);
     }
 
     @include media-breakpoint-down(md) {

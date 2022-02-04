@@ -1,10 +1,11 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables" as *;
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .card {
     box-shadow   : none;
-    border-color : $light4;
+    border-color : var(--border-color);
+    background-color : var(--body-bg);
 
     .sticky1rem {
         box-shadow: 0 -14px 0 2px $additional_light2;
@@ -23,14 +24,15 @@
         height           : 3rem;
         display          : flex;
         align-items      : center;
-        background-color : $additional_light1;
+        background-color : var(--card-header-bg);
         padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid $light3;
+        border-bottom    : 1px solid var(--border-color);
         position         : relative;
-
-        h4 {
+    
+        header h4 {
             margin : 0;
             width  : 100%;
+            color  : var(--card-header-text) !important;
         }
 
         &-logo {
@@ -48,7 +50,7 @@
 
     &--body {
         padding          : 1rem;
-        background-color : $light1;
+        background-color : var(--card-body-bg);
 
         img {
             max-width : 100%;
@@ -89,8 +91,8 @@
         width            : 100%;
         bottom           : 0;
         padding          : .5rem 1rem 1rem;
-        background-color : $light1;
-        box-shadow       : 0px -22px 22px -6px rgb(255, 255, 255);
+        background-color : var(--card-body-bg);
+        box-shadow       : 0px -22px 22px -6px var(--card-body-bg);
 
         footer {
             // overwrite standard footer properties
@@ -99,7 +101,7 @@
             width            : 100%;
             border           : none;
             padding          : 0;
-            background-color : $light1;
+            background-color : var(--card-body-bg);
             z-index          : 9;
         }
     }

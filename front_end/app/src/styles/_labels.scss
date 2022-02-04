@@ -2,6 +2,7 @@
 
 label {
     @include typography.regular13dark9;
+    color : var(--label-color) !important;
     line-height   : 16px;
     margin-bottom : 8px;
 

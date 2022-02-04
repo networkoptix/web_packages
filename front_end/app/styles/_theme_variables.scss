@@ -4,10 +4,131 @@ $font-family-medium : "robotomedium", "Helvetica Neue", Helvetica, Arial, sans-s
 $font-family-light : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-@import '~sass-rem/rem';
+@import "~sass-rem/rem";
 // @import './custom/_custom_palette';
-@import './native-theme/theme_palette';
-@import '_theme_palette';
+@import "./native-theme/theme_palette";
+@import "_theme_palette";
+
+:root {
+    --body-bg    : var(--additional_light2);
+    --alt-body-bg : var(--light1);
+    --header-bg  : var(--light1);
+    --header-border-color : var(--light4);
+    --body-text-color : var(--dark9);
+    
+    --scrollbar-color                   : var(--light16);
+    --scrollbar-thumb-bg                : var(--light10);
+    --scrollbar-thumb-border-color      : var(--additional_light1);
+    --menu-scrollbar-thumb-border-color : var(--light6);
+    
+    --auth-header-bg: var(--additional_light2);
+    --auth-header-color : var(--dark9);
+    --auth-subheader-color : var(--dark9);
+    --auth-body-bg: var(--light1);
+    --auth-pill-bg : var(--light3);
+    
+    --border-color         : var(--light4);
+    --horizontal-sep-color : var(--light6);
+    --label-color          : var(--dark9);
+    
+    --left-menu-border-color      : transparent;
+    --left-menu-l1-bg             : var(--additional_light2);
+    --left-menu-l1-bg-hover       : var(--additional_light3);
+    --left-menu-l1-color          : var(--dark9);
+    --left-menu-l1-selected-bg    : var(--light5);
+    --left-menu-l3-scroll         : var(--light5);
+    --left-menu-l3-shadow         : transparent;
+    --left-menu-l3-bg             : var(--light5);
+    --left-menu-l3-color          : var(--dark9);
+    --left-menu-l3-opacity        : 1;
+    --left-menu-l3-selected-bg    : var(--light16);
+    --left-menu-l3-selected-color : var(--light1);
+    
+    --btn-default-bg: var(--light4);
+    --btn-default-color: var(--dark9);
+    --btn-default-shadow : var(--light7);
+    
+    --btn-clear-bg    : transparent;
+    --btn-clear-color : var(--dark9);
+    
+    --btn-header-saparator-color : var(--light4);
+    --btn-header-main-bg    : var(--light4);
+    --btn-header-main-color : var(--dark9);
+    
+    //--btn-text-bg    : var(--light4;
+    //--btn-text-color : var(--dark9;
+    
+    --card-header-bg : var(--additional_light1);
+    --card-header-text : var(--dark9);
+    --card-body-bg : var(--light1);
+    
+    --input-bg: var(--light4);
+    --input-color: var(--dark9);
+    
+    --grey-section-bg: var(--light4);
+    --grey-section-sep-color: var(--light6);
+}
+
+html[data-theme="dark"] {
+    --body-bg    : #080707; //$dark2;
+    --alt-body-bg : #000000; //$dark1;
+    --header-bg  : #212A2F; //$dark7;
+    --header-border-color: transparent;
+    --body-text-color : #A5B7C0; //$light10;
+    
+    --scrollbar-color                   : #35464F; //$light16;
+    --scrollbar-thumb-bg                : #A5B7C0; //$light10;
+    --scrollbar-thumb-border-color      : #2B383F; //$dark9;
+    --menu-scrollbar-thumb-border-color : var(--dark9);
+    
+    --auth-header-bg : #2B383F; //$dark9;
+    --auth-header-color : #E1E7EA; //$light4;
+    --auth-subheader-color : #A5B7C0; //$light10;
+    --auth-body-bg : #263137; //$dark8;
+    --auth-pill-bg : #3A4D57; //$dark11;
+    
+    --border-color         : #35464F; //$dark11;
+    --horizontal-sep-color : #A5B7C0; //light10;
+    --label-color : #A5B7C0; //light10;
+    
+    --left-menu-border-color      : #2B383F; //$dark9;
+    --left-menu-l1-bg             : #1C2327; //$dark6;
+    --left-menu-l1-bg-hover       : #3A4D57; //$dark11;
+    --left-menu-l1-color          : #E1E7EA; //$light4;
+    --left-menu-l1-selected-bg    : transparent;
+    --left-menu-l3-scroll         : #1C2327; //$dark6;
+    --left-menu-l3-shadow         : transparent;
+    --left-menu-l3-bg             : #1C2327; //$dark6;
+    --left-menu-l3-color          : #E1E7EA; //$light4;
+    --left-menu-l3-opacity        : 0.6;
+    --left-menu-l3-selected-bg    : #35464F; //$light16;
+    --left-menu-l3-selected-color : #F5F7F8; //$light2;
+    
+    --btn-default-bg   : #35464F; //$dark11;
+    --btn-default-color : #E1E7EA; //$light4;
+    --btn-default-shadow : #080707; //$light2;
+    
+    --btn-clear-bg    : transparent;
+    --btn-clear-color : #E1E7EA; //$light4;
+    
+    --btn-header-saparator-color : #A5B7C0; //light10;
+    --btn-header-main-bg    : transparent;
+    --btn-header-main-color : #E1E7EA; //$light4;
+    
+    //--btn-text-bg    : $light4;
+    //--btn-text-color : $dark9;
+    
+    --card-header-bg : #1C2327; //$dark6;
+    --card-header-text : #E1E7EA; //$light4;
+    --card-body-bg   : #121517; //$dark4;
+    
+    --input-bg    : #171C1F; //$dark5;
+    --input-color : #E1E7EA; //$light4;
+    
+    --grey-section-bg : #1C2327; //$dark6;
+    --grey-section-sep-color : #35464F; //$dark11;
+}
+
 
 // Brand colors
 // -------------------------

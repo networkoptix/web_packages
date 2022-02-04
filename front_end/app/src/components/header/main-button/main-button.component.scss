@@ -1,15 +1,17 @@
 @use "../../../../styles/theme_variables" as *;
-@use 'bootstrap_utils' as bootstrap;
+@use "bootstrap_utils" as bootstrap;
 
 .main-button {
     margin-right: 26px;
     margin-top: 0 !important;
     position: relative;
+    
     &.hide-arrow {
         & > svg-icon {
             display: none;
         }
     }
+    
     & > svg-icon {
         position: absolute;
         right: -18px;
@@ -25,12 +27,20 @@
             }
         }
     }
+    
+    button {
+        border           : 1px solid transparent;
+        background-color : var(--btn-header-main-bg);
+        color            : var(--btn-header-main-color);
+    }
 }
 
 .dropdown {
     margin-left: 3px !important;
     & > button {
         border: 1px solid transparent;
+        background-color: var(--btn-header-main-bg);
+        color: var(--btn-header-main-color);
         height: 41px !important;
         border-radius: 4px;
     }
@@ -100,6 +110,6 @@
 .icon-wrapper {
     width: 48px;
     .st0 {
-        fill: $dark9 !important;
+        fill: var(--btn-header-main-color) !important;
     }
 }

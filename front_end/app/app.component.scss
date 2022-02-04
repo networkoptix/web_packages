@@ -6,7 +6,7 @@
 
 nx-app {
     .mainContainer {
-        background-color: $additional_light2;
+        background-color: var(--body-bg);
     }
 
     .altMainBackground {

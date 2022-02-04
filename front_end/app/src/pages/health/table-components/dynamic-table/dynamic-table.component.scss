@@ -1,8 +1,8 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
-@use '../../../../components/tag/tag.component' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables" as *;
+@use "../../../../components/tag/tag.component" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 nx-dynamic-table {
   cursor: default;
@@ -30,7 +30,7 @@ nx-dynamic-table {
       position         : absolute;
       left             : 50%;
       transform        : translateX(-50%);
-      border           : 1px solid var(--light14);
+      border           : 1px solid var(--border-color);
       padding          : 4px 8px;
       bottom           : 35px;
       z-index          : 9;
@@ -51,12 +51,13 @@ nx-dynamic-table {
 
     .table-header {
       @include typography.medium15dark9;
+      color : var(--card-header-text) !important;
       font-weight      : 500 !important;
-      background-color : var(--additional_light1);
+      background-color : var(--card-header-bg);
       padding          : 1rem;
       line-height      : rem(15px);
       height           : 3rem;
-      border           : 1px solid var(--light3);
+      border           : 1px solid var(--border-color);
       border-bottom    : none;
     }
 
@@ -68,9 +69,10 @@ nx-dynamic-table {
       @media (min-width: 1920px) {
         min-width: 900px !important;
       }
-
+  
       .table-row-spacer {
-        height : .5rem;
+        height        : 4px;
+        border-bottom : 8px solid var(--card-body-bg);
       }
 
       thead {
@@ -87,32 +89,32 @@ nx-dynamic-table {
             }
 
             .group-1 {
-              color        : var(--light10);
+              color        : var(--card-header-text) !important;
               border-color : var(--light10);
             }
 
             .group-2 {
-              color        : $blue500;
+              color        : var(--card-header-text) !important;
               border-color : $blue500;
             }
 
             .group-3 {
-              color        : $green500;
+              color        : var(--card-header-text) !important;
               border-color : $green500;
             }
 
             .group-4 {
-              color        : $purple500;
+              color        : var(--card-header-text) !important;
               border-color : $purple500;
             }
 
             .group-5 {
-              color        : $cyan500;
+              color        : var(--card-header-text) !important;
               border-color : $cyan500;
             }
 
             .group-6 {
-              color        : var(--light10);
+              color        : var(--card-header-text) !important;
               border-color : var(--light10);
             }
           }
@@ -120,12 +122,14 @@ nx-dynamic-table {
 
         th {
           @include typography.medium13dark9;
-          font-weight    : 500 !important;
-          padding        : 0 16px 0 0;
-          text-transform : none;
-          overflow-wrap  : break-word;
-          cursor         : pointer;
-          border         : none;
+          color            : var(--card-header-text) !important;
+          background-color : var(--card-header-bg);
+          font-weight      : 500 !important;
+          padding          : 0 16px 0 0;
+          text-transform   : none;
+          overflow-wrap    : break-word;
+          cursor           : pointer;
+          border           : none;
 
           &:first-of-type {
             padding-right: 0;
@@ -138,6 +142,7 @@ nx-dynamic-table {
 
           &.table-title {
             @include typography.regular24dark9;
+            color : var(--card-header-text) !important;
 
             .text-placeholder {
               font-size : 1.25rem;
@@ -168,12 +173,12 @@ nx-dynamic-table {
               margin-bottom: 8px;
 
               &:after {
-                content : ' ';
+                content : " ";
               }
 
               &.asc {
                 &:after {
-                  content : '+';
+                  content : "+";
                 }
               }
             }
@@ -227,6 +232,7 @@ nx-dynamic-table {
 
           td {
             @include typography.regular12dark9;
+            color       : var(--label-color) !important;
             padding     : 0 16px 0 0;
             line-height : 1rem;
             border      : none;

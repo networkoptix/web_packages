@@ -9,7 +9,7 @@
 .camera-settings-info {
     font-family: typography.$font-family-regular;
     font-size: typography.$font-size-base;
-    color: var(--dark9);
+    color: var(--card-header-text);
 
     .grid-container {
         display               : grid;
@@ -131,10 +131,14 @@
     }
 }
 
+nx-block .card {
+    background-color : var(--card-header-bg);
+}
+
 .preview-wrapper {
-    background: var(--additional_light1);
+    background-color: var(--card-header-bg);
     border-radius: 2px;
-    border: 1px solid var(--light3);
+    border: 1px solid var(--border-color);
     overflow: hidden;
     padding: 0;
 }
@@ -151,7 +155,7 @@
 }
 
 .sensitivity-buttons {
-      color: var(--dark9) !important;
+      color: var(--card-header-text) !important;
       border-radius: 2px;
       font-size: 12px;
       width: 32px !important;
