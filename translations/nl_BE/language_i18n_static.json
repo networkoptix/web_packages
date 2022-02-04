@@ -863,7 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "Herstel de verbinding met %CLOUD_NAME% en probeer het opnieuw.",
         "noInternet": "%CLOUD_NAME% is momenteel niet beschikbaar. Probeer het later opnieuw.",
         "userChangesFail": "Wijzigingen toepassen is mislukt",
         "reviewAccepted": "De review is verwijderd",
