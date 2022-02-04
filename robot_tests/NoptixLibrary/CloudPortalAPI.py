@@ -148,7 +148,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_cloud_system_id(self, server_url, local_auth):
-        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        system_settings = CloudPortalAPI.get_system_settings(self, server_url, local_auth)
         for obj in system_settings:
             if obj['name'] == 'cloudSystemID':
                 return obj['value']

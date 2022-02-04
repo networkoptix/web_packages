@@ -217,7 +217,7 @@ ${password}    ${BASE PASSWORD}
     Log    Check that system name is changed - server
     Restart Server   http://${QABURBANK IP}:${system}[port]    ${system}[cloud auth]
     Sleep    10
-    ${settings}=   Get System Settings    ${system}[local auth]    http://${QABURBANK IP}:${system}[port]
+    ${settings}=   ServerAPI.Get System Settings    ${system}[local auth]    https://${QABURBANK IP}:${system}[port]
     FOR    ${s}    IN    @{settings}
         Run Keyword If    '''${s}[name]''' == '''systemName'''    Run Keywords
            ...   Should be equal as strings    ${new system name}    ${s}[value]   AND
@@ -264,7 +264,6 @@ ${password}    ${BASE PASSWORD}
         ...    ${CAMERAS LINK}
         ...    ${USERS LINK}
         ...    ${SERVERS LINK}
-        ...    ${SYSTEM SETTINGS FORM}
         ...    ${SECURITY FORM}
     Validate Header Button Text    ${system}[name]    systems=False
     IF    '${mode}'=='cloud'
@@ -292,7 +291,6 @@ ${password}    ${BASE PASSWORD}
         ...    ${CAMERAS LINK}
         ...    ${USERS LINK}
         ...    ${SERVERS LINK}
-        ...    ${SYSTEM SETTINGS FORM}
         ...    ${SECURITY FORM}
     Wait Until Elements Are Not Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
     Validate Header Button Text    ${system}[name]    systems=False
@@ -328,6 +326,7 @@ ${password}    ${BASE PASSWORD}
         Run Keyword Unless     '${text}' == 'Custom Cameras'    Wait Until Element Is Not Visible    ${CAMERAS LINK}
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Log Out
+        Wait Until Element Is Visible    ${ANONYMOUS BODY}
     END
     Remove User By Email    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${custom role}
 
@@ -402,12 +401,14 @@ ${password}    ${BASE PASSWORD}
         Log in to system    ${system}    ${user}
         Validate Search Input
         Log Out
+        Wait Until Element Is Visible    ${ANONYMOUS BODY}
     END
 
     FOR     ${user}    IN    ${system}[cloud users][advancedViewer]    ${system}[cloud users][viewer]
         Log in to system    ${system}    ${user}
         Wait until element is not visible    ${SEARCH INPUT}
         Log Out
+        Wait Until Element Is Visible    ${ANONYMOUS BODY}
     END
 
 21. Left menu search: Search mechanics
@@ -436,7 +437,7 @@ ${password}    ${BASE PASSWORD}
     Set Suite Variable    ${viewer id}
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
-    Should Be Equal As Numbers    ${num users found}    6
+    Should Be Equal As Numbers    ${num users found}    11
     
     Log    Step 4
     ${name} =    Get Text    ${all users found}[0]
@@ -580,7 +581,7 @@ ${password}    ${BASE PASSWORD}
     Log     C47020: checking that system is disconnected from cloud on the server side
     Restart Server    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Sleep    10
-    ${cloud system id}=   Get Cloud System Id    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
+    ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     # Verify the system is removed from others' users accounts

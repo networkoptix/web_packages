@@ -218,6 +218,7 @@ Log Out Cloud
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element Is Visible    ${LOG OUT BUTTON}
     Click Link    ${LOG OUT BUTTON}
+    Sleep    .5
     Validate Log Out
 
 Log Out Web Admin

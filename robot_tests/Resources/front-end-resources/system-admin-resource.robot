@@ -30,6 +30,7 @@ System Admin Test Restart
     Close Modal If There
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out
+    Sleep    1
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
     Run Keyword If    ${logged in}    Log Out via API
 
@@ -91,8 +92,7 @@ Validate Success Dialog
 # UI - actions
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
-    Click Element    ${SYSTEM NAME}
-    Input Text    ${SYSTEM NAME}    ${new name}
+    Press Keys    ${SYSTEM NAME}    CTRL+a+BACKSPACE    ${new name}
     #Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
     Press Keys    ${SYSTEM NAME}    ENTER
     Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}

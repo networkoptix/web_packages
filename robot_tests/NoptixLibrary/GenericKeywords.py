@@ -18,6 +18,7 @@ from requests import head
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
 from robot.api.deco import keyword, library
+from ServerAPI import ServerAPI
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -698,7 +699,7 @@ class GenericKeywords(object):
             
     @keyword
     def remove_user_by_email(self, auth, serverUrl, email):
-        users = self.get_users(auth, serverUrl)
+        users = ServerAPI.get_users(self, auth, serverUrl)
         for user in users:
             if user['email']==email:
-                self.remove_user(auth, serverUrl, user['id'])
+                ServerAPI.remove_user(self, auth, serverUrl, user['id'])
