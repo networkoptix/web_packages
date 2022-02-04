@@ -66,6 +66,7 @@ class SWITCHES(metaclass=_FlagType):
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
     archive_selection = ('Archive Selection', 'archiveSelection')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
+    cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer')
 
 
 class SAMPLES(metaclass=_FlagType):
