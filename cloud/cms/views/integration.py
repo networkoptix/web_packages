@@ -1,5 +1,4 @@
 from cms.serializers import IntegrationSerializer, IntegrationsListSerializer
-from util.base_cache import BaseCache
 from cms.controllers.integration import check_integration_store_enabled, make_integrations_json
 from django.conf import settings
 from django.db.models import Q
@@ -52,6 +51,8 @@ def get_integration(request, asset_id=None):
     is_enabled = check_integration_store_enabled()
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
         request.user)
+    has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'cms.view_integration_drafts')
 
     if not (asset_id := int(asset_id)) or not (integration := Asset.objects.filter(asset_type__type=INTEGRATION, customizations__name__in=[settings.CUSTOMIZATION], id=asset_id).last()):
         return api_success(INTEGRATION_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
@@ -62,13 +63,13 @@ def get_integration(request, asset_id=None):
                                status_code=status.HTTP_403_FORBIDDEN)
 
         if integration.id not in request.user.assets and not request.user.is_superuser:
-            if draft:
+            if draft and not has_draft_permission:
                 return api_success(
                     'You do not have permission to view this draft.',
                     status_code=status.HTTP_403_FORBIDDEN,
                 )
 
-            if not UserGroupsToAssetPermissions.\
+            if review and not UserGroupsToAssetPermissions.\
                     check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
                 return api_success(
                     'You do not have permission to view this review.',
@@ -110,11 +111,15 @@ def get_integrations(request):
 
     has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(
         request.user)
+    has_draft_permission = UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'cms.view_integration_drafts')
     draft_integrations = []
 
     if not request.user.is_anonymous:
         draft_integrations = integrations.filter(
             Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
+        if has_draft_permission: 
+            draft_integrations = integrations
         if request.user.is_superuser:
             draft_integrations = integrations
             review_integrations = integrations

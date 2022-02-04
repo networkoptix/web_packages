@@ -28,6 +28,8 @@ class ReleaseNotesSerializer(serializers.Serializer):
     lastModified = serializers.CharField()
     review_id = serializers.IntegerField()
     id = serializers.IntegerField()
+    draft = serializers.BooleanField(required=False)
+    pending = serializers.BooleanField(required=False)
 
     @staticmethod
     def generate(release_notes, request):

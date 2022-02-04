@@ -1417,7 +1417,8 @@ class TestCustomization:
         assert self.cust._meta.permissions == (
             ('access_customization', 'Can access customization'),
             ('access_integration_store', 'Can access the integration store'),
-            ('access_developers', 'Can see Developers pages')
+            ('access_developers', 'Can see Developers pages'),
+            ('view_integration_drafts', 'Can view all integration drafts')
         )
 
     def test_name(self):

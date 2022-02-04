@@ -78,6 +78,8 @@ class IntegrationSerializer(serializers.Serializer):
     mine = serializers.BooleanField(required=False)
     canEdit = serializers.BooleanField(required=False)
     urlified = serializers.CharField(required=False)
+    draft = serializers.BooleanField(required=False)
+    pending = serializers.BooleanField(required=False)
 
     @staticmethod
     def generate(integrations, request):
