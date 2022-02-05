@@ -3,6 +3,8 @@ import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 import { NxApplyService, Watcher, SectionWatcher } from '@services/apply.service';
 import { NxProcessService, Process } from '@services/process.service';
 
+import { NxMenuService } from '../../../menu';
+
 @Component({
     selector: 'section-apply-example',
     templateUrl: 'section-apply-example.component.html',
@@ -63,10 +65,14 @@ export class SectionApplyExampleComponent {
 
     constructor(
         private applyService: NxApplyService,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private menuService: NxMenuService,
     ) {}
 
     ngOnInit() {
+        this.menuService.section = 'components';
+        this.menuService.detail = 'applyServiceSection';
+
         // setup section 1
         this.section1Input = 'section1';
         this.saveSection1 = this.processService

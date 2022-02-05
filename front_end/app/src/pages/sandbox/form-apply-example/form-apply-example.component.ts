@@ -6,6 +6,8 @@ import { NxApplyService } from '@services/apply.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxProcessService, Process } from '@services/process.service';
 
+import { NxMenuService } from '../../../menu';
+
 @Component({
     selector: 'form-apply-example',
     templateUrl: 'form-apply-example.component.html',
@@ -54,6 +56,7 @@ export class FormApplyExampleComponent {
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private toastService: NxToastService,
+        private menuService: NxMenuService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
         this.CONFIG = configService.config;
@@ -109,6 +112,9 @@ export class FormApplyExampleComponent {
     }
 
     ngOnInit() {
+        this.menuService.section = 'components';
+        this.menuService.detail = 'applyServiceForm';
+
         this.account.form1Field1Input = 'Tsanko';
         this.account.form1Field2Input = 'Tsolov';
         this.applyService.initPageFormsWatcher(this.pageApply);

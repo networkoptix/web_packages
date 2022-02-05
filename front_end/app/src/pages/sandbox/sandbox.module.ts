@@ -10,9 +10,11 @@ import { DirectivesModule } from '@directives/directives.module';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
+import { MenuModule } from '@src/menu';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { AuthGuard } from '@src/routeGuards';
+import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 
+import { NxGridLayoutComponent } from '../layout/layout.component';
 import { NxGridLayoutModule } from '../layout/layout.module';
 
 import {
@@ -21,14 +23,63 @@ import {
 import {
     FormApplyExampleComponent
 } from './form-apply-example/form-apply-example.component';
+import { FormElementsComponent } from './form-elements/form-elements.component';
+import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
+import { MultiSelectComponent } from './multi-select/multi-select.component';
 import { NxSandboxComponent } from './sandbox.component';
+import { SearchComponent } from './search/search.component';
 import {
     SectionApplyExampleComponent
 } from './section-apply-example/section-apply-example.component';
+import { TagsComponent } from './tags/tags.component';
+import { ToasterComponent } from './toaster/toaster.component';
+import { ValidationComponent } from './validation/validation.component';
 
 const appRoutes: Routes = [
     {
-        path: '', component: NxSandboxComponent, canActivate: [AuthGuard]
+        path: '',
+        component: NxSandboxComponent,
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: '',
+                component: FormElementsComponent,
+            },
+            {
+                path: 'apply-service-form',
+                component: FormApplyExampleComponent,
+                canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'apply-service-section',
+                component: SectionApplyExampleComponent,
+                canDeactivate: [ApplyGuard]
+            }, {
+                path: 'multi-select',
+                component: MultiSelectComponent,
+            }, {
+                path: 'demo-layout',
+                component: NxGridLayoutComponent,
+            }, {
+                path: 'toaster',
+                component: ToasterComponent,
+            }, {
+                path: 'search',
+                component: SearchComponent,
+            }, {
+                path: 'masonry-grid',
+                component: MasonryGridComponent,
+            }, {
+                path: 'form-elements',
+                component: FormElementsComponent,
+            }, {
+                path: 'validation',
+                component: ValidationComponent,
+            }, {
+                path: 'tags',
+                component: TagsComponent,
+            },
+        ]
     }
 ];
 
@@ -40,6 +91,7 @@ const appRoutes: Routes = [
         FormsModule,
         ComponentsModule,
         DirectivesModule,
+        MenuModule,
         PipesModule,
         NxGridLayoutModule,
         VmsClientModule,
@@ -52,7 +104,14 @@ const appRoutes: Routes = [
         NxSandboxComponent,
         SectionApplyExampleComponent,
         FormApplyExampleComponent,
-        DynamicFormApplyExampleComponent
+        DynamicFormApplyExampleComponent,
+        ToasterComponent,
+        MultiSelectComponent,
+        SearchComponent,
+        MasonryGridComponent,
+        FormElementsComponent,
+        TagsComponent,
+        ValidationComponent,
     ],
     bootstrap: [
     ],
