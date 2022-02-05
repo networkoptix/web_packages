@@ -2,8 +2,7 @@ import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { NxApplyService, Watcher, SectionWatcher } from '@services/apply.service';
 import { NxProcessService, Process } from '@services/process.service';
-
-import { NxMenuService } from '../../../menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'section-apply-example',

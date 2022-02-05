@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NxMenuService } from '../../../menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'multi-select',

@@ -5,8 +5,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxProcessService, Process } from '@services/process.service';
-
-import { NxMenuService } from '../../../menu';
+import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
     selector: 'form-apply-example',

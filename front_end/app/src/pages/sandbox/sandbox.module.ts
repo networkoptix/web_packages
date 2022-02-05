@@ -10,7 +10,7 @@ import { DirectivesModule } from '@directives/directives.module';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
-import { MenuModule } from '@src/menu';
+import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 

@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { NxMenuService } from '../../../menu';
+import { NxMenuService } from '@src/menu/menu.service';
+
 import { ISelect } from '../../systems/settings/cameras/cameras.component';
 
 @Component({

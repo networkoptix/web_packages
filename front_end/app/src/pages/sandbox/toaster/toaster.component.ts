@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 
+import { NxMenuService } from '@src/menu/menu.service';
+
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
-import { NxMenuService } from '../../../menu';
 
 @Component({
     selector: 'toaster',
