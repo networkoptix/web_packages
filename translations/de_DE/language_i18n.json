@@ -190,8 +190,6 @@
     "Failed to detach server from system.": "Der Server konnte nicht vom System getrennt werden.",
     "Failed to disconnect system from %CLOUD_NAME%.": "Die Verbindung zwischen dem System und %CLOUD_NAME% konnte nicht getrennt werden.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Zusammenführung von {primarySystem} und {secondarySystem} fehlgeschlagen.",
-    "Failed to reset server.": "Der Server konnte nicht zurückgesetzt werden.",
-    "Failed to restart server.": "Neustart des Servers fehlgeschlagen.",
     "Failed to the check current system's password.": "Das Passwort des aktuellen Systems konnte nicht überprüft werden.",
     "Fill in all required fields": "Füllen Sie alle erforderlichen Felder aus",
     "Firmware version": "Firmwareversion",
