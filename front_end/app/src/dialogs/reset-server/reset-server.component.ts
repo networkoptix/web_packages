@@ -52,7 +52,7 @@ export class ResetServerModalContent {
         private toastService: NxToastService,
         private localStorage: LocalStorageService,
         private router: Router,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,

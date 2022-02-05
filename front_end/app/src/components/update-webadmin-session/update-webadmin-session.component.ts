@@ -1,8 +1,16 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Inject,
+    Input,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -17,7 +25,7 @@ import { WINDOW } from '@services/window-provider';
 export class UpdateWebadminSessionComponent implements OnInit {
     @Input() noConnectionMsg: string;
     @Input() system: NxSystem;
-
+    @Input() dialogRef: DialogRef;
     @Output() loginSuccess = new EventEmitter<any>();
 
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
@@ -42,10 +50,9 @@ export class UpdateWebadminSessionComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private toastService: NxToastService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -60,7 +67,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
             this.auth.login = account.name;
             this.isCloud = this.system.mediaserver.isSessionOauth;
             if (this.isCloud && !(this.window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))) {
-                this.activeModal.close();
+                this.close();
                 this.toastService.notify(`${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`, this.CONFIG.toast.danger, true);
             }
         });
@@ -100,6 +107,6 @@ export class UpdateWebadminSessionComponent implements OnInit {
     }
 
     close = () => {
-        this.activeModal.dismiss();
+        this.dialogRef.close();
     }
 }

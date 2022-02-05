@@ -16,7 +16,7 @@ import {
     HostListener,
     Renderer2
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
@@ -32,6 +32,10 @@ interface Params {
     [key: string]: any;
 }
 
+interface IpvdParams {
+    [key: string]: string;
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-cam-table',
@@ -43,7 +47,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @Input() elements: any[];
     @Input() allowedParameters: string[];
     @Input() activeCamera;
-    @Input() params: any = {};
+    @Input() params: IpvdParams;
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>()
@@ -53,6 +57,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     public selectedCamera;
     public sortOrderASC: boolean;
     public results;
+    public pages;
     public debug: boolean;
 
     private _elements: any[];
@@ -133,6 +138,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private router: Router,
+        private route: ActivatedRoute,
         private uri: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private renderer: Renderer2,
@@ -191,6 +197,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     ngOnInit() {
+        this.params = this.route.snapshot.queryParams;
         this.setDebugAndBetaMode();
 
         this.results = this._elements.length;
@@ -209,20 +216,15 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
         this.uriSubscription = this.uri
             .getParams()
+            .pipe(debounceTime(this.CONFIG.search.debounceShortTime))
             .subscribe(params => {
                 this.params = params;
                 this.setDebugAndBetaMode();
 
-                if (!this.params.debug && !this.params.beta) {
-                    this.filterAllowedParams(
-                        this.serviceHeaders,
-                        this.serviceParams
-                    );
-                }
-
                 this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents ||
-                    this.params.debug ||
-                    this.params.beta;
+                    this.debug ||
+                    this.beta;
+
                 this.showHeaders = this.cameraHeaders;
 
                 if (this.params.sortBy) {
@@ -232,18 +234,17 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                         return x === this.LANG.ipvd[sortBy[0]]();
                     });
 
+                    // do not sort if sorted
                     if (
-                        this.sortOrderASC === direction &&
-                        column === this.selectedHeader
+                        this.sortOrderASC !== direction ||
+                        column !== this.selectedHeader
                     ) {
-                        return; // do not sort if sorted
+                        this.sortOrderASC = direction;
+                        this.toggleSort(sortBy[0], true);
                     }
-
-                    this.sortOrderASC = direction;
-                    this.toggleSort(sortBy[0], true);
                 }
 
-                this.setPage(this.params.page || 1, true);
+                this.setPage(parseInt(this.params.page) || 1, true);
 
                 if (this.params.camera) {
                     const camera = this.pagedItems.find(camera => {
@@ -304,14 +305,20 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.elements) {
-            this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
-            this._elements = changes.elements.currentValue;
-            this.results = this._elements.length;
+            if (changes.elements.firstChange ||
+                    (!changes.elements.firstChange &&
+                     !NxUtilsService.isEqual(changes.elements.currentValue, changes.elements.previousValue))
+            ) {
+                this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
+                this._elements = changes.elements.currentValue;
+                this.results = this._elements.length;
+                this.pages = Math.ceil(this.results / this.pageSize);
 
-            this.sortElements(true /* keep uri params */);
-            this.csvCameraData = this.getCsvData();
+                this.sortElements(true /* keep uri params */);
+                this.csvCameraData = this.getCsvData();
 
-            this.setPage(this.currentPage, true);
+                this.setPage(this.currentPage, true);
+            }
         }
 
         if (changes.activeCamera) {
@@ -364,7 +371,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         /* reset camera and page params in uri */
 
         const queryParams: Params = {};
-
         queryParams.page = undefined;
         queryParams.sortBy = filter;
         queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
@@ -527,9 +533,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
         if (this.params && parseInt(this.params.page) !== pageParam) {
             const queryParams: Params = {};
-            queryParams.page = (this.currentPage === 1)
-                ? undefined
-                : this.currentPage;
+            queryParams.page = pageParam;
 
             this.uri
                 .updateURI('/ipvd', queryParams)
@@ -617,5 +621,12 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     private setDebugAndBetaMode() {
         this.debug = (this.params.debug !== undefined);
         this.beta = (this.params.beta !== undefined);
+
+        if (!this.debug && !this.beta) {
+            this.filterAllowedParams(
+                this.serviceHeaders,
+                this.serviceParams
+            );
+        }
     }
 }

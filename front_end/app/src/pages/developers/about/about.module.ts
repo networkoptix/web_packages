@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -39,7 +38,6 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         FormsModule,
-        NgbModule,
         PipesModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)

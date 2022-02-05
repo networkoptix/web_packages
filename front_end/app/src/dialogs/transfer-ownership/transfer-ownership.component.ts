@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import type { NxSystem, NxSystemRole } from '@services/system.service';
+import { NxUtilsService } from '@services/utils.service';
 
 @Component({
     selector: 'src-transfer-ownership',
@@ -15,14 +16,14 @@ import type { NxSystem, NxSystemRole } from '@services/system.service';
     styleUrls: ['./transfer-ownership.component.scss']
 })
 export class TransferOwnershipModalContent implements OnInit {
-    @Input() system: NxSystem;
-    @Input() closable: boolean;
+    @Input() closable: boolean = true;
 
     @ViewChild('transferOwnershipForm') form: NgForm;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    system: NxSystem;
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;
@@ -33,15 +34,18 @@ export class TransferOwnershipModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
     }
 
     ngOnInit(): void {
+        NxUtilsService.pickFrom(this.dialogData, ['system'], this);
+
         this.newRole = this.system.userManager.accessRoles.find(role =>
             role.name.toLowerCase() === 'administrator'
         );
@@ -68,5 +72,9 @@ export class TransferOwnershipModalContent implements OnInit {
             () => { this.transferComplete = true; },
             () => {},
         );
+    }
+
+    close = () => {
+        this.dialogRef.close();
     }
 }

@@ -48,7 +48,7 @@ export class RestartServerModalContent {
         private simpleDialogService: NxSimpleDialogsService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
         injector: Injector,

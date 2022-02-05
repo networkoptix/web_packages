@@ -1,14 +1,12 @@
-import { formatDate } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, Input } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-
 import {
     TimelineSelectionService
-} from '../../pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
+} from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 @Component({
     selector: 'nx-modal-select-time-range',
@@ -19,21 +17,21 @@ export class SelectTimeRangeModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     hideErrors = true;
-    @Input() closable;
-
     start: Date;
     end: Date;
-
     startDate: string
     startTime: string
     endDate: string
     endTime: string
 
+    @Input() closable = true;
+
     constructor(
-        public activeModal: NgbActiveModal,
         private language: NxLanguageProviderService,
         private configService: NxConfigService,
-        private selection: TimelineSelectionService
+        private selection: TimelineSelectionService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
@@ -41,7 +39,7 @@ export class SelectTimeRangeModalContent {
 
     public closeModal = $event => {
         $event.preventDefault();
-        return this.activeModal.close(false);
+        return this.close(false);
     }
 
     public handleChange (v: string, a: 'start' | 'end', b: 'Date' | 'Time') {
@@ -61,9 +59,9 @@ export class SelectTimeRangeModalContent {
         const start = this.start.getTime();
         const end = this.end.getTime();
         if (start > end) {
-            return this.activeModal.close({ start: end, end: start });
+            return this.close({ start: end, end: start });
         } else {
-            return this.activeModal.close({ start, end });
+            return this.close({ start, end });
         }
     }
 
@@ -80,6 +78,10 @@ export class SelectTimeRangeModalContent {
 
     private get _timezoneOffset () {
         return new Date().getTimezoneOffset() * 60 * 1000;
+    }
+
+    close = (msg: boolean | {}) => {
+        this.dialogRef.close(msg);
     }
 }
 

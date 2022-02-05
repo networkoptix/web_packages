@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -28,7 +27,6 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         RouterModule,
-        NgbModule,
         TranslateModule,
         ComponentsModule,
         PipesModule,

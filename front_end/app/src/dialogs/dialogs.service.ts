@@ -46,9 +46,7 @@ import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
-// import { SelectTimeRangeModalContent } from './select-time-range-datetime-local/select-time-range.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
-// import { SelectTimeRangeModalContent } from './select-time-range-full-fallback/select-time-range.component';
 import { NxToastService } from './toast.service';
 import {
     TransferOwnershipModalContent

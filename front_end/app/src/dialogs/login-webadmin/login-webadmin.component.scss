@@ -1,4 +1,4 @@
-@use '../../../styles/theme_variables' as *;
+@use "../../../styles/theme_variables" as *;
 
 svg-icon {
     stroke: #2B383F
@@ -40,7 +40,7 @@ svg-icon {
 
 .separator::before,
 .separator::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid $additional_light8;
 }
@@ -51,4 +51,9 @@ svg-icon {
 
 .separator:not(:empty)::after {
   margin-left: 1em;
+}
+
+.webadmin-backdrop-login + .cdk-global-overlay-wrapper {
+    display  : flex !important;
+    position : absolute !important;
 }

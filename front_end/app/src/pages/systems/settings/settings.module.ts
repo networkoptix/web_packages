@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
@@ -87,7 +86,6 @@ export const cloudSettingsRoutes: Routes = [
     imports: [
         CommonModule,
         RouterModule,
-        NgbModule,
         TranslateModule,
         ComponentsModule,
         PipesModule,

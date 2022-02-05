@@ -27,8 +27,6 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: []
 })
 export class DisconnectModalContent {
-    // @Input() account: NxAccountService;
-    // @Input() system: NxSystem;
     @Input() closable: boolean = true;
 
     readonly environment: IEnvironment = environment;
@@ -58,7 +56,7 @@ export class DisconnectModalContent {
         private simpleDialogService: NxSimpleDialogsService,
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {

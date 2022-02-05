@@ -3,17 +3,14 @@ import {
     Component,
     Inject,
     OnInit,
-    Input,
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import type { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -31,9 +28,9 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: ['login-webadmin.component.scss']
 })
 export class LoginWebadminModalContent implements OnInit {
-    @Input() account: NxAccountService;
-    @Input() keepPage: boolean;
-    @Input() blockNavigation: boolean;
+    account: NxAccountService;
+    keepPage: boolean;
+    blockNavigation: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -69,7 +66,8 @@ export class LoginWebadminModalContent implements OnInit {
         private simpleDialogService: NxSimpleDialogsService,
         private router: Router,
         private cookieService: CookieService,
-        public activeModal: NgbActiveModal,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) protected window: Window
     ) {
@@ -110,6 +108,17 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     ngOnInit(): void {
+        // These are passed by login service but
+        // only "account", "keepPage" and "blockNavigation" were set as @Input
+        // ******************************************
+        // account, login, cancellable, location, keepPage,
+        // redirectClose, redirectHome, blockNavigation
+        NxUtilsService.pickFrom(
+            this.dialogData,
+            ['account', 'keepPage', 'blockNavigation'],
+            this
+        );
+
         const url = new URL(this.document.location.href);
         const [hash, query] = url.hash.split('?');
         const params = new URLSearchParams(query || '');
@@ -179,7 +188,7 @@ export class LoginWebadminModalContent implements OnInit {
             ignoreUnauthorized: true,
             errorCodes
         }, result => {
-            this.activeModal.close(result);
+            this.close(result);
             if (this.blockNavigation) {
                 return;
             }
@@ -256,5 +265,9 @@ export class LoginWebadminModalContent implements OnInit {
             .subscribe(() => {
                 this.window.location.reload();
             });
+    }
+
+    close = msg => {
+        this.dialogRef.close(msg);
     }
 }

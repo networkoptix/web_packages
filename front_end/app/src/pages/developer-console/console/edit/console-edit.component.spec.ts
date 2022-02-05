@@ -3,7 +3,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement, Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { v4 as uuid } from 'uuid';
 
@@ -118,7 +117,6 @@ describe('NxDevConsoleEditComponent', () => {
                     TranslateModule.forRoot(),
                     HttpClientTestingModule,
                     FormsModule,
-                    NgbModule
                 ],
                 providers: [
                     { provide: NxConfigService, useValue: configMock },

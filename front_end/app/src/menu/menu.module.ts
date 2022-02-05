@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -21,7 +20,6 @@ import { NxMenuComponent } from './menu.component';
     imports: [
         CommonModule,
         RouterModule,
-        NgbModule,
         DirectivesModule,
         TranslateModule,
         PipesModule,

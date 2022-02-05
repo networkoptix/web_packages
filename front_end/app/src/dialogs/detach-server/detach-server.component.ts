@@ -38,7 +38,7 @@ export class DetachServerModalContent {
         private processService: NxProcessService,
         private simpleDialogService: NxSimpleDialogsService,
         private toastService: NxToastService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {

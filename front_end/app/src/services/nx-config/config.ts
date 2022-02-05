@@ -509,6 +509,7 @@ export const nxConfig: IConfig = {
     headerHeight: 48,
     ribbonHeight: 33,
     search: {
+        debounceShortTime: 100, // ms
         debounceTime: 500, // ms
         maxLength: 200,
         minSystems: 9 // We need at least 9 system to enable search

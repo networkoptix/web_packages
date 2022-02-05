@@ -14,14 +14,14 @@
         <div class="modal-body">
             <h3>{{state.label}}</h3>
             <div>{{state.description}}</div>
-            <ngb-progressbar *ngIf="packageHandler.total && packageHandler.total > packageHandler.current"
-                [value]="packageHandler.current"
-                [max]="packageHandler.total"
-                type="primary"
-                height="32px"
-                [animated]="true"
-                [striped]="true"
-                [showValue]="true"></ngb-progressbar>
+<!--            <ngb-progressbar *ngIf="packageHandler.total && packageHandler.total > packageHandler.current"-->
+<!--                [value]="packageHandler.current"-->
+<!--                [max]="packageHandler.total"-->
+<!--                type="primary"-->
+<!--                height="32px"-->
+<!--                [animated]="true"-->
+<!--                [striped]="true"-->
+<!--                [showValue]="true"></ngb-progressbar>-->
         </div>
         <div class="modal-footer border-top-0">
             <a class="btn btn-success" *ngIf="packageHandler.downloadUrl" [href]="packageHandler.downloadUrl" download>Download Package</a>

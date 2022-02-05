@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -78,7 +77,6 @@ describe('NxIntegrationsComponent', () => {
                 imports: [
                     PipesModule,
                     CommonModule,
-                    NgbModule,
                     TranslateModule.forRoot()
                 ],
                 providers: [

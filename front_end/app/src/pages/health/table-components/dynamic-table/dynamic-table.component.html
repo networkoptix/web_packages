@@ -75,17 +75,13 @@
                     </tbody>
                 </table>
             </div>
-            <div class="vertical-align ml-0 clearfix">
+            <div class="vertical-align ml-0 clearfix" *ngIf="healthService.tableReady">
                 <nav aria-label="Cameras table navigation" class="pagination-nav pt-3 pb-3 pb-lg-0">
-                    <ngb-pagination
-                            *ngIf="healthService.tableReady"
-                            [collectionSize]="_elements.length"
-                            [maxSize]="pagerMaxSize"
-                            [ellipses]="pagerEllipses"
-                            [rotate]="true"
-                            [pageSize]="pageSize"
-                            [page]="currentPage"
-                            (pageChange)="setPage($event, undefined, true)"></ngb-pagination>
+                    <nx-paginator
+                            [numPages]="pages"
+                            [pagesToShow]="pagerMaxSize"
+                            [showPrevNext]="true"
+                    ></nx-paginator>
                 </nav>
             </div>
         </ng-container>

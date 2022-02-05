@@ -42,8 +42,9 @@
             <nx-cancel-button [process]="resetServer" [discardFn]="close"></nx-cancel-button>
         </div>
     </div>
-    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
-                                (loginSuccess)="needsUpdate = false; resetServer.run()"
-                                [noConnectionMsg]="'Failed to reset server.' | translate"
-                                [system]="system"></nx-update-webadmin-session>
+    <nx-update-webadmin-session
+        *ngIf="system.useRest && needsUpdate"
+        (loginSuccess)="needsUpdate = false; resetServer.run()"
+        [dialogRef]="dialogRef"
+        [system]="system"></nx-update-webadmin-session>
 </form>

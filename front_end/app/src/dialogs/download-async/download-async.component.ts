@@ -1,5 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
 import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -11,6 +10,7 @@ import {
     ModalManifest,
     ModalType
 } from '@components/console-table/console-table.component.types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import {
     PackageProgress,
     PackageState,
@@ -22,6 +22,7 @@ import {
 } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 
 type DownloadId = string;
@@ -132,10 +133,10 @@ export class PackageHandler {
     styleUrls: ['download-async.component.scss']
 })
 export class DownloadAsyncModalContent implements ModalContent {
-    @Input() heading: string;
-    @Input() modal: ModalType;
-    @Input() manifest: ModalManifest;
-    @Input() values: Record<string, any>;
+    heading: string;
+    modal: ModalType;
+    manifest: ModalManifest;
+    values: Record<string, any>;
 
     PACKAGE_PROGRESS = PackageProgress;
     packageHandler: PackageHandler;
@@ -146,14 +147,21 @@ export class DownloadAsyncModalContent implements ModalContent {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
         private cloudApi: NxCloudApiService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.config;
     }
 
     ngOnInit() {
+        NxUtilsService.pickFrom(
+            this.dialogData,
+            ['heading', 'modal', 'manifest', 'values'],
+            this
+        );
+
         const apiLookup: Partial<Record<ModalType, ConsoleSection>> = {
             [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS
         };
@@ -174,6 +182,6 @@ export class DownloadAsyncModalContent implements ModalContent {
     }
 
     close = (result?: string) => {
-        this.activeModal.close(result);
+        this.dialogRef.close(result);
     }
 }

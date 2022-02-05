@@ -2,7 +2,6 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -36,7 +35,6 @@ import { NxTagComponent } from './tag/tag.component';
         CommonModule,
         TranslateModule,
         FormsModule,
-        NgbModule,
         DirectivesModule,
         PipesModule,
         AngularSvgIconModule.forRoot()

@@ -1,4 +1,5 @@
 <a class="{{element}} {{size}} {{ badgeType }}"
+   name="tag-{{name}}" id="tag-{{name}}"
    [ngClass]="{ 'static' : locked }"
    [attr.href]="tagHref"
    (click)="clickable && selectTag()">

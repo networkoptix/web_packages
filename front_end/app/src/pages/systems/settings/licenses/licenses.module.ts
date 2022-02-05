@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
@@ -23,7 +22,6 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         CommonModule,
         RouterModule,
         FormsModule,
-        NgbModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,

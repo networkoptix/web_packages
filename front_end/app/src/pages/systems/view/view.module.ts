@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
@@ -25,7 +24,6 @@ import VmsClientModule from './vms-client/vms-client.module';
     imports: [
         CommonModule,
         RouterModule,
-        NgbModule,
         TranslateModule,
         ComponentsModule,
         DirectivesModule,

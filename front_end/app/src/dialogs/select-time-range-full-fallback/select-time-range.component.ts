@@ -1,6 +1,4 @@
-import { formatDate } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, Input } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
@@ -9,6 +7,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import {
     TimelineSelectionService
 } from '../../pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
+import { DIALOG_DATA, DialogRef } from '../dialog-ref';
 
 interface DateDict {
     date?: Date,
@@ -29,10 +28,10 @@ export class SelectTimeRangeModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     hideErrors = true;
-    @Input() closable;
-
     start: DateDict
     end: DateDict
+
+    @Input() closable = true;
 
     private _dateFromDateDict (d: DateDict): Date {
         const str = `${d.year}-${d.month.toString().padStart(2, '0')}-${d.day.toString().padStart(2, '0')}` +
@@ -54,10 +53,11 @@ export class SelectTimeRangeModalContent {
     }
 
     constructor(
-        public activeModal: NgbActiveModal,
         private language: NxLanguageProviderService,
         private configService: NxConfigService,
-        private selection: TimelineSelectionService
+        private selection: TimelineSelectionService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
@@ -65,7 +65,7 @@ export class SelectTimeRangeModalContent {
 
     public closeModal = $event => {
         $event.preventDefault();
-        return this.activeModal.close(false);
+        return this.close(false);
     }
 
     public handleChange (v: string, a: 'start' | 'end', b: 'year' | 'month' | 'day' | 'hour' | 'minute') {
@@ -85,15 +85,19 @@ export class SelectTimeRangeModalContent {
         const start = this.start.date.getTime();
         const end = this.end.date.getTime();
         if (start > end) {
-            return this.activeModal.close({ start: end, end: start });
+            return this.close({ start: end, end: start });
         } else {
-            return this.activeModal.close({ start, end });
+            return this.close({ start, end });
         }
     }
 
     ngOnInit() {
         this.start = this._dateDictFromTimeStamp(this.selection.range.start);
         this.end = this._dateDictFromTimeStamp(this.selection.range.end);
+    }
+
+    close = (msg: boolean | {}) => {
+        this.dialogRef.close(msg);
     }
 }
 

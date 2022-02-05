@@ -114,7 +114,7 @@ export class MergeModalContent {
         private systemsService: NxSystemsService,
         private translate: TranslateService,
         private ribbonService: NxRibbonService,
-        private dialogRef: DialogRef,
+        public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         @Inject(WINDOW) private window: Window,
     ) {

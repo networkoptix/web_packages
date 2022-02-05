@@ -17,7 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { SubscriptionLike } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { debounceTime, delay } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon';
 import { NxConfigService, IConfig } from '@services/nx-config';
@@ -69,6 +69,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     _elements: any = [];
     params: any = {};
+    pages: number;
 
     public selectedEntity;
     public selectedGroup;
@@ -157,6 +158,16 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
                     this.selectPage(undefined, this.startIndex);
                 });
+            });
+
+        this.queryParamSubscription = this.uri
+            .getParams()
+            .pipe(debounceTime(this.CONFIG.search.debounceShortTime))
+            .subscribe(params => {
+                this.params = params;
+                if (this.params.page) {
+                    this.selectPage(parseInt(this.params.page));
+                }
             });
     }
 
@@ -398,6 +409,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             return;
         }
 
+        this.pages = Math.ceil(this._elements.length / this.pageSize);
         this.selectPage(page, startIndex);
 
         this.params = { ...this.route.snapshot.queryParams };

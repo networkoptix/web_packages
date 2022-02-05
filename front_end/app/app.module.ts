@@ -20,9 +20,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import {
-    NgbModal,
-} from '@ng-bootstrap/ng-bootstrap';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { InputTrimModule } from 'ng2-trim-directive';
 import { CookieService } from 'ngx-cookie-service';
@@ -113,7 +110,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         CdkScrollableModule
     ],
     providers: [
-        NgbModal,
         Location,
         Title,
         CookieService,

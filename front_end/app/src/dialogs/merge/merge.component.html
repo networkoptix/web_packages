@@ -73,10 +73,12 @@
                 buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
     </div>
-    <nx-update-webadmin-session *ngIf="updateSession"
-                                (loginSuccess)="updateSession = false; checkMergeabilityProcess.run()"
-                                [noConnectionMsg]="'Failed to check if the systems can merge.' | translate"
-                                [system]="system"></nx-update-webadmin-session>
+    <nx-update-webadmin-session
+        *ngIf="updateSession"
+        (loginSuccess)="updateSession = false; checkMergeabilityProcess.run()"
+        [noConnectionMsg]="'Failed to check if the systems can merge.' | translate"
+        [dialogRef]="dialogRef"
+        [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'adminPassword'" #adminPasswordForm="ngForm" name="adminPasswordForm">
     <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
@@ -120,10 +122,12 @@
                 buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
     </div>
-    <nx-update-webadmin-session *ngIf="updateSession"
-                                (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
-                                [noConnectionMsg]="'Failed to the check current system\'s password.' | translate"
-                                [system]="system"></nx-update-webadmin-session>
+    <nx-update-webadmin-session
+        *ngIf="updateSession"
+        (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+        [noConnectionMsg]="'Failed to the check current system\'s password.' | translate"
+        [dialogRef]="dialogRef"
+        [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
     <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
@@ -141,10 +145,12 @@
                 buttonText="{{ 'Try Again' | translate}}"></nx-process-button>
         </div>
     </div>
-    <nx-update-webadmin-session *ngIf="updateSession"
-                                (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
-                                [noConnectionMsg]="'Failed to check the target system\'s password.' | translate"
-                                [system]="system"></nx-update-webadmin-session>
+    <nx-update-webadmin-session
+        *ngIf="updateSession"
+        (loginSuccess)="updateSession = false; checkPasswordProcess.run()"
+        [noConnectionMsg]="'Failed to check the target system\'s password.' | translate"
+        [dialogRef]="dialogRef"
+        [system]="system"></nx-update-webadmin-session>
 </form>
 <form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">
     <div class="modal-body">
@@ -222,8 +228,10 @@
                 buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
         </div>
     </div>
-    <nx-update-webadmin-session *ngIf="updateSession"
-                                (loginSuccess)="updateSession = false; mergingProcess.run()"
-                                [noConnectionMsg]="'Failed to merge {primarySystem} and {secondarySystem}.' | translate: { primarySystem: primaryName, secondarySystem: secondaryName }"
-                                [system]="system"></nx-update-webadmin-session>
+    <nx-update-webadmin-session
+        *ngIf="updateSession"
+        (loginSuccess)="updateSession = false; mergingProcess.run()"
+        [noConnectionMsg]="'Failed to merge {primarySystem} and {secondarySystem}.' | translate: { primarySystem: primaryName, secondarySystem: secondaryName }"
+        [dialogRef]="dialogRef"
+        [system]="system"></nx-update-webadmin-session>
 </form>

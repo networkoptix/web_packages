@@ -111,7 +111,7 @@
                                             size="large"
                                             [name]="tag.label"
                                             [(ngModel)]="tag.value"
-                                            (ngModelChange)="onModelChange(true)"
+                                            (onClick)="onModelChange($event)"
                                             [value]="tag.value">
                                         <ng-container>{{ tag.label }}</ng-container>
                                     </nx-tag>

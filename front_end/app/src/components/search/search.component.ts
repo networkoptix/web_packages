@@ -101,6 +101,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    private debounceShortTime: number;
     private debounceTime: number;
     private params: any = {};
     private searchUpdated: any = Subject;
@@ -143,6 +144,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     ngOnInit() {
         this.placeholderText = (typeof this.placeholder === 'function') ? this.placeholder() : ''; // optional param
+        this.debounceShortTime = this.instant ? 0 : this.CONFIG.search.debounceShortTime; // optional param
         this.debounceTime = this.instant ? 0 : this.CONFIG.search.debounceTime; // optional param
         this.layout = (this.layout !== undefined) ? this.layout : 'full';
         this.showAdvancedOptions = !(this.layout === 'full'); // hide advanced search in "full" layout
@@ -163,7 +165,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             });
 
         this.modelUpdated
-            .pipe(untilDestroyed(this), debounceTime(this.debounceTime))
+            .pipe(untilDestroyed(this), debounceTime(this.debounceShortTime))
             .subscribe(data => {
                 this.modelChanged();
             });
@@ -312,9 +314,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.numberFilters = 0;
         this.filterSelected = '';
 
-        let flag                 = 0;
-        let tagsSelected         = '';
-        let selectsSelected      = '';
+        let flag = 0;
+        let tagsSelected = '';
+        let selectsSelected = '';
         let multiSelectsSelected = '';
 
         if (this.localFilter.tags) {
@@ -465,17 +467,32 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             });
         }
         this.uri.pageOffset = window.pageYOffset;
-        // make sure we reset page on new model
-        queryParams.page = undefined;
-        const hasUpdatedParams = !!Object.values(queryParams).filter(val => val).length;
-        const replaceUrl = hasExistingParams && hasUpdatedParams;
 
-        return this.uri.updateURI(this.uri.getURL(), queryParams, replaceUrl);
+        let modelChanged = false;
+        Object.keys(queryParams).forEach(key => {
+            if (queryParams[key] !== this.params[key]) {
+                modelChanged = true;
+            }
+        });
+
+        if (modelChanged) {
+            // make sure we reset page on new model
+            queryParams.page = undefined;
+            const hasUpdatedParams = !!Object.values(queryParams).filter(val => val).length;
+            const replaceUrl = hasExistingParams && hasUpdatedParams;
+
+            return this.uri.updateURI(this.uri.getURL(), queryParams, replaceUrl);
+        }
+
+        return Promise.resolve({ notUpdated: true });
     }
 
     modelChanged(resetUri?) {
         this.setRouteParams(resetUri)
-            .then(() => {
+            .then(response => {
+                if (response.notUpdated) {
+                    return;
+                }
                 this.numberOfOptionsSelected();
                 this.onChangeCallback(this.localFilter);
             });

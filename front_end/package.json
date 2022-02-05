@@ -71,7 +71,6 @@
     "@angular/router": "10.2.2",
     "@angular/service-worker": "10.2.2",
     "@angular/upgrade": "10.2.2",
-    "@ng-bootstrap/ng-bootstrap": "7.0.0",
     "@ngneat/until-destroy": "8.0.3",
     "@ngx-translate/core": "13.0.0",
     "@ngx-translate/http-loader": "6.0.0",

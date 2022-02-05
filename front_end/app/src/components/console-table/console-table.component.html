@@ -197,7 +197,12 @@
         <nx-pre-loader *ngIf="!dataLoaded; else createPlaceholder"></nx-pre-loader>
     </div>
     <nx-section [nonPadded]="true"  type="d-flex flex-row">
-        <nx-paginator *ngIf="selectedData.showAdvanced$ | async" [numPages]="selectedData.numberOfPages$ | async" [pagesToShow]="selectedManifest.pagesToShow" [tempDisabled]="selectedData.noSearchMatches$ | async"></nx-paginator>
+        <nx-paginator
+            *ngIf="selectedData.showAdvanced$ | async"
+            [numPages]="selectedData.numberOfPages$ | async"
+            [pagesToShow]="selectedManifest.pagesToShow"
+            [tempDisabled]="selectedData.noSearchMatches$ | async"
+        ></nx-paginator>
         <div class="rows-selector" *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.PER_PAGE]">
             <span>Rows per page:</span>
             <nx-select type="transparent-button" [selected]="perPageSelectedOption" [items]="selectedManifest.perPageOptions" (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"></nx-select>

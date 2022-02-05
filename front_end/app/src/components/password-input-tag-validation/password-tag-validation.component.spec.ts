@@ -4,7 +4,6 @@ import {
     TestBed,
     waitForAsync
 } from '@angular/core/testing';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MockProvider } from 'ng-mocks';
 
 import { NxTagComponent } from '@components/tag/tag.component';
@@ -21,7 +20,7 @@ describe('NxPasswordTagValidationComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
-                imports: [NgbModule],
+                imports: [],
                 declarations: [
                     NxPasswordTagValidationComponent,
                     NxTagComponent

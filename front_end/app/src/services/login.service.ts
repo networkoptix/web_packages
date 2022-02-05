@@ -1,12 +1,15 @@
+import { ComponentType, Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
+import { DialogConfig } from '@dialogs/dialog-config';
+import { defaultConfig, DIALOG_DATA, DIALOG_SIZE, DialogRef } from '@dialogs/dialog-ref';
 import {
     LoginWebadminModalContent
 } from '@dialogs/login-webadmin/login-webadmin.component';
@@ -15,7 +18,7 @@ import type { NxAccountService } from '@services/account.service';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import { IConfig, NxConfigService } from './nx-config';
-import { IParams, NxSystem } from './system.service';
+import { NxSystem } from './system.service';
 
 @Injectable({
     providedIn: 'root'
@@ -33,10 +36,11 @@ export class NxLoginService {
         configService: NxConfigService,
         private http: HttpClient,
         private location: Location,
-        private modalService: NgbModal,
         private router: Router,
         private storage: LocalStorageService,
-        private bootstrapProvider: NxBootstrapProvider
+        private bootstrapProvider: NxBootstrapProvider,
+        private overlay: Overlay,
+        private injector: Injector,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -49,12 +53,35 @@ export class NxLoginService {
         this._currentSystem = system;
     }
 
-    private createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any> (
-        modal: Modal, options: Options, inputs: Inputs
-    ): Promise<Result> {
-        const modalRef = this.modalService.open(modal, options);
-        Object.assign(modalRef.componentInstance, inputs);
-        return modalRef.result;
+    private open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
+        const positionStrategy = this.overlay
+            .position()
+            .global()
+            .centerHorizontally()
+            .centerVertically();
+
+        const overlayRef = this.overlay.create({
+            positionStrategy,
+            hasBackdrop: config.hasBackdrop,
+            backdropClass: config.backdropClass,
+            panelClass: config.panelClass,
+            width: config.width,
+        });
+
+        // Create dialogRef to return
+        const dialogRef = new DialogRef(overlayRef);
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [
+                { provide: DialogRef, useValue: dialogRef },
+                { provide: DIALOG_DATA, useValue: config.data },
+            ]
+        });
+
+        const portal = new ComponentPortal(component, null, injector);
+        overlayRef.attach(portal);
+
+        return dialogRef;
     }
 
     private handleCode(code): Promise<boolean> {
@@ -81,42 +108,36 @@ export class NxLoginService {
             return;
         }
 
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static',
-            size: 'sm'
-        };
-
         const system = this._currentSystem || { mediaserver: this._accountService.mediaServerApi };
-        const params: IParams = {
-            account: this._accountService,
-            login: system.mediaserver.loginToken,
-            cancellable: !keepPage || false,
-            closable: true,
-            location: this.location,
-            keepPage: (keepPage !== undefined) ? keepPage : true,
-            redirectClose: redirectClose || false,
-            redirectHome,
-            blockNavigation
+        const config: Partial<DialogConfig> = {
+            width: DIALOG_SIZE.SMALL,
+            data: {
+                account: this._accountService,
+                login: system.mediaserver.loginToken,
+                cancellable: !keepPage || false,
+                location: this.location,
+                keepPage: (keepPage !== undefined) ? keepPage : true,
+                redirectClose: redirectClose || false,
+                redirectHome,
+                blockNavigation
+            }
         };
 
         if (environment.isLocal) {
             if (this.bootstrapProvider.newSystem) {
                 return;
             }
-            Object.assign(options, {
-                centered: true,
+            Object.assign(config, {
                 keyboard: false,
-                backdropClass: 'webadmin-backdrop',
-                windowClass: 'webadmin-window no-scroll',
+                backdropClass: 'webadmin-backdrop-login',
+                panelClass: 'modal-panel webadmin-window no-scroll'
             });
         }
 
-        return this.createModal(LoginWebadminModalContent, options, params)
-            // handle how the dialog was closed
-            // required if we need to have dismissible dialog otherwise
-            // will raise a JS error ( Uncaught [in promise] )
-            .then(result => {
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+
+        return this.open(LoginWebadminModalContent, dialogConfig)
+            .afterClosed().then(result => {
                 this.closeResult = `Closed with: ${result}`;
 
                 if (redirectClose && result === 'canceled') {
@@ -127,6 +148,22 @@ export class NxLoginService {
                 this.closeResult = 'Dismissed';
                 return reason;
             });
+
+        // return this.createModal(LoginWebadminModalContent, options, params)
+        //     // handle how the dialog was closed
+        //     // required if we need to have dismissible dialog otherwise
+        //     // will raise a JS error ( Uncaught [in promise] )
+        //     .then((result) => {
+        //         this.closeResult = `Closed with: ${result}`;
+        //
+        //         if (redirectClose && result === 'canceled') {
+        //             return this.router.navigate([this.CONFIG.redirect.unauthorised]);
+        //         }
+        //         return result;
+        //     }, (reason) => {
+        //         this.closeResult = 'Dismissed';
+        //         return reason;
+        //     });
     }
 
     cancelCodeSubscription() {

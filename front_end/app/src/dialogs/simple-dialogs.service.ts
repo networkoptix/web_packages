@@ -1,14 +1,16 @@
+import { ComponentType, Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT, Location } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DialogConfig } from '@dialogs/dialog-config';
+import { defaultConfig, DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-
-import { IConfig, NxConfigService } from '../services/nx-config';
 
 import { GenericModalContent } from './generic/generic.component';
 import { NxToastService } from './toast.service';
@@ -31,10 +33,11 @@ export class NxSimpleDialogsService {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         location: Location,
-        @Inject(DOCUMENT) private document: Document,
-        private modalService: NgbModal,
         private toastService: NxToastService,
-        private domSanitizer: DomSanitizer
+        private domSanitizer: DomSanitizer,
+        private overlay: Overlay,
+        private injector: Injector,
+        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.location = location;
@@ -43,9 +46,6 @@ export class NxSimpleDialogsService {
             .subscribe(() => {
                 this.LANG = languageService.translations;
             });
-    }
-
-    public ngOnDestroy() {
     }
 
     public dismiss() {
@@ -65,12 +65,35 @@ export class NxSimpleDialogsService {
         return this.toastService.show(message, options);
     }
 
-    public createModal<Modal, Options extends IParams, Inputs extends IParams, Result extends any>(
-        modal: Modal, options: Options, inputs: Inputs
-    ): Promise<Result> {
-        const modalRef = this.modalService.open(modal, options);
-        Object.assign(modalRef.componentInstance, inputs);
-        return modalRef.result;
+    private open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
+        const positionStrategy = this.overlay
+            .position()
+            .global()
+            .centerHorizontally()
+            .centerVertically();
+
+        const overlayRef = this.overlay.create({
+            positionStrategy,
+            hasBackdrop: config.hasBackdrop,
+            backdropClass: config.backdropClass,
+            panelClass: config.panelClass,
+            width: config.width,
+        });
+
+        // Create dialogRef to return
+        const dialogRef = new DialogRef(overlayRef);
+        const injector = Injector.create({
+            parent: this.injector,
+            providers: [
+                { provide: DialogRef, useValue: dialogRef },
+                { provide: DIALOG_DATA, useValue: config.data },
+            ]
+        });
+
+        const portal = new ComponentPortal(component, null, injector);
+        overlayRef.attach(portal);
+
+        return dialogRef;
     }
 
     public confirm (
@@ -81,25 +104,24 @@ export class NxSimpleDialogsService {
         cancelLabel?: string,
         footerClass?: string
     ): any {
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
+        const config: Partial<DialogConfig> = {
+            data: {
+                message: message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '',
+                title,
+                actionLabel,
+                buttonType: actionType || 'default',
+                cancelLabel,
+                buttonClass: actionType || 'btn-primary',
+                footerClass: footerClass || '',
+                hasFooter: true,
+                cancellable: false,
+                closable: true
+            }
         };
 
-        const params: IParams = {
-            message: message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '',
-            title,
-            actionLabel,
-            buttonType: actionType || 'default',
-            cancelLabel,
-            buttonClass: actionType || 'btn-primary',
-            footerClass: footerClass || '',
-            hasFooter: true,
-            cancellable: false,
-            closable: true
-        };
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.createModal(GenericModalContent, options, params);
+        return this.open(GenericModalContent, dialogConfig);
     }
 
     public expiredSession() {

@@ -215,6 +215,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.resetFilterModel();
         }
 
+        this.showAnalytics =
+            this.CONFIG.ipvd.showAnalyticsEvents ||
+            this.debug ||
+            this.beta;
+
         this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices?.();
 
         this.company = this.CONFIG.company.name;
@@ -469,13 +474,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
-
                 this.analytics = data.analytics;
-
-                this.showAnalytics =
-                    this.CONFIG.ipvd.showAnalyticsEvents ||
-                    this.debug ||
-                    this.beta;
                 this.cameraSearchService.showAnalytics = this.showAnalytics;
                 this.addAnalyticsEvents();
                 this.addFilterTags();

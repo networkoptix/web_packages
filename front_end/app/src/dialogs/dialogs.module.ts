@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { QrCodeModule } from 'ng-qrcode';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import { ComponentsModule } from '@components/components.module';
+import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -38,10 +38,7 @@ import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
-// import { SelectTimeRangeModalContent } from './select-time-range-datetime-local/select-time-range.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
-// import { SelectTimeRangeModalContent } from './select-time-range-full-fallback/select-time-range.component';
-import { TransferOwnershipModalContent } from './transfer-ownership/transfer-ownership.component';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import {
     UpdateCameraCredentialsModalContent
@@ -58,7 +55,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         ComponentsModule,
         DirectivesModule,
         RouterModule,
-        NgbModule,
         AngularSvgIconModule.forRoot(),
         PipesModule,
         QrCodeModule,

@@ -142,6 +142,7 @@ nx-cam-table {
 
     .pagination-nav {
       display: inline-flex;
+      flex-direction: column;
 
       /*** overwrite bootstrap pagination style ***/
       .pagination {

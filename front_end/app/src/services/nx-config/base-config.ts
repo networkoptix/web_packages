@@ -175,6 +175,7 @@ const FeatureFlagKeys = [
     'readonlyAPIs',
     'dashboardRedirect',
     'cloudOwnershipTransfer',
+    'paginatorExperimental',
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -591,6 +592,7 @@ export interface Redirect {
 }
 
 export interface Search {
+    debounceShortTime: number;
     debounceTime: number;
     maxLength: number;
     minSystems: number;

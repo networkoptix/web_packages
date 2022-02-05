@@ -38,6 +38,7 @@ import { IBool, CoercedBoolInput } from '@decorators/ibool';
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string;
+    @Input() name: string;
     @Input() size: string = 'small';
     @IBool() @Input() clickable: CoercedBoolInput = true;
     @IBool() @Input() locked: CoercedBoolInput;
@@ -45,7 +46,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() linkParam;
     @IBool() @Input('value') selected: CoercedBoolInput;
 
-    @Output() onClick = new EventEmitter<boolean>();
+    @Output() onClick = new EventEmitter<any>();
 
     public badgeType: string;
     public tagHref: string;
@@ -104,8 +105,12 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     };
 
     writeValue(value: any) {
-        this.selected = value;
-        if (!this.selected) {
+        // tag should have value!
+        if (value === undefined) {
+            return;
+        }
+        // this.selected = value;
+        if (!value) {
             this.deselectTag();
         } else {
             this.selectTag();

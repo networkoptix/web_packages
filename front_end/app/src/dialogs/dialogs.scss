@@ -56,8 +56,14 @@ nx-modal-wizard {
 }
 
 .webadmin {
-    &-backdrop {
-        height: 100vh !important;
+    &-backdrop-login + .cdk-global-overlay-wrapper {
+        //height: 100vh !important;
+        display  : flex !important;
+        position : absolute !important;
+        
+        .modal-holder {
+            margin: 0 !important;
+        }
     }
 
     &-window {
