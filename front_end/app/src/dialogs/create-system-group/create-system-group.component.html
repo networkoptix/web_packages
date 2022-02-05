@@ -3,7 +3,7 @@
         <h1 class="modal-title" translate>Create Group</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.dismiss()" *ngIf="closable">
+                (click)="close()">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
@@ -22,6 +22,6 @@
                 [form]="createSystemGroupForm"
                 [process]="createSystemGroupProcess"
                 [buttonText]="'Add' | translate"></nx-process-button>
-        <nx-cancel-button [process]="createSystemGroupProcess" [discardFn]="activeModal.dismiss"></nx-cancel-button>
+        <nx-cancel-button [process]="createSystemGroupProcess" [discardFn]="close"></nx-cancel-button>
     </div>
 </form>

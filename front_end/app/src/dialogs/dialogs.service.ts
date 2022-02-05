@@ -631,14 +631,8 @@ export class NxDialogsService {
     }
 
     public createSystemGroup() {
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
-        };
-
-        const params: IParams = {
-            closable: true
-        };
-        return this.createModal(CreateSystemGroupModalContent, options, params);
+        const config: IParams = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(CreateSystemGroupModalContent, dialogConfig).afterClosed();
     }
 }

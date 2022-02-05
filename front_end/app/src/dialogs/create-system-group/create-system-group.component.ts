@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -12,7 +12,6 @@ import { NxProcessService, Process } from '@services/process.service';
     styleUrls: []
 })
 export class CreateSystemGroupModalContent implements OnInit {
-    @Input() closable: boolean;
     @ViewChild('addSystemGroupForm') form;
 
     createSystemGroupProcess: Process;
@@ -23,8 +22,9 @@ export class CreateSystemGroupModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        public activeModal: NgbActiveModal,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        public dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
     }
 
@@ -39,11 +39,15 @@ export class CreateSystemGroupModalContent implements OnInit {
     }
 
     ngOnInit() {
-        const successHandler = (group) => {
-            return this.activeModal.close(group);
+        const successHandler = group => {
+            return this.dialogRef.close(group);
         };
         this.createSystemGroupProcess = this.processService.createProcess(() => {
             return this._createGroup(this.group.name);
         }, {}, successHandler);
+    }
+
+    close = () => {
+        this.dialogRef.close();
     }
 }

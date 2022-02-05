@@ -112,7 +112,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.accountService.get()
-            .then((account) => {
+            .then(account => {
                 if (account?.email) {
                     this.account = account;
                     this.userEmail = account.email;
@@ -121,7 +121,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
             });
 
         this.systemSubscription = this.systemsService.systemsSubject
-            .subscribe((systems) => {
+            .subscribe(systems => {
                 if (systems === undefined) {
                     return;
                 }
@@ -310,7 +310,10 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     }
 
     newGroup(): void {
-        this.dialogsService.createSystemGroup().then((res: GroupTile) => {
+        this.dialogsService.createSystemGroup().then((res: GroupTile | undefined) => {
+            if (!res) {
+                return;
+            }
             this.groups.push(res);
             let lastIndex = -1;
             this.filteredTiles.forEach((item, index) => {
