@@ -18,6 +18,7 @@
                 type="email"
                 id="authorizeEmail"
                 name="email"
+                class="form-control"
                 [ngClass]="{ 'invalid-state': email.invalid && (email.dirty && email.touched) && (email.errors && !email.errors.accountDoesNotExist) }"
                 [(ngModel)]="loginEmail"
                 #email="ngModel"

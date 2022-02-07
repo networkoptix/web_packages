@@ -97,8 +97,8 @@ $nx-theme-colors :
     "info" $brand-info $light1,
     "warning" $brand-warning $light1,
     "warning-bright" $brand-warning-bright $light1,
-    "danger" $brand-danger $light1,
-    "danger-bright" $brand-danger-bright $light1;
+    "danger" $brand-danger $light1;
+    //"danger-bright" var(--badge-danger-bright-bg) var(--badge-danger-bright-color);
 
 @each $name, $bg-color, $fg-color in $nx-theme-colors {
     .badge-#{$name} {
@@ -122,5 +122,21 @@ $nx-theme-colors :
             right    : 0;
             top      : 0;
         }
+    }
+}
+
+.badge-danger-bright {
+    @extend .badge;
+    background-color : var(--badge-danger-bright-bg) !important;
+    color            : var(--badge-danger-bright-color) !important;
+}
+.badge-danger-bright-selected {
+    color : var(--badge-danger-bright-color) !important;
+    @include mixins.badge-selected(var(--badge-danger-bright-bg), rgba(var(--badge-danger-bright-bg), 90%), rgba(var(--badge-danger-bright-bg), 85%));
+    
+    .close-button {
+        position : absolute;
+        right    : 0;
+        top      : 0;
     }
 }

@@ -21,7 +21,7 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --scrollbar-thumb-border-color      : var(--additional_light1);
     --menu-scrollbar-thumb-border-color : var(--light6);
     
-    --auth-header-bg: var(--additional_light2);
+    --auth-header-bg: var(--additional_light1);
     --auth-header-color : var(--dark9);
     --auth-subheader-color : var(--dark9);
     --auth-body-bg: var(--light1);
@@ -62,8 +62,21 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --card-header-text : var(--dark9);
     --card-body-bg : var(--light1);
     
-    --input-bg: var(--light4);
-    --input-color: var(--dark9);
+    --input-bg                 : var(--light1);
+    --input-color              : var(--dark9);
+    --input-border-color       : var(--light6);
+    --input-error-color        : var(--error);
+    --input-error-border-color : var(--error);
+    --input-hover-color        : var(--dark9);
+    --input-hover-border-color : var(--light8);
+    --input-focus-color        : var(--dark9);
+    --input-focus-border-color : var(--brand-core);
+    --input-active-bg           : var(--light1);
+    --input-active-color        : var(--dark9);
+    --input-active-border-color : var(--light6);
+    
+    --badge-danger-bright-bg    : var(--error);
+    --badge-danger-bright-color : var(--light1);
     
     --grey-section-bg: var(--light4);
     --grey-section-sep-color: var(--light6);
@@ -95,7 +108,7 @@ html[data-theme="dark"] {
     --left-menu-l1-bg             : #1C2327; //$dark6;
     --left-menu-l1-bg-hover       : #3A4D57; //$dark11;
     --left-menu-l1-color          : #E1E7EA; //$light4;
-    --left-menu-l1-selected-bg    : transparent;
+    --left-menu-l1-selected-bg    : #1C2327; //$dark6;
     --left-menu-l3-scroll         : #1C2327; //$dark6;
     --left-menu-l3-shadow         : transparent;
     --left-menu-l3-bg             : #1C2327; //$dark6;
@@ -122,8 +135,22 @@ html[data-theme="dark"] {
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;
     
-    --input-bg    : #171C1F; //$dark5;
-    --input-color : #E1E7EA; //$light4;
+    --input-bg                 : #121517; //$dark4;
+    --input-color              : #A5B7C0; //$light10;
+    --input-border-color       : #35464F; //$dark11;
+    --input-error-color        : #AA1E1E; //$red_d1;
+    --input-error-border-color : #5E1010; //$red_d4;
+    --input-hover-color        : #A5B7C0; //$light10;
+    --input-hover-border-color : #587785; //$dark18;
+    --input-focus-color        : #E1E7EA; //$light4;
+    --input-focus-border-color : #587785; //$dark18;
+    --input-active-bg           : #0D0E0F; //$dark3;
+    --input-active-color        : #E1E7EA; //$light4;
+    --input-active-border-color : #5D7E8F; //$dark19;
+    
+    --badge-danger-bright-bg : #8E1717; //$red_d2;
+    --badge-danger-bright-color : #E1E7EA; //$light4;
+    
     
     --grey-section-bg : #1C2327; //$dark6;
     --grey-section-sep-color : #35464F; //$dark11;

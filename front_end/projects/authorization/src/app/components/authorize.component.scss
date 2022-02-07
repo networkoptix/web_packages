@@ -1,7 +1,9 @@
 @use "../../../../../app/src/styles/typography";
 @use "../../../../../app/src/styles/mixins";
 @use "../../../../../app/styles/theme_variables" as *;
-
+@use "../../../../../app/styles/css-variables/native-theme/theme_palette" as *;
+@use "../../../../../app/styles/css-variables/theme_palette" as *;
+@use "../../../../../app/styles/css-variables/theme_variables" as *;
 
 @media only screen and (max-width: 355px)  {
     body {
@@ -231,14 +233,10 @@
             }
 
             input {
-                height: 40px;
-                font-size: $h6-font-size;
-                padding: 0 8px;
-                border-radius: 1px;
-                border: 1px solid $light6;
-                &:hover {
-                    border-color: $light8;
-                }
+                height: 40px !important;
+                font-size: $h6-font-size !important;
+                padding: 0 8px !important;
+                border-radius: 1px !important;
             }
 
             .create-row input {

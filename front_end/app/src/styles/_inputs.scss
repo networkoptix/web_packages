@@ -1,6 +1,6 @@
-@use './typography';
-@use '../../styles/theme_variables' as *;
-@use './mixins';
+@use "./typography";
+@use "../../styles/theme_variables" as *;
+@use "./mixins";
 
 .form-control {
     display          : block !important;
@@ -8,42 +8,52 @@
     height           : 32px !important;
     font-size        : rem(14px) !important;
     line-height      : 1.428571429 !important;
-    color            : $dark9 !important;
-    background-color : $light1 !important;
+    color            : var(--input-color) !important;
+    background-color : var(--input-bg) !important;
     background-image : none !important;
-    border           : 1px solid $light6 !important;
-    border-radius    : 2px !important;
+    border           : 1px solid var(--input-border-color) !important;
+    border-radius    : 1px !important;
     transition       : none !important;
     box-shadow       : none !important;
     padding          : $padding-base-vertical $padding-input-horizontal !important;
 
     @include mixins.placeholder ();
+    
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-text-fill-color : var(--input-color);
+        -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+    }
 
     &[disabled], &[readonly],
     fieldset[disabled] & {
-        background-color : $additional_light2 !important;
+        opacity : .3;
 
         &:hover, &:focus {
-            border-color : $light6 !important;
+            border-color : var(--input-border-color) !important;
         }
     }
 
     &[type="password"] {
-        font-family: 'Roboto', 'Helvetica', sans-serif; // reset font to show dots and not Japanese currency
+        font-family: "Roboto", "Helvetica", sans-serif; // reset font to show dots and not Japanese currency
     }
 
     &:hover {
-        border-color : $light8;
+        border-color : var(--input-hover-border-color);
     }
 
     &:focus {
-        border-color : var(--brand-core);
+        background-color: var(--input-active-bg) !important;
+        color : var(--input-active-color) !important;
+        border-color : var(--input-active-border-color) !important;
         box-shadow   : none;
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
-        border-color : $error !important;
-        color        : $error !important;
+        border-color : var(--input-error-border-color) !important;
+        color        : var(--input-error-color) !important;
 
         + .input-group-addon {
             border-color     : transparent;
@@ -53,17 +63,25 @@
 }
 
 .form-component {
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-text-fill-color : var(--input-color);
+        -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+    }
+    
     &.ng-untouched {
         input {
-            border-color : $light6 !important;
-            color        : $dark9 !important;
+            border-color : var(--input-border-color) !important;
+            color        : var(--input-color) !important;
         }
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched) {
         input {
-            border-color : $error !important;
-            color        : $error !important;
+            border-color : var(--input-error-border-color) !important;
+            color        : var(--input-error-color) !important;
 
             + .input-group-addon {
                 border-color     : transparent;
@@ -108,8 +126,8 @@ select.form-control {
 // This is used to implement updated validation handling where errors aren't shown until submit
 // See register.component for implementation example.
 .override-error-style {
-    border-color: $light6 !important;
-    color: $dark9 !important;
+    border-color: var(--input-border-color) !important;
+    color: var(--input-color) !important;
 }
 input.hide-errors {
     @extend .override-error-style;
@@ -128,24 +146,31 @@ input.hide-errors {
     width            : 100% !important;
     font-size        : rem(14px) !important;
     line-height      : 1.428571429 !important;
-    color            : $dark9 !important;
-    background-color : $light1 !important;
+    color            : var(--input-color) !important;
+    background-color : var(--input-bg) !important;
     background-image : none !important;
-    border           : 1px solid $light6 !important;
-    border-radius    : 2px !important;
+    border           : 1px solid var(--input-border-color) !important;
+    border-radius    : 1px !important;
     transition       : none !important;
     box-shadow       : none !important;
     padding          : $padding-base-vertical $padding-input-horizontal !important;
     @include mixins.placeholder ();
+    
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-text-fill-color : var(--input-color);
+        -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+    }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
-        border-color : $error !important;
-        color        : $error !important;
+        border-color : var(--input-error-border-color) !important;
+        color        : var(--input-error-color) !important;
 
         + .input-group-addon {
             border-color     : transparent;
             background-color : transparent;
         }
     }
-
 }
