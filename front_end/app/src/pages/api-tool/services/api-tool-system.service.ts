@@ -7,6 +7,8 @@ import { delay, distinctUntilChanged, filter, finalize, map, retryWhen, take } f
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import type { IConfig } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config';
 import type { APIDocType } from '@services/nx-config/base-config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -23,12 +25,14 @@ import { NxReadonlyAPIService } from './readonly-api.service';
 @UntilDestroy()
 @Injectable()
 export class NxAPIToolSystemService {
+    CONFIG: IConfig;
     _currentSystem: NxSystem;
     currentSystemId$ = new BehaviorSubject<string>(null);
     systemVersion$ = new BehaviorSubject<string>(null);
     systemEmitter$ = new Subject<EmitInfo<NxSystem>>();
     validSystems: NxSystemWithUserInfo[] = []; // Used for trying all possible systems before showing an error
     manualSystemChange = false;
+    systemChangeLockout = false;
 
     mediaServer = {
         updating: false,
@@ -75,6 +79,7 @@ export class NxAPIToolSystemService {
     set systemVersion(version: string) { this.systemVersion$.next(version); }
 
     constructor(
+        private configService: NxConfigService,
         private systemService: NxSystemService,
         private readonlyAPIService: NxReadonlyAPIService,
         private accountService: NxAccountService,
@@ -85,6 +90,7 @@ export class NxAPIToolSystemService {
         private localStorage: LocalStorageService,
         private systemsService: NxSystemsService,
     ) {
+        this.CONFIG = this.configService.getConfig();
         this.initializeAPITool();
 
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
@@ -98,6 +104,7 @@ export class NxAPIToolSystemService {
             this.outDatedSystem$.next(false);
             this.loading$.next(true);
             this.handleSystemChange();
+            this.disableManualSystemChanging();
         });
 
         this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(({ api }) => {
@@ -113,6 +120,7 @@ export class NxAPIToolSystemService {
                 }
                 if (this.currentServerId) {
                     this.loading$.next(false);
+                    this.systemChangeLockout = false;
                 } else {
                     this.tryNextSystem();
                 }
@@ -429,5 +437,12 @@ export class NxAPIToolSystemService {
         const version = this.systemVersion;
         const cacheObject = { version, json };
         this.localStorage.store(this.makeLSKey(this.currentSystemId, type), cacheObject);
+    }
+
+    private disableManualSystemChanging = () => {
+        this.systemChangeLockout = true;
+        setTimeout(() => {
+            this.systemChangeLockout = false;
+        }, (this.CONFIG.apiTool.manualSystemChangeCooldown));
     }
 }

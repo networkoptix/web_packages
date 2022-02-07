@@ -34,6 +34,9 @@ export const nxConfig: IConfig = {
         legacy: '/swagger-ui/openapi_legacy.json',
         deprecated: '/swagger-ui/openapi_deprecated.json'
     },
+    apiTool: {
+        manualSystemChangeCooldown: 5000
+    },
     cameraCredentialUpdateTimeout: 1500,
     cameraSettings: {
         sensitivityColors: [

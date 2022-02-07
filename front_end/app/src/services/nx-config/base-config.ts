@@ -32,6 +32,7 @@ export interface BaseConfig {
     animations: Animations;
     apiBase: string;
     apiDocURL: APIDocURL;
+    apiTool: APIToolSettings;
     cameraCredentialUpdateTimeout: number;
     cameraSettings: CameraSettings;
     clientMode: ClientMode;
@@ -194,6 +195,10 @@ export interface APIDocURL {
     main: string;
     legacy: string;
     deprecated: string;
+}
+
+export interface APIToolSettings {
+    manualSystemChangeCooldown: number
 }
 
 export interface AccessRoles {

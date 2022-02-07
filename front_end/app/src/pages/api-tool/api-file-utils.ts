@@ -62,6 +62,8 @@ export const addAPITypeToTags = (api: APIDoc, type: APIDocType = 'main') => {
     // We have to change the tags on apis
     // so that swagger can properly differentiate tags with the same name coming from multiple different API files
     const tagModifier = getTagModifier(type);
+    api.tagsModified = true;
+
     api.tags.forEach(tag => {
         tag.name = tag.name + getTagModifier(type);
     });
@@ -111,6 +113,8 @@ export const removeProprietaryEndpoints = (api: APIDoc) => {
 };
 
 export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: APIDocType) => {
+    if (APIDoc.tagsModified) return;
+
     removeProprietaryEndpoints(APIDoc);
     addAPITypeToTags(APIDoc, type);
 };
@@ -174,7 +178,7 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
             const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
             const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
             methodNode.parentNode = subMenuNode;
-            subMenuNode.nodes.push(methodNode);
+            subMenuNode?.nodes?.push(methodNode);
         });
     });
 };
