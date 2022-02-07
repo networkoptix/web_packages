@@ -196,6 +196,7 @@ Force Tags        system
     Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Wait Until Element Is Visible    ${SECURITY FORM}
     FOR    ${setting}    IN    @{tested settings}
+        Wait Until Element Is Visible    ${setting}/..
         Checkbox Should Be Selected     ${setting}
     END
 
