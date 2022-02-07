@@ -6,7 +6,7 @@ ${ADMIN LINK}              //a[@id="admin"]
 ${GENERAL LINK}            //a[@id="general"]
 ${USERS LINK}              //a[@id="users"]
 ${SYSTEM SETTINGS FORM}    //form[@name="systemSettingsForm"]
-${SECURITY FORM}           //form[@id="securitySettingsForm"]
+${SECURITY FORM}           //form[@name="systemAndSecuritySettingsForm"]
 
 ${ENABLE AUTO DISCOVERY CHECKBOX}     //*[@id="autoDiscoveryEnabled"]
 ${SEND ANONYMOUS USAGE CHECKBOX}      //*[@id="statisticsAllowed"]

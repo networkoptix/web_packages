@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       Systems Page Suite Setup
 Test Setup        Common Restart Logout    ${ENV}
-Suite Teardown    Systems Page Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Systems Page Suite Teardown
 Force Tags        system    cloud
 
 *** Test Cases ***

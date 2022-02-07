@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Camera Suite Setup
 Test Setup        Camera Test Setup
 Test Teardown     reset cameras and log out
-Suite Teardown    Camera Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Camera Suite Teardown
 Force Tags        system    cameras
 
 *** Variables ***
@@ -66,11 +66,11 @@ Camera Suite Setup
     #Add Software Camera    ${system}[port]    ${camera port3}    online
     #Sleep    30
     
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    192.168.0.27     manufacturer=Sony    #SNC-XM636
-    Add Camera    http://${QA BURBANK IP}:${system2}[port]    admin    QAbur777$    00-16-6C-7F-65-67    192.168.0.206     manufacturer=Hanwha_Sunapi    #SND-6084
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    192.168.0.201    manufacturer=Sony    #SNC-CH120
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    192.168.0.208    manufacturer=Sony    #SNC-DH120T
-    Add Camera    http://${QA BURBANK IP}:${system}[port]    admin    admin        78-84-3C-0F-82-76    192.168.0.209    manufacturer=Sony    #SNC-CH280 not connected
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    http://192.168.0.27     manufacturer=Sony    #SNC-XM636
+    Add Camera    https://${QA BURBANK IP}:${system2}[port]    admin    QAbur777$    00-16-6C-7F-65-67    http://192.168.0.206     manufacturer=Hanwha_Sunapi    #SND-6084
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    http://192.168.0.201    manufacturer=Sony    #SNC-CH120
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    http://192.168.0.208    manufacturer=Sony    #SNC-DH120T
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        78-84-3C-0F-82-76    http://192.168.0.209    manufacturer=Sony    #SNC-CH280 not connected
     Sleep    50
     ${camera id}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id}    cameraName    good cam
@@ -105,7 +105,7 @@ Camera Test Setup
     Log in to user and system    ${user}    ${system}
     Sleep    5
     Go To Cameras
-    
+
 Offline Server Test Setup
     Stop Docker Server    ${system3}[name]
     Camera Test Setup    user=${system3}[owner]    system=${system3}[cloud id]
@@ -246,7 +246,7 @@ Set Radio Value
     Should Be Equal As Strings    ${value}    Offline
 
 7. Warning dialog appears when changes are made on navigating away and works correctly
-    [Tags]    C76416    
+    [Tags]    C76416
     Log    Step 1
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -912,16 +912,16 @@ Set Radio Value
 #Record motion and record motion low quality radio buttons should be disabled
 
 32. Placeholder shows when system is offline
-    [Tags]    C76254
+    [Tags]    C76254    debug
     [Setup]    Offline Server Test Setup
     Wait Until Elements are Visible
     ...    ${OFFLINE PLACEHOLDER IAMGE}
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
     Log Out
-    
+    Sleep   5
     Log in to user and system    ${system3}[cloud users][cloudAdmin]    ${system3}[cloud id]
-    Wait Until Element is Visible    ${CAMERAS LINK}
+    Wait Until Element is Visible    ${CAMERAS LINK}    timeout=5
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible
     ...    ${OFFLINE PLACEHOLDER IAMGE}

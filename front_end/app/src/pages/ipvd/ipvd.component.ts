@@ -85,10 +85,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     offsetSubscription: SubscriptionLike;
     getIPVDSubscription: SubscriptionLike;
 
-    @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
-    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
-    @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef;
-    @ViewChild('ipvdRequest', { static: false }) ipvdRequest: ElementRef;
+    @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('ipvdRequest', { static: false }) ipvdRequest: ElementRef<HTMLSpanElement>;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -248,8 +248,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     initPseudoAnchors() {
-        if (this.ipvdRequest && !this.targets.find((target: any) => target.id === 'request')) {
-            const linkRequest = this.ipvdRequest.nativeElement.querySelector('span#request');
+        if (this.ipvdRequest) {
+            this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+            const linkRequest = this.ipvdRequest.nativeElement
+                .querySelector<HTMLSpanElement>('span#request');
             NxUtilsService.addPseudoAnchor(
                 this.targets,
                 linkRequest,

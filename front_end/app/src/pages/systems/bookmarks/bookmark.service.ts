@@ -47,10 +47,11 @@ export interface Bookmark {
     name: string;
     description: string;
     startTimeMs: string;
-    durationMs: string;
+    durationMs: number;
     tags: string[];
     creatorUserId: string;
     creationTimeMs: string;
+    src?: string;
     thumbnail?: string;
     tagsFormatted?: { type: string, label: string }[];
 }
@@ -82,6 +83,13 @@ export class BookmarkService implements OnDestroy {
             .pipe(
                 map((bookmarks: Bookmark[]) => bookmarks.map((bookmark: Bookmark) => ({
                     ...bookmark,
+                    src: this.system.mediaserver.getExportUrl({
+                        cameraId: bookmark.deviceId,
+                        duration: bookmark.durationMs,
+                        endPos: bookmark.startTimeMs + bookmark.durationMs,
+                        pos: bookmark.startTimeMs,
+                        transport: 'mp4'
+                    }),
                     thumbnail: this.system.serverManager.getPreviewUrl(
                         bookmark.deviceId, bookmark.startTimeMs, 700, 400, 0
                     )

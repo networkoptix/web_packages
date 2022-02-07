@@ -68,7 +68,7 @@
         </nx-vendor-list>
         <div>
             <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-                <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
+                <span>{{'ipvdDisclaimer' | translate:disclaimerParams}} </span>
                 <span #ipvdRequest [innerHTML]="LANG.ipvdFeedback.request() | safe : 'html'"></span>
             </p>
         </div>

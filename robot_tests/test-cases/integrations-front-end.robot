@@ -5,7 +5,7 @@ Resource          ../variables-env.robot
 Suite Setup       Open Browser and go to URL    ${ENV}
 Test Setup        Go To    ${ENV}
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        integrations    Threaded 
 
 *** Variables ***

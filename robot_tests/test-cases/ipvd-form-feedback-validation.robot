@@ -3,7 +3,7 @@ Resource          resource.robot
 Suite Setup       Open IPVD Page
 Test Template     Test Submit Feedback Message
 Test Teardown     NONE
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        form    Threaded
 
 *** Variables ***

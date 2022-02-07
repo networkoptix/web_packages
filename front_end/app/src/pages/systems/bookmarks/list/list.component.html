@@ -28,10 +28,7 @@
             <span class="date">{{bookmark.startTimeMs | date:'medium':'UTC'}}</span>
         </header>
         <main>
-            <a class="">
-            <!-- [routerLink]="bookmark.link" [queryParams]="bookmark.queryParams"> -->
-                <div class="card-main-video"><img [src]="bookmark.thumbnail" [alt]="'thumbnail of ' + bookmark.name"></div>
-            </a>
+            <clip class="video" [sourceUrl]="bookmark.src" [posterUrl]="bookmark.thumbnail"></clip>
         </main>
         <footer class="tags-compact">
             <ng-container *ngFor="let tag of bookmark.tagsFormatted">

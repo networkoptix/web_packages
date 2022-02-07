@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { delay, switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { SearchTag, SearchFilter } from '@components/search/search.component';
@@ -83,8 +83,10 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                         this.account.email,
                         params.systemId
                     );
-                    return this.bookmarkService.getBookmarks();
+                    return of(true);
                 }),
+                delay(500),
+                switchMap(() => this.bookmarkService.getBookmarks()),
                 untilDestroyed(this)
             ).subscribe((bookmarks: Bookmark[]) => {
                 this.restEndpointUsed = true;

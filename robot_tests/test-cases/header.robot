@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Header Suite Setup
 Test Setup        Header Test Setup
 Test Teardown     Header Test Teardown
-Suite Teardown    Header Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Header Suite Teardown
 Force Tags        cloud
 
 *** Test Cases ***

@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Health Monitor Suite Setup
 Test Setup        Health Monitor Test Setup
 Test Teardown     Health Monitor Test Teardown
-Suite Teardown    Health Monitor Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Health Monitor Suite Teardown
 Force Tags        Threaded    hm
 
 *** Variables ***

@@ -33,6 +33,7 @@ Cloud Suite Setup
     Open Browser and go to URL    ${url}
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}     65
+    Sleep    1
     Click Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
     Log Out
@@ -377,7 +378,7 @@ Reset Local Users API
         ...    '${variable}' == 'liveviewer'    liveViewer
         ...    '${variable}' == 'advancedviewer'    advancedViewer
         ...    ${variable}
-        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    user id=${user}[id]    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}
     END
 
 Check Special Hints

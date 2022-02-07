@@ -218,6 +218,7 @@ Log Out Cloud
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element Is Visible    ${LOG OUT BUTTON}
     Click Link    ${LOG OUT BUTTON}
+    Sleep    .5
     Validate Log Out
 
 Log Out Web Admin
@@ -401,7 +402,7 @@ Restore Password using API
 
 Go to Users List
     Wait Until Element is Visible    ${USERS LIST LINK}
-    Click Element    ${USERS LIST LINK}
+    Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
 
 Go to System Administration
     Wait Until Element Is Visible    ${SYSTEM ADMINISTRATION LINK}
@@ -414,7 +415,7 @@ Go to Servers
 Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success    ${system}=${AUTO TESTS}
     Wait Until Element Is Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Wait Until Keyword Succeeds    10    0.5    Click Element    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}    timeout=60
     Sleep    1
     Click Button    ${ADD USER BUTTON SYSTEMS}
@@ -822,7 +823,7 @@ Create Local Users via API
     &{liveViewer} =    Create Dictionary
     &{viewer} =    Create Dictionary
     FOR    ${user}    IN    @{locals}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
         Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
         Set To Dictionary    ${local users}    ${user}=&{${user}}
     END
@@ -859,11 +860,12 @@ Check Password Badge
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}  
 
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Mouse Over    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}/div[text()="${PASSWORD TOO COMMON TEXT}"]
-    ...    ELSE IF    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}/div[text()="${PASSWORD IS WEAK TEXT}"]
-    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}/div[text()="${PASSWORD SPECIAL CHARS TEXT}"]
-    ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}/div[text()="${PASSWORD IS WEAK TEXT}"]
-    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}/div[text()="${PASSWORD TOO SHORT TEXT}"]
+    Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD TOO COMMON TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD SPECIAL CHARS TEXT}"]
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD IS WEAK TEXT}"]
+    ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD TOO SHORT TEXT}"]
+    Mouse Over    //input[@type="password"]
 
     Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Move focus and check badge stays    ${PASSWORD IS TOO COMMON BADGE}    ${new focus}
     ...    ELSE IF    '''${pass}''' in ${weak passwords}         Move focus and check badge stays    ${PASSWORD IS WEAK BADGE}    ${new focus}
@@ -1132,10 +1134,11 @@ Execute Command Remotely
     Acquire Lock    exec_cmd_lock
     Open Connection    ${host ip}
     SSHLibrary.Login    ${host user}    ${host password}
-    ${result}=   Execute Command    ${command}
+    ${result}=   Execute Command    ${command}     return_rc=${True}
+    Should Be Equal As Integers     ${result}[1]    0
     Close Connection
     Release Lock    exec_cmd_lock
-    [Return]    ${result}
+    [Return]    ${result}[0]
 
 Wait Until Element is Visible with Retry
     [Arguments]    ${element}    ${timeout}=120

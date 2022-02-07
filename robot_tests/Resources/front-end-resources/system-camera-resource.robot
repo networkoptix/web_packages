@@ -127,7 +127,7 @@ Add Software Camera
 
 Create And Add Custom Camera User Type and User
     ${user}=    Register and activate account with random email    mark     hamill    ${BASE PASSWORD}
-    ${role id}=   Save User Role    ${system}[cloud auth]    http://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
+    ${role id}=   Save User Role    ${system}[cloud auth]    https://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
     #Rest Save User     ${system}[local auth]    h${QA BURBANK IP}:${system}[port]    ${user}    Custom Cameras    ${user}    mark Hamill    ${BASE PASSWORD}
     Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}
     ${id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]
@@ -146,4 +146,4 @@ Take Camera Offline
 Bring Camera Online
     [Documentation]    Brings the camera back online by removing the blacklisting of its IP on the docker server
     [Arguments]    ${docker name}    ${Camera IP}
-    Execute Command Remotely    docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
+    Execute Command Remotely   docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP

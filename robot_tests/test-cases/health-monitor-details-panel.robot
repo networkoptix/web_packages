@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Start
 Test Template     Check Details Panel Alerts
 #Test Teardown     Run Keyword If Test Failed    Start
-Suite Teardown    Health Monitor Details Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Health Monitor Details Tear Down
 Force Tags        email    form    Threaded    hm
 
 *** Variables ***
@@ -76,7 +76,7 @@ Health Monitor Details Tear Down
     ${results}    Execute Command    docker container stop ${server}[id]
     ${results}    Execute Command    docker container rm ${server}[id]
     FOR    ${user}    IN    @{server['cloud users'].values()}
-         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}          ${password}  
+         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}          ${password}  
     END
     Close All Connections
     Close All Browsers

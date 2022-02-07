@@ -135,13 +135,17 @@ class ServerAPI(object):
         return r.json()
 
     @keyword
-    def setup_local_system(self, serverUrl, newPassword, systemName):
+    def setup_local_system(self, server_url, new_password, system_name):
         logger.trace("4.2")
         body= {
-            "password":newPassword,
-            "systemName":systemName
+            "password": new_password,
+            "systemName": system_name
         }
-        r = requests.post(f"{serverUrl}/api/setupLocalSystem", auth=HTTPBasicAuth("admin","admin"), json=body, verify=False)
+        r = requests.post(f"{server_url}/api/setupLocalSystem", auth=HTTPBasicAuth("admin", "admin"), json=body, verify=False)
+
+        auth = ("admin", new_password)
+        self.set_system_settings(auth, server_url, {"statisticsAllowed": 'false'})
+
         return r.json()
 
     @keyword
@@ -307,7 +311,7 @@ class ServerAPI(object):
             "cameraId":cameraId,
             f"{attribute}":value
         }
-        r = requests.post(f'{serverUrl}/ex2/saveCameraUserAttributes', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{serverUrl}/ec2/saveCameraUserAttributes', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
@@ -347,11 +351,10 @@ class ServerAPI(object):
             "isEnabled":isEnabled,
             "password":password
         }
-        if userId:
+        if userId is not None:
             body["id"]=userId
-        if isCloud:
-            body["fullName"]=fullName
-        if userRoleId:
+        body["fullName"]=fullName
+        if userRoleId is not None:
             body["id"]=userRoleId
         r = requests.post(f'{serverUrl}/ec2/saveUser', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
@@ -376,7 +379,7 @@ class ServerAPI(object):
             "name":name,
             "permissions":permissions
         }
-        r = requests.post(f'{serverUrl}/ec2/saveUserRole', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{serverUrl}/ec2/saveUserRole', auth=HTTPDigestAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
@@ -386,7 +389,7 @@ class ServerAPI(object):
 
     @keyword
     def get_cameras(self, auth, serverUrl):
-        r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword
@@ -438,9 +441,9 @@ class ServerAPI(object):
     def set_system_settings(self, auth, serverUrl, settings):
         query = "/api/systemSettings?"
         for key, val in zip(settings.keys(), settings.values()):
-            query = query+f'{key}={val}&'
+            query = query + f'{key}={val}&'
         query = query[:-1]
-        r = requests.get(f'{serverUrl}/api/systemSettings?{query}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{serverUrl}{query}', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword

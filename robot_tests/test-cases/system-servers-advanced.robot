@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Server Advanced Settings Suite Setup
 Test Setup        Advanced Server Settings Test Setup
 Test Teardown     Advanced Server Test Teardown
-Suite Teardown    Server Advanced Settings Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Server Advanced Settings Suite Teardown
 Force Tags        advanced server
 
 *** Variables ***

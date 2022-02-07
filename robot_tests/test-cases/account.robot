@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Account Suite Setup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Account Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    Account Suite Teardown
 Force Tags        account
 
 *** Variables ***

@@ -14,7 +14,7 @@ import { FeatureGuard } from '@src/routeGuards';
 import { Nx500Module } from './500/500.module';
 import { Nx503Module } from './503/503.module';
 import { NxAccountModule } from './account/account.module';
-import { NxDebugModule } from './debug/debug.module';
+// import { NxDebugModule } from './debug/debug.module';
 import {
     DownloadHistoryModule
 } from './download-history/download-history.module';
@@ -159,7 +159,7 @@ const lazyRoutes: Routes = [
         NonSupportedBrowserModule,
         Angular2CsvModule,
         NxAccountModule,
-        NxDebugModule,
+        // NxDebugModule,
         Nx500Module,
         Nx503Module,
         RouterModule.forRoot(lazyRoutes, {
@@ -181,7 +181,7 @@ const lazyRoutes: Routes = [
         DownloadHistoryModule,
         NonSupportedBrowserModule,
         Angular2CsvModule,
-        NxDebugModule,
+        // NxDebugModule,
         Nx500Module,
         Nx503Module,
         RouterModule

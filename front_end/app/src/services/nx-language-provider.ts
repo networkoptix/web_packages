@@ -110,7 +110,6 @@ export class NxLanguageProviderService {
             monthNames: reduceTranslations(timelineTranslations.monthNames, times.monthNames),
             timeNames: reduceTranslations(timelineTranslations.timeNames, times.timeNames)
         };
-        translations.monthNames.splice(4, 0, timelineTranslations.monthNames.May());
         return translations;
     }
 

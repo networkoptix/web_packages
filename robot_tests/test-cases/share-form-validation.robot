@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Open Share Dialog
 Test Template     Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Share Form Tear Down
+Suite Teardown    Run Keyword and Ignore Error    Share Form Tear Down
 Force Tags        email    form    Threaded
 
 *** Variables ***
@@ -73,7 +73,7 @@ Share Form Tear Down
     ${results}    Execute Command    docker container stop ${server}[id]
     ${results}    Execute Command    docker container rm ${server}[id]
     FOR    ${user}    IN    @{server['cloud users'].values()}
-         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${ENV}    ${user}          ${password}  
+         Run Keyword If    '''${mode}'''=='''cloud'''    Delete Account    ${user}      ${password}  
     END
     Close All Connections
     Close All Browsers

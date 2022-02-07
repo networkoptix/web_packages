@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart
-Suite Teardown    System Admin Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system
 
 *** Test Cases ***
@@ -97,7 +97,7 @@ Force Tags        system
         ...    //nx-text-editable[contains(text(), "${system}[name]")]
         ...    ${DISCONNECT FROM MY ACCOUNT}
         Wait until elements are not visible
-        ...    ${SYSTEM SETTINGS FORM}
+        ...    ${SECURITY FORM}
         ...    ${SECURITY FORM}
         Log Out
     END
@@ -391,7 +391,6 @@ Force Tags        system
     ...    ${MERGE BUTTON SYSTEM}
     ...    ${PLACEHOLDER ICON}
     ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
-    Wait Until Elements Are Not Visible    ${SYSTEM SETTINGS FORM}    ${SECURITY FORM}
     Start Docker Server    ${system}[id]
 
 #System settings block view for different System versions
@@ -587,7 +586,7 @@ Force Tags        system
     Click Button     ${SAVE BUTTON}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Reload Page
-    Wait Until Element Is Visible    ${SECURITY FORM}
+    Wait Until Element Is Visible    ${TIME NUMBER INPUT}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 61    Fail    Interval not 61 days as expected
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}

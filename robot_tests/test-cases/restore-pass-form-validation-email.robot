@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       Restore Pass Validation Setup
 Test Template     Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
-Suite Teardown    Restore Pass Validation Teardown
+Suite Teardown    Run Keyword and Ignore Error    Restore Pass Validation Teardown
 Force Tags        email    form    Threaded
 
 *** Variables ***

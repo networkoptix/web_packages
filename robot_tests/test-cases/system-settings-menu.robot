@@ -3,7 +3,7 @@ Resource          ../resource.robot
 Suite Setup       System Settings Menu Suite Setup
 Test Setup        System Settings Menu Test Setup
 Test Teardown     Run Keyword If Test Failed    System Settings Menu Test Restart
-Suite Teardown    System Settings Menu Suite Teardown
+Suite Teardown    Run Keyword and Ignore Error    System Settings Menu Suite Teardown
 Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Variables ***
@@ -39,7 +39,7 @@ System Settings Menu Suite Setup
     END
 
     FOR    ${i}    IN RANGE    2    4
-        Merge Cloud Systems    ${system 1}[cloud id]    ${system ${i}}[cloud id]    ${system 1}[cloud auth][0]    ${system 1}[cloud auth][1]
+        cdb Merge Cloud Systems    ${system 1}[cloud id]    ${system ${i}}[cloud id]    ${system 1}[cloud auth][0]    ${system 1}[cloud auth][1]
         Sleep    60
     END
 

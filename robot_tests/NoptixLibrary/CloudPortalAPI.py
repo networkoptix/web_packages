@@ -148,7 +148,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_cloud_system_id(self, server_url, local_auth):
-        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
+        system_settings = CloudPortalAPI.get_system_settings(self, server_url, local_auth)
         for obj in system_settings:
             if obj['name'] == 'cloudSystemID':
                 return obj['value']
@@ -347,6 +347,8 @@ class CloudPortalAPI(object):
         logger.trace(body)
         r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
         logger.trace(r.status_code)
+        logger.trace(r.text)
+        assert r.status_code == 200
         return r.text
 
     #@keyword
