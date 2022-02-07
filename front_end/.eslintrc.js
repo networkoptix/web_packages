@@ -267,7 +267,7 @@ module.exports = {
             }
         },
         {
-            /* @typescript-eslint overrides */
+            /* @typescript-eslint overrides/exclusives */
             files: ['**/*.ts'],
             rules: {
                 'lines-between-class-members': 'off',
@@ -280,6 +280,7 @@ module.exports = {
                 '@typescript-eslint/no-redeclare': ['error', {
                     builtinGlobals: false
                 }],
+                '@typescript-eslint/prefer-includes': 'error',
             },
         },
     ]
