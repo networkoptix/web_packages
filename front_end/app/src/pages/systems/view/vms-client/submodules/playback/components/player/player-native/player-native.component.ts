@@ -13,9 +13,9 @@ import {
     OnChanges,
 } from '@angular/core';
 import Hls from 'hls.js';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 
-import { NxUtilsService } from '@services/utils.service';
 import {
     WebClientUxService
 } from '@view/services/webclient-ux.service';
@@ -63,13 +63,13 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     constructor (
         languageService: NxLanguageProviderService,
-        utilsService: NxUtilsService,
+        deviceService: DeviceDetectorService,
         public playback: PlaybackService,
         public ux: WebClientUxService,
         private http: HttpClient
     ) {
         this.LANG = languageService.translations;
-        this.isMobile = utilsService.isMobile() || utilsService.isTablet();
+        this.isMobile = deviceService.isMobile() || deviceService.isTablet();
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
 

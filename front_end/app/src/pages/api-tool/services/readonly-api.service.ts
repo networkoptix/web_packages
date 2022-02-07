@@ -6,7 +6,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { OpenAPIJSON } from '@services/nx-cloud-api.types';
 import { NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
+import { isUUID } from '@utils/general';
 
 import { createMenuContent, prepareSwaggerAPIDoc, removeProprietaryEndpoints } from '../api-file-utils';
 
@@ -63,7 +63,7 @@ export class NxReadonlyAPIService {
         if (!this.isEnabled) return;
 
         const systemParam = this.queryParams.system;
-        if (systemParam && !NxUtilsService.isUUID(systemParam)) {
+        if (systemParam && !isUUID(systemParam)) {
             const readonlyAPI = this.readonlyAPIStore[parseInt(systemParam)];
             if (readonlyAPI) {
                 this.currentReadonlyAPI = readonlyAPI;

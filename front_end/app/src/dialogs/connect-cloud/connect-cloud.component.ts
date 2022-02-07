@@ -16,7 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -62,7 +62,7 @@ export class ConnectCloudModalContent implements OnInit {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['account', 'system'], this);
+        pickFrom(this.dialogData, ['account', 'system'], this);
 
         this.setupProcess();
         this.setupAuth();

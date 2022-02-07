@@ -7,6 +7,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { isEqual } from '@utils/general';
 
 import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
@@ -14,7 +15,6 @@ import { NxPollService } from './poll.service';
 import { NxStorageService } from './storage.service';
 import { NxSystem } from './system.service';
 import { NxUriService } from './uri.service';
-import { NxUtilsService } from './utils.service';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -180,7 +180,7 @@ export class NxSystemsService implements OnDestroy {
         this.activeSubscription = this.systemsPoll
             .pipe(
                 tap((systems: NxSystemWithUserInfo[]) => this.processSystems(systems)),
-                distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b))
+                distinctUntilChanged((a, b) => isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
     }

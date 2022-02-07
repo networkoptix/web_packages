@@ -1,6 +1,6 @@
 import { environment } from '@environments/environment';
 
-export enum LogLevel {
+enum LogLevel {
     ERROR = 'error',
     INFO = 'info',
     LOG = 'log',

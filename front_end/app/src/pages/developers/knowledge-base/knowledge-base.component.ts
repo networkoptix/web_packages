@@ -43,8 +43,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { highlight } from '@utils/general';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';
 
@@ -223,9 +223,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             return {
                 docId,
                 snippet: content
-                    ? NxUtilsService.highlight(content, matchStart, matchEnd)
+                    ? highlight(content, matchStart, matchEnd)
                     : shortDescription,
-                title: NxUtilsService.highlight(
+                title: highlight(
                     title,
                     titleMatchStart,
                     titleMatchEnd

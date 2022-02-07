@@ -7,8 +7,8 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem, NxSystemServer } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -234,7 +234,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
                                                 if (Object.keys(server).length) {
                                                     item.info.serverTime = serversTime.find(time => {
-                                                        return NxUtilsService.cleanId(server.id) === time.serverId;
+                                                        return cleanId(server.id) === time.serverId;
                                                     }).vmsTime;
 
                                                     // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"

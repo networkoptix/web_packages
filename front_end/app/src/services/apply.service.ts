@@ -32,9 +32,9 @@ import {
     defaultConfig,
     DialogRef
 } from '@dialogs/dialog-ref';
+import { isEqual, deepCopy } from '@utils/general';
 
 import { NxProcessService, Process } from './process.service';
-import { NxUtilsService } from './utils.service';
 
 export type extNgForm = {
     form: NgForm,
@@ -174,7 +174,7 @@ export class FormWatcher {
                 this.changed = false;
                 this.valueSubject.next(change);
             } else {
-                this.changed = !NxUtilsService.isEqual(this.originalValue, change);
+                this.changed = !isEqual(this.originalValue, change);
                 this.valueSubject.next(change);
             }
         });
@@ -509,7 +509,7 @@ export class NxApplyService {
                     // but valueChanges triggers on every control init
                     if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
                         // if form contain multiselect (array) spread is not enough
-                        extNgForm.originalForm = NxUtilsService.deepCopy(change);
+                        extNgForm.originalForm = deepCopy(change);
                         return;
                     } else {
                         // cover a case with dynamic fields in form represented as array
@@ -522,7 +522,7 @@ export class NxApplyService {
                             .forEach(key => {
                                 if (isArray(change[key])) {
                                     if (change[key].length !== extNgForm.originalForm[key].length) {
-                                        extNgForm.originalForm[key] = NxUtilsService.deepCopy(change[key]);
+                                        extNgForm.originalForm[key] = deepCopy(change[key]);
                                     }
                                 }
                             });
@@ -531,7 +531,7 @@ export class NxApplyService {
                     extNgForm.changedFields.clear();
                     Object.keys(extNgForm.originalForm).forEach(key => {
                         if (
-                            (isObject(extNgForm.originalForm[key]) && !NxUtilsService.isEqual(extNgForm.originalForm[key], change[key])) ||
+                            (isObject(extNgForm.originalForm[key]) && !isEqual(extNgForm.originalForm[key], change[key])) ||
                             (!isObject(extNgForm.originalForm[key]) && extNgForm.originalForm[key] !== change[key])) {
                             extNgForm.changedFields.add(key);
                         }
@@ -806,7 +806,7 @@ export class NxApplyService {
             map(current => {
                 if (isObject(current)) {
                     // Form watcher
-                    return !NxUtilsService.isEqual(current, watcher.originalValue);
+                    return !isEqual(current, watcher.originalValue);
                 }
 
                 return watcher.originalValue !== undefined && current !== watcher.originalValue;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { NxUtilsService } from '@services/utils.service';
+import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import { ms, px } from '@vms-client/utils/type-aliases';
 
 import TimelineService from './timeline.service';
@@ -73,7 +73,7 @@ export class TimelineTimeUnderMouseService {
     }
 
     public handleMouseMove (e: MouseEvent|TouchEvent) {
-        this._offsetX = NxUtilsService.calcOffsetX(e);
+        this._offsetX = calcOffsetX(e);
         this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
         this._emit();
     }

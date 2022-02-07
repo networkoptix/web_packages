@@ -9,7 +9,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { deepCopy } from '@utils/general';
 
 import { IntegrationService } from './integration.service';
 
@@ -126,7 +126,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         });
 
         // Ensure model change will be trigger
-        this.filterModel = NxUtilsService.deepCopy(this.filterModel);
+        this.filterModel = deepCopy(this.filterModel);
     }
 
     setFilter() {
@@ -174,7 +174,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     modelChanged(searchModel): void {
-        this.filterModel = NxUtilsService.deepCopy(searchModel);
+        this.filterModel = deepCopy(searchModel);
         this.setFilter();
     }
 

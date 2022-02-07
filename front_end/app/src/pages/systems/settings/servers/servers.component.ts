@@ -19,9 +19,10 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
+import { cleanId } from '@utils/general';
+import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -189,7 +190,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     this.environment.isLocal && this.location.path() === '/settings/servers'
                 ) {
                     server = this.system.serverManager.servers[0];
-                    const id = NxUtilsService.cleanId(server.id);
+                    const id = cleanId(server.id);
                     let path = this.CONFIG.menus.systemSettings.baseUrl;
                     path += (this.environment.isLocal) ? '' : `${this.system.id}`;
                     path += `/servers/${id}`;
@@ -208,7 +209,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 ? JSON.parse(server.osInfo).platform
                 : this.LANG.common.unknown?.();
             if (!server.ip) {
-                NxUtilsService.formatURL(server);
+                setServerIpAndPort(server);
             }
             this.selectedServer = server;
             this.menuService.detail = this.selectedServer.id;

@@ -6,7 +6,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-reset-backup',
@@ -35,7 +35,7 @@ export class ResetBackupModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'setDefaultBackupSettings'], this);
+        pickFrom(this.dialogData, ['system', 'setDefaultBackupSettings'], this);
 
         this.resetBackupProcess = this.processService.createProcess(() => {
             return this.setDefaultBackupSettings();

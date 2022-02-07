@@ -16,7 +16,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import {
     StorageManager
 } from '@services/system.service/system/storage-manager/storage-manager';
-import { NxUtilsService } from '@services/utils.service';
+import { cleanId, pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';
 
@@ -93,7 +93,7 @@ export class AddStorageModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
+        pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
 
         this.storageForm = new FormGroup({
             url: new FormControl(
@@ -226,7 +226,7 @@ export class AddStorageModalContent {
                     const updateSubscription = this.storageManager.update().pipe(
                         filter((state: any) => state.locations.find(({
                             storageId
-                        }) => storageId === NxUtilsService.cleanId(res.id)))
+                        }) => storageId === cleanId(res.id)))
                     ).subscribe(_ => {
                         setTimeout(() => {
                             resolve(res);

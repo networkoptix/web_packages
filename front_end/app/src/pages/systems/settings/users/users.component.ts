@@ -23,8 +23,8 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import { cleanId, isEqual, deepCopy } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -106,8 +106,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    private _filterUser =
-        (user: any) => NxUtilsService.cleanId(user.id) === this.paramUser;
+    private _filterUser = (user: any) => cleanId(user.id) === this.paramUser;
 
     private _findUser () {
         return this.system.userManager.users.find(this._filterUser);
@@ -165,10 +164,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     if (
                         !this.applyService.locked && (
                             this.paramUser === undefined ||
-                            this.paramUser !== NxUtilsService.cleanId(
-                                this.selectedUser?.id
-                            ) ||
-                            !NxUtilsService.isEqual(updatedUser, cleanUser)
+                            this.paramUser !== cleanId(this.selectedUser?.id) ||
+                            !isEqual(updatedUser, cleanUser)
                         )
                     ) {
                         this.setUser();
@@ -308,13 +305,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 ? this.LANG.system.users.cloudDelete()
                 : this.LANG.system.users.localDelete();
 
-            this.menuService.detail = NxUtilsService.cleanId(
-                this.selectedUser.id
-            );
+            this.menuService.detail = cleanId(this.selectedUser.id);
             if (this.selectedUser.role.name === 'Custom') {
-                this.currentCustomRole = NxUtilsService.deepCopy(
-                    this.selectedUser.role
-                );
+                this.currentCustomRole = deepCopy(this.selectedUser.role);
             }
 
             this.setPermission(this.selectedUser.role);

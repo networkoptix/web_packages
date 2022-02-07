@@ -22,7 +22,7 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity } from '@utils/general';
 
 type Endpoint = Partial<{
     ipvd: boolean;
@@ -118,7 +118,7 @@ export class NxSystemsListComponent implements OnInit {
 
             this.systems.map(system => {
                 // avoid html being interpreted
-                system.name = NxUtilsService.htmlToEntity(system.name);
+                system.name = htmlToEntity(system.name);
             });
 
             if (this.location.path().startsWith(this.base)) {

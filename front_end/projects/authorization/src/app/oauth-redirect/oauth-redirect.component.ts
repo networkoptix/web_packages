@@ -6,10 +6,10 @@ import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxPageService }             from '@services/page.service';
-import { NxUtilsService }            from '@services/utils.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { AuthorizeParams, ClientType } from '../components/authorize.component';
 import { WINDOW } from '@services/window-provider';
+import { deepCopy } from '@utils/general';
 
 @UntilDestroy()
 @Component({
@@ -48,7 +48,7 @@ export class NxOAuthRedirectComponent implements OnInit {
         if (this.window.nativeClient) {
             this.pageService.pageTitle = this.LANG.pageTitles.default?.();
             this.route.queryParams.subscribe(async(params: any) => {
-                this.initialData = NxUtilsService.deepCopy(params);
+                this.initialData = deepCopy(params);
                 this.localStorageService.store('client_type', this.initialData.client_type);
                 this.viewType = this.initialData.view_type || 'web';
                 if (this.initialData.code) {

@@ -19,7 +19,7 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { paramSortFunc } from '@utils/general';
 
 /* USAGE
  <nx-vendor-list
@@ -174,13 +174,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     setVendorsShown(vendors) {
-        const byCountDESC = NxUtilsService.byParam((elm: any) => {
-            return elm.count;
-        }, NxUtilsService.sortDESC);
+        const byCountDESC = paramSortFunc((elm: any) => elm.count, false);
 
-        const byNameASC = NxUtilsService.byParam((elm: any) => {
-            return elm.name.toLowerCase();
-        }, NxUtilsService.sortASC);
+        const byNameASC = paramSortFunc((elm: any) => elm.name.toLowerCase());
 
         this.vendors = vendors.sort(byCountDESC)
             .slice(0, this.CONFIG.ipvd.vendorsShown)

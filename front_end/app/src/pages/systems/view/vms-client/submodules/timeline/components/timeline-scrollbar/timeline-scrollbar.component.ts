@@ -6,10 +6,10 @@ import {
     ViewChild,
     HostListener
 } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
 import { LoggerDecorator } from '@view/vms-client/utils';
 import {
     PlaybackState,
@@ -71,13 +71,13 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         protected playback: PlaybackService,
         protected selection: TimelineSelectionService,
         configService: NxConfigService,
-        nxUtilsService: NxUtilsService
+        deviceService: DeviceDetectorService,
     ) {
         this.CONFIG = configService.getConfig();
         this.onScrollBarSubjectChange = this.onScrollBarSubjectChange.bind(this);
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onSelectionSubjectChange = this.onSelectionSubjectChange.bind(this);
-        this.useTouch = nxUtilsService.isTablet() || nxUtilsService.isMobile();
+        this.useTouch = deviceService.isTablet() || deviceService.isMobile();
     }
 
     public ngAfterViewInit (): void {

@@ -54,7 +54,7 @@ import {
     UpdateTriggers
 } from '@services/system.service/system/storage-manager/storage-state';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { cleanId, cleanSmbUrl } from '@utils/general';
 
 enum MODE_INDEX {
     MAIN = 0,
@@ -127,6 +127,8 @@ export class NxSystemStorageComponent implements OnInit {
     ddWidth: number;
     modes: Mode[];
     STATUS = STORAGE_STATUS
+
+    cleanSmbUrl = cleanSmbUrl;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -324,7 +326,7 @@ export class NxSystemStorageComponent implements OnInit {
             modeWatchers.forEach(([id, watcher]) => {
                 watcher.reset();
                 const store = storage.find(({ storageId }) =>
-                    storageId === NxUtilsService.cleanId(id)
+                    storageId === cleanId(id)
                 );
                 if (!store) {
                     return;
@@ -490,9 +492,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
     }
 
-    normalizeId = (id: unknown): string => `{${NxUtilsService.cleanId(id || '')}}`
-
-    cleanUrl = NxUtilsService.cleanSmbUrl
+    normalizeId = (id: unknown): string => `{${cleanId(id || '')}}`
 
     getIconSrc(store: Storage): string {
         const svgName = this.updatingModes.includes(store.storageId) || !store.storageType
@@ -646,7 +646,7 @@ export class NxSystemStorageComponent implements OnInit {
         const updating = [];
         for (const id in this.modeWatchers) {
             const store = this.currentStorageState.locations.find(
-                ({ storageId }) => storageId === NxUtilsService.cleanId(id)
+                ({ storageId }) => storageId === cleanId(id)
             );
             const currentMode = `mode${store?.mode.charAt(0).toUpperCase() + store?.mode.slice(1)}`;
             if (store && this.modeWatchers[id].originalValue !== currentMode) {
@@ -707,7 +707,7 @@ export class NxSystemStorageComponent implements OnInit {
 
     deleteStorage(storage: Storage): void {
         this.dialogs.confirm(
-            this.cleanUrl(storage.url),
+            cleanSmbUrl(storage.url),
             this.LANG.storage.deleteExternalStorage(),
             this.LANG.dialogs.buttons.delete(),
             'btn-danger',
@@ -721,7 +721,7 @@ export class NxSystemStorageComponent implements OnInit {
                         if (response.id) {
                             this.currentStorageState.locations = this.currentStorageState.locations
                                 .filter(({ storageId }) =>
-                                    storageId !== NxUtilsService.cleanId(response.id)
+                                    storageId !== cleanId(response.id)
                                 );
                             await this.system.storageManager
                                 .update()
@@ -730,7 +730,7 @@ export class NxSystemStorageComponent implements OnInit {
                             this.toastService.notify(
                                 NxLanguageProviderService.translate(
                                     this.LANG.storage.storageDeleted,
-                                    { url: this.cleanUrl(storage.url) }
+                                    { url: cleanSmbUrl(storage.url) }
                                 ),
                                 'success'
                             );
@@ -741,7 +741,7 @@ export class NxSystemStorageComponent implements OnInit {
                         this.toastService.notify(
                             NxLanguageProviderService.translate(
                                 this.LANG.storage.failedRemove,
-                                { url: this.cleanUrl(storage.url) }
+                                { url: cleanSmbUrl(storage.url) }
                             ),
                             'danger'
                         );

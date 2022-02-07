@@ -2,7 +2,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
 import { NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
+import { mod } from '@utils/general';
 
 const config = new NxConfigService(null).config;
 
@@ -57,18 +57,12 @@ export class NxCarouselComponent implements OnInit {
     }
 
     previousElement(): void {
-        this.currentIndex = NxUtilsService.mod(
-            (this.currentIndex - 1),
-            this.screenshots.length
-        );
+        this.currentIndex = mod(this.currentIndex - 1, this.screenshots.length);
         this.setCaption();
     }
 
     nextElement(): void {
-        this.currentIndex = NxUtilsService.mod(
-            (this.currentIndex + 1),
-            this.screenshots.length
-        );
+        this.currentIndex = mod(this.currentIndex + 1, this.screenshots.length);
         this.setCaption();
     }
 

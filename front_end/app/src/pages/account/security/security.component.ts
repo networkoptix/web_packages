@@ -24,8 +24,13 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import {
+    htmlToEntity,
+    addPseudoAnchor,
+    clearPseudoAnchors,
+    PseudoAnchorTarget
+} from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,7 +49,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     twoFaSystems: NxSystemWithUserInfo[] = [];
     subV5Systems: NxSystemWithUserInfo[] = [];
 
-    targets: object[] = [];
+    targets: PseudoAnchorTarget[] = [];
     popover: PopoverRef;
 
     verificationWatcher = new Watcher<boolean>();
@@ -93,7 +98,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 const twoFaSystems: NxSystemWithUserInfo[] = [];
                 const subV5Systems: NxSystemWithUserInfo[] = [];
                 systems.forEach(system => {
-                    system.name = NxUtilsService.htmlToEntity(system.name);
+                    system.name = htmlToEntity(system.name);
 
                     if (system.system2faEnabled) {
                         twoFaSystems.push(system);
@@ -139,7 +144,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     private clearPopoverTargets() {
-        this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+        this.targets = clearPseudoAnchors(this.targets);
 
         if (this.popover) {
             this.popover.close();
@@ -150,7 +155,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     private setPopoverTargets() {
         if (this.subV5Systems.length && this.v5WarningSpan) {
             const targetV5 = this.v5WarningSpan.nativeElement.querySelector('span#targetV5');
-            NxUtilsService.addPseudoAnchor(
+            addPseudoAnchor(
                 this.targets,
                 targetV5,
                 this.popLegendSubV5Template,
@@ -160,7 +165,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
         if (this.twoFaSystems.length && this.twoFaSystemsSpan) {
             const target2FaSystems = this.twoFaSystemsSpan.nativeElement.querySelector('span#target2FaSystems');
-            NxUtilsService.addPseudoAnchor(
+            addPseudoAnchor(
                 this.targets,
                 target2FaSystems,
                 this.popLegend2faTemplate,

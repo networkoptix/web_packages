@@ -2,8 +2,8 @@ import { Component, Input, Inject, OnChanges, SimpleChanges } from '@angular/cor
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { deepCopy } from '@utils/general';
 
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
@@ -44,9 +44,7 @@ export class NxGetStartedComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const getStartedNode = NxUtilsService.deepCopy(
-            changes.getStartedNode.currentValue
-        );
+        const getStartedNode = deepCopy(changes.getStartedNode.currentValue);
         getStartedNode.nodes.forEach(step => {
             const images = step.icon.split(' ');
             step.icon = images[0];

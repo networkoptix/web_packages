@@ -17,8 +17,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, NxSystemService } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { cleanIp, htmlToEntity, deepCopy, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import StateMachine from './stateMachine';
@@ -123,7 +123,7 @@ export class MergeModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'systems', 'user'], this);
+        pickFrom(this.dialogData, ['system', 'systems', 'user'], this);
 
         this.machine = new StateMachine(this.checkMerge, State);
         this.init();
@@ -156,7 +156,7 @@ export class MergeModalContent {
                         system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         if (system.moduleInfo.remoteAddresses) {
                             system.moduleInfo.remoteAddresses.forEach((addy: string) => {
-                                const ip = NxUtilsService.cleanIp(addy);
+                                const ip = cleanIp(addy);
                                 this.systemUrls[`${ip}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
                             });
                         }
@@ -329,12 +329,12 @@ export class MergeModalContent {
                     .map(peer => {
                         if (peer.remoteAddresses) {
                             peer.remoteAddresses.forEach((addy: string) => {
-                                const ip = NxUtilsService.cleanIp(addy);
+                                const ip = cleanIp(addy);
                                 this.systemUrls[`${ip}:${peer.port}`] = peer.id.replace(/{|}/g, '');
                             });
                         }
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
-                        const ip = NxUtilsService.cleanIp(peer.remoteAddresses[0]);
+                        const ip = cleanIp(peer.remoteAddresses[0]);
                         const system: any = {
                             ...peer,
                             id: peer.id.replace(/[{}]/g, ''),
@@ -652,7 +652,7 @@ export class MergeModalContent {
     }
 
     handleMergeError(error) {
-        const err = error.data ? NxUtilsService.deepCopy(error.data) : {};
+        const err = error.data ? deepCopy(error.data) : {};
         err.resultCode = error && error.resultCode || '';
         err.errorText = (error && error.errorText) || '';
 
@@ -877,13 +877,13 @@ export class MergeModalContent {
             const firstValidIp = system.remoteAddresses.find(addy => {
                 return addy.split('.')[0].length <= 4 || addy.split(':')[0].length <= 4;
             }) || system.remoteAddresses[0];
-            status = ` (${system.name}, ${NxUtilsService.cleanIp(firstValidIp)}:${system.port}) ${status}`;
+            status = ` (${system.name}, ${cleanIp(firstValidIp)}:${system.port}) ${status}`;
         } else {
             systemName = system.name;
         }
 
         // HTML required for dropdown list
-        return `<span>${NxUtilsService.htmlToEntity(systemName)}</span><span class="text-muted">${status}</span>`;
+        return `<span>${htmlToEntity(systemName)}</span><span class="text-muted">${status}</span>`;
     }
 
     checkMergeability(system) {
@@ -1005,7 +1005,7 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = NxUtilsService.htmlToEntity(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
+        this.primaryName = htmlToEntity(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
     }
 
     getSecondaryName() {
@@ -1014,6 +1014,6 @@ export class MergeModalContent {
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {
             name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
         }
-        this.secondaryName = NxUtilsService.htmlToEntity(name);
+        this.secondaryName = htmlToEntity(name);
     }
 }

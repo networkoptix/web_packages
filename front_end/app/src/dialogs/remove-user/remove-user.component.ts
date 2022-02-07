@@ -10,7 +10,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, NxSystemUser } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-remove-user-content',
@@ -41,7 +41,7 @@ export class RemoveUserModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'user'], this);
+        pickFrom(this.dialogData, ['system', 'user'], this);
 
         const msg = this.user.isCloud ? 'remove' : 'delete';
         this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`]?.();

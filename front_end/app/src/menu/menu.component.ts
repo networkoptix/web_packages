@@ -27,6 +27,7 @@ import { ButtonArrowType, NxSearchService, SearchModel } from '@services/search.
 import { NxSystem } from '@services/system.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { isEqual } from '@utils/general';
 
 import { NxMenuService } from './menu.service';
 import type {
@@ -208,7 +209,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             );
             if (
                 filtered.length !== this.menuContent.length ||
-                !NxUtilsService.isEqual(filtered, cleanMenuContent)
+                !isEqual(filtered, cleanMenuContent)
             ) {
                 this.menuContent = filtered;
             }

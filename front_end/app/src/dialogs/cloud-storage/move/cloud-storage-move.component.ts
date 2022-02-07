@@ -19,7 +19,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-cloud-storage-move-content',
@@ -74,7 +74,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system$', 'updateCallback'], this);
+        pickFrom(this.dialogData, ['system$', 'updateCallback'], this);
 
         this.system$.subscribe(system => {
             if (!system || !system.id) {

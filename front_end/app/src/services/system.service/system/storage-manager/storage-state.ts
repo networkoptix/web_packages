@@ -5,17 +5,23 @@ import {
     retry,
     startWith,
     switchMap,
-    takeUntil
+    takeUntil,
+    catchError,
 } from 'rxjs/operators';
 
-import { NxLogger, fallback } from '@services/utils.service';
-import { StateManager } from '@src/utils';
+import { NxLogger } from '@utils/logger';
+import { StateManager } from '@utils/state-manager';
 
 import { BaseManager } from '../base/base-manager';
 import { ServerManager } from '../server-manager/server-manager';
 
 import { currentStorageStateFactory } from './current-storage-state';
 import { CurrentStorageState } from './storage';
+
+/**
+* Provides a fallback value for errors.
+*/
+const fallback = <T>(value: T) => catchError(() => Promise.resolve(value));
 
 export enum UpdateTriggers {
     INFO='info',

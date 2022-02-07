@@ -15,7 +15,7 @@ import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -179,7 +179,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 changes.servers.currentValue.forEach(server => {
                     const option: any = {
-                        name: NxUtilsService.htmlToEntity(server.name),
+                        name: htmlToEntity(server.name),
                         value: server.id,
                         status: server.status
                     };

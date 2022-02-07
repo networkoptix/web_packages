@@ -3,8 +3,8 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 
 import { IConfig, NxConfigService } from '@services/nx-config';
+import { htmlToEntity } from '@utils/general';
 
-import { NxUtilsService } from '../../../../../../../../services/utils.service';
 import ICamera from '../../datatypes/ICamera';
 import MediaServer from '../../datatypes/MediaServer';
 import VmsState, { VMS_MODE } from '../../datatypes/VmsState';
@@ -68,9 +68,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
             case VMS_MODE.CAMERA_SELECTED:
                 this._mediaservers = s.mediaServers;
                 this._mediaservers.map(server => {
-                    server.name = NxUtilsService.htmlToEntity(server.name);
+                    server.name = htmlToEntity(server.name);
                     server.cameras.map(camera => {
-                        camera.name = NxUtilsService.htmlToEntity(camera.name);
+                        camera.name = htmlToEntity(camera.name);
                     });
                 });
                 setTimeout(() => {

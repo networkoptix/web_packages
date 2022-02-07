@@ -22,8 +22,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { delayInitial } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import { delayInitial } from '@utils/general';
 
 const HR_MINS = 60;
 const DAY_HRS = 24;

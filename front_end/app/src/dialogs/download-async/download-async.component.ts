@@ -22,8 +22,8 @@ import {
 } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { pickFrom } from '@utils/general';
 
 type DownloadId = string;
 
@@ -156,7 +156,7 @@ export class DownloadAsyncModalContent implements ModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(
+        pickFrom(
             this.dialogData,
             ['heading', 'modal', 'manifest', 'values'],
             this

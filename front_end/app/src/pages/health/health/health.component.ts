@@ -27,6 +27,7 @@ import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
+import { deepCopy } from '@utils/general';
 
 import { NxHealthService } from '../health.service';
 
@@ -223,7 +224,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     setupReport(_data) {
-        const data = NxUtilsService.deepCopy(_data);
+        const data = deepCopy(_data);
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
             return throwError('Error getting manifest');
@@ -493,7 +494,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     processManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.values(this.healthService.manifest).forEach(metricValue => {
-            const metric: any = NxUtilsService.deepCopy(metricValue);
+            const metric: any = deepCopy(metricValue);
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
@@ -507,7 +508,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     createSnapshot(data) {
         const systems: any = Object.values(this.healthService.values.systems);
-        this.reportSnapshot = NxUtilsService.deepCopy(data);
+        this.reportSnapshot = deepCopy(data);
         this.reportSnapshot.time = new Date().toJSON();
         this.reportSnapshot.system = systems[0].info.name;
     }

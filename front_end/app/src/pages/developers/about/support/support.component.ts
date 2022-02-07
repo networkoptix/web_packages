@@ -5,8 +5,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { deepCopy } from '@utils/general';
 
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
@@ -51,9 +51,7 @@ export class NxSupportComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.cleanSupportNode = NxUtilsService.deepCopy(
-            changes.supportNode.currentValue
-        );
+        this.cleanSupportNode = deepCopy(changes.supportNode.currentValue);
         this.cleanSupportNode.asset.shortDescription =
             this.sanitizer.bypassSecurityTrustHtml(
                 this.cleanSupportNode.asset.shortDescription

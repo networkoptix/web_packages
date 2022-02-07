@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity } from '@utils/general';
 
 @Pipe({ name: 'unsafe' })
 export class NxUnsafePipe implements PipeTransform {
     public transform(value: string): string {
-        return NxUtilsService.htmlToEntity(value);
+        return htmlToEntity(value);
     }
 }

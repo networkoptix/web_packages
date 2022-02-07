@@ -21,12 +21,21 @@ export class StateManager<State, GetStateArgs> {
         initialState: State = null
     ) {
         this._state$.next(initialState);
-        getStateArguments$.pipe(takeUntil(this.tearDown$)).subscribe(this._args$);
-        this._args$.pipe(filter(args => args !== null), switchMap(args => this.getState(args)), takeUntil(this.tearDown$)).subscribe(this._state$);
+        getStateArguments$
+            .pipe(takeUntil(this.tearDown$))
+            .subscribe(this._args$);
+        this._args$
+            .pipe(
+                filter(args => args !== null),
+                switchMap(args => this.getState(args)),
+                takeUntil(this.tearDown$)
+            ).subscribe(this._state$);
     }
 
     /**
      * Refresh state using previous arguments. Or if replace with new state.
      */
-    refreshState = (overrideState?: State) => overrideState !== undefined ? this._state$.next(overrideState) : this._args$.next(this._args$.value);
+    // refreshState = (overrideState?: State) => overrideState !== undefined
+    //     ? this._state$.next(overrideState)
+    //     : this._args$.next(this._args$.value);
 }

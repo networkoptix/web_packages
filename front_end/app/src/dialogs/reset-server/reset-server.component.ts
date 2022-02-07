@@ -20,8 +20,8 @@ import {
     NormalResponse
 } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { cleanId, pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
@@ -62,7 +62,7 @@ export class ResetServerModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
+        pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
         const options = {
             classname: this.CONFIG.toast.warning,
@@ -87,7 +87,7 @@ export class ResetServerModalContent {
         const routeToNextServer = (): void => {
             const { servers } = this.system.serverManager;
             const currentServerIndex = servers.findIndex(server => server.id === this.serverId);
-            const nextServerId = NxUtilsService.cleanId(currentServerIndex === servers.length - 1
+            const nextServerId = cleanId(currentServerIndex === servers.length - 1
                 ? servers[0].id : servers[currentServerIndex + 1].id);
             this.router.navigate(['/settings', 'servers', nextServerId]);
         };

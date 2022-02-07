@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
+import { HttpClient } from '@angular/common/http';
 import {
     Component,
     ElementRef,
@@ -22,9 +23,8 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
-import { HttpClient } from '@angular/common/http';
+import { deepCopy } from '@utils/general';
 
 require('what-input');
 
@@ -227,7 +227,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.loginEmail = atob(this.loginCode).split(':')[1];
         }
         this.route.queryParams.subscribe(async(params: any) => {
-            this.initialData = NxUtilsService.deepCopy(params);
+            this.initialData = deepCopy(params);
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
             this.clientType = ClientType[clientType];

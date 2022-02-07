@@ -5,7 +5,7 @@ import { filter } from 'rxjs/operators';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
+import { isUUID } from '@utils/general';
 
 import { NxAPIToolSystemService } from '../services/api-tool-system.service';
 import { NxOpenAPIJSONService } from '../services/openapi-json.service';
@@ -142,7 +142,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     }
 
     onSystemChange(system: DropdownItem) {
-        if (NxUtilsService.isUUID(system.value)) {
+        if (isUUID(system.value)) {
             this.APIToolSystemService.manualSystemChange = true;
             this.APIToolSystemService.currentSystemId = system.value;
         } else {

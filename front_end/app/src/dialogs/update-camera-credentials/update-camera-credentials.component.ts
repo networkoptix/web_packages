@@ -12,7 +12,7 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, ICamera } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-rename-content',
@@ -49,7 +49,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'camera', 'updateCallback'], this);
+        pickFrom(this.dialogData, ['system', 'camera', 'updateCallback'], this);
 
         const [loginName, password] = (
             this.camera.parsedAddParams && this.camera.parsedAddParams.credentials ||

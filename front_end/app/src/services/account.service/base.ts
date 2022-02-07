@@ -12,6 +12,7 @@ import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { OauthService } from '@services/oauth.service';
+import { isEqual } from '@utils/general';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -23,7 +24,6 @@ import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
 import { NxUriService } from '../uri.service';
-import { NxUtilsService } from '../utils.service';
 import { WINDOW } from '../window-provider';
 
 import { Account } from './account';
@@ -165,7 +165,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     set account(account: Account) {
-        if (!NxUtilsService.isEqual(account, this.account)) {
+        if (!isEqual(account, this.account)) {
             this.accountSubject.next(account);
             const loginState = this.sessionService.loginState;
             const login = account?.email || account?.name;

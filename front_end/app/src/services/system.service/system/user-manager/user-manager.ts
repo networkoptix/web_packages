@@ -1,9 +1,9 @@
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import { isEqual, deepCopy } from '@utils/general';
 
 import { IConfig } from '../../../nx-config';
 import { NxSystemAPI, NxSystemRestAPI } from '../../../system-api.service';
-import { NxUtilsService } from '../../../utils.service';
 
 import {
     NxSystemRole,
@@ -141,7 +141,7 @@ export class UserManager {
         });
         // handles the Custom role
         if (!role) {
-            role = NxUtilsService.deepCopy(roles[roles.length - 1]);
+            role = deepCopy(roles[roles.length - 1]);
             role.isAdmin = this.isAdmin(user);
             role.permissions = user.permissions;
         }
@@ -303,7 +303,7 @@ export class UserManager {
             ...userRolesList,
             this.CONFIG.accessRoles.customPermission
         ]));
-        if (!NxUtilsService.isEqual(newRoles, this.accessRoles)) {
+        if (!isEqual(newRoles, this.accessRoles)) {
             this.accessRoles = newRoles;
         }
         return this.accessRoles;

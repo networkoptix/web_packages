@@ -16,7 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemAPI } from '@services/system-api.service';
 import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-remove-model-content',
@@ -67,7 +67,7 @@ export class RemoveSystemModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system'], this);
+        pickFrom(this.dialogData, ['system'], this);
 
         this.auth.username = this.system.userManager.currentUserEmail;
         this.auth.password = '';

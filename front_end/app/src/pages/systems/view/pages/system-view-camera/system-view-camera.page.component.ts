@@ -11,12 +11,11 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import Hls from 'hls.js';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, Subscription, timer, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 
-import { environment } from '@environments/environment';
 import FpsMeterService from '@services/fps-meter.service';
-import { NxUtilsService } from '@services/utils.service';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import PlaybackState, { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
@@ -101,7 +100,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     constructor(
         private configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        utilsService: NxUtilsService,
+        deviceService: DeviceDetectorService,
         protected location: Location,
         protected self: ElementRef,
         protected route: ActivatedRoute,
@@ -124,9 +123,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
-        this.isMobile = utilsService.isMobile() || utilsService.isTablet();
-        this.isChrome = utilsService.isChrome();
-        this.isMobileSafari = utilsService.isSafari() && utilsService.isMobile();
+        this.isMobile = deviceService.isMobile() || deviceService.isTablet();
+        this.isChrome = deviceService.browser === 'Chrome';
+        this.isMobileSafari = deviceService.browser === 'Safari' &&
+            deviceService.isMobile();
 
         this.onPlaybackChange = this.onPlaybackChange.bind(this);
 

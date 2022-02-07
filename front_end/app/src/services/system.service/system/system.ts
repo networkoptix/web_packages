@@ -13,7 +13,6 @@ import { NxRibbonService } from '@components/ribbon';
 import { environment } from '@environments/environment';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
-import { trimIDs as trimIds } from '../../../utils/api_response_cleaners';
 import { NxAppStateService } from '../../nx-app-state.service';
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { IConfig } from '../../nx-config';
@@ -40,6 +39,44 @@ import {
     NxSystemRole
 } from './system-types';
 import { UserManager } from './user-manager/user-manager';
+
+/* Api response cleaners */
+export function trimId(id) {
+    if (!id || !id.length || typeof id !== 'string') { return id; }
+    if (id[0] === '{' && id[id.length - 1] === '}') {
+        return id.slice(1, id.length - 1);
+    } else {
+        return id;
+    }
+}
+
+function trimIds(o) {
+    const result = { ...o };
+
+    const idFields = [
+        'id',
+        'parentId',
+        'preferredServerId',
+        'authKey',
+        'metadataStorageId',
+        'typeId'
+    ];
+
+    idFields.map(idField => {
+        if (idField in o) {
+            result[idField] = trimId(o[idField]);
+        }
+    });
+    return result;
+}
+
+// function tryToParseJSON(v) {
+//     try {
+//         return JSON.parse(v);
+//     } catch {
+//         return trimId(v);
+//     }
+// }
 
 /**
  * NxSystem has been largely refactored with a lot of methods being deprecated.

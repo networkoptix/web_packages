@@ -13,7 +13,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem, NxSystemUser } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-change-password',
@@ -58,7 +58,7 @@ export class ChangePasswordModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'user'], this);
+        pickFrom(this.dialogData, ['system', 'user'], this);
 
         this.changePassword = this.processService
             .createProcess(() => {

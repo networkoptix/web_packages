@@ -1,4 +1,4 @@
-import { NxUtilsService } from '@services/utils.service';
+import { cleanId } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
 
@@ -24,7 +24,7 @@ export const currentStorageStateFactory = (
             .reduce((storages, [storageId, value]: [string, any]) => {
                 return {
                     ...storages,
-                    [NxUtilsService.cleanId(storageId)]: {
+                    [cleanId(storageId)]: {
                         vmsSpace: value?.space?.mediaSpaceB || 0
                     }
                 };
@@ -41,7 +41,7 @@ export const currentStorageStateFactory = (
         }
     ) => ({
         ...allInfo,
-        [NxUtilsService.cleanId(id)]: {
+        [cleanId(id)]: {
             ...info,
             reservedSpace,
             serverId,
@@ -60,7 +60,7 @@ export const currentStorageStateFactory = (
         }) => ({
         ...storagesStats,
         [storageId !== '{00000000-0000-0000-0000-000000000000}'
-            ? NxUtilsService.cleanId(storageId)
+            ? cleanId(storageId)
             : storageStats.url
         ]: {
             ...storageStats

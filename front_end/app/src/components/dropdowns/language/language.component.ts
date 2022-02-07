@@ -14,7 +14,7 @@ import { ILanguage, ILanguages } from '@services/nx-cloud-api.types';
 import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
-import { NxUtilsService } from '@services/utils.service';
+import { paramSortFunc } from '@utils/general';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -100,9 +100,7 @@ class BaseLanguageDropdown extends BaseDropdown {
                 ? data
                 : data.filter(language =>
                     this.CONFIG.supportedLanguages?.includes(language.language));
-            this.languages.sort(NxUtilsService.byParam((lang: ILanguage) => {
-                return lang.language;
-            }, NxUtilsService.sortASC));
+            this.languages.sort(paramSortFunc(lang => lang.language));
 
             this.splitLanguages();
 

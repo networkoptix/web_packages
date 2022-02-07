@@ -28,7 +28,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity, pickFrom } from '@utils/general';
 
 export enum T_FA_STEPS {
     ChangePassword,
@@ -154,7 +154,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .subscribe((systems: NxSystemWithUserInfo[]) => {
                 systems.forEach(system => {
                     if (!system.useRest) {
-                        system.name = NxUtilsService.htmlToEntity(system.name);
+                        system.name = htmlToEntity(system.name);
                         this.incompatibleSystems.push(system);
                     }
                 });
@@ -182,7 +182,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(
+        pickFrom(
             this.dialogData,
             [
                 'type', 'oldPassword', 'newPassword',

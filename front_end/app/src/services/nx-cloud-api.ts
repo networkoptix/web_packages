@@ -13,13 +13,13 @@ import { NxConsoleService } from '@pages/developer-console/console/console.servi
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
+import { mapValuesToStrings } from '@utils/general';
 
 import { Account } from './account.service/account';
 import type * as t from './nx-cloud-api.types';
 import { InstantSearchOptions } from './nx-cloud-api.types';
 import { NxConfigService, IConfig } from './nx-config';
 import { NxUriCacheService } from './uri-cache.service';
-import { NxUtilsService } from './utils.service';
 
 export const DOC_TYPES = {
     knowledgebase: 'kb',
@@ -606,7 +606,7 @@ export class NxCloudApiService {
         if (!this.configService.flagsEnabled(FeatureFlagStrings.kbInstantSearch)) {
             return throwError(new Error('Instant search feature not enabled'));
         }
-        const params = NxUtilsService.mapValuesToStrings({ query, ...options });
+        const params = mapValuesToStrings({ query, ...options });
         const route = `${this.CONFIG.apiBase}/documentation/kb/${name}/search?`;
         return this.http.get<any>(route,  { params });
     }

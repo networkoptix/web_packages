@@ -16,8 +16,8 @@ import { NxRibbonService } from '@components/ribbon';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { highlight, deepCopyWithCircularReference } from '@utils/general';
 
 import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-menu-types';
 
@@ -189,7 +189,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         const newDisplayedNodes: MenuNodeWithParent[] = [];
         const newOpenNodes: string[] = [];
         const highlightText = (node: MenuNodeWithParent, startInd: number) => {
-            return NxUtilsService.highlight(node.display_name || node.name, startInd, startInd + query.length);
+            return highlight(node.display_name || node.name, startInd, startInd + query.length);
         };
         const search = (menuNode: MenuNodeWithParent) => {
             let inQuery = false;
@@ -197,7 +197,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             const startInd = name.indexOf(query.toLowerCase());
             const pathMatchesQuery = menuNode.name.toLowerCase().includes(query.toLowerCase());  // For API-Tool: display_name is not always the path, need to check if the path matches the query
             const isSeperator = menuNode.name.includes('-seperator');
-            const displayedNode = NxUtilsService.deepCopyWithCircularReference(menuNode);
+            const displayedNode = deepCopyWithCircularReference(menuNode);
             displayedNode.nodes = [];
             let newName = displayedNode.display_name || displayedNode.name;
             if (startInd !== -1) {

@@ -26,7 +26,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { isEqual, deepCopy } from '@utils/general';
 
 /* Usage
  <nx-search
@@ -274,10 +274,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                     (value.multiselects?.length) ||
                     (value.tags?.length !== this.localFilter.tags?.length))
         ) {
-            if (NxUtilsService.isEqual(this.localFilter, value)) {
+            if (isEqual(this.localFilter, value)) {
                 return;
             }
-            this.localFilter = NxUtilsService.deepCopy(value);
+            this.localFilter = deepCopy(value);
             this.advSearch = (this.localFilter.selects && this.localFilter.selects.length) ||
                 (this.localFilter.multiselects && this.localFilter.multiselects.length) ||
                 (this.localFilter.tags && this.localFilter.tags.length);

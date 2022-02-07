@@ -19,8 +19,36 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service';
 import { NxStorageService } from '@services/storage.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { pickFrom } from '@utils/general';
+
+/**
+ * Parse url string to:
+ *
+ *   protocol -> match[1],
+ *
+ *   host     -> match[2],
+ *
+ *   hostname -> match[3],
+ *
+ *   port     -> match[4],
+ *
+ *   pathname -> match[5],
+ *
+ *   search   -> match[6],
+ *
+ *   hash     -> match[7]
+ *
+ * */
+function getRelativeLocation(href: string): string {
+    const match = href.match(/^(https?:)?\/\/(([^:\/?#]*)(?::([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+    if (match) {
+        return match[5] + match[6] + match[7];
+    } else {
+        // href not recognized as valid url
+        return href;
+    }
+}
 
 @Component({
     selector: 'nx-login-webadmin-modal',
@@ -113,7 +141,7 @@ export class LoginWebadminModalContent implements OnInit {
         // ******************************************
         // account, login, cancellable, location, keepPage,
         // redirectClose, redirectHome, blockNavigation
-        NxUtilsService.pickFrom(
+        pickFrom(
             this.dialogData,
             ['account', 'keepPage', 'blockNavigation'],
             this
@@ -211,7 +239,7 @@ export class LoginWebadminModalContent implements OnInit {
                 }
             } else if (this.next) {
                 // sanitize this.next
-                this.next = NxUtilsService.getRelativeLocation(this.next);
+                this.next = getRelativeLocation(this.next);
                 this.router
                     .navigate([this.next])
                     .then(() => {

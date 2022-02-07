@@ -22,6 +22,8 @@ import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import { bitsToString } from '@utils/bits-to-string';
+import { wrapWithPercent } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -116,10 +118,10 @@ export class NxCloudStorageComponent implements OnInit {
 
     public get cloudCapacity() {
         const { locale } = this;
-        return NxUtilsService.fromBits(this._cloudCapacity, {
-            locale,
-            roundTo: 1073741824 / 10
-        });
+        return bitsToString(
+            this._cloudCapacity,
+            { locale, roundTo: 1073741824 / 10 }
+        );
     }
 
     public get compCloudCapacity() {
@@ -127,10 +129,10 @@ export class NxCloudStorageComponent implements OnInit {
             locale,
             CONFIG: { cloudCapabilities: { cloudStorageSize } }
         } = this;
-        return NxUtilsService.fromBits(cloudStorageSize, {
-            locale,
-            roundTo: 1073741824 / 10
-        });
+        return bitsToString(
+            cloudStorageSize,
+            { locale, roundTo: 1073741824 / 10 }
+        );
     }
 
     public get bitrate() {
@@ -138,10 +140,10 @@ export class NxCloudStorageComponent implements OnInit {
         return (
             typeof this.usageStats.recordingBitrate !== 'number'
                 ? this.usageStats.recordingBitrate
-                : NxUtilsService.fromBits(this.usageStats.recordingBitrate, {
-                    unitType: 'bps',
-                    locale
-                })
+                : bitsToString(
+                    this.usageStats.recordingBitrate,
+                    { unitType: 'bps', locale }
+                )
         );
     }
 
@@ -150,12 +152,13 @@ export class NxCloudStorageComponent implements OnInit {
         return (
             typeof this.usageStats.amountUsed !== 'number'
                 ? this.usageStats.amountUsed
-                : NxUtilsService.wrapWithPercent(
+                : wrapWithPercent(
                     this.usageStats.amountUsed,
                     this._cloudCapacity,
-                    NxUtilsService.fromBits(
+                    bitsToString(
                         this.usageStats.amountUsed,
-                        { locale, roundTo: 1073741824 / 10 }),
+                        { locale, roundTo: 1073741824 / 10 }
+                    ),
                     2
                 )
         );

@@ -1,7 +1,7 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxUtilsService } from '@services/utils.service';
+import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
 
 import TimelineService from './timeline.service';
@@ -104,7 +104,7 @@ export class TimelineScrollbarRelativeService {
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
         this._scrollDirection =
-            NxUtilsService.calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
+            calcOffsetX(e) < (this.offset * this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr)
                 ? -1
                 : +1;
     }
@@ -169,7 +169,7 @@ export class TimelineScrollbarRelativeService {
         return Math.round(
             this.timeline.fullRange.start +
         this.timeline.fullRange.duration * (
-            NxUtilsService.calcOffsetX(e) / (e.target as HTMLElement).clientWidth
+            calcOffsetX(e) / (e.target as HTMLElement).clientWidth
         ) -
         this.timeline.visibleRange.duration * 0.5
         );

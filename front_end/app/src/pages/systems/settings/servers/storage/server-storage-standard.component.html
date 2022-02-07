@@ -61,7 +61,7 @@
                                     [nxTooltip]="getStorageTypeTooltip(store.storageType)"
                                     [src]="getIconSrc(store)"
                                 ></svg-icon>
-                                <span class="ellipsis">{{cleanUrl(store.url)}}</span>
+                                <span class="ellipsis">{{cleanSmbUrl(store.url)}}</span>
                             </td>
                             <td
                                 *ngIf="!updatingModes.includes(store.storageId) || reindexingStorages.includes(store.mode);

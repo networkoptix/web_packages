@@ -27,8 +27,8 @@ import { NxProcessService, Process } from '@services/process.service';
 import type { GetMediaServers } from '@services/system-api.types';
 import type { NxSystem, NxSystemServer } from '@services/system.service';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import { cleanId, isEqual } from '@utils/general';
 
 export interface DropdownStorage {
     name: string,
@@ -163,14 +163,14 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 delete previousValue.shownStatus;
             }
 
-            if (!NxUtilsService.isEqual(currentValue, previousValue)) {
+            if (!isEqual(currentValue, previousValue)) {
                 if (!this.applyService.locked) {
                     setTimeout(() => this.setServer(
                         currentValue?.id !== previousValue?.id
                     ));
                 }
             } else {
-                this.checkIfOnline(NxUtilsService.cleanId(currentValue.id));
+                this.checkIfOnline(cleanId(currentValue.id));
             }
         }
     }
@@ -190,7 +190,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
-        this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
+        this.parsedServerId = cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo
             ? JSON.parse(this.selectedServer.osInfo).platform
             : this.LANG.common.unknown?.();
@@ -371,8 +371,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 if (res) {
                     this.setStatus(
                         res.find(server => (
-                            NxUtilsService.cleanId(server.id) ===
-                            NxUtilsService.cleanId(serverId)
+                            cleanId(server.id) === cleanId(serverId)
                         )).status.toLowerCase()
                     );
                     this.applyService.setVisible(true);

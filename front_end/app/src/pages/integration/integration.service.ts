@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { NxAccountService, Account } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity, paramSortFunc } from '@utils/general';
 
 interface Platform {
     file: string;
@@ -130,9 +130,9 @@ export class IntegrationService implements OnDestroy {
             if (section.screenshots.length < 1) {
                 delete section.screenshots;
             } else {
-                section.screenshots.sort(NxUtilsService.byParam((elm: any) => {
-                    return elm.sortKey;
-                }, NxUtilsService.sortASC));
+                section.screenshots.sort(
+                    paramSortFunc((elm: any) => elm.sortKey)
+                );
             }
         }
     }
@@ -169,9 +169,9 @@ export class IntegrationService implements OnDestroy {
         });
 
         if (processed.length) {
-            processed.sort(NxUtilsService.byParam((elm: any) => {
+            processed.sort(paramSortFunc((elm: any) => {
                 return elm.sortKey;
-            }, NxUtilsService.sortASC));
+            }));
 
             plugin.overview.screenshots = processed;
         }
@@ -240,7 +240,7 @@ export class IntegrationService implements OnDestroy {
         }
 
         if (plugin.versionDetails) {
-            plugin.versionDetails.version = NxUtilsService.htmlToEntity(
+            plugin.versionDetails.version = htmlToEntity(
                 this.formatVersion(plugin.versionDetails.version)
             );
         } else {

@@ -19,8 +19,8 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-restart-server-content',
@@ -61,7 +61,7 @@ export class RestartServerModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
+        pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
         const options = {
             classname: this.CONFIG.toast.warning,

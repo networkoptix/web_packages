@@ -26,7 +26,13 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import {
+    paramSortFunc,
+    deepCopy,
+    addPseudoAnchor,
+    clearPseudoAnchors,
+    PseudoAnchorTarget
+} from '@utils/general';
 
 import { IpvdSearchService } from './ipvd-search.service';
 
@@ -46,7 +52,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    targets: object[] = [];
+    targets: PseudoAnchorTarget[] = [];
     placeholder: string;
     data;
     company: string;
@@ -249,10 +255,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     initPseudoAnchors() {
         if (this.ipvdRequest) {
-            this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+            this.targets = clearPseudoAnchors(this.targets);
             const linkRequest = this.ipvdRequest.nativeElement
                 .querySelector<HTMLSpanElement>('span#request');
-            NxUtilsService.addPseudoAnchor(
+            addPseudoAnchor(
                 this.targets,
                 linkRequest,
                 undefined,
@@ -269,7 +275,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     ngOnDestroy() {
-        this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+        this.targets = clearPseudoAnchors(this.targets);
     }
 
     findVendorForCamera(name) {
@@ -453,7 +459,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     modelChanged(model) {
-        this.filterModel = NxUtilsService.deepCopy(model);
+        this.filterModel = deepCopy(model);
         this.searchVendor();
     }
 
@@ -482,9 +488,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.addFilterTags();
 
                 this.vendors = data.vendors;
-                this.vendors.sort(NxUtilsService.byParam((elm: any) => {
-                    return elm.name.toLowerCase();
-                }, NxUtilsService.sortASC));
+                this.vendors.sort(
+                    paramSortFunc((elm: any) => elm.name.toLowerCase())
+                );
 
                 // reformat vendors to fit the multiselect component
                 this.filterModel

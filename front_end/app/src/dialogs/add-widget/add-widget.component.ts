@@ -13,7 +13,7 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { delayInitial, NxUtilsService } from '@services/utils.service';
+import { deepCopy, pickFrom, delayInitial } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-add-widget-content',
@@ -52,7 +52,7 @@ export class AddWidgetModalContent {
     updateSelected(selected) {
         this.selectedWidget = null;
         this.cd.detectChanges();
-        this.selectedWidget = NxUtilsService.deepCopy(selected);
+        this.selectedWidget = deepCopy(selected);
     }
 
     findDashboard(dashboardId) {
@@ -92,7 +92,7 @@ export class AddWidgetModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(
+        pickFrom(
             this.dialogData,
             [
                 'widgets', 'gridSize', 'gridGap',
@@ -108,10 +108,10 @@ export class AddWidgetModalContent {
         const { widgetUrl, devServer = false } = this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
-            this.selectedWidget = NxUtilsService.deepCopy(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
+            this.selectedWidget = deepCopy(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
             this.downloadWidget(devServer || widgetUrl, !!devServer);
         } else {
-            this.selectedWidget = NxUtilsService.deepCopy(this.widgetDropdownOptions[0]);
+            this.selectedWidget = deepCopy(this.widgetDropdownOptions[0]);
         }
 
         this.addWidget = this.processService.createProcess(

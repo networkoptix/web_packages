@@ -20,7 +20,7 @@ import { PopoverRef } from '@components/popover/popover-ref';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/system/storage-manager/storage';
-import { NxUtilsService } from '@services/utils.service';
+import { bitsToString } from '@utils/bits-to-string';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -174,7 +174,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         const { locale } = this;
         const gbBits = 1073741824;
         const roundTo = bits < gbBits / 2 ? gbBits / 1024 : gbBits / (fractionGb ? 10 : 1);
-        const friendlySize = NxUtilsService.fromBits(bits, { locale, roundTo });
+        const friendlySize = bitsToString(bits, { locale, roundTo });
         if (friendlySize === '0 B') {
             return '< 1 MB';
         }

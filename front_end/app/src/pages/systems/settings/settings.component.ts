@@ -32,9 +32,10 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { ICamera, NxSystem, NxSystemService } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content, Level3Item } from '@src/menu/menu.types';
+import { cleanId, htmlToEntity, paramSortFunc } from '@utils/general';
+import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from './settings.service';
 
@@ -559,9 +560,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(camerasNode);
             }
             if (this.system.cameras) {
-                const byParam = NxUtilsService.byParam((camera: ICamera) => {
-                    return camera.name;
-                }, NxUtilsService.sortASC);
+                const byParam = paramSortFunc<ICamera>(camera => camera.name);
                 this.system.cameras.sort(byParam);
                 camerasNode.level3 = this.system.cameras.map(
                     (camera): Level3Item => ({
@@ -628,7 +627,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     cloudUsers: Level3Item[];
                     localUsers: Level3Item[];
                 } = this.system.users.reduce((result, user) => {
-                    const id = NxUtilsService.cleanId(user.id);
+                    const id = cleanId(user.id);
                     const node: Level3Item = {
                         additionalLabel: this.LANG.accessRoles[user.role.name]?.label?.() ||
                             user.role.name,
@@ -689,15 +688,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.servers) {
-                const byParam = NxUtilsService.byParam((server: any) => {
+                const byParam = paramSortFunc((server: any) => {
                     return server.name.toLowerCase();
-                }, NxUtilsService.sortASC);
+                });
                 this.system.servers.sort(byParam);
 
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
-                    const server = NxUtilsService.formatURL(systemServer);
-                    const id = NxUtilsService.cleanId(server.id);
+                    const server = setServerIpAndPort(systemServer);
+                    const id = cleanId(server.id);
 
                     serversNode.level3.push({
                         id: server.id,
@@ -709,7 +708,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         disabled: server.status.toLowerCase() === 'offline'
                     });
                 });
-                serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${NxUtilsService.cleanId(serversNode.level3[0]?.id || '')}`;
+                serversNode.path = `${this.CONFIG.menus.systemSettings.servers.path}/${cleanId(serversNode.level3[0]?.id || '')}`;
             }
         } else {
             this.content.level1 = this.content.level1.filter(node =>
@@ -779,7 +778,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
-        const sysName = NxUtilsService.htmlToEntity(
+        const sysName = htmlToEntity(
             this.system.info.name || this.LANG.errorCodes.thisSystem()
         );
         this.dialogs.notify(

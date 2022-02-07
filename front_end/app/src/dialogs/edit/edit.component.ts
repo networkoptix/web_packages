@@ -25,7 +25,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';
 
@@ -85,7 +85,7 @@ export class EditModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(
+        pickFrom(
             this.dialogData,
             [
                 'heading', 'modal', 'values',

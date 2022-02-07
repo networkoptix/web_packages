@@ -26,7 +26,21 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import {
+    paramSortFunc,
+    addPseudoAnchor,
+    clearPseudoAnchors,
+    PseudoAnchorTarget,
+    isEqual,
+} from '@utils/general';
+
+function yesNo(bVal: unknown): string {
+    if (bVal === undefined || bVal === null) {
+        return 'Unknown';
+    }
+
+    return bVal ? 'Yes' : 'No';
+}
 
 interface Params {
     [key: string]: any;
@@ -65,7 +79,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     private paramsShown;
     private beta: boolean;
 
-    targets: object[] = [];
+    targets: PseudoAnchorTarget[] = [];
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -267,7 +281,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     ngAfterViewInit(): void {
         if (this.ipvdRequest) {
             const linkRequest = this.ipvdRequest.nativeElement.querySelector('span#request');
-            NxUtilsService.addPseudoAnchor(
+            addPseudoAnchor(
                 this.targets,
                 linkRequest,
                 undefined,
@@ -300,14 +314,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     ngOnDestroy() {
-        this.targets = NxUtilsService.clearPseudoAnchors(this.targets);
+        this.targets = clearPseudoAnchors(this.targets);
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.elements) {
             if (changes.elements.firstChange ||
                     (!changes.elements.firstChange &&
-                     !NxUtilsService.isEqual(changes.elements.currentValue, changes.elements.previousValue))
+                     !isEqual(changes.elements.currentValue, changes.elements.previousValue))
             ) {
                 this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
                 this._elements = changes.elements.currentValue;
@@ -389,7 +403,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 param === 'maxFps' ||
                 param === 'isAnalyticsSupported' ||
                 param === 'count') {
-            byParam = NxUtilsService.byParam((elm: any) => {
+            byParam = paramSortFunc((elm: any) => {
                 if (param === 'maxResolution') {
                     return elm.resolutionArea;
                 } else {
@@ -399,7 +413,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         } else if (param === 'isFisheye' ||
                 param === 'isMdSupported' ||
                 param === 'isIoSupported') {
-            byParam = NxUtilsService.byParam(elm => {
+            byParam = paramSortFunc(elm => {
                 if (elm[param]) {
                     return 0;
                 }
@@ -411,7 +425,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }
             }, this.sortOrderASC);
         } else if (param === 'isPtzSupported') {
-            byParam = NxUtilsService.byParam((elm: any) => {
+            byParam = paramSortFunc((elm: any) => {
                 if (elm.isAptzSupported) {
                     return 0;
                 }
@@ -426,7 +440,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }
             }, this.sortOrderASC);
         } else if (param === 'isAudioSupported') {
-            byParam = NxUtilsService.byParam((elm: any) => {
+            byParam = paramSortFunc((elm: any) => {
                 if (elm.isAudioSupported === null) {
                     return 3;
                 }
@@ -441,7 +455,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 }
             }, this.sortOrderASC);
         } else {
-            byParam = NxUtilsService.byParam(elm => {
+            byParam = paramSortFunc(elm => {
                 return (typeof elm[param] === 'string')
                     ? elm[param].toLowerCase()
                     : elm[param];
@@ -551,13 +565,13 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             'Max Resolution': camera.maxResolution,
             'Max FPS': camera.maxFps,
             Codec: camera.primaryCodec,
-            Audio: NxUtilsService.yesNo(camera.isAudioSupported),
-            '2-Way Audio': NxUtilsService.yesNo(camera.isTwAudioSupported),
-            PTZ: NxUtilsService.yesNo(camera.isPtzSupported),
-            'Advanced PTZ': NxUtilsService.yesNo(camera.isAptzSupported),
-            Fisheye: NxUtilsService.yesNo(camera.isFisheye),
-            Motion: NxUtilsService.yesNo(camera.isMdSupported),
-            'I/O': NxUtilsService.yesNo(camera.isIoSupported)
+            Audio: yesNo(camera.isAudioSupported),
+            '2-Way Audio': yesNo(camera.isTwAudioSupported),
+            PTZ: yesNo(camera.isPtzSupported),
+            'Advanced PTZ': yesNo(camera.isAptzSupported),
+            Fisheye: yesNo(camera.isFisheye),
+            Motion: yesNo(camera.isMdSupported),
+            'I/O': yesNo(camera.isIoSupported)
         })
         );
     }

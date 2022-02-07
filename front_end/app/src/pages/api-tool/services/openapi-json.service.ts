@@ -7,7 +7,7 @@ import { filter } from 'rxjs/operators';
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import type { MenuNode } from '@services/menus.service.types';
 import { APIDocType, MenuStructure } from '@services/nx-config/base-config';
-import { NxUtilsService } from '@services/utils.service';
+import { findMenuNode } from '@utils/nx';
 
 import { addSeperatedAPIMenu, createMenuContent, mergeAPIDocs, prepareSwaggerAPIDoc } from '../api-file-utils';
 import type { APIDoc, APIInfo } from '../api-tool-types';
@@ -215,7 +215,7 @@ export class NxOpenAPIJSONService {
             const urlIsEqual = (node: MenuNode) => {
                 return node.url === url;
             };
-            const activeNode = NxUtilsService.findMenuNode(this.menuNodes, urlIsEqual);
+            const activeNode = findMenuNode(this.menuNodes, urlIsEqual);
             if (activeNode) {
                 this.activeNode = activeNode;
                 this.menuNodes = this.menuSubject.value.nodes; // trigger change detection;

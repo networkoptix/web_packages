@@ -13,8 +13,8 @@ import { NxAccountService } from '@services/account.service';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { pickFrom } from '@utils/general';
 
 export interface MessageParams {
     disclaimer: string;
@@ -74,7 +74,7 @@ export class MessageModalContent implements OnInit {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['account', 'messageType', 'data'], this);
+        pickFrom(this.dialogData, ['account', 'messageType', 'data'], this);
 
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {

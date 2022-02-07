@@ -7,7 +7,7 @@ import { NgForm } from '@angular/forms';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { Process } from '@services/process.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-apply-content',
@@ -26,7 +26,7 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);
+        pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);
     }
 
     apply = () => {

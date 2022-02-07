@@ -11,9 +11,13 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
-import { px, ms } from '@view/vms-client/utils/type-aliases';
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import {
+    calcScreenX,
+    calcOffsetX,
+    calcOffsetY,
+} from '@vms-client/utils/calculate-coordinates';
+import { px, ms } from '@vms-client/utils/type-aliases';
 
 import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
 import TimelineSelectionService from '../../services/timeline.selection.service';
@@ -138,7 +142,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.selection.handleMouseMove(e as MouseEvent)) {
             return;
         }
-        const screenX = NxUtilsService.calcScreenX(e);
+        const screenX = calcScreenX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
             // console.log('dragging started', delta)
@@ -177,19 +181,19 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         e.stopPropagation();
         e.preventDefault();
         if (this.archiveSelectionEnabled) {
-            const offsetY = NxUtilsService.calcOffsetY(e);
+            const offsetY = calcOffsetY(e);
             if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
                 offsetY <= CANVAS_SELECTION_OFFSET_END
             ) {
                 this.selection.handleBackgroundMouseDown(e as MouseEvent);
             } else {
                 this.selection.reset();
-                this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
+                this._mouseDownScreenX = calcScreenX(e);
                 this._mouseNotReleasedYet = true;
                 this.timeUnderMouse.handleMouseDown();
             }
         } else {
-            this._mouseDownScreenX = NxUtilsService.calcScreenX(e);
+            this._mouseDownScreenX = calcScreenX(e);
             this._mouseNotReleasedYet = true;
             this.timeUnderMouse.handleMouseDown();
         }
@@ -199,8 +203,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.archiveSelectionEnabled) {
             this.selection.handleMouseUp(e as MouseEvent);
         }
-        const screenX = NxUtilsService.calcScreenX(e);
-        const offsetX = NxUtilsService.calcOffsetX(e);
+        const screenX = calcScreenX(e);
+        const offsetX = calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         // console.log('mouse up', e.screenX, delta)
         if (!this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX) {

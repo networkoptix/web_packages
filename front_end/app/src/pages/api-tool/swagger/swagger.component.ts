@@ -18,7 +18,7 @@ import type {
 } from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
-import { NxUtilsService } from '@services/utils.service';
+import { isUUID } from '@utils/general';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
@@ -161,7 +161,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     private handlePotentialRTSPRoute = request => {
         const urlPath = new URL(request.url).pathname.slice(1);
-        const isRTSP = NxUtilsService.isUUID(urlPath) ||  // The only route that starts with uuid is an RTSP route.
+        const isRTSP = isUUID(urlPath) ||  // The only route that starts with uuid is an RTSP route.
                       (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
 
         if (isRTSP) {

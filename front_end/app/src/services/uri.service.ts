@@ -4,9 +4,9 @@ import { BehaviorSubject, Observable }  from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { WINDOW } from '@services/window-provider';
+import { isEqual } from '@utils/general';
 
 import { NxConfigService, IConfig } from './nx-config';
-import { NxUtilsService } from './utils.service';
 
 export enum ChildRoutes {
     CAMERAS='cameras',
@@ -45,7 +45,7 @@ export class NxUriService {
     }
 
     set queryParams(params: Params) {
-        if (!NxUtilsService.isEqual(params, this.queryParams)) {
+        if (!isEqual(params, this.queryParams)) {
             this.queryParamsSubject.next(params);
         }
     }

@@ -1,5 +1,6 @@
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxUtilsService } from '@services/utils.service';
+import { paramSortFunc } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
 import { NxSystemServer, ModuleInfo } from '../system-types';
@@ -28,7 +29,9 @@ export class CameraManager {
             const response = await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
             const [moduleInfo, servers, serverTimes, cameras] = response;
             this.moduleInfo = moduleInfo;
-            this.servers = servers.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+            this.servers = servers.sort(
+                paramSortFunc((server: any) => server.name)
+            );
             this.getCameras(serverTimes, cameras);
             return Promise.resolve();
         } catch (error) {

@@ -3,6 +3,7 @@ import { tap } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import type { APIDocType } from '@services/nx-config/base-config';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { paramSortFunc } from '@utils/general';
 
 import { NxCloudApiService } from '../../../nx-cloud-api';
 import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../../system-api.service';
@@ -75,12 +76,14 @@ export class ServerManager {
                     return Promise.reject(new Error(`Request to server has failed ${res}`));
                 }
 
-                this.servers = res.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+                this.servers = res.sort(
+                    paramSortFunc((server: any) => server.name)
+                );
                 return this.servers;
             });
             return serverSubscription;
         } else {
-            this.servers = servers.sort(NxUtilsService.byParam((server: any) => server.name, NxUtilsService.sortASC));
+            this.servers = servers.sort(paramSortFunc(server => server.name));
         }
     }
 

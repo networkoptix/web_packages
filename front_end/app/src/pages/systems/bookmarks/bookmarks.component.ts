@@ -11,7 +11,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSystem, NxSystemService } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { deepCopy } from '@utils/general';
 
 import { BookmarkService, Bookmark } from './bookmark.service';
 
@@ -128,7 +128,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.filterModel = NxUtilsService.deepCopy(this.filterModel);
+        this.filterModel = deepCopy(this.filterModel);
     }
 
     setFilter(): void {
@@ -174,7 +174,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     }
 
     modelChanged(searchModel: SearchFilter): void {
-        this.filterModel = NxUtilsService.deepCopy(searchModel);
+        this.filterModel = deepCopy(searchModel);
         this.setFilter();
     }
 }

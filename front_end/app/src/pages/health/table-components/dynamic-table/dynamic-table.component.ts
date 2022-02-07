@@ -23,7 +23,7 @@ import { NxRibbonService } from '@components/ribbon';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { paramSortFunc, isEqual } from '@utils/general';
 
 import { NxHealthLayoutService } from '../../health-layout.service';
 import { NxHealthService } from '../../health.service';
@@ -281,7 +281,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedHeader = undefined;
 
             if (changes.headers.previousValue !== undefined &&
-                !NxUtilsService.isEqual(
+                !isEqual(
                     changes.headers.previousValue,
                     changes.headers.currentValue
                 )
@@ -500,7 +500,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         this.sortOrderASC = (byParam) ? this.sortOrderASC : !this.sortOrderASC;
-        this._elements.sort(NxUtilsService.byParam(sortFunc(), this.sortOrderASC));
+        this._elements.sort(paramSortFunc(sortFunc(), this.sortOrderASC));
 
         if (updateURI || updateURI === undefined) {
             const queryParams: Params = {};

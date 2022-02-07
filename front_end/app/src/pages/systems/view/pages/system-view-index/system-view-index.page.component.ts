@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription, timer } from 'rxjs';
 import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 
@@ -14,7 +15,8 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxSystemService, NxSystem } from '@services/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
+import { cleanId } from '@utils/general';
+import { setServerIpAndPort } from '@utils/nx';
 import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
 import Camera from '@vms-client/submodules/vms/datatypes/Camera';
 import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
@@ -130,7 +132,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected vms: VideoManagementSystemService,
         protected timeline: TimelineService,
         protected ux: WebClientUxService,
-        private utilsService: NxUtilsService,
+        private deviceService: DeviceDetectorService,
         private dialogs: NxDialogsService,
         private ribbonService: NxRibbonService,
         private settingsService: NxSettingsService
@@ -216,7 +218,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this.fullscreenMode = false;
             this.showElementsInFSM = true;
 
-            if (this.utilsService.isMobile() && this.fullscreenToggle) {
+            if (this.deviceService.isMobile() && this.fullscreenToggle) {
                 this.ux.isSidebarShown = false;
             }
             this.fullscreenToggle = false;
@@ -468,9 +470,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                                     );
                                     rec?.archivedCameras.forEach(cameraId => {
                                         // trick camera 'hasArchive' - here we don't need a real info -- TT
-                                        archiveRanges[
-                                            NxUtilsService.cleanId(cameraId)
-                                        ] = new SimpleTimeRange(1, 2);
+                                        archiveRanges[cleanId(cameraId)] =
+                                            new SimpleTimeRange(1, 2);
                                     });
                                 });
                             });
@@ -487,7 +488,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     // await Promise.all(cameraIds.map(findCameraArchiveRanges));
 
                     cachedMediaServers = mediaServers.map(
-                        ms => NxUtilsService.formatURL(({
+                        ms => setServerIpAndPort(({
                             id: ms.id,
                             name: ms.name,
                             networkAddresses: ms.networkAddresses,
@@ -495,7 +496,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             cameras: ms.cameras.map((c: any) =>
                                 processCameras(c, ms)
                             )
-                        }))
+                        } as any))
                     );
 
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);

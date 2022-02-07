@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { isArray } from 'rxjs/internal-compatibility';
 
 import { NxSearchService, SearchModel } from '@services/search.service';
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity, isEqual, deepCopy } from '@utils/general';
 
 import type {
     Level1Item,
@@ -109,7 +109,7 @@ export class NxMenuService implements OnDestroy {
         newContent: Level1Item[],
         nodeGroup: string
     ): boolean {
-        return NxUtilsService.isEqual(
+        return isEqual(
             currentContent.filter(node => node.id === nodeGroup),
             newContent.filter(node => node.id === nodeGroup)
         );
@@ -117,7 +117,7 @@ export class NxMenuService implements OnDestroy {
 
     hasUpdatedContent(content: Level1Item[]): boolean {
         const cleanedContent = this.cleanUpAdditionalTextIfNeeded(content);
-        return !NxUtilsService.isEqual(cleanedContent, content) ||
+        return !isEqual(cleanedContent, content) ||
             !this.isEqual(cleanedContent, content, 'cameras') ||
             !this.isEqual(cleanedContent, content, 'users') ||
             !this.isEqual(cleanedContent, content, 'servers');
@@ -223,7 +223,7 @@ export class NxMenuService implements OnDestroy {
                         haveNode = { ...node };
                         haveNode.level3 = []; // remove items so we can all only matches
                     }
-                    const filteredItem = NxUtilsService.deepCopy(item);
+                    const filteredItem = deepCopy(item);
                     filteredItem.additionalText = additional;
                     filteredItem.subNode = subNode || node;
                     filteredItem.query = { search: model.query };
@@ -240,20 +240,20 @@ export class NxMenuService implements OnDestroy {
     }
 
     sanitizeContent(content: Level1Item[]): SanitizedLevel1Item[] {
-        const clean = NxUtilsService.deepCopy(content);
+        const clean = deepCopy(content);
         return clean.map(node => {
             if (node.level3?.length) {
                 node.level3.forEach(item => {
                     if (item.label) {
-                        item.label = NxUtilsService.htmlToEntity(item.label);
+                        item.label = htmlToEntity(item.label);
                     }
                     if (item.additionalLabel) {
-                        item.additionalLabel = NxUtilsService.htmlToEntity(
+                        item.additionalLabel = htmlToEntity(
                             item.additionalLabel
                         );
                     }
                     if (item.additionalText) {
-                        item.additionalText = NxUtilsService.htmlToEntity(
+                        item.additionalText = htmlToEntity(
                             item.additionalText
                         );
                     }
@@ -264,7 +264,7 @@ export class NxMenuService implements OnDestroy {
     }
 
     cleanMenuContent(content: Level1Item[]): Level1Item[] {
-        const clean = NxUtilsService.deepCopy(content);
+        const clean = deepCopy(content);
         return clean.map(node => {
             delete node.toggle;
             return node;
@@ -283,9 +283,6 @@ export class NxMenuService implements OnDestroy {
         one of the above type string[] */
         // @ts-ignore
         ).join('|');
-
-        // query will be broken in tokens so attempted html/js injection will fail
-        // pattern = NxUtilsService.escapeRegExp(pattern);
 
         this.regex = new RegExp(pattern, 'gi');
     }

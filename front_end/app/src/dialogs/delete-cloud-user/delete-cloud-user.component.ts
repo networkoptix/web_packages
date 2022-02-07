@@ -7,7 +7,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-delete-cloud-user-content',
@@ -38,7 +38,7 @@ export class DeleteCloudUserModalContent {
     }
 
     ngOnInit() {
-        NxUtilsService.pickFrom(this.dialogData, ['cloudApi'], this);
+        pickFrom(this.dialogData, ['cloudApi'], this);
 
         this.deleteCloudUser = this.processService
             .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),

@@ -8,7 +8,7 @@ import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import type { NxSystem, NxSystemRole } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'src-transfer-ownership',
@@ -44,7 +44,7 @@ export class TransferOwnershipModalContent implements OnInit {
     }
 
     ngOnInit(): void {
-        NxUtilsService.pickFrom(this.dialogData, ['system'], this);
+        pickFrom(this.dialogData, ['system'], this);
 
         this.newRole = this.system.userManager.accessRoles.find(role =>
             role.name.toLowerCase() === 'administrator'

@@ -16,8 +16,8 @@ import { delay, throttleTime } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
+import { paramSortFunc, isEqual, deepCopy } from '@utils/general';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
@@ -139,7 +139,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.processAlerts();
 
         this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
-        this.alerts.sort(NxUtilsService.byParam(this.sortAlertsFunc(), true /* sort defined in func() */));
+        this.alerts.sort(paramSortFunc(this.sortAlertsFunc()));
         this.countAlerts();
 
         if (this.params.id && this.params.metric) {
@@ -239,9 +239,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     modelChanged(model) {
-        if (!NxUtilsService.isEqual(this.filterModel, model)) { // avoid unnecessary trips
+        if (!isEqual(this.filterModel, model)) { // avoid unnecessary trips
             this.healthService.tableReady = false;
-            this.filterModel = NxUtilsService.deepCopy(model);
+            this.filterModel = deepCopy(model);
             this.alerts = this.healthService.alertsSearch(
                 this.healthService.alertsValues,
                 model

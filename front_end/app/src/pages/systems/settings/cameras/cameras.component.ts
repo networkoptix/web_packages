@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import {
     Subject,
     Subscription,
@@ -52,9 +53,9 @@ import {
     StreamQuality
 } from '@services/system.service';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
+import { isEqual } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -423,7 +424,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogService: NxDialogsService,
-        private utilsService: NxUtilsService,
+        private deviceService: DeviceDetectorService,
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef
     ) {
@@ -435,7 +436,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
+        this.isMobile = this.deviceService.isMobile() ||
+            this.deviceService.isTablet();
 
         this.router.events.subscribe(route => {
             if (route instanceof NavigationStart) {
@@ -531,12 +533,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                 this.initUpdateProcess();
                             }
 
-                            const isEqual = NxUtilsService.isEqual(
+                            const camerasEqual = isEqual(
                                 prevCameras,
                                 res.cameraManager.cameras
                             );
                             prevCameras = [...res.cameraManager.cameras];
-                            return !isEqual;
+                            return !camerasEqual;
                         }),
                         map((system: NxSystem) => {
                             if (!system.cameraManager.cameras) {

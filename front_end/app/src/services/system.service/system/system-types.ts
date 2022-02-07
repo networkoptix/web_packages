@@ -112,7 +112,7 @@ export interface NxCamera {
 export interface NxMediaServer {
     id: string;
     name: string;
-    networkAddresses: any;
+    networkAddresses: string;
     status: string;
     timeInfo: ServerTimeInfo;
     ip?: string,

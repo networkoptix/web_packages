@@ -9,7 +9,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxSystem, NxSystemService } from '@services/system.service';
 import { NxSystemWithUserInfo } from '@services/systems.service';
-import { NxUtilsService } from '@services/utils.service';
+import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -58,7 +58,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         map(systems => systems.map(({ id, name, stateOfHealth }) => ({
             name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
             disabled: stateOfHealth !== 'online',
-            value: NxUtilsService.cleanId(id)
+            value: cleanId(id)
         }))),
         tap(async (systems: any) => {
             if (!systems.length) {
@@ -84,10 +84,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
             const previewUrl = this.system.mediaserver.previewUrl(id, 0, this.size.width, this.size.height, rotation as number);
             return {
                 ...lookup,
-                [NxUtilsService.cleanId(id)]: {
-                    previewUrl,
-                    name
-                }
+                [cleanId(id)]: { previewUrl, name }
             };
         }, {}))
     )
@@ -101,7 +98,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
             }
             await this.initCameras();
             const cameras = this.system.cameraManager.cameras || [];
-            return cameras.map(({ name, id, status: state }) => ({ name, state, disabled: state !== 'online' && false, value: NxUtilsService.cleanId(id) }));
+            return cameras.map(({ name, id, status: state }) => ({ name, state, disabled: state !== 'online' && false, value: cleanId(id) }));
         }),
         tap(cameras => {
             this.selectedCamera = cameras.find(({ value }) => value === this.card.config.selectedCamera) || cameras.find(({ disabled }) => !disabled) || cameras[0];

@@ -15,7 +15,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem, NxSystemServer, NxSystemService } from '@services/system.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { isEqual, deepCopy } from '@utils/general';
 
 import type { APIDoc } from '../api-tool-types';
 
@@ -364,7 +364,7 @@ export class NxAPIToolSystemService {
     setQueryParams = (param: string, newValue: string) => {
         if (environment.isLocal && param === 'system') return;
 
-        const queryParams = NxUtilsService.deepCopy(this.queryParams);
+        const queryParams = deepCopy(this.queryParams);
         queryParams[param] = newValue;
         this.queryParams = queryParams;
         this.uri.updateURI(this.uri.getURL(), queryParams);
@@ -376,7 +376,7 @@ export class NxAPIToolSystemService {
         if (!initialSystems.length) {
             systemsSubjectSubscription = this.systemsService.systemsSubject
                 .pipe(
-                    distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b)),
+                    distinctUntilChanged((a, b) => isEqual(a, b)),
                     untilDestroyed(this))
                 .subscribe(systems => {
                     this.initSystems(systems);

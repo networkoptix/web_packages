@@ -1,6 +1,6 @@
 import { GetStorages } from '@services/system-api.types';
 import { ServerManager } from '@services/system.service/system/server-manager/server-manager';
-import { NxUtilsService } from '@services/utils.service';
+import { cleanId } from '@utils/general';
 
 /**
  * TODO: Need to add better types to some of the system-api methods
@@ -163,7 +163,7 @@ export class CurrentStorageState {
     }) => isBackup === !main && isOnline && isWritable && usedForWriting;
 
     #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }) => {
-        this.#metadataStorageId = NxUtilsService.cleanId(metadataStorageId || '');
+        this.#metadataStorageId = cleanId(metadataStorageId || '');
         this.#hasAnalyticsData = hasAnalyticsData;
         this.#hasPlugins = hasPlugins;
     }

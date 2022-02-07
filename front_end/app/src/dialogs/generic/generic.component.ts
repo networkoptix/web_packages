@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxUtilsService } from '@services/utils.service';
+import { pickFrom } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-generic-content',
@@ -32,7 +32,7 @@ export class GenericModalContent implements OnInit {
     ) {}
 
     ngOnInit() {
-        NxUtilsService.pickFrom(
+        pickFrom(
             this.dialogData,
             [
                 'message', 'title', 'actionLabel',

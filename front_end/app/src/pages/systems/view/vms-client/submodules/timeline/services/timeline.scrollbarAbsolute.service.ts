@@ -1,7 +1,7 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxUtilsService } from '@services/utils.service';
+import { calcClientX } from '@vms-client/utils/calculate-coordinates';
 import { px } from '@vms-client/utils/type-aliases';
 
 import {
@@ -120,7 +120,7 @@ export class TimelineScrollbarAbsoluteService {
     protected _isBarGrabbed: boolean = false;
 
     public handleBarMouseDown (e: MouseEvent|TouchEvent) {
-        this._dragAnchorAbsolute = NxUtilsService.calcClientX(e);
+        this._dragAnchorAbsolute = calcClientX(e);
         this._isBarGrabbed = true;
         if (e instanceof MouseEvent) {
             e.stopPropagation();
@@ -134,7 +134,7 @@ export class TimelineScrollbarAbsoluteService {
 
     public handleBarDragMouseMove (e: MouseEvent) {
         if (this._isBarGrabbed) {
-            const dx = NxUtilsService.calcClientX(e) - this._dragAnchorAbsolute;
+            const dx = calcClientX(e) - this._dragAnchorAbsolute;
             const leftEdgeMeansMs = this.timeline.visibleRange.start;
 
             // there's a dilemma:
@@ -145,7 +145,7 @@ export class TimelineScrollbarAbsoluteService {
 
             const newLeftEdgeMs = leftEdgeMeansMs + msPerBarPixel * dx;
             this.timeline.jumpScrollTo(newLeftEdgeMs); // don't animate the jump!
-            this._dragAnchorAbsolute = NxUtilsService.calcClientX(e); // unless you found a way to get rid of this update
+            this._dragAnchorAbsolute = calcClientX(e); // unless you found a way to get rid of this update
             // yet if you managed it, animation could make UX less bumpy
             this._emit();
         }

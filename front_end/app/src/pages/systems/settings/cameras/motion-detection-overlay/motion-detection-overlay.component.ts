@@ -11,10 +11,10 @@ import {
     Output,
     EventEmitter
 } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxUtilsService } from '@services/utils.service';
 
 import { MotionMaskRenderer } from './MotionMaskRenderer';
 import { MotionMaskState } from './MotionMaskState';
@@ -43,7 +43,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     constructor(
         config: NxConfigService,
-        private utilsService: NxUtilsService
+        private deviceService: DeviceDetectorService,
     ) {
         this.config = config.getConfig();
     };
@@ -109,7 +109,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
             this.config.cameraSettings.sensitivityColors,
             this.unsub$,
             this.sensitivityButtons$,
-            this.utilsService.isMobile() || this.utilsService.isTablet()
+            this.deviceService.isMobile() || this.deviceService.isTablet()
 
         );
 
