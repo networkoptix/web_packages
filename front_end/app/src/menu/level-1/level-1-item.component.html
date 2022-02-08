@@ -37,7 +37,8 @@
         </div>
         <div class="search-results" *ngIf="searchMode">
             <svg-icon
-                [src]="CONFIG.icons.dir + _type + '.svg'"
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + _type + '.svg'"
                 [svgStyle]="{'width.px': '20', 'height.px': '20'}"
             ></svg-icon>
         </div>
