@@ -9,7 +9,7 @@ Force Tags        email    form    Threaded
 *** Variables ***
 ${url}    ${ENV}
 ${password}     ${BASE PASSWORD}
-${EMAIL IS REQUIRED}   //p[contains(@class,'error-label') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL IS REQUIRED}   //p[contains(@class,'error-label') and contains(text(),"${ENTER EMAIL TEXT}")]
 ${EMAIL INVALID}       //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
 ${EMAIL IS REQUIRED HEBREW}   //p[contains(@class,'error-label') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
 ${EMAIL INVALID HEBREW}       //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
@@ -83,20 +83,35 @@ Open Restore Password Dialog
 Test Email Invalid
     [Arguments]   ${email}
     Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}
+    IF    '${email}' == '${EMPTY}'
+        Press Keys    ${RESTORE PASSWORD EMAIL INPUT}    CTRL+a+BACKSPACE
+    END
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
     Run Keyword Unless    '${email}'=='${EMAIL UNREGISTERED}' or '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Check Email Outline    ${email}
-    Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL}${SPACE}${ACCOUNT DOES NOT EXIST}
-    Run Keyword If    '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Go To    ${url}/restore_password
+    Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check Error Content and Reset Button Disabled
+    IF    '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'
+        Restart
+    END
 
 Check Email Outline
     [Arguments]    ${email}
     Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/parent::form[contains(@class,'ng-invalid')]
     IF    "${LANGUAGE}"=="he_IL"
-        Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED HEBREW}
-        Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID HEBREW}
+        IF    $"${email}"=="${EMPTY}" or "${email}"=="${SPACE}"
+            Wait Until Element Is Visible    ${EMAIL IS REQUIRED HEBREW}
+            Element Should Be Disabled    ${RESET PASSWORD BUTTON}
+        ELSE
+            Wait Until Element Is Visible    ${EMAIL INVALID HEBREW}
+            Element Should Be Disabled    ${RESET PASSWORD BUTTON}
+        END
     ELSE
-        Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
-        Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID}
+        IF    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"
+            Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
+            Element Should Be Disabled    ${RESET PASSWORD BUTTON}
+        ELSE
+            Wait Until Element Is Visible    ${EMAIL INVALID}
+            Element Should Be Disabled    ${RESET PASSWORD BUTTON}
+        END
     END
     

@@ -479,6 +479,12 @@ Check For Alert Dismissable
     Click Button    ${ALERT CLOSE}
     Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]
 
+Check Error Content and Reset Button Disabled
+    Wait Until Element Is Visible    //nx-authorize-reset-request-component//main//form//p
+    ${error text}=    Get Text    //nx-authorize-reset-request-component//main//form//p
+    Should Be Equal    ${error text}    ${ACCOUNT DOES NOT EXIST TEXT}
+    Element Should Be Disabled    ${RESET PASSWORD BUTTON}
+    
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
