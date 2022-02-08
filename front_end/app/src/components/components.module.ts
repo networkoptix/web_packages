@@ -77,6 +77,7 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
 import { NxNoSystemsComponent } from './no-systems/no-systems.component';
 import { NxClientButtonComponent } from './open-client-button/client-button.component';
 import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component';
+import { NxOpenClientSectionPlaceholderComponent } from './placeholders/open-client-section/open-client-section.component';
 import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from './placeholders/player/player-placeholder.component';
 import { NxSectionPlaceholderComponent } from './placeholders/section/section-placeholder.component';
@@ -150,6 +151,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxOpenClientSectionPlaceholderComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
@@ -202,6 +204,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxOpenClientSectionPlaceholderComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
@@ -258,6 +261,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxOpenClientSectionPlaceholderComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,

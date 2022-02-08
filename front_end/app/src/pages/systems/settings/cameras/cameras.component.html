@@ -72,134 +72,155 @@
                         </div>
                         <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
                     </header>
-                    <nx-section>
-                        <h4 class="mb-3" translate>Image</h4>
+                    <ng-template #deviceNotSupported>
+                        <nx-open-client-section-placeholder
+                                [system]="system"
+                                [translatedMessage]="'Settings for this device are not available.' | translate"
+                        ></nx-open-client-section-placeholder>
 
-                        <div class="grid-container">
-                            <div class="grid-item">
-                                <span class="text-right" translate>Aspect Ratio</span>
-                            </div>
-                            <div class="grid-item mb-2 mb-md-0">
-                                <nx-select
-                                        [selected]="false"
-                                        [(ngModel)]="selectedAspect"
-                                        [items]="aspectRatios"
-                                        id="aspect-ratios"></nx-select>
-                            </div>
-                            <div class="grid-item">
-                                <span class="text-right" translate>Rotation</span>
-                            </div>
-                            <div class="grid-item">
-                                <nx-select
-                                        [selected]="false"
-                                        [(ngModel)]="selectedRotation"
-                                        [items]="rotations"
-                                        id="rotations"></nx-select>
-                            </div>
-                        </div>
-                    </nx-section>
-                    <nx-section>
-                        <h4 class="mb-3" translate>Audio</h4>
-                        <div class="d-flex checkbox-block align-items-center mt-1">
-                            <nx-checkbox
-                                name="audioEnabled"
-                                componentId="audioEnabled"
-                                [(ngModel)]="audioEnabled"
-                                [disabled]="!selectedCamera.isAudioSupported">
-                            </nx-checkbox>
-                            <label class="control-label mb-0"
-                                [ngClass]="!selectedCamera.isAudioSupported ? 'disabled-audio-label' : ''"
-                                for="audioEnabled">
-                                <span translate>Enable Audio</span>
-                            </label>
-                        </div>
-                    </nx-section>
-                    <nx-section>
-                        <h4 class="mb-3" translate>Authentication</h4>
-                        <button class="btn btn-default" (click)="updateCredentials()" id="update-credentials"><span translate>Edit Credentials</span></button>
-                    </nx-section>
-                </nx-block>
-            </div>
-            <div class="col-12 camera-settings-info mt-3" *ngIf="!system.useRest">
-                <nx-block header-style="no-padding">
-                    <header>
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <nx-switch
-                                    [checked]="recording"
-                                    [label]="'Recording' | translate"
-                                    id="recording"
-                                    name="recording"
-                                    [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
-                                    (onSwitch)="handleRecordingToggle($event)"></nx-switch>
-                                <div *ngIf="!recording && !recordingWatcher.originalValue" class="recording-hint"
-                                    [ngClass]="{
-                                            'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
-                                            'shake-hint': shakeHint
-                                    }">{{ availableLicenses > 0 ?
-                                            ('1 professional license channel will be used' | translate)  :
-                                            ('Professional license is required' | translate)}}
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                    <ng-container *ngIf="recording">
+                    </ng-template>
+                    <ng-container *ngIf="!settingsDisabled; else deviceNotSupported">
                         <nx-section>
-                            <h4 class="mb-3" translate>Mode</h4>
-                                <nx-radio
-                                    *ngFor="let mode of recordingModes" class="d-flex pb-2"
-                                    [name]="mode.name"
-                                    [componentId]="mode.name"
-                                    [value]="mode.value"
-                                    [label]="LANG.common.recordingModes[mode.name]()"
-                                    [disabled]="!mode.enabled"
-                                    [(ngModel)]="mode.value"
-                                    (click)="toggleMode(mode)"
-                                    ></nx-radio>
-                            <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
-                            <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
-                        </nx-section>
-                        <nx-section *ngIf="!selectedCamera.isStream">
-                            <h4 class="mb-3" translate>Quality</h4>
-                            <div class="grid-container-with-warning">
-                                <div class="grid-item mb-2">
-                                    <span class="text-right" translate>FPS</span>
+                            <h4 class="mb-3" translate>Image</h4>
+
+                            <div class="grid-container">
+                                <div class="grid-item">
+                                    <span class="text-right" translate>Aspect Ratio</span>
                                 </div>
-                                <div class="grid-item mb-2 mb-lg-0">
-                                    <div style="width: 100%">
-                                        <nx-numeric
-                                                id="fps"
-                                                name="fps"
-                                                [class]="'pl-2'"
-                                                [step]="1"
-                                                [min]="1"
-                                                [placeholder]="selectedCamera.maxFps || 15"
-                                                [max]="selectedCamera.maxFps || 15"
-                                                [(ngModel)]="selectedFps"
-                                        ></nx-numeric>
-                                    </div>
-                                </div>
-                                <div class="grid-item mb-2">
-                                    <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error error-span col-8" translate>Please select FPS.</span>
+                                <div class="grid-item mb-2 mb-md-0">
+                                    <nx-select
+                                            [selected]="false"
+                                            [(ngModel)]="selectedAspect"
+                                            [items]="aspectRatios"
+                                            id="aspect-ratios"></nx-select>
                                 </div>
                                 <div class="grid-item">
-                                    <span class="text-right" translate>Quality</span>
+                                    <span class="text-right" translate>Rotation</span>
                                 </div>
                                 <div class="grid-item">
-                                    <nx-select [selected]="selectedQuality"
-                                        [(ngModel)]="selectedQuality"
-                                        [items]="streamQualities"
-                                        id="recording-quality"></nx-select>
-                                </div>
-                                <div class="grid-item">
-                                    <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error error-span col-8" translate>Please select recording quality</span>
+                                    <nx-select
+                                            [selected]="false"
+                                            [(ngModel)]="selectedRotation"
+                                            [items]="rotations"
+                                            id="rotations"></nx-select>
                                 </div>
                             </div>
+                        </nx-section>
+                        <nx-section>
+                            <h4 class="mb-3" translate>Audio</h4>
+                            <div class="d-flex checkbox-block align-items-center mt-1">
+                                <nx-checkbox
+                                    name="audioEnabled"
+                                    componentId="audioEnabled"
+                                    [(ngModel)]="audioEnabled"
+                                    [disabled]="!selectedCamera.isAudioSupported">
+                                </nx-checkbox>
+                                <label class="control-label mb-0"
+                                    [ngClass]="!selectedCamera.isAudioSupported ? 'disabled-audio-label' : ''"
+                                    for="audioEnabled">
+                                    <span translate>Enable Audio</span>
+                                </label>
+                            </div>
+                        </nx-section>
+                        <nx-section>
+                            <h4 class="mb-3" translate>Authentication</h4>
+                            <button class="btn btn-default" (click)="updateCredentials()" id="update-credentials"><span translate>Edit Credentials</span></button>
                         </nx-section>
                     </ng-container>
                 </nx-block>
             </div>
-            <div class="col-12 camera-settings-info mt-3">
+            <ng-container *ngIf="!settingsDisabled">
+                <div class="col-12 camera-settings-info mt-3">
+                    <nx-block [header-style]="system.useRest ? '' : 'no-padding'">
+                        <header>
+                            <div class="d-flex align-items-center">
+                                <ng-template #notAvailable>
+                                    <h4 translate>Recording</h4>
+                                </ng-template>
+                                <div *ngIf="!system.useRest; else notAvailable">
+                                    <nx-switch
+                                        [checked]="recording"
+                                        [label]="'Recording' | translate"
+                                        id="recording"
+                                        name="recording"
+                                        [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
+                                        (onSwitch)="handleRecordingToggle($event)"></nx-switch>
+                                    <div *ngIf="!recording && !recordingWatcher.originalValue" class="recording-hint"
+                                        [ngClass]="{
+                                                'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
+                                                'shake-hint': shakeHint
+                                        }">{{ availableLicenses > 0 ?
+                                                ('1 professional license channel will be used' | translate)  :
+                                                ('Professional license is required' | translate)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <ng-container *ngIf="system.useRest">
+                            <nx-open-client-section-placeholder
+                                svgFileName="system_settings_placeholder"
+                                width="64"
+                                [system]="system"
+                                [translatedMessage]="'Recording settings are not available.' | translate">
+                            </nx-open-client-section-placeholder>
+                        </ng-container>
+                        <ng-container *ngIf="!system.useRest && recording">
+                            <nx-section>
+                                <h4 class="mb-3" translate>Mode</h4>
+                                    <nx-radio
+                                        *ngFor="let mode of recordingModes" class="d-flex pb-2"
+                                        [name]="mode.name"
+                                        [componentId]="mode.name"
+                                        [value]="mode.value"
+                                        [label]="LANG.common.recordingModes[mode.name]()"
+                                        [disabled]="!mode.enabled"
+                                        [(ngModel)]="mode.value"
+                                        (click)="toggleMode(mode)"
+                                        ></nx-radio>
+                                <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
+                                <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
+                            </nx-section>
+                            <nx-section *ngIf="!selectedCamera.isStream">
+                                <h4 class="mb-3" translate>Quality</h4>
+                                <div class="grid-container-with-warning">
+                                    <div class="grid-item mb-2">
+                                        <span class="text-right" translate>FPS</span>
+                                    </div>
+                                    <div class="grid-item mb-2 mb-lg-0">
+                                        <div style="width: 100%">
+                                            <nx-numeric
+                                                    id="fps"
+                                                    name="fps"
+                                                    [class]="'pl-2'"
+                                                    [step]="1"
+                                                    [min]="1"
+                                                    [placeholder]="selectedCamera.maxFps || 15"
+                                                    [max]="selectedCamera.maxFps || 15"
+                                                    [(ngModel)]="selectedFps"
+                                            ></nx-numeric>
+                                        </div>
+                                    </div>
+                                    <div class="grid-item mb-2">
+                                        <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error error-span col-8" translate>Please select FPS.</span>
+                                    </div>
+                                    <div class="grid-item">
+                                        <span class="text-right" translate>Quality</span>
+                                    </div>
+                                    <div class="grid-item">
+                                        <nx-select [selected]="selectedQuality"
+                                            [(ngModel)]="selectedQuality"
+                                            [items]="streamQualities"
+                                            id="recording-quality"></nx-select>
+                                    </div>
+                                    <div class="grid-item">
+                                        <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error error-span col-8" translate>Please select recording quality</span>
+                                    </div>
+                                </div>
+                            </nx-section>
+                        </ng-container>
+                    </nx-block>
+                </div>
+                <div class="col-12 camera-settings-info mt-3">
                 <nx-section *ngIf="!motionEnabled">
                     <span class="d-block" translate>Motion detection for this camera is turned off.</span>
                     <span clss="d-block" translate>Enabling it will allow you to set up "motion only" and "motion + low-res" recording types, but may increase the CPU usage.</span>
@@ -257,6 +278,7 @@
                     </div>
                 </nx-block>
             </div>
+            </ng-container>
         </ng-container>
     </ng-template>
 </div>
