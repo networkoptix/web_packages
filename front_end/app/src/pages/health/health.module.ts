@@ -8,24 +8,30 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { AuthGuard } from '@guards/authGuard';
+import { SystemGuard } from '@guards/systemGuard';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { AuthGuard, SystemGuard } from '@src/routeGuards';
 
+import { NxSystemAlertsComponent } from './alerts/alerts.component';
+import { NxSystemAlertCardComponent } from './card/card.component';
 import { NxHealthLayoutService } from './health-layout.service';
-
+import { NxHealthComponent } from './health/health.component';
+import { NxSystemMetricsComponent } from './metrics/metrics.component';
 import {
-    NxHealthComponent,
-    NxReportViewerComponent,
-    NxSystemAlertsComponent,
-    NxSystemMetricsComponent,
-    NxDynamicTableComponent,
-    NxDynamicTablePanelComponent,
-    NxSingleEntityComponent,
-    NxImageSectionComponent,
-    NxSystemAlertCardComponent,
-    NxUpdateInfoComponent
-} from './';
+    NxDynamicTablePanelComponent
+} from './table-components/dynamic-table-panel/dynamic-table-panel.component';
+import {
+    NxDynamicTableComponent
+} from './table-components/dynamic-table/dynamic-table.component';
+import {
+    NxImageSectionComponent
+} from './table-components/image-section/image-section.component';
+import {
+    NxSingleEntityComponent
+} from './table-components/single-entity/single-entity.component';
+import { NxUpdateInfoComponent } from './update-info/update-info.component';
+import { NxReportViewerComponent } from './viewer/viewer.component';
 
 const appRoutes: Routes = [
     {

@@ -7,8 +7,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { DevelopersGuard } from '@guards/developersGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { DevelopersGuard } from '@src/routeGuards';
 
 import { NxDevToolsComponent } from '../dev-tools/dev-tools.component';
 

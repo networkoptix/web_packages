@@ -14,7 +14,7 @@ import {
 
 import { environment } from '@environments/environment';
 import { Account, NxAccountService } from '@services/account.service';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';

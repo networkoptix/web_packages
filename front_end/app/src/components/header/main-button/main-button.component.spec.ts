@@ -14,7 +14,7 @@ import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component'
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';

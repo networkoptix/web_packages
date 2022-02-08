@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, flatMap } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Injectable()

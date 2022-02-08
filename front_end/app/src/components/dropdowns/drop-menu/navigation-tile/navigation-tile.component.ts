@@ -4,7 +4,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { Auth, MenuNode } from '@services/menus.service.types';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSessionService } from '@services/session.service';
 

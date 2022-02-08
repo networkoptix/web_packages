@@ -1,4 +1,4 @@
-import { NxSystem } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 
 export function setupTest41System() : Partial<NxSystem> {
     return {

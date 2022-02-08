@@ -14,7 +14,8 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { MotionMaskRenderer } from './MotionMaskRenderer';
 import { MotionMaskState } from './MotionMaskState';

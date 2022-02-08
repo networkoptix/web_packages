@@ -4,7 +4,8 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { first } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @UntilDestroy()
 @Component({

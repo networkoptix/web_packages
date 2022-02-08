@@ -15,7 +15,7 @@ import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';

@@ -15,7 +15,8 @@ import {
 } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
-import { assertNever, ms, px } from '@vms-client/utils';
+import { assertNever } from '@vms-client/utils';
+import type { ms, px } from '@vms-client/utils/type-aliases';
 
 import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
 

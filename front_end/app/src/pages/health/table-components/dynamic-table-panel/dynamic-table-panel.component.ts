@@ -13,7 +13,8 @@ import {
     InfoBlockSections,
     InfoBlockLine
 } from '@components/info-block/info-block.component';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
 import { NxHealthLayoutService } from '../../health-layout.service';

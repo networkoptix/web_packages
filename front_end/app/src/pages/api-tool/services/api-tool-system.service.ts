@@ -7,12 +7,14 @@ import { delay, distinctUntilChanged, filter, finalize, map, retryWhen, take } f
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import type { IConfig } from '@services/nx-config';
-import { NxConfigService } from '@services/nx-config';
 import type { APIDocType } from '@services/nx-config/base-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxSystem, NxSystemServer, NxSystemService } from '@services/system.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystemServer } from '@services/system.service/system/system-types';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { isEqual, deepCopy } from '@utils/general';

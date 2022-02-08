@@ -11,7 +11,10 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem, ICamera } from '@services/system.service';
+import type {
+    ICamera
+} from '@services/system.service/system/camera-manager/camera-manager-types';
+import type { NxSystem } from '@services/system.service/system/system';
 import { pickFrom } from '@utils/general';
 
 @Component({

@@ -1,7 +1,7 @@
 import { trigger, style, animate, transition } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { mod } from '@utils/general';
 
 const config = new NxConfigService(null).config;

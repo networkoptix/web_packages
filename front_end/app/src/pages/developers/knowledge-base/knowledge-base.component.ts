@@ -32,12 +32,13 @@ import type {
     MenuNodeWithParent,
     RelatedLinks
 } from '@components/developers-menu/developers-menu-types';
-import { NxRibbonService, RibbonActionInput } from '@components/ribbon';
+import { NxRibbonService, RibbonActionInput } from '@components/ribbon/ribbon.service';
 import { SearchFilter } from '@components/search/search.component';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';

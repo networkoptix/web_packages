@@ -19,8 +19,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
 
-import { NxRibbonService } from '@components/ribbon';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc, isEqual } from '@utils/general';

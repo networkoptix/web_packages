@@ -9,7 +9,8 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LoggerDecorator } from '@view/vms-client/utils';
 import {
     PlaybackState,

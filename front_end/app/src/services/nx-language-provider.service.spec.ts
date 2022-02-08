@@ -11,7 +11,7 @@ import { MockProvider } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { of } from 'rxjs';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { NxUriCacheService } from '@services/uri-cache.service';

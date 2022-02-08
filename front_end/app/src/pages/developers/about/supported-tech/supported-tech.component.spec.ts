@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { MockDirective } from 'ng-mocks';
 
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 
 import { HelperMockProvider } from '../../../../_mocks/helpers.test';
 import {
@@ -26,7 +26,10 @@ describe('For Developers Landing - Supported Tech Node', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxSupportedTechComponent, RouterLinkDirectiveStub],
+                declarations: [
+                    NxSupportedTechComponent,
+                    MockDirective(RouterLink),
+                ],
                 imports: [CommonModule],
                 providers: [
                     new HelperMockProvider(Router, routeLandingMock),

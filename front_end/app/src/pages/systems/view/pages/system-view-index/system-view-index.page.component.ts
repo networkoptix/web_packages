@@ -13,7 +13,8 @@ import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import { NxSystemService, NxSystem } from '@services/system.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemsService } from '@services/systems.service';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
@@ -23,10 +24,11 @@ import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datat
 import MediaServer from '@vms-client/submodules/vms/datatypes/MediaServer';
 import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
-import { ms, LoggerDecorator } from '@vms-client/utils';
+import { LoggerDecorator } from '@vms-client/utils';
+import type { ms } from '@vms-client/utils/type-aliases';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
-import { NxRibbonService } from '../../../../../components/ribbon';
+import { NxRibbonService } from '../../../../../components/ribbon/ribbon.service';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSettingsService } from '../../../settings/settings.service';

@@ -3,9 +3,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockDirective } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,7 +21,6 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOW } from '@services/window-provider';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import {
@@ -128,7 +129,10 @@ describe('NxConsoleTableComponent', () => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
         TestBed
             .configureTestingModule({
-                declarations: [NxConsoleTableComponent, RouterLinkDirectiveStub],
+                declarations: [
+                    NxConsoleTableComponent,
+                    MockDirective(RouterLink),
+                ],
                 providers: [
                     { provide: NxConfigService, useValue: configMock },
                     { provide: NxDialogsService, useValue: {} },

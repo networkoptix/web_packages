@@ -8,7 +8,7 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';

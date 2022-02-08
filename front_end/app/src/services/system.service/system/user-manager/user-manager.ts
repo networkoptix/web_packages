@@ -1,8 +1,8 @@
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
+import type { IConfig } from '@services/nx-config/config-types';
 import { isEqual, deepCopy } from '@utils/general';
 
-import { IConfig } from '../../../nx-config';
 import { NxSystemAPI, NxSystemRestAPI } from '../../../system-api.service';
 
 import {

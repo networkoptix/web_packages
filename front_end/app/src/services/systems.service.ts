@@ -9,11 +9,12 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { isEqual } from '@utils/general';
 
-import { NxConfigService, IConfig } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPollService } from './poll.service';
 import { NxStorageService } from './storage.service';
-import { NxSystem } from './system.service';
+import type { NxSystem } from './system.service/system/system';
 import { NxUriService } from './uri.service';
 
 interface IParams<Value = any> {

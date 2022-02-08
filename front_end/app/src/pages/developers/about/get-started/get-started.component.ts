@@ -1,7 +1,8 @@
 import { Component, Input, Inject, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 import { deepCopy } from '@utils/general';
 

@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { ApplyGuard } from '@guards/applyGuard';
+import { AuthGuard } from '@guards/authGuard';
 import { NxAccountComponent } from '@pages/account/account.component';
 import { NxAccountPasswordComponent } from '@pages/account/password/password.component';
 import { NxAccountPasswordModule } from '@pages/account/password/password.module';
@@ -15,7 +17,6 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
 import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {

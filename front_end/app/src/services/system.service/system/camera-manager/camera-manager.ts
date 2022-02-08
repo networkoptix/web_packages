@@ -1,5 +1,4 @@
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { NxUtilsService } from '@services/utils.service';
 import { paramSortFunc } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';

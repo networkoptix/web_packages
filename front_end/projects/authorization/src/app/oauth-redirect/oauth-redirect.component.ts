@@ -4,7 +4,8 @@ import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxConfigService, IConfig }  from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService }             from '@services/page.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { AuthorizeParams, ClientType } from '../components/authorize.component';

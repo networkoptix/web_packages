@@ -2,7 +2,8 @@ import { Component, Input, SimpleChanges } from '@angular/core';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
 export interface ConsoleMenuNode {

@@ -21,7 +21,8 @@ import {
 } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api.types';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';

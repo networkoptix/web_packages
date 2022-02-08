@@ -4,8 +4,8 @@ import { waitForAsync, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxStaticCacheService } from '@services/nx-static-cache';
 
 describe('Static cache service', () => {

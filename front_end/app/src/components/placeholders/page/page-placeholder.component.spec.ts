@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 import { MockProvider } from 'ng-mocks';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 

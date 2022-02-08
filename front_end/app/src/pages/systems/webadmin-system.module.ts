@@ -4,9 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { ApplyGuard } from '@guards/applyGuard';
+import { AuthGuard } from '@guards/authGuard';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 
 import { NxSystemAdminComponent } from './settings/admin/admin.component';
 import { NxSystemAdminModule } from './settings/admin/admin.module';

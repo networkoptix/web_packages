@@ -6,11 +6,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { Account } from '@services/account.service/account';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxConfigService } from '../nx-config';
 import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';

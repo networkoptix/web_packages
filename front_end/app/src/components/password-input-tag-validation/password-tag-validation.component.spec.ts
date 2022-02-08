@@ -7,7 +7,7 @@ import {
 import { MockProvider } from 'ng-mocks';
 
 import { NxTagComponent } from '@components/tag/tag.component';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxPasswordTagValidationComponent } from './password-tag-validation.component';

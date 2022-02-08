@@ -18,7 +18,8 @@ import { mapValuesToStrings } from '@utils/general';
 import { Account } from './account.service/account';
 import type * as t from './nx-cloud-api.types';
 import { InstantSearchOptions } from './nx-cloud-api.types';
-import { NxConfigService, IConfig } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxUriCacheService } from './uri-cache.service';
 
 export const DOC_TYPES = {

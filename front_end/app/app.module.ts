@@ -37,6 +37,11 @@ import { PopoverModule } from '@components/popover/popover.module';
 import { DialogsModule } from '@dialogs/dialogs.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
+import { AuthGuard } from '@guards/authGuard';
+import { BookmarksGuard } from '@guards/bookmarksGuard';
+import { DevelopersGuard } from '@guards/developersGuard';
+import { ManualAccessGuard } from '@guards/manualAccessGuard';
+import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
@@ -45,19 +50,12 @@ import { PagesModule } from '@pages/pages.module';
 import { initializeApp } from '@pages/push-notifications/push-notifications.module';
 import { WebadminPageModule } from '@pages/webadmin-page.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import {
-    AuthGuard,
-    SystemGuard,
-    DevelopersGuard,
-    ManualAccessGuard,
-    BookmarksGuard
-} from '@src/routeGuards';
 
 import { AppComponent } from './app.component';
 

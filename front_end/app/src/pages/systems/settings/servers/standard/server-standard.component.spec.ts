@@ -2,20 +2,19 @@ import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { MockProvider } from 'ng-mocks';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MockProvider, MockDirective } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 import { NxMenuService } from '@src/menu/menu.service';
 
 import {
@@ -99,7 +98,10 @@ describe('NxSystemStandardServerComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [NxSystemStandardServerComponent, RouterLinkDirectiveStub],
+            declarations: [
+                NxSystemStandardServerComponent,
+                MockDirective(RouterLink),
+            ],
             imports: [CommonModule, HttpClientTestingModule],
             providers: [
                 { provide: NxConfigService, useValue: configMock },

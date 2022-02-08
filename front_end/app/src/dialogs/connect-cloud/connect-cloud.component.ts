@@ -11,11 +11,11 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import * as t from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem } from '@services/system.service';
 import { pickFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })

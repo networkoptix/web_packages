@@ -6,13 +6,13 @@ import {
     TestBed,
     waitForAsync
 } from '@angular/core/testing';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockDirective } from 'ng-mocks';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 
 import { NxRibbonComponent, RibbonAction } from './ribbon.component';
 import { NxRibbonService } from './ribbon.service';
@@ -26,7 +26,7 @@ describe('NxRibbonComponent', () => {
         const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
 
         TestBed.configureTestingModule({
-            declarations: [NxRibbonComponent, RouterLinkDirectiveStub],
+            declarations: [NxRibbonComponent, MockDirective(RouterLink)],
             imports: [
                 CommonModule,
                 TranslateModule.forRoot()

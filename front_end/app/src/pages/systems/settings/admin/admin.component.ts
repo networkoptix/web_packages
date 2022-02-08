@@ -13,18 +13,22 @@ import { Subscription } from 'rxjs';
 import { auditTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxRibbonService } from '@components/ribbon';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { FormWatcher, NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem, NxSystemUser } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
+import type {
+    NxSystemUser
+} from '@services/system.service/system/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';

@@ -19,7 +19,7 @@ import {
     NxProcessButtonComponent
 } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import {

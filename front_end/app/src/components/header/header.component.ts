@@ -28,12 +28,14 @@ import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { NxStorageService } from '@services/storage.service';
-import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 

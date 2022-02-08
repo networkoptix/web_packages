@@ -6,7 +6,7 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProvider } from 'ng-mocks';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxCarouselComponent } from './carousel.component';

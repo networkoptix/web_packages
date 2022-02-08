@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MockProvider } from 'ng-mocks';
 
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxEmailComponent } from './email.component';

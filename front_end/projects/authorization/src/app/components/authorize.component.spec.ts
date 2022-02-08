@@ -35,7 +35,7 @@ import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
 import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';

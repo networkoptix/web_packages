@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';

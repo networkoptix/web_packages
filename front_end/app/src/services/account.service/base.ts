@@ -11,13 +11,14 @@ import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import { isEqual } from '@utils/general';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
-import { NxConfigService, IConfig } from '../nx-config';
 import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';

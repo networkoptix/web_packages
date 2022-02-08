@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { PushComponent } from './push-notifications.component';

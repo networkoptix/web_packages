@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { NxFooterComponent } from './footer.component';
 

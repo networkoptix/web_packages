@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subscription } from 'rxjs';
 
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { htmlToEntity } from '@utils/general';
 
 import ICamera from '../../datatypes/ICamera';

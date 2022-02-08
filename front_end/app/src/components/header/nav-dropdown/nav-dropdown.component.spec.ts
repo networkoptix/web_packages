@@ -11,7 +11,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';

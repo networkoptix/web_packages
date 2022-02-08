@@ -5,7 +5,8 @@ import { takeWhile } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
 

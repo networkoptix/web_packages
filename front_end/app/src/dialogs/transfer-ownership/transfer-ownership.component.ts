@@ -4,10 +4,14 @@ import type { NgForm } from '@angular/forms';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import type { NxSystem, NxSystemRole } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
+import type {
+    NxSystemRole
+} from '@services/system.service/system/user-manager/user-manager-types';
 import { pickFrom } from '@utils/general';
 
 @Component({

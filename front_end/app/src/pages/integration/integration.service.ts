@@ -3,7 +3,8 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { NxAccountService, Account } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { htmlToEntity, paramSortFunc } from '@utils/general';
 
 interface Platform {

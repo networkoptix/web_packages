@@ -1,6 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
 import { AboutNode } from '../about.component';

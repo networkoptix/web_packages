@@ -17,19 +17,24 @@ import { Subject, Subscription } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxRibbonService } from '@components/ribbon';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { Account, NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { ICamera, NxSystem, NxSystemService } from '@services/system.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type {
+    ICamera
+} from '@services/system.service/system/camera-manager/camera-manager-types';
+import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';

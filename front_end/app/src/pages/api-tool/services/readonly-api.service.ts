@@ -5,7 +5,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { OpenAPIJSON } from '@services/nx-cloud-api.types';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
 import { createMenuContent, prepareSwaggerAPIDoc, removeProprietaryEndpoints } from '../api-file-utils';

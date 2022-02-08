@@ -16,11 +16,12 @@ import {
 } from '@components/info-block/info-block.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import type { NxSystem } from '@services/system.service/system/system';
+import { NxUtilsService } from '@services/utils.service/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { bitsToString } from '@utils/bits-to-string';
 import { wrapWithPercent } from '@utils/general';

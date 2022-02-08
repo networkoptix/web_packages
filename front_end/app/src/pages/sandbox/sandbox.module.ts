@@ -7,12 +7,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule } from '@components/components.module';
 import { DialogsModule } from '@dialogs/dialogs.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { ApplyGuard } from '@guards/applyGuard';
+import { AuthGuard } from '@guards/authGuard';
 import {
     VmsClientModule
 } from '@pages/systems/view/vms-client/vms-client.module';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { ApplyGuard, AuthGuard } from '@src/routeGuards';
 
 import { NxGridLayoutComponent } from '../layout/layout.component';
 import { NxGridLayoutModule } from '../layout/layout.module';

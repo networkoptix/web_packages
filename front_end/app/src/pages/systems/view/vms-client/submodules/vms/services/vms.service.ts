@@ -2,7 +2,9 @@ import { Injectable, isDevMode } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject } from 'rxjs';
 
-import { ServerTimeInfo } from '@services/system.service';
+import type {
+    ServerTimeInfo
+} from '@services/system.service/system/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
 import ICamera, { CameraArchive } from '../datatypes/ICamera';

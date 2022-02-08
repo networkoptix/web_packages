@@ -10,7 +10,7 @@ import {
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxSectionPlaceholderComponent } from './section-placeholder.component';

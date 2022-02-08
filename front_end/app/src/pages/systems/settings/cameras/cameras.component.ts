@@ -39,7 +39,8 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxApplyService, Watcher } from '@services/apply.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import {
@@ -48,10 +49,10 @@ import {
     IRecordingSettings,
     ITask,
     MotionType,
-    NxSystem,
     RecordingType,
     StreamQuality
-} from '@services/system.service';
+} from '@services/system.service/system/camera-manager/camera-manager-types';
+import type { NxSystem } from '@services/system.service/system/system';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';

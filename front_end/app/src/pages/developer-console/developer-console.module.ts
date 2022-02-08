@@ -7,9 +7,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { ApplyGuard } from '@guards/applyGuard';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { ApplyGuard } from '@src/routeGuards';
 
 import { NxDevConsoleComponent } from './console/console.component';
 import { NxDevConsoleEditComponent } from './console/edit/console-edit.component';

@@ -18,8 +18,8 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import {
     NxLicenseTrialComponent
 } from '@pages/systems/settings/licenses/trial/trial.component';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 

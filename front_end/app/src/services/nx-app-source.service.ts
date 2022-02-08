@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
 
-import { NxConfigService, IConfig } from './nx-config';
-import { NxSystem } from './system.service';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
+import type { NxSystem } from './system.service/system/system';
 
 @Injectable({
     providedIn: 'root'

@@ -4,7 +4,8 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 
 import { NxAccountService } from './account.service';
-import { NxConfigService, IConfig } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { WINDOW } from './window-provider';
 

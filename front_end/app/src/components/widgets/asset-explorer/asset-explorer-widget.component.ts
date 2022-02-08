@@ -6,7 +6,8 @@ import { filter, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ExplorerNode } from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { FirstPartyWidget } from '../helper-classes';
 

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { waitForAsync, TestBed } from '@angular/core/testing';
 
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import {

@@ -12,14 +12,15 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxLoginService } from '@services/login.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import {
     ModuleInformationReply,
     NormalResponse
 } from '@services/system-api.types';
-import { NxSystem } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 import { WINDOW } from '@services/window-provider';
 import { cleanId, pickFrom } from '@utils/general';
 

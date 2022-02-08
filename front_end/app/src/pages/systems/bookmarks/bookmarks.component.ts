@@ -7,10 +7,12 @@ import { delay, switchMap } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { SearchTag, SearchFilter } from '@components/search/search.component';
 import { NxAccountService, Account } from '@services/account.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 import { deepCopy } from '@utils/general';
 
 import { BookmarkService, Bookmark } from './bookmark.service';

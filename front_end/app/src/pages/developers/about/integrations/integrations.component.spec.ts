@@ -2,15 +2,16 @@ import { CommonModule } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockDirective } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import {
@@ -73,7 +74,10 @@ describe('NxIntegrationsComponent', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [NxIntegrationsComponent, RouterLinkDirectiveStub],
+                declarations: [
+                    NxIntegrationsComponent,
+                    MockDirective(RouterLink),
+                ],
                 imports: [
                     PipesModule,
                     CommonModule,

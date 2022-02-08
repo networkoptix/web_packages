@@ -5,7 +5,8 @@ import { tap } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 
-import { IConfig, NxConfigService } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxStorageService } from './storage.service';
 import { WINDOW } from './window-provider';
 

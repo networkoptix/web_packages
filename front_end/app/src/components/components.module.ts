@@ -80,7 +80,7 @@ import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder
 import { NxPlayerPlaceholderComponent } from './placeholders/player/player-placeholder.component';
 import { NxSectionPlaceholderComponent } from './placeholders/section/section-placeholder.component';
 import { NxRadioComponent } from './radio/radio.component';
-import { NxRibbonComponent } from './ribbon';
+import { NxRibbonComponent } from './ribbon/ribbon.component';
 import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';

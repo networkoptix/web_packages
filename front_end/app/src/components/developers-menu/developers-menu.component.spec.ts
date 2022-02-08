@@ -3,19 +3,19 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgModel } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockComponent, MockDirective } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxRibbonService } from '@components/ribbon';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxSearchComponent } from '@components/search/search.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { HelperMockProvider } from '@src/_mocks/helpers.test';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { kbMenu } from '../../_mocks/knowledge_base_menu.mock';
@@ -67,7 +67,7 @@ describe('Test NxDevelopersMenuComponent', () => {
                 ],
                 declarations: [
                     NxDevelopersMenuComponent,
-                    RouterLinkDirectiveStub,
+                    MockDirective(RouterLink),
                     MockComponent(NxSearchComponent),
                     MockDirective(NgModel)
                 ],

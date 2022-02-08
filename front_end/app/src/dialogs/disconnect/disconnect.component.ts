@@ -9,7 +9,8 @@ import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import {
@@ -17,7 +18,7 @@ import {
     NxSystemAPIService,
     NxSystemRestAPI
 } from '@services/system-api.service';
-import { NxSystem } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 import { WINDOW } from '@services/window-provider';
 import { pickFrom } from '@utils/general';
 

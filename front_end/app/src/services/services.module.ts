@@ -7,7 +7,7 @@ import { NxAccountService } from './account.service';
 import { NxApplyService } from './apply.service';
 import { NxAppSourceService } from './nx-app-source.service';
 import { NxAppStateService } from './nx-app-state.service';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxHeaderService } from './nx-header.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPageService } from './page.service';
@@ -15,7 +15,7 @@ import { NxScrollMechanicsService } from './scroll-mechanics.service';
 import { NxSearchService } from './search.service';
 import { NxSystemsService } from './systems.service';
 import { NxUrlProtocolService } from './url-protocol.service';
-import { NxUtilsService } from './utils.service';
+import { NxUtilsService } from './utils.service/utils.service';
 
 @NgModule({
     imports: [

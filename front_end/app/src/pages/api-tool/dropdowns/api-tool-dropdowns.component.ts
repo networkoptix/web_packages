@@ -4,7 +4,8 @@ import { filter } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
 import { NxAPIToolSystemService } from '../services/api-tool-system.service';

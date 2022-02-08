@@ -3,7 +3,8 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService, Process } from '@services/process.service';
 
 @Component({

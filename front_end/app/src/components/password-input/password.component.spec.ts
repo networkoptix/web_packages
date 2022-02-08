@@ -15,7 +15,7 @@ import {
 } from '@components/password-input-tag-validation/password-tag-validation.component';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {

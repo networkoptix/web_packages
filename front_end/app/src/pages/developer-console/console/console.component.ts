@@ -8,7 +8,8 @@ import { ConsoleSection } from '@components/console-table/console-table.componen
 import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentManifest } from '@services/nx-cloud-api.types';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
 import { ConsoleMenuNode } from './menu/console-menu.component';

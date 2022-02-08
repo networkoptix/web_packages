@@ -7,12 +7,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxRibbonService } from '@components/ribbon';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';

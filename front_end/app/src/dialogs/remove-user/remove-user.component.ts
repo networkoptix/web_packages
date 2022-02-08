@@ -6,10 +6,14 @@ import {
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem, NxSystemUser } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
+import type {
+    NxSystemUser
+} from '@services/system.service/system/user-manager/user-manager-types';
 import { pickFrom } from '@utils/general';
 
 @Component({

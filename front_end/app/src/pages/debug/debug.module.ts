@@ -6,8 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { AuthGuard } from '@src/routeGuards';
 
 import { NxDebugComponent } from './debug.component';
 

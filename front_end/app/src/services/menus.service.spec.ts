@@ -5,8 +5,8 @@ import { ReplaySubject } from 'rxjs';
 
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { getMockTranslations } from '@src/_mocks/helpers.test';
 import { headerNodes } from '@src/_mocks/nodesMock';

@@ -12,7 +12,7 @@ import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxApplyService } from '@services/apply.service';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSearchService } from '@services/search.service';
 import { WINDOW } from '@services/window-provider';

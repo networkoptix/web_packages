@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
-
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 @Component({
     selector: 'nx-external-video',
     templateUrl: 'external-video.component.html',

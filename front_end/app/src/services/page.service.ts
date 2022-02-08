@@ -7,7 +7,8 @@ import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
-import { NxConfigService, IConfig } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { WINDOW } from './window-provider';
 
 interface MetaLookup {

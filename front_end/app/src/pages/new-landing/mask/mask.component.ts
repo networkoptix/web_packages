@@ -9,7 +9,8 @@ import {
     SimpleChanges
 } from '@angular/core';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { NxLandingService } from '../landing.service';
 

@@ -4,8 +4,8 @@ import {
     ModalType
 } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
-import { IConfig } from '@services/nx-config';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import type { IConfig } from '@services/nx-config/config-types';
 
 export function setupConfig(): IConfig {
     return {

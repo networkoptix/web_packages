@@ -4,7 +4,8 @@ import { interval } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 import { NxToastService } from '@dialogs/toast.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { FirstPartyWidget } from '../helper-classes';
 

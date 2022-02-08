@@ -21,11 +21,11 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ButtonArrowType, NxSearchService, SearchModel } from '@services/search.service';
-import { NxSystem } from '@services/system.service';
-import { NxUtilsService } from '@services/utils.service';
+import type { NxSystem } from '@services/system.service/system/system';
 import { WINDOW } from '@services/window-provider';
 import { isEqual } from '@utils/general';
 

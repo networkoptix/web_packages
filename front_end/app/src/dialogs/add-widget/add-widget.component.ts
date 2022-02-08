@@ -10,7 +10,8 @@ import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/thi
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { deepCopy, pickFrom, delayInitial } from '@utils/general';

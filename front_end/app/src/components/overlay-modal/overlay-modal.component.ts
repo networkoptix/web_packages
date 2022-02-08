@@ -15,9 +15,11 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSystem, NxSystemService } from '@services/system.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 
 interface Server {
     name: string,

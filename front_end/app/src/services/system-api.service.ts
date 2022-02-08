@@ -7,7 +7,8 @@ import { environment } from '@environments/environment';
 import { NxHealthService } from '@pages/health/health.service';
 
 import { NxAppStateService } from './nx-app-state.service';
-import { NxConfigService, IConfig } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSystemAPI } from './system-legacy-api.service';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { NxUriCacheService } from './uri-cache.service';

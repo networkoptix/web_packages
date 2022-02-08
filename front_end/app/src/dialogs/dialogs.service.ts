@@ -13,10 +13,13 @@ import { ConnectCloudModalContent } from '@dialogs/connect-cloud/connect-cloud.c
 import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSystem, ICamera, NxSystemUser } from '@services/system.service';
+import type { ICamera } from '@services/system.service/system/camera-manager/camera-manager-types';
 import { StorageManager } from '@services/system.service/system/storage-manager/storage-manager';
+import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystemUser } from '@services/system.service/system/user-manager/user-manager-types';
 
 import { AddStorageModalContent } from './add-storage/add-storage.component';
 import { AddUserModalContent } from './add-user/add-user.component';

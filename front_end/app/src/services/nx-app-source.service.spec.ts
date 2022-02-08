@@ -1,8 +1,8 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 
 import { NxAppSourceService } from '@services/nx-app-source.service';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { setupTest41System } from '@src/_mocks/system.test';
 
 describe('AppSource Service', () => {

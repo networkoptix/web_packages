@@ -6,7 +6,8 @@ import { environment } from '@environments/environment';
 // do not use barrel file for the next import - it breaks auth app
 import { NxSystemRole } from '@services/system.service/system/user-manager/user-manager-types';
 
-import { IConfig, NxConfigService } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPageService } from './page.service';
 

@@ -1,9 +1,6 @@
 import type { Params, GetStorages } from '../../system-api.types';
 import type { NxSystemWithUserInfo } from '../../systems.service';
 
-export * from './camera-manager/camera-manager-types';
-export * from './user-manager/user-manager-types';
-
 export interface IParams<Value = any> {
     [key: string]: Value;
 }

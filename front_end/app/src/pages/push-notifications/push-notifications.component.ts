@@ -6,7 +6,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 
 import { NxAccountService, isAccount } from '@services/account.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemsService } from '@services/systems.service';
 
 @UntilDestroy({ checkProperties: true })

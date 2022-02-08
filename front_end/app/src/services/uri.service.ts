@@ -6,7 +6,8 @@ import { environment } from '@environments/environment';
 import { WINDOW } from '@services/window-provider';
 import { isEqual } from '@utils/general';
 
-import { NxConfigService, IConfig } from './nx-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 
 export enum ChildRoutes {
     CAMERAS='cameras',

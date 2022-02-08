@@ -7,9 +7,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { DevelopersGuard } from '@guards/developersGuard';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { DevelopersGuard } from '@src/routeGuards';
 
 import { Nx404Component } from '../404/404.component';
 

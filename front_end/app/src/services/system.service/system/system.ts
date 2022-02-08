@@ -5,17 +5,17 @@ import {
     Subscription,
     Observable
 } from 'rxjs';
-import { flatMap, switchMap, tap } from 'rxjs/operators';
+import { flatMap, switchMap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxRibbonService } from '@components/ribbon';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxAppStateService } from '../../nx-app-state.service';
 import { NxCloudApiService } from '../../nx-cloud-api';
-import { IConfig } from '../../nx-config';
 import { NxPollService } from '../../poll.service';
 import { NxSystemAPIService, NxSystemAPI } from '../../system-api.service';
 import {
@@ -27,18 +27,15 @@ import {
 import { NxSystemsService, NxSystemWithUserInfo } from '../../systems.service';
 
 import { CameraManager } from './camera-manager/camera-manager';
+import type { ICamera, ITask } from './camera-manager/camera-manager-types';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
-import {
-    System,
-    IParams,
-    ServerTimeInfo,
-    ICamera,
-    ITask,
+import { System, ServerTimeInfo } from './system-types';
+import { UserManager } from './user-manager/user-manager';
+import type {
     NxSystemUser,
     NxSystemRole
-} from './system-types';
-import { UserManager } from './user-manager/user-manager';
+} from './user-manager/user-manager-types';
 
 /* Api response cleaners */
 export function trimId(id) {

@@ -20,11 +20,11 @@ import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
 
 import { NxAppStateService } from './nx-app-state.service';
-import { IConfig } from './nx-config';
 import type { APIDocType } from './nx-config/base-config';
+import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
-import { IParams } from './system.service';
+import type { IParams } from './system.service/system/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 /**

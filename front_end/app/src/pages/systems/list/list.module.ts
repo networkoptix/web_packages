@@ -8,8 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ComponentsModule } from '@components/components.module';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
 import { DirectivesModule } from '@directives/directives.module';
+import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { AuthGuard } from '@src/routeGuards';
 
 const appRoutes: Routes = [
     {

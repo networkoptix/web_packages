@@ -7,8 +7,10 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { Bookmark } from '@pages/systems/bookmarks/bookmark.service';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxSystem, NxSystemService } from '@services/system.service';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 
 import { NxHealthMonitorWidgetComponent } from '../health-monitor/health-monitor-widget.component';
 import { FirstPartyWidget } from '../helper-classes';

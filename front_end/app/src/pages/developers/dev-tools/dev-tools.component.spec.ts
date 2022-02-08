@@ -6,18 +6,18 @@ import {
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockDirective } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 
 import { HelperMockProvider } from '../../../_mocks/helpers.test';
 import {
@@ -50,7 +50,7 @@ describe('NxDevToolsComponent', () => {
                 declarations: [
                     NxDevToolsComponent,
                     NxMatchHeightDirective,
-                    RouterLinkDirectiveStub
+                    MockDirective(RouterLink),
                 ],
                 imports: [
                     CommonModule,

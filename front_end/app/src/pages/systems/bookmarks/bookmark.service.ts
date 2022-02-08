@@ -2,8 +2,9 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
-import { NxSystem } from '@services/system.service';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { NxSystem } from '@services/system.service/system/system';
 
 // const mockBookmarks: Bookmark[] = [
 //     {

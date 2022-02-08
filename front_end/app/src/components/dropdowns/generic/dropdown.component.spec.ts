@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PipesModule } from '@src/pipes/pipes.module';
 

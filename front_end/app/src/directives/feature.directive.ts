@@ -5,8 +5,8 @@ import {
     ViewContainerRef
 } from '@angular/core';
 
-import { NxConfigService } from '@services/nx-config';
 import { FeatureFlagType } from '@services/nx-config/base-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Directive({
     selector: '[featureFlag]'

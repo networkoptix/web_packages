@@ -18,12 +18,18 @@ import { NxHealthService } from '@pages/health/health.service';
 
 import { Account } from './account.service';
 import { NxAppStateService } from './nx-app-state.service';
-import { NxConfigService, IConfig } from './nx-config';
 import type { APIDocType } from './nx-config/base-config';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { IParams, ResourceParam } from './system-api.service';
 import * as t from './system-api.types';
 import { User } from './system-api.types';
-import { ICamera, NxSystemUser } from './system.service';
+import type {
+    ICamera
+} from './system.service/system/camera-manager/camera-manager-types';
+import type {
+    NxSystemUser
+} from './system.service/system/user-manager/user-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemAPI {

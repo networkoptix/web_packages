@@ -17,8 +17,9 @@ import { environment } from '@environments/environment';
 import type { NxAccountService } from '@services/account.service';
 
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
-import { IConfig, NxConfigService } from './nx-config';
-import { NxSystem } from './system.service';
+import type { IConfig } from './nx-config/config-types';
+import { NxConfigService } from './nx-config/nx-config.service';
+import type{ NxSystem } from './system.service/system/system';
 
 @Injectable({
     providedIn: 'root'

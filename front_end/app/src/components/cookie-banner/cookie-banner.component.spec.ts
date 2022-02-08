@@ -8,17 +8,15 @@ import {
     fakeAsync,
     inject
 } from '@angular/core/testing';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockDirective } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { of } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
-
-import {
-    RouterLinkDirectiveStub
-} from '../../_testing/router-link-directive-stub';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { NxCookieBannerComponent } from './cookie-banner.component';
 
@@ -41,7 +39,10 @@ xdescribe('NxCookieBannerComponent', () => {
     beforeEach(waitForAsync(() => {
         localStorageMockStore = {};
         TestBed.configureTestingModule({
-            declarations: [NxCookieBannerComponent, RouterLinkDirectiveStub],
+            declarations: [
+                NxCookieBannerComponent,
+                MockDirective(RouterLink),
+            ],
             imports: [
                 CommonModule,
                 TranslateModule.forRoot()

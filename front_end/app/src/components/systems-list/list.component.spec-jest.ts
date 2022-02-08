@@ -8,8 +8,8 @@ import { describe, expect, jest, beforeEach, it } from '@jest/globals';
 
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';

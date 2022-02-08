@@ -10,7 +10,8 @@ import { Params } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxMenuService } from '@src/menu/menu.service';
 
 import type { Level3Item } from '../menu.types';

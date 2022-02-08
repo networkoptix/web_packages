@@ -16,9 +16,10 @@ import {
     InfoDetailClass,
     InfoLineStyle,
 } from '@components/info-block/info-block.component';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSystem } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
 
 import { getDynamicLicense } from '../licenses.component';
 

@@ -7,7 +7,6 @@ import { paramSortFunc } from '@utils/general';
 
 import { NxCloudApiService } from '../../../nx-cloud-api';
 import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../../system-api.service';
-import { NxUtilsService } from '../../../utils.service';
 import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo, IParams } from '../system-types';
 

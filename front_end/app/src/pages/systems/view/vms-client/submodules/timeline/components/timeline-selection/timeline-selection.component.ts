@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import { ms } from '@vms-client/utils';
+import type { ms } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineSelectionService,

@@ -9,7 +9,8 @@ import {
 import { Observable } from 'rxjs';
 
 import { NxAccountService, Account } from '@services/account.service';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @Injectable()
 export class RedirectGuard implements CanActivate {

@@ -2,13 +2,14 @@ import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockDirective } from 'ng-mocks';
 
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
-import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
-import { RouterLinkDirectiveStub } from '@src/_testing';
 import { NxSafePipe } from '@src/pipes/nx-safe';
 
 import { HelperMockProvider } from '../../../../_mocks/helpers.test';
@@ -42,7 +43,7 @@ xdescribe('NxCapabilitiesComponent', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     NxCapabilitiesComponent,
-                    RouterLinkDirectiveStub,
+                    MockDirective(RouterLink),
                     NxSafePipe,
                     NxMatchHeightDirective
                 ],

@@ -13,7 +13,7 @@ import { EMPTY as empty } from 'rxjs';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { DownloadComponent } from './download.component';

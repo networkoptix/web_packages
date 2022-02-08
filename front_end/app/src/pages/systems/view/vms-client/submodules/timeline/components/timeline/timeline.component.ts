@@ -10,7 +10,7 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
-import { NxConfigService } from '@services/nx-config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
 import {
     calcScreenX,

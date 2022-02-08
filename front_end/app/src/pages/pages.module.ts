@@ -7,9 +7,9 @@ import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { BookmarksGuard } from '@guards/bookmarksGuard';
+import { FeatureGuard } from '@guards/feature.guard';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { FeatureGuard } from '@src/routeGuards';
 
 import { Nx500Module } from './500/500.module';
 import { Nx503Module } from './503/503.module';

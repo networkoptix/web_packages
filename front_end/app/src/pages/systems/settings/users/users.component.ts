@@ -17,11 +17,16 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { FormWatcher, NxApplyService } from '@services/apply.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import { NxSystem, NxSystemRole, NxSystemUser } from '@services/system.service';
+import type { NxSystem } from '@services/system.service/system/system';
+import type {
+    NxSystemRole,
+    NxSystemUser
+} from '@services/system.service/system/user-manager/user-manager-types';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { cleanId, isEqual, deepCopy } from '@utils/general';
