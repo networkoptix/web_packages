@@ -55,6 +55,24 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --btn-header-main-bg    : var(--light4);
     --btn-header-main-color : var(--dark9);
     
+    --btn-dropdown-toggle-bg    : #{$light4};
+    --btn-dropdown-toggle-color : #{$dark9};
+    --btn-dropdown-toggle-selected-color : #{$light1};
+    --btn-dropdown-toggle-shadow-color : #{$light7};
+    --btn-dropdown-toggle-hover-bg : #{$light5};
+    --btn-dropdown-toggle-active-bg : #{$light6};
+    
+    --dropdown-menu-arrow-color : #{$light4};
+    --dropdown-menu-arrow-fill-color : #{$additional_light1};
+    
+    --dropdown-menu-border : none;
+    --dropdown-menu-top-border : none;
+    --dropdown-menu-shadow : 0 1rem 2rem 0 transparentize(#{$dark15}, 0.4);
+    --dropdown-menu-bg : #{$additional_light1};
+    --dropdown-item-active-bg : #{$light4};
+    --dropdown-item-hover-bg    : #{$light3};
+    --dropdown-item-hover-color : #{$dark9};
+    
     //--btn-text-bg    : var(--light4;
     //--btn-text-color : var(--dark9;
     
@@ -83,6 +101,7 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --badge-base-selected-hover-bg : #{$light17};
     --badge-base-selected-active-bg : #{$light18};
     
+    --badge-default-bg : #{$light8};
     --badge-color : #{$light1};
     --badge-selected-color : #{$light1};
     --badge-danger-bg    : #{$red_main};
@@ -119,7 +138,7 @@ html[data-theme="dark"] {
     --auth-pill-bg : #3A4D57; //$dark11;
     
     --border-color         : #35464F; //$dark11;
-    --horizontal-sep-color : #A5B7C0; //light10;
+    --horizontal-sep-color : #49626F; //$dark15;
     --label-color : #A5B7C0; //light10;
     
     --left-menu-border-color      : #2B383F; //$dark9;
@@ -145,6 +164,24 @@ html[data-theme="dark"] {
     --btn-header-saparator-color : #A5B7C0; //light10;
     --btn-header-main-bg    : transparent;
     --btn-header-main-color : #E1E7EA; //$light4;
+    
+    --btn-dropdown-toggle-bg : #263137; //$dark8
+    --btn-dropdown-toggle-selected-color : #D7DFE3 ; //$light5;
+    --btn-dropdown-toggle-color : #A5B7C0; //$light10
+    --btn-dropdown-toggle-shadow-color : #080707; //$dark2
+    --btn-dropdown-toggle-hover-bg : #2B383F; //$dark9;
+    --btn-dropdown-toggle-active-bg : #35464F; //$dark11;
+    
+    --dropdown-menu-arrow-color      : #49626F; //$dark15;
+    --dropdown-menu-arrow-fill-color : #121517; //dark4;
+    
+    --dropdown-menu-border : 1px solid #263137; //$dark8;
+    --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
+    --dropdown-menu-shadow : 0px 7px 8px rgba(#000000, 0.2), 0px 5px 22px rgba(#000000, 0.12), 0px 12px 17px rgba(#000000, 0.14);
+    --dropdown-menu-bg : #121517; //dark4;
+    --dropdown-item-active-bg : #B9C7CE; //$light8;
+    --dropdown-item-hover-bg : #A5B7C0; //$light10;
+    --dropdown-item-hover-color : #080707; //$dark2;
     
     //--btn-text-bg    : $light4;
     //--btn-text-color : $dark9;
@@ -174,7 +211,7 @@ html[data-theme="dark"] {
     --badge-base-selected-hover-bg  : #35464F;//#{$dark11};
     --badge-base-selected-active-bg : #263137;//#{$dark8};
     
-    --badge-default-bg    : #1C2327; //$dark6;
+    --badge-default-bg    : #35464F; //$dark11;
     --badge-color : #E1E7EA; //$light4;
     --badge-selected-color : #EBEFF1; //$light3;
     --badge-danger-bg    : #5E1010; //$red_d4;

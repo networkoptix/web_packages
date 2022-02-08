@@ -95,7 +95,7 @@ a {
 
 $nx-theme-colors :
     "brand" var(--badge-brand-bg) var(--badge-color),
-    "default" $light8 $light1, // TBD
+    "default" var(--badge-default-bg) var(--badge-color),
     //"integration" var(--badge-integration-bg) var(--badge-integration-color),
     "default-dark" $light16 $light1, // Not used?
     "default-inverted" $light4 $light16, // Not used?

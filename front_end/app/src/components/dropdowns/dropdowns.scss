@@ -1,7 +1,7 @@
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/typography';
-@use '../../styles/mixins';
-@use 'variables' as *;
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/typography";
+@use "../../styles/mixins";
+@use "variables" as *;
 
 .dropdown, .dropup {
     .lang-sm {
@@ -143,10 +143,10 @@ header {
 
     .dropdown-menu {
         margin-top       : 3px;
-        background-color : $additional_light1;
-        box-shadow       : 0 1rem 2rem 0 transparentize($dark15, 0.4);
+        background-color : var(--dropdown-menu-bg);
+        box-shadow       : var(--dropdown-menu-shadow);
         position         : absolute !important;
-        border           : none;
+        border           : var(--dropdown-menu-border);
         border-radius    : 2px;
         width            : 100%;
         padding          : 4px 0 !important;
@@ -177,7 +177,8 @@ header {
             height   : auto;
 
             .dropdown-item {
-                @include typography.medium13dark9;
+                @include typography.medium13nocolor;
+                color : var(--label-color);
                 display         : flex;
                 align-items     : center;
                 padding         : 0;
@@ -191,12 +192,16 @@ header {
                 }
 
                 &:hover {
-                    background-color : $light3;
-                    color            : $dark9 !important;
+                    background-color : var(--dropdown-item-hover-bg);
+                    color            : var(--dropdown-item-hover-color) !important;
+                    
+                    label {
+                        color : var(--dropdown-item-hover-color) !important;
+                    }
                 }
 
                 &:active {
-                    background-color : $light4 !important;
+                    background-color : var(--dropdown-item-active-bg) !important;
                     //color            : $light1 !important;
                 }
 
@@ -271,12 +276,12 @@ header {
         }
 
         &:hover {
-            background-color : $light2 !important;
+            background-color : var(--btn-dropdown-toggle-hover-bg) !important;
             box-shadow       : none !important;
         }
 
         &:active {
-            background-color : $light3 !important;
+            background-color : var(--btn-dropdown-toggle-active-bg) !important;
             box-shadow       : none !important;
         }
     }
@@ -287,14 +292,14 @@ header {
         }
 
         .dropdown-toggle-transparent {
-            background-color : transparentize($light5, 0.75) !important;
+            background-color : rgba(var(--btn-dropdown-toggle-active-bg), 0.75) !important;
         }
     }
-
+    
     &-divider {
         height     : auto !important;
         margin     : 4px 12px;
-        border-top : 1px solid $light6;
+        border-top : 1px solid var(--horizontal-sep-color);
     }
 
     &-api-tool {
