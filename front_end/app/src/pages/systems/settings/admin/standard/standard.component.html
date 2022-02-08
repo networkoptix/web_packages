@@ -173,9 +173,15 @@
                         </nx-checkbox>
 
                         <label class="control-label mb-0" for="trafficEncryptionForced">
-                            <span translate>Allow only secure connections</span>
+                            <span translate>Force servers to accept only encrypted connections</span>
                         </label>
                     </div>
+                    <label id="trafficEncryptionForcedHelpBlock"
+                           class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
+                           for="trafficEncryptionForced"
+                           translate>
+                        <span translate>Does not affect the connections established by server.</span>
+                    </label>
                     <ng-container *ngIf="systemAndSecuritySettings.videoTrafficEncryptionForced !== undefined">
                         <div class="d-flex checkbox-block align-items-center mt-1">
                             <nx-checkbox
@@ -188,13 +194,13 @@
 
                             <label class="control-label mb-0"
                                    for="videoTrafficEncryptionForced">
-                                <span translate>Encrypt video traffic</span>
+                                <span translate>Encrypt video traffic to desktop and mobile clients</span>
                             </label>
                         </div>
                         <label id="videoTrafficEncryptionForcedHelpBlock"
                                class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                                for="videoTrafficEncryptionForced">
-                            <span translate>Only client-server video traffic can be encrypted.</span>
+                            <span translate>Enables RTSP traffic encryption.</span>
                         </label>
                     </ng-container>
                     <ng-container *ngIf="!environment.isLocal && system.useRest && system.userManager.isMine">
