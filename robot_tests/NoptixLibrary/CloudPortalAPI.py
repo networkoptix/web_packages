@@ -443,11 +443,12 @@ class CloudPortalAPI(object):
         return r.json()
 
     @keyword
-    def share(self, auth, systemId,accessRole, accountEmail):
+    def share(self, auth, systemId, accessRole, accountEmail, customPermissions):
         body= {
             "systemId":systemId,
             "accessRole":accessRole,
-            "accountEmail":accountEmail
+            "accountEmail":accountEmail,
+            "customPermissions":customPermissions
         }
         r = requests.post(f'{self.env}/cdb/system/share', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()

@@ -10,7 +10,7 @@ Systems Page Suite Setup
     Set Suite Variable    ${extra system}
 
     ${tmp auth}=   Create List    ${another owner}    ${base password}
-    Share    ${tmp auth}    ${extra system}[cloud id]    viewer    ${system}[owner]
+    Share    ${tmp auth}    ${extra system}[cloud id]    viewer    ${system}[owner]     ${permissions}[viewer]
     Set Suite Variable    ${extra system}
 
     ${offline systems}=   Create List

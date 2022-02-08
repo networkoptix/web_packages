@@ -664,7 +664,7 @@ User is in cloud system
 Add user to cloud system if not there
     [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
     ${is there}=   User is in cloud system    ${email}    ${system id}    ${auth}
-    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}
+    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}     ${permissions}[${access role}]
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}

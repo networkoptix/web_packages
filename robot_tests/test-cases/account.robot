@@ -520,9 +520,9 @@ Account Suite Tear Down
 26. After account deletion user is deleted from all systems that were shared with this user
     [Tags]    C69862    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}
-    Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}
-    Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}
+    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[admin]
+    Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}     ${permissions}[viewer]
+    Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
     Verify in Account Page

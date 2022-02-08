@@ -26,7 +26,7 @@ Reset
 1. Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884    cloud
     ${random user}=    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}      ${permissions}[viewer]
     Log in to user and system    ${random user}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
@@ -125,7 +125,7 @@ Reset
     [Tags]    email    cloud
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}     ${permissions}[cloudAdmin]
 
     #verify user name displayed correctly in users list
     Log in    ${random email}    ${password}
