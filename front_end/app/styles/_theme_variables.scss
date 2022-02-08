@@ -75,15 +75,33 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --input-active-color        : var(--dark9);
     --input-active-border-color : var(--light6);
     
-    --badge-danger-bright-bg    : var(--error);
-    --badge-danger-bright-color : var(--light1);
+    --badge-opacity : 1;
+    --badge-base-bg : #{$light4};
+    --badge-base-hover-bg : #{$light5};
+    --badge-base-color : #{$light16};
+    --badge-base-selected-bg : #{$light16};
+    --badge-base-selected-hover-bg : #{$light17};
+    --badge-base-selected-active-bg : #{$light18};
+    
+    --badge-color : #{$light1};
+    --badge-selected-color : #{$light1};
+    --badge-danger-bg    : #{$red_main};
+    --badge-danger-bright-bg    : #{$error};
+    --badge-warning-bg        : #{$yellow_d1};
+    --badge-warning-bright-bg : #{$yellow_main};
+    --badge-success-bg        : #{$green_main};
+    --badge-success-bright-bg : #{$green_l2};
+    --badge-brand-bg : #{$brand_d2};
+    --badge-info-bg  : #{$brand_core};
+    --badge-integration-bg : #{$light4};
+    --badge-integration-color : #{$light16};
     
     --grey-section-bg: var(--light4);
     --grey-section-sep-color: var(--light6);
 }
 
 html[data-theme="dark"] {
-    --body-bg    : #080707; //$dark2;
+    --body-bg    : #0D0E0F; //$dark3;
     --alt-body-bg : #000000; //$dark1;
     --header-bg  : #212A2F; //$dark7;
     --header-border-color: transparent;
@@ -148,14 +166,40 @@ html[data-theme="dark"] {
     --input-active-color        : #E1E7EA; //$light4;
     --input-active-border-color : #5D7E8F; //$dark19;
     
-    --badge-danger-bright-bg : #8E1717; //$red_d2;
-    --badge-danger-bright-color : #E1E7EA; //$light4;
+    --badge-opacity : 0.9;
+    --badge-base-bg    : #1C2327; //$dark6;
+    --badge-base-hover-bg : #2B383F; //$dark9;
+    --badge-base-color : #E1E7EA; //$light4;
+    --badge-base-selected-bg : #49626F; //$dark15;
+    --badge-base-selected-hover-bg  : #35464F;//#{$dark11};
+    --badge-base-selected-active-bg : #263137;//#{$dark8};
     
+    --badge-default-bg    : #1C2327; //$dark6;
+    --badge-color : #E1E7EA; //$light4;
+    --badge-selected-color : #EBEFF1; //$light3;
+    --badge-danger-bg    : #5E1010; //$red_d4;
+    --badge-danger-bright-bg : #8E1717; //$red_d2;
+    --badge-warning-bg           : #E1A700; //$yellow_d1;
+    --badge-warning-bright-bg    : #E1A700; //$yellow_d1;
+    --badge-success-bg        : #2A551E; //$green_d2;
+    --badge-success-bright-bg : #3A911E; //$green_main;
+    --badge-brand-bg : #{$brand_d2};
+    --badge-info-bg : #{$brand_d4};
+    --badge-integration-bg : #3F545F; //$dark13;
+    --badge-integration-color : #E1E7EA; //$light4;
     
     --grey-section-bg : #1C2327; //$dark6;
     --grey-section-sep-color : #35464F; //$dark11;
 }
 
+// $brand-primary : var(--brand-core, $brand_core);
+// $brand-info : var(--brand-l2, $brand_l2);
+$brand-success        : $green_main;
+$brand-success-bright : $green_l2;
+$brand-warning        : $yellow_d1;
+$brand-warning-bright : $yellow_main;
+$brand-danger         : $red_main;
+$brand-danger-bright  : $red_l2;
 
 // Brand colors
 // -------------------------
@@ -248,14 +292,6 @@ $border-radius-base:      2px;
 // Variables from Bootstrap 3 ****************************
 $line-height-base : 1.5 !default;
 $line-height-computed : floor(($font-size-base * $line-height-base)); // ~20px
-// $brand-primary : var(--brand-core, $brand_core);
-// $brand-info : var(--brand-l2, $brand_l2);
-$brand-success : $green_main;
-$brand-success-bright : $green_l2;
-$brand-warning : $yellow_d1;
-$brand-warning-bright : $yellow_main;
-$brand-danger : $red_main;
-$brand-danger-bright : $red_l2;
 $jumbotron-color : tranparent;
 // ********************************************************
 

@@ -35,12 +35,12 @@
         }
 
         .search-input {
-            @include typography.regular15light;
+            @include typography.regular15nocolor;
             height        : 40px !important;
             padding-left  : 48px !important;
             padding-right : 40px;
             border-radius : 2px;
-            border        : 1px solid $light6;
+            //border        : 1px solid $light6;
             background    : transparent !important;
             outline       : none !important;
             box-shadow    : none !important;
@@ -54,23 +54,19 @@
             }
 
             &:active, &:focus, &.non-empty {
-                background-color : $light1 !important;
-                color            : $dark9 !important;
-                border           : 1px solid var(--brand-core) !important;
+                border : 1px solid var(--brand-core) !important;
             }
 
             &:hover:not(:active):not(:focus) {
                 border : 1px solid $light8;
             }
-
+    
             &:-webkit-autofill,
             &:-webkit-autofill:hover,
-            &:-webkit-autofill:active,
-            &:-webkit-autofill:focus {
-                background-color        : $light1 !important;
-                color                   : $dark9 !important;
-                -webkit-box-shadow      : 0 0 0 1000px $light1 inset !important;
-                -webkit-text-fill-color : $dark9 !important;
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active {
+                -webkit-text-fill-color : var(--input-color);
+                -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
             }
         }
 
