@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare",
-            "serversDetach": "Koppla bort server { title } från nuvarande system",
-            "serversReset": "Återställ servern \"{ title }\" till standard",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Starta om servern \"{ title }"
         },
         "tooltips": {

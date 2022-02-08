@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Bạn sẽ đăng nhập bằng một tài khoản khác",
             "noClientDetected": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

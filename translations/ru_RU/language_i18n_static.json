@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Вы будете авторизованы под другой учетной записью",
             "noClientDetected": "Установите %VMS_NAME% для просмотра вашей системы",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

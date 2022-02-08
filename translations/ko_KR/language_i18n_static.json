@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Farklı bir hesapla giriş yapacaksınız",
             "noClientDetected": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

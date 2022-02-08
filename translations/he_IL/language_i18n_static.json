@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "אתה עומד להיכנס בחשבון אחר",
             "noClientDetected": "התקן %VMS_NAME% כדי להציג את המערכת שלך",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Ви ввійдете в інший обліковий запис",
             "noClientDetected": "Встановіть %VMS_NAME% для роботи з системою",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

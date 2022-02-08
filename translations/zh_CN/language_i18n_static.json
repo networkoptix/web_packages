@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "您将使用其他帐户登录",
             "noClientDetected": "安装%VMS_NAME%来查看您的系统",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

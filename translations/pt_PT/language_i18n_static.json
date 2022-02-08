@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "You will be logged in with a different account",
             "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

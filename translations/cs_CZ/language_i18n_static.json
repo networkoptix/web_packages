@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Budete přihlášeni pomocí jiného účtu",
             "noClientDetected": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

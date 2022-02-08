@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen",
-            "serversDetach": "Ontkoppel server { title } van het huidige systeem",
-            "serversReset": "Server { title } resetten naar standaardwaarden",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Server { title } herstarten"
         },
         "tooltips": {

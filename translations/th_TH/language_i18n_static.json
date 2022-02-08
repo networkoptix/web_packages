@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "คุณจะเข้าสู่ระบบด้วยบัญชีอื่น",
             "noClientDetected": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

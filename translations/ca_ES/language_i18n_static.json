@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Iniciareu la sessió amb un altre compte",
             "noClientDetected": "Instal·leu %VMS_NAME% per veure el vostre sistema",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {

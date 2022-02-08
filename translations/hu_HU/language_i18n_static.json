@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Egy másik fiókkal lesz bejelentkezve",
             "noClientDetected": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {
