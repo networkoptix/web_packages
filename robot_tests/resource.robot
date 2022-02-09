@@ -207,8 +207,13 @@ Check Log In
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
+    # Add a delay to your call if logging in soon after logging oiut to avoid session race condition
+    [Arguments]     ${add_delay}=0
     Run Keyword If    '''${mode}'''=='''cloud'''    Log Out cloud
     ...    ELSE    Log Out Web Admin
+    IF   ${add_delay} > 0
+        Sleep   ${add_delay}
+    END
 
 Log Out Cloud
     Wait Until Page Does Not Contain Element    ${BACKDROP}
