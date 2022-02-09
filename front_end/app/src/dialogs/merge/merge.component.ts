@@ -88,6 +88,7 @@ export class MergeModalContent {
     readonly serverNotAvailable: string = 'serverNotAvailable';
     readonly systemOffline: string = 'systemOffline';
     readonly systemOfflineUrl: string = 'systemOfflineUrl';
+    readonly targetSystemBoundToCloud: string = 'targetSystemBoundToCloud';
     readonly unknownError: string = 'unknownError';
 
     machine: StateMachine;
@@ -431,11 +432,11 @@ export class MergeModalContent {
                         }
                         // Handling for rest errors.
                         if (err.errorString) {
-                            if (err.errorString.includes('Merge error. Both systems have same server')) {
+                            if (err.errorString.includes(this.LANG.dialogs.merge.restError.duplicateServer)) {
                                 err.message = this.duplicateServers;
-                            } else if (err.errorString.includes('Cannot merge systems bound to the cloud')) {
-                                err.message = 'targetSystemBoundToCloud';
-                            } else if (err.errorString.includes('Cannot merge two Cloud Systems with different owners')) {
+                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.useCloudMerge)) {
+                                err.message = this.targetSystemBoundToCloud;
+                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.differentCloudOwners)) {
                                 err.message = this.differentOwners;
                             }
                         }
