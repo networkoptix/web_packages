@@ -43,7 +43,6 @@ export class LoginWebadminModalContent implements OnInit {
     login: Process;
     next: string;
     password: string;
-    remember: boolean;
     hideErrors: boolean = true;
 
     wrongCredentials: boolean;
@@ -55,7 +54,6 @@ export class LoginWebadminModalContent implements OnInit {
         this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
-        this.remember = true;
         this.wrongCredentials = false;
     }
 
@@ -173,7 +171,7 @@ export class LoginWebadminModalContent implements OnInit {
             return this.account.login(
                 this.auth.email,
                 this.password,
-                this.remember
+                true
             );
         }, {
             ignoreUnauthorized: true,
