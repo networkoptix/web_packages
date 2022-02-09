@@ -23,12 +23,13 @@
                 [(ngModel)]="resetEmail"
                 [disabled]="resetRequestProcess.processing"
                 #email="ngModel"
+                [pattern]="CONFIG.credentialsValidation.emailRegex"
                 required
                 email
                 nxFocusMe>
             <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
                 <p *ngIf="email.errors.required" class="error-label mt-2 mb-0" translate>Enter email</p>
-                <p *ngIf="email.errors.email" class="error-label mt-2 mb-0" translate>Invalid email</p>
+                <p *ngIf="email.errors.email || email.errors.pattern" class="error-label mt-2 mb-0" translate>Invalid email</p>
                 <p *ngIf="email.errors.accountDoesNotExist" class="error-label mt-2 mb-0" translate>Account does not exist.</p>
             </ng-container>
         </ng-container>
