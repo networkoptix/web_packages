@@ -141,7 +141,7 @@ export class Process {
      * @param successHandler
      * @param errorHandler
      */
-    public then (successHandler, errorHandler = logError) {
+    public then(successHandler, errorHandler = logError) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
         return this;
@@ -155,7 +155,7 @@ export class Process {
      *
      * @param catchHandler
      */
-    public catch (catchHandler) {
+    public catch(catchHandler) {
         this._catchHandler = catchHandler;
         return this;
     }
@@ -163,13 +163,13 @@ export class Process {
     /**
      * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
      */
-    public  cancel () {
+    public  cancel() {
         this.processing = false;
         this.canceled = true;
         this.canceled$.next(true);
     }
 
-    private errorHelper (data) {
+    private errorHelper(data) {
         if (this.canceled) {
             return;
         }
@@ -231,7 +231,7 @@ export class NxProcessService {
      * @param errorHandler - Error handler can be assigned here or on .then(successHandler, errorHandler) method.
      * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
      */
-    public createProcess (
+    public createProcess(
         caller: (() => PromiseLike<any>) | Observable<any>,
         settings?: Partial<ProcessSettings>,
         successHandler: Handler = () => {},

@@ -33,7 +33,7 @@ export const DEFAULT_EDITOR_CONFIG = {
             args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, '');
         }
     },
-    urlconverter_callback: function(url, node) {
+    urlconverter_callback: function (url, node) {
         if (url.startsWith('%')) {
             return url;
         }
@@ -55,7 +55,7 @@ export const DEFAULT_EDITOR_CONFIG = {
         return url;
     },
     setup: function (editor) {
-        editor.on('paste', function(event) {
+        editor.on('paste', function (event) {
             pasteHandleImages(event, editor);
         });
 
@@ -107,7 +107,7 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
         const img = new Image();
 
         // Once the image loads, render the img on the canvas
-        img.onload = function() {
+        img.onload = function () {
             // Update dimensions of the canvas with the dimensions of the image
             imageCanvas.width = img.width;
             imageCanvas.height = img.height;
@@ -160,7 +160,7 @@ function pasteHandleImages(pasteEvent, editor) {
         const ctx = tempCanvas.getContext('2d');
         const img = new Image();
         const url = window.URL || window.webkitURL;
-        img.onload = function() {
+        img.onload = function () {
             tempCanvas.width = img.width;
             tempCanvas.height = img.height;
             ctx.drawImage(img, 0, 0);

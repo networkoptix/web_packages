@@ -120,7 +120,7 @@ export class AddStorageModalContent {
             delay: this.CONFIG.alertTimeout
         };
         this.addStorage = this.processService
-            .createProcess(async() => {
+            .createProcess(async () => {
                 const { url, login, password } = this.storageForm.value;
                 const systemStorages = (
                     await this.storageManager.getStoragesInfo().toPromise()

@@ -73,11 +73,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     @ViewChild('userRoleForm', { read: NgForm }) userRoleForm: NgForm;
     @ViewChild('userSettingsForm', { read: NgForm }) userSettingsForm: NgForm;
 
-    get localUserNameDiffers (): boolean {
+    get localUserNameDiffers(): boolean {
         return this.localUserName !== this.username;
     }
 
-    get shouldChangePassword (): boolean {
+    get shouldChangePassword(): boolean {
         return this.localUserNameDiffers && !this.passwordChanged;
     }
 
@@ -85,12 +85,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     private systemSubscription: Subscription;
     private userSubscription: Subscription;
 
-    private setupDefaults () {
+    private setupDefaults() {
         this.locked = {};
         this.menuService.section = 'users';
     }
 
-    constructor (
+    constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         location: Location,
@@ -113,11 +113,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     private _filterUser = (user: any) => cleanId(user.id) === this.paramUser;
 
-    private _findUser () {
+    private _findUser() {
         return this.system.userManager.users.find(this._filterUser);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
         this.routeParamsSubscription = this.route
@@ -185,7 +185,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.applyService.resetFormWatchers();
     }
 
-    private initProcesses () {
+    private initProcesses() {
         this.editUser = this.processService.createProcess(async () => {
             if (this.shouldChangePassword) {
                 // console.log('rejected saving the form until password has changed')
@@ -225,17 +225,17 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
     }
 
-    public handleUserNameBlur () {
+    public handleUserNameBlur() {
         if (!this.localUserName || this.emptyName) {
             this.passwordChanged = false;
         }
     }
 
-    public handleUserNameChange (newName) {
+    public handleUserNameChange(newName) {
         this.emptyName = /^\s+$/.test(newName);
     }
 
-    public removeUser () {
+    public removeUser() {
         const user = this.selectedUser;
         if (this.locked[user.email]) {
             return;
@@ -263,7 +263,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
     }
 
-    protected _calcNextUserId () {
+    protected _calcNextUserId() {
         const currentUserIndex = this.system.users.findIndex(user => {
             return user.id === this.selectedUser.id;
         });
@@ -278,7 +278,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         );
     }
 
-    private setUser () {
+    private setUser() {
         if (this.system && this.system.users?.length > 0) {
             let user;
             if (this.paramUser) {
@@ -354,7 +354,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
     }
 
-    public changePassword () {
+    public changePassword() {
         const dialog = this.dialogs
             .changePassword(this.system, this.selectedUser);
         dialog.then(this._onPasswordChanged);
@@ -367,7 +367,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.passwordChanged = true;
     }
 
-    public setPermission (role: NxSystemRole) {
+    public setPermission(role: NxSystemRole) {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description()
@@ -376,7 +376,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.role = role.name;
     }
 
-    public routeToAccountSettings () {
+    public routeToAccountSettings() {
         this.uriService
             .updateURI('/account')
             .catch(error => {

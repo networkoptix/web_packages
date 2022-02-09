@@ -2,7 +2,7 @@ import { IrregularLengthInterval } from '../IrregularLengthInterval';
 
 import { timeStampMs, durationMs } from './alignTimeStamp';
 
-export function isIntervalOdd (
+export function isIntervalOdd(
     t: timeStampMs,
     d: IrregularLengthInterval
 ) {

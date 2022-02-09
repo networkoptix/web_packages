@@ -64,7 +64,7 @@ export class TimelineSelectionService {
         requestAnimationFrame(this.onAnimationFrame);
     }
 
-    public get exportUrlParams (): Object {
+    public get exportUrlParams(): Object {
         return {
             transport: this.playback.state.transport,
             cameraId: this.vms.selectedCamera.id,
@@ -82,39 +82,39 @@ export class TimelineSelectionService {
         }
     )
 
-    public get subject () {
+    public get subject() {
         return this._subject;
     }
 
-    public get isActive () {
+    public get isActive() {
         return this._isActive;
     }
 
-    public get range (): TimeRange {
+    public get range(): TimeRange {
         return this._selectedRange.clone();
     }
 
-    public get rangeText (): String {
+    public get rangeText(): String {
         const r = this.range;
         const s = new Date(r.start);
         const e = new Date(r.end);
         return `(${s.toLocaleString()} - ${e.toLocaleString()})`;
     }
 
-    public set range (r: TimeRange) {
+    public set range(r: TimeRange) {
         this._selectedRange.start = r.start;
         this._selectedRange.end = r.end;
         this._sanitizeRange();
         this._emit();
     }
 
-    public get pixelRange () {
+    public get pixelRange() {
         return this._pixelRange;
     }
 
     protected _pixelRange: PixelRange = { left: 0, right: 0 }
 
-    protected updatePixelRange () {
+    protected updatePixelRange() {
         this._pixelRange = {
             left: this.timeline.timeToDomOffsetX(this.range.start),
             right: this.timeline.timeToDomOffsetX(this.range.end)
@@ -128,32 +128,32 @@ export class TimelineSelectionService {
     // }
 
     protected _leftEar: HTMLElement
-    public set leftEar (e: HTMLElement) {
+    public set leftEar(e: HTMLElement) {
         this._leftEar = e;
     }
 
     protected _rightEar: HTMLElement
-    public set rightEar (e: HTMLElement) {
+    public set rightEar(e: HTMLElement) {
         this._rightEar = e;
     }
 
-    public get leftEarClientLeft (): px {
+    public get leftEarClientLeft(): px {
         return this._leftEar?.getBoundingClientRect().left || Infinity;
     }
 
-    public get rightEarClientRight (): px {
+    public get rightEarClientRight(): px {
         return this._rightEar?.getBoundingClientRect().right || Infinity;
     }
 
-    public get leftEarClientRight (): px {
+    public get leftEarClientRight(): px {
         return this._leftEar?.getBoundingClientRect().right || Infinity;
     }
 
-    public get rightEarClientLeft (): px {
+    public get rightEarClientLeft(): px {
         return this._rightEar?.getBoundingClientRect().left || Infinity;
     }
 
-    protected _emit () {
+    protected _emit() {
         this.updatePixelRange();
         this._subject.next({
             isActive: this.isActive,
@@ -168,11 +168,11 @@ export class TimelineSelectionService {
         this._$background = b;
     }
 
-    protected _getOffsetPx (e: MouseEvent) {
+    protected _getOffsetPx(e: MouseEvent) {
         return e.clientX - this._$background.getBoundingClientRect().left;
     }
 
-    public handleBackgroundMouseDown (e: MouseEvent) {
+    public handleBackgroundMouseDown(e: MouseEvent) {
         this._activate();
 
         if (this._dragMode === SELECTION_DRAG_MODE.NO_DRAGGING) {
@@ -200,7 +200,7 @@ export class TimelineSelectionService {
         this._emit();
     }
 
-    public handleSelectedRangeMouseDown (e: MouseEvent) {
+    public handleSelectedRangeMouseDown(e: MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
         this.playback.pause();
@@ -211,7 +211,7 @@ export class TimelineSelectionService {
         }
     }
 
-    public handleLeftEarMouseDown (e: MouseEvent) {
+    public handleLeftEarMouseDown(e: MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
         this.playback.pause();
@@ -223,7 +223,7 @@ export class TimelineSelectionService {
         }
     }
 
-    public handleRightEarMouseDown (e: MouseEvent) {
+    public handleRightEarMouseDown(e: MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
         this.playback.pause();
@@ -236,7 +236,7 @@ export class TimelineSelectionService {
 
     protected _lastMouseMove: MouseEvent
 
-    public handleMouseMove (e: MouseEvent) {
+    public handleMouseMove(e: MouseEvent) {
         this._lastMouseMove = e;
         if (this._isActive) {
             if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND) {
@@ -331,7 +331,7 @@ export class TimelineSelectionService {
         }
     }
 
-    protected _snapToPlaybackTime (t) {
+    protected _snapToPlaybackTime(t) {
         // @ts-ignore
         const playbackTime = this.playback.state?.currentTime || Infinity;
         const diff_ms = Math.abs(t - playbackTime);
@@ -343,24 +343,24 @@ export class TimelineSelectionService {
         }
     }
 
-    protected _snapStartToPlayback () {
+    protected _snapStartToPlayback() {
         const s = this._selectedRange.start;
         this._selectedRange.start = this._snapToPlaybackTime(s);
         return s !== this._selectedRange.start;
     }
 
-    protected _snapEndToPlayback () {
+    protected _snapEndToPlayback() {
         const e = this._selectedRange.end;
         this._selectedRange.end = this._snapToPlaybackTime(e);
         return e !== this._selectedRange.end;
     }
 
-    protected _snapRangeEdgesToPlayback () {
+    protected _snapRangeEdgesToPlayback() {
         return this._snapStartToPlayback() ||
             this._snapEndToPlayback();
     }
 
-    public handleMouseUp (e: MouseEvent) {
+    public handleMouseUp(e: MouseEvent) {
         // console.log('hmu', this.rangeText, this.range)
         this._sanitizeRange();
         // console.log('hmuSan', this.rangeText, this.range)
@@ -378,32 +378,32 @@ export class TimelineSelectionService {
         this._dragMode = SELECTION_DRAG_MODE.NO_DRAGGING;
     }
 
-    public handleMouseLeave (e: MouseEvent) {
+    public handleMouseLeave(e: MouseEvent) {
         // this.handleMouseUp(e);
     }
 
-    protected _activate () {
+    protected _activate() {
         this._isActive = true;
         this.playback.pause();
     }
 
-    protected _sanitizeRange () {
+    protected _sanitizeRange() {
         this._selectedRange.fitWithin(this.timeline.archiveRange);
     }
 
-    protected _sanitizeStart () {
+    protected _sanitizeStart() {
         this._selectedRange.fitStart(this.timeline.archiveRange);
     }
 
-    protected _sanitizeEnd () {
+    protected _sanitizeEnd() {
         this._selectedRange.fitEnd(this.timeline.archiveRange);
     }
 
-    protected _deactivate () {
+    protected _deactivate() {
         this._isActive = false;
     }
 
-    public reset () {
+    public reset() {
         this._deactivate();
         this._selectedRange = new TimeRange(0, 0);
         this._emit();
@@ -411,7 +411,7 @@ export class TimelineSelectionService {
 
     protected _animationFrameHandle: number
 
-    public onAnimationFrame () {
+    public onAnimationFrame() {
         this._animationFrameHandle = requestAnimationFrame(this.onAnimationFrame);
         let speed, offset;
         const STEP = 0.2;
@@ -522,7 +522,7 @@ export class TimelineSelectionService {
         }
     }
 
-    public get mouseFromLeftEdge (): px {
+    public get mouseFromLeftEdge(): px {
         if (!this.isActive) {
             return Infinity;
         }
@@ -530,7 +530,7 @@ export class TimelineSelectionService {
         // return this.timeline.timeToDomOffsetX(this._selectedRange.start) - EAR_WIDTH
     }
 
-    public get mouseFromRightEdge (): px {
+    public get mouseFromRightEdge(): px {
         if (!this.isActive) {
             return Infinity;
         }
@@ -539,7 +539,7 @@ export class TimelineSelectionService {
         //     (this.timeline.timeToDomOffsetX(this._selectedRange.end) + EAR_WIDTH * 2)
     }
 
-    protected _distanceToScrollingSpeed (distanceFromEdge: px): EDGE_SCROLLING_SPEED {
+    protected _distanceToScrollingSpeed(distanceFromEdge: px): EDGE_SCROLLING_SPEED {
         if (distanceFromEdge > 80) {
             return EDGE_SCROLLING_SPEED.NONE;
         }
@@ -552,11 +552,11 @@ export class TimelineSelectionService {
         return EDGE_SCROLLING_SPEED.FAST;
     }
 
-    public get rightEdgeScrollingSpeed (): EDGE_SCROLLING_SPEED {
+    public get rightEdgeScrollingSpeed(): EDGE_SCROLLING_SPEED {
         return this._distanceToScrollingSpeed(this.mouseFromRightEdge);
     }
 
-    public get leftEdgeScrollingSpeed (): EDGE_SCROLLING_SPEED {
+    public get leftEdgeScrollingSpeed(): EDGE_SCROLLING_SPEED {
         return this._distanceToScrollingSpeed(this.mouseFromLeftEdge);
     }
 }

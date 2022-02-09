@@ -199,7 +199,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         this.showAction({ url, label });
     }
 
-    updateSystem = async(system: DropdownItem, systemsToTry = []) => {
+    updateSystem = async (system: DropdownItem, systemsToTry = []) => {
         const nextSystem = this.systemService.createSystem(this.accountService.email, system.value);
         this.manifest = NxHealthMonitorWidgetComponent.manifestLookup[system.value];
 

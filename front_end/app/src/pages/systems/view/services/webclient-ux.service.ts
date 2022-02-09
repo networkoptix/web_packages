@@ -23,21 +23,21 @@ export class WebClientUxService {
         ...webClientUxInitialState
     })
 
-    protected _emit (): void {
+    protected _emit(): void {
         this._subject.next(this.state);
     }
 
-    public get subject (): BehaviorSubject<WebclientUxState> {
+    public get subject(): BehaviorSubject<WebclientUxState> {
         return this._subject;
     }
 
     protected _state: WebclientUxState = { ...webClientUxInitialState }
 
-    public get state (): WebclientUxState {
+    public get state(): WebclientUxState {
         return { ...this._state };
     }
 
-    public set isFullScreen (nv: boolean) {
+    public set isFullScreen(nv: boolean) {
         if (this._state.isFullScreen === nv) { return; }
         this._state.isFullScreen = nv;
         this._state.isSidebarShown = !this._state.isFullScreen;
@@ -45,7 +45,7 @@ export class WebClientUxService {
         this._emit();
     }
 
-    public set isSidebarShown (nv: boolean) {
+    public set isSidebarShown(nv: boolean) {
         if (this._state.isSidebarShown === nv) {
             return;
         }
@@ -53,7 +53,7 @@ export class WebClientUxService {
         this._emit();
     }
 
-    public set isTimelineShown (nv: boolean) {
+    public set isTimelineShown(nv: boolean) {
         if (this._state.isTimelineShown === nv) {
             return;
         }

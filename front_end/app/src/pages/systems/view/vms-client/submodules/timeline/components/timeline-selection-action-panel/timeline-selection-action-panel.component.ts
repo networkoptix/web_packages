@@ -39,13 +39,13 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     protected status: TimelineSelectionServiceStatus
     protected system: NxSystem
 
-    public get duration (): string {
+    public get duration(): string {
         return msDurationToString(
             Math.floor(this.selection.range.duration / 1000) * 1000
         );
     }
 
-    public get exportUrl (): string {
+    public get exportUrl(): string {
         // return this.selection.exportUrl
         return this.system
             ? this.system.getExportUrl(this.selection.exportUrlParams)
@@ -64,13 +64,13 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
-    protected get $self (): HTMLElement {
+    protected get $self(): HTMLElement {
         return this.self.nativeElement;
     }
 
     public duration$: Observable<String>
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.subscription = this.selection.subject.subscribe(this.onSubjectChange);
 
         // supposed to reduce jitter; doesn't quite work, though
@@ -104,29 +104,29 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         });
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         this.selection.$background = this.self.nativeElement;
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
 
     protected _prev
 
-    public onSubjectChange (s: TimelineSelectionServiceStatus) {
+    public onSubjectChange(s: TimelineSelectionServiceStatus) {
         this.status = s;
         this.$self.classList.toggle('active', s.isActive);
     }
 
-    public handleDurationClick (e: MouseEvent) {
+    public handleDurationClick(e: MouseEvent) {
         this.timeline.jumpScrollTo(
             this.selection.range.start -
             this.timeline.domWidthToDuration(EAR_WIDTH)
         );
     }
 
-    public handleDurationDoubleClick (
+    public handleDurationDoubleClick(
         e: MouseEvent,
         recalibrate: boolean = false
     ) {
@@ -140,7 +140,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         }
     }
 
-    public initSetTimeDialog () {
+    public initSetTimeDialog() {
         const dialog = this.dialogs.selectTimeRange();
         dialog.then(this._onTimeSetDialogDone);
     }

@@ -57,7 +57,7 @@ export class ChangePasswordModalContent {
         this.confirmNewPasswordForUser = '';
     }
 
-    public get isMe (): boolean {
+    public get isMe(): boolean {
         return this.user.isLocalOwner && this.user.isMe;
     }
 

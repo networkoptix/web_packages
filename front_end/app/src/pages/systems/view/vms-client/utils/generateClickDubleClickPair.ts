@@ -1,4 +1,4 @@
-export function generateClickDubleClickPair (onClick, onDblClick, dblClickDelayMs = 300) {
+export function generateClickDubleClickPair(onClick, onDblClick, dblClickDelayMs = 300) {
     let scheduledHandler = null;
     let prevClickTime = null;
 

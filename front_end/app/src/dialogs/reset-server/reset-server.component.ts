@@ -107,7 +107,7 @@ export class ResetServerModalContent {
                     invalidParameter: wrongPasswordHandler,
                     wrongPassword: wrongPasswordHandler
                 }
-            }, async() => {
+            }, async () => {
                 const numberOfServers = this.system.serverManager.servers?.length || 0;
                 if (environment.isLocal && numberOfServers) {
                     this.close();

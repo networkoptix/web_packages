@@ -40,7 +40,7 @@ xdescribe('alignTimeStamp', () => {
     });
 
     it('aligns irregular intervals correctly', () => {
-        function check (i: IrregularLengthInterval, d: 'left' | 'right' = 'left') {
+        function check(i: IrregularLengthInterval, d: 'left' | 'right' = 'left') {
             const r = alignTimeStamp(t, i, d);
             const v = new Date(r);
             switch (i) {

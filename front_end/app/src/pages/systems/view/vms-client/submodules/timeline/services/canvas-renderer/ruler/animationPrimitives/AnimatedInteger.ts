@@ -18,23 +18,23 @@ export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
         super(initialValue, _animationDuration, _easing);
     }
 
-    public set (v: int) {
+    public set(v: int) {
         super.set(v);
         this._target = Math.round(v);
     }
 
-    public reset (v: int) {
+    public reset(v: int) {
         this._value = Math.round(v);
         this._target = Math.round(v);
         this._lastChange = Date.now();
     }
 
-    public forceShift (delta: durationMs) {
+    public forceShift(delta: durationMs) {
         delta = Math.round(delta);
         super.forceShift(delta);
     }
 
-    protected _getCurrentValue (dt: durationMs = Date.now() - this._lastChange) {
+    protected _getCurrentValue(dt: durationMs = Date.now() - this._lastChange) {
         return Math.round(super._getCurrentValue(dt));
     }
 }

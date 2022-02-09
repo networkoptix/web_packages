@@ -12,15 +12,15 @@ export class HighlightedStringComponent {
     constructor() {
     }
 
-    get tokenMatches () {
+    get tokenMatches() {
         return this.token && this.matchPosition !== -1;
     }
 
-    get matchPosition () {
+    get matchPosition() {
         return this.string.toLocaleLowerCase().indexOf(this.token);
     }
 
-    get beforeMatch () {
+    get beforeMatch() {
         if (!this.tokenMatches) {
             return this.string;
         } else {
@@ -28,7 +28,7 @@ export class HighlightedStringComponent {
         }
     }
 
-    get afterMatch () {
+    get afterMatch() {
         if (!this.tokenMatches) {
             return '';
         } else {
@@ -36,7 +36,7 @@ export class HighlightedStringComponent {
         }
     }
 
-    get match () {
+    get match() {
         if (!this.tokenMatches) {
             return '';
         } else {

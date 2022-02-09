@@ -27,11 +27,11 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
 
     public previewLoaded = {}
 
-    public handlePreviewLoaded (cid) {
+    public handlePreviewLoaded(cid) {
         this.previewLoaded[cid] = true;
     }
 
-    public handlePreviewError (cid) {
+    public handlePreviewError(cid) {
         this.previewLoaded[cid] = -1;
     }
 
@@ -50,17 +50,17 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.config;
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this._vmsStateSubscription = this.vms.subject.subscribe(
             this._onVmsSubjectChange
         );
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this._vmsStateSubscription.unsubscribe();
     }
 
-    protected _onVmsSubjectChange (s: VmsState) {
+    protected _onVmsSubjectChange(s: VmsState) {
         switch (s.mode) {
             case VMS_MODE.NOT_INITIALIZED:
                 this._mediaservers = [];
@@ -98,7 +98,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         this.updateFilteredList(this.token);
     }
 
-    protected _resetServersVisibility () {
+    protected _resetServersVisibility() {
         if (this._mediaservers) {
             this.isServerExpanded = this._mediaservers.reduce(
                 (acc, ms) => {
@@ -115,18 +115,18 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         }
     }
 
-    public changeServerVisibility (serverId: string) {
+    public changeServerVisibility(serverId: string) {
         this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
         const systemId = this.vms.systemId;
         const key = `nx_system_${systemId}_server_${serverId}_expansion_status`;
         this.localStorage.store(key, JSON.stringify(this.isServerExpanded[serverId]));
     }
 
-    public updateShowIP (newValue: boolean) {
+    public updateShowIP(newValue: boolean) {
         this.showIP = newValue;
     }
 
-    public updateFilteredList (token: string) {
+    public updateFilteredList(token: string) {
         this.token = token;
         if (!token) {
             this.mediaservers = this._mediaservers;

@@ -25,11 +25,11 @@ export class SimpleTimeRange {
     ) {
     }
 
-    public get duration (): ms {
+    public get duration(): ms {
         return this.end - this.start;
     }
 
-    public clone (): SimpleTimeRange {
+    public clone(): SimpleTimeRange {
         return new SimpleTimeRange(this.start, this.end);
     }
 
@@ -37,19 +37,19 @@ export class SimpleTimeRange {
         return new SimpleTimeRange(tr.start, tr.end);
     }
 
-    public contains (r: SimpleTimeRange): boolean {
+    public contains(r: SimpleTimeRange): boolean {
         return (this.start <= r.start && this.end >= r.end);
     }
 
-    public isContained (r: SimpleTimeRange): boolean {
+    public isContained(r: SimpleTimeRange): boolean {
         return r.contains(this);
     }
 
-    public isDisjointWith (r: SimpleTimeRange): boolean {
+    public isDisjointWith(r: SimpleTimeRange): boolean {
         return this.start > r.end || this.end < r.start;
     }
 
-    public overlapsWith (r: SimpleTimeRange): boolean {
+    public overlapsWith(r: SimpleTimeRange): boolean {
         return !this.isDisjointWith(r);
     }
 }

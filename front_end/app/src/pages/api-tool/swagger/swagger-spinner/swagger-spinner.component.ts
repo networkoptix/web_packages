@@ -25,7 +25,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
     }
 
-    ngOnInit () {
+    ngOnInit() {
         this.classMutationObserver = new MutationObserver(mutations => {
             mutations.forEach((mutation: MutationRecord) => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {

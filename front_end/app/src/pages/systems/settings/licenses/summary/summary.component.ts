@@ -67,7 +67,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         }
     }
 
-    setLicenses (response) {
+    setLicenses(response) {
         this.licenses = Object.keys(response).map(licence => {
             const title = this.CONFIG.licenseTypes.find(item =>
                 item.name === licence

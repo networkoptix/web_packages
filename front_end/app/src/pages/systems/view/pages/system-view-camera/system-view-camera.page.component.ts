@@ -140,7 +140,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public readonly archiveSelectionEnabled: boolean
 
-    protected onPlaybackChange (s: PlaybackState) {
+    protected onPlaybackChange(s: PlaybackState) {
         let time = '';
         switch (s.mode) {
             case PLAYBACK_MODE.LIVE:
@@ -178,15 +178,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     };
 
-    public handleControlsTogglingEarClick () {
+    public handleControlsTogglingEarClick() {
         this.ux.isTimelineShown = !this.ux.state.isTimelineShown;
     }
 
-    public get $self (): HTMLElement {
+    public get $self(): HTMLElement {
         return this.self.nativeElement as HTMLElement;
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this._playbackSubscription = this.playback.subject
             .pipe(throttle(ev => interval(TIMESTAMP_UPDATE_THROTTLE_MS)))
             .subscribe(this.onPlaybackChange);
@@ -266,29 +266,29 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this._getRecords();
     }
 
-    public get availableTransportsAndResolutions () {
+    public get availableTransportsAndResolutions() {
         return this.availableTransportsAndResolutions$.getValue();
     }
 
-    public set availableTransportsAndResolutions (
+    public set availableTransportsAndResolutions(
         transportsAndResolutions: AvailableTransportsAndResolutions
     ) {
         this.availableTransportsAndResolutions$.next(transportsAndResolutions);
     }
 
-    private get transports () {
+    private get transports() {
         return this.transports$.getValue();
     }
 
-    private set transports (transports) {
+    private set transports(transports) {
         this.transports$.next(transports.filter(transport => ['hls', 'webm'].includes(transport)) || []);
     }
 
-    get selectedTransport (): PlaybackTransport {
+    get selectedTransport(): PlaybackTransport {
         return this.selectedTransport$.getValue();
     }
 
-    set selectedTransport (transport: PlaybackTransport) {
+    set selectedTransport(transport: PlaybackTransport) {
         this._log('setTransport', transport);
         if (transport && this.selectedTransport !== transport) {
             this.qualities = this.availableTransportsAndResolutions[transport];
@@ -303,7 +303,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return this.qualities$.getValue();
     }
 
-    private set qualities (qualities) {
+    private set qualities(qualities) {
         qualities = qualities || {};
         const qualityKeys = Object.keys(qualities);
         this.visibleQualities$.next(
@@ -324,11 +324,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.qualities$.next(qualities);
     }
 
-    get selectedQuality (): PlaybackQuality {
+    get selectedQuality(): PlaybackQuality {
         return this.selectedQuality$.getValue();
     }
 
-    set selectedQuality (initialQuality: PlaybackQuality) {
+    set selectedQuality(initialQuality: PlaybackQuality) {
         if (!this.selectedTransport) {
             return;
         }
@@ -362,7 +362,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return quality ? this.LANG.common.resolution[quality]?.() || quality : this.LANG.common.resolution.auto();
     }
 
-    public qualityToVerbose (q: PlaybackQuality) {
+    public qualityToVerbose(q: PlaybackQuality) {
         switch (q) {
             case 'hi':
             case 'high':
@@ -375,7 +375,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public qualityFromVerbose (q: PlaybackQuality) {
+    public qualityFromVerbose(q: PlaybackQuality) {
         q = q?.toLowerCase();
         switch (q) {
             case 'high':
@@ -389,12 +389,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public getRecordsInProgress: string // cameraId
 
-    protected _updateAvailableTransportsAndResolutions () {
+    protected _updateAvailableTransportsAndResolutions() {
         this.availableTransportsAndResolutions =
             this.camera ? this.camera.availableTransportsAndResolutions : {};
     }
 
-    protected _restorePlayback (archiveAvailable: boolean = false) {
+    protected _restorePlayback(archiveAvailable: boolean = false) {
         const getQueryParam = q => {
             // return (this.location.path().match(new RegExp('[?&]' + q + '=([^&]+)')) || [, null])[1];
             return (new URLSearchParams(this.location.path().split('?')[1] || '')).get(q);
@@ -428,7 +428,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    protected _getRecords () {
+    protected _getRecords() {
         this._log('_getRecords', this.id);
 
         const now = Date.now();
@@ -518,7 +518,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _newlyRecordedIntervalHandle
 
-    public startPollingForNewlyRecordedChunks () {
+    public startPollingForNewlyRecordedChunks() {
         timer(0, 10 * 1000).pipe(takeUntil(this.unsub$)).subscribe(() => {
             const since = this.vms.selectedCamera.archiveRange.end;
             const now = Date.now();
@@ -556,7 +556,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
     }
 
-    protected _extractPeriodsFromServerResponse (response) {
+    protected _extractPeriodsFromServerResponse(response) {
         if (!response?.reply.length) {
             return [];
         }
@@ -575,7 +575,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return records.sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
-    public ngAfterViewInit () {
+    public ngAfterViewInit() {
         this.$self.classList.add('controls-shown');
 
         // this.fpsMeter.install()
@@ -586,7 +586,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.ux.isFullScreen = !!fullscreen.getElement();
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this._playbackSubscription?.unsubscribe();
         this._routeSubscription?.unsubscribe();
         this._vmsStateSubscription?.unsubscribe();
@@ -607,7 +607,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
-    protected _onUxStateChange (s: WebclientUxState) {
+    protected _onUxStateChange(s: WebclientUxState) {
         this._log('UX state change');
         if (s.isTimelineShown) {
             this.$self.classList.add('controls-shown');
@@ -624,7 +624,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    protected _onRouteChange (params) {
+    protected _onRouteChange(params) {
         this._log('ROUTE CHANGE: NEW CAMERA', this.id, '->', params.cameraId);
         this.id = params.cameraId;
         this.playback.save();
@@ -642,7 +642,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    protected _onVmsStateChange (s: VmsState) {
+    protected _onVmsStateChange(s: VmsState) {
         this._log('VMS state change', { ...s });
         switch (s.mode) {
             case VMS_MODE.NOT_INITIALIZED:
@@ -675,7 +675,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public _onAnimationFrame (): void {
+    public _onAnimationFrame(): void {
         if (this.camera?.isLive) {
             this.timelineExtendToNow.extendToNow();
         }
@@ -687,11 +687,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }, this.timeline.renderFps);
     }
 
-    public get showTimeline (): boolean {
+    public get showTimeline(): boolean {
         return this.camera && this.camera.hasArchive && this.canViewArchives && this.getRecordsInProgress === undefined;
     }
 
-    public get enableControls (): boolean {
+    public get enableControls(): boolean {
         return this.camera &&
             !this.cameraError &&
             (
@@ -700,7 +700,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             );
     }
 
-    protected _initSelectedCamera () {
+    protected _initSelectedCamera() {
         this._log('_initSelectedCamera');
         this.resetTransport();
         this.resetQuality();
@@ -754,7 +754,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public toggleFullScreen ($event?) {
+    public toggleFullScreen($event?) {
         this._log('toggleFullScreen');
         $event?.stopPropagation();
 
@@ -772,28 +772,28 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         // isFullScreen is updated by onFullScreenChange on document events
     }
 
-    public stopSettingsClickPropagation ($event) {
+    public stopSettingsClickPropagation($event) {
         $event?.stopPropagation();
     }
 
-    public toggleSettings ($event?) {
+    public toggleSettings($event?) {
         $event?.stopPropagation();
         this.settingsShown = !this.settingsShown;
     }
 
-    public hideSettings () {
+    public hideSettings() {
         this.settingsShown = false;
     }
 
-    public showSettings () {
+    public showSettings() {
         this.settingsShown = true;
     }
 
-    public resetQuality () {
+    public resetQuality() {
         this.selectedQuality = this.cameraQualityStorage.get(this.id) || '';
     }
 
-    public resetTransport () {
+    public resetTransport() {
         let transport;
 
         if (this.isChrome && this.isMobile) {
@@ -818,12 +818,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedTransport = transport;
     }
 
-    public onVideoDblClick (_: boolean) {
+    public onVideoDblClick(_: boolean) {
         this.toggleFullScreen();
     }
 
     @HostListener('document:click', ['$event'])
-    public clickOutside ($event) {
+    public clickOutside($event) {
         this.hideSettings();
     }
 

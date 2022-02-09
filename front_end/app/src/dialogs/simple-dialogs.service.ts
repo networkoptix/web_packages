@@ -97,7 +97,7 @@ export class NxSimpleDialogsService {
         return dialogRef;
     }
 
-    public confirm (
+    public confirm(
         message: string,
         title: string,
         actionLabel: string,

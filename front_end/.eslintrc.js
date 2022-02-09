@@ -199,7 +199,11 @@ module.exports = {
         semi: ['error', 'always'],
         'semi-spacing': ['error', { before: false, after: true }],
         'space-before-blocks': ['error', 'always'],
-        'space-before-function-paren': 'off',
+        'space-before-function-paren': ['error', {
+            anonymous: 'always',
+            named: 'never',
+            asyncArrow: 'always'
+        }],
         'space-in-parens': ['error', 'never'],
         'space-infix-ops': 'error',
         'space-unary-ops': ['error', { words: true, nonwords: false }],
@@ -282,6 +286,12 @@ module.exports = {
                     builtinGlobals: false
                 }],
                 '@typescript-eslint/prefer-includes': 'error',
+                'space-before-function-paren': 'off',
+                '@typescript-eslint/space-before-function-paren': ['error', {
+                    anonymous: 'always',
+                    named: 'never',
+                    asyncArrow: 'always'
+                }],
             },
         },
     ]

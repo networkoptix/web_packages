@@ -64,7 +64,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public readonly archiveSelectionEnabled: boolean = false
 
-    protected _onTimelineStatusChange (s: TimelineServiceStatus) {
+    protected _onTimelineStatusChange(s: TimelineServiceStatus) {
         if (s.canvasGeometryUpdateRequested) {
             this.updateCanvas.next();
         }
@@ -74,7 +74,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _pinchDestructor: Function
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this._stateSubscription = this.timeline.subject.subscribe(
             this._onTimelineStatusChange
         );
@@ -82,7 +82,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             requestAnimationFrame(() => this.onAnimationFrame());
     }
 
-    public onAnimationFrame (): void {
+    public onAnimationFrame(): void {
         const ctx = this.canvasView.nativeElement.getContext('2d');
         // console.log('render #', times_rendered)
         this.canvasRenderer.render(ctx);
@@ -95,14 +95,14 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }, this.timeline.renderFps);
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.unsub$.next();
         this._stateSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
         this._pinchDestructor && this._pinchDestructor();
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         window.addEventListener(
             'resize',
             () => this.updateCanvas.next()
@@ -124,7 +124,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         );
     }
 
-    protected _updateCanvasGeometry (): void {
+    protected _updateCanvasGeometry(): void {
         const rect = this.canvasView.nativeElement.getBoundingClientRect();
         const dpr = window.devicePixelRatio;
         this.canvasView.nativeElement.width = rect.width * dpr;
@@ -132,12 +132,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timeline.setCanvasGeometry(rect.width * dpr, rect.height * dpr, dpr);
     }
 
-    public canvasWheelHandler (e: WheelEvent): void {
+    public canvasWheelHandler(e: WheelEvent): void {
         e.preventDefault();
         this.wheelHandler.handleWheel(e);
     }
 
-    public canvasMouseMoveHandler (e: MouseEvent|TouchEvent): void {
+    public canvasMouseMoveHandler(e: MouseEvent|TouchEvent): void {
         this.timeUnderMouse.handleMouseMove(e);
         if (this.selection.handleMouseMove(e as MouseEvent)) {
             return;
@@ -161,11 +161,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseEnterHandler (e: MouseEvent): void {
+    public canvasMouseEnterHandler(e: MouseEvent): void {
         this.timeUnderMouse.handleMouseEnter(e);
     }
 
-    public canvasMouseLeaveHandler (e: MouseEvent): void {
+    public canvasMouseLeaveHandler(e: MouseEvent): void {
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
@@ -174,7 +174,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public hideTimeUnderMouse: boolean = false
     public isDragging: boolean = false
 
-    public canvasMouseDownHandler (e: MouseEvent|TouchEvent): void {
+    public canvasMouseDownHandler(e: MouseEvent|TouchEvent): void {
         if (e instanceof MouseEvent && e.button !== 0) {
             return;
         }
@@ -199,7 +199,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
+    public canvasMouseUpHandler(e: MouseEvent|TouchEvent): void {
         if (this.archiveSelectionEnabled) {
             this.selection.handleMouseUp(e as MouseEvent);
         }
@@ -235,7 +235,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:mouseup')
-    public documentMouseUpHandler (e: MouseEvent): void {
+    public documentMouseUpHandler(e: MouseEvent): void {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {

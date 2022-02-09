@@ -13,7 +13,7 @@ export class TimelineExtendToNowService {
     ) {
     }
 
-    public extendToNow (): void {
+    public extendToNow(): void {
         this.timeline.extendToNow();
         this.timeUnderMouse.updateTime();
     }

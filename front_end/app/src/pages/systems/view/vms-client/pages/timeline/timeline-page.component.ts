@@ -9,7 +9,7 @@ import { TimelineService } from '@vms-client/submodules/timeline/services/timeli
     styleUrls: ['./timeline-page.component.scss']
 })
 export class TimelinePageComponent implements OnInit, OnDestroy {
-    public constructor (
+    public constructor(
         public timeline: TimelineService,
         public timelineExtendToNow: TimelineExtendToNowService
     ) {
@@ -17,7 +17,7 @@ export class TimelinePageComponent implements OnInit, OnDestroy {
 
     protected _animationFrameRequestHandler: number
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         const now = Date.now();
         if (!this.timeline.fullRange.duration) {
             const DURATION = 12 * 31 * 24 * 60 * 60 * 1000;
@@ -28,14 +28,14 @@ export class TimelinePageComponent implements OnInit, OnDestroy {
             requestAnimationFrame(this.onAnimationFrame.bind(this));
     }
 
-    public onAnimationFrame (): void {
+    public onAnimationFrame(): void {
         // this.timelineExtendToNow.extendToNow()
 
         this._animationFrameRequestHandler =
             requestAnimationFrame(this.onAnimationFrame.bind(this));
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 }

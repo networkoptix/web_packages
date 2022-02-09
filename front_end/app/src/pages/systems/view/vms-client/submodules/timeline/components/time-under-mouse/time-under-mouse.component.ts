@@ -49,17 +49,17 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.subscription = this.timeUnderMouse.subject.subscribe(
             this.onSubjectChange
         );
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
 
-    public onSubjectChange (s: TimelineTimeUnderMouseServiceStatus) {
+    public onSubjectChange(s: TimelineTimeUnderMouseServiceStatus) {
         if (s.isMouseInside) {
             this.self.nativeElement.style.opacity = 1.0;
             let offset = s.offsetX;
@@ -94,7 +94,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         }
     }
 
-    public get svgArrowPoints () {
+    public get svgArrowPoints() {
         const wwm = PRIMARY_WIDTH + 2 * MARGIN; // widthWithMargins
         const aw = ARROW_WIDTH; // arrowWidth
 
@@ -129,7 +129,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         return `${tl},0 ${tr},0 ${b},5`;
     }
 
-    public get verticalLineLeftPx () {
+    public get verticalLineLeftPx() {
         let result = PRIMARY_WIDTH / 2;
         const offset = this._visualOffset - this._honestOffset;
         if (Math.abs(offset) > 0) {

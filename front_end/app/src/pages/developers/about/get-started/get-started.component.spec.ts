@@ -95,7 +95,7 @@ describe('NxGetStartedComponent', () => {
         expect(stepContent.imageSrc).toBe(stepIconSrc);
     });
 
-    it('should show the correct animated step image state', async() => {
+    it('should show the correct animated step image state', async () => {
         const stepIconSrc = `${configMock.config.images.dirDevelopers}${stepIcon}`;
         const stepIconAnimatedSrc = `${configMock.config.images.dirDevelopers}${stepAnimatedIcon}`;
         const detailBlock = el.nativeElement.querySelector('.detail-block');

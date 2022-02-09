@@ -32,7 +32,7 @@ export class NxHTMLComponent implements ControlValueAccessor {
 
     #onChangeCallback
 
-    get value () {
+    get value() {
         return this.#value;
     }
 

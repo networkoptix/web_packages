@@ -19,13 +19,13 @@ export class CameraTransportStorageService {
         });
     }
 
-    public get (cameraId: string) {
+    public get(cameraId: string) {
         return this.localStorageService.retrieve(
             `${this.user}_transport_${cameraId}`
         );
     }
 
-    public set (cameraId: string, transport: PlaybackTransport) {
+    public set(cameraId: string, transport: PlaybackTransport) {
         if (transport) {
             this.localStorageService.store(
                 `${this.user}_transport_${cameraId}`, transport

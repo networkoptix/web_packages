@@ -49,7 +49,7 @@ export interface LivePlaybackState extends AbstractPlaybackState {
 
 export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState
 
-export function createInitialStoppedState (
+export function createInitialStoppedState(
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm'
 ): StoppedPlaybackState {
@@ -62,7 +62,7 @@ export function createInitialStoppedState (
     };
 }
 
-export function createInitialArchiveState (
+export function createInitialArchiveState(
     sourceUrl: string,
     t: ms,
     quality: PlaybackQuality = 'auto',
@@ -85,7 +85,7 @@ export function createInitialArchiveState (
     };
 }
 
-export function createInitialLiveState (
+export function createInitialLiveState(
     sourceUrl: string,
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',

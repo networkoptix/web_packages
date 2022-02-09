@@ -34,7 +34,7 @@ describe('AnimatedFloat', () => {
         expect(n.lastChange).toBeCloseTo(0.0);
     });
 
-    it('actually animates and respects animation duration parameter', async() => {
+    it('actually animates and respects animation duration parameter', async () => {
         n.animationDuration = 20;
         n.set(200.0);
         expect(n.value).toBeGreaterThanOrEqual(100);
@@ -56,7 +56,7 @@ describe('AnimatedFloat', () => {
         expect(samples[2] <= samples[3]).toBeTrue();
     });
 
-    it('can abort animation', async() => {
+    it('can abort animation', async () => {
         n.animationDuration = 20;
         n.set(200.0);
         await sleep(10);
@@ -65,7 +65,7 @@ describe('AnimatedFloat', () => {
         expect(n.get()).toBeLessThan(200.0);
     });
 
-    it('can force animation', async() => {
+    it('can force animation', async () => {
         n.animationDuration = 20;
         n.set(200.0);
         await sleep(10);
@@ -73,7 +73,7 @@ describe('AnimatedFloat', () => {
         expect(n.get()).toBeCloseTo(200.0);
     });
 
-    it('can be shifted in progress', async() => {
+    it('can be shifted in progress', async () => {
         n.animationDuration = 20;
         n.set(200.0);
         n.forceShift(1000);
@@ -96,7 +96,7 @@ describe('AnimatedFloat', () => {
         expect(samples[2] <= samples[3]).toBeTrue();
     });
 
-    it('returns floats during the whole animation process', async() => {
+    it('returns floats during the whole animation process', async () => {
         n.animationDuration = 20;
         n.set(200.123);
         const samples = [];

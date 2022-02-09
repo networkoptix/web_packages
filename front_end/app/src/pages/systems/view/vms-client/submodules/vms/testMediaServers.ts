@@ -8,7 +8,7 @@ const DURATION = 12 * 31 * 24 * 60 * 60 * 1000;
 const TEST_ARCHIVE_RANGE = new SimpleTimeRange(now - DURATION, now);
 const TEST_ARCHIVE = [TEST_ARCHIVE_RANGE];
 
-function generateGappedArchive (start, end, count) {
+function generateGappedArchive(start, end, count) {
     const result = [];
     const len = Math.round((end - start) / (count * 2));
     const gap = len;

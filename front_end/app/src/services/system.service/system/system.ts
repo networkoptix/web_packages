@@ -340,7 +340,7 @@ export class NxSystem extends System {
 
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
-            .then(async(response: any) => {
+            .then(async (response: any) => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
                     return Promise.reject(error);
@@ -604,7 +604,7 @@ export class NxSystem extends System {
         return this.mediaserver.getBookmarks?.();
     }
 
-    public getPlaybackUrl (cameraId, transport, resolution, position) {
+    public getPlaybackUrl(cameraId, transport, resolution, position) {
         return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
     }
 
@@ -620,7 +620,7 @@ export class NxSystem extends System {
         );
     }
 
-    public getExportUrl (params) {
+    public getExportUrl(params) {
         return this.mediaserver.getExportUrl(params);
     }
 
@@ -670,7 +670,7 @@ export class NxSystem extends System {
         );
     }
 
-    #addAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+    #addAlexaRules = async (existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
         const showAlarmRule = NxSystem.createRule(
             {
                 eventCondition: NxSystem.getEventCondition(
@@ -700,7 +700,7 @@ export class NxSystem extends System {
         });
     }
 
-    #removeAlexaRules = async(existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
+    #removeAlexaRules = async (existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
         const toRemove = existingRules.filter(({
             eventCondition
         }) => [

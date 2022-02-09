@@ -30,7 +30,7 @@ export class TimelineTopRulerCanvasRendererService {
     ) {
     }
 
-    public render (ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D) {
         const interval = this.getInterval();
         const serifTimes = this.getSerifTimes();
         // console.log('TOP SERIFS', serifTimes, serifTimes.map(st => new Date(st)))
@@ -55,21 +55,21 @@ export class TimelineTopRulerCanvasRendererService {
         });
     }
 
-    public reset () {
+    public reset() {
         this._serifTimes = undefined;
         this._interval = undefined;
     }
 
     protected _interval: IrregularLengthInterval
 
-    public getInterval () {
+    public getInterval() {
         if (!this._interval) {
             this._interval = this._getInterval();
         }
         return this._interval;
     }
 
-    protected _getInterval (): IrregularLengthInterval {
+    protected _getInterval(): IrregularLengthInterval {
         for (const interval of irregularLengthIntervals) {
             if (interval in TOP__MIN_WIDTH_FOR_INTERVALS) {
                 const displayWidth = this.timeline.durationToDomWidth(
@@ -85,26 +85,26 @@ export class TimelineTopRulerCanvasRendererService {
 
     protected _serifTimes: Array<ms>
 
-    public getSerifTimes () {
+    public getSerifTimes() {
         if (!this._serifTimes) {
             this._serifTimes = this._getSerifTimes(this.getInterval());
         }
         return this._serifTimes;
     }
 
-    protected _getSerifTimes (interval: IrregularLengthInterval): Array<ms> {
+    protected _getSerifTimes(interval: IrregularLengthInterval): Array<ms> {
         return interval
             ? this.timeline.visibleRange.iterate(interval, this.vms.timeZoneOffset)
             : [];
     }
 
-    protected _withContext (ctx, actualDrawing: () => void) {
+    protected _withContext(ctx, actualDrawing: () => void) {
         ctx.save();
         actualDrawing();
         ctx.restore();
     }
 
-    protected _drawSerif (
+    protected _drawSerif(
         ctx: CanvasRenderingContext2D,
         interval: IrregularLengthInterval,
         curTime: ms,
@@ -144,7 +144,7 @@ export class TimelineTopRulerCanvasRendererService {
         this._drawSerifText(ctx, interval, curTime, x0, x1, y0, y1, y2);
     }
 
-    protected _drawSerifText (
+    protected _drawSerifText(
         ctx: CanvasRenderingContext2D,
         interval: IrregularLengthInterval,
         curTime: ms,

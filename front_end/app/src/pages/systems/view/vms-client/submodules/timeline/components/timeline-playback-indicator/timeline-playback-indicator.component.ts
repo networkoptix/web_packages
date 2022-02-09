@@ -57,7 +57,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('click', ['$event'])
-    onClick (e) {
+    onClick(e) {
         if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.timeline.jumpScrollTo(
                 this.playback.state.currentTime -
@@ -67,7 +67,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         }
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.playbackSubscription = this.playback.subject.subscribe(
             this.onPlaybackSubjectChange
         );
@@ -76,12 +76,12 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         );
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.playbackSubscription.unsubscribe();
         this.timelineSubscription.unsubscribe();
     }
 
-    public get edgeCaseClasses () {
+    public get edgeCaseClasses() {
         this.self.nativeElement.classList[(this.visible ? 'add' : 'remove')]('visible');
         return {
             'left-most': this.honestOffset <= 0,
@@ -95,11 +95,11 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
 
     protected _svgArrowPoints: string = ''
 
-    public get svgArrowPoints () {
+    public get svgArrowPoints() {
         return this._svgArrowPoints;
     }
 
-    protected _updateSvgArrowPoints () {
+    protected _updateSvgArrowPoints() {
         // if (this.edgeCaseClasses['left-most'] || this.edgeCaseClasses['right-most']) {
         //   return ''
         // }
@@ -136,7 +136,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         this._svgArrowPoints = `${tl},0 ${tr},0 ${b},5`;
     }
 
-    public get verticalLineLeftPx () {
+    public get verticalLineLeftPx() {
         let result = PRIMARY_WIDTH / 2;
         if (this.edgeCaseClasses.leftish) {
             const offset = Math.abs(this.visibleOffset - this.honestOffset);
@@ -148,7 +148,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    public onTimelineSubjectChange (s: TimelineServiceStatus) {
+    public onTimelineSubjectChange(s: TimelineServiceStatus) {
         const ps = this.playback.state;
         if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
             this.timeMs = ps.currentTime; // prevents the weired jitter
@@ -177,7 +177,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         }
     }
 
-    public onPlaybackSubjectChange (s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState) {
         // if (s.mode === PLAYBACK_MODE.ARCHIVE && s.started) {
         //     console.log('playback change', s.currentTime - this.timeMs, s.currentTime, new Date(s.currentTime))
         // }

@@ -80,7 +80,7 @@ export class BirdViewTree {
         return this._newlyRecorded;
     }
 
-    public get archiveEnd (): ms {
+    public get archiveEnd(): ms {
         return this._treeRoot.archiveEnd;
     }
 
@@ -293,19 +293,19 @@ export class BirdViewTree {
 export class BirdViewTreeNode {
     protected _intervalCenterMs: ms
 
-    public get startMs () {
+    public get startMs() {
         return this._startMs;
     }
 
-    public get endMs () {
+    public get endMs() {
         return this._endMs;
     }
 
-    public get centerMs () {
+    public get centerMs() {
         return this._intervalCenterMs;
     }
 
-    public get depth () {
+    public get depth() {
         return this._depth;
     }
 
@@ -363,7 +363,7 @@ export class BirdViewTreeNode {
         }
     }
 
-    public get archiveEnd (): ms {
+    public get archiveEnd(): ms {
         if (this._rightChild) {
             return this._rightChild.archiveEnd ||
                 this._records[this._records.length - 1]?.end;

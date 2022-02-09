@@ -23,10 +23,10 @@ export function IBool(): PropertyDecorator {
 
         Object.defineProperty(target, propertyKey, {
         // function used over fat arrow syntax to preserve the value of `this`
-            get: function(): boolean | undefined {
+            get: function (): boolean | undefined {
                 return this[hiddenKey];
             },
-            set: function(extValue: CoercedBoolInput): void {
+            set: function (extValue: CoercedBoolInput): void {
                 this[hiddenKey] = extValue === true || extValue === '';
             }
         });

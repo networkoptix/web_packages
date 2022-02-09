@@ -114,7 +114,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
     }
 
-    public ngOnChanges (changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges): void {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 

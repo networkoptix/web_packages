@@ -22,21 +22,21 @@ export class TimelineScrollbarRelativeService {
     protected _logPrefix: string = 'SCROLLBAR_RELATIVE_SERVICE ::';
     protected _logDisable: boolean = true;
 
-    protected _log (...args: any[]) {
+    protected _log(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    protected _warn (...args: any[]) {
+    protected _warn(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    constructor (
+    constructor(
         protected timeline: TimelineService
     ) {
         this.timeline.subject.subscribe(this._emit.bind(this));
@@ -51,7 +51,7 @@ export class TimelineScrollbarRelativeService {
         }
     )
 
-    protected _emit () {
+    protected _emit() {
         this._subject.next({
             magnification: this.magnification,
             offset: this.offset,
@@ -60,11 +60,11 @@ export class TimelineScrollbarRelativeService {
         });
     }
 
-    public get subject (): BehaviorSubject<TimelineScrollbarRelativeServiceStatus> {
+    public get subject(): BehaviorSubject<TimelineScrollbarRelativeServiceStatus> {
         return this._subject;
     }
 
-    public get offset (): px {
+    public get offset(): px {
         return Math.max(
             0,
             Math.min(
@@ -75,21 +75,21 @@ export class TimelineScrollbarRelativeService {
         );
     }
 
-    public get magnification (): float {
+    public get magnification(): float {
         return this.timeline.fullRange.duration / this.timeline.visibleRange.duration;
     }
 
-    public get canScrollLeft (): boolean {
+    public get canScrollLeft(): boolean {
         return this.timeline.visibleRange.start > this.timeline.fullRange.start;
         // return this.timeline.visibleRange.start - this.timeline.fullRange.start > SCROLL_TRESHOLD_MS;
     }
 
-    public get canScrollRight (): boolean {
+    public get canScrollRight(): boolean {
         return this.timeline.fullRange.end > this.timeline.visibleRange.end;
         // return this.timeline.fullRange.end - this.timeline.visibleRange.end > SCROLL_TRESHOLD_MS;
     }
 
-    public handleBarDblClick (e: MouseEvent|TouchEvent) {
+    public handleBarDblClick(e: MouseEvent|TouchEvent) {
         e.preventDefault();
         this.timeline.fullZoomOut();
     }
@@ -99,7 +99,7 @@ export class TimelineScrollbarRelativeService {
     protected _timestampMouseDown: ms;
     protected _scrollDirection: sign = 0;
 
-    public handleBackgroundMouseDown (e: MouseEvent) {
+    public handleBackgroundMouseDown(e: MouseEvent) {
         this.isBackgroundMouseDown = true;
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
@@ -109,7 +109,7 @@ export class TimelineScrollbarRelativeService {
                 : +1;
     }
 
-    public handleBackgroundMouseUp (e: MouseEvent|TouchEvent) {
+    public handleBackgroundMouseUp(e: MouseEvent|TouchEvent) {
         this.isBackgroundMouseDown = false;
         this.holdScrollTargetTime = -1;
         const sinceMouseDown: ms = Date.now() - this._timestampMouseDown;
@@ -128,36 +128,36 @@ export class TimelineScrollbarRelativeService {
         }
     }
 
-    public handleButtonLeftMouseDown () {
+    public handleButtonLeftMouseDown() {
         this.isBackgroundMouseDown = true;
         this.holdScrollTargetTime = this.timeline.fullRange.start;
     }
 
-    public handleButtonRightMouseDown () {
+    public handleButtonRightMouseDown() {
         this.isBackgroundMouseDown = true;
         this.holdScrollTargetTime = this.timeline.fullRange.end - this.timeline.visibleRange.duration;
     }
 
-    public updateIfMouseIsDown () {
+    public updateIfMouseIsDown() {
         if (this.isBackgroundMouseDown) {
             this.timeline.stepScrollToStartTime(this.holdScrollTargetTime);
             this._emit();
         }
     }
 
-    public handleBackgroundDblClick (e: MouseEvent) {
+    public handleBackgroundDblClick(e: MouseEvent) {
         this.isBackgroundMouseDown = false;
         const targetTime = this._targetTimeFromMouseEvent(e);
         this.timeline.jumpScrollTo(targetTime, true);
         this._emit();
     }
 
-    public handleButtonLeftDblClick () {
+    public handleButtonLeftDblClick() {
         this.timeline.jumpScrollTo(this.timeline.fullRange.start, true);
         this._emit();
     }
 
-    public handleButtonRightDblClick () {
+    public handleButtonRightDblClick() {
         this.timeline.jumpScrollTo(
             this.timeline.fullRange.end - this.timeline.visibleRange.duration,
             true
@@ -165,7 +165,7 @@ export class TimelineScrollbarRelativeService {
         this._emit();
     }
 
-    protected _targetTimeFromMouseEvent (e: MouseEvent|TouchEvent): ms {
+    protected _targetTimeFromMouseEvent(e: MouseEvent|TouchEvent): ms {
         return Math.round(
             this.timeline.fullRange.start +
         this.timeline.fullRange.duration * (

@@ -29,7 +29,7 @@ export const DOC_TYPES = {
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args) {
+    descriptor.value = function (...args) {
         return of('').pipe(
             switchMap(_ => {
                 if (this.currentAccountEmail !== undefined) {
@@ -53,7 +53,7 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
 
 const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args) {
+    descriptor.value = function (...args) {
         const returnPromise = this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
             return originalMethod.apply(this, args);
         });

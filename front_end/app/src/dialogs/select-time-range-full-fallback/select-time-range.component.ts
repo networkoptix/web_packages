@@ -34,14 +34,14 @@ export class SelectTimeRangeModalContent {
 
     @Input() closable = true;
 
-    private _dateFromDateDict (d: DateDict): Date {
+    private _dateFromDateDict(d: DateDict): Date {
         const str = `${d.year}-${d.month.toString().padStart(2, '0')}-${d.day.toString().padStart(2, '0')}` +
             'T' +
             `${d.hour.toString().padStart(2, '0')}:${d.minute.toString().padStart(2, '0')}`;
         return new Date(str);
     }
 
-    private _dateDictFromTimeStamp (ts: number): DateDict {
+    private _dateDictFromTimeStamp(ts: number): DateDict {
         const date = new Date(ts);
         return {
             date,
@@ -69,7 +69,7 @@ export class SelectTimeRangeModalContent {
         return this.close(false);
     }
 
-    public handleChange (v: string, a: 'start' | 'end', b: 'year' | 'month' | 'day' | 'hour' | 'minute') {
+    public handleChange(v: string, a: 'start' | 'end', b: 'year' | 'month' | 'day' | 'hour' | 'minute') {
         this[a][b] = parseInt(v) || 1;
         switch (a) {
             case 'start':

@@ -248,7 +248,7 @@ export class NxSystemStorageComponent implements OnInit {
         });
     }
 
-    pollStats = async(update: boolean = false): Promise<void> => {
+    pollStats = async (update: boolean = false): Promise<void> => {
         this.cancelPolling$.next('cancel previous');
         if (update) {
             await timer(1500).pipe(
@@ -396,7 +396,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
     }
 
-    setDefaultBackupSettings = async() => {
+    setDefaultBackupSettings = async () => {
         if (this.system.useRest) {
             const cameras: Record<string, string>[] = this.system.cameraManager.cameras.map(
                 ({ id }) => ({
@@ -459,7 +459,7 @@ export class NxSystemStorageComponent implements OnInit {
         return Promise.resolve();
     }
 
-    turnOffBackup = async(retries = 5): Promise<void> => {
+    turnOffBackup = async (retries = 5): Promise<void> => {
         this.isBackupOn.originalValue = !retries;
         this.isBackupOn.value = !retries;
         this.backupState = !retries;

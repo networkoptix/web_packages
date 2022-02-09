@@ -31,7 +31,7 @@ export class TimelineService {
     protected _subject = new Subject<TimelineServiceStatus>()
     protected _canvasGeometryUpdateRequested: boolean = true
 
-    public constructor (
+    public constructor(
         protected vms: VideoManagementSystemService,
         browserDetector: DeviceDetectorService
     ) {
@@ -50,15 +50,15 @@ export class TimelineService {
         requestAnimationFrame(() => this._onAnimationFrame());
     }
 
-    public get canvasGeometryUpdateRequested () {
+    public get canvasGeometryUpdateRequested() {
         return this._canvasGeometryUpdateRequested;
     }
 
-    public requestCanvasGeometryUpdate () {
+    public requestCanvasGeometryUpdate() {
         this._canvasGeometryUpdateRequested = true;
     }
 
-    protected _emit () {
+    protected _emit() {
         this._subject.next({
             fullRange: this.fullRange,
             visibleRange: this.visibleRange,
@@ -68,7 +68,7 @@ export class TimelineService {
         });
     }
 
-    public get zoomStatus () {
+    public get zoomStatus() {
         return {
             canZoomIn: (
                 this._visibleRange.duration / this.canvasGeometry.dpr
@@ -77,11 +77,11 @@ export class TimelineService {
         };
     }
 
-    public get subject () {
+    public get subject() {
         return this._subject;
     }
 
-    public get archiveRange (): TimeRange {
+    public get archiveRange(): TimeRange {
         const sc = this.vms.selectedCamera;
         if (sc?.hasArchive) {
             return new TimeRange(this.fullRange.start, sc.archiveEnd);
@@ -90,32 +90,32 @@ export class TimelineService {
         }
     }
 
-    public get fullRange (): TimeRange {
+    public get fullRange(): TimeRange {
         return this._fullRange.clone();
     }
 
-    public get visibleRange (): TimeRange {
+    public get visibleRange(): TimeRange {
         return this._visibleRange.clone();
     }
 
-    public set visibleRange (r: TimeRange) {
+    public set visibleRange(r: TimeRange) {
         this._visibleRange.start = Math.max(r.start, this.fullRange.start);
         this._visibleRange.end = Math.min(r.end, this.fullRange.end);
         this._emit();
     }
 
-    public get canvasGeometry (): CanvasGeometry {
+    public get canvasGeometry(): CanvasGeometry {
         return { ...this._canvasGeometry };
     }
 
-    public reset (start: ms, end: ms): void {
+    public reset(start: ms, end: ms): void {
         this._fullRange.start = start;
         this._fullRange.end = end;
         this._visibleRange.start = start;
         this._visibleRange.end = end;
     }
 
-    public extendToNow (): void {
+    public extendToNow(): void {
         const now = Date.now();
         if (this._fullRange.end - this._visibleRange.end < cfg.STICK_TO_LIVE_TRESHOLD) {
             const visibleRangeDurationWas = this._visibleRange.duration;
@@ -128,7 +128,7 @@ export class TimelineService {
         this._emit();
     }
 
-    public setCanvasGeometry (width: px, height: px, dpr: int): void {
+    public setCanvasGeometry(width: px, height: px, dpr: int): void {
         // console.log(this.id, 'setCanvasGeometry', width, height, dpr)
         this._canvasGeometry.width = width;
         this._canvasGeometry.height = height;
@@ -137,46 +137,46 @@ export class TimelineService {
         this._emit();
     }
 
-    public get msPerCanvasPx (): float {
+    public get msPerCanvasPx(): float {
         // console.log(this.id, 'msPerCanvasPx', this._visibleRange.duration, this._canvasGeometry.width)
         return this._visibleRange.duration / this._canvasGeometry.width;
     }
 
-    public domOffsetXtoTime (x: px): ms {
+    public domOffsetXtoTime(x: px): ms {
         return this.canvasOffsetXtoTime(x * this._canvasGeometry.dpr);
     }
 
-    public canvasOffsetXtoTime (x: px): ms {
+    public canvasOffsetXtoTime(x: px): ms {
         return Math.round(this._visibleRange.start + this.msPerCanvasPx * x);
     }
 
-    public timeToDomOffsetX (t: ms): px {
+    public timeToDomOffsetX(t: ms): px {
         return Math.round(
             (t - this._visibleRange.start) / (this.msPerCanvasPx * this._canvasGeometry.dpr)
         );
     }
 
-    public timeToCanvasOffsetX (t: ms): px {
+    public timeToCanvasOffsetX(t: ms): px {
         return Math.round((t - this._visibleRange.start) / this.msPerCanvasPx);
     }
 
-    public durationToCanvasWidth (d: ms): px {
+    public durationToCanvasWidth(d: ms): px {
         return Math.round(d / this.msPerCanvasPx);
     }
 
-    public durationToDomWidth (d: ms): px {
+    public durationToDomWidth(d: ms): px {
         return Math.round(this.durationToCanvasWidth(d) / this._canvasGeometry.dpr);
     }
 
-    public domWidthToDuration (w: px): ms {
+    public domWidthToDuration(w: px): ms {
         return this.canvasWidthToDuration(w * this._canvasGeometry.dpr);
     }
 
-    public canvasWidthToDuration (w: px): ms {
+    public canvasWidthToDuration(w: px): ms {
         return Math.round(w * this.msPerCanvasPx);
     }
 
-    public shiftVisibleRange (offset: ms) {
+    public shiftVisibleRange(offset: ms) {
         // If the visible start is less than full range ignore the move.
         if (
             this.fullRange.start <= this.visibleRange.start + offset &&
@@ -187,7 +187,7 @@ export class TimelineService {
         }
     }
 
-    public zoom (durationDelta: ms, offset: float) {
+    public zoom(durationDelta: ms, offset: float) {
         const MIN_DURATION = this.canvasGeometry.width * this.canvasGeometry.dpr;
         const duration = this.visibleRange.duration;
         if (duration - durationDelta < MIN_DURATION) {
@@ -197,7 +197,7 @@ export class TimelineService {
         this._emit();
     }
 
-    public fullZoomOut () {
+    public fullZoomOut() {
         this._visibleRange.start = this._fullRange.start;
         this._visibleRange.end = this._fullRange.end;
         this._targetScrollMs = undefined;
@@ -205,7 +205,7 @@ export class TimelineService {
         // console.log('full zoom out')
     }
 
-    protected _sanitizeScrollStartTimeAim (targetT: ms): ms {
+    protected _sanitizeScrollStartTimeAim(targetT: ms): ms {
         if (targetT > this._fullRange.end - this._visibleRange.duration) {
             targetT = this._fullRange.end - this._visibleRange.duration;
         }
@@ -215,7 +215,7 @@ export class TimelineService {
         return targetT;
     }
 
-    public stepScrollToStartTime (targetT: ms, step = cfg.SCROLL_STEP) {
+    public stepScrollToStartTime(targetT: ms, step = cfg.SCROLL_STEP) {
         targetT = this._sanitizeScrollStartTimeAim(targetT);
         const dt = targetT - this._visibleRange.start;
         if (dt) {
@@ -233,11 +233,11 @@ export class TimelineService {
     protected _targetScrollMs: ms
     protected _animationStep: int = 0
 
-    public get targetScrollMs () {
+    public get targetScrollMs() {
         return this._targetScrollMs || this.visibleRange.start;
     }
 
-    public jumpScrollTo (targetT: ms, animate: boolean = false) {
+    public jumpScrollTo(targetT: ms, animate: boolean = false) {
         if (animate) {
             this._scrollAnimationStartTime = Date.now();
             this._initialScrollMs = this._visibleRange.start;
@@ -247,7 +247,7 @@ export class TimelineService {
         }
     }
 
-    protected _sanitizeVisibleRangePosition () {
+    protected _sanitizeVisibleRangePosition() {
         let diff = this._visibleRange.end - this._fullRange.end;
         if (diff > 0) {
             this._visibleRange.shift(-diff);
@@ -258,14 +258,14 @@ export class TimelineService {
         }
     }
 
-    protected _changeVisibleDurationStart (t: ms) {
+    protected _changeVisibleDurationStart(t: ms) {
         const duration = this._visibleRange.duration;
         this._visibleRange.start = t;
         this._visibleRange.end = t + duration;
         this._sanitizeVisibleRangePosition();
     }
 
-    protected _onAnimationFrame () {
+    protected _onAnimationFrame() {
         const now = Date.now();
         const diff = now - this._scrollAnimationStartTime;
         if (diff < cfg.SCROLL_ANIMATION_DURATION_MS) {

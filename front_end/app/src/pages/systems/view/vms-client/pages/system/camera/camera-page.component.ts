@@ -37,7 +37,7 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         this._onAnimationFrame = this._onAnimationFrame.bind(this);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this._routeSubscription = this.route.params.subscribe(
             this._onRouteChange
         );
@@ -49,18 +49,18 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         this.fpsMeter.install();
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this._routeSubscription?.unsubscribe();
         this._vmsStateSubscription?.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
-    protected _onRouteChange (params) {
+    protected _onRouteChange(params) {
         this.id = params['camera-id'];
         this.vms.selectCamera(this.id);
     }
 
-    protected _onVmsStateChange (s: VmsState) {
+    protected _onVmsStateChange(s: VmsState) {
         switch (s.mode) {
             case VMS_MODE.NOT_INITIALIZED:
             case VMS_MODE.CAMERA_NOT_SELECTED:
@@ -72,7 +72,7 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    public _onAnimationFrame (): void {
+    public _onAnimationFrame(): void {
         if (this.camera?.isLive) {
             this.timelineExtendToNow.extendToNow();
         }
@@ -84,19 +84,19 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         }, Math.ceil(1000 / 34));
     }
 
-    public get showPlayer (): boolean {
+    public get showPlayer(): boolean {
         return this.camera && this.camera.isLive || this.camera.hasArchive;
     }
 
-    public get showPlaybackControls (): boolean {
+    public get showPlaybackControls(): boolean {
         return this.showPlayer;
     }
 
-    public get showTimeline (): boolean {
+    public get showTimeline(): boolean {
         return this.camera && this.camera.hasArchive;
     }
 
-    protected _initSelectedCamera () {
+    protected _initSelectedCamera() {
         this.playback.stop();
 
         if (this.camera.hasArchive) {
@@ -112,7 +112,7 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    public onTimeLineDoubleClick (e: MouseEvent) {
+    public onTimeLineDoubleClick(e: MouseEvent) {
         // TODO: remove
         // @ts-ignore
         console.log(this.vms.selectedCamera._birdViewTree._treeRoot);

@@ -16,11 +16,11 @@ export class TestCamera implements ICamera {
 
     public readonly isVirtual: boolean = false
 
-    public get archiveRange () {
+    public get archiveRange() {
         return this._archiveRange;
     }
 
-    public get archive () {
+    public get archive() {
         return this._archive;
     }
 
@@ -38,31 +38,31 @@ export class TestCamera implements ICamera {
         this._initBirdView();
     }
 
-    public get isScheduleEnabled () {
+    public get isScheduleEnabled() {
         return false;
     }
 
-    public get isLive () {
+    public get isLive() {
         return this.status === 'Live' || this.status === 'Recording';
     }
 
-    public get isOnline () {
+    public get isOnline() {
         return this.status !== 'Offline';
     }
 
-    public get isRecording () {
+    public get isRecording() {
         return this.status === 'Recording';
     }
 
-    public get isAuthorized () {
+    public get isAuthorized() {
         return this.status !== 'Unauthorized';
     }
 
-    public get hasArchive () {
+    public get hasArchive() {
         return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
     }
 
-    public getVideoUrl (transport: string, quality: string, t: ms) {
+    public getVideoUrl(transport: string, quality: string, t: ms) {
         if (!t) {
             switch (transport) {
                 case 'hls':
@@ -82,41 +82,41 @@ export class TestCamera implements ICamera {
         }
     }
 
-    public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
+    public getRecords(startMs: ms, endMs: ms, minGapMs: ms) {
         // console.log('========', new Date(startMs), new Date(endMs))
         return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
     }
 
-    public setRecords (range: ISimpleTimeRange, archive: CameraArchive) {
+    public setRecords(range: ISimpleTimeRange, archive: CameraArchive) {
         this._archiveRange = range;
         this._archive = archive;
         this._initBirdView();
     }
 
-    protected _initBirdView () {
+    protected _initBirdView() {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
     }
 
-    public get availableTransportsAndResolutions () {
+    public get availableTransportsAndResolutions() {
         return {
             hls: ['lo', 'hi', ''],
             webm: ['AxB']
         };
     }
 
-    public get availableTransports () {
+    public get availableTransports() {
         return ['hls', 'wemb'];
     }
 
-    public setNewlyRecordedChunks (rs: CameraArchive) {
+    public setNewlyRecordedChunks(rs: CameraArchive) {
         // noop
     }
 
-    public isThereRecord (t: ms) {
+    public isThereRecord(t: ms) {
         return _isThereRecord(this.archive, t);
     }
 
-    public getNextRecord (t: ms): ISimpleTimeRange {
+    public getNextRecord(t: ms): ISimpleTimeRange {
         return _getNextRecord(this.archive, t);
     }
 }

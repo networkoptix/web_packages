@@ -65,7 +65,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
 
     public showHonestBar: boolean = false;
 
-    constructor (
+    constructor(
         private self: ElementRef,
         protected timeline: TimelineService,
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
@@ -82,7 +82,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this.useTouch = deviceService.isTablet() || deviceService.isMobile();
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         this.scrollbarSubscription = this.scrollbarAbsolute.subject
             .subscribe((s:TimelineScrollbarAbsoluteServiceStatus) => {
                 setTimeout(() => {
@@ -101,7 +101,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => this.onResize(), 0);
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.scrollbarSubscription.unsubscribe();
         this.playbackSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
@@ -114,7 +114,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public honestBarLeftPx: px = 0;
     public honestBarWidthPx: px = 0;
 
-    public onScrollBarSubjectChange (s: TimelineScrollbarAbsoluteServiceStatus) {
+    public onScrollBarSubjectChange(s: TimelineScrollbarAbsoluteServiceStatus) {
         this.barLeftPx = s.left;
         this.barWidthPx = s.width;
 
@@ -136,7 +136,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public selectionLeftPixel: px = -1;
     public selectionWidthPixel: px = 0;
 
-    public onPlaybackSubjectChange (s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState) {
         if (s.mode === PLAYBACK_MODE.STOPPED) {
             this.isPlaying = false;
         } else {
@@ -173,7 +173,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onSelectionSubjectChange (s: TimelineSelectionServiceStatus) {
+    public onSelectionSubjectChange(s: TimelineSelectionServiceStatus) {
         this.isSelected = s.isActive;
         if (s.isActive) {
             const bgw = this.backgroundView.nativeElement
@@ -190,16 +190,16 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public barDblClickHandler (e: MouseEvent|TouchEvent) {
+    public barDblClickHandler(e: MouseEvent|TouchEvent) {
         this.scrollbarRelative.handleBarDblClick(e);
     }
 
-    public barMouseDownHandler (e: MouseEvent|TouchEvent) {
+    public barMouseDownHandler(e: MouseEvent|TouchEvent) {
         this.scrollbarAbsolute.handleBarMouseDown(e);
     }
 
     @HostListener('document:touchstart', ['$event'])
-    public touchStartHandler (e: any) {
+    public touchStartHandler(e: any) {
         if (!this.useTouch) {
             return;
         }
@@ -230,7 +230,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:touchend', ['$event'])
-    public touchEndHandler (e: TouchEvent) {
+    public touchEndHandler(e: TouchEvent) {
         if (!this.useTouch) {
             return;
         }
@@ -241,7 +241,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:touchmove', ['$event'])
-    public barTouchMoveHandler (e: MouseEvent) {
+    public barTouchMoveHandler(e: MouseEvent) {
         if (!this.useTouch) {
             return;
         }
@@ -258,7 +258,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:mouseup', ['$event'])
-    public mouseUpHandler (e: MouseEvent) {
+    public mouseUpHandler(e: MouseEvent) {
         if (this.useTouch) {
             return;
         }
@@ -267,32 +267,32 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:mousemove', ['$event'])
-    public barDragMouseMoveHandler (e: MouseEvent) {
+    public barDragMouseMoveHandler(e: MouseEvent) {
         if (this.useTouch) {
             return;
         }
         this.scrollbarAbsolute.handleBarDragMouseMove(e);
     }
 
-    public backgroundMouseDownHandler (e: MouseEvent) {
+    public backgroundMouseDownHandler(e: MouseEvent) {
         this.scrollbarRelative.handleBackgroundMouseDown(e);
     }
 
-    public backgroundDblClickHandler (e: MouseEvent) {
+    public backgroundDblClickHandler(e: MouseEvent) {
         this.scrollbarRelative.handleBackgroundDblClick(e);
     }
 
-    public buttonLeftMouseDownHandler () {
+    public buttonLeftMouseDownHandler() {
         this.scrollbarRelative.handleButtonLeftMouseDown();
     }
 
-    public buttonRightMouseDownHandler () {
+    public buttonRightMouseDownHandler() {
         this.scrollbarRelative.handleButtonRightMouseDown();
     }
 
     protected _prevMouseUpTime: number
     protected _doubleClickDelay: number = 300 // ms
-    public buttonLeftHandleMouseUp () {
+    public buttonLeftHandleMouseUp() {
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.buttonLeftDblClickHandler();
@@ -300,7 +300,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public buttonRightHandleMouseUp () {
+    public buttonRightHandleMouseUp() {
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.buttonRightDblClickHandler();
@@ -308,7 +308,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public barHandleMouseUp (e: MouseEvent|TouchEvent) { // this UX is a bit doubtful
+    public barHandleMouseUp(e: MouseEvent|TouchEvent) { // this UX is a bit doubtful
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.barDblClickHandler(e);
@@ -316,17 +316,17 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public buttonLeftDblClickHandler () {
+    public buttonLeftDblClickHandler() {
         this.scrollbarRelative.handleButtonLeftDblClick();
     }
 
-    public buttonRightDblClickHandler () {
+    public buttonRightDblClickHandler() {
         this.scrollbarRelative.handleButtonRightDblClick();
     }
 
     protected _animationFrameRequestHandler: number
 
-    public onAnimationFrame (): void {
+    public onAnimationFrame(): void {
         this.scrollbarRelative.updateIfMouseIsDown();
         setTimeout(() => {
             this._animationFrameRequestHandler = requestAnimationFrame(() =>
@@ -336,7 +336,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('window:resize', ['$event'])
-    public onResize (): void {
+    public onResize(): void {
         setTimeout(() => {
             // wait native element to actually resize ... otherwise we're measuring old size -- TT
             this.scrollbarAbsolute.backgroundWidth =

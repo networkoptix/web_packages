@@ -19,13 +19,13 @@ export class CameraQualityStorageService {
         });
     }
 
-    public get (cameraId: string) {
+    public get(cameraId: string) {
         return this.localStorageService.retrieve(
             `${this.user}_quality_${cameraId}`
         ) || '';
     }
 
-    public set (cameraId: string, quality: PlaybackQuality) {
+    public set(cameraId: string, quality: PlaybackQuality) {
         this.localStorageService.store(
             `${this.user}_quality_${cameraId}`,
             quality

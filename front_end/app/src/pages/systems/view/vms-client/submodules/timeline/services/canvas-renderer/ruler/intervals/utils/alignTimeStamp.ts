@@ -5,7 +5,7 @@ import { IrregularLengthInterval } from '../IrregularLengthInterval';
 export type timeStampMs = ms
 export type durationMs = ms
 
-export function alignTimeStamp (
+export function alignTimeStamp(
     t: timeStampMs,
     d: IrregularLengthInterval,
     alignment: 'left' | 'right' = 'left'

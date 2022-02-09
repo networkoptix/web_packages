@@ -245,7 +245,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         if (this.saveSettings) {
             return;
         }
-        this.saveSettings = this.processService.createProcess(async() => {
+        this.saveSettings = this.processService.createProcess(async () => {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
             let newPort: number;

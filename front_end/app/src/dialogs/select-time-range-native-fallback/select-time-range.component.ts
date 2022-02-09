@@ -43,7 +43,7 @@ export class SelectTimeRangeModalContent {
         return this.close(false);
     }
 
-    public handleChange (v: string, a: 'start' | 'end', b: 'Date' | 'Time') {
+    public handleChange(v: string, a: 'start' | 'end', b: 'Date' | 'Time') {
         this[a + b] = v;
         switch (a) {
             case 'start':
@@ -77,7 +77,7 @@ export class SelectTimeRangeModalContent {
         this.endTime = this.end.toISOString().slice(11, 19);
     }
 
-    private get _timezoneOffset () {
+    private get _timezoneOffset() {
         return new Date().getTimezoneOffset() * 60 * 1000;
     }
 

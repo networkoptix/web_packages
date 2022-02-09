@@ -51,7 +51,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
     protected _lastIntervalChanges = {}
     protected _intervalWeightAnimations = {}
 
-    protected _haveIntervalsChanged (newIntervals: Array<IrregularLengthInterval>) {
+    protected _haveIntervalsChanged(newIntervals: Array<IrregularLengthInterval>) {
         if (this._prevIntervals.length !== newIntervals.length) {
             return true;
         }
@@ -63,7 +63,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return false;
     }
 
-    public render (
+    public render(
         ctx: CanvasRenderingContext2D,
         intervalToSkip: IrregularLengthInterval | false = false
     ) {
@@ -82,13 +82,13 @@ export class TimelinePrimaryRulerCanvasRendererService {
         });
     }
 
-    protected _withContext (ctx, actualDrawing: () => void) {
+    protected _withContext(ctx, actualDrawing: () => void) {
         ctx.save();
         actualDrawing();
         ctx.restore();
     }
 
-    protected _getIntervals (): Array<IrregularLengthInterval> {
+    protected _getIntervals(): Array<IrregularLengthInterval> {
         const result = [];
         for (const interval of irregularLengthIntervals) {
             const displayWidth = this.timeline.durationToDomWidth(
@@ -105,7 +105,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return result;
     }
 
-    protected _getSerifs (): Array<RulerSerif> {
+    protected _getSerifs(): Array<RulerSerif> {
         const intervals = this._getIntervals();
 
         const ANIMATION_DURATION = 200;
@@ -154,7 +154,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
             }).filter(s => s.interval);
     }
 
-    protected _getIntervalWeight (
+    protected _getIntervalWeight(
         time: ms, intervalsReversed: Array<IrregularLengthInterval>
     ): int {
         const interval = intervalsReversed.find(i =>
@@ -164,7 +164,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return result;
     }
 
-    protected _drawSerif (ctx: CanvasRenderingContext2D, s: RulerSerif) {
+    protected _drawSerif(ctx: CanvasRenderingContext2D, s: RulerSerif) {
         if (s.weight > MAX_WEIGHT || s.weight < MIN_WEIGHT) {
             return;
         }

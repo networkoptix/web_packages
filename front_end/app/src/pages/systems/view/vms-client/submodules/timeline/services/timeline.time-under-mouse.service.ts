@@ -24,7 +24,7 @@ export class TimelineTimeUnderMouseService {
 
     protected _subject = new Subject<TimelineTimeUnderMouseServiceStatus>()
 
-    protected _emit () {
+    protected _emit() {
         this._subject.next({
             isMouseInside: this._isMouseInside,
             timeUnderMouse: this._timeUnderMouse,
@@ -33,23 +33,23 @@ export class TimelineTimeUnderMouseService {
         });
     }
 
-    public get subject () {
+    public get subject() {
         return this._subject;
     }
 
-    public get isMouseInside (): boolean {
+    public get isMouseInside(): boolean {
         return this._isMouseInside;
     }
 
-    public get timeUnderMouse (): ms {
+    public get timeUnderMouse(): ms {
         return this._timeUnderMouse;
     }
 
-    public get offsetX (): ms {
+    public get offsetX(): ms {
         return this._offsetX;
     }
 
-    public get pressed () {
+    public get pressed() {
         return this._pressed;
     }
 
@@ -58,39 +58,39 @@ export class TimelineTimeUnderMouseService {
     ) {
     }
 
-    public handleMouseDown () {
+    public handleMouseDown() {
         if (!this._pressed) {
             this._pressed = true;
             this._emit();
         }
     }
 
-    public handleMouseUp () {
+    public handleMouseUp() {
         if (this._pressed) {
             this._pressed = false;
             this._emit();
         }
     }
 
-    public handleMouseMove (e: MouseEvent|TouchEvent) {
+    public handleMouseMove(e: MouseEvent|TouchEvent) {
         this._offsetX = calcOffsetX(e);
         this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
         this._emit();
     }
 
-    public handleMouseEnter (e: MouseEvent) {
+    public handleMouseEnter(e: MouseEvent) {
         this._isMouseInside = true;
         this.handleMouseMove(e);
     }
 
-    public handleMouseLeave (e: MouseEvent) {
+    public handleMouseLeave(e: MouseEvent) {
         this._isMouseInside = false;
         this._timeUnderMouse = -1;
         this._offsetX = -1;
         this._emit();
     }
 
-    public updateTime () {
+    public updateTime() {
         if (!this._isMouseInside) {
             return;
         }

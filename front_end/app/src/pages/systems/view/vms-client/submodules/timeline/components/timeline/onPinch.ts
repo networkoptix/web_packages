@@ -1,4 +1,4 @@
-export function onPinch (el: HTMLElement, onPinchMove: Function = () => {}) {
+export function onPinch(el: HTMLElement, onPinchMove: Function = () => {}) {
     let distance;
     let scale = 1.0;
     let offset = 0.5;

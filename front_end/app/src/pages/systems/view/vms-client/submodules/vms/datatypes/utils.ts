@@ -2,7 +2,7 @@ import { ms } from '@vms-client/utils/type-aliases';
 
 import { CameraArchive, ISimpleTimeRange } from './ICamera';
 
-export function _isThereRecord (archive: CameraArchive, t: ms): boolean {
+export function _isThereRecord(archive: CameraArchive, t: ms): boolean {
     // binary search approach:
     let l = 0;
     let r = archive.length - 1;
@@ -24,7 +24,7 @@ export function _isThereRecord (archive: CameraArchive, t: ms): boolean {
     // return !!archive.find(r => r.start <= t && r.end >= t)
 }
 
-export function _getNextRecord (archive: CameraArchive, t: ms): ISimpleTimeRange {
+export function _getNextRecord(archive: CameraArchive, t: ms): ISimpleTimeRange {
     // binary search approach:
     let l = 0;
     let r = archive.length - 1;

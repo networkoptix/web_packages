@@ -40,7 +40,7 @@ export class SelectTimeRangeModalContent {
         this.end = new Date(this.selection.range.end);
     }
 
-    public handleDateTimeChanged (eventDate: string): Date | null {
+    public handleDateTimeChanged(eventDate: string): Date | null {
         return eventDate ? new Date(eventDate) : null;
     }
 
@@ -62,7 +62,7 @@ export class SelectTimeRangeModalContent {
     public activeTab: string = 'start'
 
     // Not used?
-    public activateTab (name: 'start' | 'end') {
+    public activateTab(name: 'start' | 'end') {
         this.activeTab = name;
     }
 }

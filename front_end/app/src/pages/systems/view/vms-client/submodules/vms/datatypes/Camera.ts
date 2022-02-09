@@ -19,11 +19,11 @@ type MediaStreamInfo = any;
 export class Camera implements ICamera {
     protected _birdViewTree: BirdViewTree
 
-    public get archiveRange () {
+    public get archiveRange() {
         return this._archiveRange;
     }
 
-    public get archive () {
+    public get archive() {
         return this._archive;
     }
 
@@ -54,7 +54,7 @@ export class Camera implements ICamera {
         this._initBirdView();
     }
 
-    public parseAdditionalParams (ps: Array<NameValue>) {
+    public parseAdditionalParams(ps: Array<NameValue>) {
         const ms = ps.find(p => p.name === 'mediaStreams');
         if (ms) {
             try {
@@ -73,20 +73,20 @@ export class Camera implements ICamera {
         // console.log('CAMERA ROTATION RECEIVED', rotation, this._rotation)
     }
 
-    public get rotation () {
+    public get rotation() {
         // console.log('CAMERA ROTATION GET', this._rotation)
         return this._rotation;
     }
 
-    public get availableTransportsAndResolutions () {
+    public get availableTransportsAndResolutions() {
         return this.availableTransports.reduce((acc, t) => {
             acc[t] = this._getAvailableResolutions(t);
             return acc;
         }, {});
     }
 
-    public get availableTransports () {
-        function isTransportSupported (t) {
+    public get availableTransports() {
+        function isTransportSupported(t) {
             switch (t) {
                 case 'hls':
                 case 'webm':
@@ -106,7 +106,7 @@ export class Camera implements ICamera {
         return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>;
     }
 
-    protected _getAvailableResolutions (transport) {
+    protected _getAvailableResolutions(transport) {
         const result: any = {};
         const resolutions = [];
         const isHls = transport === 'hls';
@@ -157,7 +157,7 @@ export class Camera implements ICamera {
         return result;
     }
 
-    protected _resolutionIsLow (s: string): boolean {
+    protected _resolutionIsLow(s: string): boolean {
         return s.split('x').map(r => parseInt(r)).reduce((acc, v) => {
             if (acc > v) {
                 acc = v;
@@ -166,11 +166,11 @@ export class Camera implements ICamera {
         }, Infinity) < 720;
     }
 
-    public get isVirtual () {
+    public get isVirtual() {
         return !this.model;
     }
 
-    public get isLive () {
+    public get isLive() {
         return (
             !this.isVirtual &&
             (
@@ -181,63 +181,63 @@ export class Camera implements ICamera {
         );
     }
 
-    public get isOnline () {
+    public get isOnline() {
         return this.status !== 'Offline';
     }
 
-    public get isOffline () {
+    public get isOffline() {
         return this.status === 'Offline';
     }
 
-    public get isRecording () {
+    public get isRecording() {
         return !this.isVirtual && this.status === 'Recording';
     }
 
-    public get isAuthorized () {
+    public get isAuthorized() {
         return this.status !== 'Unauthorized';
     }
 
-    public get isUnauthorized () {
+    public get isUnauthorized() {
         return this.status === 'Unauthorized';
     }
 
-    public get hasArchive () {
+    public get hasArchive() {
         return !!(
             this.archiveRange &&
             this.archiveRange.end > this.archiveRange.start
         );
     }
 
-    public getRecords (startMs: ms, endMs: ms, minGapMs: ms) {
+    public getRecords(startMs: ms, endMs: ms, minGapMs: ms) {
         // console.log('========', new Date(startMs), new Date(endMs))
         return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
     }
 
-    public setRecords (range: ISimpleTimeRange, archive: CameraArchive) {
+    public setRecords(range: ISimpleTimeRange, archive: CameraArchive) {
         this._archiveRange = range;
         this._archive = archive;
         this._initBirdView();
     }
 
-    protected _initBirdView () {
+    protected _initBirdView() {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
     }
 
-    public pushRecordedChunks (rs: CameraArchive) {
+    public pushRecordedChunks(rs: CameraArchive) {
         // console.log('SNR', rs, this)
         this._birdViewTree.setNewlyRecorded(rs);
         // this._archiveRange.end = rs[rs.length - 1].end;
     }
 
-    public isThereRecord (t: ms) {
+    public isThereRecord(t: ms) {
         return this._birdViewTree.isThereRecord(t);
     }
 
-    public getNextRecord (t: ms): ISimpleTimeRange {
+    public getNextRecord(t: ms): ISimpleTimeRange {
         return this._birdViewTree.getNextRecord(t);
     }
 
-    public get archiveEnd (): ms {
+    public get archiveEnd(): ms {
         if (this.hasArchive) {
             return this._birdViewTree.archiveEnd;
         } else {

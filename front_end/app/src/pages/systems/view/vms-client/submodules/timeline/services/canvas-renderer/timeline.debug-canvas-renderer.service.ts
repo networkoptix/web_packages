@@ -10,23 +10,23 @@ import { cfg } from './drawingConfigs/recordsDrawingConfig';
     providedIn: 'root'
 })
 export class TimelineDebugCanvasRendererService {
-    constructor (
+    constructor(
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService
     ) {
     }
 
-    protected get cfg () {
+    protected get cfg() {
         return cfg;
     }
 
-    public render (ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D) {
         ctx.save();
         this._renderTimeZoneOffset(ctx);
         ctx.restore();
     }
 
-    protected _renderTimeZoneOffset (ctx: CanvasRenderingContext2D) {
+    protected _renderTimeZoneOffset(ctx: CanvasRenderingContext2D) {
         const offsetMs = this.vms.timeZoneOffset;
         const offsetH = offsetMs / (60 * 60 * 1000);
         const x = this.timeline.canvasGeometry.width / 2;

@@ -60,7 +60,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         setupPassword: 'Please set up camera password'
     }
 
-    constructor (
+    constructor(
         translateService: NxLanguageProviderService,
         public http: HttpClient,
         public playback: PlaybackService,
@@ -76,12 +76,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.onPlaybackSubjectChange(this.playback.state);
         this.onVmsSubjectChange(this.vms.state);
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         this.playbackSubscription = this.playback.subject.subscribe(
             this.onPlaybackSubjectChange
         );
@@ -90,12 +90,12 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.playbackSubscription.unsubscribe();
         this.vmsSubscription.unsubscribe();
     }
 
-    public onPlaybackSubjectChange (s: PlaybackState | ArchivePlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState | ArchivePlaybackState) {
         if (s.transport !== this.transport) {
             this.transport = s.transport;
         }
@@ -110,11 +110,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             : false;
     }
 
-    public onVmsSubjectChange (s: VmsState) {
+    public onVmsSubjectChange(s: VmsState) {
         this.rotateDeg = this.vms.selectedCamera?.rotation || 0;
     }
 
-    public onBufferingChange (s: number) {
+    public onBufferingChange(s: number) {
         /*
         s is the timeout value for when the player waits.
         s === 0 means we loaded and need the overlay.
@@ -149,7 +149,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.playback.playLive();
     }
 
-    public videoErrorEventHandler (event: any) {
+    public videoErrorEventHandler(event: any) {
         const { player } = event.target;
         const toggleTransport = () => {
             this.transportChangeByError = true;
@@ -197,7 +197,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public onClick (e: MouseEvent) {
+    public onClick(e: MouseEvent) {
         if (this.playback.canPause) {
             this.playback.pause();
         } else if (this.playback.canUnpause) {
@@ -209,7 +209,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public onDblClick (e: MouseEvent) {
+    public onDblClick(e: MouseEvent) {
         this.videoDblClick.emit(true);
     }
 }

@@ -22,46 +22,46 @@ export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.subscription = this.playback.subject.subscribe(this.onSubjectChange);
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
 
-    public onSubjectChange (s: PlaybackState) {
+    public onSubjectChange(s: PlaybackState) {
         this.state = s;
     }
 
-    public get canPlayLive (): boolean {
+    public get canPlayLive(): boolean {
         return this.playback.canPlayLive;
     }
 
-    public get canStop (): boolean {
+    public get canStop(): boolean {
         return this.playback.canStop;
     }
 
-    public get canPause (): boolean {
+    public get canPause(): boolean {
         return this.playback.canPause;
     }
 
-    public get canUnpause (): boolean {
+    public get canUnpause(): boolean {
         return this.playback.canUnpause;
     }
 
-    public playLive () {
+    public playLive() {
         if (!this.canPlayLive) return;
         this.selection.reset();
         this.playback.playLive();
     }
 
-    public stop () {
+    public stop() {
         if (!this.canStop) return;
         this.playback.stop();
     }
 
-    public togglePause () {
+    public togglePause() {
         if (this.canPause) {
             this.selection.reset();
             this.playback.pause();

@@ -53,14 +53,14 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     @Output() bufferingChange = new EventEmitter<boolean>();
 
-    protected get $video (): HTMLVideoElement {
+    protected get $video(): HTMLVideoElement {
         return this.videoView?.nativeElement;
     }
 
     protected playbackSubscription: Subscription
     protected state: PlaybackState
 
-    constructor (
+    constructor(
         languageService: NxLanguageProviderService,
         private http: HttpClient,
         public playback: PlaybackService,
@@ -70,7 +70,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
     }
 
     videoErrorEventHandler = (event: any) => {
@@ -99,7 +99,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         }
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         this.playbackSubscription = this.playback.subject.subscribe(
             this.onPlaybackSubjectChange
         );
@@ -107,12 +107,12 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         this._handleRotation();
     }
 
-    public ngOnChanges (): void {
+    public ngOnChanges(): void {
         this._handleRotation();
     }
 
     @HostListener('window:resize', ['$event'])
-    protected _handleRotation () {
+    protected _handleRotation() {
         if (!this.videoView) {
             return;
         }
@@ -128,13 +128,13 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         }
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.$video.removeEventListener('error', this.videoErrorEventHandler);
         this.playbackSubscription.unsubscribe();
         this.hls?.destroy();
     }
 
-    public onPlaybackSubjectChange (s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState) {
         const prevState = { ...this.state };
         this.state = { ...s };
         this._reactOnPlaybackStateChange(prevState);
@@ -150,7 +150,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         );
     }
 
-    protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
+    protected _reactOnPlaybackStateChange(prevState: PlaybackState) {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.pauseVideo();
@@ -190,7 +190,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     protected hls: Hls
 
-    protected _startPlayback () {
+    protected _startPlayback() {
         this._log('starting playback', { ...this.state });
         // @ts-ignore
         const sourceUrl = this.state?.sourceUrl || '';
@@ -279,7 +279,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         }
     }
 
-    public onVideoCanPlay (e: MediaStreamEvent) {
+    public onVideoCanPlay(e: MediaStreamEvent) {
         this._log('video can play', this.state.mode, this.state);
         this.bufferingChange.emit(false);
         switch (this.state.mode) {
@@ -297,7 +297,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         }
     }
 
-    public onVideoEnded (e: MediaStreamEvent) {
+    public onVideoEnded(e: MediaStreamEvent) {
         this._log('video ended');
         this.playback.playLive();
     }

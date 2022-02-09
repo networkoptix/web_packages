@@ -1,6 +1,6 @@
 import { px, pxPerSecond, color } from './types';
 
-function drawWithClipRect (
+function drawWithClipRect(
     ctx: CanvasRenderingContext2D,
     x0: px,
     y0: px,
@@ -17,7 +17,7 @@ function drawWithClipRect (
     ctx.restore();
 }
 
-export function drawStripyBar (
+export function drawStripyBar(
     ctx: CanvasRenderingContext2D,
     x0: px,
     y0: px,
@@ -41,7 +41,7 @@ export function drawStripyBar (
     });
 }
 
-function drawSingleStripe (
+function drawSingleStripe(
     ctx: CanvasRenderingContext2D,
     x0: px,
     y0: px,
@@ -58,6 +58,6 @@ function drawSingleStripe (
     ctx.fill();
 }
 
-function getOffset (speed: pxPerSecond, period: px) {
+function getOffset(speed: pxPerSecond, period: px) {
     return Math.round((Date.now() * speed / 1000) % period);
 }

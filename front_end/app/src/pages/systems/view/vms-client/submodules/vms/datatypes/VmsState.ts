@@ -17,7 +17,7 @@ export interface NotInitializedVmsState extends AbstractVmsState {
     mode: VMS_MODE.NOT_INITIALIZED,
 }
 
-export function createNotInitializedState (): NotInitializedVmsState {
+export function createNotInitializedState(): NotInitializedVmsState {
     return {
         mode: VMS_MODE.NOT_INITIALIZED
     };
@@ -36,7 +36,7 @@ export interface CameraNotSelectedVmsState extends AbstractVmsState {
     cameras: CameraDict
 }
 
-export function createCameraNotSelectedState (
+export function createCameraNotSelectedState(
     systemId: string,
     mediaServers: Array<IMediaServer>
 ): CameraNotSelectedVmsState {
@@ -62,7 +62,7 @@ export interface CameraSelectedVmsState extends AbstractVmsState {
     selectedCamera: ICamera,
 }
 
-export function createCameraSelectedState (
+export function createCameraSelectedState(
     currentState: CameraNotSelectedVmsState | CameraSelectedVmsState,
     cameraId: GUID
 ): CameraSelectedVmsState | CameraNotSelectedVmsState {

@@ -110,7 +110,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.settingsService.systemSubject
             .pipe(
                 filter(data => data !== undefined),
-                switchMap(async(system: any) => {
+                switchMap(async (system: any) => {
                     this.isOffline = !system.isOnline;
                     this.settingsService.footerSubject.next(true);
                     if (system && (!this.system || !this.environment.isLocal)) {
@@ -143,7 +143,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     }),
                     retryWhen(err => err.pipe(delay(1000)))
                 )),
-                switchMap(async() => {
+                switchMap(async () => {
                     if (this.system.currentServerNotBusy) {
                         this.system.serverManager
                             .initSystemMediaServers()

@@ -54,22 +54,22 @@ export class NxNavigationTileComponent {
         return breadcrumbUrls.includes(url);
     }
 
-    protected _setupIds () {
+    protected _setupIds() {
         this.node.htmlID = this._generateNodeId(this.node);
         this.node.nodes.map(link => {
             link.htmlID = this._generateLinkId(this.node, link);
         });
     }
 
-    protected _handleName (name) {
+    protected _handleName(name) {
         return name.toLocaleLowerCase().split(' ').join('-');
     }
 
-    protected _generateNodeId (node) {
+    protected _generateNodeId(node) {
         return 'header-navigation--' + this._handleName(node.name);
     }
 
-    protected _generateLinkId (node, link) {
+    protected _generateLinkId(node, link) {
         const name = this._handleName(link.name);
         return this._generateNodeId(node) + '--' + name;
     }

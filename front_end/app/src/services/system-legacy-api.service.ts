@@ -1136,7 +1136,7 @@ export class NxSystemAPI {
         return this.generateGetUrl(url, data, force);
     }
 
-    public getExportUrl ({ transport, cameraId, pos, endPos, duration }) {
+    public getExportUrl({ transport, cameraId, pos, endPos, duration }) {
         let url = '';
         cameraId = cameraId?.replace(/{|}/g, '');
         switch (transport) {

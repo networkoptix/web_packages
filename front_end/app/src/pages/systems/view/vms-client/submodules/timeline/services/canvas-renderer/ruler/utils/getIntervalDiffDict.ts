@@ -1,13 +1,13 @@
 import { IrregularLengthInterval } from '../intervals/IrregularLengthInterval';
 
-export function getWeightArrayFromIntervalList (arr: Array<any>) {
+export function getWeightArrayFromIntervalList(arr: Array<any>) {
     return arr.reduce((acc, v, k) => {
         acc[v] = k + 1;
         return acc;
     }, {});
 }
 
-export function getIntervalDiffDict (a1: Array<IrregularLengthInterval>, a2: Array<IrregularLengthInterval>) {
+export function getIntervalDiffDict(a1: Array<IrregularLengthInterval>, a2: Array<IrregularLengthInterval>) {
     const d1 = getWeightArrayFromIntervalList(a1);
     const d2 = getWeightArrayFromIntervalList(a2);
     const result = {};

@@ -99,7 +99,7 @@ export class NxLoginService {
             .catch(() => Promise.resolve(false));
     }
 
-    login (
+    login(
         keepPage?: boolean,
         redirectClose?: boolean,
         redirectHome = false,

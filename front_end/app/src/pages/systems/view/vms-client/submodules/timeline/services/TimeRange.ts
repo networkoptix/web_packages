@@ -10,22 +10,22 @@ export class TimeRange {
     ) {
     }
 
-    public get duration (): ms {
+    public get duration(): ms {
         return this.end - this.start;
     }
 
-    public shift (offset: ms) {
+    public shift(offset: ms) {
         this.start += offset;
         this.end += offset;
     }
 
-    public moveStartTo (s: ms) {
+    public moveStartTo(s: ms) {
         const duration = this.duration;
         this.start = s;
         this.end = s + duration;
     }
 
-    public zoom (durationDelta: ms, offset: float = 0.5, limitingRange: TimeRange) {
+    public zoom(durationDelta: ms, offset: float = 0.5, limitingRange: TimeRange) {
         this.start += Math.round(durationDelta * offset);
         this.end -= Math.round(durationDelta * (1.0 - offset));
         if (this.start < limitingRange.start) {
@@ -36,14 +36,14 @@ export class TimeRange {
         }
     }
 
-    public fitWithin (enclosingRange: TimeRange) {
+    public fitWithin(enclosingRange: TimeRange) {
         const a = this.fitStart(enclosingRange, true);
         const b = this.fitEnd(enclosingRange, true);
         // console.log('fw', a, b)
         return a || b;
     }
 
-    public fitStart (enclosingRange: TimeRange, paranoid: boolean = false) {
+    public fitStart(enclosingRange: TimeRange, paranoid: boolean = false) {
         if (this.start < enclosingRange.start) {
             this.start = enclosingRange.start;
             // console.log('fss')
@@ -58,7 +58,7 @@ export class TimeRange {
         return false;
     }
 
-    public fitEnd (enclosingRange: TimeRange, paranoid: boolean = false) {
+    public fitEnd(enclosingRange: TimeRange, paranoid: boolean = false) {
         if (this.end > enclosingRange.end) {
             this.end = enclosingRange.end;
             // console.log('fee')
@@ -73,15 +73,15 @@ export class TimeRange {
         return false;
     }
 
-    public contains (t: ms) {
+    public contains(t: ms) {
         return this.start <= t && t <= this.end;
     }
 
-    public clone () {
+    public clone() {
         return new TimeRange(this.start, this.end);
     }
 
-    public iterate (interval: IrregularLengthInterval, tzOffset: ms = 0): Array<ms> {
+    public iterate(interval: IrregularLengthInterval, tzOffset: ms = 0): Array<ms> {
         const start = alignTimeStamp(this.start + tzOffset, interval, 'left');
         const end = alignTimeStamp(this.end + tzOffset, interval, 'right');
         const result = [];

@@ -61,7 +61,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     protected state: PlaybackState;
     protected readonly isMobile: boolean;
 
-    constructor (
+    constructor(
         languageService: NxLanguageProviderService,
         deviceService: DeviceDetectorService,
         public playback: PlaybackService,
@@ -73,7 +73,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
     }
 
     videoErrorEventHandler = (event: any) => {
@@ -115,7 +115,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         this.playbackSubscription = this.playback.subject.subscribe(
             this.onPlaybackSubjectChange
         );
@@ -126,13 +126,13 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this._handleRotation();
     }
 
-    public ngOnChanges (): void {
+    public ngOnChanges(): void {
         this._handleRotation();
     }
 
     // @ts-ignore
     @HostListener('window:resize', ['$event'])
-    protected _handleRotation () {
+    protected _handleRotation() {
         if (!this.videoView) {
             return;
         }
@@ -153,7 +153,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.videoView?.nativeElement.removeEventListener(
             'error',
             this.videoErrorEventHandler
@@ -163,7 +163,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.$video.src = '';
     }
 
-    public onPlaybackSubjectChange (s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState) {
         const prevState = { ...this.state };
         this.state = { ...s };
         this._reactOnPlaybackStateChange(prevState);
@@ -179,7 +179,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         );
     }
 
-    protected _reactOnPlaybackStateChange (prevState: PlaybackState) {
+    protected _reactOnPlaybackStateChange(prevState: PlaybackState) {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.pauseVideo();
@@ -205,7 +205,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    protected _startPlayback () {
+    protected _startPlayback() {
         this._log('starting playback', { ...this.state });
         // @ts-ignore
         const sourceUrl = this.state?.sourceUrl || '';
@@ -264,7 +264,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    public onVideoCanPlay (e: MediaStreamEvent) {
+    public onVideoCanPlay(e: MediaStreamEvent) {
         this._log('video can play', this.state.mode, this.state);
         this.bufferingChange.emit(false);
         switch (this.state.mode) {
@@ -282,7 +282,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    public onVideoEnded (e: MediaStreamEvent) {
+    public onVideoEnded(e: MediaStreamEvent) {
         this._log('video ended');
         this.playback.playLive();
     }

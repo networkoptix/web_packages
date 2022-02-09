@@ -27,7 +27,7 @@ export class NxDynamicWidgetComponent {
     /**
      * Wrapper to dynamically get static properties. Might remove if we don't end up extending this component for third party widgets.
      */
-    get staticProperties () {
+    get staticProperties() {
         this.#staticProperties ||= (this.constructor as typeof NxDynamicWidgetComponent);
         return this.#staticProperties;
     };
@@ -69,7 +69,7 @@ export class NxDynamicWidgetComponent {
         this.componentInstance.update();
     }
 
-    saveSettings = async(editMode = false) => {
+    saveSettings = async (editMode = false) => {
         this.syncChanges.emit();
         this.card.editMode = editMode;
     }

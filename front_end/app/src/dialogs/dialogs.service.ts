@@ -94,14 +94,14 @@ export class NxDialogsService {
             });
     }
 
-    public ngOnDestroy () {
+    public ngOnDestroy() {
     }
 
-    public dismiss () {
+    public dismiss() {
         this.toastService.remove();
     }
 
-    public notify (message: string, type: string, hold?: boolean) {
+    public notify(message: string, type: string, hold?: boolean) {
         type = type || this.CONFIG.toast.info;
         hold = hold || false;
 
@@ -114,7 +114,7 @@ export class NxDialogsService {
         return this.toastService.show(message, options);
     }
 
-    public alert (message: string, title: string, footerClass?: string) {
+    public alert(message: string, title: string, footerClass?: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 message: this.domSanitizer.bypassSecurityTrustHtml(message),
@@ -134,7 +134,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public confirm (
+    public confirm(
         message: string,
         title: string,
         actionLabel: string,
@@ -161,7 +161,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public addWidget (gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
+    public addWidget(gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.LARGE,
             data: {
@@ -179,7 +179,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public addStorage (
+    public addStorage(
         serverId: string,
         storageManager: StorageManager,
         cancelPolls: () => any
@@ -197,7 +197,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public edit (modalContent: ModalContent) {
+    public edit(modalContent: ModalContent) {
         const config: Partial<DialogConfig> = {
             data: {
                 heading: modalContent.heading,
@@ -215,7 +215,7 @@ export class NxDialogsService {
     }
 
     // Not used at this moment
-    public downloadAsync (modalContent: ModalContent) {
+    public downloadAsync(modalContent: ModalContent) {
         // const options: IParams = {
         //     windowClass: 'modal-holder',
         //     backdrop: 'static'
@@ -233,7 +233,7 @@ export class NxDialogsService {
         //     .afterClosed();
     }
 
-    public changeStorage (system: NxSystem) {
+    public changeStorage(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -245,7 +245,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public cloudStorageDelete (
+    public cloudStorageDelete(
         system$: BehaviorSubject<NxSystem>,
         updateCallback: () => void
     ) {
@@ -262,7 +262,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public cloudStorageMove (
+    public cloudStorageMove(
         system$: BehaviorSubject<NxSystem>,
         updateCallback: () => void
     ) {
@@ -338,7 +338,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public disconnect (account: NxAccountService, system: NxSystem) {
+    public disconnect(account: NxAccountService, system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 account,
@@ -351,7 +351,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public removeUser (system: NxSystem, user: NxSystemUser) {
+    public removeUser(system: NxSystem, user: NxSystemUser) {
         const config: Partial<DialogConfig> = {
             data: {
                 user,
@@ -364,7 +364,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public removeSystem (system: NxSystem) {
+    public removeSystem(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -376,7 +376,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public restartServer (system: NxSystem, serverId: string, serverName: string) {
+    public restartServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -390,7 +390,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public detachServer (system: NxSystem, serverId: string, serverName: string) {
+    public detachServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -404,7 +404,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public resetServer (system: NxSystem, serverId: string, serverName: string) {
+    public resetServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -418,7 +418,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public changePassword (system: NxSystem, user: NxSystemUser) {
+    public changePassword(system: NxSystem, user: NxSystemUser) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -431,7 +431,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public wizard () {
+    public wizard() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
         };
@@ -441,7 +441,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public  merge (account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
+    public  merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
         const config: Partial<DialogConfig> = {
             data: {
                 user: account,
@@ -455,7 +455,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public message (account: NxAccountService, type: string, data: IParams): Promise<any> {
+    public message(account: NxAccountService, type: string, data: IParams): Promise<any> {
         const config: Partial<DialogConfig> = {
             data: {
                 account: account,
@@ -478,7 +478,7 @@ export class NxDialogsService {
     //         .afterClosed();
     // }
 
-    public deleteCloudUser (cloudApi: NxCloudApiService) {
+    public deleteCloudUser(cloudApi: NxCloudApiService) {
         const config: Partial<DialogConfig> = {
             data: {
                 cloudApi,
@@ -490,7 +490,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public updateCameraCredentials (
+    public updateCameraCredentials(
         camera: ICamera,
         system: NxSystem,
         updateCallback: () => Promise<any>
@@ -508,7 +508,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public resetBackupToDefaultSettings (
+    public resetBackupToDefaultSettings(
         system: NxSystem,
         setDefaultBackupSettings: () => Promise<any>
     ) {
@@ -524,7 +524,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public newCode2FA () {
+    public newCode2FA() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -537,7 +537,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public off2FA (num2FaSystems: number) {
+    public off2FA(num2FaSystems: number) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -609,7 +609,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public selectTimeRange () {
+    public selectTimeRange() {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 

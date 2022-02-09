@@ -48,7 +48,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     @ViewChild('rightEar')
     protected rightEarView: ElementRef<HTMLDivElement>
 
-    public get dateStrings () {
+    public get dateStrings() {
         if (!this.selectionStatus || !this.selectionStatus.isActive) {
             return {
                 left: {
@@ -85,7 +85,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.selectionSubscription = this.selection.subject.subscribe(
             this.onSelectionSubjectChange
         );
@@ -94,18 +94,18 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         );
     }
 
-    public ngAfterViewInit (): void {
+    public ngAfterViewInit(): void {
         this.selection.$background = this.self.nativeElement;
         this.selection.leftEar = this.leftEarView.nativeElement;
         this.selection.rightEar = this.rightEarView.nativeElement;
     }
 
-    public ngOnDestroy (): void {
+    public ngOnDestroy(): void {
         this.timelineSubscription && this.timelineSubscription.unsubscribe();
         this.selectionSubscription && this.selectionSubscription.unsubscribe();
     }
 
-    protected _updateCss () {
+    protected _updateCss() {
         if (this.selectedRangeView && this.selectionStatus.isActive) {
             this.selectedRangeView.nativeElement.classList.add('active');
             const left = this.timeline.timeToDomOffsetX(
@@ -129,7 +129,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         }
     }
 
-    protected _playbackOverlays (t: ms): boolean {
+    protected _playbackOverlays(t: ms): boolean {
         if (this.playback.state.mode !== PLAYBACK_MODE.ARCHIVE) {
             return false;
         }
@@ -138,46 +138,46 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         return width < PLAYBACK_OVERLAY_TRESHOLD_PX;
     }
 
-    protected get _leftEarOverPlayback (): boolean {
+    protected get _leftEarOverPlayback(): boolean {
         return this._playbackOverlays(this.selectionStatus.range.start);
     }
 
-    protected get _rightEarOverPlayback (): boolean {
+    protected get _rightEarOverPlayback(): boolean {
         return this._playbackOverlays(this.selectionStatus.range.end);
     }
 
-    public onSelectionSubjectChange (s: TimelineSelectionServiceStatus) {
+    public onSelectionSubjectChange(s: TimelineSelectionServiceStatus) {
         this.selectionStatus = s;
         this._updateCss();
     }
 
-    public onTimelineSubjectChange (s: TimelineServiceStatus) {
+    public onTimelineSubjectChange(s: TimelineServiceStatus) {
         this._updateCss();
     }
 
     @HostListener('mousedown', ['$event'])
-    public mouseDownHandler (e: MouseEvent): void {
+    public mouseDownHandler(e: MouseEvent): void {
         this.selection.handleBackgroundMouseDown(e);
     }
 
     @HostListener('document:mouseup', ['$event'])
-    public mouseUpHandler (e: MouseEvent) {
+    public mouseUpHandler(e: MouseEvent) {
         this.selection.handleMouseUp(e);
     }
 
     @HostListener('mouseenter', ['$event'])
-    public mouseEnterHandler (e: MouseEvent) {
+    public mouseEnterHandler(e: MouseEvent) {
         this.timeUnderMouse.handleMouseEnter(e);
     }
 
     @HostListener('mouseleave', ['$event'])
-    public mouseLeaveHandler (e: MouseEvent) {
+    public mouseLeaveHandler(e: MouseEvent) {
         this.selection.handleMouseLeave(e);
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
     @HostListener('document:mousemove', ['$event'])
-    public mouseMoveHandler (e: MouseEvent) {
+    public mouseMoveHandler(e: MouseEvent) {
         const $host = this.selectedRangeView.nativeElement.parentElement;
         // @ts-ignore
         this.timeUnderMouse.handleMouseMove({
@@ -189,24 +189,24 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.selection.handleMouseMove(e);
     }
 
-    public selectedRangeMouseDownHandler (e: MouseEvent) {
+    public selectedRangeMouseDownHandler(e: MouseEvent) {
         this.selection.handleSelectedRangeMouseDown(e);
     }
 
-    public selectedRangeDoubleClickHandler (e: MouseEvent) {
+    public selectedRangeDoubleClickHandler(e: MouseEvent) {
         this.selection.reset();
     }
 
-    public leftEarMouseDownHandler (e: MouseEvent) {
+    public leftEarMouseDownHandler(e: MouseEvent) {
         this.selection.handleLeftEarMouseDown(e);
     }
 
-    public rightEarMouseDownHandler (e: MouseEvent) {
+    public rightEarMouseDownHandler(e: MouseEvent) {
         this.selection.handleRightEarMouseDown(e);
     }
 
     @HostListener('wheel', ['$event'])
-    public wheelHandler (e: WheelEvent): void {
+    public wheelHandler(e: WheelEvent): void {
         e.preventDefault();
         const $host = this.selectedRangeView.nativeElement.parentElement;
         if (e.target !== $host) {

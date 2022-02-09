@@ -28,21 +28,21 @@ export class TimelineScrollbarAbsoluteService {
     protected _logPrefix: string = 'SCROLLBAR_ABSOLUTE_SERVICE ::'
     protected _logDisable: boolean = true
 
-    protected _log (...args: any[]) {
+    protected _log(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    protected _warn (...args: any[]) {
+    protected _warn(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    constructor (
+    constructor(
         protected timeline: TimelineService,
         protected relative: TimelineScrollbarRelativeService
     ) {
@@ -62,7 +62,7 @@ export class TimelineScrollbarAbsoluteService {
         honestWidth: 0
     })
 
-    protected _emit () {
+    protected _emit() {
         this._subject.next({
             ...this.relative.subject.value,
             isIllusionary: this.isIllusionary,
@@ -74,43 +74,43 @@ export class TimelineScrollbarAbsoluteService {
         });
     }
 
-    public get subject (): BehaviorSubject<TimelineScrollbarAbsoluteServiceStatus> {
+    public get subject(): BehaviorSubject<TimelineScrollbarAbsoluteServiceStatus> {
         return this._subject;
     }
 
     protected _backgroundWidth: px = 1000;
 
-    public get backgroundWidth (): px {
+    public get backgroundWidth(): px {
         return this._backgroundWidth;
     }
 
-    public set backgroundWidth (w: px) {
+    public set backgroundWidth(w: px) {
         this._log('new width', w);
         this._backgroundWidth = w;
         this._emit();
     }
 
-    public get isIllusionary (): boolean {
+    public get isIllusionary(): boolean {
         return this.honestWidth < MIN_BAR_WIDTH_PX;
     }
 
-    public get honestWidth (): px {
+    public get honestWidth(): px {
         return this.backgroundWidth / this.relative.magnification;
     }
 
-    public get honestLeft (): px {
+    public get honestLeft(): px {
         return this.backgroundWidth * this.relative.offset;
     }
 
-    public get dw (): px {
+    public get dw(): px {
         return !this.isIllusionary ? 0 : MIN_BAR_WIDTH_PX - this.honestWidth;
     }
 
-    public get width (): px {
+    public get width(): px {
         return this.isIllusionary ? MIN_BAR_WIDTH_PX : this.honestWidth;
     }
 
-    public get left (): px {
+    public get left(): px {
         return this.isIllusionary
             ? this.honestLeft - this.dw * this.relative.offset
             : this.honestLeft;
@@ -119,7 +119,7 @@ export class TimelineScrollbarAbsoluteService {
     protected _dragAnchorAbsolute: px = -1;
     protected _isBarGrabbed: boolean = false;
 
-    public handleBarMouseDown (e: MouseEvent|TouchEvent) {
+    public handleBarMouseDown(e: MouseEvent|TouchEvent) {
         this._dragAnchorAbsolute = calcClientX(e);
         this._isBarGrabbed = true;
         if (e instanceof MouseEvent) {
@@ -128,11 +128,11 @@ export class TimelineScrollbarAbsoluteService {
         }
     }
 
-    public handleBarMouseUp (e: MouseEvent|TouchEvent) {
+    public handleBarMouseUp(e: MouseEvent|TouchEvent) {
         this._isBarGrabbed = false;
     }
 
-    public handleBarDragMouseMove (e: MouseEvent) {
+    public handleBarDragMouseMove(e: MouseEvent) {
         if (this._isBarGrabbed) {
             const dx = calcClientX(e) - this._dragAnchorAbsolute;
             const leftEdgeMeansMs = this.timeline.visibleRange.start;

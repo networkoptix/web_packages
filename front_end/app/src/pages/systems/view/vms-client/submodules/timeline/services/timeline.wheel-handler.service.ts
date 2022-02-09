@@ -15,7 +15,7 @@ export class TimelineWheelHandlerService {
     ) {
     }
 
-    public handleWheel (e: WheelEvent) {
+    public handleWheel(e: WheelEvent) {
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
             this.wheelScroll(e.deltaX);
         } else {
@@ -24,7 +24,7 @@ export class TimelineWheelHandlerService {
         this.timeUnderMouse.handleMouseMove(e);
     }
 
-    protected _sanitizeOffset (offset) {
+    protected _sanitizeOffset(offset) {
         if (offset > 0) {
             if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
                 offset = this.timeline.fullRange.end - this.timeline.visibleRange.end;
@@ -37,7 +37,7 @@ export class TimelineWheelHandlerService {
         return offset;
     }
 
-    public wheelScroll (delta: int) {
+    public wheelScroll(delta: int) {
         const step = 0.01;
         const offset = this._sanitizeOffset(
             Math.round(delta * step * this.timeline.visibleRange.duration)
@@ -45,7 +45,7 @@ export class TimelineWheelHandlerService {
         this.timeline.shiftVisibleRange(offset);
     }
 
-    public wheelZoom (e: WheelEvent) {
+    public wheelZoom(e: WheelEvent) {
         const delta: int = -e.deltaY;
         const edgeOffsetPx: px = 80;
         let offset: float;

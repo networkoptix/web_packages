@@ -12,7 +12,7 @@ interface DurationDict {
     milliseconds: uint,
 }
 
-export function msToDurationDict (ms: ms): DurationDict {
+export function msToDurationDict(ms: ms): DurationDict {
     // console.log(ms)
     const SECOND_DURATION_MS = 1000;
     const MINUTE_DURATION_MS = 60 * SECOND_DURATION_MS;
@@ -57,7 +57,7 @@ export function msToDurationDict (ms: ms): DurationDict {
     };
 }
 
-export function durationDictToString (dd: DurationDict) {
+export function durationDictToString(dd: DurationDict) {
     // console.log(dd)
     let result = '';
     for (const k in dd) {
@@ -70,6 +70,6 @@ export function durationDictToString (dd: DurationDict) {
     return result.trimEnd();
 }
 
-export function msDurationToString (duration: ms) {
+export function msDurationToString(duration: ms) {
     return durationDictToString(msToDurationDict(duration)) || '0s';
 }

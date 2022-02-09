@@ -29,7 +29,7 @@ export class PlaybackControlsComponent implements OnInit {
 
     public btnClass: BtnClassesEnum = 'play'
 
-    public handleClick () {
+    public handleClick() {
         if (!this.enabled) {
             return;
         }
@@ -50,7 +50,7 @@ export class PlaybackControlsComponent implements OnInit {
     ) {
     }
 
-    public ngOnInit (): void {
+    public ngOnInit(): void {
         this.subscription = this.playback.subject
             .pipe(distinctUntilChanged((prev, curr) => {
                 // we're only interested in state mode ... avoiding useless chatter
@@ -65,7 +65,7 @@ export class PlaybackControlsComponent implements OnInit {
             });
     }
 
-    public onSubjectChange (s: PlaybackState) {
+    public onSubjectChange(s: PlaybackState) {
         this.state = { ...s };
 
         switch (this.state.mode) {
@@ -85,23 +85,23 @@ export class PlaybackControlsComponent implements OnInit {
         }
     }
 
-    protected get canPlayLive (): boolean {
+    protected get canPlayLive(): boolean {
         return this.playback.canPlayLive;
     }
 
-    protected get canStop (): boolean {
+    protected get canStop(): boolean {
         return this.playback.canStop;
     }
 
-    protected get canPause (): boolean {
+    protected get canPause(): boolean {
         return this.playback.canPause;
     }
 
-    protected get canUnpause (): boolean {
+    protected get canUnpause(): boolean {
         return this.playback.canUnpause;
     }
 
-    protected playLive () {
+    protected playLive() {
         if (!this.canPlayLive && !this.playback.livePaused) {
             return false;
         }
@@ -111,7 +111,7 @@ export class PlaybackControlsComponent implements OnInit {
         return true;
     }
 
-    protected stop () {
+    protected stop() {
         if (!this.canStop) {
             return false;
         }
@@ -120,7 +120,7 @@ export class PlaybackControlsComponent implements OnInit {
         return true;
     }
 
-    protected pause () {
+    protected pause() {
         if (!this.canPause) {
             return false;
         }
@@ -130,7 +130,7 @@ export class PlaybackControlsComponent implements OnInit {
         return true;
     }
 
-    protected unpause () {
+    protected unpause() {
         this._log('upnause', this.playback.state);
         switch (this.playback.state.mode) {
             case PLAYBACK_MODE.ARCHIVE:
@@ -155,7 +155,7 @@ export class PlaybackControlsComponent implements OnInit {
         }
     }
 
-    protected togglePause () {
+    protected togglePause() {
         const canPauseLive = (
             this.playback.canStop &&
             !this.playback.canPlayLive &&

@@ -1,12 +1,12 @@
 import { deg, rad, px } from './types';
 
-function degToRad (x: deg): rad {
+function degToRad(x: deg): rad {
     return Math.PI / 180 * x;
 }
 
 const cache = {};
 
-export function getSlopeWidth (angle: deg, h: px) {
+export function getSlopeWidth(angle: deg, h: px) {
     const cacheKey = `(${angle}, ${h})`;
     if (cacheKey in cache) {
         return cache[cacheKey];
