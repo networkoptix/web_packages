@@ -1,6 +1,6 @@
 import { ms, int } from '@vms-client/utils/type-aliases';
 
-import BirdViewTree from './BirdViewTree';
+import { BirdViewTree } from './BirdViewTree';
 import {
     ICamera,
     ISimpleTimeRange,
@@ -120,5 +120,3 @@ export class TestCamera implements ICamera {
         return _getNextRecord(this.archive, t);
     }
 }
-
-export default TestCamera;

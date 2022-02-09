@@ -2,26 +2,27 @@ import { Injectable } from '@angular/core';
 import * as df from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { ms, int, px } from '@vms-client/utils/type-aliases';
 
-import cfg from '../../timeline.config';
-import TimelineService from '../../timeline.service';
-import primaryRulerSerifDrawingConfigs from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
+import { cfg } from '../../timeline.config';
+import { TimelineService } from '../../timeline.service';
+import { primaryRulerSerifDrawingConfigs } from '../drawingConfigs/primaryRulerSerifDrawingConfigs';
 
-import AnimatedFloat from './animationPrimitives/AnimatedFloat';
-import primaryRulerDateFormats from './dateformats/primary_ruler_date_formats';
-import IrregularLengthInterval from './intervals/IrregularLengthInterval';
+import { AnimatedFloat } from './animationPrimitives/AnimatedFloat';
+import { primaryRulerDateFormats } from './dateformats/primary_ruler_date_formats';
+import { IrregularLengthInterval } from './intervals/IrregularLengthInterval';
 import {
     MAX_WEIGHT,
     MIN_WEIGHT, MIN_WIDTHS_FOR_INTERVALS
 } from './intervals/cfg/MIN_WIDTH_FOR_INTERVALS';
-import irregularLengthIntervals from './intervals/irregularLengthIntervals';
-import estimateIrregularLengthIntervalPessimistically
-    from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
-import isAlignedByIrregularInterval from './intervals/utils/isAlignedByIrregularInterval';
-import getIntervalDiffDict from './utils/getIntervalDiffDict';
-import percentageToHex from './utils/percentageToHex';
+import { irregularLengthIntervals } from './intervals/irregularLengthIntervals';
+import {
+    estimateIrregularLengthIntervalPessimistically
+} from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
+import { isAlignedByIrregularInterval } from './intervals/utils/isAlignedByIrregularInterval';
+import { getIntervalDiffDict } from './utils/getIntervalDiffDict';
+import { percentageToHex } from './utils/percentageToHex';
 
 const dateformat = df.default || df;
 
@@ -232,5 +233,3 @@ export class TimelinePrimaryRulerCanvasRendererService {
         }
     }
 }
-
-export default TimelinePrimaryRulerCanvasRendererService;

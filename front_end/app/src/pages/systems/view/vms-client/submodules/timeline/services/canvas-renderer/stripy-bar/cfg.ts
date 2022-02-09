@@ -1,8 +1,8 @@
-import colors from '../drawingConfigs/colors';
+import { colors } from '../drawingConfigs/colors';
 
 import { deg, px, pxPerSecond, color } from './types';
 
-export default {
+export const stripeCfg = {
     stripeWidth: 8 as px,
     slope: 45 as deg,
     speed: 24 as pxPerSecond,

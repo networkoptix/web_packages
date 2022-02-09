@@ -21,5 +21,3 @@ export function generateClickDubleClickPair (onClick, onDblClick, dblClickDelayM
         }
     };
 }
-
-export default generateClickDubleClickPair;

@@ -1,4 +1,4 @@
-class StateMachine {
+export class StateMachine {
     currentState: string;
     state;
     store;
@@ -38,5 +38,3 @@ class StateMachine {
         }
     }
 }
-
-export default StateMachine;

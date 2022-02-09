@@ -38,5 +38,3 @@ export const primaryRulerDateFormats = {
     decade: LF.YEAR,
     century: LF.YEAR
 };
-
-export default primaryRulerDateFormats;

@@ -33,5 +33,3 @@ export class CameraTransportStorageService {
         }
     }
 }
-
-export default CameraTransportStorageService;

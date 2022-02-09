@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as df from 'dateformat';
 
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { ms, px } from '@vms-client/utils/type-aliases';
 
-import cfg from '../../timeline.config';
-import TimelineService from '../../timeline.service';
-import drawingConfig from '../drawingConfigs/topRulerDrawingConfig';
+import { cfg } from '../../timeline.config';
+import { TimelineService } from '../../timeline.service';
+import { topRulerDrawingConfig } from '../drawingConfigs/topRulerDrawingConfig';
 
-import topRulerDateFormats from './dateformats/top_ruler_date_formats';
-import IrregularLengthInterval from './intervals/IrregularLengthInterval';
-import TOP__MIN_WIDTH_FOR_INTERVALS from './intervals/cfg/TOP__MIN_WIDTH_FOR_INTERVALS';
-import irregularLengthIntervals from './intervals/irregularLengthIntervals';
-import estimateIrregularLengthIntervalPessimistically
-    from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
-import isIntervalOdd from './intervals/utils/isIntervalOdd';
-import percentageToHex from './utils/percentageToHex';
+import { topRulerDateFormats } from './dateformats/top_ruler_date_formats';
+import { IrregularLengthInterval } from './intervals/IrregularLengthInterval';
+import { TOP__MIN_WIDTH_FOR_INTERVALS } from './intervals/cfg/TOP__MIN_WIDTH_FOR_INTERVALS';
+import { irregularLengthIntervals } from './intervals/irregularLengthIntervals';
+import {
+    estimateIrregularLengthIntervalPessimistically
+} from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
+import { isIntervalOdd } from './intervals/utils/isIntervalOdd';
+import { percentageToHex } from './utils/percentageToHex';
 
 const dateformat = df.default || df;
 
@@ -36,10 +37,10 @@ export class TimelineTopRulerCanvasRendererService {
         this._withContext(ctx, () => {
             const h = this.timeline.canvasGeometry.height * cfg.ruler.top.relativeHeight;
 
-            ctx.fillStyle = drawingConfig.backgroundEvenColor;
+            ctx.fillStyle = topRulerDrawingConfig.backgroundEvenColor;
             ctx.fillRect(0, 0, this.timeline.canvasGeometry.width, h);
 
-            ctx.strokeStyle = drawingConfig.underscoreColor;
+            ctx.strokeStyle = topRulerDrawingConfig.underscoreColor;
             ctx.beginPath();
             ctx.moveTo(0, h);
             ctx.lineTo(this.timeline.canvasGeometry.width, h);
@@ -132,11 +133,11 @@ export class TimelineTopRulerCanvasRendererService {
             cfg.ruler.top.relativeHeight * this.timeline.canvasGeometry.height
         );
         const y2: px = Math.round(
-            drawingConfig.serif.heightRelative * this.timeline.canvasGeometry.height
+            topRulerDrawingConfig.serif.heightRelative * this.timeline.canvasGeometry.height
         );
 
         if (isIntervalOdd(curTime, interval)) {
-            ctx.fillStyle = drawingConfig.backgroundOddColor;
+            ctx.fillStyle = topRulerDrawingConfig.backgroundOddColor;
             ctx.fillRect(x0, y0, x1 - x0, y1);
         }
 
@@ -153,7 +154,7 @@ export class TimelineTopRulerCanvasRendererService {
         y1: px,
         y2: px
     ) {
-        ctx.strokeStyle = `${drawingConfig.serif.baseColorHex}${percentageToHex(drawingConfig.serif.opacity)}`;
+        ctx.strokeStyle = `${topRulerDrawingConfig.serif.baseColorHex}${percentageToHex(topRulerDrawingConfig.serif.opacity)}`;
         ctx.beginPath();
         ctx.moveTo(x0, y0);
         ctx.lineTo(x0, y2);
@@ -169,19 +170,17 @@ export class TimelineTopRulerCanvasRendererService {
         // ctx.fillText(topString, x, y, x1 - x0);
         const MIN_WIDTH = 100;
         if (x1 - x0 > MIN_WIDTH * this.timeline.canvasGeometry.dpr) {
-            ctx.fillStyle = `${drawingConfig.topLabel.baseColorHex}${percentageToHex(drawingConfig.topLabel.opacity)}`;
-            ctx.font = `${drawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
+            ctx.fillStyle = `${topRulerDrawingConfig.topLabel.baseColorHex}${percentageToHex(topRulerDrawingConfig.topLabel.opacity)}`;
+            ctx.font = `${topRulerDrawingConfig.topLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
             ctx.fillText(topString, x, y); // maxWidth: x1 - x0);
         }
 
         if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
             const serifString = dateformat(this.vms.tweakT(curTime), format.serif);
-            ctx.fillStyle = `${drawingConfig.bottomLabel.baseColorHex}${percentageToHex(drawingConfig.bottomLabel.opacity)}`;
-            ctx.font = `${drawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
+            ctx.fillStyle = `${topRulerDrawingConfig.bottomLabel.baseColorHex}${percentageToHex(topRulerDrawingConfig.bottomLabel.opacity)}`;
+            ctx.font = `${topRulerDrawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
             ctx.textBaseline = 'top';
             ctx.fillText(serifString, x0, y2 + this.timeline.canvasGeometry.dpr * 10);
         }
     }
 }
-
-export default TimelineTopRulerCanvasRendererService;

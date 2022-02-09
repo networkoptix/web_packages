@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import { ms, px } from '@vms-client/utils/type-aliases';
 
-import TimelineService from './timeline.service';
+import { TimelineService } from './timeline.service';
 
 export interface TimelineTimeUnderMouseServiceStatus {
     isMouseInside: boolean,
@@ -98,5 +98,3 @@ export class TimelineTimeUnderMouseService {
         this._emit();
     }
 }
-
-export default TimelineTimeUnderMouseService;

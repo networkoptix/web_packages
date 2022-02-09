@@ -10,15 +10,15 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { ComponentsModule } from '../../../components/components.module';
 import { DirectivesModule } from '../../../directives/directives.module';
 
-import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component';
-import NxSystemViewIndexPageComponent from './pages/system-view-index/system-view-index.page.component';
-import routes from './routes';
-import CameraQualityStorageService from './services/cameraQualityStorage.service';
-import CameraTransportStorageService from './services/cameraTransportStorage.service';
-import VmsClientPlaybackModule from './vms-client/submodules/playback/playback.module';
-import VmsClientTimelineModule from './vms-client/submodules/timeline/timeline.module';
-import VmsClientVmsModule from './vms-client/submodules/vms/vms.module';
-import VmsClientModule from './vms-client/vms-client.module';
+import { NxSystemViewCameraPageComponent } from './pages/system-view-camera/system-view-camera.page.component';
+import { NxSystemViewIndexPageComponent } from './pages/system-view-index/system-view-index.page.component';
+import { routes } from './routes';
+import { CameraQualityStorageService } from './services/cameraQualityStorage.service';
+import { CameraTransportStorageService } from './services/cameraTransportStorage.service';
+import { VmsClientPlaybackModule } from './vms-client/submodules/playback/playback.module';
+import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeline.module';
+import { VmsClientVmsModule } from './vms-client/submodules/vms/vms.module';
+import { VmsClientModule } from './vms-client/vms-client.module';
 
 @NgModule({
     imports: [

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import TimelineExtendToNowService from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
-import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
+import { TimelineExtendToNowService } from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
+import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 
 @Component({
     selector: 'page-timeline',
@@ -39,5 +39,3 @@ export class TimelinePageComponent implements OnInit, OnDestroy {
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 }
-
-export default TimelinePageComponent;

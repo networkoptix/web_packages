@@ -33,5 +33,3 @@ export class FpsMeterService {
       }
   }
 }
-
-export default FpsMeterService;

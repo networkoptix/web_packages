@@ -1,4 +1,4 @@
-import colors from './colors';
+import { colors } from './colors';
 const baseColorHex = colors.dark15;
 
 export const primaryRulerSerifDrawingConfigs = {
@@ -44,5 +44,3 @@ export const primaryRulerSerifDrawingConfigs = {
         }
     }
 };
-
-export default primaryRulerSerifDrawingConfigs;

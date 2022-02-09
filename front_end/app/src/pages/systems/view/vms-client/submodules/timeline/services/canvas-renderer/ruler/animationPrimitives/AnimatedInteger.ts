@@ -1,5 +1,5 @@
-import AnimatedFloat from './AnimatedFloat';
-import IAnimated from './IAnimated';
+import { AnimatedFloat } from './AnimatedFloat';
+import { IAnimated } from './IAnimated';
 import { EASING } from './easing-functions';
 
 type int = number
@@ -38,5 +38,3 @@ export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
         return Math.round(super._getCurrentValue(dt));
     }
 }
-
-export default AnimatedInteger;

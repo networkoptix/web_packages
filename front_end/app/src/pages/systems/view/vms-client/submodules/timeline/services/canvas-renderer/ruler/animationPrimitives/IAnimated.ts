@@ -17,5 +17,3 @@ export interface IAnimated<T> {
 
     target: T
 }
-
-export default IAnimated;

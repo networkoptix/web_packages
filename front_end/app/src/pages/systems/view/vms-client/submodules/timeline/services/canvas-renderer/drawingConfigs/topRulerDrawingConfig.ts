@@ -1,4 +1,4 @@
-import colors from './colors';
+import { colors } from './colors';
 
 export const topRulerDrawingConfig = {
     serif: {
@@ -20,5 +20,3 @@ export const topRulerDrawingConfig = {
     backgroundOddColor: colors.additional_light2,
     underscoreColor: `${colors.dark15}4D`
 };
-
-export default topRulerDrawingConfig;

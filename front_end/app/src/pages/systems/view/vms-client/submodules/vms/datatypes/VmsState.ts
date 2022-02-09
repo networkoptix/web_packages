@@ -1,7 +1,7 @@
 import { GUID } from '@vms-client/utils/type-aliases';
 
-import ICamera from './ICamera';
-import IMediaServer from './IMediaServer';
+import { ICamera } from './ICamera';
+import { IMediaServer } from './IMediaServer';
 
 export enum VMS_MODE {
     NOT_INITIALIZED = -1,
@@ -81,5 +81,3 @@ export function createCameraSelectedState (
 }
 
 export type VmsState = NotInitializedVmsState | CameraNotSelectedVmsState | CameraSelectedVmsState
-
-export default VmsState;

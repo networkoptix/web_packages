@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import declarations from './components';
+import { declarations } from './components';
 // eslint-disable-next-line camelcase
-import export_components from './components/exports';
+import { export_components } from './components/exports';
 
 @NgModule({
     declarations,
@@ -17,5 +17,3 @@ import export_components from './components/exports';
 })
 export class VmsClientTimelineModule {
 }
-
-export default VmsClientTimelineModule;

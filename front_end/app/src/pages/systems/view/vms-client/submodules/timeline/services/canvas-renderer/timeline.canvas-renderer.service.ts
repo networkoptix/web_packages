@@ -3,11 +3,11 @@ import { Injectable, isDevMode } from '@angular/core';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
-import TimelineService from '../timeline.service';
+import { TimelineService } from '../timeline.service';
 
-import TimelineRulerCanvasRendererService from './ruler/timeline.ruler-canvas-renderer.service';
-import TimelineDebugCanvasRendererService from './timeline.debug-canvas-renderer.service';
-import TimelineRecordsCanvasRendererService from './timeline.records-canvas-renderer.service';
+import { TimelineRulerCanvasRendererService } from './ruler/timeline.ruler-canvas-renderer.service';
+import { TimelineDebugCanvasRendererService } from './timeline.debug-canvas-renderer.service';
+import { TimelineRecordsCanvasRendererService } from './timeline.records-canvas-renderer.service';
 
 @Injectable({
     providedIn: 'root'
@@ -35,5 +35,3 @@ export class TimelineCanvasRendererService {
         }
     }
 }
-
-export default TimelineCanvasRendererService;

@@ -1,7 +1,7 @@
 import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
-import BirdViewTree from './BirdViewTree';
+import { BirdViewTree } from './BirdViewTree';
 import {
     ICamera,
     ISimpleTimeRange,
@@ -245,5 +245,3 @@ export class Camera implements ICamera {
         }
     }
 }
-
-export default Camera;

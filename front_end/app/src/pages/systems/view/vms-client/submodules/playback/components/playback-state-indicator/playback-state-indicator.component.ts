@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
-import PlaybackService from '../../services/playback.service';
+import { PlaybackService } from '../../services/playback.service';
 
 @Component({
     selector: 'playback-state-indicator',
@@ -58,5 +58,3 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
         return this.vms.selectedCamera && this.vms.selectedCamera.isLive;
     }
 }
-
-export default PlaybackStateIndicatorComponent;

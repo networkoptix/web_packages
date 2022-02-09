@@ -1,4 +1,4 @@
-import colors from './colors';
+import { colors } from './colors';
 
 export const cfg = {
     BACKGROUND_FILL_STYLE: colors.light3,
@@ -7,5 +7,3 @@ export const cfg = {
     RECORDS_HEIGHT_RELATIVE: 0.24,
     MIN_RECORD_WIDTH_PX: 2
 };
-
-export default cfg;

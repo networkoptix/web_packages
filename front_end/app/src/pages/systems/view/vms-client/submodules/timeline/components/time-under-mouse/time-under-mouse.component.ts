@@ -3,10 +3,10 @@ import * as df from 'dateformat';
 import { Subscription } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { px } from '@vms-client/utils/type-aliases';
 
-import TimelineService from '../../services/timeline.service';
+import { TimelineService } from '../../services/timeline.service';
 import {
     TimelineTimeUnderMouseService,
     TimelineTimeUnderMouseServiceStatus
@@ -138,5 +138,3 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         return result;
     }
 }
-
-export default TimeUnderMouseComponent;

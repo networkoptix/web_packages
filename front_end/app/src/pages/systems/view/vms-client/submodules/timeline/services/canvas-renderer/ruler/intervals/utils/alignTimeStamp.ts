@@ -1,6 +1,6 @@
 import { ms } from '@vms-client/utils/type-aliases';
 
-import IrregularLengthInterval from '../IrregularLengthInterval';
+import { IrregularLengthInterval } from '../IrregularLengthInterval';
 
 export type timeStampMs = ms
 export type durationMs = ms
@@ -68,5 +68,3 @@ export function alignTimeStamp (
     }
     return date.getTime();
 }
-
-export default alignTimeStamp;

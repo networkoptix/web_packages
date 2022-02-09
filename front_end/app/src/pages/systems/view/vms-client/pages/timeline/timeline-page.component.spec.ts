@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import TimelinePageComponent from './timeline-page.component';
+import { TimelinePageComponent } from './timeline-page.component';
 
 xdescribe('TimelineComponent', () => {
     let component: TimelinePageComponent;

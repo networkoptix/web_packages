@@ -31,7 +31,7 @@ import {
     NxLanguageProviderService
 } from '../../../../../../../../../services/nx-language-provider';
 import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
-import PlaybackService from '../../../services/playback.service';
+import { PlaybackService } from '../../../services/playback.service';
 
 @Component({
     selector: 'player-hls',
@@ -302,5 +302,3 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         this.playback.playLive();
     }
 }
-
-export default PlayerHlsComponent;

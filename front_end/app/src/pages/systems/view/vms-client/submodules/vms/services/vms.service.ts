@@ -7,8 +7,8 @@ import type {
 } from '@services/system.service/system/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
-import ICamera, { CameraArchive } from '../datatypes/ICamera';
-import IMediaServer from '../datatypes/IMediaServer';
+import { ICamera, CameraArchive } from '../datatypes/ICamera';
+import { IMediaServer } from '../datatypes/IMediaServer';
 import {
     VmsState,
     VMS_MODE,
@@ -277,5 +277,3 @@ export class VideoManagementSystemService {
         }
     }
 }
-
-export default VideoManagementSystemService;

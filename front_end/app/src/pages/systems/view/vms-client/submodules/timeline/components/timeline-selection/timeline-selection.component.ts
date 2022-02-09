@@ -11,16 +11,16 @@ import * as df from 'dateformat';
 import { Subscription } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import type { ms } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineSelectionService,
     TimelineSelectionServiceStatus
 } from '../../services/timeline.selection.service';
-import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
-import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
-import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
+import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
+import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
+import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
 
 const dateformat = df.default || df;
 
@@ -224,5 +224,3 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         }
     }
 }
-
-export default TimelineSelectionComponent;

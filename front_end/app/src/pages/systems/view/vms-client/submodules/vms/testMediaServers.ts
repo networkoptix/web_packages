@@ -1,6 +1,6 @@
 import { SimpleTimeRange } from './datatypes/ICamera';
-import MediaServer from './datatypes/MediaServer';
-import TestCamera from './datatypes/TestCamera';
+import { MediaServer } from './datatypes/MediaServer';
+import { TestCamera } from './datatypes/TestCamera';
 
 const TEST_THUMBNAIL_URL = 'https://upload.wikimedia.org/wikipedia/commons/5/54/Europa-moon.jpg';
 const now = Date.now();
@@ -212,5 +212,3 @@ export const fakeMediaServerData: Array<MediaServer> = [
         ]
     }
 ];
-
-export default fakeMediaServerData;

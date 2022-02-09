@@ -1,4 +1,4 @@
-import RegularLengthInterval from './RegularLengthInterval';
+import { RegularLengthInterval } from './RegularLengthInterval';
 
 export const SECOND = 1000;
 export const MINUTE = 60 * SECOND;
@@ -32,5 +32,3 @@ export const regularLengthIntervals: Array<RegularLengthInterval> = [
     100 * ROUGH_YEAR,
     1000 * ROUGH_YEAR
 ];
-
-export default regularLengthIntervals;

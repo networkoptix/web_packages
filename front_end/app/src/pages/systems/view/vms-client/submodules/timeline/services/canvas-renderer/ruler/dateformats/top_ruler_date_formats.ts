@@ -36,5 +36,3 @@ export const topRulerDateFormats = {
     // [ROUGH_CENTURY]: { top: LF.YEAR, serif: LF.YEAR, },
     century: { top: LF.YEAR, serif: LF.YEAR }
 };
-
-export default topRulerDateFormats;

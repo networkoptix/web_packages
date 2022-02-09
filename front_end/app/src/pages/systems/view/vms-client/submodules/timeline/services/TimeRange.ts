@@ -1,7 +1,7 @@
 import { float, ms } from '@vms-client/utils/type-aliases';
 
-import IrregularLengthInterval from './canvas-renderer/ruler/intervals/IrregularLengthInterval';
-import alignTimeStamp from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';
+import { IrregularLengthInterval } from './canvas-renderer/ruler/intervals/IrregularLengthInterval';
+import { alignTimeStamp } from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';
 
 export class TimeRange {
     constructor(
@@ -91,5 +91,3 @@ export class TimeRange {
         return result;
     }
 }
-
-export default TimeRange;

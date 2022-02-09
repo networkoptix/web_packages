@@ -2,8 +2,8 @@ import { Injectable, OnDestroy, isDevMode } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
-import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { assertNever } from '@vms-client/utils';
 import { ms, percentage } from '@vms-client/utils/type-aliases';
 
@@ -591,5 +591,3 @@ export class PlaybackService implements OnDestroy {
         }
     }
 }
-
-export default PlaybackService;

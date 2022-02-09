@@ -101,5 +101,3 @@ export class SelectTimeRangeModalContent {
         this.dialogRef.close(msg);
     }
 }
-
-export default SelectTimeRangeModalContent;

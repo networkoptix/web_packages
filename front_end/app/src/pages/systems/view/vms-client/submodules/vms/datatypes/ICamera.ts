@@ -101,5 +101,3 @@ export interface ICamera {
     preferredServerId: string,
     parentServerId: string,
 }
-
-export default ICamera;

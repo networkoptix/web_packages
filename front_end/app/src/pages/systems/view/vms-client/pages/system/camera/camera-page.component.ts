@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import TimelineExtendToNowService from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
-import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
-import ICamera from '@vms-client/submodules/vms/datatypes/ICamera';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import { TimelineExtendToNowService } from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
+import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
+import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-import FpsMeterService from '../../../../../../../services/fps-meter.service';
+import { FpsMeterService } from '../../../../../../../services/fps-meter.service';
 
 @Component({
     selector: 'camera-page',
@@ -118,5 +118,3 @@ export class CameraPageComponent implements OnInit, OnDestroy {
         console.log(this.vms.selectedCamera._birdViewTree._treeRoot);
     }
 }
-
-export default CameraPageComponent;

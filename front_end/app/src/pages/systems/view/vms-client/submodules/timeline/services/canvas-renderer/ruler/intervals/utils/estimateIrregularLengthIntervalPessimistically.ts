@@ -1,4 +1,4 @@
-import IrregularLengthInterval from '../IrregularLengthInterval';
+import { IrregularLengthInterval } from '../IrregularLengthInterval';
 import { ROUGH_YEAR, ROUGH_MONTH } from '../regularLengthIntervals';
 
 export const estimateIrregularLengthIntervalPessimistically = (i: IrregularLengthInterval) => {
@@ -21,5 +21,3 @@ export const estimateIrregularLengthIntervalPessimistically = (i: IrregularLengt
             return i;
     }
 };
-
-export default estimateIrregularLengthIntervalPessimistically;

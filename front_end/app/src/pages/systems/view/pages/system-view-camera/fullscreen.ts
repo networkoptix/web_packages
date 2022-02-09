@@ -14,7 +14,7 @@ function getFullscreenElement() {
     return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 }
 
-export default {
+export const fullscreen = {
     request: getReqFullscreen,
     exit: getExitFullscreen,
     getElement: getFullscreenElement

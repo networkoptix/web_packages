@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, int, ms } from '@vms-client/utils/type-aliases';
 
-import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
+import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
 
 type signType = int // -1 | 0 | 1
 
@@ -130,5 +130,3 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this.wheelZoom(80);
     }
 }
-
-export default ZoomControlsComponent;

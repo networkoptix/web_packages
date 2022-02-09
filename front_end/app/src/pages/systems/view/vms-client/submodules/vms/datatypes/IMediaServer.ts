@@ -1,4 +1,4 @@
-import ICamera from './ICamera';
+import { ICamera } from './ICamera';
 
 export interface IMediaServer {
     id: string,
@@ -10,5 +10,3 @@ export interface IMediaServer {
     url?: string,
     cameras: Array<ICamera>,
 }
-
-export default IMediaServer;

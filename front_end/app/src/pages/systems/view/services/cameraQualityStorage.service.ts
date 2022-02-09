@@ -32,5 +32,3 @@ export class CameraQualityStorageService {
         );
     }
 }
-
-export default CameraQualityStorageService;

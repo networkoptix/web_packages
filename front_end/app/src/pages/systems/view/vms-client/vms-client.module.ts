@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import CameraPageComponent from './pages/system/camera/camera-page.component';
-import SystemPageComponent from './pages/system/system-page.component';
-import TimelinePageComponent from './pages/timeline/timeline-page.component';
-import PlaybackModule from './submodules/playback/playback.module';
-import TimelineModule from './submodules/timeline/timeline.module';
-import VmsModule from './submodules/vms/vms.module';
-import VmsClientRoutingModule from './vms-client-routing.module';
+import { CameraPageComponent } from './pages/system/camera/camera-page.component';
+import { SystemPageComponent } from './pages/system/system-page.component';
+import { TimelinePageComponent } from './pages/timeline/timeline-page.component';
+import { VmsClientPlaybackModule } from './submodules/playback/playback.module';
+import { VmsClientTimelineModule } from './submodules/timeline/timeline.module';
+import { VmsClientVmsModule } from './submodules/vms/vms.module';
+import { VmsClientRoutingModule } from './vms-client-routing.module';
 
 @NgModule({
     declarations: [
@@ -19,9 +19,9 @@ import VmsClientRoutingModule from './vms-client-routing.module';
     imports: [
         CommonModule,
         TranslateModule,
-        VmsModule,
-        PlaybackModule,
-        TimelineModule,
+        VmsClientVmsModule,
+        VmsClientPlaybackModule,
+        VmsClientTimelineModule,
         VmsClientRoutingModule
     ],
     providers: [
@@ -31,5 +31,3 @@ import VmsClientRoutingModule from './vms-client-routing.module';
 })
 export class VmsClientModule {
 }
-
-export default VmsClientModule;

@@ -32,7 +32,7 @@ import {
     NxLanguageProviderService
 }  from '../../../../../../../../../services/nx-language-provider';
 import { PlaybackState, PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
-import PlaybackService from '../../../services/playback.service';
+import { PlaybackService } from '../../../services/playback.service';
 
 @Component({
     selector: 'player-native',
@@ -287,5 +287,3 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.playback.playLive();
     }
 }
-
-export default PlayerNativeComponent;

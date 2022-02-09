@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
 import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
 
-import TimelineService from './timeline.service';
+import { TimelineService } from './timeline.service';
 
 export interface TimelineScrollbarRelativeServiceStatus {
     magnification: float,
@@ -175,5 +175,3 @@ export class TimelineScrollbarRelativeService {
         );
     }
 }
-
-export default TimelineScrollbarRelativeService;

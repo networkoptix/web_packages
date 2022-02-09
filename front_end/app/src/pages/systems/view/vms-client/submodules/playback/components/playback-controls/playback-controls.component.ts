@@ -4,10 +4,10 @@ import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { LoggerDecorator } from '@view/vms-client/utils';
-import SelectionService from '@vms-client/submodules/timeline/services/timeline.selection.service';
+import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
-import PlaybackService from '../../services/playback.service';
+import { PlaybackService } from '../../services/playback.service';
 
 type BtnClassesEnum = 'play' | 'pause'
 
@@ -46,7 +46,7 @@ export class PlaybackControlsComponent implements OnInit {
 
     constructor(
         public playback: PlaybackService,
-        protected selection: SelectionService
+        protected selection: TimelineSelectionService
     ) {
     }
 
@@ -175,5 +175,3 @@ export class PlaybackControlsComponent implements OnInit {
         return false;
     }
 }
-
-export default PlaybackControlsComponent;

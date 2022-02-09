@@ -11,7 +11,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import {
     calcScreenX,
     calcOffsetX,
@@ -19,11 +19,11 @@ import {
 } from '@vms-client/utils/calculate-coordinates';
 import { px, ms } from '@vms-client/utils/type-aliases';
 
-import TimelineCanvasRendererService from '../../services/canvas-renderer/timeline.canvas-renderer.service';
-import TimelineSelectionService from '../../services/timeline.selection.service';
-import TimelineService, { TimelineServiceStatus } from '../../services/timeline.service';
-import TimelineTimeUnderMouseService from '../../services/timeline.time-under-mouse.service';
-import TimelineWheelHandlerService from '../../services/timeline.wheel-handler.service';
+import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';
+import { TimelineSelectionService } from '../../services/timeline.selection.service';
+import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
+import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
+import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
 
 import { onPinch } from './onPinch';
 
@@ -243,5 +243,3 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 }
-
-export default TimelineComponent;

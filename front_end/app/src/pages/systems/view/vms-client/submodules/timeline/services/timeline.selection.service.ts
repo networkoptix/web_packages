@@ -2,13 +2,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { ms, px } from '@vms-client/utils/type-aliases';
 
-import TimeRange from './TimeRange';
-import TimelineScrollbarRelativeService from './timeline.scrollbarRelative.service';
-import TimelineService from './timeline.service';
+import { TimeRange } from './TimeRange';
+import { TimelineScrollbarRelativeService } from './timeline.scrollbarRelative.service';
+import { TimelineService } from './timeline.service';
 
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;
@@ -560,5 +560,3 @@ export class TimelineSelectionService {
         return this._distanceToScrollingSpeed(this.mouseFromLeftEdge);
     }
 }
-
-export default TimelineSelectionService;

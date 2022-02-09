@@ -16,18 +16,19 @@ import {
     PlaybackState,
     PLAYBACK_MODE
 } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { float, px } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineScrollbarAbsoluteService,
     TimelineScrollbarAbsoluteServiceStatus
 } from '../../services/timeline.scrollbarAbsolute.service';
-import TimelineScrollbarRelativeService from '../../services/timeline.scrollbarRelative.service';
-import TimelineSelectionService, {
+import { TimelineScrollbarRelativeService } from '../../services/timeline.scrollbarRelative.service';
+import  {
+    TimelineSelectionService,
     TimelineSelectionServiceStatus
 } from '../../services/timeline.selection.service';
-import TimelineService from '../../services/timeline.service';
+import { TimelineService } from '../../services/timeline.service';
 
 const MIN_BAR_WIDTH_PX = 50;
 
@@ -343,5 +344,3 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         });
     }
 }
-
-export default TimelineScrollbarComponent;

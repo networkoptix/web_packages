@@ -6,10 +6,10 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { htmlToEntity } from '@utils/general';
 
-import ICamera from '../../datatypes/ICamera';
-import MediaServer from '../../datatypes/MediaServer';
-import VmsState, { VMS_MODE } from '../../datatypes/VmsState';
-import VideoManagementSystemService from '../../services/vms.service';
+import { ICamera } from '../../datatypes/ICamera';
+import { MediaServer } from '../../datatypes/MediaServer';
+import { VmsState, VMS_MODE } from '../../datatypes/VmsState';
+import { VideoManagementSystemService } from '../../services/vms.service';
 
 @Component({
     selector: 'media-server-list',
@@ -157,5 +157,3 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         return server ? server.id : undefined;
     }
 }
-
-export default MediaServerListComponent;

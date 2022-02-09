@@ -16,5 +16,3 @@ export function getSlopeWidth (angle: deg, h: px) {
     cache[cacheKey] = result;
     return result;
 }
-
-export default getSlopeWidth;

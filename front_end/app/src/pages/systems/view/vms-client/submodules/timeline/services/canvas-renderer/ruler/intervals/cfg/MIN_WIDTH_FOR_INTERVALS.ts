@@ -26,5 +26,3 @@ export const MIN_WIDTHS_FOR_INTERVALS = {
     decade: [15, 40, 400, 9000],
     century: [15, 40, 400, 4000]
 };
-
-export default MIN_WIDTHS_FOR_INTERVALS;

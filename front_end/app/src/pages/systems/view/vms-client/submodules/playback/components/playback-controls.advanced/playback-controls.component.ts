@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import SelectionService from '@vms-client/submodules/timeline/services/timeline.selection.service';
+import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
-import PlaybackState from '../../datatypes/PlaybackState';
-import PlaybackService from '../../services/playback.service';
+import { PlaybackState } from '../../datatypes/PlaybackState';
+import { PlaybackService } from '../../services/playback.service';
 
 @Component({
     selector: 'playback-controls',
@@ -17,7 +17,7 @@ export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
 
     constructor(
         public playback: PlaybackService,
-        protected selection: SelectionService
+        protected selection: TimelineSelectionService
     ) {
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
@@ -70,5 +70,3 @@ export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
         }
     }
 }
-
-export default PlaybackAdvControlsComponent;

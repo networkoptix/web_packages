@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import TimelineService from './timeline.service';
-import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service';
+import { TimelineService } from './timeline.service';
+import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,5 +18,3 @@ export class TimelineExtendToNowService {
         this.timeUnderMouse.updateTime();
     }
 }
-
-export default TimelineExtendToNowService;

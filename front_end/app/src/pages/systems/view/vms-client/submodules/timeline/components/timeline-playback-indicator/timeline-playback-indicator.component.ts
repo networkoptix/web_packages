@@ -13,8 +13,8 @@ import {
     PlaybackState,
     PLAYBACK_MODE
 } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { assertNever } from '@vms-client/utils';
 import type { ms, px } from '@vms-client/utils/type-aliases';
 
@@ -205,5 +205,3 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         }
     }
 }
-
-export default TimelinePlaybackIndicatorComponent;

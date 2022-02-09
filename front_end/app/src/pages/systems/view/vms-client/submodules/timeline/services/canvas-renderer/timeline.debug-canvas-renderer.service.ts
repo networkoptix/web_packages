@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-import TimelineService from '../timeline.service';
+import { TimelineService } from '../timeline.service';
 
-import cfg from './drawingConfigs/recordsDrawingConfig';
+import { cfg } from './drawingConfigs/recordsDrawingConfig';
 
 @Injectable({
     providedIn: 'root'
@@ -40,5 +40,3 @@ export class TimelineDebugCanvasRendererService {
         ctx.fillText(`TZO ${offsetH}h`, x, y);
     }
 }
-
-export default TimelineDebugCanvasRendererService;

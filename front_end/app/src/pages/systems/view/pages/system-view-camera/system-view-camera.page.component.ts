@@ -15,22 +15,23 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, Subscription, timer, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 
-import FpsMeterService from '@services/fps-meter.service';
+import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystem } from '@services/system.service/system/system';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
-import PlaybackState, { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import PlaybackService from '@vms-client/submodules/playback/services/playback.service';
-import TimelineExtendToNowService from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
-import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
-import ICamera, {
+import { PlaybackState, PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
+import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import { TimelineExtendToNowService } from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
+import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
+import {
+    ICamera,
     AvailableTransportsAndResolutions,
     SimpleTimeRange,
 } from '@vms-client/submodules/vms/datatypes/ICamera';
-import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { LoggerDecorator } from '@vms-client/utils';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
@@ -40,11 +41,11 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxSettingsService } from '../../../settings/settings.service';
 import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
-import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
-import sidebarLayout from '../sidebarLayout.cfg';
+import { WebClientUxService, WebclientUxState } from '../../services/webclient-ux.service';
+import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
+import { sidebarLayout } from '../sidebarLayout.cfg';
 
-import fullscreen from './fullscreen';
+import { fullscreen } from './fullscreen';
 
 const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
 
@@ -839,5 +840,3 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 }
-
-export default NxSystemViewCameraPageComponent;

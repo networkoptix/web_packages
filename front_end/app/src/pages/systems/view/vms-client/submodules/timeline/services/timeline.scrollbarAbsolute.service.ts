@@ -8,7 +8,7 @@ import {
     TimelineScrollbarRelativeService,
     TimelineScrollbarRelativeServiceStatus
 } from './timeline.scrollbarRelative.service';
-import TimelineService from './timeline.service';
+import { TimelineService } from './timeline.service';
 
 const MIN_BAR_WIDTH_PX = 50;
 
@@ -151,5 +151,3 @@ export class TimelineScrollbarAbsoluteService {
         }
     }
 }
-
-export default TimelineScrollbarAbsoluteService;

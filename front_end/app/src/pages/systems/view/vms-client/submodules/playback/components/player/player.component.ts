@@ -14,9 +14,9 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PlaybackTransport } from '@view/view.types';
 import { LoggerDecorator } from '@view/vms-client/utils';
-import VmsState from '@vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
-import generateClickDubleClickPair from '@vms-client/utils/generateClickDubleClickPair';
+import { VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
+import { generateClickDubleClickPair } from '@vms-client/utils/generateClickDubleClickPair';
 
 import {
     ArchivePlaybackState,
@@ -24,7 +24,7 @@ import {
     PLAYBACK_MODE,
     LivePlaybackState,
 } from '../../datatypes/PlaybackState';
-import PlaybackService from '../../services/playback.service';
+import { PlaybackService } from '../../services/playback.service';
 
 @Component({
     selector: 'player',
@@ -213,5 +213,3 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.videoDblClick.emit(true);
     }
 }
-
-export default PlayerComponent;

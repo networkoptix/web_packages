@@ -61,5 +61,3 @@ function drawSingleStripe (
 function getOffset (speed: pxPerSecond, period: px) {
     return Math.round((Date.now() * speed / 1000) % period);
 }
-
-export default drawStripyBar;

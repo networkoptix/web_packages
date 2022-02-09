@@ -10,10 +10,10 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { ComponentsModule } from '../../../../../../components/components.module';
 
-import components from './components';
-import MediaServerList from './components/media-server-list/media-server-list.component';
-import IpInfoPipe from './pipes/ip_info.pipe';
-// import VideoManagementSystemService from './services/vms.service'
+import { components } from './components';
+import { MediaServerListComponent } from './components/media-server-list/media-server-list.component';
+import { IpInfoPipe } from './pipes/ip_info.pipe';
+// import { VideoManagementSystemService } from './services/vms.service'
 
 @NgModule({
     declarations: [
@@ -31,7 +31,7 @@ import IpInfoPipe from './pipes/ip_info.pipe';
         PipesModule
     ],
     exports: [
-        MediaServerList
+        MediaServerListComponent
     ],
     providers: [
     // VideoManagementSystemService,
@@ -39,5 +39,3 @@ import IpInfoPipe from './pipes/ip_info.pipe';
 })
 export class VmsClientVmsModule {
 }
-
-export default VmsClientVmsModule;

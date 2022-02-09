@@ -1,4 +1,4 @@
-import RegularLengthInterval from './RegularLengthInterval';
+import { RegularLengthInterval } from './RegularLengthInterval';
 
 export type IrregularLengthInterval =
     'millenia' |
@@ -9,5 +9,3 @@ export type IrregularLengthInterval =
     'quarter-year' |
     'month' |
     RegularLengthInterval
-
-export default IrregularLengthInterval;

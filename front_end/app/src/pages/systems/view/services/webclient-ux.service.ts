@@ -61,5 +61,3 @@ export class WebClientUxService {
         this._emit();
     }
 }
-
-export default WebClientUxService;

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, ms } from '@vms-client/utils/type-aliases';
 
-import TimelineService from '../timeline.service';
+import { TimelineService } from '../timeline.service';
 
-import cfg from './drawingConfigs/recordsDrawingConfig';
-import stripeCfg from './stripy-bar/cfg';
-import getSlopeWidth from './stripy-bar/slope';
-import drawStripyBar from './stripy-bar/stripy-bar';
+import { cfg } from './drawingConfigs/recordsDrawingConfig';
+import { stripeCfg } from './stripy-bar/cfg';
+import { getSlopeWidth } from './stripy-bar/slope';
+import { drawStripyBar } from './stripy-bar/stripy-bar';
 
 @Injectable({
     providedIn: 'root'
@@ -105,5 +105,3 @@ export class TimelineRecordsCanvasRendererService {
         );
     }
 }
-
-export default TimelineRecordsCanvasRendererService;

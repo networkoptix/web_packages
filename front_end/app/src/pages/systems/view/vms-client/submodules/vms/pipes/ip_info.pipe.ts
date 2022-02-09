@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
     name: 'ip_info'
 })
-export default class IpInfoPipe implements PipeTransform {
+export class IpInfoPipe implements PipeTransform {
     public transform (url) {
         if (url.includes('://')) {
             url = url.split('://')[1];

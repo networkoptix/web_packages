@@ -8,5 +8,3 @@ export const TOP__MIN_WIDTH_FOR_INTERVALS = {
     year: 100,
     century: 0
 };
-
-export default TOP__MIN_WIDTH_FOR_INTERVALS;

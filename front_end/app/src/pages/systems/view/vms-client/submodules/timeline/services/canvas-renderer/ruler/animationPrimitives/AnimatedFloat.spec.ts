@@ -1,4 +1,4 @@
-import AnimatedFloat from './AnimatedFloat';
+import { AnimatedFloat } from './AnimatedFloat';
 
 const sleep = t => new Promise(resolve => {
     setTimeout(resolve, t);

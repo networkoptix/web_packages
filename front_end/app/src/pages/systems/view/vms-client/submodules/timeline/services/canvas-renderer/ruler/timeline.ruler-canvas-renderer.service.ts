@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import TimelinePrimaryRulerCanvasRendererService from './timeline.primary-ruler-canvas-renderer.service';
-import TimelineTopRulerCanvasRendererService from './timeline.top-ruler-canvas-renderer.service';
+import { TimelinePrimaryRulerCanvasRendererService } from './timeline.primary-ruler-canvas-renderer.service';
+import { TimelineTopRulerCanvasRendererService } from './timeline.top-ruler-canvas-renderer.service';
 
 @Injectable({
     providedIn: 'root'
@@ -19,5 +19,3 @@ export class TimelineRulerCanvasRendererService {
         this.topRenderer.render(ctx);
     }
 }
-
-export default TimelineRulerCanvasRendererService;

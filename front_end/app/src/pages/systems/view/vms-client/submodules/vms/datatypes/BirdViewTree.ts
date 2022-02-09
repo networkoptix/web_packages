@@ -455,5 +455,3 @@ export class BirdViewTreeNode {
         }
     }
 }
-
-export default BirdViewTree;

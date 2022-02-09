@@ -23,7 +23,7 @@ import { WINDOW } from '@services/window-provider';
 import { cleanIp, htmlToEntity, deepCopy, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
-import StateMachine from './stateMachine';
+import { StateMachine } from './stateMachine';
 
 @Component({
     selector: 'nx-modal-merge-content',

@@ -1,4 +1,4 @@
-import IAnimated from './IAnimated';
+import { IAnimated } from './IAnimated';
 import { easeInOutSine, EASING } from './easing-functions';
 
 type float = number
@@ -106,5 +106,3 @@ export class AnimatedFloat implements IAnimated<float> {
         }
     }
 }
-
-export default AnimatedFloat;

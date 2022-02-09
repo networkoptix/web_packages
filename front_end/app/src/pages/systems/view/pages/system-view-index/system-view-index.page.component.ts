@@ -18,12 +18,12 @@ import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemsService } from '@services/systems.service';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
-import TimelineService from '@vms-client/submodules/timeline/services/timeline.service';
-import Camera from '@vms-client/submodules/vms/datatypes/Camera';
+import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
+import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
 import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
-import MediaServer from '@vms-client/submodules/vms/datatypes/MediaServer';
-import VmsState, { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
+import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { LoggerDecorator } from '@vms-client/utils';
 import type { ms } from '@vms-client/utils/type-aliases';
 
@@ -32,9 +32,9 @@ import { NxRibbonService } from '../../../../../components/ribbon/ribbon.service
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSettingsService } from '../../../settings/settings.service';
-import WebClientUxService, { WebclientUxState } from '../../services/webclient-ux.service';
-import fullscreenInactivityCfg from '../fullscreenInactivity.cfg';
-import sidebarLayout from '../sidebarLayout.cfg';
+import { WebClientUxService, WebclientUxState } from '../../services/webclient-ux.service';
+import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
+import { sidebarLayout } from '../sidebarLayout.cfg';
 
 @UntilDestroy()
 @Component({
@@ -526,5 +526,3 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
     }
 }
-
-export default NxSystemViewIndexPageComponent;

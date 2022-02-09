@@ -12,15 +12,15 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystem } from '@services/system.service/system/system';
-import VideoManagementSystemService from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { NxAccountService } from '../../../../../../../../services/account.service';
-import TimeRange from '../../services/TimeRange';
+import { TimeRange } from '../../services/TimeRange';
 import {
     TimelineSelectionService,
     TimelineSelectionServiceStatus
 } from '../../services/timeline.selection.service';
-import TimelineService from '../../services/timeline.service';
+import { TimelineService } from '../../services/timeline.service';
 
 import { msDurationToString } from './utils';
 
@@ -152,5 +152,3 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         }
     }
 }
-
-export default TimelineSelectionActionPanelComponent;

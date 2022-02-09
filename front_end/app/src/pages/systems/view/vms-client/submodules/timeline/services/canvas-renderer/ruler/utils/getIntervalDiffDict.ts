@@ -1,4 +1,4 @@
-import IrregularLengthInterval from '../intervals/IrregularLengthInterval';
+import { IrregularLengthInterval } from '../intervals/IrregularLengthInterval';
 
 export function getWeightArrayFromIntervalList (arr: Array<any>) {
     return arr.reduce((acc, v, k) => {
@@ -23,5 +23,3 @@ export function getIntervalDiffDict (a1: Array<IrregularLengthInterval>, a2: Arr
     });
     return result;
 }
-
-export default getIntervalDiffDict;

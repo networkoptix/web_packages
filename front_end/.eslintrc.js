@@ -224,6 +224,7 @@ module.exports = {
         'import/export': 'error',
         'import/first': 'error',
         'import/no-absolute-path': ['error', { esmodule: true, commonjs: true, amd: false }],
+        'import/no-default-export': 'error',
         'import/no-duplicates': 'error',
         'import/no-named-default': 'error',
         'import/no-webpack-loader-syntax': 'error',

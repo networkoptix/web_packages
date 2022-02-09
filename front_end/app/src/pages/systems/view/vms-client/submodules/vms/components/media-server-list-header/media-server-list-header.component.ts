@@ -41,5 +41,3 @@ export class NxMediaServerListHeaderComponent implements OnInit {
         this.filterTokenChange.emit(this.token);
     }
 }
-
-export default NxMediaServerListHeaderComponent;

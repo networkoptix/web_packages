@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { int, float, px } from '@vms-client/utils/type-aliases';
 
-import TimelineService from './timeline.service';
-import TimelineTimeUnderMouseService from './timeline.time-under-mouse.service';
+import { TimelineService } from './timeline.service';
+import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.service';
 
 @Injectable({
     providedIn: 'root'
@@ -71,5 +71,3 @@ export class TimelineWheelHandlerService {
         this.timeline.zoom(durationDelta, offset);
     }
 }
-
-export default TimelineWheelHandlerService;

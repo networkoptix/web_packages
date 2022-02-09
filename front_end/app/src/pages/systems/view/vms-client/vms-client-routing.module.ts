@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import CameraPageComponent from './pages/system/camera/camera-page.component';
-import SystemPageComponent from './pages/system/system-page.component';
-import TimelinePageComponent from './pages/timeline/timeline-page.component';
+import { CameraPageComponent } from './pages/system/camera/camera-page.component';
+import { SystemPageComponent } from './pages/system/system-page.component';
+import { TimelinePageComponent } from './pages/timeline/timeline-page.component';
 
 export const routes: Routes = [
 
@@ -28,5 +28,3 @@ export const routes: Routes = [
 })
 export class VmsClientRoutingModule {
 }
-
-export default VmsClientRoutingModule;

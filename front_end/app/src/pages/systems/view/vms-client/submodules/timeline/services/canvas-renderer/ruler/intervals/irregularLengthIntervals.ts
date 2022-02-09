@@ -1,4 +1,4 @@
-import IrregularLengthInterval from './IrregularLengthInterval';
+import { IrregularLengthInterval } from './IrregularLengthInterval';
 import { SECOND, MINUTE, HOUR } from './regularLengthIntervals';
 
 // assert ordered
@@ -26,5 +26,3 @@ export const irregularLengthIntervals: Array<IrregularLengthInterval> = [
     'century'
     // 'millenia',
 ];
-
-export default irregularLengthIntervals;

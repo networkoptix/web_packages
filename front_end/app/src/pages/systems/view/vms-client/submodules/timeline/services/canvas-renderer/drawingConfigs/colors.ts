@@ -84,5 +84,3 @@ export const colors = {
     additional_light7: '#F5F7F9',
     additional_light8: '#E1E7EA'
 };
-
-export default colors;

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import PlaybackControlsComponent from './playback-controls.component';
+import { PlaybackControlsComponent } from './playback-controls.component';
 
 describe('PlaybackControlsComponent', () => {
     let component: PlaybackControlsComponent;

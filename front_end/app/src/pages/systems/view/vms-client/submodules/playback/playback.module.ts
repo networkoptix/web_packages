@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '../../../../../../components/components.module';
 
-import components from './components';
+import { components } from './components';
 
 @NgModule({
     declarations: components,
@@ -18,5 +18,3 @@ import components from './components';
 })
 export class VmsClientPlaybackModule {
 }
-
-export default VmsClientPlaybackModule;

@@ -66,5 +66,3 @@ export class SelectTimeRangeModalContent {
         this.activeTab = name;
     }
 }
-
-export default SelectTimeRangeModalContent;
