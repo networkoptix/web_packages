@@ -26,7 +26,7 @@ Reset
 1. Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884    cloud
     ${random user}=    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}      ${permissions}[viewer]
     Log in to user and system    ${random user}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
@@ -125,7 +125,7 @@ Reset
     [Tags]    email    cloud
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}     ${permissions}[cloudAdmin]
 
     #verify user name displayed correctly in users list
     Log in    ${random email}    ${password}
@@ -139,7 +139,7 @@ Reset
 4. Should display same user data as shown in user account
     [Tags]    C41884    cloud
     ${random user}    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[viewer]    ${random user}      ${permissions}[viewer]
     Log in to user and system    ${random user}    ${server 1['cloud id']}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
@@ -332,7 +332,7 @@ Reset
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
         Append To List    ${TMP USERS}    ${random email}
-        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List
@@ -375,7 +375,7 @@ Reset
 13. Change role for Cloud User
     [Tags]    C41900    webadmin    cloud
     ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
-    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}
+    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}     ${permissions}[viewer]
     Log in to system    ${server 1}    ${server 1}[owner]
     Verify In System    ${server 1}[name]
 
@@ -426,7 +426,7 @@ Reset
     ${random email}=   Get Random Email    ${BASE EMAIL}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}    ${permissions}[liveViewer]
     
     # Check that the user's role is added correctly in vms
     FOR    ${user}    IN    @{list}
@@ -453,7 +453,7 @@ Reset
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}
+        Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}     ${permissions}[liveViewer]
         #Sleep    10
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
@@ -526,7 +526,7 @@ Reset
 17. Share with registered user gives user access to system
     [Tags]    email    C41888    cloud
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}      ${permissions}[viewer]
     Log in to user and system    ${random email}    ${server 1['cloud id']}
     Go to System Administration
 
@@ -670,7 +670,7 @@ Reset
     Delete email    ${email}
 
     Set Account Language    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}
+    Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
@@ -708,7 +708,7 @@ Reset
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
         Append To List    ${TMP USERS}    ${random email}
         #Save User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}    
-        Share     ${server 1['cloud auth']}    ${server 1['cloud id']}    ${role}    ${random email}
+        Share     ${server 1['cloud auth']}    ${server 1['cloud id']}    ${role}    ${random email}    ${permissions}[${role}]
         Sleep    5
         Log In    ${random email}    ${password}
         Wait until element is visible    ${SYSTEM NAME}    300

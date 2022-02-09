@@ -19,14 +19,15 @@ ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-passw
 2. Password Too Short asdfghj                            ${7char password}
     [tags]    C41876    Password
 3. Common Password qweasd123                             ${common password}
+# "s" added below to handle weird badge issue
     [tags]    C41876    Password
-4. Cyrillic Password Кенгшщзх                            ${CYRILLIC TEXT}
+4. Cyrillic Password Кенгшщзх                            ${CYRILLIC TEXT}s
     [tags]    C41876    Password
-5. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                       ${SMILEY TEXT}
+5. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                       ${SMILEY TEXT}s
     [tags]    C41876    Password
-6. Glyph Password 您都可以享受源源不絕的好禮及優惠            ${GLYPH TEXT}
+6. Glyph Password 您都可以享受源源不絕的好禮及優惠            ${GLYPH TEXT}s
     [tags]    C41876    Password
-7. TM Password qweasdzxc123®™                            ${TM TEXT}
+7. TM Password qweasdzxc123®™                            ${TM TEXT}s
     [tags]    C41876    Password    CLOUD-8457
 8. Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    ${symbol password}
     [tags]    C41876    Password

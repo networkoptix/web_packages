@@ -111,7 +111,7 @@ Open New Browser On Failure
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Activate Account    ${email}    ${password}
-    Log In    ${email}    ${password}    button=${RESET NEXT BUTTON}    reset=${True}
+    Log In    ${email}    ${password}    button=${ACTIVATION SUCCESS LOG IN BUTTON}    reset=${True}
     Go To    ${url}/authorize/restore_password
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1

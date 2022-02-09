@@ -122,14 +122,14 @@ Set Radio Value
 
 *** Test Cases ***
 1. Camera settings is available to owner admin and custom with permission
-    [Tags]    C76252
+    [Tags]    C76252    
     Verify on Cameras Page
-    Log Out
+    Log Out     add_delay=1
     
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Go To Cameras
     Verify on Cameras Page
-    Log Out
+    Log Out     add_delay=1
     
     Log in to user and system    ${custom cameras}    ${system}[cloud id]
     Go To Cameras
@@ -160,15 +160,15 @@ Set Radio Value
     [Tags]    C76253
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][liveViewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][advancedViewer]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out    add_delay=1
 
     Log in to user and system    ${system}[cloud users][custom]    ${system}[cloud id]
     Element should not be visible    ${CAMERAS LINK}
@@ -182,19 +182,19 @@ Set Radio Value
     Wait Until Elements Are Visible With Retry   ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
 
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][liveViewer]    ${system}[cloud id]
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible With Retry    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][advancedViewer]    ${system}[cloud id]
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible With Retry    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][custom]    ${system}[cloud id]
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
@@ -325,7 +325,7 @@ Set Radio Value
     Should Be Equal    ${status}    ${False}
     
 8. Rename Camera
-    [Tags]    C76259    CLOUD-8269
+    [Tags]    C76259    CLOUD-8269      
     Verify on Cameras Page
     Select Camera by Name    good cam
     Rename System or Hardware    good cam name changed 1
@@ -337,7 +337,7 @@ Set Radio Value
     @{auth}=    Create List    admin    ${password}
     Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    good cam name changed 1
     Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 1
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -354,7 +354,7 @@ Set Radio Value
     Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam name changed 2    id
     Camera Name Should be    ${auth}    https://${QA BURBANK IP}:${system}[port]    ${AUTO TESTS GOOD CAM ID}    good cam name changed 2
     Wait Until Element Contains    ${EDITABLE TITLE}    good cam name changed 2
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -423,7 +423,7 @@ Set Radio Value
     Verify on Cameras Page
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${system}[cloud id]/health
-    Log Out
+    Log Out     add_delay=1
 
     Log in to user and system    ${system}[cloud users][cloudAdmin]    ${system}[cloud id]
     Go To Cameras
@@ -912,14 +912,14 @@ Set Radio Value
 #Record motion and record motion low quality radio buttons should be disabled
 
 32. Placeholder shows when system is offline
-    [Tags]    C76254    debug
+    [Tags]    C76254    
     [Setup]    Offline Server Test Setup
     Wait Until Elements are Visible
     ...    ${OFFLINE PLACEHOLDER IAMGE}
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
-    Log Out
-    Sleep   5
+    Log Out     add_delay=1
+
     Log in to user and system    ${system3}[cloud users][cloudAdmin]    ${system3}[cloud id]
     Wait Until Element is Visible    ${CAMERAS LINK}    timeout=5
     Click Link    ${CAMERAS LINK}
@@ -927,7 +927,7 @@ Set Radio Value
     ...    ${OFFLINE PLACEHOLDER IAMGE}
     ...    ${OFFLINE TITLE}
     ...    ${OFFLINE MESSAGE}
-    Log Out
+    Log Out    add_delay=1
 
     Log in to user and system    ${system2}[cloud users][custom]    ${system2}[cloud id]
     Element should not be visible    ${CAMERAS LINK}

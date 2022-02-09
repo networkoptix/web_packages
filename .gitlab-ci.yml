@@ -231,7 +231,7 @@ frontend:
   stage: build
   image: nx/ci
   script:
-    - runJenkinsJob.sh gitlab.cloud.frontend.review
+    - runJenkinsJob.sh gitlab.cloud.frontend
       "PUSH_TO_ARTIFACTORY=true"
       "BRANCH=$CI_COMMIT_SHORT_SHA"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"

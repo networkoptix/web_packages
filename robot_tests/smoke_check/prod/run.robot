@@ -126,7 +126,7 @@ Merge systems and check the users and the licenses
 Add and delete users
     # Add new - portal
     ${new cloud user}=   Get Random Email    ${email base}
-    Share    ${cloud owner auth}    ${system 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}
+    Share    ${cloud owner auth}    ${system 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}     ${permissions}[liveViewer]
 
     # Delete existing - relay
     ${data}=   Create Dictionary    id=${del user id}

@@ -125,7 +125,7 @@ Portal - Share to registered user
 
     Log    Step 1: Share to existing user via API(viewer permissions)
     ${cloud auth}=   Create List    ${email users}    ${password}
-    Share    ${cloud auth}    ${system users}[cloud id]    ${ACCESS ROLES}[viewer]    ${email existing user1}
+    Share    ${cloud auth}    ${system users}[cloud id]    ${ACCESS ROLES}[viewer]    ${email existing user1}    ${permissions}[viewer]
 
     Log    Step 2: Check email for the user
     ${link}=   Run Keyword If    'nxvms' in $env    Get the link from email    ${email base}    ${email existing user1}    ${email password}    systems

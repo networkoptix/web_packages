@@ -20,13 +20,14 @@ ${CURRENT PASSWORD IS REQUIRED}
     [tags]    C41577    Password
 3. Short New Password              ${BASE PASSWORD}          ${7char password}
     [tags]    C41578    Password
-4. Cyrillic New Password           ${BASE PASSWORD}          ${CYRILLIC TEXT}
+# "s" added below for wierd badge issue
+4. Cyrillic New Password           ${BASE PASSWORD}          ${CYRILLIC TEXT}s
     [tags]    C41578    Password
-5. Smiley New Password             ${BASE PASSWORD}          ${SMILEY TEXT}
+5. Smiley New Password             ${BASE PASSWORD}          ${SMILEY TEXT}s
     [tags]    C41578    Password
-6. Glyph New Password              ${BASE PASSWORD}          ${GLYPH TEXT}
+6. Glyph New Password              ${BASE PASSWORD}          ${GLYPH TEXT}s
     [tags]    C41578    Password
-7. TM New Password                 ${BASE PASSWORD}          ${TM TEXT}
+7. TM New Password                 ${BASE PASSWORD}          ${TM TEXT}s
     [tags]    C41578    Password
 8. Leading Space New Password      ${BASE PASSWORD}          ${SPACE}${BASE PASSWORD}
     [tags]    C41578    Password

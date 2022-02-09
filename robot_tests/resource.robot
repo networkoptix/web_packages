@@ -207,8 +207,13 @@ Check Log In
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
+    # Add a delay to your call if logging in soon after logging oiut to avoid session race condition
+    [Arguments]     ${add_delay}=0
     Run Keyword If    '''${mode}'''=='''cloud'''    Log Out cloud
     ...    ELSE    Log Out Web Admin
+    IF   ${add_delay} > 0
+        Sleep   ${add_delay}
+    END
 
 Log Out Cloud
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -479,6 +484,12 @@ Check For Alert Dismissable
     Click Button    ${ALERT CLOSE}
     Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]
 
+Check Error Content and Reset Button Disabled
+    Wait Until Element Is Visible    //nx-authorize-reset-request-component//main//form//p
+    ${error text}=    Get Text    //nx-authorize-reset-request-component//main//form//p
+    Should Be Equal    ${error text}    ${ACCOUNT DOES NOT EXIST TEXT}
+    Element Should Be Disabled    ${RESET PASSWORD BUTTON}
+    
 Verify In System
     [arguments]    ${system name}    ${editable}=${True}
     Go to System Administration
@@ -664,7 +675,7 @@ User is in cloud system
 Add user to cloud system if not there
     [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
     ${is there}=   User is in cloud system    ${email}    ${system id}    ${auth}
-    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}
+    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}     ${permissions}[${access role}]
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
