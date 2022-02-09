@@ -110,13 +110,12 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 this.setPopoverTargets();
             });
 
-        // TODO: Replace with API logic
         this.applyService.initPageWatcher(
             this.applyContainer,
             this.processService.createProcess(
                 () => {
                     return this.dialogs
-                        .toggleVerificationCode(this.verificationWatcher.value)
+                        .toggleVerificationCode()
                         .then(action => {
                             if (action === 'canceled') {
                                 return Promise.reject('dialogCancel');

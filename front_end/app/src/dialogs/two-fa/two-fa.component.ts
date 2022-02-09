@@ -311,40 +311,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         });
 
-        // Adapted from full codeProcess for verification code toggle for now
-        // TODO: Replace with digest auth toggle
         this.verificationProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
-            // Don't need to get backup codes or refresh session when toggle verification
-            if (this.type === 'verification-disable') {
-                return this.accountService.update2fa('', this.tfaCode, 'toggle');
-            } else {
-                // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
-                return this.accountService.get2FaBackupCode().then((response: any) => {
-                    if (response.errorText !== undefined) {
-                        return Promise.reject({ resultCode: 'noBackupCodes' });
-                    }
-                    this.newCodes = response.map(code => code.backup_code);
-
-                    return this.refreshSession()
-                        .then((result) => {
-                            if (result.resultCode === 'ok') {
-                                return this.accountService.update2fa(
-                                    '',
-                                    this.tfaCode,
-                                    'toggle'
-                                );
-                            }
-
-                            return Promise.reject({ resultCode: result.errorText });
-                        }, (err) => {
-                            return Promise.reject({ resultCode: err.error.resultCode });
-                        });
-                });
-            }
+            return this.accountService.update2fa('', this.tfaCode, 'toggle');
         }, {
             ignoreUnauthorized: true,
             ignoreError: true,
@@ -456,7 +428,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             this.setTemplate(T_FA_STEPS.Disable2FaCode);
         } else if (this.type === 'changePassword') {
             this.setTemplate(T_FA_STEPS.ChangePassword);
-        } else if (this.type.startsWith('verification')) {
+        } else if (this.type === 'verification-toggle') {
             this.setTemplate(T_FA_STEPS.VerificationToggle);
         } else if (this.type === 'code') {
             this.accountService
