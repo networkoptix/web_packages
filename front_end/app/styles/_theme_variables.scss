@@ -34,19 +34,49 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --left-menu-border-color      : transparent;
     --left-menu-l1-bg             : var(--additional_light2);
     --left-menu-l1-bg-hover       : var(--additional_light3);
+    --left-menu-l1-bg-active      : #{$light5};
     --left-menu-l1-color          : var(--dark9);
     --left-menu-l1-selected-bg    : var(--light5);
+    --left-menu-l1-selected-hover-bg : #{$light6};
     --left-menu-l3-scroll         : var(--light5);
     --left-menu-l3-shadow         : transparent;
     --left-menu-l3-bg             : var(--light5);
     --left-menu-l3-color          : var(--dark9);
+    --left-menu-l3-hover-bg       : #{$light6};
+    --left-menu-l3-hover-color    : #{$dark9};
     --left-menu-l3-opacity        : 1;
     --left-menu-l3-selected-bg    : var(--light16);
     --left-menu-l3-selected-color : var(--light1);
     
-    --btn-default-bg: var(--light4);
-    --btn-default-color: var(--dark9);
-    --btn-default-shadow : var(--light7);
+    --btn-default-bg           : #{$light4};
+    --btn-default-color        : #{$dark9};
+    --btn-default-shadow       : #{$light7};
+    --btn-default-hover-bg     : #{$light5};
+    --btn-default-hover-color  : #{$dark9};
+    --btn-default-hover-shadow  : #{$light8};
+    --btn-default-active-bg    : #{$light6};
+    --btn-default-active-color : #{$dark9};
+    --btn-default-active-shadow : #{$light9};
+    
+    --btn-primary-bg           : #{$brand-core};
+    --btn-primary-color        : #{$light1};
+    --btn-primary-shadow       : #{$brand-d2};
+    --btn-primary-hover-bg     : #{$brand-d1};
+    --btn-primary-hover-color  : #{$light1};
+    --btn-primary-hover-shadow  : #{$brand-d3};
+    --btn-primary-active-bg    : #{$brand-d2};
+    --btn-primary-active-color : #{$light1};
+    --btn-primary-active-shadow : #{$brand-d4};
+    
+    --btn-danger-bg            : #{$red_main};
+    --btn-danger-color         : #{$light1};
+    --btn-danger-shadow        : #{$red_d2};
+    --btn-danger-hover-bg      : #{$red_d1};
+    --btn-danger-hover-color   : #{$light1};
+    --btn-danger-hover-shadow  : #{$red_d3};
+    --btn-danger-active-bg     : #{$red_d2};
+    --btn-danger-active-color  : #{$light1};
+    --btn-danger-active-shadow : #{$red_d4};
     
     --btn-clear-bg    : transparent;
     --btn-clear-color : var(--dark9);
@@ -61,6 +91,13 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --btn-dropdown-toggle-shadow-color : #{$light7};
     --btn-dropdown-toggle-hover-bg : #{$light5};
     --btn-dropdown-toggle-active-bg : #{$light6};
+    
+    --btn-tag-bg : #{$light4};
+    --btn-tag-color : #{$light16};
+    --btn-tag-selected-bg    : #{$light16};
+    --btn-tag-selected-hover-bg : #{$light17};
+    --btn-tag-selected-active-bg : #{$light18};
+    --btn-tag-selected-color : #{$light1};
     
     --dropdown-menu-arrow-color : #{$light4};
     --dropdown-menu-arrow-fill-color : #{$additional_light1};
@@ -92,6 +129,9 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --input-active-bg           : var(--light1);
     --input-active-color        : var(--dark9);
     --input-active-border-color : var(--light6);
+    
+    --input-numeric-arrow-bg : #{$light1};
+    --input-numeric-arrow-color : #{$dark9};
     
     --badge-opacity : 1;
     --badge-base-bg : #{$light4};
@@ -144,19 +184,19 @@ html[data-theme="dark"] {
     --left-menu-border-color      : #2B383F; //$dark9;
     --left-menu-l1-bg             : #1C2327; //$dark6;
     --left-menu-l1-bg-hover       : #3A4D57; //$dark11;
+    --left-menu-l1-bg-active      : #2B383F; //$dark9;
     --left-menu-l1-color          : #E1E7EA; //$light4;
     --left-menu-l1-selected-bg    : #1C2327; //$dark6;
+    --left-menu-l1-selected-hover-bg : #2B383F; //$dark9;
     --left-menu-l3-scroll         : #1C2327; //$dark6;
     --left-menu-l3-shadow         : transparent;
     --left-menu-l3-bg             : #1C2327; //$dark6;
     --left-menu-l3-color          : #E1E7EA; //$light4;
+    --left-menu-l3-hover-bg       : #A5B7C0; //light10;
+    --left-menu-l3-hover-color    : #080707; //$dark2
     --left-menu-l3-opacity        : 0.6;
     --left-menu-l3-selected-bg    : #35464F; //$light16;
     --left-menu-l3-selected-color : #F5F7F8; //$light2;
-    
-    --btn-default-bg   : #35464F; //$dark11;
-    --btn-default-color : #E1E7EA; //$light4;
-    --btn-default-shadow : #080707; //$light2;
     
     --btn-clear-bg    : transparent;
     --btn-clear-color : #E1E7EA; //$light4;
@@ -172,6 +212,50 @@ html[data-theme="dark"] {
     --btn-dropdown-toggle-hover-bg : #2B383F; //$dark9;
     --btn-dropdown-toggle-active-bg : #35464F; //$dark11;
     
+    --btn-tag-bg                 : #3A4D57; //$dark12;
+    --btn-tag-color              : #F5F7F8; //$light2;
+    --btn-tag-selected-bg        : #49626F; //$dark15;
+    --btn-tag-selected-hover-bg  : #35464F; //$dark11;
+    --btn-tag-selected-active-bg : #263137; //$dark8
+    --btn-tag-selected-color     : #E1E7EA; //$light4;
+    
+    --btn-arrow-bg : #3A4D57; //$dark12;
+    --btn-arrow-color : #F5F7F8; //$light2;
+    --btn-arrow-hover-bg    : #303F47; //$dark10;
+    --btn-arrow-hover-color : #F5F7F8; //$light2;
+    --btn-arrow-selected-bg    : #2B383F; //$dark9;
+    --btn-arrow-selected-color : #D7DFE3; //$light5;
+    
+    --btn-default-bg           : #3A4D57; //$dark12;
+    --btn-default-color        : #F5F7F8; //$light2;
+    --btn-default-shadow       : #263137; //$dark8
+    --btn-default-hover-bg     : #303F47; //$dark10;
+    --btn-default-hover-color  : #F5F7F8; //$light2;
+    --btn-default-hover-shadow  : #1C2327; //$dark6;
+    --btn-default-active-bg    : #2B383F; //$dark9;
+    --btn-default-active-color : #D7DFE3; //$light5;
+    --btn-default-active-shadow : #1C2327; //$dark6;
+    
+    --btn-primary-bg           : #2FA2DB; //$brand-core;
+    --btn-primary-color        : #F5F7F8; //$light2;
+    --btn-primary-shadow       : #1B82AD; //$brand-d2;
+    --btn-primary-hover-bg     : #1B82AD; //$brand-d2;
+    --btn-primary-hover-color  : #F5F7F8; //$light2;
+    --btn-primary-hover-shadow  : #117297; //$brand_d3;
+    --btn-primary-active-bg    : #076281; //$brand-d4;
+    --btn-primary-active-color : #F5F7F8; //$light2;
+    --btn-primary-active-shadow : #076281; //$brand-d4;
+    
+    --btn-danger-bg            : #741414; //$red_d3;
+    --btn-danger-color         : #F5F7F8; //$light2;
+    --btn-danger-shadow        : #5E1010; //red_d4;
+    --btn-danger-hover-bg      : #5E1010; //$red-d4;
+    --btn-danger-hover-color   : #F5F7F8; //$light2;
+    --btn-danger-hover-shadow  : #330909; //$red_d6;
+    --btn-danger-active-bg     : #480D0D; //$red-d5;
+    --btn-danger-active-color  : #F5F7F8; //$light2;
+    --btn-danger-active-shadow : #330909; //$red_d6;
+    
     --dropdown-menu-arrow-color      : #49626F; //$dark15;
     --dropdown-menu-arrow-fill-color : #121517; //dark4;
     
@@ -185,6 +269,7 @@ html[data-theme="dark"] {
     
     //--btn-text-bg    : $light4;
     //--btn-text-color : $dark9;
+    
     
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
@@ -202,6 +287,9 @@ html[data-theme="dark"] {
     --input-active-bg           : #0D0E0F; //$dark3;
     --input-active-color        : #E1E7EA; //$light4;
     --input-active-border-color : #5D7E8F; //$dark19;
+    
+    --input-numeric-arrow-bg    : #121517; //$dark4;
+    --input-numeric-arrow-color : #A5B7C0; //$light10;
     
     --badge-opacity : 0.9;
     --badge-base-bg    : #1C2327; //$dark6;

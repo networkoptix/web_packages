@@ -27,7 +27,7 @@
             margin-bottom: .5rem;
 
             .menu-level-1.selected:hover {
-                background-color: $light6 !important;
+                background-color: var(--left-menu-l1-selected-hover-bg) !important;
             }
         }
     }

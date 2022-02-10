@@ -187,6 +187,10 @@ p {
     @include font-source($font-family-regular, $h5-font-size, $dark9);
 }
 
+@mixin regular14nocolor {
+    @include font-source($font-family-regular, $h5-font-size);
+}
+
 @mixin regular14dark9lh16 {
     @include font-source($font-family-regular, $h6-font-size, $dark9, false, rem(16px));
 }

@@ -15,6 +15,8 @@ import {
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 /* Usage
  <nx-numeric
@@ -60,6 +62,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     @Output() onChange = new EventEmitter<number>();
 
+    CONFIG: IConfig;
     componentId: string;
     _value: number;
     _previousValue: number;
@@ -73,6 +76,12 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
 
     private onChangeCallback = (_: any) => {
     };
+
+    constructor(
+        configService : NxConfigService,
+    ) {
+        this.CONFIG = configService.getConfig();
+    }
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {

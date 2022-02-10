@@ -5,10 +5,12 @@ import {
     waitForAsync
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { MockProvider } from 'ng-mocks';
 
 import {
     NxNumericComponent
 } from '@components/numeric-input/numeric.component';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
@@ -29,7 +31,9 @@ describe('NumericComponent', () => {
                 FormsModule
             ],
             declarations: [NxNumericComponent],
-            providers: []
+            providers: [
+                MockProvider(NxConfigService),
+            ]
         })
             .compileComponents()
             .then(() => {

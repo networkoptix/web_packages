@@ -21,7 +21,7 @@ $item_height : 40px;
     }
 
     &:active {
-        background-color : $light5;
+        background-color : var(--left-menu-l1-bg-active);
     }
 
     &-icon {

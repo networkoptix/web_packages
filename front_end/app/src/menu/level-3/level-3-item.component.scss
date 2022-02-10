@@ -63,7 +63,8 @@
 
     &:hover {
         &, * {
-            background-color: $light6 !important;
+            background-color: var(--left-menu-l3-hover-bg) !important;
+            color : var(--left-menu-l3-hover-color);
         }
     }
 
