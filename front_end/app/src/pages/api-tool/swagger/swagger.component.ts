@@ -386,7 +386,7 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     addLineCounter = (parent: HTMLElement) => {
-        const lines =  parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
+        const lines =  parent.textContent.split('\n').map(div => `<div class='line'>${div}</div>`);
         if (lines.length > 1) { // Don't show line counters if only one line
             parent.innerHTML = lines.join('\n');
             let contentFound = false;
@@ -407,7 +407,7 @@ export class NxSwaggerComponent implements OnChanges {
                 parent.lastElementChild.remove();
             }
         } else {
-            parent.innerHTML = parent.innerText; // If no lines are added, remove code highlighting elements that comes from swagger-ui
+            parent.innerHTML = parent.textContent; // If no lines are added, remove code highlighting elements that comes from swagger-ui
         };
     }
 
