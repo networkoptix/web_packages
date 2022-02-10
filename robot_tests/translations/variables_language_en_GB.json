@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Please fill in the name",
     "LAST NAME IS REQUIRED TEXT": "Surname is required",
     "EMAIL IS REQUIRED TEXT": "Email is required",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Password is required",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

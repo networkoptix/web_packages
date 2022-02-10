@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Fornavn er påkrevd",
     "LAST NAME IS REQUIRED TEXT": "Etternavn er påkrevd",
     "EMAIL IS REQUIRED TEXT": "E-post er påkrevd",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Passord er påkrevd",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

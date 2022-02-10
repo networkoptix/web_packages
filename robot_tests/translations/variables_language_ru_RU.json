@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Имя обязательно для заполнения",
     "LAST NAME IS REQUIRED TEXT": "Фамилия обязательна для заполнения",
     "EMAIL IS REQUIRED TEXT": "Email обязателен для заполнения",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Пароль обязателен для заполнения",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

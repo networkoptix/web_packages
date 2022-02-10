@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "ต้องระบุชื่อ",
     "LAST NAME IS REQUIRED TEXT": "ต้องระบุนามสกุล",
     "EMAIL IS REQUIRED TEXT": "ต้องระบุอีเมล",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "จำเป็นต้องใช้รหัสผ่าน",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

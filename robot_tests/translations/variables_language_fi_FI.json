@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Etunimi on pakollinen",
     "LAST NAME IS REQUIRED TEXT": "Sukunimi on pakollinen",
     "EMAIL IS REQUIRED TEXT": "Sähköpostiosoite vaaditaan",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Salasana on pakollinen",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

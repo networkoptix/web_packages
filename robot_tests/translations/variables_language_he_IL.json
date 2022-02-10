@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "נדרש שם פרטי",
     "LAST NAME IS REQUIRED TEXT": "נדרש שם משפחה",
     "EMAIL IS REQUIRED TEXT": "נדרש דוא\"ל",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "נדרשת סיסמא",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

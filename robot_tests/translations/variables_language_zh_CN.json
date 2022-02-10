@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "名字是必填项",
     "LAST NAME IS REQUIRED TEXT": "姓氏是必填项",
     "EMAIL IS REQUIRED TEXT": "电子邮件是必填栏位",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "密码为必填项",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

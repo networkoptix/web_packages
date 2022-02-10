@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Jméno je povinné",
     "LAST NAME IS REQUIRED TEXT": "Příjmení je povinné",
     "EMAIL IS REQUIRED TEXT": "Je vyžadován e-mail",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Heslo je vyžadováno",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

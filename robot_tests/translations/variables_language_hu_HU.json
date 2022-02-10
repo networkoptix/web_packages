@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Utónév megadása szükséges",
     "LAST NAME IS REQUIRED TEXT": "Vezetéknév megadása szükséges",
     "EMAIL IS REQUIRED TEXT": "Email megadása szükséges",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Jelszó megadása szükséges",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",

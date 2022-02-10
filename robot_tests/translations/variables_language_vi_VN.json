@@ -520,6 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Họ là bắt buộc",
     "LAST NAME IS REQUIRED TEXT": "Họ là bắt buộc",
     "EMAIL IS REQUIRED TEXT": "Email là bắt buộc",
+    "ENTER EMAIL TEXT": "Enter email",
     "PASSWORD IS REQUIRED TEXT": "Mật khẩu là bắt buộc",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",
