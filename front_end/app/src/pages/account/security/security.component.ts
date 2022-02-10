@@ -133,7 +133,10 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             () => {
                 this.applyService.reset();
             },
-            [this.verificationWatcher]
+            [this.verificationWatcher],
+            undefined,
+            undefined,
+            true
         );
     }
 
@@ -192,8 +195,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     @HostListener('document:click', ['$event.target'])
     onMouseClick(targetElement) {
-        if (targetElement.className !== 'pseudo-anchor') {
-            this.popover?.close();
+        if (targetElement.className !== 'pseudo-anchor' && this.popover) {
+            this.popover.close();
             this.popover = undefined;
         }
     }

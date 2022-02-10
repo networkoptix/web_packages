@@ -403,7 +403,8 @@ export class NxApplyService {
         form: NgForm,
         saveFunction: Process,
         discardFunction?: () => void,
-        owner?: any
+        owner = undefined,
+        nonSystem = true
     ) {
         const updateOriginalForm = () => {
             const forms = this.applyComponentInstance.forms;
@@ -469,6 +470,8 @@ export class NxApplyService {
                 }, Promise.resolve({ result: 'ok' })
             );
         };
+
+        this.nonSystem$.next(nonSystem);
 
         if (this.applyComponentRef) {
             const formatInitial = () => {
