@@ -127,7 +127,7 @@ export class NxDropMenu extends BaseDropdown {
             } else {
                 user = await this.accountService.get(true);
             }
-            const isAdmin = user?.permissions.includes('GlobalAdminPermission') || false;
+            const isAdmin = user?.permissions?.includes('GlobalAdminPermission') || false;
             this.systems$.next(changes.systems.currentValue);
             const activeSystem = this.headerService.activeSystem ||
                 this.headerService.lastActive$.value ||

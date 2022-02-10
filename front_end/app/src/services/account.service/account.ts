@@ -32,7 +32,7 @@ export class Account {
         this.first_name = first;
         this.last_name = (rest || ['']).reverse()[0];
         this.permissions = (permissions || '').split('|');
-        this.is_superuser = isAdmin || permissions.includes('GlobalAdminPermission');
+        this.is_superuser = isAdmin || permissions?.includes('GlobalAdminPermission');
         this.isCloud = isCloud;
     }
 }
