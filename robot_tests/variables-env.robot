@@ -16,6 +16,11 @@ ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 @{AUTO SYS AUTH}                      admin    qweasd 123
 
+&{LM HOSTS}
+   ...    prod=https://licensing.vmsproxy.com
+   ...    stage=https://nxlicensed.hdw.mx
+   ...    test=https://nxlicensed.test.hdw.mx
+
 ${BROWSER}                            Chrome
 
 ${MODE}                               cloud
