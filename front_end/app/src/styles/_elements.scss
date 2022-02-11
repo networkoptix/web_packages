@@ -28,13 +28,13 @@ svg {
 
 .standalone-delimiter {
     height           : 1px;
-    background-color : $light5;
+    background-color : var(--border-color);
     padding          : 0 12px;
     position         : relative;
 
     &:after {
         height           : 1px;
-        background-color : $light7;
+        background-color : var(--horizontal-sep-color);
         content          : "";
         position         : absolute;
         width            : calc(100% - 24px);

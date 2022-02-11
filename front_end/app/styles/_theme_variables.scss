@@ -48,6 +48,17 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --left-menu-l3-selected-bg    : var(--light16);
     --left-menu-l3-selected-color : var(--light1);
     
+    --btn-text-color        : #{$light16};
+    --btn-text-hover-color  : #{$dark15};
+    --btn-text-active-color : #{$light16};
+    
+    --btn-clear-bg    : transparent;
+    --btn-clear-color : #{$dark9};
+    --btn-clear-hover-bg  : rgba(#{$light16}, .1);
+    --btn-clear-hover-color  : #{$dark9};
+    --btn-clear-active-bg : rgba(#{$light16}, .15);
+    --btn-clear-active-color : #{$dark9};
+    
     --btn-default-bg           : #{$light4};
     --btn-default-color        : #{$dark9};
     --btn-default-shadow       : #{$light7};
@@ -77,9 +88,6 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --btn-danger-active-bg     : #{$red_d2};
     --btn-danger-active-color  : #{$light1};
     --btn-danger-active-shadow : #{$red_d4};
-    
-    --btn-clear-bg    : transparent;
-    --btn-clear-color : var(--dark9);
     
     --btn-header-saparator-color : var(--light4);
     --btn-header-main-bg    : var(--light4);
@@ -198,8 +206,16 @@ html[data-theme="dark"] {
     --left-menu-l3-selected-bg    : #35464F; //$light16;
     --left-menu-l3-selected-color : #F5F7F8; //$light2;
     
+    --btn-text-color : #E1E7EA; //$light4;
+    --btn-text-hover-color : #A5B7C0; //light10;
+    --btn-text-active-color : #5F7F8F; //$light17;
+    
     --btn-clear-bg    : transparent;
     --btn-clear-color : #E1E7EA; //$light4;
+    --btn-clear-hover-bg  : transparent;
+    --btn-clear-hover-color  : #A5B7C0; //light10;
+    --btn-clear-active-bg : transparent;
+    --btn-clear-active-color : #5F7F8F; //$light17;
     
     --btn-header-saparator-color : #A5B7C0; //light10;
     --btn-header-main-bg    : transparent;
@@ -266,10 +282,6 @@ html[data-theme="dark"] {
     --dropdown-item-active-bg : #B9C7CE; //$light8;
     --dropdown-item-hover-bg : #A5B7C0; //$light10;
     --dropdown-item-hover-color : #080707; //$dark2;
-    
-    //--btn-text-bg    : $light4;
-    //--btn-text-color : $dark9;
-    
     
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;

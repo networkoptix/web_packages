@@ -210,7 +210,11 @@ button, .btn {
     align-content    : center;
     justify-content  : center;
     border-radius    : $border-radius-base !important;
-
+    
+    svg-icon svg .st0 {
+        stroke : var(--btn-clear-color);
+    }
+    
     input {
         position : absolute;
         opacity  : 0;
@@ -221,12 +225,22 @@ button, .btn {
     }
 
     &:hover:not([disabled]):not(.disabled) {
-        background-color : rgba($light16, .1);
+        color : var(--btn-clear-hover-color);
+        background-color : var(--btn-clear-hover-bg);
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-clear-hover-color);
+        }
     }
 
     &:active,
     &.active {
-        background-color : rgba($light16, .15) !important;
+        color : var(--btn-clear-active-color);
+        background-color : var(--btn-clear-active-bg) !important;
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-clear-active-color);
+        }
     }
 }
 
@@ -375,6 +389,10 @@ button, .btn {
     svg-icon svg {
         width  : 20px;
         height : 20px;
+        
+        .st0 {
+            stroke : var(--btn-text-color);
+        }
     }
 
     &.has-icon {
@@ -383,21 +401,21 @@ button, .btn {
 
         svg {
             path {
-                fill : $light16;
+                fill : var(--btn-text-color);
             }
         }
     }
 
     span {
-        @include typography.regular13light;
-
+        @include typography.regular13nocolor;
+        color : var(--btn-text-color);
         &.close {
             left   : 4px;
             width  : 16px;
             height : 16px;
 
             &:before, &:after {
-                background-color : $light16;
+                background-color : var(--btn-text-color);
             }
         }
     }
@@ -406,26 +424,34 @@ button, .btn {
         text-decoration : none;
 
         span {
-            color           : $dark15 !important;
+            color           : var(--btn-text-hover-color) !important;
             text-decoration : none;
 
             &.close {
                 &:before, &:after {
-                    background-color : $dark15;
+                    background-color : var(--btn-text-hover-color);
                 }
             }
+        }
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-text-hover-color);
         }
     }
 
     &:active {
         span {
-            color : $light16 !important;
+            color : var(--btn-text-active-color) !important;
 
             &.close {
                 &:before, &:after {
-                    color : $light16 !important;
+                    color : var(--btn-text-active-color) !important;
                 }
             }
+        }
+    
+        svg-icon svg .st0 {
+            stroke : var(--btn-text-active-color);
         }
     }
 }
