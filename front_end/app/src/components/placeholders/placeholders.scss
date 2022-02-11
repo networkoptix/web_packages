@@ -1,5 +1,5 @@
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/typography';
+@use "../../../styles/theme_variables" as *;
+@use "../../styles/typography";
 
 $preloader_circle_color          : $light;
 $preloader_circle_size           : 16px;
@@ -193,6 +193,10 @@ $preloader_small_circle_distance : 8px;
     margin-bottom : 24px;
 
     svg {
+        .brand_element_cloud {
+            fill : var(--placehoder-cloud-color);
+            opacity: var(--placehoder-cloud-opacity);
+        }
         .brand_element {
             fill : var(--brand-core);
         }
@@ -200,7 +204,8 @@ $preloader_small_circle_distance : 8px;
 }
 
 .placeholder-title {
-    @include typography.medium24dark9;
+    @include typography.medium24nocolor;
+    color : var(--placehoder-title-color) !important;
     text-align      : center;
     margin-bottom   : 1rem;
     justify-content : center;
@@ -208,7 +213,8 @@ $preloader_small_circle_distance : 8px;
 }
 
 .placeholder-message {
-    @include typography.regular15dark9;
+    @include typography.regular15nocolor;
+    color : var(--placehoder-body-color) !important;
     line-height : 24px;
     max-width   : 560px;
 }

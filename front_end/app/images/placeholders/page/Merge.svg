@@ -2,7 +2,6 @@
 <svg viewBox="0 0 400 200" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 style="enable-background:new 0 0 400 200;" xml:space="preserve">
 <style type="text/css">
-	.st0{opacity:0.1;fill-rule:evenodd;clip-rule:evenodd;fill:#2EA2DB;enable-background:new    ;}
 	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#455A67;stroke:#212A2F;stroke-width:2;stroke-linejoin:round;}
 	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;stroke:#212A2F;stroke-width:2;}
 	.st3{fill-rule:evenodd;clip-rule:evenodd;fill:#E1E7EA;stroke:#212A2F;stroke-width:2;}
@@ -12,7 +11,7 @@
 	.st7{fill-rule:evenodd;clip-rule:evenodd;fill:#2EA2DB;stroke:#212A2F;stroke-width:2;stroke-linejoin:round;}
 	.st8{fill:#212A2F;}
 </style>
-<path id="Combined-Shape" class="st0" d="M200.2,0C224,0,246,6.8,264.1,18.4l76.2,0c33,0,59.7,26.7,59.7,59.7
+<path id="Combined-Shape" class="brand_element_cloud" fill="#2EA2DB" d="M200.2,0C224,0,246,6.8,264.1,18.4l76.2,0c33,0,59.7,26.7,59.7,59.7
 	c0,27.5-18.6,50.6-43.8,57.6c-12.3,24.2-39.3,40.9-70.6,40.9c-4.5,0-8.9-0.3-13.1-1c-19.4,15.2-44.6,24.4-72.2,24.4
 	c-27.6,0-52.8-9.2-72.1-24.3c-4.1,0.6-8.3,0.9-12.6,0.9C84.2,176.6,57.3,160,45,136c-25.9-6.5-45-30-45-57.9
 	c0-33,26.7-59.7,59.7-59.7l76.7,0C154.4,6.8,176.4,0,200.2,0z"/>
