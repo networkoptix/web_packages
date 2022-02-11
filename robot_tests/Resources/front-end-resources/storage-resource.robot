@@ -96,7 +96,7 @@ Verify Storages
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number}
     Run Keyword If    ${login}    Run Keywords
-    ...    Log Out    AND
+    ...    Log Out    add_delay=1    AND
     ...    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
 
 Turn on Recording
