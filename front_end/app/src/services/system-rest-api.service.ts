@@ -571,7 +571,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     // remoteCertificatePem          : '', // Currently optional.
                     mergeOneServer: false,
                     ignoreIncompatible: false,
-                    ignoreOfflineServerDuplicates: false
+                    ignoreOfflineServerDuplicates: true
                 };
                 return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
             })
