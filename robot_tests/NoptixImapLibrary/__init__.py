@@ -21,8 +21,8 @@ IMAP Library - a IMAP email testing library.
 import quopri
 from email import message_from_string
 from imaplib import IMAP4, IMAP4_SSL
-from re import findall, sub
-from time import sleep, time
+from re import findall
+import time
 try:
     from urllib.request import urlopen
 except ImportError:
@@ -145,19 +145,16 @@ class NoptixImapLibrary(object):
         Examples:
         | Get Links From Email | INDEX |
         """
-        body = self.get_email_body(email_index)
-        #body = body.decode('utf-8')
-        print (body)
-        res = findall(r'href=[\'"]?([^\'" >]+)', str(body))
+        body = self.get_email_body(email_index).decode('utf-8')
+        res = findall(r'href=[\'"]?([^\'" >]+)', body)
         return res
 
     def get_nx_links_from_email(self, email_index, path):
         body = self.get_email_body(email_index)
-        #body = body.decode('utf-8')
-        url = r'href=[\'\"]?(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'.format(path)
+        # url = r'href=[\'\"]?(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'.format(path)
+        url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize\/{path})\/[^\'\" >]+)'
         res = findall(url, str(body))
         return str(res[0][0])
-
 
     def get_matches_from_email(self, email_index, pattern):
         """Returns all Regular Expression ``pattern`` found in the email body
@@ -325,13 +322,13 @@ class NoptixImapLibrary(object):
         """
         poll_frequency = float(kwargs.pop('poll_frequency', 44))
         timeout = int(kwargs.pop('timeout', 60))
-        end_time = time() + timeout
-        while time() < end_time:
+        end_time = time.time() + timeout
+        while time.time() < end_time:
             self._mails = self._check_emails(**kwargs)
             if len(self._mails) > 0:
                 return self._mails[-1]
-            if time() < end_time:
-                sleep(poll_frequency)
+            if time.time() < end_time:
+                time.sleep(poll_frequency)
         raise AssertionError("No email received within %ss" % timeout)
 
     def wait_for_mail(self, **kwargs):

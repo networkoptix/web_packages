@@ -6,6 +6,7 @@ PASSWORD = ""
 BACKUP_CODE = None
 VERIFICATION_CODE = None
 
+
 class CloudSession:
     def __init__(self, instance, username, password, backup_code=None, verification_code=None, logout=True):
         self.session = requests.Session()

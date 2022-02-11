@@ -412,7 +412,7 @@ class CloudPortalAPI(object):
             logger.trace(self.customization)
             body= {
                 "name": name,
-                "customization":self.customization
+                "customization": self.customization
             }
             r = s.post(f'{cloudUrl}/cdb/system/bind', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
             logger.trace(r.json())
@@ -435,16 +435,16 @@ class CloudPortalAPI(object):
 
     @keyword
     def rename_system(self, auth, systemId, newName):
-        body= {
-            "systemId":systemId,
-            "name":newName
+        body = {
+            "systemId": systemId,
+            "name": newName
         }
         r = requests.post(f'{self.env}/cdb/system/rename', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
 
     @keyword
     def share(self, auth, systemId, accessRole, accountEmail, customPermissions):
-        body= {
+        body = {
             "systemId":systemId,
             "accessRole":accessRole,
             "accountEmail":accountEmail,
@@ -473,7 +473,7 @@ class CloudPortalAPI(object):
     def set_account_password(self, email, oldPassword, newPassword):
         passwordHa1 = Encode.get_ha1_password(email, newPassword)
         passwordHa1Sha256 = Encode.get_ha1_sha256_password(email, newPassword)
-        body= {
+        body = {
             "passwordHa1":passwordHa1,
             "passwordHa1Sha256":passwordHa1Sha256
         }
@@ -487,29 +487,29 @@ class CloudPortalAPI(object):
 
     @keyword
     def register_account(self, firstName, lastName, email, password):
-        body= {
-            "email":email,
-            "password":password,
-            "first_name":firstName,
-            "last_name":lastName
+        body = {
+            "email": email,
+            "password": password,
+            "first_name": firstName,
+            "last_name": lastName
         }
         r = requests.post(f'{self.env}/api/account/register', auth=HTTPBasicAuth(self.baseEmail, self.password), json=body, verify=False)
         return r.json()
 
     @keyword
     def activate_account(self, email, password):
-        code = self.get_code_from_email([self.baseEmail, self.password], email, "activate_account")
+        code = self.get_code_from_email((self.baseEmail, self.password), email, "activate_account")
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
-        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)
+        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPDigestAuth(email, password), json={"code": code}, verify=False)
         return r.json()
 
     @keyword
     def disconnect_server_via_api(self, auth, sysId, password, email):
-        body= {
-            "password":password,
-            "system_id":sysId,
-            "email":email
+        body = {
+            "password": password,
+            "system_id": sysId,
+            "email": email
         }
         r = requests.post(f'{self.env}/api/systems/disconnect', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
 
@@ -522,7 +522,7 @@ class CloudPortalAPI(object):
             secretKey = splitString[1]
             api2fa = Cloud2fa()
             totp = api2fa.get_2fa_verification_code(secretKey)
-            body = {"action":"toggle", "totp":totp}
+            body = {"action": "toggle", "totp": totp}
             securityRes = s.post(f'{self.env}/api/account/security', data=body)
             assert securityRes.status_code == 200 , 'Toggle 2fa on failed'
             return secretKey
@@ -530,7 +530,7 @@ class CloudPortalAPI(object):
     @keyword
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
-            body = {"action":"deactivate", "totp":verification_code}
+            body = {"action":"deactivate", "totp": verification_code}
             securityRes = s.post(f'{self.env}/api/account/security', data=body)
 
     @keyword
@@ -547,7 +547,7 @@ class CloudPortalAPI(object):
     def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
             backupGetRes = s.get(f'{self.env}/api/2fa/backup/codes', data=None)
-            assert backupGetRes.status_code == 200 , 'Get backup codes failed'
+            assert backupGetRes.status_code == 200, 'Get backup codes failed'
             backupList = backupGetRes.json()
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")
