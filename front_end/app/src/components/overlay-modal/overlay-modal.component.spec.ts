@@ -7,7 +7,7 @@ import {
 } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockModule } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, of } from 'rxjs';
 
@@ -24,20 +24,12 @@ describe('NxOverlayModalComponent', () => {
     let fixture: ComponentFixture<NxOverlayModalComponent>;
     let el: DebugElement;
 
-    const localStorageMock = {
-        retrieve: () => false
-    };
     const appStateMock = {
         systemAvailable$: of(false),
         lastErrorStatus$: new BehaviorSubject<number>(undefined)
     };
     const accountMock = {
         get: () => Promise.resolve(undefined)
-    };
-    const systemServiceMock = {
-        mediaserver: {
-            getModuleInfo: () => { throw new Error('still offline'); }
-        }
     };
     const servers = [
         {
@@ -60,15 +52,15 @@ describe('NxOverlayModalComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NxOverlayModalComponent],
-            imports: [CommonModule, TranslateModule.forRoot()],
+            imports: [MockModule(CommonModule), MockModule(TranslateModule)],
             providers: [
                 MockProvider(NxLanguageProviderService),
                 MockProvider(NxConfigService),
                 MockProvider(Router),
                 { provide: NxAppStateService, useValue: appStateMock },
-                { provide: NxSystemService, useValue: systemServiceMock },
+                MockProvider(NxSystemService),
                 { provide: NxAccountService, useValue: accountMock },
-                { provide: LocalStorageService, useValue: localStorageMock }
+                MockProvider(LocalStorageService),
 
             ]
         }).compileComponents()

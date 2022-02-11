@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NgModel } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider, MockComponent, MockDirective } from 'ng-mocks';
+import { MockProvider, MockComponent, MockDirective, MockModule } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -41,13 +39,7 @@ describe('Test NxDevelopersMenuComponent', () => {
         }
     };
 
-    const ribbonMock: any = {
-        context: {
-            visibility: ''
-        }
-    };
-
-    const mockService: any = {
+    const mockService = {
         menuSubject: new BehaviorSubject(kbMenu),
         activeAssetIdSubject: new BehaviorSubject(initialNode.asset_id),
         activeNode: initialNode,
@@ -58,21 +50,19 @@ describe('Test NxDevelopersMenuComponent', () => {
         waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [
-                    CommonModule,
+                    MockModule(CommonModule),
                     DirectivesModule,
-                    AngularSvgIconModule,
-                    HttpClientTestingModule,
+                    MockModule(AngularSvgIconModule),
                     RouterTestingModule,
                     PipesModule
                 ],
                 declarations: [
                     NxDevelopersMenuComponent,
-                    MockDirective(RouterLink),
                     MockComponent(NxSearchComponent),
                     MockDirective(NgModel)
                 ],
                 providers: [
-                    new HelperMockProvider(NxRibbonService, ribbonMock),
+                    MockProvider(NxRibbonService),
                     MockProvider(NxConfigService),
                     new HelperMockProvider(WINDOW, windowMock),
                     new HelperMockProvider(NxUriService, mockURIService)

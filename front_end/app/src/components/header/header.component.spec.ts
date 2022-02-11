@@ -1,21 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement, Renderer2, Input, Component } from '@angular/core';
+import { DebugElement, Renderer2 } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { BehaviorSubject, of } from 'rxjs';
+import { MockProvider, MockModule, MockComponent, MockDirective } from 'ng-mocks';
+import { of } from 'rxjs';
 
+import {
+    NxAccountSettingsDropdown
+} from '@components/dropdowns/account-settings/account-settings.component';
+import {
+    NxHeaderLanguageDropdown
+} from '@components/dropdowns/language/language.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -27,40 +32,13 @@ import { WINDOW } from '@services/window-provider';
 import { NxUnsafePipe } from '@src/pipes/nx-unsafe';
 
 import { NxHeaderComponent } from './header.component';
-
-@Component({
-    selector: 'nx-nav-dropdown',
-    template: '<div></div>'
-})
-class MockNavDropdown {
-    @Input() nodeLocation;
-}
-
-@Component({
-    selector: 'nx-account-settings-select',
-    template: '<div></div>'
-})
-class MockAccountSettings {
-    @Input() small;
-}
-
-@Component({
-    selector: 'nx-header-language-select',
-    template: '<div></div>'
-})
-class MockHeaderLanguageDropdown {}
+import { NxNavDropdownComponent } from './nav-dropdown/nav-dropdown.component';
 
 describe('NxHeaderComponent', () => {
     let component: NxHeaderComponent;
     let fixture: ComponentFixture<NxHeaderComponent>;
     let el: DebugElement;
 
-    const translateMock = {
-        translations: {
-            pleaseSelect: () => 'Please select'
-        }
-    };
-    const configMock = { getConfig: () => nxConfig };
     const menuMock = {
         getMenu: () => of({
             description: '',
@@ -110,70 +88,43 @@ describe('NxHeaderComponent', () => {
         }),
         cleanEmptyNodes: (header: any) => header.nodes
     };
-    const routeMock = {
-        queryParams: of({})
-    };
-    // const routerMock = {
-    //     url: '',
-    //     events: of('')
-    // };
     const headerMock = {
         systemIdSubject: of(''),
         currentLocation: {}
     };
-    const sessionMock = {
-        loginStateSubject: of('')
-    };
-    const accountMock = {
-        get: () => Promise.resolve({ email: 'testEmail@co.co' }),
-        accountSubject: new BehaviorSubject(null)
-    };
-    const systemsMock = {
-        getSystem: () => {},
-        forceUpdateSystems: () => Promise.resolve('systemUpdated'),
-        systemsSubject: of([])
-    };
-    const storageMock = {
-        systemId: 'testSystemId'
-    };
     const appStateMock = {
         headerVisibleSubject: of(true)
-    };
-    const cloudMock = {
-        getLanguages: () => Promise.resolve()
     };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 NxHeaderComponent,
-                MockNavDropdown,
-                MockAccountSettings,
-                MockHeaderLanguageDropdown,
-                NxUnsafePipe
+                MockComponent(NxNavDropdownComponent),
+                MockComponent(NxAccountSettingsDropdown),
+                MockComponent(NxHeaderLanguageDropdown),
+                MockDirective(NxUnsafePipe)
             ],
             imports: [
-                CommonModule,
-                AngularSvgIconModule.forRoot(),
+                MockModule(CommonModule),
+                MockModule(AngularSvgIconModule),
                 HttpClientTestingModule,
                 RouterTestingModule
             ],
             providers: [
-                { provide: NxConfigService, useValue: configMock },
-                { provide: NxLanguageProviderService, useValue: translateMock },
-                Renderer2,
+                MockProvider(NxConfigService),
+                MockProvider(NxLanguageProviderService),
+                MockProvider(Renderer2),
                 { provide: NxAppStateService, useValue: appStateMock },
-                { provide: ActivatedRoute, useValue: routeMock },
-                { provide: NxSystemsService, useValue: systemsMock },
-                { provide: NxSystemService, useValue: {} },
-                { provide: NxDialogsService, useValue: {} },
-                { provide: NxAccountService, useValue: accountMock },
-                { provide: NxSessionService, useValue: sessionMock },
-                { provide: NxStorageService, useValue: storageMock },
-                // { provide: Router, useValue: routerMock },
+                MockProvider(NxSystemsService),
+                MockProvider(NxSystemService),
+                MockProvider(NxDialogsService),
+                MockProvider(NxAccountService),
+                MockProvider(NxSessionService),
+                MockProvider(NxStorageService),
                 { provide: NxHeaderService, useValue: headerMock },
                 { provide: NxMenusService, useValue: menuMock },
-                { provide: WINDOW, useValue: window }
+                { provide: WINDOW, useValue: window },
             ]
         }).compileComponents()
             .then(() => {

@@ -1,5 +1,4 @@
 import { CommonModule, Location } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
@@ -11,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockModule } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
 import { DirectivesModule } from '@directives/directives.module';
@@ -21,7 +20,6 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
 import { HelperMockProvider } from '@src/_mocks/helpers.test';
-import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxSearchComponent } from './search.component';
 
@@ -31,56 +29,34 @@ describe('NxSearchComponent', () => {
     let el: DebugElement;
     let inputElement: HTMLInputElement;
 
-    let params = { search: 'initial search' };
-    let url = '/mock/url';
-    const locationMock = new BehaviorSubject(null);
+    const params = { search: 'initial search' };
     const routeMock = { queryParams: new BehaviorSubject(params) };
-    const uriMock = {
-        getParams: () => params,
-        getURL: () => url,
-        updateURI: (newUrl, newParams, replaceUrl) => {
-            url = newUrl;
-            params = newParams;
-            routeMock.queryParams.next(params);
-            return Promise.resolve();
-        }
-    };
-    let searchService: NxSearchService;
-    let searchServiceSpy: jasmine.SpyObj<NxSearchService>;
 
     beforeEach(
         waitForAsync(() => {
-            const spyCreateSearch = jasmine.createSpyObj(
-                'NxSearchService',
-                ['getMatchPatterns']
-            );
             TestBed.configureTestingModule({
                 declarations: [NxSearchComponent],
                 imports: [
-                    CommonModule,
+                    MockModule(CommonModule),
                     FormsModule,
                     DirectivesModule,
-                    PipesModule,
                     TranslateModule.forRoot(),
-                    AngularSvgIconModule,
-                    HttpClientTestingModule
+                    MockModule(AngularSvgIconModule),
                 ],
                 providers: [
                     MockProvider(NxLanguageProviderService),
                     MockProvider(NxConfigService),
                     MockProvider(NxScrollMechanicsService),
                     new HelperMockProvider(ActivatedRoute, routeMock),
-                    new HelperMockProvider(Location, locationMock),
-                    new HelperMockProvider(NxUriService, uriMock),
-                    new HelperMockProvider(NxSearchService, spyCreateSearch)
+                    MockProvider(Location),
+                    MockProvider(NxUriService),
+                    MockProvider(NxSearchService),
                 ]
             });
 
             fixture = TestBed.createComponent(NxSearchComponent);
             component = fixture.componentInstance;
             el = fixture.debugElement;
-            searchService = TestBed.inject(NxSearchService);
-            searchServiceSpy = TestBed.inject(NxSearchService) as jasmine.SpyObj<NxSearchService>;
             fixture.detectChanges();
             inputElement = el.nativeElement.querySelector('input');
         })

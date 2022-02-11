@@ -305,7 +305,7 @@ export class NxConsoleTableComponent {
     }
 }
 
-class TableDataSource extends DataSource<any> {
+export class TableDataSource extends DataSource<any> {
     #baseData$: BehaviorSubject<any[]> = new BehaviorSubject([]);
     #itemsPerPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #currentPage$: BehaviorSubject<number> = new BehaviorSubject(null);
@@ -444,11 +444,3 @@ class TableDataSource extends DataSource<any> {
         return Math.floor(index / this.#itemsPerPage$.value) + 1;
     }
 }
-
-export const forUnitTest = {
-    NxConfigService,
-    NxDialogsService,
-    NxCloudApiService,
-    TableDataSource,
-    ConsoleSection
-};

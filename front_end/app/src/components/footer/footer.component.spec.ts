@@ -8,7 +8,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockModule } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxMenusService } from '@services/menus.service';
@@ -76,7 +76,7 @@ describe('NxFooterComponent', () => {
         TestBed.configureTestingModule({
             declarations: [NxFooterComponent],
             imports: [
-                CommonModule,
+                MockModule(CommonModule),
                 TranslateModule.forRoot(),
                 RouterTestingModule
             ],

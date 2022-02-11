@@ -1,4 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
@@ -9,6 +8,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider, MockDirective, MockModule } from 'ng-mocks';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -60,26 +60,18 @@ describe('NxGenericDropdown', () => {
     ];
 
     beforeEach(waitForAsync(() => {
-        const translateSpy = {
-            translations: {
-                pleaseSelect: () => 'Please select...'
-            }
-        };
-        const configSpy = {
-            getConfig: () => {
-                return {
-                    icons: {
-                        dirSectionPlaceholder: '/static/images/placeholders/section/'
-                    }
-                };
-            }
-        };
         TestBed.configureTestingModule({
-            imports: [AngularSvgIconModule.forRoot(), HttpClientTestingModule, PipesModule],
-            declarations: [NxGenericDropdown, NxArrowNavDirective],
+            imports: [
+                MockModule(AngularSvgIconModule),
+                MockModule(PipesModule),
+            ],
+            declarations: [
+                NxGenericDropdown,
+                MockDirective(NxArrowNavDirective),
+            ],
             providers: [
-                { provide: NxLanguageProviderService, useValue: translateSpy },
-                { provide: NxConfigService, useValue: configSpy }
+                MockProvider(NxLanguageProviderService),
+                MockProvider(NxConfigService),
             ]
         }).compileComponents()
             .then(() => {

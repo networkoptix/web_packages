@@ -4,9 +4,10 @@ import {
     TestBed,
     waitForAsync
 } from '@angular/core/testing';
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockDirective } from 'ng-mocks';
 
 import { NxTagComponent } from '@components/tag/tag.component';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
@@ -23,7 +24,8 @@ describe('NxPasswordTagValidationComponent', () => {
                 imports: [],
                 declarations: [
                     NxPasswordTagValidationComponent,
-                    NxTagComponent
+                    NxTagComponent,
+                    MockDirective(NxTooltipDirective),
                 ],
                 providers: [
                     MockProvider(NxLanguageProviderService),

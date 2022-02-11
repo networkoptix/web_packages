@@ -3,20 +3,22 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockDirective } from 'ng-mocks';
+import { MockProvider, MockModule } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, timer } from 'rxjs';
+import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { ComponentsModule } from '@components/components.module';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxMenusService } from '@services/menus.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
@@ -24,81 +26,21 @@ import { WINDOW } from '@services/window-provider';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import {
-    forUnitTest,
-    NxConsoleTableComponent
+    NxConsoleTableComponent,
+    TableDataSource
 } from './console-table.component';
-import { ListSerializer } from './console-table.component.types';
-
-const {
-    NxConfigService,
-    NxDialogsService,
-    NxCloudApiService,
-    TableDataSource,
+import {
+    ListSerializer,
     ConsoleSection
-} = forUnitTest;
+} from './console-table.component.types';
 
 const section = 'custom-clients';
-const url = `/developers/${section}`;
-const currentNode = { url };
-const consoleStructure = { nodes: [currentNode] };
-const [
-    contextName,
-    contextLabel,
-    contextIcon,
-    fieldName,
-    fieldLabel,
-    fieldDescription,
-    fieldPlaceholder
-] = [...new Array(7)].map(uuid);
-const field = {
-    name: fieldName,
-    label: fieldLabel,
-    description: fieldDescription,
-    type: 'text',
-    metaOnly: false,
-    optional: false,
-    placeholder: fieldPlaceholder
-};
 
 describe('NxConsoleTableComponent', () => {
     let component: NxConsoleTableComponent;
     let fixture: ComponentFixture<NxConsoleTableComponent>;
     let el: DebugElement;
-    const configMock = { getConfig: () => nxConfig };
-    const localStorageMock = {
-        retrieve: () => { },
-        observe: () => ({
-            subscribe: () => { }
-        })
-    };
-    const translateMock = {
-        translations: {
-            'Reset Search': () => 'Reset Search',
-            Search: () => 'Search'
-        }
-    };
-    const menuMock = {
-        getMenu: () => new BehaviorSubject(consoleStructure)
-    };
-    const tableItems = new BehaviorSubject([]);
-    const cloudMock = {
-        getSubAPI: () => ({
-            getManifest: () => ({
-                manifest: {
-                    contexts: [
-                        {
-                            name: contextName,
-                            label: contextLabel,
-                            icon: contextIcon,
-                            fields: [field],
-                            global: false
-                        }
-                    ]
-                }
-            }),
-            list: tableItems
-        })
-    };
+
     const perPage = Math.round(Math.random() * 5 + 3);
     const minItemsAdvanced = Math.round(Math.random() * 5 + perPage);
 
@@ -126,33 +68,31 @@ describe('NxConsoleTableComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
-        const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
         TestBed
             .configureTestingModule({
                 declarations: [
                     NxConsoleTableComponent,
-                    MockDirective(RouterLink),
                 ],
                 providers: [
-                    { provide: NxConfigService, useValue: configMock },
-                    { provide: NxDialogsService, useValue: {} },
-                    { provide: NxCloudApiService, useValue: cloudMock },
-                    { provide: NxLanguageProviderService, useValue: translateMock },
-                    { provide: LocalStorageService, useValue: localStorageMock },
-                    { provide: WINDOW, useValue: window },
-                    { provide: NxUriCacheService, useValue: {} },
-                    { provide: NxMenusService, useValue: menuMock },
-                    { provide: NxHeaderService, useValue: spyHeader }
+                    MockProvider(NxConfigService),
+                    MockProvider(NxDialogsService),
+                    MockProvider(NxCloudApiService),
+                    MockProvider(NxLanguageProviderService),
+                    MockProvider(LocalStorageService),
+                    MockProvider(WINDOW),
+                    MockProvider(NxUriCacheService),
+                    MockProvider(NxMenusService),
+                    MockProvider(NxHeaderService),
                 ],
                 imports: [
-                    CommonModule,
-                    FormsModule,
+                    MockModule(CommonModule),
+                    MockModule(FormsModule),
                     AngularSvgIconModule.forRoot(),
                     HttpClientTestingModule,
                     TranslateModule.forRoot(),
                     ComponentsModule,
-                    DirectivesModule,
-                    PipesModule,
+                    MockModule(DirectivesModule),
+                    MockModule(PipesModule),
                     RouterTestingModule
                 ]
             })

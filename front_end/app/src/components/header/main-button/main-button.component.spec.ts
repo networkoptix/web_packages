@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
@@ -7,7 +6,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider } from 'ng-mocks';
+import { MockProvider, MockComponent, MockDirective, MockModule } from 'ng-mocks';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
@@ -64,22 +63,20 @@ describe('NxHeaderMainButtonComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 NxHeaderMainButtonComponent,
-                NxDropMenu,
-                NxArrowNavDirective
+                MockComponent(NxDropMenu),
+                MockDirective(NxArrowNavDirective)
             ],
             imports: [
-                CommonModule,
-                AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule
+                MockModule(CommonModule),
+                MockModule(AngularSvgIconModule),
             ],
             providers: [
                 MockProvider(NxLanguageProviderService),
                 MockProvider(NxConfigService),
                 MockProvider(NxAccountService),
+                MockProvider(NxUriService),
                 { provide: NxHeaderService, useValue: headerMock },
-                { provide: NxUriService, useValue: {} },
                 { provide: NxMenusService, useValue: menusMock }
-
             ]
         }).compileComponents()
             .then(() => {

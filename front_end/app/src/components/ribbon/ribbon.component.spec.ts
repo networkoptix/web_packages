@@ -7,8 +7,9 @@ import {
     waitForAsync
 } from '@angular/core/testing';
 import { RouterLink } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { MockProvider, MockDirective } from 'ng-mocks';
+import { MockProvider, MockDirective, MockModule } from 'ng-mocks';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -23,19 +24,18 @@ describe('NxRibbonComponent', () => {
     let el: DebugElement;
 
     beforeEach(waitForAsync(() => {
-        const spyHeader = jasmine.createSpyObj('NxHeaderService', ['currentLocation']);
-
         TestBed.configureTestingModule({
             declarations: [NxRibbonComponent, MockDirective(RouterLink)],
             imports: [
-                CommonModule,
-                TranslateModule.forRoot()
+                MockModule(CommonModule),
+                MockModule(TranslateModule),
+                RouterTestingModule,
             ],
             providers: [
                 NxRibbonService,
                 MockProvider(NxLanguageProviderService),
                 MockProvider(NxConfigService),
-                { provide: NxHeaderService, useValue: spyHeader }
+                MockProvider(NxHeaderService),
             ]
         }).compileComponents()
             .then(() => {
