@@ -214,9 +214,9 @@ export class NxMenuService implements OnDestroy {
                 );
 
                 let searchAggregate = item.label || '';
-                searchAggregate += additional ? ' ' + additional : '';
+                searchAggregate += additional ? ` ${additional}` : '';
                 searchAggregate += (model.query.length > 10 && item.id)
-                    ? ' ' + item.id
+                    ? ` ${item.id}`
                     : '';
 
                 if (this.searchService.findMatch(searchAggregate, model)) {
@@ -235,7 +235,7 @@ export class NxMenuService implements OnDestroy {
             }
         });
         if (haveNode && subNode) {
-            haveNode.label = haveNode.label + ' - ' + subNode.label;
+            haveNode.label = `${haveNode.label} - ${subNode.label}`;
         }
         return haveNode;
     }

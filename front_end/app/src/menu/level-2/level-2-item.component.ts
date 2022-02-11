@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { NxMenuService } from '@src/menu/menu.service';
+import type { NgChanges } from '@utils/ng-changes';
 
 import type { Level2Item } from '../menu.types';
 
@@ -26,7 +27,7 @@ export class NxLevel2ItemComponent implements OnInit {
         this.itemPath += (this.item.path !== '') ? `/${this.item.path}` : '';
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxLevel2ItemComponent>): void {
         if (changes.item?.currentValue) {
             this.item.additionalText = this.menuService.getAdditionalText(
                 changes.item.currentValue.additionalLabel

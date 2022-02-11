@@ -43,6 +43,7 @@ export interface Level2Item {
     path?: string;
     disabled?: boolean;
     additionalText?: string;
+    additionalLabel?: string;
     query?: SearchModel;
     icon?: string;
 }

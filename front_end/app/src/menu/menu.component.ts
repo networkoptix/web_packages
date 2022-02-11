@@ -5,7 +5,6 @@ import {
     Input,
     OnChanges,
     OnInit,
-    SimpleChanges,
     ViewChild,
     ViewEncapsulation,
     EventEmitter,
@@ -28,6 +27,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ButtonArrowType, NxSearchService, SearchModel } from '@services/search.service';
 import type { NxSystem } from '@services/system.service/system/system';
 import { WINDOW } from '@services/window-provider';
+import type { NgChanges } from '@utils/ng-changes';
 
 import { NxMenuService } from './menu.service';
 import type {
@@ -190,8 +190,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
             });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        const currentContent: Partial<Content> = changes.content.currentValue;
+    ngOnChanges(changes: NgChanges<NxMenuComponent>): void {
+        const currentContent = changes.content.currentValue;
         if (currentContent) {
             const sanitizedContent = this.menuService.sanitizeContent(
                 currentContent.level1
@@ -294,7 +294,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     resizeMenu(): void {
         if (this.autoFit && this.scrollArea && !this.searchMode) {
             setTimeout(() => {
-                let windowHeightFit;
+                let windowHeightFit: number;
                 this.menuOverflow = 'hidden';
 
                 if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
