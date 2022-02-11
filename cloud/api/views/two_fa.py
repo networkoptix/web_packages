@@ -54,6 +54,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
             raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
 
         if request.user and request.user.is_authenticated:
+            Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
         return api_success(res)
 
@@ -82,6 +83,7 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
             raise APIRequestException("Invalid verification code.", error_code=ErrorCodes.bad_request)
 
         if request.user and request.user.is_authenticated:
+            Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
 
         return api_success(res)

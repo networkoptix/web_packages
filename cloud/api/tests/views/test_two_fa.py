@@ -71,19 +71,19 @@ class TestTwoFAViews:
     def test_two_factor_verification(self, create_user, arf, mocker):
         mock_verify_2fa = mocker.patch(self.auth_mock_path + 'verify_2fa_code', return_value=True)
         mock_generate_2fa_key = mocker.patch(self.auth_mock_path + 'generate_2fa_key', return_value=True)
-        code, verification_code = self.make_uuids(2)
+        access_token, code, verification_code = self.make_uuids(3)
         view = TwoFactorVerification().as_view()
 
         # Valid Get
         request = arf.get(f'/2fa/verification?code={code}&verification_code={verification_code}')
-        request.session = {}
+        request.session = {'access_token': access_token}
         request.user = self.user
 
         assert view(request).status_code == 200
-        mock_verify_2fa.assert_called_once_with(verification_code, code)
+        assert mock_verify_2fa.call_count == 2
 
         # Raise Get error
-        mock_verify_2fa.side_effect = APIInternalException('','')
+        mock_verify_2fa.side_effect = APIInternalException('', '')
         response = view(request)
         assert response.data['resultCode'] == 'badRequest'
         assert response.data['errorText'] == 'Invalid verification code.'
@@ -99,14 +99,14 @@ class TestTwoFAViews:
 
     def test_backup_code_get(self, create_user, arf, mocker):
         mock_verify_backup_code = mocker.patch(self.auth_mock_path + 'verify_backup_code', return_value=True)
-        code, verification_code = self.make_uuids(2)
+        access_token, code, verification_code = self.make_uuids(3)
         request = arf.get(f'/?code={code}&verification_code={verification_code}')
-        request.session = {}
+        request.session = {'access_token': access_token}
         request.user = self.user
         view = BackupCode().as_view()
 
         assert view(request).status_code == 200
-        mock_verify_backup_code.assert_called_once_with(verification_code, code)
+        assert mock_verify_backup_code.call_count == 2
 
 
     def test_backup_code_post_and_delete(self, create_user, arf, mocker):
