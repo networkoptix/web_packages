@@ -322,8 +322,8 @@
         "merge": {
             "adminPasswordTitle": "Entrez le mot de passe du compte du propriétaire dans <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Le mot de passe de l'utilisateur admin est incorrect",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "knownBothSystemsConnectedToCloud": "Le système {targetSystem} est connecté à %CLOUD_NAME%. Les systèmes CLOUDS ne peuvent être fusionnés qu'à partir de %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Impossible de fusionner deux systèmes connectés au cloud. Veuillez accéder à %CLOUD_NAME% pour fusionner ces systèmes.",
             "checking": "Vérification...",
             "cloud": "Cloud",
             "commonText": "Échec de la fusion des systèmes <strong>{primarySystem}</strong> et <strong>{secondarySystem}</strong>.",
@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
             "removeUser": "Supprimer l'utilisateur",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
+            "serversDetach": "Détacher le serveur { title } du système actuel ?",
+            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
             "serversRestart": "Redémarrer le serveur { title }"
         },
         "tooltips": {
@@ -863,7 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "nameFail": "Impossible de changer le nom de {type}",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "Restaurez la connexion à %CLOUD_NAME% et réessayez.",
         "noInternet": "%CLOUD_NAME% est actuellement indisponible. Veuillez réessayer plus tard.",
         "userChangesFail": "Impossible d'appliquer les modifications",
         "reviewAccepted": "La révision a été acceptée",
