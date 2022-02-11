@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
+import { HttpClient } from '@angular/common/http';
 import {
     Component,
     ElementRef,
@@ -24,7 +25,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
-import { HttpClient } from '@angular/common/http';
 
 require('what-input');
 
@@ -357,6 +357,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
+    handleVerificationExpiration(process) {
+        if (this.loginEmail && this.loginPassword) {
+            this.login().then(
+                ({ code, link }) => {
+                    this.loginCode = code;
+                    this.redirectLink = link;
+                    process.run();
+                });
+        } else {
+            this.clientType = ClientType.renewWeb;
+            this.setCurrentState(AuthorizeState.email);
+        }
+    }
+
     initProcesses() {
         const timeoutMs = 3000;
         this.checkEmailProcess = this.processService.createProcess(
@@ -444,7 +458,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             },
             err => {
-                if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
+                if (err?.resultCode === 'notAuthorized') {
+                    this.handleVerificationExpiration(this.checkAuthCodeProcess);
+                } else if (err?.resultCode === 'invalidTotp' || err?.errorText === '2FA is required') {
                     this.authCodeErrorCode = 'wrongAuthCode';
                 } else {
                     console.error('err from checkAuthCodeProcess', err);
@@ -468,7 +484,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             },
             err => {
-                if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
+                if (err?.resultCode === 'notAuthorized') {
+                    this.handleVerificationExpiration(this.checkBackupCodeProcess);
+                } else if (err?.resultCode === 'invalidTotp' || err?.errorText === '2FA is required') {
                     this.backupCodeErrorCode = 'wrongBackupCode';
                 } else {
                     console.error('err from checkBackupCodeProcess', err);
