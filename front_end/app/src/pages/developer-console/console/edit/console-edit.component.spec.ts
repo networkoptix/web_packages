@@ -4,8 +4,10 @@ import { DebugElement, Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MockDirective } from 'ng-mocks';
 import { v4 as uuid } from 'uuid';
 
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { nxConfig } from '@services/nx-config/config';
 
 import { forUnitTest, NxDevConsoleEditComponent } from './console-edit.component';
@@ -110,7 +112,8 @@ describe('NxDevConsoleEditComponent', () => {
                     MockContentBlockSectionComponent,
                     MockProcessButtonComponent,
                     MockProcessCancelButtonComponent,
-                    MockPreLoaderComponentComponent
+                    MockPreLoaderComponentComponent,
+                    MockDirective(NxTooltipDirective),
                 ],
                 imports: [
                     CommonModule,

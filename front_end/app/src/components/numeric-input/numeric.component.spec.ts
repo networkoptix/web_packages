@@ -5,7 +5,8 @@ import {
     waitForAsync
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MockProvider } from 'ng-mocks';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider, MockModule } from 'ng-mocks';
 
 import {
     NxNumericComponent
@@ -28,7 +29,8 @@ describe('NumericComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 CommonModule,
-                FormsModule
+                FormsModule,
+                MockModule(AngularSvgIconModule),
             ],
             declarations: [NxNumericComponent],
             providers: [
