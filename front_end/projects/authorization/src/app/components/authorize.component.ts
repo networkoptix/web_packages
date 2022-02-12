@@ -486,7 +486,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             err => {
                 if (err?.resultCode === 'notAuthorized') {
                     this.handleVerificationExpiration(this.checkBackupCodeProcess);
-                } else if (err?.resultCode === 'invalidTotp' || err?.errorText === '2FA is required') {
+                } else if (err?.resultCode === 'invalidBackupCode' || err?.errorText === '2FA is required') {
                     this.backupCodeErrorCode = 'wrongBackupCode';
                 } else {
                     console.error('err from checkBackupCodeProcess', err);
