@@ -218,16 +218,6 @@ export class NxSystemUsersComponent implements OnInit {
         });
     }
 
-    public handleUserNameBlur () {
-        if (!this.localUserName || this.emptyName) {
-            this.passwordChanged = false;
-        }
-    }
-
-    public handleUserNameChange (newName) {
-        this.emptyName = /^\s+$/.test(newName);
-    }
-
     public removeUser () {
         const user = this.selectedUser;
         if (this.locked[user.email]) {
