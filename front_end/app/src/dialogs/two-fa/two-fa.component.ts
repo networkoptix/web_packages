@@ -256,6 +256,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         });
 
+        const codeProcessUnauthorizedHandles = () => {
+            this.notAuthorized = true;
+            this.codeForm.controls.tfaCodeInput.markAsTouched();
+            this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
+            this.renderer.selectRootElement('#tfaCodeInput').focus();
+        };
+
         this.codeProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
                 return Promise.reject({ resultCode: 'missingParam' });
@@ -314,12 +321,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 },
-                forbidden: () => {
-                    this.notAuthorized = true;
-                    this.codeForm.controls.tfaCodeInput.markAsTouched();
-                    this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
-                    this.renderer.selectRootElement('#tfaCodeInput').focus();
-                }
+                forbidden: codeProcessUnauthorizedHandles,
+                notAuthorized: codeProcessUnauthorizedHandles
             }
         }, (response) => {
             if (response.account2faEnabled) {
