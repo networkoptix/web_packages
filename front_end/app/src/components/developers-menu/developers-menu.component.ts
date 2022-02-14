@@ -193,6 +193,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             return highlight(node.display_name || node.name, startInd, startInd + query.length);
         };
         const search = (menuNode: MenuNodeWithParent) => {
+            if (!menuNode) return false;
             let inQuery = false;
             const name = menuNode.display_name.toLowerCase();
             const startInd = name.indexOf(query.toLowerCase());
@@ -229,7 +230,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             }
         }
 
-        if (newDisplayedNodes[newDisplayedNodes.length - 1].name.includes('-seperator')) {
+        if (newDisplayedNodes[newDisplayedNodes.length - 1]?.name?.includes('-seperator')) {
             newDisplayedNodes.pop();
         }
         this.openNodes = newOpenNodes;

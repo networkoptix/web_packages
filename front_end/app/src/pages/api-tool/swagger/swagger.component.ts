@@ -13,11 +13,18 @@ import { take } from 'rxjs/operators';
 import SwaggerUI from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
     MenuNodeWithParent
 } from '@components/developers-menu/developers-menu-types';
+import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { WINDOW } from '@services/window-provider';
 import { isUUID } from '@utils/general';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
@@ -48,6 +55,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     @ViewChild('swaggerDescription') swaggerDescriptionRef: ElementRef;
     @Input() activeNode: MenuNodeWithParent;
 
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     currentAPIDoc: APIDoc;
     swagger: SwaggerUI;
     swaggerLoading$ = new BehaviorSubject(false);
@@ -64,9 +73,16 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     constructor(public APIToolSystemService: NxAPIToolSystemService,
                 public openAPIJSONService: NxOpenAPIJSONService,
+                private loginService: NxLoginService,
+                private configService: NxConfigService,
                 private renderer2: Renderer2,
                 private componentFactoryResolver: ComponentFactoryResolver,
-                @Inject(DOCUMENT) private document: Document) {
+                private toastService: NxToastService,
+                languageService: NxLanguageProviderService,
+                @Inject(DOCUMENT) private document: Document,
+                @Inject(WINDOW) private window: Window) {
+        this.LANG = languageService.translations;
+        this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit() {
@@ -136,6 +152,11 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                     }
                     this.handlePotentialRTSPRoute(request);
                     return request;
+                },
+                responseInterceptor: response => {
+                    if (response.status === 403 && response?.obj?.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                        this.handleOldSession();
+                    }
                 }
             });
             if (this.openAPIJSONService.isInfoNode) {
@@ -171,6 +192,22 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.RTSPRequestShowing = false;
         }
     }
+
+    private handleOldSession = () => {
+        this.loginService.currentSystem = this.APIToolSystemService.currentSystem;
+        this.loginService.updateSession('renewWeb')
+            .then(ready => {
+                const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
+                const { success, danger } = this.CONFIG.toast;
+                const toastMessage = ready ? sessionRenewed() : failedToUpdateSession();
+                const options = {
+                    classname: ready ? success : danger,
+                    autohide: true,
+                    delay: this.CONFIG.alertTimeout
+                };
+                this.toastService.show(toastMessage, options);
+            });
+    };
 
     private handleRTSPRequest = request => {
         // replace http with rtsp (for display only, does not actually send an rtsp request)

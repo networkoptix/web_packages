@@ -986,6 +986,8 @@ export interface ToastMessage {
     webAdminCloudCredentialError: any;
     twoFaRequired:                any;
     loggingIn:                    any;
+    sessionRenewed:               any;
+    failedToUpdateSession:        any;
 }
 
 export interface ToastMessageSystem {
@@ -2100,6 +2102,8 @@ const typeMap: any = {
         { json: "webAdminCloudCredentialError", js: "webAdminCloudCredentialError", typ: "any" },
         { json: "twoFaRequired", js: "twoFaRequired", typ: "any" },
         { json: "loggingIn", js: "loggingIn", typ: "any" },
+        { json: "sessionRenewed", js: "sessionRenewed", typ: "any" },
+        { json: "failedToUpdateSession", js: "failedToUpdateSession", typ: "any" },
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },
