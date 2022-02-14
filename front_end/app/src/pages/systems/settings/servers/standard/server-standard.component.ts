@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 import { of, SubscriptionLike, Subject } from 'rxjs';
 import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
@@ -30,7 +31,7 @@ import type { NxSystem } from '@services/system.service/system/system';
 import type { NxSystemServer } from '@services/system.service/system/system-types';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
-import { cleanId, isEqual } from '@utils/general';
+import { cleanId } from '@utils/general';
 
 export interface DropdownStorage {
     name: string,

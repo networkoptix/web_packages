@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, fromEvent, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
@@ -25,7 +26,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
-import { deepCopy } from '@utils/general';
 
 require('what-input');
 
@@ -228,7 +228,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.loginEmail = atob(this.loginCode).split(':')[1];
         }
         this.route.queryParams.subscribe(async(params: any) => {
-            this.initialData = deepCopy(params);
+            this.initialData = cloneDeep(params);
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
             this.clientType = ClientType[clientType];

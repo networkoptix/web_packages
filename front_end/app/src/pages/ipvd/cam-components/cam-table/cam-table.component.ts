@@ -18,6 +18,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 import { Subject, Subscription, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
 
@@ -32,7 +33,6 @@ import {
     addPseudoAnchor,
     clearPseudoAnchors,
     PseudoAnchorTarget,
-    isEqual,
 } from '@utils/general';
 
 function yesNo(bVal: unknown): string {

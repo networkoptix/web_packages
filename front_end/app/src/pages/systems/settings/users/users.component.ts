@@ -9,6 +9,7 @@ import {
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { isEqual, cloneDeep } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -29,7 +30,7 @@ import type {
 } from '@services/system.service/system/user-manager/user-manager-types';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
-import { cleanId, isEqual, deepCopy } from '@utils/general';
+import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -312,7 +313,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
             this.menuService.detail = cleanId(this.selectedUser.id);
             if (this.selectedUser.role.name === 'Custom') {
-                this.currentCustomRole = deepCopy(this.selectedUser.role);
+                this.currentCustomRole = cloneDeep(this.selectedUser.role);
             }
 
             this.setPermission(this.selectedUser.role);

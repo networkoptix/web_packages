@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { cloneDeep, last } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -14,7 +15,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
-import { deepCopy, pickFrom, delayInitial } from '@utils/general';
+import { pickFrom, delayInitial } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-add-widget-content',
@@ -53,7 +54,7 @@ export class AddWidgetModalContent {
     updateSelected(selected) {
         this.selectedWidget = null;
         this.cd.detectChanges();
-        this.selectedWidget = deepCopy(selected);
+        this.selectedWidget = cloneDeep(selected);
     }
 
     findDashboard(dashboardId) {
@@ -80,7 +81,7 @@ export class AddWidgetModalContent {
 
     downloadWidget = async (widgetUrl, isDevServer = false) => {
         // To handle cors issue when developing locally
-        widgetUrl = this.environment.isLocal ? widgetUrl : widgetUrl.split(this.environment.cloudHost).reverse()[0];
+        widgetUrl = this.environment.isLocal ? widgetUrl : last(widgetUrl.split(this.environment.cloudHost));
         const devSource = `${widgetUrl}/widget.html`;
         const devEditSource = `${widgetUrl}/edit.html`;
         this.downloadingThirdParty = true;
@@ -109,10 +110,10 @@ export class AddWidgetModalContent {
         const { widgetUrl, devServer = false } = this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
-            this.selectedWidget = deepCopy(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
+            this.selectedWidget = cloneDeep(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));
             this.downloadWidget(devServer || widgetUrl, !!devServer);
         } else {
-            this.selectedWidget = deepCopy(this.widgetDropdownOptions[0]);
+            this.selectedWidget = cloneDeep(this.widgetDropdownOptions[0]);
         }
 
         this.addWidget = this.processService.createProcess(

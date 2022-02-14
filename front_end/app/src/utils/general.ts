@@ -2,6 +2,7 @@
 for a particular part of the codebase. No in-house specific types/structures. */
 
 import type { TemplateRef } from '@angular/core';
+import { last } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -21,7 +22,7 @@ export function isUUID(value: string): boolean {
 }
 
 export function cleanSmbUrl(url: string): string {
-    return url.split('@').reverse()[0].replace('smb:/', '');
+    return last(url.split('@')).replace('smb:/', '');
 }
 
 export function htmlToEntity(target: string[] | string): string {
@@ -52,10 +53,6 @@ export function wrapWithPercent(
 ): string {
     const percentage = (numerator / denominator) * 100;
     return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
-}
-
-export function isNumber(n: unknown): boolean {
-    return !isNaN(parseFloat(n as string)) && !isNaN(n as number - 0);
 }
 
 /* Array */
@@ -97,57 +94,6 @@ export function paramSortFunc<Param = unknown>(
         }
         return 0;
     };
-}
-
-/* Object */
-/** An imperfect deep equality check using `JSON.stringify()`. */
-export function isEqual<T>(obj1: T, obj2: T): boolean {
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
-}
-
-/** An imperfect deep copy using `JSON.stringify()` and `JSON.parse()`.
- *
- * Note: will not copy any methods.
-*/
-export function deepCopy<T>(obj: T): T {
-    return JSON.parse(JSON.stringify(obj));
-}
-
-export function deepCopyWithCircularReference<T extends Object>(
-    obj: T,
-    hash = new WeakMap()
-): T {
-    if (Object(obj) !== obj || obj instanceof Function) {
-        return obj;
-    }
-    if (hash.has(obj)) {
-        return hash.get(obj); // Cyclic reference
-    }
-    const result: unknown = Object.create(Object.getPrototypeOf(obj));
-    if (obj instanceof Map) {
-        Array.from(
-            obj,
-            ([key, val]: [string, unknown]) =>
-                (result as Map<string, unknown>).set(
-                    deepCopyWithCircularReference(key, hash),
-                    deepCopyWithCircularReference(val, hash)
-                )
-        );
-    } else if (obj instanceof Set) {
-        Array.from(
-            obj,
-            (key: unknown) => (result as Set<unknown>).add(
-                deepCopyWithCircularReference(key, hash)
-            )
-        );
-    }
-    hash.set(obj, result);
-    return Object.assign(
-        result as T,
-        ...Object.keys(obj).map(key => ({
-            [key]: deepCopyWithCircularReference(obj[key], hash)
-        }))
-    );
 }
 
 export function mapValuesToStrings(

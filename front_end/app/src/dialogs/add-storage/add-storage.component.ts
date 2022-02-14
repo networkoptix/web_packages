@@ -5,6 +5,7 @@ import {
     Validators
 } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -127,10 +128,9 @@ export class AddStorageModalContent {
                 ) || [];
                 const storageExistsOnSystem = !this.alreadyCheckedAndExists &&
                     systemStorages.find(
-                        s => s.url.replace('smb:', '')
-                            .replace('//', '')
-                            .split('@')
-                            .reverse()[0] === url.replace('//', '')
+                        s => last(
+                            s.url.replace('smb:', '').replace('//', '').split('@')
+                        ) === url.replace('//', '')
                     );
                 if (storageExistsOnSystem) {
                     return Promise.reject(Error('alreadyExists'));

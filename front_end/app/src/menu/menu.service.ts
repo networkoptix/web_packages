@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { isEqual, cloneDeep } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 import { isArray } from 'rxjs/internal-compatibility';
 
 import { NxSearchService, SearchModel } from '@services/search.service';
-import { htmlToEntity, isEqual, deepCopy } from '@utils/general';
+import { htmlToEntity } from '@utils/general';
 
 import type {
     Level1Item,
@@ -223,7 +224,7 @@ export class NxMenuService implements OnDestroy {
                         haveNode = { ...node };
                         haveNode.level3 = []; // remove items so we can all only matches
                     }
-                    const filteredItem = deepCopy(item);
+                    const filteredItem = cloneDeep(item);
                     filteredItem.additionalText = additional;
                     filteredItem.subNode = subNode || node;
                     filteredItem.query = { search: model.query };
@@ -240,7 +241,7 @@ export class NxMenuService implements OnDestroy {
     }
 
     sanitizeContent(content: Level1Item[]): SanitizedLevel1Item[] {
-        const clean = deepCopy(content);
+        const clean = cloneDeep(content);
         return clean.map(node => {
             if (node.level3?.length) {
                 node.level3.forEach(item => {
@@ -264,7 +265,7 @@ export class NxMenuService implements OnDestroy {
     }
 
     cleanMenuContent(content: Level1Item[]): Level1Item[] {
-        const clean = deepCopy(content);
+        const clean = cloneDeep(content);
         return clean.map(node => {
             delete node.toggle;
             return node;

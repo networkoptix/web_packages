@@ -15,6 +15,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { isArray } from 'rxjs/internal-compatibility';
 import { debounceTime } from 'rxjs/operators';
@@ -27,7 +28,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { ButtonArrowType, NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
-import { isEqual, deepCopy } from '@utils/general';
 
 /* Usage
  <nx-search
@@ -278,7 +278,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             if (isEqual(this.localFilter, value)) {
                 return;
             }
-            this.localFilter = deepCopy(value);
+            this.localFilter = cloneDeep(value);
             this.advSearch = (this.localFilter.selects && this.localFilter.selects.length) ||
                 (this.localFilter.multiselects && this.localFilter.multiselects.length) ||
                 (this.localFilter.tags && this.localFilter.tags.length);

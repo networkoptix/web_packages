@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual, cloneDeep } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest as combineLatestFrom,
@@ -32,7 +33,6 @@ import {
     defaultConfig,
     DialogRef
 } from '@dialogs/dialog-ref';
-import { isEqual, deepCopy } from '@utils/general';
 
 import { NxProcessService, Process } from './process.service';
 
@@ -509,7 +509,7 @@ export class NxApplyService {
                     // but valueChanges triggers on every control init
                     if (Object.values(extNgForm.originalForm).length !== Object.values(change).length) {
                         // if form contain multiselect (array) spread is not enough
-                        extNgForm.originalForm = deepCopy(change);
+                        extNgForm.originalForm = cloneDeep(change);
                         return;
                     } else {
                         // cover a case with dynamic fields in form represented as array
@@ -522,7 +522,7 @@ export class NxApplyService {
                             .forEach(key => {
                                 if (isArray(change[key])) {
                                     if (change[key].length !== extNgForm.originalForm[key].length) {
-                                        extNgForm.originalForm[key] = deepCopy(change[key]);
+                                        extNgForm.originalForm[key] = cloneDeep(change[key]);
                                     }
                                 }
                             });

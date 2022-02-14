@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -10,7 +11,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxUriService } from '@services/uri.service';
-import { deepCopy } from '@utils/general';
 
 import { IntegrationService } from './integration.service';
 
@@ -127,7 +127,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         });
 
         // Ensure model change will be trigger
-        this.filterModel = deepCopy(this.filterModel);
+        this.filterModel = cloneDeep(this.filterModel);
     }
 
     setFilter() {
@@ -175,7 +175,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     modelChanged(searchModel): void {
-        this.filterModel = deepCopy(searchModel);
+        this.filterModel = cloneDeep(searchModel);
         this.setFilter();
     }
 

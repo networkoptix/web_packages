@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { QueryParamsHandling } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { cloneDeep, last } from 'lodash-es';
 import { timer, Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -18,7 +19,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
-import { highlight, deepCopyWithCircularReference } from '@utils/general';
+import { highlight } from '@utils/general';
 
 import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-menu-types';
 
@@ -116,7 +117,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         };
 
         findActiveNode(this.menuNodes, activeAssetId, activeAssetState);
-        this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
+        this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
     }
 
     toggleOpen(node: MenuNode) {
@@ -153,7 +154,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         } else {
             this.openNodes = this.openNodes.filter(filterTree(name));
         }
-        this.highlightedTopNode = this.activeRouteNodes.filter(name => !this.openNodes.includes(name)).reverse()[0];
+        this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
     }
 
     prefetchAsset(assetId, state) {
@@ -199,7 +200,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             const startInd = name.indexOf(query.toLowerCase());
             const pathMatchesQuery = menuNode.name.toLowerCase().includes(query.toLowerCase());  // For API-Tool: display_name is not always the path, need to check if the path matches the query
             const isSeperator = menuNode.name.includes('-seperator');
-            const displayedNode = deepCopyWithCircularReference(menuNode);
+            const displayedNode = cloneDeep(menuNode);
             displayedNode.nodes = [];
             let newName = displayedNode.display_name || displayedNode.name;
             if (startInd !== -1) {

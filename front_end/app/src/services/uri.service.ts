@@ -1,10 +1,10 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
+import { isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable }  from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { WINDOW } from '@services/window-provider';
-import { isEqual } from '@utils/general';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';

@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash-es';
+
 import type {
     NxSystemServer
 } from '@services/system.service/system/system-types';
@@ -33,74 +35,6 @@ describe('General purpose utils', () => {
 
     it('should return modulus', () => {
         expect(generalUtils.mod(10, 3)).toBe(1);
-    });
-
-    it('should return true if a number', () => {
-        expect(generalUtils.isNumber(1)).toBe(true);
-        expect(generalUtils.isNumber(0)).toBe(true);
-        expect(generalUtils.isNumber(10000000000)).toBe(true);
-        expect(generalUtils.isNumber(9007199254740992)).toBe(true); // not safe number
-        expect(generalUtils.isNumber(-1)).toBe(true);
-    });
-
-    it('should return false if not a number', () => {
-        expect(generalUtils.isNumber('')).toBe(false);
-        expect(generalUtils.isNumber('string')).toBe(false);
-        expect(generalUtils.isNumber(true)).toBe(false);
-        expect(generalUtils.isNumber(undefined)).toBe(false);
-        expect(generalUtils.isNumber(null)).toBe(false);
-        expect(generalUtils.isNumber({})).toBe(false);
-        expect(generalUtils.isNumber([])).toBe(false);
-    });
-
-    it('should be equal with identical deeply nested objects', () => {
-        const obj1 = {
-            a: '1',
-            b: 2,
-            c: {
-                1: 'one',
-                2: 2
-            }
-        };
-        const obj2 = {
-            a: '1',
-            b: 2,
-            c: {
-                1: 'one',
-                2: 2
-            }
-        };
-        expect(generalUtils.isEqual(obj1, obj2)).toBe(true);
-    });
-
-    it('should not be equal with different deeply nested objects', () => {
-        const obj1 = {
-            a: '1',
-            b: 2,
-            c: {
-                1: 'one',
-                2: 2
-            }
-        };
-        const obj2 = {
-            a: '1',
-            b: 2,
-            c: {
-                1: 'one',
-                2: 3
-            }
-        };
-        expect(generalUtils.isEqual(obj1, obj2)).toBe(false);
-    });
-
-    it('should return exact object', () => {
-        const obj = {
-            a: '1',
-            c: {
-                2: 2
-            }
-        };
-        expect(generalUtils.deepCopy(obj)).toEqual(obj);
     });
 });
 
@@ -142,5 +76,74 @@ describe('Nx utils', () => {
         };
         expect(nxUtils.setServerIpAndPort(mockServer as NxSystemServer))
             .toEqual(expectedReturnedServer as NxSystemServer);
+    });
+});
+
+/* Object */
+/** @deprecated
+ * Replaced with lodash `cloneDeep()`.
+ *
+ * Source: https://stackoverflow.com/a/40293777
+ */
+function deepCopyWithCircularReference<T extends Object>(
+    obj: T,
+    hash = new WeakMap()
+): T {
+    if (Object(obj) !== obj || obj instanceof Function) {
+        return obj;
+    }
+    if (hash.has(obj)) {
+        return hash.get(obj); // Cyclic reference
+    }
+    const result: unknown = Object.create(Object.getPrototypeOf(obj));
+    if (obj instanceof Map) {
+        Array.from(
+            obj,
+            ([key, val]: [string, unknown]) =>
+                (result as Map<string, unknown>).set(
+                    deepCopyWithCircularReference(key, hash),
+                    deepCopyWithCircularReference(val, hash)
+                )
+        );
+    } else if (obj instanceof Set) {
+        Array.from(
+            obj,
+            (key: unknown) => (result as Set<unknown>).add(
+                deepCopyWithCircularReference(key, hash)
+            )
+        );
+    }
+    hash.set(obj, result);
+    return Object.assign(
+        result as T,
+        ...Object.keys(obj).map(key => ({
+            [key]: deepCopyWithCircularReference(obj[key], hash)
+        }))
+    );
+}
+
+describe('deepCopyWithCircularReference', () => {
+    /* https://github.com/lodash/lodash/blob/2f79053d7bc7c9c9561a30dda202b3dcd2b72b90/test/clone-methods.js#L106 */
+    it('should match _.cloneDeep() with lots of circular references', () => {
+        const LARGE_ARRAY_SIZE = 200;
+        const cyclical = {};
+
+        for (let i = 0; i < LARGE_ARRAY_SIZE + 1; i++) {
+            cyclical[`v${i}`] = [i ? cyclical[`v${i - 1}`] : cyclical];
+        }
+
+        const utilsClone = deepCopyWithCircularReference(cyclical);
+        const utilsActual = utilsClone[`v${LARGE_ARRAY_SIZE}`][0];
+        const lodashClone = cloneDeep(cyclical);
+        const lodashActual = lodashClone[`v${LARGE_ARRAY_SIZE}`][0];
+
+        expect(utilsActual).toEqual(utilsClone[`v${LARGE_ARRAY_SIZE - 1}`]);
+        expect(utilsActual).not.toEqual(cyclical[`v${LARGE_ARRAY_SIZE - 1}`]);
+
+        // expect(utilsClone).toEqual(lodashClone); // FAIL
+        // expect(utilsActual).toEqual(lodashActual); // FAIL
+
+        expect(lodashClone).toEqual(cyclical);
+        // expect(utilsClone).toEqual(cyclical); // FAIL
     });
 });

@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
-import { deepCopy } from '@utils/general';
 
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
@@ -52,7 +52,7 @@ export class NxSupportComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.cleanSupportNode = deepCopy(changes.supportNode.currentValue);
+        this.cleanSupportNode = cloneDeep(changes.supportNode.currentValue);
         this.cleanSupportNode.asset.shortDescription =
             this.sanitizer.bypassSecurityTrustHtml(
                 this.cleanSupportNode.asset.shortDescription

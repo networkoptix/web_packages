@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { Injectable } from '@angular/core';
+import { last } from 'lodash-es';
 
 import { User } from '../system-api.types';
 
@@ -30,7 +31,7 @@ export class Account {
         this.id = id;
         this.name = name;
         this.first_name = first;
-        this.last_name = (rest || ['']).reverse()[0];
+        this.last_name = last((rest || ['']));
         this.permissions = (permissions || '').split('|');
         this.is_superuser = isAdmin || permissions.includes('GlobalAdminPermission');
         this.isCloud = isCloud;

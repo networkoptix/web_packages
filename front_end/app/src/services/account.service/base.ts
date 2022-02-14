@@ -1,6 +1,7 @@
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, OnDestroy, Injector, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { isEqual } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
@@ -14,7 +15,6 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
-import { isEqual } from '@utils/general';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';

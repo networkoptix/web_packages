@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef, ElementRef, Inject
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { cloneDeep } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -20,7 +21,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { cleanIp, htmlToEntity, deepCopy, pickFrom } from '@utils/general';
+import { cleanIp, htmlToEntity, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';
@@ -654,7 +655,7 @@ export class MergeModalContent {
     }
 
     handleMergeError(error) {
-        const err = error.data ? deepCopy(error.data) : {};
+        const err = error.data ? cloneDeep(error.data) : {};
         err.resultCode = error && error.resultCode || '';
         err.errorText = (error && error.errorText) || '';
 

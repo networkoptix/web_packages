@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
@@ -29,7 +30,6 @@ import { NxUtilsService } from '@services/utils.service/utils.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
-import { deepCopy } from '@utils/general';
 
 import { NxHealthService } from '../health.service';
 
@@ -226,7 +226,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     setupReport(_data) {
-        const data = deepCopy(_data);
+        const data = cloneDeep(_data);
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
             return throwError('Error getting manifest');
@@ -496,7 +496,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     processManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.values(this.healthService.manifest).forEach(metricValue => {
-            const metric: any = deepCopy(metricValue);
+            const metric: any = cloneDeep(metricValue);
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
@@ -510,7 +510,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     createSnapshot(data) {
         const systems: any = Object.values(this.healthService.values.systems);
-        this.reportSnapshot = deepCopy(data);
+        this.reportSnapshot = cloneDeep(data);
         this.reportSnapshot.time = new Date().toJSON();
         this.reportSnapshot.system = systems[0].info.name;
     }

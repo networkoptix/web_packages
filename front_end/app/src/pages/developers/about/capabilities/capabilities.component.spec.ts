@@ -4,6 +4,7 @@ import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { last } from 'lodash-es';
 import { MockDirective } from 'ng-mocks';
 
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
@@ -83,7 +84,7 @@ xdescribe('NxCapabilitiesComponent', () => {
     });
 
     it('should display the correct block heading background', () => {
-        const backgroundImage = capability.icon.split(' ').reverse()[0];
+        const backgroundImage = last(capability.icon.split(' '));
         const backgroundImageUrl = `url("${configMock.config.icons.backgrounds}${backgroundImage}")`;
         expect(blockContent.headerBackground).toContain(backgroundImageUrl);
     });

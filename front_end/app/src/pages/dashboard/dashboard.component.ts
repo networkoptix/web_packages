@@ -9,6 +9,7 @@ import { Component, ViewChildren, QueryList, HostListener, Inject, ElementRef, V
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { last } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
@@ -220,7 +221,7 @@ export class NxDashboardComponent implements DashboardGroup {
         }
 
         // Used to prevent cors issue when developing locally
-        const dashboardUrlCleaned = this.environment.isLocal ? dashboardUrl : dashboardUrl.split(this.environment.cloudHost).reverse()[0];
+        const dashboardUrlCleaned = this.environment.isLocal ? dashboardUrl : last(dashboardUrl.split(this.environment.cloudHost));
 
         const downloaded = await this.http.get(dashboardUrlCleaned).toPromise().catch(_ => {
             const options = {

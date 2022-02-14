@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { isArray } from 'rxjs/internal-compatibility';
 import { delay } from 'rxjs/operators';
@@ -29,7 +30,6 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import {
     paramSortFunc,
-    deepCopy,
     addPseudoAnchor,
     clearPseudoAnchors,
     PseudoAnchorTarget
@@ -460,7 +460,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     modelChanged(model) {
-        this.filterModel = deepCopy(model);
+        this.filterModel = cloneDeep(model);
         this.searchVendor();
     }
 

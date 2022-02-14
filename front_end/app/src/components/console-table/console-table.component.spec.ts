@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { last } from 'lodash-es';
 import { MockProvider, MockModule } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
@@ -156,7 +157,7 @@ describe('NxConsoleTableComponent', () => {
 
         await fixture.whenStable();
         const paginator = el.nativeElement.querySelector('nx-paginator');
-        const numOfPages = parseInt([...paginator.children].reverse()[0].innerText);
+        const numOfPages = parseInt(last([...paginator.children]).innerText);
         expect(numOfPages).toEqual(
             expectedPages);
     });

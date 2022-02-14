@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import {
     Subject,
@@ -56,7 +57,6 @@ import type { NxSystem } from '@services/system.service/system/system';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
-import { isEqual } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 

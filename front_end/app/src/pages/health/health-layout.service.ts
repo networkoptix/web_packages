@@ -1,4 +1,5 @@
 import { ElementRef, Injectable } from '@angular/core';
+import { sum } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -246,7 +247,7 @@ export class NxHealthLayoutService {
 
         const windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
 
-        const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
+        const ELEMENTS_HEIGHT = sum(this.dimensions);
         const THEAD_HEIGHT = this.tableHeaderElement ? tableHeader.offsetHeight : 0;
         const PADDING = 16;
         const PAGINATION_HEIGHT = 64;

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { combineLatest, of } from 'rxjs';
 import { delay, switchMap } from 'rxjs/operators';
 
@@ -13,7 +14,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystem } from '@services/system.service/system/system';
-import { deepCopy } from '@utils/general';
 
 import { BookmarkService, Bookmark } from './bookmark.service';
 
@@ -130,7 +130,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.filterModel = deepCopy(this.filterModel);
+        this.filterModel = cloneDeep(this.filterModel);
     }
 
     setFilter(): void {
@@ -176,7 +176,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     }
 
     modelChanged(searchModel: SearchFilter): void {
-        this.filterModel = deepCopy(searchModel);
+        this.filterModel = cloneDeep(searchModel);
         this.setFilter();
     }
 }

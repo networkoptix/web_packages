@@ -13,6 +13,7 @@ import {
     RoutesRecognized
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { sum } from 'lodash-es';
 import {
     Subscription,
     BehaviorSubject,
@@ -161,7 +162,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.breadcrumbWidth$
         ]).pipe(
             map(([icon, mainButton, tabs, rightNav, windowWidth, breadcrumbWidths]) => ({
-                totalWidths: icon + mainButton + tabs + rightNav + breadcrumbWidths.reduce((a, c) => a + c, 0),
+                totalWidths: icon + mainButton + tabs + rightNav + sum(breadcrumbWidths),
                 icon,
                 mainButton,
                 tabs,

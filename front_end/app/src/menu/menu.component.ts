@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 import { fromEvent, Subject } from 'rxjs';
 import { distinctUntilChanged, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -27,7 +28,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { ButtonArrowType, NxSearchService, SearchModel } from '@services/search.service';
 import type { NxSystem } from '@services/system.service/system/system';
 import { WINDOW } from '@services/window-provider';
-import { isEqual } from '@utils/general';
 
 import { NxMenuService } from './menu.service';
 import type {

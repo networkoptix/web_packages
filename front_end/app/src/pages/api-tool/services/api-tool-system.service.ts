@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual, cloneDeep } from 'lodash-es';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { delay, distinctUntilChanged, filter, finalize, map, retryWhen, take } from 'rxjs/operators';
@@ -17,7 +18,6 @@ import type { NxSystem } from '@services/system.service/system/system';
 import type { NxSystemServer } from '@services/system.service/system/system-types';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { isEqual, deepCopy } from '@utils/general';
 
 import type { APIDoc } from '../api-tool-types';
 
@@ -366,7 +366,7 @@ export class NxAPIToolSystemService {
     setQueryParams = (param: string, newValue: string) => {
         if (environment.isLocal && param === 'system') return;
 
-        const queryParams = deepCopy(this.queryParams);
+        const queryParams = cloneDeep(this.queryParams);
         queryParams[param] = newValue;
         this.queryParams = queryParams;
         this.uri.updateURI(this.uri.getURL(), queryParams);

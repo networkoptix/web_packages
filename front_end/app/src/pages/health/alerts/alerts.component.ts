@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { isEqual, cloneDeep } from 'lodash-es';
 import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
@@ -17,7 +18,7 @@ import { environment } from '@environments/environment';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
-import { paramSortFunc, isEqual, deepCopy } from '@utils/general';
+import { paramSortFunc } from '@utils/general';
 
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
@@ -241,7 +242,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     modelChanged(model) {
         if (!isEqual(this.filterModel, model)) { // avoid unnecessary trips
             this.healthService.tableReady = false;
-            this.filterModel = deepCopy(model);
+            this.filterModel = cloneDeep(model);
             this.alerts = this.healthService.alertsSearch(
                 this.healthService.alertsValues,
                 model
