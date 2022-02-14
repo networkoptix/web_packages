@@ -142,6 +142,11 @@
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
                         minute.
                     </div>
+                    <div
+                        class="input-error"
+                        *ngIf="loginPassword.touched && loginPassword.errors?.required"
+                        translate
+                    >Password is required</div>
                     <div class="input-error" *ngIf="loginPassword.touched && loginPassword.errors?.pattern">
                         {{LANG.passwordRequirements.requiredMessage()}}</div>
                 </ng-container>
