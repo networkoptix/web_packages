@@ -136,6 +136,17 @@ export class LoginWebadminModalContent implements OnInit {
             this.next = nextUrl[1];
         }
         this.password = '';
+
+        const showAccountBlockedError = () => {
+            this.loginForm.controls.login_password.markAsPristine();
+            this.loginForm.controls.login_password.markAsUntouched();
+
+            this.accountBlocked = true;
+            this.loginForm.controls.login_password.setErrors({
+                nx_account_blocked: true
+            });
+        };
+
         const showWrongCredentialsError = () => {
             this.wrongCredentials = true;
             this.loginForm.controls.login_email.setErrors({
@@ -151,15 +162,8 @@ export class LoginWebadminModalContent implements OnInit {
             notFound: showWrongCredentialsError,
             invalidParameter: showWrongCredentialsError,
             notAuthorized: showWrongCredentialsError,
-            accountBlocked: () => {
-                this.loginForm.controls.login_password.markAsPristine();
-                this.loginForm.controls.login_password.markAsUntouched();
-
-                this.accountBlocked = true;
-                this.loginForm.controls.login_password.setErrors({
-                    nx_account_blocked: true
-                });
-            }
+            serviceUnavailable: showAccountBlockedError,
+            accountBlocked: showAccountBlockedError
         };
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError();
         this.login = this.processService.createProcess(() => {
