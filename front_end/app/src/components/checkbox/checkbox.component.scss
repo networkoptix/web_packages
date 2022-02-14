@@ -1,5 +1,5 @@
-@use '../../../styles/theme_variables';
-@use '../../../styles/theme_palette' as *;
+@use "../../../styles/theme_variables";
+@use "../../../styles/theme_palette" as *;
 
 @mixin checkboxSvgColor($box, $mark) {
     svg {
@@ -46,11 +46,19 @@
     }
 }
 
-@mixin checkboxSvgStateColors($hover, $checked, $checkedHover, $halfChecked) {
+@mixin checkboxSvgStateColors($hover, $checked, $checkedHover, $halfChecked, $checkHoverColor) {
     input:hover ~ .tick {
         svg polygon.box,
         svg polyline.box {
             stroke : $hover;
+        }
+    
+        svg polyline.tick {
+            stroke : $checkHoverColor;
+        }
+    
+        & ~ .labelText {
+            color : $hover;
         }
     }
 
@@ -59,27 +67,24 @@
         svg polyline.box {
             stroke : $checked !important;
         }
-    }
-
-    input:hover ~ .check {
-        svg polygon.box,
-        svg polyline.box {
-            stroke : $checkedHover;
-        }
-
-        & ~ .text {
-            color : $checkedHover;
-        }
-    }
-
-    input:active ~ .check {
-        svg polygon.box,
-        svg polyline.box {
-            stroke : $checked !important;
-        }
-
-        & ~ .text {
+    
+        & ~ .labelText {
             color : $checked !important;
+        }
+    }
+
+    input:hover ~ .tick.checked {
+        svg polygon.box,
+        svg polyline.box {
+            stroke : $checkedHover !important;
+        }
+    
+        svg polyline.tick {
+            stroke : $checkHoverColor !important;
+        }
+
+        & ~ .labelText {
+            color : $checkedHover !important;
         }
     }
 
@@ -140,11 +145,23 @@ nx-checkbox {
         }
 
         &.desktop {
-            @include checkboxSvgStateColors($light8, $light4, $light1, $light4);
+            @include checkboxSvgStateColors(
+                $light8,
+                $light4,
+                $light1,
+                $light4,
+                var(--brand-core),
+            );
         }
-
+        
         &:not(.desktop) {
-            @include checkboxSvgStateColors($dark1, $dark9, $dark1, $dark9);
+            @include checkboxSvgStateColors(
+                var(--checkbox-hover-color),
+                var(--checkbox-active-color),
+                var(--checkbox-active-hover-color),
+                var(--checkbox-active-color),
+                var(--checkbox-hover-check-color),
+            );
         }
 
         & + label {
@@ -162,7 +179,7 @@ nx-checkbox {
     }
 
     :not(.desktop) .tick {
-        @include checkboxSvgColor(var(--label-color), var(--brand-core));
+        @include checkboxSvgColor(var(--checkbox-color), var(--checkbox-check-color));
     }
 
     .tick {
@@ -180,10 +197,16 @@ nx-checkbox {
                 polyline.tick {
                     display : block;
                 }
+    
+                polyline.tick {
+                    stroke  : var(--checkbox-check-color);
+                }
 
                 polygon.box {
                     display : none;
                 }
+                
+                
             }
         }
 

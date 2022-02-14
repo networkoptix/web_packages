@@ -161,7 +161,7 @@ hr {
 }
 
 .help-block {
-    background-color : theme_variables.$body-bg;
+    background-color : var(--body-bg);
 }
 
 //@mixin kill-glyphicon {

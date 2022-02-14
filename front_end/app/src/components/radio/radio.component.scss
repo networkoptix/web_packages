@@ -3,15 +3,15 @@
 nx-radio {
     label {
         &.disabled {
-            color: var(--card-header-text) !important;
+            color: var(--radio-color) !important;
             opacity: 0.3 !important;
         }
         &:hover:not([disabled]) {
-            color : $dark1;
+            color : var(--radio-hover-color);
         }
-
+        
         &:active:not([disabled]) {
-            color : var(--card-header-text) !important;
+            color : var(--radio-color) !important;
         }
     }
 
@@ -24,7 +24,8 @@ nx-radio {
             }
 
             svg path.circle {
-                fill : var(--card-header-text) !important;
+                fill : var(--radio-color) !important;
+                opacity : 0.3 !important;
             }
         }
         .check {
@@ -47,39 +48,31 @@ nx-radio {
     
         input ~ .check {
             svg path.circle {
-                fill : var(--card-header-text);
+                fill : var(--radio-color);
             }
         }
 
         input:hover ~ .check {
             svg path.circle {
-                fill : var(--card-header-text);
+                fill : var(--radio-hover-color);
+            }
+    
+            svg circle {
+                fill : var(--radio-hover-check-color);
+            }
+    
+            & ~ .text {
+                color : var(--radio-hover-color);
             }
         }
 
         input:active ~ .check {
             svg path.circle {
-                fill : var(--card-header-text) !important;
+                fill : var(--radio-active-color) !important;
             }
-        }
-
-        input:hover ~ .check {
-            svg path.circle {
-                fill : var(--card-header-text);
-            }
-
+    
             & ~ .text {
-                color : var(--card-header-text);
-            }
-        }
-
-        input:active ~ .check {
-            svg path.circle {
-                fill : var(--card-header-text) !important;
-            }
-
-            & ~ .text {
-                color : var(--card-header-text) !important;
+                color : var(--radio-active-color) !important;
             }
         }
     }
@@ -102,7 +95,7 @@ nx-radio {
     &.checked {
         svg {
             circle {
-                fill    : var(--brand-core);
+                fill    : var(--radio-check-color);
                 display : block;
             }
         }

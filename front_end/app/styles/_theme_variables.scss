@@ -16,10 +16,28 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --header-border-color : var(--light4);
     --body-text-color : var(--dark9);
     
+    --page-titles : #{$dark9}; // this should be only use of h1
+    
     --scrollbar-color                   : var(--light16);
     --scrollbar-thumb-bg                : var(--light10);
     --scrollbar-thumb-border-color      : var(--additional_light1);
     --menu-scrollbar-thumb-border-color : var(--light6);
+    
+    --radio-color              : #{$dark9};
+    --radio-check-color        : #{$brand_core};
+    --radio-hover-color        : #{$dark1};
+    --radio-hover-check-color  : #{$brand_core};
+    --radio-active-color       : #{$dark9};
+    --radio-active-check-color : #{$brand_core};
+    --radio-active-hover-color : #{$dark1};
+    
+    --checkbox-color              : #{$dark9};
+    --checkbox-check-color        : #{$brand_core};
+    --checkbox-hover-color        : #{$dark1};
+    --checkbox-hover-check-color  : #{$brand_core};
+    --checkbox-active-color       : #{$dark9};
+    --checkbox-active-check-color : #{$brand_core};
+    --checkbox-active-hover-color : #{$dark1};
     
     --auth-header-bg: var(--additional_light1);
     --auth-header-color : var(--dark9);
@@ -179,10 +197,28 @@ html[data-theme="dark"] {
     --header-border-color: transparent;
     --body-text-color : #A5B7C0; //$light10;
     
+    --page-titles : #F5F7F8; //$light2; // this should be only use of h1
+    
     --scrollbar-color                   : #35464F; //$light16;
     --scrollbar-thumb-bg                : #A5B7C0; //$light10;
     --scrollbar-thumb-border-color      : #2B383F; //$dark9;
-    --menu-scrollbar-thumb-border-color : var(--dark9);
+    --menu-scrollbar-thumb-border-color : #2B383F; //$dark9;
+    
+    --radio-color              : #A5B7C0; //$light10;
+    --radio-check-color        : #2592C3; //$brand_d1;
+    --radio-hover-color        : #E1E7EA; //$light4;
+    --radio-hover-check-color  : #2FA2DB; //$brand_core;
+    --radio-active-color       : #F5F7F8; //$light2;
+    --radio-active-check-color : #39B2EF; //$brand_l1;
+    --radio-active-hover-color : #E1E7EA; //$light4;
+    
+    --checkbox-color              : #A5B7C0; //$light10;
+    --checkbox-check-color        : #2592C3; //$brand_d1;
+    --checkbox-hover-color        : #E1E7EA; //$light4;
+    --checkbox-hover-check-color  : #2FA2DB; //$brand_core;
+    --checkbox-active-color       : #F5F7F8; //$light2;
+    --checkbox-active-check-color : #39B2EF; //$brand_l1;
+    --checkbox-active-hover-color : #E1E7EA; //$light4;
     
     --auth-header-bg : #2B383F; //$dark9;
     --auth-header-color : #E1E7EA; //$light4;

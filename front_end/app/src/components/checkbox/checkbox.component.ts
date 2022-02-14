@@ -53,7 +53,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @IBool() @Input() required: CoercedBoolInput;
     @IBool() @Input() checked: CoercedBoolInput;
     @IBool() @Input() disabled: CoercedBoolInput;
-    @Input() description: string;
+    @Input() labelText: string;
     @Input() color: string;
     @Output() onClick = new EventEmitter<string>();
 
@@ -98,8 +98,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     }
 
     ngOnInit() {
-        this.description = this.description || undefined;
-
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {

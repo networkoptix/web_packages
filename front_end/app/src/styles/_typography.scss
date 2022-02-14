@@ -20,7 +20,8 @@
 
 
 h1, h2 {
-    @include font-source($font-family-medium, $h1-font-size, $dark9);
+    @include font-source($font-family-medium, $h1-font-size);
+    color         : var(--page-titles);
     margin-top    : $line-height-computed;
     margin-bottom : $line-height-computed;
     padding       : 0;
