@@ -43,7 +43,7 @@ ${LOG IN CREATE ACCOUNT BUTTON}       //nx-authorize-component//footer//button[@
 ${LOG IN BTN REGISTER ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
 ${LOG IN BTN CREATE ACCOUNT PAGE}     //nx-authorize-create-account-component//footer//span[contains(text(), '${LOG IN BUTTON TEXT}')]
 ${LOG IN BTN ACTIVATE ACCOUNT PAGE}   //nx-authorize-activate-account-component//footer//button[contains(text(), '${LOG IN BUTTON TEXT}')]
-${LOG IN BTN RESET PASSWORD PAGE}     //nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '${LOG IN BUTTON TEXT}')]
+${LOG IN BTN RESET PASSWORD PAGE}     //nx-authorize-reset-request-component//footer//button[contains(text(), '${LOG IN BUTTON TEXT}')]
 ${LOG IN BTN SET NEW PASSWORD PAGE}   //nx-authorize-reset-password-component//footer//nx-process-button//button[contains(text(), '${LOG IN BUTTON TEXT}')]
 
 ${REMEMBER ME CHECKBOX VISIBLE}       //form[@name='loginForm']//input[@id='remember']/following-sibling::span[@class="checkmark"]/..
