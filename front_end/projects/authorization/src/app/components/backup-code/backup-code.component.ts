@@ -37,6 +37,16 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     @ViewChild('backupCodeForm', { static: false }) backupCodeForm: HTMLFormElement;
     @ViewChild('backToAuthSpan', { static: false }) backToAuthSpan: ElementRef;
     needLargerFooter = false;
+    header: string;
+    subHeader: string;
+    subHeaderSuffix: string;
+    templateText: {
+        [clientType: string]: {
+            header: string,
+            subHeader: string,
+            subHeaderSuffix?: string
+        }
+    }
 
     constructor(
         language: NxLanguageProviderService,
@@ -47,6 +57,9 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     }
 
     ngOnInit(): void {
+        this.setupText();
+        this.setText();
+
         this.sendCode = () => {
             this.codeChange.emit(this.code);
         };
@@ -59,6 +72,78 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode?.currentValue) {
             this.backupCodeForm?.controls.backupCode.setErrors({ [changes.errorCode.currentValue]: true });
+        }
+
+        if (!changes.clientType?.firstChange) {
+            this.setText();
+        }
+    }
+
+    setupText() {
+        const auth = this.LANG.authorize;
+        const connect = {
+            header: auth.connectHeader(),
+            subHeader: auth.toAccountSubheader()
+        };
+        const renew = {
+            header: auth.expiredHeader(),
+            subHeader: auth.expiredAccountSubheader()
+        };
+        const subHeader = auth.asAccountSubheader();
+        const login = {
+            header: auth.loginCloudHeader(),
+            subHeader
+        };
+        this.templateText = {
+            loginToCloud: login,
+            loginToWebadmin: login,
+            confirmPasswordDisconnect: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordDisconnect()
+            },
+            confirmPasswordMerge: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordMerge()
+            },
+            confirmPasswordCreateBackup: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordBackup()
+            },
+            confirmPasswordRestoreBackup: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordRestore()
+            },
+            confirmPasswordResetServer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordReset()
+            },
+            confirmPasswordRestartServer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordRestart()
+            },
+            confirmPasswordDetachServer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordDetach()
+            },
+            connectSystemToCloud: connect,
+            setupWizard: connect,
+            renewSessionDesktop: renew,
+            renewSessionWeb: renew
+        };
+    }
+
+    setText() {
+        this.header = this.templateText[this.clientType]?.header;
+        this.subHeader = this.templateText[this.clientType]?.subHeader;
+        if (this.clientType.includes('Password')) {
+            this.subHeaderSuffix = this.templateText[this.clientType]?.subHeaderSuffix;
         }
     }
 

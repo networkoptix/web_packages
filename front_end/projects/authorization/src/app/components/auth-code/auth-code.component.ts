@@ -39,7 +39,17 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     @ViewChild('backToPasswordSpan', { static: false }) backToPasswordSpan: ElementRef;
     needLargerFooter = false;
     restore = false;
+    header: string;
+    subHeader: string;
+    subHeaderSuffix: string;
     suffixText: string;
+    templateText: {
+        [clientType: string]: {
+            header: string,
+            subHeader: string,
+            subHeaderSuffix?: string
+        }
+    }
 
     constructor(
         language: NxLanguageProviderService,
@@ -55,7 +65,14 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         };
 
         this.restore = this.action === 'restore_password';
-        this.suffixText = this.restore ? this.LANG.authorize.authCode.newPass() : this.LANG.authorize.authCode.login();
+        this.setupText();
+        this.setText();
+        this.suffixText = NxLanguageProviderService.translate(
+            this.LANG.authorize.authCode.message,
+            {
+                suffix: this.restore ? this.LANG.authorize.authCode.newPass() : this.LANG.authorize.authCode.login()
+            }
+        );
 
         fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe(() => {
             this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;
@@ -65,6 +82,78 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     ngOnChanges(changes: SimpleChanges) {
         if (changes.errorCode?.currentValue) {
             this.authCodeForm?.controls.authCode.setErrors({ [changes.errorCode.currentValue]: true });
+        }
+
+        if (!changes.clientType?.firstChange) {
+            this.setText();
+        }
+    }
+
+    setupText() {
+        const auth = this.LANG.authorize;
+        const connect = {
+            header: auth.connectHeader(),
+            subHeader: auth.toAccountSubheader()
+        };
+        const renew = {
+            header: auth.expiredHeader(),
+            subHeader: auth.expiredAccountSubheader()
+        };
+        const subHeader = auth.asAccountSubheader();
+        const login = {
+            header: auth.loginCloudHeader(),
+            subHeader
+        };
+        this.templateText = {
+            loginToCloud: login,
+            loginToWebadmin: login,
+            confirmPasswordDisconnect: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordDisconnect()
+            },
+            confirmPasswordMerge: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordMerge()
+            },
+            confirmPasswordCreateBackup: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordBackup()
+            },
+            confirmPasswordRestoreBackup: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordRestore()
+            },
+            confirmPasswordResetServer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordReset()
+            },
+            confirmPasswordRestartServer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordRestart()
+            },
+            confirmPasswordDetachServer: {
+                header: auth.loginCloudHeader(),
+                subHeader,
+                subHeaderSuffix: auth.passwordDetach()
+            },
+            connectSystemToCloud: connect,
+            setupWizard: connect,
+            renewSessionDesktop: renew,
+            renewSessionWeb: renew
+        };
+    }
+
+    setText() {
+        this.header = this.templateText[this.clientType]?.header;
+        this.subHeader = this.templateText[this.clientType]?.subHeader;
+        if (this.clientType.includes('Password')) {
+            this.subHeaderSuffix = this.templateText[this.clientType]?.subHeaderSuffix;
         }
     }
 

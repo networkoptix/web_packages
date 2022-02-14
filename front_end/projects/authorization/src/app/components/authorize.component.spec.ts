@@ -82,6 +82,7 @@ describe('NxAuthorizeComponent', () => {
                 passResetHeader: () => 'Reset Password',
                 newPassHeader: () => 'Set New Password',
                 authCode: {
+                    message: () => 'Enter a code from your authentication app to confirm it\'s really you trying to {suffix}',
                     newPass: () => 'set a new password',
                     login: () => 'log in'
                 }
