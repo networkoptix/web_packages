@@ -765,6 +765,8 @@ class Auth(object):
 
         if scope:
             params["scope"] = scope
+        else:
+            params["scope"] = f"{settings.CLOUD_PORTAL_URL} cloudSystemId=*"
 
         if grant_type == Auth.GRANT_TYPE.password:
             params.update({
