@@ -8,11 +8,13 @@ import {
     AfterViewInit,
     HostListener,
     ElementRef,
+    Inject,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+import { CookieService } from 'ngx-cookie-service';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
@@ -28,6 +30,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUtilsService } from '@services/utils.service';
+import { WINDOW } from '@services/window-provider';
 
 export enum T_FA_STEPS {
     ChangePassword,
@@ -85,6 +88,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     public tfaCode: string;
 
     private code: string;
+    private listenFor2faActivation = false;
 
     // static property is needed for unit tests
     @ViewChild('loginForm') loginForm: NgForm;
@@ -166,12 +170,27 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private systemsService: NxSystemsService,
         private cloudApiService: NxCloudApiService,
         private elem: ElementRef<HTMLElement>,
+        private cookieService: CookieService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
 
         this.setupDefaults();
     }
+
+    // Using fetch api because angular http request is canceled when page is unloading.
+    private removeUnverified2faKey = () => {
+        const options = {
+            method: 'delete',
+            headers: {
+                'x-CSRFToken': this.cookieService.get('csrftoken')
+            },
+            keepalive: true
+        };
+        fetch(`${this.CONFIG.apiBase}/account/security`, options)
+            .catch(() => { console.error('something went wrong'); });
+    };
 
     ngOnInit() {
         this.loginProcess = this.processService.createProcess(() => {
@@ -186,6 +205,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             return this.accountService
                 .verify(this.password)
                 .then((result: any) => {
+                    this.listenFor2faActivation = true;
+                    this.window.addEventListener('beforeunload', this.removeUnverified2faKey);
                     return this.accountService.get2FaKey();
                 });
         }, {
@@ -302,6 +323,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         }, (response) => {
             if (response.account2faEnabled) {
+                this.listenFor2faActivation = false;
+                this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
                 this.setTemplate(T_FA_STEPS.WizardFinish);
             }
 
@@ -456,6 +479,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     close(action?) {
+        if (this.listenFor2faActivation) {
+            this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
+        }
         this.resetDefaults();
         this.activeModal.close(action || 'changed');
     }
@@ -463,6 +489,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     /* Needs to be an arrow function to access this
     when passed to <nx-cancel-button> as [discardFn] */
     closeWizard = (action?) => {
+        if (this.listenFor2faActivation) {
+            this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
+        }
         if (action === 'deactivate') {
             this.accountService.deactivate2FaKey()
                 .catch((err) => {

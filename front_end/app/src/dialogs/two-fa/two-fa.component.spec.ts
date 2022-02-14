@@ -26,6 +26,7 @@ import { NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
 
 import { T_FA_STEPS, TwoFAModalContent } from './two-fa.component';
 
@@ -75,6 +76,7 @@ describe('TwoFAModalContent', () => {
                 MockProvider(NxToastService),
                 MockProvider(NxSystemsService),
                 MockProvider(NxCloudApiService),
+                { provide: WINDOW, useValue: window }
             ],
             imports: [
                 FormsModule,
