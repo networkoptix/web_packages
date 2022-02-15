@@ -99,8 +99,11 @@ def user_logged_in_callback(sender, request, user, **kwargs):
 @receiver(user_logged_out)
 def user_logged_out_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
-    logger.info(f'User logged out: {user.email}, IP: {ip}')
-    AccountLoginHistory.objects.create(action='user_logged_out', ip=ip, email=user.email)
+    if user:
+        logger.info(f'User logged out: {user.email}, IP: {ip}')
+        AccountLoginHistory.objects.create(action='user_logged_out', ip=ip, email=user.email)
+    else:
+        logger.info(f'Unknown user has logged out, IP: {ip}')
 
 
 @receiver(user_login_failed)
