@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { forkJoin, SubscriptionLike } from 'rxjs';
-import { delay, filter, map, retryWhen } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { forkJoin, Subject } from 'rxjs';
+import { delay, filter, map, retryWhen, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig } from '@services/nx-config';
@@ -23,9 +23,9 @@ export class NxSystemLicensesComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     system: NxSystem;
-    systemSubscription: SubscriptionLike;
-    serverSubscription: SubscriptionLike;
-    licensesSubscription: SubscriptionLike;
+    resetSystemInfo$ = new Subject();
+    resetSystem$ = new Subject();
+    resetLicense$ = new Subject();
 
     licenses: any = [];
     licenseSummaries: Array<{
@@ -38,26 +38,27 @@ export class NxSystemLicensesComponent implements OnInit {
 
     // Constructor and class initialization methods
     private setupDefaults() {
-        this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined && data.id !== this.system?.id))
+        this.settingsService.systemSubject
+            .pipe(
+                untilDestroyed(this),
+                filter(data => data !== undefined && data.id !== this.system?.id))
             .subscribe((system) => {
                 this.system = system;
 
                 this.getLicenses();
 
-                if (this.licensesSubscription) {
-                    this.licensesSubscription.unsubscribe();
-                }
-                this.licensesSubscription = this.system.licensesModifiedSubject
+                this.resetLicense$.next(true);
+                this.system.licensesModifiedSubject
+                    .pipe(takeUntil(this.resetLicense$))
                     .subscribe(() => {
                         this.getLicenses();
                     });
 
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
-                this.serverSubscription = this.system.infoSubject
+                this.resetSystem$.next(true);
+                this.system.infoSubject
                     .pipe(
+                        untilDestroyed(this),
+                        takeUntil(this.resetSystem$),
                         map(system => {
                             if (!system.servers || system.servers.length === 0) {
                                 throw system;
@@ -190,11 +191,11 @@ export class NxSystemLicensesComponent implements OnInit {
         this.system.getLicenses()
             .then(({ licenses: result }) => {
                 if (result.length) {
-                    if (this.serverSubscription) {
-                        this.serverSubscription.unsubscribe();
-                    }
-                    this.serverSubscription = this.system.infoSubject
+                    this.resetSystemInfo$.next(true);
+                    this.system.infoSubject
                         .pipe(
+                            untilDestroyed(this),
+                            takeUntil(this.resetSystemInfo$),
                             map(system => {
                                 if (
                                     !system.servers ||
