@@ -168,14 +168,16 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
         const endpointObj = Object.entries(API.paths[endpoint]);
         endpointObj.forEach((method: method) => {
             const subMenuTag = method[1].tags[0];
-            const HTTPMethod = method[0];
-            const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
+            if (!subMenuTag.includes('Proprietary')) {
+                const HTTPMethod = method[0];
+                const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
 
-            const url = generateNodeURL(endpoint, HTTPMethod);
-            const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
-            const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
-            methodNode.parentNode = subMenuNode;
-            subMenuNode.nodes.push(methodNode);
+                const url = generateNodeURL(endpoint, HTTPMethod);
+                const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
+                const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
+                methodNode.parentNode = subMenuNode;
+                subMenuNode?.nodes.push(methodNode);
+            }
         });
     });
 };
