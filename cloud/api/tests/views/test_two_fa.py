@@ -82,12 +82,6 @@ class TestTwoFAViews:
         assert view(request).status_code == 200
         assert mock_verify_2fa.call_count == 2
 
-        # Raise Get error
-        mock_verify_2fa.side_effect = APIInternalException('', '')
-        response = view(request)
-        assert response.data['resultCode'] == 'badRequest'
-        assert response.data['errorText'] == 'Invalid verification code.'
-
         # Valid Post
         request = arf.post(f'/2fa/verification')
         request.user = self.user
