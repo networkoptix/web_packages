@@ -888,7 +888,9 @@
         },
         "webAdminCloudCredentialError": "Faça login com %CLOUD_NAME% para acessar este sistema como usuário da nuvem",
         "twoFaRequired": "A autenticação de dois fatores foi ativada para esta conta. Por favor, insira seu código de verificação na janela popup.",
-        "loggingIn": "Fazendo login. Aguarde."
+        "loggingIn": "Fazendo login. Aguarde.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
         "healthReportForSystem": "Relatório de saúde para o sistema {systemName}"

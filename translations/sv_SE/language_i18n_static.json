@@ -422,8 +422,8 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
+            "serversDetach": "Koppla bort server { title } från nuvarande system?",
+            "serversReset": "Återställ servern { title } till standard?",
             "serversRestart": "Starta om servern \"{ title }"
         },
         "tooltips": {
@@ -863,7 +863,7 @@
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Det gick inte att ändra {type} namn",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "Återställ anslutningen till %CLOUD_NAME% och försök igen.",
         "noInternet": "%CLOUD_NAME% är tillfälligt otillgänglig. Vänligen försök igen senare.",
         "userChangesFail": "Det gick inte att tillämpa ändringar",
         "reviewAccepted": "Avtal har accepterats",
@@ -888,7 +888,9 @@
         },
         "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare",
         "twoFaRequired": "Tvåfaktorsautentisering har aktiverats för det här kontot. Vänligen ange din verifieringskod i popup-fönstret.",
-        "loggingIn": "Loggar in. Vänligen vänta."
+        "loggingIn": "Loggar in. Vänligen vänta.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath-rapport för system {systemName}"

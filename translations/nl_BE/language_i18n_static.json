@@ -888,7 +888,9 @@
         },
         "webAdminCloudCredentialError": "Log in met %CLOUD_NAME% om toegang te krijgen tot dit systeem als cloud-gebruiker",
         "twoFaRequired": "Twee-factor-authenticatie is ingeschakeld voor dit account. Voer uw verificatiecode in het pop-upvenster in.",
-        "loggingIn": "Inloggen. Een ogenblik geduld."
+        "loggingIn": "Inloggen. Een ogenblik geduld.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Rapport voor Systeem {systemName}"

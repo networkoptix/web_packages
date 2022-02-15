@@ -888,7 +888,9 @@
         },
         "webAdminCloudCredentialError": "Melden Sie sich mit %CLOUD_NAME% an, um als Cloud-Benutzer auf dieses System zuzugreifen",
         "twoFaRequired": "Die Zwei-Faktor-Authentifizierung wurde für dieses Konto aktiviert. Bitte geben Sie Ihren Verifizierungscode in das Popup-Fenster ein.",
-        "loggingIn": "Einloggen. Bitte warten."
+        "loggingIn": "Einloggen. Bitte warten.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
         "healthReportForSystem": "Bericht für System {systemName}"

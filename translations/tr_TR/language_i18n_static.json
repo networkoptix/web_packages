@@ -888,7 +888,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Bu hesap için iki faktörlü kimlik doğrulama etkinleştirildi. Lütfen açılır pencereye doğrulama kodunuzu girin.",
-        "loggingIn": "Oturum açılıyor. Lütfen bekleyin."
+        "loggingIn": "Oturum açılıyor. Lütfen bekleyin.",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

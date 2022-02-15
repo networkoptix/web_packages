@@ -520,7 +520,7 @@
     "FIRST NAME IS REQUIRED TEXT": "Voornaam is verplicht",
     "LAST NAME IS REQUIRED TEXT": "Achternaam is verplicht",
     "EMAIL IS REQUIRED TEXT": "E-mail is vereist",
-    "ENTER EMAIL TEXT": "Enter email",
+    "ENTER EMAIL TEXT": "Voer e-mailadres in",
     "PASSWORD IS REQUIRED TEXT": "Wachtwoord is vereist",
     "2FA BACKUP CODE BTN TEXT": "Geen toegang tot authenticatie-app?",
     "2FA LOG IN CLOUD TEXT": "Log in op Nx Cloud",

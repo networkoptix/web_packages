@@ -888,7 +888,9 @@
         },
         "webAdminCloudCredentialError": "クラウドユーザーとしてこのシステムにアクセスするには %CLOUD_NAME% でログインしてください",
         "twoFaRequired": "このアカウントでは二要素認証が有効になっています。ポップアップウィンドウに認証コードを入力してください。",
-        "loggingIn": "ログイン中。お待ちください..."
+        "loggingIn": "ログイン中。お待ちください...",
+        "sessionRenewed": "Session has been renewed.",
+        "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
         "healthReportForSystem": "システム {systemName} のヘルスレポート"
