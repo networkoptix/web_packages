@@ -331,7 +331,7 @@ class PushNotification(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     send_date = models.DateTimeField(null=True, blank=True)
     state = models.CharField(choices=RESULT_STATES,
-                             default=RESULT_STATES.open, max_length=20)
+                             default=RESULT_STATES.open, max_length=20, db_index=True)
 
     def __str__(self):
         return self.title or 'Untitled Notification'
@@ -477,9 +477,9 @@ def check_urls(known_urls, sub_val=''):
         original = match_obj.group()
         domain = '.'.join(original.split('//')[-1].split('/')[0].split('.')[-2:])
         return original if domain in known_urls else sub_val
-    
+
     return _check_urls
-    
+
 
 
 def clean_content_factory():
@@ -496,7 +496,7 @@ def sub_system_id_factory(system_id):
 
     def _sub_system_id(content):
         return content.replace(system_id, proxy) if system_id else content
-    
+
     return _sub_system_id
 
 
@@ -525,16 +525,16 @@ class SystemEmail(models.Model):
             'html_body': self.message_html,
             'text_body': self.message_text
         }
-    
+
     def clean_email(self):
         def clean(content):
             content_cleaners = [clean_content_factory(), sub_system_id_factory(self.system_id)]
-            
+
             for cleaner in content_cleaners:
                 content = cleaner(content)
-            
+
             return content
-        
+
         self.subject = clean(self.subject)
         self.message_html = clean(self.message_html)
         self.message_text = clean(self.message_text)
