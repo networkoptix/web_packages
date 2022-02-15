@@ -14,17 +14,17 @@ import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
-import { NxAppStateService } from '../../nx-app-state.service';
-import { NxCloudApiService } from '../../nx-cloud-api';
-import { NxPollService } from '../../poll.service';
-import { NxSystemAPIService, NxSystemAPI } from '../../system-api.service';
+import { NxAppStateService } from '../nx-app-state.service';
+import { NxCloudApiService } from '../nx-cloud-api';
+import { NxPollService } from '../poll.service';
+import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
 import {
     EventRule,
     EventTypes,
     RawRule,
     SystemConfigSettings
-} from '../../system-api.types';
-import { NxSystemsService, NxSystemWithUserInfo } from '../../systems.service';
+} from '../system-api.types';
+import { NxSystemsService, NxSystemWithUserInfo } from '../systems.service';
 
 import { CameraManager } from './camera-manager/camera-manager';
 import type { ICamera, ITask } from './camera-manager/camera-manager-types';

@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash-es';
 
 import type {
     NxSystemServer
-} from '@services/system.service/system/system-types';
+} from '@services/system.service/system-types';
 
 import * as generalUtils from './general';
 import * as nxUtils from './nx';

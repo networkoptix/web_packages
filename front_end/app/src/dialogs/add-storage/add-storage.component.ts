@@ -17,7 +17,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import {
     StorageManager
-} from '@services/system.service/system/storage-manager/storage-manager';
+} from '@services/system.service/storage-manager/storage-manager';
 import { cleanId, pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';

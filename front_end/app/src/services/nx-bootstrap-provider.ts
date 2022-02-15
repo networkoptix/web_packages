@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
-// do not use barrel file for the next import - it breaks auth app
-import { NxSystemRole } from '@services/system.service/system/user-manager/user-manager-types';
+import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';

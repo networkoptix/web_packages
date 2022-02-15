@@ -16,7 +16,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemAPI } from '@services/system-api.service';
-import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystem } from '@services/system.service/system';
 import { pickFrom } from '@utils/general';
 
 @Component({

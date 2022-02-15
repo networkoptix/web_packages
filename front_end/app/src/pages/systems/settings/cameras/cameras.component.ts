@@ -52,8 +52,8 @@ import {
     MotionType,
     RecordingType,
     StreamQuality
-} from '@services/system.service/system/camera-manager/camera-manager-types';
-import type { NxSystem } from '@services/system.service/system/system';
+} from '@services/system.service/camera-manager/camera-manager-types';
+import type { NxSystem } from '@services/system.service/system';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';

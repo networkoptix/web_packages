@@ -14,7 +14,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPollService } from './poll.service';
 import { NxStorageService } from './storage.service';
-import type { NxSystem } from './system.service/system/system';
+import type { NxSystem } from './system.service/system';
 import { NxUriService } from './uri.service';
 
 interface IParams<Value = any> {

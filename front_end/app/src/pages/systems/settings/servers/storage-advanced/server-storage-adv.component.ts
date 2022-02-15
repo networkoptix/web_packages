@@ -21,8 +21,8 @@ import { NxProcessService, Process } from '@services/process.service';
 import {
     CurrentStorageState,
     Storage,
-} from '@services/system.service/system/storage-manager/storage';
-import type { NxSystem } from '@services/system.service/system/system';
+} from '@services/system.service/storage-manager/storage';
+import type { NxSystem } from '@services/system.service/system';
 import { bitsToString } from '@utils/bits-to-string';
 
 type GbOrTb = 'GB' | 'TB';

@@ -9,8 +9,8 @@ import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemWithUserInfo } from '@services/systems.service';
 
 import { FirstPartyWidget } from '../helper-classes';

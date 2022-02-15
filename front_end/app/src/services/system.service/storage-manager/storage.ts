@@ -1,5 +1,5 @@
 import { GetStorages } from '@services/system-api.types';
-import { ServerManager } from '@services/system.service/system/server-manager/server-manager';
+import { ServerManager } from '@services/system.service/server-manager/server-manager';
 import { cleanId } from '@utils/general';
 
 /**

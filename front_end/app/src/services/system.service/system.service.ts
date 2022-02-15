@@ -15,7 +15,7 @@ import { NxPollService } from '../poll.service';
 import { NxSystemAPIService } from '../system-api.service';
 import { NxSystemsService } from '../systems.service';
 
-import { NxSystem } from './system/system';
+import { NxSystem } from './system';
 
 @Injectable({
     providedIn: 'root'

@@ -18,7 +18,7 @@ import {
     NxSystemAPIService,
     NxSystemRestAPI
 } from '@services/system-api.service';
-import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { pickFrom } from '@utils/general';
 

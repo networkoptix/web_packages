@@ -5,8 +5,8 @@ import type { APIDocType } from '@services/nx-config/base-config';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
-import { NxCloudApiService } from '../../../nx-cloud-api';
-import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../../system-api.service';
+import { NxCloudApiService } from '../../nx-cloud-api';
+import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../system-api.service';
 import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo, IParams } from '../system-types';
 

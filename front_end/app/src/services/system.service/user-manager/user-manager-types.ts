@@ -1,4 +1,4 @@
-import { PredefinedRole } from '../../../nx-config/base-config';
+import { PredefinedRole } from '../../nx-config/base-config';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;

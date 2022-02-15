@@ -4,7 +4,7 @@ import type { MenuNode } from '@services/menus.service.types';
 import type {
     NxSystemServer,
     NxMediaServer,
-} from '@services/system.service/system/system-types';
+} from '@services/system.service/system-types';
 
 /**
  * Pass a function that evaluates a menu node to fulfill a specific condition,

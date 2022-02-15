@@ -25,10 +25,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
-import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystem } from '@services/system.service/system';
 import type {
     NxSystemUser
-} from '@services/system.service/system/user-manager/user-manager-types';
+} from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';

@@ -10,7 +10,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { EmailNotification } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 
 const getTestEvents = (systemId?: string) => [

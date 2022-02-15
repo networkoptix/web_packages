@@ -11,8 +11,8 @@ import { Observable } from 'rxjs';
 import { environment } from '@environments/environment';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
+import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystem } from '@services/system.service/system/system';
 
 @Injectable()
 export class SystemGuard implements CanActivate {

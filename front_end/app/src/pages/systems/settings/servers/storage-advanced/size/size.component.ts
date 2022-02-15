@@ -19,7 +19,7 @@ import { POS_STRATEGY } from '@components/popover/popover-config';
 import { PopoverRef } from '@components/popover/popover-ref';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Storage, STORAGE_STATUS } from '@services/system.service/system/storage-manager/storage';
+import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
 import { bitsToString } from '@utils/bits-to-string';
 
 @UntilDestroy({ checkProperties: true })

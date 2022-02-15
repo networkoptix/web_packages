@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import type {
     ServerTimeInfo
-} from '@services/system.service/system/system-types';
+} from '@services/system.service/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
 import { ICamera, CameraArchive } from '../datatypes/ICamera';

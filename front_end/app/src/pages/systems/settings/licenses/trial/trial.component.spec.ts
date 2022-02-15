@@ -24,7 +24,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import {
     ServerManager
-} from '@services/system.service/system/server-manager/server-manager';
+} from '@services/system.service/server-manager/server-manager';
 
 import { NxLicenseTrialComponent } from './trial.component';
 

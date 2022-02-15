@@ -20,7 +20,7 @@ import {
     ModuleInformationReply,
     NormalResponse
 } from '@services/system-api.types';
-import type { NxSystem } from '@services/system.service/system/system';
+import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { cleanId, pickFrom } from '@utils/general';
 

@@ -16,7 +16,7 @@ import {
 } from '@components/info-block/info-block.component';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSystem } from '@services/system.service/system/system';
+import { NxSystem } from '@services/system.service/system';
 
 import { NxLicenseDetailComponent } from './license.component';
 

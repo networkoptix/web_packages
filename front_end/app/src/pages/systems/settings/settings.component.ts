@@ -30,11 +30,11 @@ import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { NxSystemService } from '@services/system.service/system.service';
 import type {
     ICamera
-} from '@services/system.service/system/camera-manager/camera-manager-types';
-import type { NxSystem } from '@services/system.service/system/system';
+} from '@services/system.service/camera-manager/camera-manager-types';
+import type { NxSystem } from '@services/system.service/system';
+import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';

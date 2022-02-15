@@ -24,7 +24,7 @@ import type { APIDocType } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
-import type { IParams } from './system.service/system/system-types';
+import type { IParams } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 /**

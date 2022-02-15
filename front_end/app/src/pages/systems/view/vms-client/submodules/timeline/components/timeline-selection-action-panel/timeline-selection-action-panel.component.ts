@@ -10,8 +10,8 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystem } from '@services/system.service/system/system';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { NxAccountService } from '../../../../../../../../services/account.service';

@@ -26,10 +26,10 @@ import * as t from './system-api.types';
 import { User } from './system-api.types';
 import type {
     ICamera
-} from './system.service/system/camera-manager/camera-manager-types';
+} from './system.service/camera-manager/camera-manager-types';
 import type {
     NxSystemUser
-} from './system.service/system/user-manager/user-manager-types';
+} from './system.service/user-manager/user-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemAPI {

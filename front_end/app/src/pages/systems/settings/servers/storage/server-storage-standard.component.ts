@@ -49,11 +49,11 @@ import {
     STORAGE_TYPES,
     CurrentStorageState,
     MODE,
-} from '@services/system.service/system/storage-manager/storage';
+} from '@services/system.service/storage-manager/storage';
 import {
     UpdateTriggers
-} from '@services/system.service/system/storage-manager/storage-state';
-import type { NxSystem } from '@services/system.service/system/system';
+} from '@services/system.service/storage-manager/storage-state';
+import type { NxSystem } from '@services/system.service/system';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
 import { cleanId, cleanSmbUrl } from '@utils/general';
 

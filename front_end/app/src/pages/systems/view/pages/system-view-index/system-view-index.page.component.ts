@@ -13,8 +13,8 @@ import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import type { NxSystem } from '@services/system.service/system/system';
 import { NxSystemsService } from '@services/systems.service';
 import { cleanId } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
