@@ -35,7 +35,7 @@ Clear Register Fields
 
 2. Should open register page from register success page by clicking Register button on top right corner
     [Tags]    email
-    ${email}    Get Random Email        ${BASE EMAIL}
+    ${email}    Get Random Email        ${BASE EMAIL}     sendemail=${True}
     Register    'mark'    'hamill'    ${email}    ${password}
     Activate    ${email}
     Go To    ${url}

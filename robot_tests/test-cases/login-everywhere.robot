@@ -42,7 +42,7 @@ Restart
 4. works at registration page on account activation success
     [tags]    email
     Go To    ${url}/authorize/register
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
     Register    mark    hamill    ${random email}    ${password}
     Activate    ${random email}
     Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True

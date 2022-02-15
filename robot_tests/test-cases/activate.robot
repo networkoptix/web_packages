@@ -29,7 +29,7 @@ Open New Browser On Failure
 *** Test Cases ***
 1. Register and Activate
     [Tags]    email    C24211    C41862
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email    ${BASE EMAIL}     sendemail=${True}
     Register And Activate Account    mark    hamill    ${email}    ${password}    act=ui
 
 2. Allows register, activate, login with curly text in First and Last name fields

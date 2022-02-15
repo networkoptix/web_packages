@@ -253,7 +253,7 @@ Restart
 21. Log in more than 5 times
     [tags]    C42075
     Go To    ${url}/authorize?client_type=create
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
     Activate    ${email}
     Click Element    ${LOG IN BUTTON}
