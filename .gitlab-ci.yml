@@ -29,6 +29,7 @@ workflow:
     - when: never
 
 stages:
+  - pre-build
   - docker image
   - check
   - build
@@ -242,6 +243,21 @@ frontend:
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
 
+wheel-uploader:
+  extends: .retries
+  stage: pre-build
+  script:
+    - mkdir ~/.nxcloud
+    - >
+      echo "auth: $NXCLOUD_UTIL_SERVICE_AUTH" > ~/.nxcloud/config.yaml
+    - curl -L hdw.mx/linux/nxcloud | tee ./nxcloud > /dev/null && chmod +x ./nxcloud
+    - cat cloud/requirements.txt | ./nxcloud runCommand UploadWheels
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/requirements.txt
+
+
 .fail-on:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
   stage: fail-fast
@@ -330,6 +346,10 @@ on-django-tests-slow:
 on-django-tests-fast:
   extends: .fail-on-backend
   needs: ["django-unit-test-fast"]
+
+on-wheel-upload:
+  extends: .fail-on-backend
+  needs: ["wheel-uploader"]
 
 .hooker:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
