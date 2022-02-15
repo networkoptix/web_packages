@@ -1123,7 +1123,8 @@ class TestAssetTypeFields:
                                                                    (4, "article", "Article"),
                                                                    (5, "agreement", "Agreement"),
                                                                    (6, "documentation", "Documentation Page"),
-                                                                   (7, 'release_notes', "Release Notes")])
+                                                                   (7, 'release_notes', "Release Notes"),
+                                                                   (8, 'vms_extension', 'VMS Extension')])
 
     def test_name(self):
         name = self.type._meta.get_field('name')

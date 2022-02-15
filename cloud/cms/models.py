@@ -17,6 +17,7 @@ from django.db.models.aggregates import Count
 from util.base_cache import BaseCache
 
 from redis.exceptions import ConnectionError
+from django.apps import apps
 from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -491,7 +492,8 @@ class AssetType(models.Model):
                           (4, "article", "Article"),
                           (5, "agreement", "Agreement"),
                           (6, "documentation", "Documentation Page"),
-                          (7, 'release_notes', "Release Notes"))
+                          (7, 'release_notes', "Release Notes"),
+                          (8, 'vms_extension', 'VMS Extension'))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -1006,7 +1008,8 @@ class DataStructure(models.Model):
                          (10, 'object', 'Object'),
                          (11, 'array', 'Array'),
                          (12, 'multiselect', 'Multiselect'),
-                         (13, 'integer', 'Integer'))
+                         (13, 'integer', 'Integer'),
+                         (14, 'foreign_key', 'Foreign Key'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
@@ -1244,6 +1247,15 @@ class DataStructure(models.Model):
         elif data_structure.type == DataStructure.DATA_TYPES.integer:
             return int(value) if value else 0
 
+        elif data_structure.type == DataStructure.DATA_TYPES.foreign_key:
+            try:
+                foreign_id = int(value)
+            except ValueError:
+                return None
+
+            foreign_model, filters = data_structure.get_foreign_key_config()
+            return foreign_model.objects.filter(pk=foreign_id, **filters).first()
+
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
                                      DataStructure.DATA_TYPES.multiselect]:
             if not value:
@@ -1271,10 +1283,20 @@ class DataStructure(models.Model):
         if data_structure.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.multiselect,
                                    DataStructure.DATA_TYPES.object]:
             value = json.dumps(value)
+        elif data_structure.type == DataStructure.DATA_TYPES.foreign_key:
+            value = str(value.pk) if value is not None else ''
         else:
             value = str(value)
 
         return value
+
+    def get_foreign_key_config(self):
+        foreign_key_options = self.meta_settings.get('foreign_key_config', {})
+        app_name = foreign_key_options.get('app')
+        model_name = foreign_key_options.get('model')
+        filters = self.meta_settings['foreign_key_config'].get('filters', {})
+        foreign_model = apps.get_model(app_name, model_name)
+        return foreign_model, filters
 
     @staticmethod
     def get_type_by_name(name):

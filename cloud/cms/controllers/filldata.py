@@ -139,10 +139,10 @@ class ContextProcessor:
     custom: bool = False
     custom_data: Dict = None
 
-    def process_global_contexts(self, content, language):
+    def process_global_contexts(self, content, language, prefix=''):
         for global_context in self.global_contexts.all():
             content = self.process_context_structure(
-                context=global_context, content=content, force_global_files=False, language=language
+                context=global_context, content=content, force_global_files=False, language=language, prefix=prefix
             )
 
         for tag in SPECIAL_STRUCTURES.function_dict:
@@ -169,7 +169,7 @@ class ContextProcessor:
                 content = content.replace(tag, content_value)
         return content
 
-    def process_context_structure(self, context, content, force_global_files, language=None, context_dict=None):
+    def process_context_structure(self, context, content, force_global_files, language=None, context_dict=None, prefix=''):
         values = DataStructure.find_actual_values(
             context.datastructure_set.all(), asset=self.asset, language=language, version_id=self.version_id,
             draft=self.preview
@@ -197,8 +197,20 @@ class ContextProcessor:
                 else:
                     content_value = values[datastructure.id]
                 # replace marker with value
-                if not DataStructure.is_file_or_image(datastructure.type):
-                    content = self.process_data_structure(content, datastructure.name, datastructure.type, content_value)
+                if datastructure.type == DataStructure.DATA_TYPES.foreign_key:
+                    foreign_model, filters = datastructure.get_foreign_key_config()
+                    if foreign_model is Asset:
+                        foreign_asset = content_value
+                        if foreign_asset:
+                            global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=foreign_asset.asset_type)
+                            foreign_context_processor = ContextProcessor(
+                                asset=foreign_asset, global_contexts=global_contexts,
+                                preview=self.preview, skin=self.skin, version_id=foreign_asset.version_id()
+                            )
+                            foreign_context_processor.process_global_contexts(content, language=language, prefix=f'{datastructure.name}.')
+
+                elif not DataStructure.is_file_or_image(datastructure.type):
+                    content = self.process_data_structure(content, f'{prefix}{datastructure.name}', datastructure.type, content_value)
 
                 elif content_value or datastructure.optional:
                     if context.is_global and not force_global_files:

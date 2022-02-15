@@ -2,8 +2,9 @@ from json.decoder import JSONDecodeError
 from django import forms
 from django.db.models import Q
 from django.core.validators import RegexValidator
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.db.models import When, Case
+from django.contrib.admin import site
+from django.contrib.admin.widgets import FilteredSelectMultiple, ForeignKeyRawIdWidget
+from django.db.models import When, Case, QuerySet, ForeignKey, SET_NULL
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -146,7 +147,7 @@ class CustomContextForm(forms.Form):
         self.fields.pop('language')
 
     def add_fields(self, asset, context, language, user):
-        data_structures = context.datastructure_set.all()
+        data_structures: QuerySet[DataStructure] = context.datastructure_set.all()
         fieldsets = {None: []}
         if self.order:
             data_structures = data_structures.order_by(Case(
@@ -271,6 +272,22 @@ class CustomContextForm(forms.Form):
 
             elif data_structure.type == DataStructure.DATA_TYPES.long_text:
                 widget_type = forms.Textarea(attrs={'placeholder': data_structure.placeholder})
+
+            elif data_structure.type == DataStructure.DATA_TYPES.foreign_key:
+                foreign_model, filters = data_structure.get_foreign_key_config()
+                temp_field = ForeignKey(foreign_model, on_delete=SET_NULL)
+                temp_field.model = Context
+                temp_field.remote_field.limit_choices_to = filters
+                self.fields[data_structure.name] = forms.ModelChoiceField(
+                    label=ds_label,
+                    help_text=ds_description,
+                    initial=record_value,
+                    required=False,
+                    disabled=disabled,
+                    queryset=foreign_model.objects.filter(**filters),
+                    widget=ForeignKeyRawIdWidget(rel=temp_field.remote_field, admin_site=site)
+                )
+                continue
 
             validator = RegexValidator('')
             pattern = None
