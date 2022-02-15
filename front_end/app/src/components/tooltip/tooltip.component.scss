@@ -3,11 +3,12 @@
 :host {
     display : block;
     
+    
     .tooltip-body {
         max-width        : 200px;
         padding          : 0.25rem 0.5rem;
-        color            : $light1;
-        background-color : rgba($dark1, 0.9);
+        color            : var(--popover-color);
+        background-color : var(--popover-bg);
         border-radius    : 0.25rem;
         position         : relative;
         text-align       : left;
@@ -28,7 +29,7 @@
         &::before {
             left               : 0;
             border-width       : 4px 4px 4px 0;
-            border-right-color : rgba(0, 0, 0, 0.9);
+            border-right-color : var(--popover-bg);
         }
     }
 }

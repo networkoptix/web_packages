@@ -3,7 +3,7 @@
 .cdk-overlay-pane {
     border        : none;
     border-radius : 2px;
-    box-shadow    : 0 1rem 2rem 0 transparentize($dark15, 0.4);
+    box-shadow    : 0 1rem 2rem 0 rgba(var(--popover-shadow-color), 0.4);
     
     &.system-popover {
         width   : 250px;
@@ -23,45 +23,3 @@
         }
     }
 }
-
-//// TODO: Remove after retiring NgbPopover
-//.popover {
-//    border : none;
-//    border-radius: 2px !important;
-//    box-shadow : 0 1rem 2rem 0 transparentize($dark15, 0.4);
-//
-//    &.bs-popover-bottom {
-//        margin-top : 1px;
-//
-//        & > .arrow {
-//            top : calc(-1rem - 1px); // move it closer to the size bar
-//            margin-left : -.5rem !important;
-//            transform   : translateX(-50%);
-//        }
-//    }
-//
-//    &.bs-popover-right {
-//        & > .arrow {
-//            margin-top : -1rem !important;
-//            transform   : translateX(-50%);
-//        }
-//    }
-//
-//    &.systems-popover {
-//        width : 250px;
-//    }
-//}
-//
-//.tooltip {
-//    pointer-events: none !important;
-//
-//    &.bs-tooltip-top {
-//        & > .arrow {
-//            left : calc(50% - 1rem); // move it to the center
-//        }
-//
-//        & > .tooltip-inner {
-//            text-align: left;
-//        }
-//    }
-//}

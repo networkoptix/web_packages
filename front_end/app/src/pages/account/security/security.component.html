@@ -37,7 +37,7 @@
                     <div *ngFor="let system of twoFaSystems | slice:0:4; let i=index" class="d-flex align-items-center">
                         <svg-icon nx-add-svg-src
                                   class="d-inline-block"
-                                  [src]="CONFIG.icons.dir + 'system.svg'"
+                                  [src]="CONFIG.icons.dir + 'system_nocolor.svg'"
                                   [svgStyle]="{'width.px': '24', 'height.px': '24'}"
                                   [applyClass]="true"></svg-icon>
                         <span class="system-name ml-1">{{system.name}}</span>
@@ -72,7 +72,7 @@
                         <svg-icon
                             nx-add-svg-src
                             class="d-inline-block"
-                            [src]="CONFIG.icons.dir + 'system.svg'"
+                            [src]="CONFIG.icons.dir + 'system_nocolor.svg'"
                             [svgStyle]="{'width.px': '24', 'height.px': '24'}"
                             [applyClass]="true"></svg-icon>
                         <span class="system-name ml-1">{{system.name}}</span>

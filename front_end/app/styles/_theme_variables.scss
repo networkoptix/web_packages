@@ -23,6 +23,10 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --scrollbar-thumb-border-color      : var(--additional_light1);
     --menu-scrollbar-thumb-border-color : var(--light6);
     
+    --popover-shadow-color : #{$dark15};
+    --tooltip-bg : #{$dark1};
+    --tooltip-color : #{$light1};
+    
     --radio-color              : #{$dark9};
     --radio-check-color        : #{$brand_core};
     --radio-hover-color        : #{$dark1};
@@ -203,6 +207,10 @@ html[data-theme="dark"] {
     --scrollbar-thumb-bg                : #A5B7C0; //$light10;
     --scrollbar-thumb-border-color      : #2B383F; //$dark9;
     --menu-scrollbar-thumb-border-color : #2B383F; //$dark9;
+    
+    --popover-shadow-color : #000000;  //$dark1;
+    --popover-bg : #3F545F; //$dark13;
+    --popover-color : #E1E7EA; //$light4;
     
     --radio-color              : #A5B7C0; //$light10;
     --radio-check-color        : #2592C3; //$brand_d1;

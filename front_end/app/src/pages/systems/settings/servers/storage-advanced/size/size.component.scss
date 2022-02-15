@@ -143,11 +143,11 @@ $stripes : repeating-linear-gradient(
     }
 
     &-title {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
     }
 
     &-size {
-        @include typography.medium13dark9;
+        @include typography.medium13nocolor;
         display    : grid;
         text-align : right;
     }

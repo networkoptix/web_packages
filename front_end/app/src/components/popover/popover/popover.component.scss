@@ -1,10 +1,15 @@
 
 :host {
     position      : relative;
-    background    : white;
+    color         : var(--popover-color);
+    background    : var(--popover-bg);
     border-radius : 2px;
     padding       : 0.5rem 0.75rem;
     width         : 100%;
+    // problem with setting svg fill color directly when content is
+    // set for the popover ... this is the reason for this weirdness
+    // ... and it will work only if svg without color/class!="st0" is used
+    fill          : var(--popover-color);
     
     .arrow {
         &::before,
@@ -25,7 +30,7 @@
         &::after {
             left               : 1px;
             border-width       : 0.5rem 0.5rem 0.5rem 0;
-            border-right-color : #fff;
+            border-right-color : var(--popover-bg);
         }
     }
 }
