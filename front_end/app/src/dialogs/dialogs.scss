@@ -122,8 +122,8 @@ nx-modal-wizard {
         border-radius    : 2px 2px 0 0 !important;
 
         .modal-title {
-            @include typography.medium14dark9;
-            color       : var(--card-header-text) !important;
+            @include typography.medium14nocolor;
+            color       : var(--card-header-text);
             line-height : $modal-title-line-height !important;
             margin      : 0 !important;
             padding     : 0 !important;
@@ -164,14 +164,20 @@ nx-modal-wizard {
             }
 
             &:hover {
+                &:before, &:after {
+                    background-color : var(--btn-close-hover-color);
+                }
                 .close-content {
-                    background-color : $additional_light2 !important;
+                    background-color : var(--btn-close-hover-bg) !important;
                 }
             }
 
             &:active {
+                &:before, &:after {
+                    background-color : var(--btn-close-active-color);
+                }
                 .close-content {
-                    background-color : $additional_light3 !important;
+                    background-color : var(--btn-close-active-bg) !important;
                 }
             }
 

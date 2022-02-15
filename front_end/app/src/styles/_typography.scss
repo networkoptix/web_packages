@@ -318,6 +318,10 @@ p {
     @include font-source($font-family-medium, $h5-font-size, $dark9);
 }
 
+@mixin medium14nocolor {
+    @include font-source($font-family-medium, $h5-font-size);
+}
+
 @mixin medium14dark10 {
     @include font-source($font-family-medium, $h5-font-size, $dark10);
 }

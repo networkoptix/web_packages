@@ -44,8 +44,8 @@
             display               : grid;
             grid-template-columns : 1fr 1fr;
             width                 : 100%;
-            background-color      : $light2;
-            border                : 1px solid $light4;
+            background-color      : var(--card-header-bg);
+            border                : 1px solid var(--border-color);
             padding               : 1rem;
             margin-top            : 1rem;
 
@@ -66,6 +66,24 @@
                 align-content   : center;
                 justify-content : center;
                 margin-top      : 0.5rem;
+                
+                button {
+                    svg-icon svg .st7 {
+                        fill : var(--btn-text-color) !important
+                    }
+                    
+                    &:hover {
+                        svg-icon svg .st7 {
+                            fill : var(--btn-text-hover-color) !important
+                        }
+                    }
+                    
+                    &:active {
+                        svg-icon svg .st7 {
+                            fill : var(--btn-text-active-color) !important
+                        }
+                    }
+                }
             }
 
             &-note {

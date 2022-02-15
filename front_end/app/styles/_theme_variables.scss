@@ -75,6 +75,9 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
     --left-menu-l3-selected-bg    : var(--light16);
     --left-menu-l3-selected-color : var(--light1);
     
+    --btn-close-hover-bg  : #{$additional_light2};
+    --btn-close-active-bg : #{$additional_light3};
+    
     --btn-text-color        : #{$light16};
     --btn-text-hover-color  : #{$dark15};
     --btn-text-active-color : #{$light16};
@@ -259,6 +262,11 @@ html[data-theme="dark"] {
     --left-menu-l3-opacity        : 0.6;
     --left-menu-l3-selected-bg    : #35464F; //$light16;
     --left-menu-l3-selected-color : #F5F7F8; //$light2;
+    
+    --btn-close-hover-bg : #2B383F; //$dark9;
+    --btn-close-hover-color : #A5B7C0; //light10;
+    --btn-close-active-bg : #121517; //$dark4;
+    --btn-close-active-color : #5F7F8F; //$light17;
     
     --btn-text-color : #E1E7EA; //$light4;
     --btn-text-hover-color : #A5B7C0; //light10;
