@@ -348,8 +348,12 @@ on-django-tests-fast:
   needs: ["django-unit-test-fast"]
 
 on-wheel-upload:
-  extends: .fail-on-backend
+  extends: .fail-on
   needs: ["wheel-uploader"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/requirements.txt
 
 .hooker:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}
