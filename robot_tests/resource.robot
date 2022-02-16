@@ -315,7 +315,7 @@ Get Email Link
     [Arguments]    ${recipient}    ${link type}    ${timeout}=120
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
-    IF    "${link type}"=="activate"    
+    IF    "${link type}"=="activate"
         Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ELSE IF    "${link type}"=="restore_password"    
         Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
@@ -331,8 +331,6 @@ Get Email Link
 
 Activate
     [Arguments]    ${email}
-#    ${code}=   Get Code From Email    ${auth}    ${email}    activate_account
-#    Go To    ${ENV}/authorize/activate/${code}
     ${link}=   Get Email Link    ${email}    activate
     Go To    ${link}
 

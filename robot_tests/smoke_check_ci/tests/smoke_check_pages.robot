@@ -1,14 +1,15 @@
 *** Settings ***
 Resource         ../smoke_check_resource.robot
 
-Suite Setup      Open browser and go to url    ${ENV}    False    False
-Suite Teardown   Close Browser
+Suite Setup    Pages Suite Setup
+Suite Teardown   Skip    Customization settings on CI hosts are broken
 
+*** Keywords ***
+Pages Suite Setup
+    Skip    Customization settings on CI hosts are broken
+    Open browser and go to url    ${ENV}    False    False
 
 *** Test Cases ***
-Dummy Test
-    Log    All test cases from the suite are commented because of failures caused by wrong customization settings
-
 #About
 #    [Tags]    C30820    pages
 #    Wait Until Element Is Visible    ${FOOTER ABOUT LINK}

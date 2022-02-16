@@ -16,4 +16,4 @@ set -e
 #. ${PWD}/smoke_check_ci/scripts/run_tests.sh ${cloud_host} ${vms}
 
 # Run all tests in parallel
-pabot --pabotlib --outputdir smoke_check_ci/test_results -v ENV:${cloud_host} -v VMS:${vms} smoke_check_ci/tests
+pabot --pabotlib --outputdir smoke_check_ci/test_results -v ENV:${cloud_host} -v VMS:${vms} -v "TEST EMAIL":qaburbank smoke_check_ci/tests

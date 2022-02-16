@@ -20,15 +20,16 @@ from Cloud2fa import Cloud2fa
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+
 @library
 class CloudPortalAPI(object):
-    
+
     def __init__(self, env, customization, password, email):
         self.env = env
         self.customization = customization
         self.password = password
         self.baseEmail = email
-        
+
     @keyword
     def api_log_in(self, email, password, env=None, backup_code=None, verification_code=None):
         cloud_session = CloudSession(self.env, email, password, backup_code, verification_code)
@@ -48,7 +49,7 @@ class CloudPortalAPI(object):
     def merge_cloud_systems(self, master_id, slave_id, email, password):
         with CloudSession(self.env, email, password) as s:
             logger.trace(f'The headers are {s.headers}')
-            data = {'master_system_id': master_id,  'password': password, 'slave_system_id': slave_id}
+            data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             r = s.post(f'{self.env}/api/systems/merge', data)
             logger.trace(f'Value of r.content: {r.content}')
             assert r.status_code == 200, f'merge failed with {r.status_code}'
@@ -56,12 +57,14 @@ class CloudPortalAPI(object):
 
     @keyword
     def cdb_merge_cloud_systems(self, master_id, slave_id, email, password):
-        r = requests.post(f'{self.env}/cdb/system/{master_id}/merged_systems/', auth=HTTPBasicAuth(email, password), json={"systemId":slave_id}, verify=False)
+        r = requests.post(f'{self.env}/cdb/system/{master_id}/merged_systems/', auth=HTTPBasicAuth(email, password),
+                          json={"systemId": slave_id}, verify=False)
         return r.json()
 
     @keyword
     def change_password(self, email, old_password, new_password):
         with CloudSession(self.env, email, old_password) as s:
+            s.headers.update({"referer": f"{self.env}/account/password"})
             data = {'old_password': old_password, 'new_password': new_password}
             r = s.post(f'{self.env}/api/account/changePassword', data)
             return r.status_code
@@ -127,8 +130,9 @@ class CloudPortalAPI(object):
             return r.json()
 
     @keyword
-    def get_code_from_email(self, auth, email, message_type):
-        with CloudSession(self.env, auth[0], auth[1]) as s:
+    def get_code_from_email(self, email, message_type):
+        with CloudSession(self.env, self.baseEmail, self.password) as s:
+            s.headers.update({"referer": f"{self.env}/authorize"})
             r = s.post(f'{self.env}/api/robot/get_code', json={'email': email, 'type': message_type})
             return r.json()['code']
 
@@ -142,7 +146,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_system_settings(self, server_url, local_auth):
-        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0],  local_auth[1]), verify=False)
+        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0], local_auth[1]), verify=False)
         assert r.status_code == 200, 'Failed to get system settings'
         return r.json()
 
@@ -192,77 +196,81 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_new_FCM_token(self, key, auth, body):
-        headers = {'Content-Type': 'application/json','x-goog-api-key': key, 'x-goog-firebase-installations-auth': auth}
+        headers = {'Content-Type': 'application/json', 'x-goog-api-key': key,
+                   'x-goog-firebase-installations-auth': auth}
         print(headers)
-        r = requests.post('https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations', headers=headers, data=body)
+        r = requests.post('https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations',
+                          headers=headers, data=body)
         print(r)
         token = r.json()['token']
         return token
 
     @keyword
     def push_notifications_requests(self, env, email, password, process, min, max):
-        r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
-#        print(r)
-#        print(r.json())
+        r = requests.get(env + "cdb/system/get", auth=HTTPDigestAuth(email, password))
+        #        print(r)
+        #        print(r.json())
         self.systemsDict = r.json()
         self.systemsList = []
 
         for system in self.systemsDict['systems']:
             self.systemsList.append(system)
 
-        self.sortedList = sorted(self.systemsList, key = lambda i: i['registrationTime'])
+        self.sortedList = sorted(self.systemsList, key=lambda i: i['registrationTime'])
         uid = 0
         self.userId = str(uuid.uuid1())
-#        systemStart = int(self.minEmail/10)
-#        systemEnd = int(self.maxEmail/10)
+        #        systemStart = int(self.minEmail/10)
+        #        systemEnd = int(self.maxEmail/10)
         txtFile = os.environ['LOCUSTTEXT']
-        f= open(f'{txtFile}.txt', 'a')
-#        print(len(systemsList))
+        f = open(f'{txtFile}.txt', 'a')
+        #        print(len(systemsList))
         min = int(min)
         max = int(max)
         for system in self.sortedList[min:max]:
-#            print(system)
+            #            print(system)
             authKey = system["authKey"]
             id = system["id"]
             name = system["name"]
-#            f2= open("posts.txt", "w+")
-            title = process+" "+str(uid)+"_"+self.userId
-#            print(authKey, id, name)
- #           print(system)
+            #            f2= open("posts.txt", "w+")
+            title = process + " " + str(uid) + "_" + self.userId
+            #            print(authKey, id, name)
+            #           print(system)
 
-            emailIntStart = (int(name.strip(string.ascii_letters)))*10
- #           print(name+" stripped number "+str(emailIntStart)+" minEmail "+str(self.minEmail))
-            emailIntEnd = emailIntStart+10
+            emailIntStart = (int(name.strip(string.ascii_letters))) * 10
+            #           print(name+" stripped number "+str(emailIntStart)+" minEmail "+str(self.minEmail))
+            emailIntEnd = emailIntStart + 10
 
- #           if  emailIntStart == self.maxEmail:
- #              break
- #           elif emailIntStart >= self.minEmail:
+            #           if  emailIntStart == self.maxEmail:
+            #              break
+            #           elif emailIntStart >= self.minEmail:
             targetList = []
             for x in range(emailIntStart, emailIntEnd):
                 targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
             body = {
-                "systemId":id,
-                "targets":targetList,
-                "notification":{
+                "systemId": id,
+                "targets": targetList,
+                "notification": {
                     "title": title,
                     "body": name,
                     "payload": {
-                        "url": "nx-vms://test4.cloud.hdw.mx/client/"+id+"/view",
+                        "url": "nx-vms://test4.cloud.hdw.mx/client/" + id + "/view",
                         "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
-                        }
                     }
                 }
-    # to test script comment o6ut the post and write to file instead
-            r = requests.post(f'{self.env}api/notifications/push_notification', auth=HTTPBasicAuth(id, authKey), headers={'Content-Type':'application/json'}, data=json.dumps(body))
+            }
+            # to test script comment o6ut the post and write to file instead
+            r = requests.post(f'{self.env}api/notifications/push_notification', auth=HTTPBasicAuth(id, authKey),
+                              headers={'Content-Type': 'application/json'}, data=json.dumps(body))
             f.write(f"{r.text} {title}\n")
             uid += 1
         f.close()
-#       print("Sleeping for 300 secs")
-#        time.sleep(300)
+
+    #       print("Sleeping for 300 secs")
+    #        time.sleep(300)
 
     @keyword
     def create_systems_json(self, env, email, password):
-        r = requests.get(env+"cdb/system/get", auth=HTTPBasicAuth(email, password))
+        r = requests.get(env + "cdb/system/get", auth=HTTPBasicAuth(email, password))
 
         systemsDict = r.json()
         systemsList = []
@@ -270,7 +278,7 @@ class CloudPortalAPI(object):
         for system in systemsDict['systems']:
             systemsList.append(system)
 
-        sortedList = sorted(systemsList, key = lambda i: i['registrationTime'])
+        sortedList = sorted(systemsList, key=lambda i: i['registrationTime'])
         sysID = 1
         systemsJson = []
 
@@ -280,12 +288,10 @@ class CloudPortalAPI(object):
             id = system["id"]
             name = system["name"]
 
-            title = str(sysID)+" "+str(uuid.uuid1())
+            title = str(sysID) + " " + str(uuid.uuid1())
 
-
-            emailIntStart = (int(name.strip(string.ascii_letters)))*10
-            emailIntEnd = emailIntStart+10
-
+            emailIntStart = (int(name.strip(string.ascii_letters))) * 10
+            emailIntEnd = emailIntStart + 10
 
             targetList = []
             for x in range(emailIntStart, emailIntEnd):
@@ -297,18 +303,18 @@ class CloudPortalAPI(object):
                 "pre-authenticate": True,
                 "systemId": id,
                 "targets": targetList,
-                "notification":{
+                "notification": {
                     "title": title,
                     "body": name,
                     "payload": {
-                        "url": "nx-vms://test4.cloud.hdw.mx/client/"+id+"/view",
+                        "url": "nx-vms://test4.cloud.hdw.mx/client/" + id + "/view",
                         "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
-                        }
                     }
                 }
+            }
             systemsJson.append({"authKey": authKey, "id": id, "body": json.dumps(body), "title": title})
             sysID += 1
-        f= open('systems.json', 'w')
+        f = open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
         f.close()
 
@@ -322,12 +328,15 @@ class CloudPortalAPI(object):
 
     @keyword
     def camera_search(self, serverUrl, cameraPort, camFile, serverIp, user='mark', password='hamill'):
-        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'url':f'http://{serverIp}:{cameraPort}/{camFile}.mjpeg', 'user':user, 'password': password}, verify=False)
+        r = requests.get(f"{serverUrl}/api/manualCamera/search", auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                         params={'url': f'http://{serverIp}:{cameraPort}/{camFile}.mjpeg', 'user': user,
+                                 'password': password}, verify=False)
         return r.json()['reply']['processUuid']
 
     @keyword
     def camera_status(self, serverUrl, uuid):
-        r = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'), params={'uuid':uuid}, verify=False)
+        r = requests.get(f"{serverUrl}/api/manualCamera/status", auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                         params={'uuid': uuid}, verify=False)
         return r.json()
 
     @keyword
@@ -338,21 +347,22 @@ class CloudPortalAPI(object):
             "cameras":
                 [
                     {
-                    "uniqueId": uniqueId,
-                    "url": url,
-                    "manufacturer": manufacturer
+                        "uniqueId": uniqueId,
+                        "url": url,
+                        "manufacturer": manufacturer
                     }
                 ]
-            }
+        }
         logger.trace(body)
-        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                          headers={'Content-Type': 'application/json'}, json=body, verify=False)
         logger.trace(r.status_code)
         logger.trace(r.text)
         assert r.status_code == 200
         return r.text
 
-    #@keyword
-    #def add_fake_camera(self, erverUrl, cameras, user="mark", password="hamill"):
+    # @keyword
+    # def add_fake_camera(self, erverUrl, cameras, user="mark", password="hamill"):
     #    logger.trace("cameras value")
     #    logger.trace(cameras)
     #    body= {"cameras":cameras, "user":user, "password":password}
@@ -360,8 +370,8 @@ class CloudPortalAPI(object):
     #    r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
     #    return r.text
 
-    #@staticmethod
-    #def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer=None):
+    # @staticmethod
+    # def add_camera(serverUrl, camuser, campassword, uniqueId, url, manufacturer=None):
     #    body = {
     #        "user": camuser,
     #        "password": campassword,
@@ -383,54 +393,58 @@ class CloudPortalAPI(object):
     def add_fake_camera(self, serverUrl, cameras, user="mark", password="hamill"):
         logger.trace("cameras value")
         logger.trace(cameras)
-        body= {"cameras":cameras, "user":"mark", "password":"hamill"}
+        body = {"cameras": cameras, "user": "mark", "password": "hamill"}
         logger.trace(body)
-        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                          headers={'Content-Type': 'application/json'}, json=body, verify=False)
         return r.text
 
     @keyword
-    def turn_on_analytics(self, serverUrl,value,resourceId):
-#         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
-#         cameraDict = r.json()
-#         cameraID = cameraDict["id"]
+    def turn_on_analytics(self, serverUrl, value, resourceId):
+        #         r = requests.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth('admin', 'qweasd 123'), verify=False)
+        #         cameraDict = r.json()
+        #         cameraID = cameraDict["id"]
         body = [
-                    {
-                    "name": "userEnabledAnalyticsEngines",
-                    #"value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]",
-                    #"value": "[\"{0bfb37a3-06bd-3505-47f5-8fb8d2712e7f\"]",
-                    "value": value,
-                    "resourceId": resourceId
-                    }
-                ]
+            {
+                "name": "userEnabledAnalyticsEngines",
+                # "value": "[\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]",
+                # "value": "[\"{0bfb37a3-06bd-3505-47f5-8fb8d2712e7f\"]",
+                "value": value,
+                "resourceId": resourceId
+            }
+        ]
 
-        p = requests.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'), headers={'Content-Type':'application/json'}, json=body, verify=False)
+        p = requests.post(f'{serverUrl}/ec2/setResourceParams', auth=HTTPDigestAuth('admin', 'qweasd 123'),
+                          headers={'Content-Type': 'application/json'}, json=body, verify=False)
         return p.text
 
     @keyword
     def bind_system(self, auth, cloudUrl, name="API made system"):
         with CloudSession(self.env, auth[0], auth[1]) as s:
             logger.trace(self.customization)
-            body= {
+            body = {
                 "name": name,
                 "customization": self.customization
             }
             r = s.post(f'{cloudUrl}/cdb/system/bind', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
             logger.trace(r.json())
             return r.json()
-    
+
     @keyword
     def unbind_system(self, auth, cloudUrl, systemId):
-        r = requests.post(f'{cloudUrl}/cdb/system/unbind', auth=HTTPBasicAuth(auth[0], auth[1]), json={"systemId":systemId}, verify=False)
+        r = requests.post(f'{cloudUrl}/cdb/system/unbind', auth=HTTPBasicAuth(auth[0], auth[1]),
+                          json={"systemId": systemId}, verify=False)
         return r.json()
 
     @keyword
     def save_cloud_system_credentials(self, auth, serverUrl, authKey, cloudSystemId, ownerEmail):
-        body= {
-            "cloudAuthKey":authKey,
-            "cloudSystemID":cloudSystemId,
-            "cloudAccountName":ownerEmail
+        body = {
+            "cloudAuthKey": authKey,
+            "cloudSystemID": cloudSystemId,
+            "cloudAccountName": ownerEmail
         }
-        r = requests.post(f"{serverUrl}/api/saveCloudSystemCredentials", auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f"{serverUrl}/api/saveCloudSystemCredentials", auth=HTTPBasicAuth(auth[0], auth[1]),
+                          json=body, verify=False)
         return r.json()
 
     @keyword
@@ -439,16 +453,17 @@ class CloudPortalAPI(object):
             "systemId": systemId,
             "name": newName
         }
-        r = requests.post(f'{self.env}/cdb/system/rename', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{self.env}/cdb/system/rename', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
+                          verify=False)
         return r.json()
 
     @keyword
     def share(self, auth, systemId, accessRole, accountEmail, customPermissions):
         body = {
-            "systemId":systemId,
-            "accessRole":accessRole,
-            "accountEmail":accountEmail,
-            "customPermissions":customPermissions
+            "systemId": systemId,
+            "accessRole": accessRole,
+            "accountEmail": accountEmail,
+            "customPermissions": customPermissions
         }
         r = requests.post(f'{self.env}/cdb/system/share', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
         return r.json()
@@ -460,7 +475,8 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_cloud_system_users(self, auth, systemId):
-        r = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        r = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}',
+                         auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
 
         return r.json()['sharing']
 
@@ -474,10 +490,12 @@ class CloudPortalAPI(object):
         passwordHa1 = Encode.get_ha1_password(email, newPassword)
         passwordHa1Sha256 = Encode.get_ha1_sha256_password(email, newPassword)
         body = {
-            "passwordHa1":passwordHa1,
-            "passwordHa1Sha256":passwordHa1Sha256
+            "passwordHa1": passwordHa1,
+            "passwordHa1Sha256": passwordHa1Sha256
+
         }
-        r = requests.post(f'{self.env}/cdb/account/update', auth=HTTPBasicAuth(email, oldPassword), json=body, verify=False)
+        r = requests.post(f'{self.env}/cdb/account/update', auth=HTTPBasicAuth(email, oldPassword), json=body,
+                          verify=False)
         return r.json()
 
     @keyword
@@ -493,15 +511,17 @@ class CloudPortalAPI(object):
             "first_name": firstName,
             "last_name": lastName
         }
-        r = requests.post(f'{self.env}/api/account/register', auth=HTTPBasicAuth(self.baseEmail, self.password), json=body, verify=False)
+        r = requests.post(f'{self.env}/api/account/register', auth=HTTPBasicAuth(self.baseEmail, self.password),
+                          json=body, verify=False)
         return r.json()
 
     @keyword
     def activate_account(self, email, password):
-        code = self.get_code_from_email((self.baseEmail, self.password), email, "activate_account")
+        code = self.get_code_from_email(email, "activate_account")
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
-        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPDigestAuth(email, password), json={"code": code}, verify=False)
+        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPDigestAuth(email, password), json={"code": code},
+                          verify=False)
         return r.json()
 
     @keyword
@@ -511,7 +531,8 @@ class CloudPortalAPI(object):
             "system_id": sysId,
             "email": email
         }
-        r = requests.post(f'{self.env}/api/systems/disconnect', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+        r = requests.post(f'{self.env}/api/systems/disconnect', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
+                          verify=False)
 
     @keyword
     def toggle_2fa_on_api(self, email, password, backup_code=None, verification_code=None):
@@ -524,20 +545,20 @@ class CloudPortalAPI(object):
             totp = api2fa.get_2fa_verification_code(secretKey)
             body = {"action": "toggle", "totp": totp}
             securityRes = s.post(f'{self.env}/api/account/security', data=body)
-            assert securityRes.status_code == 200 , 'Toggle 2fa on failed'
+            assert securityRes.status_code == 200, 'Toggle 2fa on failed'
             return secretKey
-    
+
     @keyword
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
-            body = {"action":"deactivate", "totp": verification_code}
+            body = {"action": "deactivate", "totp": verification_code}
             securityRes = s.post(f'{self.env}/api/account/security', data=body)
 
     @keyword
     def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
             backupPostRes = s.post(f'{self.env}/api/2fa/backup', data={"count": "8"})
-            assert backupPostRes.status_code == 200 , 'Generate backup codes failed'
+            assert backupPostRes.status_code == 200, 'Generate backup codes failed'
             backupList = backupPostRes.json()
             backupDict = backupList[random.randint(0, 7)]
             backupCode = backupDict.get("backup_code")

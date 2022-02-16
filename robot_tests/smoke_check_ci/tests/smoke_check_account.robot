@@ -7,12 +7,14 @@ Suite Teardown   Account Suite Teardown
 
 *** Keywords ***
 Account Suite Setup
+    Skip    Customization settings on CI hosts are broken
     Base Suite Setup
 
     ${email acc}=   Register and activate account with random email    SmokeCheck    Auth    ${base password}
     Set Suite Variable    ${email acc}
 
 Account Suite Teardown
+    Skip    Customization settings on CI hosts are broken
     ${restored}=   Run keyword and return status    Change Password    ${email acc}    ${restored password}    ${password}
     Log    Password restored: ${restored}
     Close Browser
@@ -119,7 +121,7 @@ Restore Password
     Wait Until Location Is    ${ENV}/authorize
     Log    Step 3: Check email inbox
     ${link}=   Run Keyword If    'nxvms' in $env    Get Email Link    ${email acc}    restore_password
-    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${cloud auth}    ${email acc}    restore_password
+    ${code}=   Run Keyword If    'nxvms' not in $env    Get Code From Email    ${email acc}    restore_password
 
     Log    Step 4: Click on Restore Password button
     Run Keyword If    'nxvms' in $env    Go To    ${link}
