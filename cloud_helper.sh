@@ -478,6 +478,9 @@ do
         update_requirements_licenses)
             update_requirements_licenses
             ;;
+        update_package_licenses)
+            npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json
+            ;;
         install_cli)
             install_cli
             ;;
@@ -508,6 +511,7 @@ do
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
             echo 'update_requirements_licenses - Updates requirements-license.json when run locally else checks if updated when CI'
+            echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'
             echo 'install_cli - Installs cloud-helper CLI command globally'
             echo ''
             if ! command -v cloud-helper &> /dev/null

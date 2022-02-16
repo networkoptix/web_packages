@@ -404,3 +404,24 @@ fail-on-python-license-check:
         - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
       when: on_failure
+check-node-licenses:
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+  stage: check
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/package.json
+        - front_end/**/package.json
+  script:
+    - npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true
+
+fail-on-license-check:
+  extends: .fail-on
+  needs: [check-node-licenses]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/**/package.json
+        - front_end/**/package.json
+      when: on_failure
