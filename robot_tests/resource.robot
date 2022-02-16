@@ -1191,7 +1191,7 @@ Verify Element Does Not Scroll
     Should Be Equal As Numbers    ${original x}    ${new x}
 
 Delete All Text
-    [Arguments]    ${input}
+    [Arguments]    ${input}     ${replaceText}=${False}     ${replaceWith}=${None}
     ${text}=   Get Text    ${input}
     ${value}=   Get Element Attribute    ${input}    value
     ${innertext}=    Get Element Attribute    ${input}    innertext
@@ -1210,6 +1210,7 @@ Delete All Text
     FOR    ${n}    IN RANGE    ${length}
         Press Keys    None     BACKSPACE 
     END
+    Run Keyword If    ${replaceText}    Press Keys    None   ${replaceWith}
 
 #Delete All Content Editable Text
 #    [Arguments]    ${input}
