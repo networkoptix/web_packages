@@ -6,13 +6,13 @@ import {
     LOCALE_ID,
     OnChanges,
     OnDestroy,
-    SimpleChanges,
     TemplateRef,
     ViewContainerRef,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { of, Subject, Subscription, timer } from 'rxjs';
-import { delay, takeUntil } from 'rxjs/operators';
+import { pick } from 'lodash-es';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { POS_STRATEGY } from '@components/popover/popover-config';
@@ -21,6 +21,9 @@ import { NxPopoverService } from '@components/popover/popover.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
 import { bitsToString } from '@utils/bits-to-string';
+import { NgChanges } from '@utils/ng-changes';
+
+type CachedSizes = Record<string, { vms: number, total: number }>;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,16 +33,13 @@ import { bitsToString } from '@utils/bits-to-string';
 })
 export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewInit {
     @Input() store: Storage;
-    @Input() cachedSizes: {[key: string]: { vms: number, total: number }} = {}
+    @Input() cachedSizes: CachedSizes = {}
 
     LANG: LanguageI18NStaticTypes;
 
-    destroy$ = new Subject();
-    targets: object[] = [];
-    popover: PopoverRef;
+    destroy$ = new Subject<void>();
+    popover: PopoverRef<void>;
 
-    loading: boolean;
-    showStorage: boolean;
     totalSpace: string;
     reserved: string;
     reservedPercentage: number;
@@ -49,24 +49,21 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     availPercentage: number;
     archive: string;
     archivePercentage: number;
-    STATUS: any;
 
-    get inaccessible() {
+    get inaccessible(): boolean {
         return [
             STORAGE_STATUS.INACCESSIBLE,
             STORAGE_STATUS.BEING_CHECKED
         ].includes(this.store.status);
     }
 
-    get cachedSizesClean() {
-        return Object.entries(
-            this.cachedSizes
-        ).reduce((
-            cachedSizes, [key, store]
-        ) => store.total > 0
-            ? { ...cachedSizes, [key]: store }
-            : cachedSizes,
-        {});
+    get cachedSizesClean(): CachedSizes {
+        return pick(
+            this.cachedSizes,
+            Object.keys(this.cachedSizes).filter(k =>
+                this.cachedSizes[k].total > 0
+            )
+        );
     }
 
     constructor(
@@ -76,10 +73,9 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.LANG = languageService.translations;
-        this.STATUS = STORAGE_STATUS;
     }
 
-    showLegend(template: TemplateRef<any>, target: any): void {
+    showLegend(template: TemplateRef<any>, target: HTMLElement): void {
         timer(300)
             .pipe(
                 takeUntil(this.destroy$)
@@ -96,26 +92,25 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             });
     }
 
-    closeLegend() {
+    closeLegend(): void {
         this.popover?.close();
         this.popover = undefined;
         this.destroy$.next();
     }
 
-    ngAfterViewInit() {
-    }
+    ngAfterViewInit(): void {}
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.closeLegend();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxStorageSizeComponent>): void {
         if (changes.store.currentValue) {
             this.init();
         }
     }
 
-    init() {
+    init(): void {
         this.store.totalSpace = this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
         this.store.vmsSpace = this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
@@ -159,16 +154,16 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         }
     }
 
-    clamp(input, max, min = 0) {
+    clamp(input: number, max: number, min: number = 0): number {
         return Math.min(Math.max(input, min), max);
     }
 
-    toPercentageOfTotal(size) {
+    toPercentageOfTotal(size: number): number {
         return Math.round((size / this.store.totalSpace) * 100);
     }
 
-    toFriendlyBytes(bits, fractionGb = true) {
-        if (!+bits || bits < 0) {
+    toFriendlyBytes(bits: number, fractionGb: boolean = true): string {
+        if (bits <= 0) {
             return '&mdash;';
         }
         const { locale } = this;

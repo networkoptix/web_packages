@@ -1,22 +1,33 @@
-<div #usageChart class="container"
-     (mouseenter)="showLegend(popLegendUsageTemplate, usageChart)"
-     (mouseout)="closeLegend()">
+<div
+    #usageChart
+    class="container"
+    (mouseenter)="showLegend(popLegendUsageTemplate, usageChart)"
+    (mouseout)="closeLegend()"
+>
     <div class="container-overlay"></div>
     <div class="total-label" [innerHTML]="totalSpace"></div>
-    <div class="bar available"
-         [ngClass]="{'full': inaccessible}"
-         [style.width.%]="100"></div>
-    <div class="bar used"
-         [ngClass]="{'hidden': inaccessible || !usedPercentage}"
-         [style.width.%]="usedPercentage"></div>
-    <div class="bar archive"
-         [ngClass]="{'hidden': inaccessible || !archivePercentage}"
-         [style.left.%]="usedPercentage"
-         [style.width.%]="archivePercentage"></div>
-    <div class="bar reserved"
-         [ngClass]="{'hidden': inaccessible || !reservedPercentage}"
-         [style.right.%]="0"
-         [style.width.%]="reservedPercentage"></div>
+    <div
+        class="bar available"
+        [ngClass]="{'full': inaccessible}"
+        [style.width.%]="100"
+    ></div>
+    <div
+        class="bar used"
+        [ngClass]="{'hidden': inaccessible || !usedPercentage}"
+        [style.width.%]="usedPercentage"
+    ></div>
+    <div
+        class="bar archive"
+        [ngClass]="{'hidden': inaccessible || !archivePercentage}"
+        [style.left.%]="usedPercentage"
+        [style.width.%]="archivePercentage"
+    ></div>
+    <div
+        class="bar reserved"
+        [ngClass]="{'hidden': inaccessible || !reservedPercentage}"
+        [style.right.%]="0"
+        [style.width.%]="reservedPercentage"
+    ></div>
 </div>
 
 <ng-template #popLegendUsageTemplate>
