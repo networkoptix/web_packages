@@ -461,8 +461,8 @@ export class NxUtilsService {
         return [];
     }
 
-    private static createPseudoAnchor(target: HTMLElement, eventType: string, clickHandler: Function) {
+    private static createPseudoAnchor(target: HTMLElement, eventType: string, handler: (event: Event) => void) {
         target.classList.add('pseudo-anchor');
-        target.addEventListener(eventType, (event) => clickHandler(event));
+        target.addEventListener(eventType, handler);
     }
 }
