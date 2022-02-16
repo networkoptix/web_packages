@@ -244,8 +244,7 @@ def merge(request):
     slave_id = request.data['slave_system_id']
     if password := request.data.get('password'):
         try:
-            with cloud_api.TempLogin(request.user.email, password) as credentials:
-                data = cloud_api.System.merge(credentials.tokens, master_id, slave_id)
+            data = cloud_api.System.merge(request, master_id, slave_id, email=request.user.email, password=password)
         except APINotAuthorisedException:
             raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
                                       error_data={'password': ['Not recognized']})

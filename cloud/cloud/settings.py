@@ -692,6 +692,7 @@ DEFAULT_SKIN = 'blue'
 
 if LOCAL_ENVIRONMENT:
     _HOST = 'https://cloud-test.hdw.mx'
+    CLOUD_PORTAL_URL = _HOST
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"
