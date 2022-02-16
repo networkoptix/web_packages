@@ -60,6 +60,7 @@ ${STORAGE SYSTEM TOOLTIP}           //ngb-tooltip-window//div[contains(text(), "
 ${STORAGE NONSYSTEM TOOLTIP}        //ngb-tooltip-window//div[contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE LOCATIONS FIRST ROW}      ${STORAGE LOCATIONS TABLE}//tbody//tr[2]
 ${STORAGE LOCATIONS FIRST SPACE}    ${STORAGE LOCATIONS FIRST ROW}/td[3]/nx-storage-size-component/div[@class="container"]
+${STORAGE POPOVER}                  //nx-popover
 ${STORAGE ITEM}                     //span[contains(text(),"HD Witness Media") and @class="ellipsis"]
 ${STORAGE DISK 0}                   //span[contains(text(), "disk0") and @class="ellipsis"] 
 ${STORAGE DISK 1}                   //span[contains(text(), "disk1") and @class="ellipsis"]
@@ -84,7 +85,7 @@ ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
 ${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/info.svg"]
 ${STORAGE RESERVED TOOLTIP}         //div[contains(@class, "tooltip-body") and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
-${RESERVED SPACE}                   //ngb-popover-window//td[text()="Reserved"]/following-sibling::td
+${RESERVED SPACE}                   ${STORAGE POPOVER}//td[text()="Reserved"]/following-sibling::td
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0-numeric"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
 ${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup-switch-wrapper"]

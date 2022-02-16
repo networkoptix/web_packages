@@ -270,12 +270,12 @@ Restart
     Wait Until Element is Visible    ${STORAGE RESERVED TOOLTIP}
 
 10. Changing of reserved space is shown in the table
-    [Tags]    C81569   
+    [Tags]    C81569   deb
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
-    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    Wait Until Element is Visible    ${STORAGE POPOVER}     #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
     ${reserved} =    Get Substring    ${reserved}    0    2
     ${location} =    Get Location
@@ -291,7 +291,7 @@ Restart
     Reload Page
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
-    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    Wait Until Element is Visible    ${STORAGE POPOVER}       #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
     Should Contain  ${reserved}    5.0
 
@@ -523,12 +523,13 @@ Restart
     Set Selenium Speed    ${normal}
 
 17. Storage Location Table Space Legend Tooltip Shows
+    [Tags]      deb
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
-    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    Wait Until Element is Visible    ${STORAGE POPOVER}     #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
 
 18. Backup Option Disabled when only One Main Storage
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
