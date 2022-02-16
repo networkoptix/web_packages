@@ -322,7 +322,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.toastService.show(this.LANG.common.generalError(), options);
                 },
                 forbidden: codeProcessUnauthorizedHandles,
-                notAuthorized: codeProcessUnauthorizedHandles
+                notAuthorized: codeProcessUnauthorizedHandles,
+                invalidTotp: codeProcessUnauthorizedHandles
             }
         }, (response) => {
             if (response.account2faEnabled) {
