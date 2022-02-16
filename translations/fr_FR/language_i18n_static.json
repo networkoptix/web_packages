@@ -889,8 +889,8 @@
         "webAdminCloudCredentialError": "Connectez-vous avec %CLOUD_NAME% pour accéder à ce système en tant qu'utilisateur du cloud",
         "twoFaRequired": "L'authentification à deux facteurs a été activée pour ce compte. Veuillez entrer votre code de vérification dans la fenêtre contextuelle.",
         "loggingIn": "Connexion en cours. Veuillez patienter.",
-        "sessionRenewed": "Session has been renewed.",
-        "failedToUpdateSession": "Updating the session failed."
+        "sessionRenewed": "La session a été renouvelée.",
+        "failedToUpdateSession": "La mise à jour de la session a échoué."
     },
     "headerLabels": {
         "healthReportForSystem": "Rapport de santé pour le système {systemName}"
