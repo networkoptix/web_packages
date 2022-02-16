@@ -367,19 +367,36 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def merge(request, master_system_id, slave_system_id, headers=None):
-        if hasattr(request, "session"):
-            refresh_token = request.session.get("refresh_token")
-        else:
-            refresh_token = request.get("refresh_token")
-        masterToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={master_system_id}")["access_token"]
-        slaveToken = Auth.get_refresh_token(refresh_token, scope=f"cloudSystemId={slave_system_id}")["access_token"]
+    def merge(request, master_system_id, slave_system_id, email=None, password=None, headers=None):
+        master_system = System.get(request, master_system_id).get('systems', [])[0]
+        auth = None
         params = {
-            "systemId": slave_system_id,
-            "masterSystemAccessToken": masterToken,
-            "slaveSystemAccessToken": slaveToken
+            "systemId": slave_system_id
         }
-        return post_wrapper(System.get_request_url("merged_systems/", master_system_id), json=params, headers=headers)
+
+        if int(master_system.get('version', '')[0] or 0) > 4:
+            if hasattr(request, "session"):
+                refresh_token = request.session.get("refresh_token")
+            else:
+                refresh_token = request.get("refresh_token")
+            master_token = Auth.get_refresh_token(
+                refresh_token,
+                scope=f"cloudSystemId={master_system_id}"
+            ).get("access_token")
+            slave_token = Auth.get_refresh_token(
+                refresh_token,
+                scope=f"cloudSystemId={slave_system_id}"
+            ).get("access_token")
+            params.update({
+                "masterSystemAccessToken": master_token,
+                "slaveSystemAccessToken": slave_token
+            })
+        else:
+            headers = None
+            auth = {"email": email, "password": password}
+            params["password"] = password
+
+        return post_wrapper(System.get_request_url("merged_systems/", master_system_id), json=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
