@@ -171,6 +171,7 @@ System Settings Menu Suite Teardown
 
 15. Should perform search with single criteria
     Wait Until Page Contains Element            ${LEFT MENU}
+    Wait Until Settings Are Visible
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     ${matches}=   Get WebElements     ${LEFT MENU SEARCH MATCHES}
@@ -182,6 +183,7 @@ System Settings Menu Suite Teardown
 
 16. Should perform search with 'AND' criteria
     Wait Until Page Contains Element    ${LEFT MENU}
+    Wait Until Settings Are Visible
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${and criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     Check if Match AND Criteria         ${LEFT MENU MATCHES CONTENT}    ${and criteria}
@@ -190,6 +192,7 @@ System Settings Menu Suite Teardown
 17. Should perform search with 'OR' criteria
     [Tags]    cdeb
     Wait Until Page Contains Element    ${LEFT MENU}
+    Wait Until Settings Are Visible
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${or criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     Check if Match OR Criteria          ${LEFT MENU MATCHES CONTENT}    ${or criteria}
