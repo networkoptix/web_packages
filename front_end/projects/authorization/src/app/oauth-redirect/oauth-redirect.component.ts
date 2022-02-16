@@ -65,7 +65,7 @@ export class NxOAuthRedirectComponent implements OnInit {
                     this.state = 'readyToLogin';
                 }
             });
-        } else if (this.deviceService.isMobile) {
+        } else if (this.deviceService.isMobile()) {
             this.route.queryParams.subscribe(async(params: any) => {
                 this.initialData = NxUtilsService.deepCopy(params);
                 this.viewType = this.initialData.view_type || 'desktop';
