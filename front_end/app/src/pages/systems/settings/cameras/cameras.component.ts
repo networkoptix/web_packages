@@ -932,8 +932,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }) + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
             this.selectedCamera = cameras[cameraIndex];
-            const { vendor, model, url, parentName, groupId, addParamsRaw } = this.selectedCamera;
-            this.settingsDisabled = !!groupId || !addParamsRaw.find(({ name }) => name === 'VideoLayout');
+            const { vendor, model, url, parentName, addParamsRaw } = this.selectedCamera;
+            // This check is used to determine if the device is an io device or virtual camera.
+            // Virtual cameras don't have a vendor and io devices have io settings but do not have VideoLayout in add params
+            this.settingsDisabled = !vendor ||
+                !!(
+                    !addParamsRaw.find(({ name }) => name === 'VideoLayout') &&
+                    addParamsRaw.find(({ name }) => name === 'ioSettings')
+                );
             const deviceColumn = [
                 new InfoBlockSection([
                     new InfoBlockLine(this.LANG.common.vendor(), vendor),
