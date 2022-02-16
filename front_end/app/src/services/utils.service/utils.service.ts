@@ -321,9 +321,18 @@ export class NxUtilsService {
 
         const getLog = (num: number): number =>
             is1024 ? Math.log2(num) / 10 : Math.log10(num) / 3;
-        const exponent = Math.min(Math.floor(getLog(number)), UNITS.length - 1);
+        let exponent = Math.min(Math.floor(getLog(number)), UNITS.length - 1);
 
-        number = Math.round(Number(number / Math.pow(base, exponent)) * 100) / 100; // round 2 decimals
+        number = number / Math.pow(base, exponent);
+
+        /* A fix to cover the "blind spot" from 1000-1024 created by
+        directly displaying binary storage values as decimal */
+        if (number >= 1000 && number < 1024 && exponent < UNITS.length - 1) {
+            number = number / 1024;
+            exponent += 1;
+        }
+
+        number = Math.round(number * 100) / 100; // round 2 decimals
         const numberString = uv.toLocaleString(number, options.locale);
 
         const unit = UNITS[exponent];
