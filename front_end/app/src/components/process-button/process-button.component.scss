@@ -1,6 +1,6 @@
-@use '../../../styles/_theme_variables' as *;
-@use '../../styles/typography';
-@use '../../styles/mixins';
+@use "../../../styles/_theme_variables_common" as *;
+@use "../../styles/typography";
+@use "../../styles/mixins";
 
 nx-process-button {
     .full-width {

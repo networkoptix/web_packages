@@ -1,5 +1,5 @@
 @use "../../../../styles/typography";
-@use "../../../../../styles/theme_variables" as *;
+@use "../../../../../styles/theme_variables_common" as *;
 @use "../../../../components/tag/tag.component" as *;
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/mixins/breakpoints";

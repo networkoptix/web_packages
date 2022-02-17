@@ -1,8 +1,8 @@
-@use '../../styles/_theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
-@import '~sass-rem/rem';
+@use "../../styles/_theme_variables_common" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~sass-rem/rem";
 
 .form-horizontal {
     .form-group {

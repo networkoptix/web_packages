@@ -1,7 +1,7 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as theme_vars;
-@use '../../../styles/buttons' as buttons;
-@use 'bootstrap_utils' as bootstrap;
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as theme_vars;
+@use "../../../styles/buttons" as buttons;
+@use "bootstrap_utils" as bootstrap;
 
 nx-block {
 	.username,

@@ -159,7 +159,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/compat-data",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/compat-data/LICENSE"
         },
-        "@babel/core@7.17.4": {
+        "@babel/core@7.17.5": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -4900,7 +4900,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/bn.js",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/bn.js/LICENSE"
         },
-        "body-parser@1.19.1": {
+        "body-parser@1.19.2": {
             "licenses": "MIT",
             "repository": "https://github.com/expressjs/body-parser",
             "path": "cloud_portal/front_end/inline-wizard/node_modules/body-parser",
@@ -5360,7 +5360,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/cookie-signature",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/cookie-signature/Readme.md"
         },
-        "cookie@0.4.1": {
+        "cookie@0.4.2": {
             "licenses": "MIT",
             "repository": "https://github.com/jshttp/cookie",
             "publisher": "Roman Shtylman",
@@ -6002,7 +6002,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/expand-brackets",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/expand-brackets/LICENSE"
         },
-        "express@4.17.2": {
+        "express@4.17.3": {
             "licenses": "MIT",
             "repository": "https://github.com/expressjs/express",
             "publisher": "TJ Holowaychuk",
@@ -6490,15 +6490,6 @@
             "url": "https://mathiasbynens.be/",
             "path": "cloud_portal/front_end/inline-wizard/node_modules/he",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/he/LICENSE-MIT.txt"
-        },
-        "hint.css@2.7.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/chinchang/hint.css",
-            "publisher": "Kushagra Gour",
-            "email": "chinchang457@gmail.com",
-            "url": "https://kushagra.dev",
-            "path": "cloud_portal/front_end/inline-wizard/node_modules/hint.css",
-            "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/hint.css/LICENSE"
         },
         "hmac-drbg@1.0.1": {
             "licenses": "MIT",
@@ -8327,7 +8318,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/range-parser",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/range-parser/LICENSE"
         },
-        "raw-body@2.4.2": {
+        "raw-body@2.4.3": {
             "licenses": "MIT",
             "repository": "https://github.com/stream-utils/raw-body",
             "publisher": "Jonathan Ong",
@@ -9394,7 +9385,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/url-loader",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/url-loader/LICENSE"
         },
-        "url-parse@1.5.6": {
+        "url-parse@1.5.7": {
             "licenses": "MIT",
             "repository": "https://github.com/unshiftio/url-parse",
             "publisher": "Arnout Kazemier",

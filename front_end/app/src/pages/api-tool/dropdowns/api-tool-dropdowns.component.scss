@@ -1,9 +1,9 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
-@use '../../../styles/buttons' as *;
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/buttons" as *;
 
 
-@import '~bootstrap/scss/mixins/breakpoints';
+@import "~bootstrap/scss/mixins/breakpoints";
 
 :host {
     margin-top: 16px;

@@ -1,8 +1,8 @@
-@use '../../styles/theme_variables';
+@use "../../styles/theme_variables_common";
 
 .highlighted {
     display          : inline;
-    background-color : rgba(theme_variables.$yellow_main, 0.5);
+    background-color : rgba(theme_variables_common.$yellow_main, 0.5);
 }
 
 .brand-text {
@@ -23,23 +23,23 @@
 }
 
 .border-left {
-    border-left : 1px solid theme_variables.$common-border-color;
+    border-left : 1px solid theme_variables_common.$common-border-color;
 }
 
 .border-right {
-    border-right : 1px solid theme_variables.$common-border-color;
+    border-right : 1px solid theme_variables_common.$common-border-color;
 }
 
 .border-top {
-    border-top : 1px solid theme_variables.$common-border-color;
+    border-top : 1px solid theme_variables_common.$common-border-color;
 }
 
 .border-bottom {
-    border-bottom : 1px solid theme_variables.$common-border-color;
+    border-bottom : 1px solid theme_variables_common.$common-border-color;
 }
 
 .light-color {
-    color : theme_variables.$gray-light;
+    color : theme_variables_common.$gray-light;
 }
 
 .preloader {
@@ -53,6 +53,6 @@
     }
 
     .border-left-md {
-        border-left : 1px solid theme_variables.$common-border-color;
+        border-left : 1px solid theme_variables_common.$common-border-color;
     }
 }

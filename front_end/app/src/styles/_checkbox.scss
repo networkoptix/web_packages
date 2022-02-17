@@ -1,4 +1,4 @@
-@use "../../styles/theme_variables";
+@use "../../styles/theme_variables_common";
 
 /* Customize the label (the container) */
 .checkbox {
@@ -16,7 +16,7 @@
     user-select         : none;
 
     .text {
-        font-family : theme_variables.$font-family-regular;
+        font-family : theme_variables_common.$font-family-regular;
         user-select : none;
         color       : var(--label-color);
     }
@@ -45,11 +45,11 @@
     & input:hover ~ .checkmark {
         svg polygon.box,
         svg polyline.box {
-            stroke : theme_variables.$dark1;
+            stroke : theme_variables_common.$dark1;
         }
 
         & ~ .text {
-            color : theme_variables.$dark1;
+            color : theme_variables_common.$dark1;
         }
     }
 

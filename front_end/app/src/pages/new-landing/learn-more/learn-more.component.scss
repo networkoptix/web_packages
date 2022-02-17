@@ -1,10 +1,10 @@
-@use '../../../../styles/theme_variables' as *;
+@use "../../../../styles/theme_variables_common" as *;
 
 .button-wrapper {
     width: 100%;
     position: fixed;
-    bottom: 0px;
-    margin: 0px;
+    bottom: 0;
+    margin: 0;
     margin-bottom: 24px;
 }
 

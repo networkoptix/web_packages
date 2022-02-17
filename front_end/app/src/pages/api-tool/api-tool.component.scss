@@ -1,8 +1,8 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/buttons' as *;
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/buttons" as *;
 
-@import '~bootstrap/scss/mixins/breakpoints';
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .page-wrapper {
     min-height: 100%;
@@ -84,7 +84,7 @@
 
 
 .swagger-container {
-    margin-top: 22px; 
+    margin-top: 22px;
     padding-left: 4px !important;
 }
 

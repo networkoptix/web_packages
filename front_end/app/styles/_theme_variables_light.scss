@@ -1,0 +1,196 @@
+@import "./native-theme/theme_palette";
+@import "_theme_palette";
+
+:root {
+    --body-bg    : var(--additional_light2);
+    --alt-body-bg : var(--light1);
+    --header-bg  : var(--light1);
+    --header-border-color : var(--light4);
+    --body-text-color : var(--dark9);
+    
+    --page-titles : #{$dark9}; // this should be only use of h1
+    
+    --scrollbar-color                   : var(--light16);
+    --scrollbar-thumb-bg                : var(--light10);
+    --scrollbar-thumb-border-color      : var(--additional_light1);
+    --menu-scrollbar-thumb-border-color : var(--light6);
+    
+    --popover-shadow-color : #{$dark15};
+    --tooltip-bg : #{$dark1};
+    --tooltip-color : #{$light1};
+    
+    --radio-color              : #{$dark9};
+    --radio-check-color        : #{$brand_core};
+    --radio-hover-color        : #{$dark1};
+    --radio-hover-check-color  : #{$brand_core};
+    --radio-active-color       : #{$dark9};
+    --radio-active-check-color : #{$brand_core};
+    --radio-active-hover-color : #{$dark1};
+    
+    --checkbox-color              : #{$dark9};
+    --checkbox-check-color        : #{$brand_core};
+    --checkbox-hover-color        : #{$dark1};
+    --checkbox-hover-check-color  : #{$brand_core};
+    --checkbox-active-color       : #{$dark9};
+    --checkbox-active-check-color : #{$brand_core};
+    --checkbox-active-hover-color : #{$dark1};
+    
+    --auth-header-bg: var(--additional_light1);
+    --auth-header-color : var(--dark9);
+    --auth-subheader-color : var(--dark9);
+    --auth-body-bg: var(--light1);
+    --auth-pill-bg : var(--light3);
+    
+    --border-color         : var(--light4);
+    --horizontal-sep-color : var(--light6);
+    --label-color          : var(--dark9);
+    
+    --placehoder-cloud-color   : #{$brand_core};
+    --placehoder-cloud-opacity : .1;
+    --placehoder-title-color : #{$dark9};
+    --placehoder-body-color : #{$dark9};
+    
+    --left-menu-border-color      : transparent;
+    --left-menu-l1-bg             : var(--additional_light2);
+    --left-menu-l1-bg-hover       : var(--additional_light3);
+    --left-menu-l1-bg-active      : #{$light5};
+    --left-menu-l1-color          : #{$dark9};
+    --left-menu-l1-selected-bg    : var(--light5);
+    --left-menu-l1-selected-hover-bg : #{$light6};
+    --left-menu-l3-scroll         : var(--light5);
+    --left-menu-l3-shadow         : transparent;
+    --left-menu-l3-bg             : var(--light5);
+    --left-menu-l3-color          : #{$dark9};
+    --left-menu-l3-hover-bg       : #{$light6};
+    --left-menu-l3-hover-color    : #{$dark9};
+    --left-menu-l3-opacity        : 1;
+    --left-menu-l3-selected-bg    : var(--light16);
+    --left-menu-l3-selected-color : var(--light1);
+    
+    --btn-close-hover-bg  : #{$additional_light2};
+    --btn-close-hover-color : #A5B7C0; //light10;
+    --btn-close-active-bg : #{$additional_light3};
+    --btn-close-active-color : #5F7F8F; //$light17;
+    
+    --btn-text-color        : #{$light16};
+    --btn-text-hover-color  : #{$dark15};
+    --btn-text-active-color : #{$light16};
+    
+    --btn-clear-bg    : transparent;
+    --btn-clear-color : #{$dark9};
+    --btn-clear-hover-bg  : rgba(#{$light16}, .1);
+    --btn-clear-hover-color  : #{$dark9};
+    --btn-clear-active-bg : rgba(#{$light16}, .15);
+    --btn-clear-active-color : #{$dark9};
+    
+    --btn-dropdown-toggle-bg             : #{$light4};
+    --btn-dropdown-toggle-color          : #{$dark9};
+    --btn-dropdown-toggle-selected-color : #{$light1};
+    --btn-dropdown-toggle-shadow-color   : #{$light7};
+    --btn-dropdown-toggle-hover-bg       : #{$light5};
+    --btn-dropdown-toggle-active-bg      : #{$light6};
+    
+    --btn-tag-bg                         : #{$light4};
+    --btn-tag-color                      : #{$light16};
+    --btn-tag-selected-bg                : #{$light16};
+    --btn-tag-selected-hover-bg          : #{$light17};
+    --btn-tag-selected-active-bg         : #{$light18};
+    --btn-tag-selected-color             : #{$light1};
+    
+    --btn-arrow-bg             : #3A4D57; //TBD;
+    --btn-arrow-color          : #F5F7F8; //TBD;
+    --btn-arrow-hover-bg       : #303F47; //TBD;
+    --btn-arrow-hover-color    : #F5F7F8; //TBD;
+    --btn-arrow-selected-bg    : #2B383F; //TBD;
+    --btn-arrow-selected-color : #D7DFE3; //TBD;
+    
+    --btn-default-bg           : #{$light4};
+    --btn-default-color        : #{$dark9};
+    --btn-default-shadow       : #{$light7};
+    --btn-default-hover-bg     : #{$light5};
+    --btn-default-hover-color  : #{$dark9};
+    --btn-default-hover-shadow  : #{$light8};
+    --btn-default-active-bg    : #{$light6};
+    --btn-default-active-color : #{$dark9};
+    --btn-default-active-shadow : #{$light9};
+    
+    --btn-primary-bg           : #{$brand-core};
+    --btn-primary-color        : #{$light1};
+    --btn-primary-shadow       : #{$brand-d2};
+    --btn-primary-hover-bg     : #{$brand-d1};
+    --btn-primary-hover-color  : #{$light1};
+    --btn-primary-hover-shadow  : #{$brand-d3};
+    --btn-primary-active-bg    : #{$brand-d2};
+    --btn-primary-active-color : #{$light1};
+    --btn-primary-active-shadow : #{$brand-d4};
+    
+    --btn-danger-bg            : #{$red_main};
+    --btn-danger-color         : #{$light1};
+    --btn-danger-shadow        : #{$red_d2};
+    --btn-danger-hover-bg      : #{$red_d1};
+    --btn-danger-hover-color   : #{$light1};
+    --btn-danger-hover-shadow  : #{$red_d3};
+    --btn-danger-active-bg     : #{$red_d2};
+    --btn-danger-active-color  : #{$light1};
+    --btn-danger-active-shadow : #{$red_d4};
+    
+    --btn-header-saparator-color : var(--light4);
+    --btn-header-main-bg         : var(--light4);
+    --btn-header-main-color      : var(--dark9);
+    
+    --dropdown-menu-arrow-color : #{$light4};
+    --dropdown-menu-arrow-fill-color : #{$additional_light1};
+    
+    --dropdown-menu-border : none;
+    --dropdown-menu-top-border : none;
+    --dropdown-menu-shadow : 0 1rem 2rem 0 transparentize(#{$dark15}, 0.4);
+    --dropdown-menu-bg : #{$additional_light1};
+    --dropdown-item-active-bg : #{$light4};
+    --dropdown-item-hover-bg    : #{$light3};
+    --dropdown-item-hover-color : #{$dark9};
+    
+    --card-header-bg : var(--additional_light1);
+    --card-header-text : var(--dark9);
+    --card-body-bg : var(--light1);
+    
+    --input-bg                 : var(--light1);
+    --input-color              : var(--dark9);
+    --input-border-color       : var(--light6);
+    --input-error-color        : var(--error);
+    --input-error-border-color : var(--error);
+    --input-hover-color        : var(--dark9);
+    --input-hover-border-color : var(--light8);
+    --input-focus-color        : var(--dark9);
+    --input-focus-border-color : var(--brand-core);
+    --input-active-bg           : var(--light1);
+    --input-active-color        : var(--dark9);
+    --input-active-border-color : var(--light6);
+    
+    --input-numeric-arrow-bg : #{$light1};
+    --input-numeric-arrow-color : #{$dark9};
+    
+    --badge-opacity : 1;
+    --badge-base-bg : #{$light4};
+    --badge-base-hover-bg : #{$light5};
+    --badge-base-color : #{$light16};
+    --badge-base-selected-bg : #{$light16};
+    --badge-base-selected-hover-bg : #{$light17};
+    --badge-base-selected-active-bg : #{$light18};
+    
+    --badge-default-bg : #{$light8};
+    --badge-color : #{$light1};
+    --badge-selected-color : #{$light1};
+    --badge-danger-bg    : #{$red_main};
+    --badge-danger-bright-bg    : #{$error};
+    --badge-warning-bg        : #{$yellow_d1};
+    --badge-warning-bright-bg : #{$yellow_main};
+    --badge-success-bg        : #{$green_main};
+    --badge-success-bright-bg : #{$green_l2};
+    --badge-brand-bg : #{$brand_d2};
+    --badge-info-bg  : #{$brand_core};
+    --badge-integration-bg : #{$light4};
+    --badge-integration-color : #{$light16};
+    
+    --grey-section-bg: var(--light4);
+    --grey-section-sep-color: var(--light6);
+}

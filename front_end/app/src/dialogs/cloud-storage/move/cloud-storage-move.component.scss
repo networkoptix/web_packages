@@ -1,5 +1,5 @@
 @use "../../../styles/typography";
-@use "../../../../styles/theme_variables";
+@use "../../../../styles/theme_variables_common";
 .radio-group {
     margin-top: 5px;
 }
@@ -32,7 +32,7 @@
     &.next-button {
         svg {
             .st0 {
-                fill: theme_variables.$light1;
+                fill: theme_variables_common.$light1;
             }
         }
     }

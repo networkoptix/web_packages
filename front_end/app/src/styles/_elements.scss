@@ -2,7 +2,7 @@
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
 @use "./mixins";
-@use "../../styles/theme_variables" as *;
+@use "../../styles/theme_variables_common" as *;
 
 svg {
     pointer-events : none;

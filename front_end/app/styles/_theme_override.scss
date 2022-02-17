@@ -1,8 +1,8 @@
 /* Here we override some default bootstrap styles and behavior for our purposes */
-@use "_theme_variables";
+@use "_theme_variables_common";
 @import "~sass-rem/rem";
 
-$font-size-a-bit-large : ceil(theme_variables.$font-size-base * 1.15); //~16px - we just need 16px sometimes :-)
+$font-size-a-bit-large : ceil(theme_variables_common.$font-size-base * 1.15); //~16px - we just need 16px sometimes :-)
 
 body {
     color : var(--body-text-color);
@@ -19,12 +19,12 @@ body {
 
 .card {
     border-radius : 2px;
-    box-shadow    : 0 1px 2px transparentize(theme_variables.$dark15, 0.9);
+    box-shadow    : 0 1px 2px transparentize(theme_variables_common.$dark15, 0.9);
 
     .card-body {
-        padding : theme_variables.rem(16px);
+        padding : theme_variables_common.rem(16px);
         h2 {
-            font-size: theme_variables.rem(20px);
+            font-size: theme_variables_common.rem(20px);
             display: inline;
         }
     }
@@ -48,8 +48,8 @@ body {
             }
 
             .user-name {
-                font-size     : theme_variables.$font-size-sm !important;
-                font-family   : theme_variables.$font-family-medium;
+                font-size     : theme_variables_common.$font-size-sm !important;
+                font-family   : theme_variables_common.$font-family-medium;
                 height        : 16px;
                 margin-bottom : 0 !important;
             }
@@ -83,7 +83,7 @@ body {
 
 table {
     & > thead > tr > th {
-        color : theme_variables.$brand-core;
+        color : theme_variables_common.$brand-core;
 
         &:first-child {
             padding-left : 15px;
@@ -96,7 +96,7 @@ table {
         }
 
         &.hoverable:hover {
-            background-color : theme_variables.$light2;
+            background-color : theme_variables_common.$light2;
         }
     }
 }
@@ -115,10 +115,10 @@ hr {
 //}
 
 .alert {
-    font-size      : theme_variables.$h4-font-size;
+    font-size      : theme_variables_common.$h4-font-size;
     padding-top    : 8px;
     padding-bottom : 8px;
-    @include box-shadow(0px 8px 4px 0px transparentize(theme_variables.$light16, 0.9));
+    @include box-shadow(0px 8px 4px 0px transparentize(theme_variables_common.$light16, 0.9));
 }
 
 .alert-dismissable .close, .alert-dismissible .close {
@@ -195,12 +195,12 @@ select {
 }
 
 .info-icon.active {
-    color : var(--brand-core, theme_variables.$brand_core) !important;
+    color : var(--brand-core, theme_variables_common.$brand_core) !important;
 }
 
 .video-settings-button:hover,
 .webclient-panel .dropdown-menu > li > a:hover {
-    background-color : var( --brand-l2, theme_variables.$brand_l2) !important;
+    background-color : var( --brand-l2, theme_variables_common.$brand_l2) !important;
 }
 
 .webclient-panel .dropdown-menu {
@@ -254,40 +254,6 @@ select {
     & tbody {
         & td {
             padding-left : 0;
-        }
-    }
-}
-
-ngb-tabset {
-    .nav-tabs {
-        .nav-item {
-
-            height: theme_variables.rem(48px);
-
-            .nav-link {
-                border-top-left-radius  : 2px;
-                border-top-right-radius : 2px;
-                color                   : theme_variables.$dark12;
-                font-size               : theme_variables.$h5-font-size;
-                font-family             : theme_variables.$font-family-medium;
-                line-height             : 26px;
-                padding                 : 10px 20px;
-                text-decoration         : none;
-
-                &.active {
-                    background-color : theme_variables.$light1 !important;
-                    border-bottom    : 1px solid transparent;
-
-                    .tab-heading {
-                        border-bottom : 1px solid #d7dfe3;
-                        padding       : 14px 0;
-                    }
-                }
-
-                &:hover {
-                    background-color : transparentize(theme_variables.$light5, 0.75);
-                }
-            }
         }
     }
 }

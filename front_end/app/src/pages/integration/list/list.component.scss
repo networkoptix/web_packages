@@ -1,5 +1,5 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as theme_vars;
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as theme_vars;
 
 .plugin {
     text-decoration : none;

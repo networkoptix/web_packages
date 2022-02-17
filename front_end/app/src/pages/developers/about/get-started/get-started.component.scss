@@ -1,6 +1,6 @@
-@use '../../../../../styles/theme_variables' as *;
-@use '../../../../styles/typography';
-@use 'app/src/styles/_bootstrap_utils' as bootstrap;
+@use "../../../../../styles/theme_variables_common" as *;
+@use "../../../../styles/typography";
+@use "app/src/styles/_bootstrap_utils" as bootstrap;
 
 .get-started-heading {
     font-family: $font-family-light;
@@ -48,7 +48,7 @@
     min-height: 246px;
     @include bootstrap.media-breakpoint-down(xs) {
         min-height: 0 !important;
-        flex: 0 1 99% !important;      
+        flex: 0 1 99% !important;
     }
 }
 

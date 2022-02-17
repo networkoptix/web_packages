@@ -1,6 +1,6 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/bootstrap_utils' as bootstrap;
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/bootstrap_utils" as bootstrap;
 
 nx-no-systems {
     .no-data-panel {
@@ -20,13 +20,13 @@ nx-no-systems {
         width               : 40px;
         height              : 40px;
         position            : relative;
-        background-image    : url('/static/images/tutorial_arrow.png') !important;
+        background-image    : url("/static/images/tutorial_arrow.png") !important;
         background-repeat   : no-repeat;
         background-size     : 40px 40px;
         background-position : right 0 center;
 
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-            background-image : url('/static/images/tutorial_arrow@2x.png') !important;
+            background-image : url("/static/images/tutorial_arrow@2x.png") !important;
         }
     }
 

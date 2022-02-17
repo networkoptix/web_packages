@@ -1,9 +1,9 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
-@use '../../../styles/buttons' as *;
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/buttons" as *;
 
-@import '~swagger-ui/dist/swagger-ui.css';
-@import '~bootstrap/scss/mixins/breakpoints';
+@import "~swagger-ui/dist/swagger-ui.css";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 :host{
 	@include media-breakpoint-down(sm){
@@ -91,7 +91,7 @@
 	}
 	&.active {
 		position: relative;
-		a {	
+		a {
 			@include typography.medium14blue1;
 			padding-bottom: 8px;
 			border-bottom: 1px solid $blue1;
@@ -528,7 +528,7 @@
 			font-weight: 500 !important;
 		}
 	}
-	tr { 
+	tr {
 		td {
 			&:first-of-type {
 				width: 160px !important;
@@ -559,7 +559,7 @@
 			}
 			&:first-child {
 				padding-right: 8px !important;
-			}	
+			}
 		}
 		&:last-child {
 			display:none
@@ -639,7 +639,7 @@
 	svg-icon {
 		display: none;
 	}
-} 
+}
 
 .swagger-ui .execute-wrapper {
 	position: relative;
@@ -712,7 +712,7 @@
 	-moz-appearance    : none;
 	appearance         : none;
 	background         : none;
-	box-shadow         : none; 
+	box-shadow         : none;
 }
 
 .swagger-ui .scheme-container {
@@ -810,7 +810,7 @@
 
 .swagger-ui .opblock-body {
 	table:not(.model) {
-		thead{ 
+		thead{
 			display: none;
 		}
 		tbody tr td:first-of-type {
@@ -832,7 +832,7 @@
 }
 
 .swagger-ui .opblock-body table.parameters {
-	thead{ 
+	thead{
 		display: table-header-group !important;
 		background-color: $additional_light1;
 		tr th:first-of-type {

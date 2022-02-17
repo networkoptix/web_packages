@@ -1,5 +1,5 @@
-@use '../../../styles/theme_variables';
-@use 'bootstrap_utils' as bootstrap;
+@use "../../../styles/theme_variables_common";
+@use "bootstrap_utils" as bootstrap;
 
 .layout {
     position  : relative;

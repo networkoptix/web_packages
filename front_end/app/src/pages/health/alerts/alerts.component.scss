@@ -1,6 +1,6 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+@import "~bootstrap/scss/mixins/breakpoints";
 
 nx-system-alerts-component {
 

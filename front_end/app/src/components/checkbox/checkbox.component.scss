@@ -1,4 +1,4 @@
-@use "../../../styles/theme_variables";
+@use "../../../styles/theme_variables_common";
 @use "../../../styles/theme_palette" as *;
 
 @mixin checkboxSvgColor($box, $mark) {

@@ -1,4 +1,4 @@
-@use "styles/theme_variables" as theme_vars;
+@use "styles/theme_variables_common" as theme_vars;
 @use "styles/src-variables/pages/timeline-scrollbar" as *;
 
 $current-playback-indicator-color: var(--dark1);

@@ -1,4 +1,4 @@
-@use '../../../../styles/theme_variables';
+@use "../../../../styles/theme_variables_common";
 
 nx-header-language-select {
     .dropdown {
@@ -6,34 +6,34 @@ nx-header-language-select {
         height: 41px;
         margin: 3px 3px 3px 0;
         display: flex;
-        color: theme_variables.$additional_light1 !important;
+        color: theme_variables_common.$additional_light1 !important;
         & > button#dropdownMenuButton {
-            color: theme_variables.$additional_light1 !important;
-            background : theme_variables.$dark14 !important;
+            color: theme_variables_common.$additional_light1 !important;
+            background : theme_variables_common.$dark14 !important;
             border     : 1px solid transparent !important;
 
             &:hover {
-                background : theme_variables.$dark15 !important;
+                background : theme_variables_common.$dark15 !important;
             }
 
             &:active {
-                background : theme_variables.$dark13 !important;
+                background : theme_variables_common.$dark13 !important;
             }
         }
 
         &.dropdown-show {
             & > button#dropdownMenuButton {
-                color: theme_variables.$additional_light1 !important;
-                border: 1px solid theme_variables.$dark11 !important;
-                background: theme_variables.$dark11 !important;
+                color: theme_variables_common.$additional_light1 !important;
+                border: 1px solid theme_variables_common.$dark11 !important;
+                background: theme_variables_common.$dark11 !important;
 
                 &:hover {
-                    background: 1px theme_variables.$dark11 !important;
-                    border: 1px solid theme_variables.$dark11 !important;
+                    background: 1px theme_variables_common.$dark11 !important;
+                    border: 1px solid theme_variables_common.$dark11 !important;
                 }
                 &:active {
-                    background: theme_variables.$dark11 !important;
-                    border: 1px solid theme_variables.$dark11 !important;
+                    background: theme_variables_common.$dark11 !important;
+                    border: 1px solid theme_variables_common.$dark11 !important;
                 }
 
             }
@@ -46,7 +46,7 @@ nx-header-language-select {
             box-shadow: none !important;
             & > .arrow-flip {
                 bottom: 10px !important;
-                background: theme_variables.$additional_light1 !important;
+                background: theme_variables_common.$additional_light1 !important;
             }
 
             & > .lang-sm {
@@ -63,7 +63,7 @@ nx-header-language-select {
     svg-icon {
         bottom: 10px !important;
         #Path-2-Copy {
-            stroke: theme_variables.$additional_light1 !important;
+            stroke: theme_variables_common.$additional_light1 !important;
         }
     }
 }

@@ -1,6 +1,6 @@
-@use '../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../styles/theme_variables_common" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 /* Palette spec is here: http://4yppjt.axshare.com/#p=colors */
 $theme-map : null;
@@ -34,7 +34,7 @@ $theme-map : null;
         .theme-#{$theme} & {
             $theme-map : () !global;
             @each $key, $submap in $map {
-                $value     : map-get(map-get($themes, $theme), '#{$key}');
+                $value     : map-get(map-get($themes, $theme), "#{$key}");
                 $theme-map : map-merge($theme-map, ($key: $value)) !global;
             }
 
@@ -51,25 +51,25 @@ $theme-map : null;
 
 .theme-container {
     @include themify($themes) {
-        color            : themed('textColor');
-        background-color : themed('backgroundColor');
+        color            : themed("textColor");
+        background-color : themed("backgroundColor");
     }
 
     h3 {
         @include themify($themes) {
-            color : themed('textColor');
+            color : themed("textColor");
         }
     }
 
     label {
         @include themify($themes) {
-            color : themed('buttonTextColor');
+            color : themed("buttonTextColor");
         }
     }
 
     nx-radio .nx-radio .check svg path.circle {
         @include themify($themes) {
-            color : themed('buttonColor');
+            color : themed("buttonColor");
         }
     }
 }

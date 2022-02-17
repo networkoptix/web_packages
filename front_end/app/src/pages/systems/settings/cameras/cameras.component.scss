@@ -1,14 +1,14 @@
 @use "../../../../styles/typography";
 @use "../../../../styles/mixins";
-@use "../../../../../styles/theme_variables" as *;
+@use "../../../../../styles/theme_variables_common" as *;
 @use "styles/src-variables/pages/cameras" as *;
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .camera-settings-info {
-    font-family: typography.$font-family-regular;
-    font-size: typography.$font-size-base;
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
     color: var(--card-header-text);
 
     .grid-container {
@@ -80,7 +80,7 @@
     }
 
     .header-table {
-        font-size: typography.$font-size-base;
+        font-size: $font-size-base;
         padding: 0;
         .header-table-cell {
             display: flex;

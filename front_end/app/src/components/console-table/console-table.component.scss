@@ -1,5 +1,5 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
 
 :host {
     grid-area: content;
@@ -157,7 +157,7 @@ tr.data-row {
         100% {
             transform: rotate(360deg);
         }
-    }    
+    }
 }
 
 .table-content-placeholder {

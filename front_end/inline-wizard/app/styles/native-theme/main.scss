@@ -30,11 +30,6 @@
   }
 }
 
-* {
-  @import '_theme_hint';
-  @import '~hint.css/src/hint';
-}
-
 html {
   position: relative;
   height: 100%;

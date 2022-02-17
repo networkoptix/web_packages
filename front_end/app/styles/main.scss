@@ -1,6 +1,6 @@
-@use '_theme_variables' as *;
-@import "~sass-rem";
+@use '_theme_variables_common' as *;
 
+@import "~sass-rem";
 @import '~bootstrap/scss/bootstrap';
 
 @import '_theme_override';

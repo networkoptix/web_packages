@@ -1,7 +1,7 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 nx-health-viewer-component {
 
@@ -226,7 +226,7 @@ nx-health-viewer-component {
     font-size       : 130%;
     font-weight     : 300;
     line-height     : 30px;
-    background-image: url('/static/images/icons/drop_rectangle.svg');
+    background-image: url("/static/images/icons/drop_rectangle.svg");
 
   }
 }

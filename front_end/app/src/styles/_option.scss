@@ -1,4 +1,4 @@
-@use '../../styles/theme_variables';
+@use "../../styles/theme_variables_common";
 
 /* Customize the label (the container) */
 .option {
@@ -16,9 +16,9 @@
     user-select         : none;
 
     .text {
-        font-family : theme_variables.$font-family-regular;
+        font-family : theme_variables_common.$font-family-regular;
         user-select : none;
-        color       : theme_variables.$dark9
+        color       : theme_variables_common.$dark9
     }
 
     /* Hide the browser's default checkbox */
@@ -39,21 +39,21 @@
 
     & input:hover ~ .optionmark {
         svg path.circle {
-            fill : theme_variables.$dark1;
+            fill : theme_variables_common.$dark1;
         }
 
         & ~ .text {
-            color : theme_variables.$dark1;
+            color : theme_variables_common.$dark1;
         }
     }
 
     & input:active ~ .optionmark {
         svg path.circle {
-            fill : theme_variables.$dark9 !important;
+            fill : theme_variables_common.$dark9 !important;
         }
 
         & ~ .text {
-            color : theme_variables.$dark9 !important;
+            color : theme_variables_common.$dark9 !important;
         }
     }
 }
@@ -68,7 +68,7 @@
     margin-top : -2px;
 
     & svg path.circle {
-        fill : theme_variables.$dark9;
+        fill : theme_variables_common.$dark9;
     }
 
     & svg circle {

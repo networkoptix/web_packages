@@ -1,7 +1,7 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .installers {
     .links {
@@ -38,10 +38,10 @@
     background-repeat : no-repeat;
     background-size   : 32px 32px;
 
-    background-image  : url('/static/images/download.png') !important;
+    background-image  : url("/static/images/download.png") !important;
 
     @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/download@2x.png') !important;
+        background-image : url("/static/images/download@2x.png") !important;
     }
 }
 
@@ -56,18 +56,18 @@
     margin-right      : 10px;
 
     &.iOS, &.ios {
-        background-image : url('/static/images/appstore.png') !important;
+        background-image : url("/static/images/appstore.png") !important;
 
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-            background-image : url('/static/images/appstore@2x.png') !important;
+            background-image : url("/static/images/appstore@2x.png") !important;
         }
     }
 
     &.Android, &.android {
-        background-image : url('/static/images/googleplay.png') !important;
+        background-image : url("/static/images/googleplay.png") !important;
 
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-            background-image : url('/static/images/googleplay@2x.png') !important;
+            background-image : url("/static/images/googleplay@2x.png") !important;
         }
     }
 }

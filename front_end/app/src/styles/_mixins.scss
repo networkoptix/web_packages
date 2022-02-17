@@ -1,29 +1,29 @@
-@use '../../styles/theme_variables';
-@use '../styles/typography';
-@forward '../../styles/theme_variables';
+@use "../../styles/theme_variables_common";
+@use "../styles/typography";
+@forward "../../styles/theme_variables_common";
 
 // Placeholder text
-@mixin placeholder($color: theme_variables.$input-color-placeholder) {
+@mixin placeholder($color: theme_variables_common.$input-color-placeholder) {
     // Firefox
     &::-moz-placeholder {
         color   : $color;
-        font-family: theme_variables.$font-family-regular;
+        font-family: theme_variables_common.$font-family-regular;
         opacity : 1; // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526
     }
     // Internet Explorer 10+
     &:-ms-input-placeholder {
         color : $color;
-        font-family: theme_variables.$font-family-regular;
+        font-family: theme_variables_common.$font-family-regular;
     }
     // Microsoft Edge
     ::-ms-input-placeholder {
         color : $color;
-        font-family: theme_variables.$font-family-regular;
+        font-family: theme_variables_common.$font-family-regular;
     }
     // Safari and Chrome
     &::-webkit-input-placeholder {
         color : $color;
-        font-family: theme_variables.$font-family-regular;
+        font-family: theme_variables_common.$font-family-regular;
     }
 }
 
@@ -47,7 +47,7 @@
 }
 
 @mixin selected-tag {
-    color         : theme_variables.$light1 !important;
+    color         : theme_variables_common.$light1 !important;
     padding-left  : 12px;
     padding-right : 32px !important;
 }
@@ -125,12 +125,12 @@
 @mixin details-buttons {
     flex: 0 0 auto;
     &:hover, &:hover > span {
-        color: theme_variables.$dark15 !important;
+        color: theme_variables_common.$dark15 !important;
         svg-icon {
             svg {
                 g,
                 path {
-                    fill: theme_variables.$dark15 !important;
+                    fill: theme_variables_common.$dark15 !important;
                 }
             }
         }
@@ -141,13 +141,13 @@
     align-items: center;
     white-space: nowrap;
     padding-left: 8px;
-    padding-right: 0px;
+    padding-right: 0;
     svg-icon {
         svg {
             height: 20px;
             g,
             path {
-                fill: theme_variables.$light16 !important;
+                fill: theme_variables_common.$light16 !important;
             }
         }
     }

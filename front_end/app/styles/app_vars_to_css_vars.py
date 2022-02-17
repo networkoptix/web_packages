@@ -18,7 +18,7 @@ LIGHT_DARK_VALUE_REGEX = re.compile(r"\$[\w\-]*?(light|dark)\d+")
 
 def main():
     source_files = [
-        "./_theme_variables.scss",
+        "./_theme_variables_common.scss",
         # "./_pages_variables.scss"
     ]
 

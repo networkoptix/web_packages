@@ -15,7 +15,7 @@ import re
 from pathlib import Path
 
 def main():
-    text = Path("./_theme_variables.scss").read_text(encoding="utf-8")
+    text = Path("./_theme_variables_common.scss").read_text(encoding="utf-8")
     theme_vars = dict.fromkeys(
         match.group(1) for match in re.finditer(r"^\$([\w\-]+)", text, re.M)
     )
@@ -30,7 +30,7 @@ def main():
 
     app_sass_files = Path("../").rglob("*.scss")
     for file in app_sass_files:
-        if file.name == "_theme_variables.scss":
+        if file.name == "_theme_variables_common.scss":
             continue
         contents = file.read_text(encoding="utf-8")
         file_vars = set(

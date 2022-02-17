@@ -1,7 +1,7 @@
-@use '../../../styles/theme_variables' as *;
-@use '../../styles/typography';
+@use "../../../styles/theme_variables_common" as *;
+@use "../../styles/typography";
 
-@import '~bootstrap/scss/mixins/breakpoints';
+@import "~bootstrap/scss/mixins/breakpoints";
 
 .nodes-container {
     background: $additional_light2;
@@ -36,7 +36,7 @@
     display: block;
     text-align: center;
     overflow: hidden;
-    white-space: nowrap; 
+    white-space: nowrap;
     margin-left: 16px;
     width: calc(100% - 32px);
 

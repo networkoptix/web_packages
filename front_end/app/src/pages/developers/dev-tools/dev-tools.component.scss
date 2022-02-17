@@ -1,6 +1,6 @@
-@use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
-@use 'app/src/styles/_bootstrap_utils' as bootstrap;
+@use "../../../styles/typography";
+@use "../../../../styles/theme_variables_common" as *;
+@use "app/src/styles/_bootstrap_utils" as bootstrap;
 
 .heading {
     @include typography.regular24dark9;

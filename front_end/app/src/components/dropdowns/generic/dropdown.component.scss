@@ -1,6 +1,6 @@
-@use '../../../styles/typography';
-@use '../../../styles/mixins';
-@use '../../../../styles/theme_variables' as *;
+@use "../../../styles/typography";
+@use "../../../styles/mixins";
+@use "../../../../styles/theme_variables_common" as *;
 
 nx-select {
     width: 100%;

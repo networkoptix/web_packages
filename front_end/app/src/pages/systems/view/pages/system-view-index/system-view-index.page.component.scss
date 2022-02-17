@@ -1,5 +1,5 @@
-@use '../../../../../../styles/theme_variables' as *;
-@use 'bootstrap_utils' as bootstrap;
+@use "../../../../../../styles/theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
 
 :host {
     padding-left: 0;
@@ -120,7 +120,7 @@
                 width               : 16px;
                 height              : 40px;
                 background-color    : var(--light4);
-                background-image    : url('./img/arrow-left.png');
+                background-image    : url("./img/arrow-left.png");
                 background-position : center center;
                 background-repeat   : no-repeat;
                 background-size     : 16px 16px;

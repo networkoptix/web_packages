@@ -1,5 +1,5 @@
-@use '../../../../../styles/theme_variables' as *;
-@use '../../../../styles/typography';
+@use "../../../../../styles/theme_variables_common" as *;
+@use "../../../../styles/typography";
 
 :host {
     margin: 16px;

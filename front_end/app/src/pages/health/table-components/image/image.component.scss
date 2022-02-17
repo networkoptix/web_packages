@@ -1,5 +1,5 @@
-@use '../../../../../styles/theme_variables' as *;
-@import '~bootstrap/scss/mixins/breakpoints';
+@use "../../../../../styles/_theme_variables_common" as *;
+@import "~bootstrap/scss/mixins/breakpoints";
 
 img {
     max-height: 100%;

@@ -1,6 +1,6 @@
-@use '../../../../styles/theme_variables' as *;
-@use '../../../styles/typography';
-@use 'bootstrap_utils' as bootstrap;
+@use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/typography";
+@use "bootstrap_utils" as bootstrap;
 
 $custom-lg: 1200px;
 $custom-xl: 1440px;

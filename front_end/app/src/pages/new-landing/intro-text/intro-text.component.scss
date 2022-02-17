@@ -1,6 +1,6 @@
-@use '../../../../styles/theme_variables' as *;
-@use '../../../styles/typography';
-@use '../../../styles/mixins';
+@use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/typography";
+@use "../../../styles/mixins";
 
 .wrapper {
     position: relative;
@@ -123,7 +123,7 @@
       stroke-dasharray: 0, 473;
     }
     to {
-      stroke-dasharray: 473, 0; 
+      stroke-dasharray: 473, 0;
     }
   }
 

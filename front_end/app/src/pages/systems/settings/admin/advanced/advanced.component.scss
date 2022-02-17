@@ -1,11 +1,11 @@
 @use "~bootstrap/scss/bootstrap";
 @use "../../../../../styles/typography";
-@use "styles/theme_variables" as theme_vars;
+@use "../../../../../../styles/theme_variables_common" as theme_vars;
 
 :host {
     .server-info {
-        font-family : typography.$font-family-regular;
-        font-size   : typography.$font-size-base;
+        font-family : theme_vars.$font-family-regular;
+        font-size   : theme_vars.$font-size-base;
         color       : var(--dark9);
 
         .header-top-bar {
@@ -19,7 +19,7 @@
                 flex-grow   : 1;
 
                 h2 {
-                    font-family : typography.$font-family-regular;
+                    font-family : theme_vars.$font-family-regular;
                     height      : 32px;
                     font-weight : bold;
                     font-size   : 24px;
@@ -48,7 +48,7 @@
         }
 
         .header-table {
-            font-size    : typography.$font-size-base;
+            font-size    : theme_vars.$font-size-base;
             padding-left : 0;
 
             .header-table-cell {

@@ -1,5 +1,5 @@
-@use '../../styles/typography';
-@use '../../../styles/theme_variables' as *;
+@use "../../styles/typography";
+@use "../../../styles/theme_variables_common" as *;
 
 .ribbon {
     @include typography.regular13light1;

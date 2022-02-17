@@ -1,5 +1,5 @@
-@use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables_common" as *;
 
 .active {
     background: $additional_light4 !important;

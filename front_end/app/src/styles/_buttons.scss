@@ -1,9 +1,9 @@
 @use "../styles/typography";
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
-@use "../../styles/theme_variables" as *;
+@use "../../styles/theme_variables_common" as *;
 @use "../styles/mixins";
-@forward "../../styles/theme_variables";
+@forward "../../styles/theme_variables_common";
 @import "~bootstrap/scss/mixins";
 
 @mixin button {

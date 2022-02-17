@@ -1,5 +1,5 @@
-@use '../../../../../styles/theme_variables' as *;
-@use '../../../../styles/typography';
+@use "../../../../../styles/theme_variables_common" as *;
+@use "../../../../styles/typography";
 
 :host {
     grid-area: menu;
@@ -15,7 +15,7 @@ a {
 ul {
     @media screen and (min-width: 769px) {
         position: sticky;
-        top: 16px;   
+        top: 16px;
     }
     margin: 16px;
     flex: 1 0 240px;

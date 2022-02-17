@@ -1,4 +1,4 @@
-@import "../../styles/theme_variables";
+@import "../../styles/theme_variables_common";
 
 @mixin font-source($font-family, $size, $color: false, $weight: false,  $lh: false) {
     font-family : $font-family;

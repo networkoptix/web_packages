@@ -1,6 +1,6 @@
 @use "../../../../styles/typography";
 @use "../../../../styles/mixins";
-@use "styles/theme_variables" as theme_vars;
+//@use "styles/theme_variables" as theme_vars;
 
 .camview {
     padding          : 0;
@@ -97,11 +97,11 @@
     }
 
     .blue {
-        color : theme_vars.$blue1;
+        color : var(--brand_core);
     }
 
     .firmware-line {
-        stroke       : theme_vars.$brand-primary;
+        stroke       : var(--brand_core);
         stroke-width : 2
     }
 
