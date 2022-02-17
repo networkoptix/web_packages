@@ -10,6 +10,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { last } from 'lodash-es';
+import { CookieService } from 'ngx-cookie-service';
 import { Subject } from 'rxjs';
 import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
@@ -261,7 +262,7 @@ export class NxDashboardComponent implements DashboardGroup {
      * Retrieves existing dashboard from cloud
      */
     getPersistedConfig = async () => {
-        const { widgetUrl, dashboardUrl, devServer } = this.route.snapshot.queryParams;
+        const { widgetUrl, dashboardUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
         const currentDashboard = DashboardGroup.validateDashboard(
             await this.cloudApi.getCustomAccountProperty(this.CUSTOM_PROPERTY_KEY).toPromise().catch(_ => ({})),
@@ -522,7 +523,8 @@ export class NxDashboardComponent implements DashboardGroup {
         private toastService: NxToastService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
+        private cookieService: CookieService
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;

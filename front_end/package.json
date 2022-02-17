@@ -55,7 +55,9 @@
     "test-lang": "node testCompiledLang.js",
     "update-lang": "ngx-translate-extract -i ./app/src ./projects/authorization/src -o ./app/language_i18n.json --clean --sort --format json",
     "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts; rm -f app/language_i18n_static_types.ts-e",
-    "update-lang-types:ci": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts; rm -f app/language_i18n_static_types.ts-e"
+    "update-lang-types:ci": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts; rm -f app/language_i18n_static_types.ts-e",
+    "link-local-libs": "node app/lib/link-libs.js",
+    "publish-public-libraries": "node app/lib/publish-public-libs.js"
   },
   "private": true,
   "dependencies": {

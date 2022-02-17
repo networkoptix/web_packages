@@ -404,10 +404,15 @@ fail-on-python-license-check:
         - cloud/**/requirements.txt
         - build_scripts/**/requirements.txt
       when: on_failure
+
 check-node-licenses:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
   stage: check
   needs: []
+  artifacts:
+    paths:
+      - ci-package-license.json
+    when: on_failure
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:

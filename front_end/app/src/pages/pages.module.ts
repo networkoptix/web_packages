@@ -140,7 +140,8 @@ const lazyRoutes: Routes = [
         canLoad: [FeatureGuard],
         canActivate: [AuthGuard],
         data: {
-            flags: FeatureFlagStrings.dashboard
+            flags: FeatureFlagStrings.dashboard,
+            override: 'devServer'
         },
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.NxDashboardModule)
     },

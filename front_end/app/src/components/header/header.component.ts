@@ -14,6 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { sum } from 'lodash-es';
+import { CookieService } from 'ngx-cookie-service';
 import {
     Subscription,
     BehaviorSubject,
@@ -139,7 +140,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
         @Inject(WINDOW) private window: Window,
-        private bootstrapProvider: NxBootstrapProvider
+        private bootstrapProvider: NxBootstrapProvider,
+        private cookieService: CookieService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -501,7 +503,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         }
 
-        return this.CONFIG.featureFlags.dashboardRedirect ? '/dashboard' : '/';
+        return (this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')) ? '/dashboard' : '/';
     }
 
     get mainNode() {

@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { interval } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
 
 import { NxToastService } from '@dialogs/toast.service';
+import { SharedWidgetState } from '@lib/dashboard-widget-state';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystemsService } from '@services/systems.service';
 
 import { FirstPartyWidget } from '../helper-classes';
 
@@ -27,7 +28,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         { name: '4 x 6', value: { cols: 4, rows: 6 } }
     ]
 
-    static sharedState$;
+    static sharedState$: SharedWidgetState;
 
     static BASE_CONFIG = {
         source: '',
@@ -121,14 +122,13 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
     constructor(
         configService: NxConfigService,
         cd: ChangeDetectorRef,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        systemsService: NxSystemsService,
+        router: Router,
     ) {
         super(cd);
         this.CONFIG = configService.config;
-        NxThirdPartyWidgetComponent.sharedState$ ||= interval(1000).pipe(
-            map(time => `Shared state from cloud portal: ${time}`),
-            shareReplay(1)
-        );
+        NxThirdPartyWidgetComponent.sharedState$ ||= new SharedWidgetState(systemsService.systemsSubject.asObservable() as any, url => router.navigateByUrl(url));
     }
 }
 

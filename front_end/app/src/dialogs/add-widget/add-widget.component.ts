@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { cloneDeep, last } from 'lodash-es';
+import { CookieService } from 'ngx-cookie-service';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -74,6 +75,7 @@ export class AddWidgetModalContent {
         private http: HttpClient,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
+        private cookieService: CookieService
     ) {
         this.CONFIG = configService.config;
         this.LANG = language.translations;
@@ -107,7 +109,7 @@ export class AddWidgetModalContent {
         this.dashboardOptions = this.dashboardMenu.map(({ dashboardName: name, id: value }) => ({ name, value }));
         const { dashboardName: name, id: value } = this.activeDashboard || {};
         this.selectedDashboard = { name, value };
-        const { widgetUrl, devServer = false } = this.route.snapshot.queryParams;
+        const { widgetUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets.sort(({ title: a }, { title: b }) => a > b ? 1 : -1).map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
             this.selectedWidget = cloneDeep(this.widgetDropdownOptions.find(({ name }) => name === NxThirdPartyWidgetComponent.NAME));

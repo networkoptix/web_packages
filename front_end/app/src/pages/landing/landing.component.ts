@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -36,17 +37,21 @@ export class NxLandingComponent implements OnInit {
     }
 
     constructor(private configService: NxConfigService,
-                private dialogs: NxDialogsService,
-                private accountService: NxAccountService,
-                private pageService: NxPageService,
-                private language: NxLanguageProviderService,
-                @Inject(WINDOW) private window: Window,
-                private router: Router
+        private dialogs: NxDialogsService,
+        private accountService: NxAccountService,
+        private pageService: NxPageService,
+        private language: NxLanguageProviderService,
+        @Inject(WINDOW) private window: Window,
+        private router: Router,
+        private cookieService: CookieService
     ) {
         this.setupDefaults(this.configService);
         this.startUrl = this.router.url;
         this.startParams = this.router.parseUrl(this.router.url).queryParams;
-        if (this.configService.flagsEnabled('landingPage')) {
+
+        if (this.cookieService.get('devServer')) {
+            this.router.navigateByUrl('dashboard');
+        } else if (this.configService.flagsEnabled('landingPage')) {
             this.router.navigateByUrl('new-landing', { skipLocationChange: true });
         }
 

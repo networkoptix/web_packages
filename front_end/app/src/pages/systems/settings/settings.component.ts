@@ -13,6 +13,7 @@ import {
     NavigationStart
 } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { CookieService } from 'ngx-cookie-service';
 import { Subject, Subscription } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 
@@ -150,6 +151,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private oauthService: OauthService,
         @Inject(DOCUMENT) private document: Document,
+        private cookieService: CookieService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -415,7 +417,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             !environment.isLocal
                                         ) {
                                             this.uriService.updateURI(
-                                                this.CONFIG.featureFlags.dashboardRedirect || 'beta' in this.route.snapshot.queryParams
+                                                (this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer') || 'beta' in this.route.snapshot.queryParams)
                                                     ? '/dashboard'
                                                     : '/systems'
                                             );
