@@ -24,7 +24,7 @@ Send "Restore Password" Email
 Get Restore Code and Open the Link
     [Arguments]    ${email}    ${restore}=${False}    ${new password}=${EMPTY}
     @{auth}=   Create List   ${BASE EMAIL}    ${password}
-    ${code}=   Get Code From Email    ${auth}    ${email}    restore_password
+    ${code}=   Get Code From Email    ${email}    restore_password
     Go To    ${url}/authorize/restore_password/${code}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${RESET NEXT BUTTON}
     Run Keyword If    ${restore} == ${True} and '${new password}' != '${EMPTY}'  Run Keywords

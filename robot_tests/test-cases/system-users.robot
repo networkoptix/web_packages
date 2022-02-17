@@ -547,7 +547,7 @@ Reset
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    system_invite
+    ${code}=   Get Code From Email    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    ${LOCAL USER NAME HEADER}
@@ -619,7 +619,7 @@ Reset
     FOR    ${link}  IN  @{activation link}
         check in list    ${expected links}    ${link}
     END
-    ${activation code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    activate_account
+    ${activation code}=   Get Code From Email    ${random email}    activate_account
     Delete Email    ${email}
     Close Mailbox
     Go To    ${url}/authorize/activate/${activation code}
