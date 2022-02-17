@@ -560,11 +560,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 console.error('err in resetPassword process', err);
                 if (err.errorText === '2FA is required') {
                     this.currentState = AuthorizeState.auth;
-                } else if (err.errorText === 'unauthorized') {
+                } else if (['unauthorized', 'badUsername'].includes(err.errorText)) {
                     // loginCode is either invalid or already used
                     this.toastService.notify(
                         this.LANG.authorize.newPassInvalidCode(),
-                        'error',
+                        'danger'
                     );
                 } else {
                     this.handleCloudConnectionError(err, this.resetPasswordProcess);

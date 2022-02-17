@@ -6,6 +6,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxToast } from '@components/toast/toast.component';
+import { NxToastsContainer } from '@components/toast/toast.container';
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -39,7 +41,7 @@ import { NxTagComponent } from './tag/tag.component';
         NgbModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
     ],
     declarations: [
         NxCheckboxComponent,
@@ -52,6 +54,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxToastsContainer,
+        NxToast,
     ],
     providers: [
         NxCheckboxComponent,
@@ -64,6 +68,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxToastsContainer,
+        NxToast,
     ],
     exports: [
         NxCheckboxComponent,
@@ -76,6 +82,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxToastsContainer,
+        NxToast,
     ]
 })
 export class SharedComponentsModule {
