@@ -42,7 +42,7 @@ const PROXY_CONFIG = [
             '/static/lang_ru_RU',
             '/static/lang_ja_JP',
             '/static/images/logo.png',
-            // '/static/supported_languages.json',
+            '/static/supported_languages.json', // Comment out to use your own supported_languages.json.
             '/static/languages.json',
             '/swagger-ui',
             '/web'
@@ -52,7 +52,7 @@ const PROXY_CONFIG = [
         secure: false
     }, {
         context: [
-            '/static/supported_languages.json',
+            // '/static/supported_languages.json', // Uncomment for using your own local supported_languages.json. It goes in front_end/app/supported_languages.
             '/static/lang_en_US',
             '/static'
         ],
