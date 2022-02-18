@@ -22,7 +22,7 @@
         <ng-container *ngFor="let link of node.nodes" >
             <li class="nav-links"
                 [style.padding-right.px]="link.new_window || link.icon ? 0 : 8"
-                [ngClass]="{'active': headerService.currentLocation.path === link.url || checkActive(link.url) }">
+                [ngClass]="{'selected': headerService.currentLocation.path === link.url || checkActive(link.url) }">
                 <ng-template #internalLink>
                     <a
                         [routerLink]="link.url"

@@ -37,6 +37,7 @@
         .arrow {
             display : block;
             transform: translateY(3px);
+            bottom : -1px !important;
         }
         & > button {
             height: 100% !important;

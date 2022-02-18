@@ -1,0 +1,36 @@
+:host {
+    .themes {
+        div {
+            width               : 120px;
+            height              : 100px;
+            cursor              : pointer;
+            border              : 1px solid var(--image-box-border-color);
+            background-position : center center;
+            background-repeat   : no-repeat;
+            background-size     : auto 100%;
+            background-image    : url("/static/images/themes/sprite.png");
+            
+            &.selected {
+                border-color : var(--image-box-selected-border-color);
+            }
+            
+            &.theme-light {
+                opacity             : .9;
+                background-position : 0 0;
+            }
+            
+            &.theme-auto {
+                opacity             : .9;
+                margin-left         : 1rem;
+                background-position : -117px 0;
+            }
+            
+            &.theme-dark {
+                margin-left         : 1rem;
+                background-position : -234px 0;
+            }
+        }
+        
+        
+    }
+}

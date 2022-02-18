@@ -69,15 +69,12 @@
 
     &.disable {
         background-color: $light8;
-        &:hover {
-            background-color: $light6 !important;
-        }
     }
 
     &.show-warning {
-        background-color: $red_l1;
+        background-color: var(--switch-warning-color);
         &:hover {
-            background-color: $red_l2 !important;
+            background-color: var(--switch-warning-hover-color);
         }
     }
 
@@ -92,30 +89,24 @@
         width: 15px;
         left: 1px;
         bottom: 1px;
-        background-color: white;
+        background-color: var(--switch-button-color);
         z-index: 1;
     }
 }
 
 input.selected + .slider {
     &.disable {
-        background-color: $light8;
-        &:hover {
-            background-color: $light6 !important;
-        }
+        background-color: var(--switch-disabled-color);
     }
-    background-color: $green_main;
+    background-color: var(--switch-selected-color);
     &:hover {
-        background-color: $green_l1 !important;
+        background-color: var(--switch-selected-hover-color);
     }
 }
 
 input:focus + .slider {
     &.disable {
-    background-color: $light8;
-        &:hover {
-            background-color: $light6 !important;
-        }
+        background-color: $light8;
     }
     box-shadow: 0 0 1px $green_l1;
     &:hover {
@@ -155,7 +146,7 @@ input.selected + .slider:before {
         background: $light12;
     }
 
-    background: $green_l2;
+    background: var(--switch-bar-color);
     width: 2px;
     left: 8px;
 }
@@ -168,10 +159,10 @@ input.selected + .slider:before {
     right: 4px;
 
     &.disable {
-        border: 2px solid $light12;
+        border: 2px solid var(--switch-circle-disable-color);
     }
 
     &.show-warning {
-        border: 2px solid $red_d1;
+        border: 2px solid var(--switch-circle-color);
     }
 }

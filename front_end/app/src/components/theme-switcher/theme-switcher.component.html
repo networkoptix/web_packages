@@ -1,0 +1,60 @@
+<nx-block *ngIf="layout !== 'test'">
+    <header>
+        <span translate>Themes</span>
+    </header>
+
+    <nx-section>
+        <div class="d-flex flex-row themes">
+            <div
+                    class="theme-light"
+                    (click)="setTheme('light')"
+                    [ngClass]="{selected: theme === 'light'}"
+            ></div>
+            <div
+                    class="theme-auto"
+                    (click)="setTheme('auto')"
+                    [ngClass]="{selected: theme === 'auto'}"
+            ></div>
+            <div
+                    class="theme-dark"
+                    (click)="setTheme('dark')"
+                    [ngClass]="{selected: theme === 'dark'}"
+            ></div>
+        </div>
+    </nx-section>
+</nx-block>
+
+<!-- test component -->
+<div *ngIf="layout === 'test'">
+    <div class="radio-group">
+        <nx-radio
+            componentId="blah1"
+            name="theme"
+            value="light"
+            label="light"
+            [(ngModel)]="theme"
+            (click)="setTheme('light')"
+        ></nx-radio>
+    </div>
+    <div class="radio-group">
+        <nx-radio
+            componentId="blah2"
+            name="theme"
+            value="auto"
+            label="system"
+            [(ngModel)]="theme"
+            (click)="setTheme('auto')"
+        ></nx-radio>
+    </div>
+    <div class="radio-group">
+        <nx-radio
+            componentId="blah3"
+            name="theme"
+            value="dark"
+            label="dark"
+            [(ngModel)]="theme"
+            (click)="setTheme('dark')"
+        ></nx-radio>
+    </div>
+</div>
+<!-- end test component -->

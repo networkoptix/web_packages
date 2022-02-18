@@ -54,6 +54,7 @@ class FLAGS(metaclass=_FlagType):
     bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
     dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
+    themes_enabled = ('Enable themes', 'themesEnabled', '%THEMES_ENABLED%')
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
     # *************************************************************************************

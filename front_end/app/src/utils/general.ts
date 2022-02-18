@@ -209,10 +209,10 @@ export function clearPseudoAnchors(targetArr: PseudoAnchorTarget[]): [] {
 function createPseudoAnchor(
     target: HTMLElement,
     eventType: string,
-    clickHandler: (e: Event) => void
+    handler: (e: Event) => void
 ): void {
     target.classList.add('pseudo-anchor');
-    target.addEventListener(eventType, event => clickHandler(event));
+    target.addEventListener(eventType, handler);
 }
 
 /* Async */

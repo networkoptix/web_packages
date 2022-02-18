@@ -1,4 +1,4 @@
-@use "../../../styles/theme_variables_common" as *;
+//@use "../../../styles/theme_variables_common" as *;
 
 .editable {
     &-initial {
@@ -12,7 +12,7 @@
         border        : 1px solid transparent; // avoid text jump
         
         &:hover {
-            background    : $additional_light2;
+            background    : var(--input-bg);
             border-radius : 2px;
             padding-left  : 4px;
             margin-left   : -4px;
@@ -26,10 +26,11 @@
     &-edit {
         position      : relative;
         border-radius : 2px;
-        background    : $light1;
+        color         : var(--input-active-color);
+        background    : var(--input-active-bg);
         padding-left  : 4px;
         margin-left   : -4px;
-        border        : 1px solid $blue1;
+        border        : 1px solid var(--input-active-border-color);
         text-align    : left !important;
         overflow      : hidden;
         white-space   : nowrap !important;
@@ -37,6 +38,6 @@
     }
     
     &-error {
-        border : 1px solid $red_l2;
+        border : 1px solid var(--input-error-border-color);
     }
 }

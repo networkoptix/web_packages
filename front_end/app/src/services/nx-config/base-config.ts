@@ -176,6 +176,7 @@ const FeatureFlagKeys = [
     'readonlyAPIs',
     'dashboardRedirect',
     'cloudOwnershipTransfer',
+    'themesEnabled',
     'paginatorExperimental',
 ] as const;
 

@@ -155,23 +155,34 @@ nx-block .card {
 }
 
 .sensitivity-buttons {
-      color: var(--card-header-text) !important;
-      border-radius: 2px;
-      font-size: 12px;
-      width: 32px !important;
-      padding: 0 !important;
-      border: 1px solid transparent !important;
-      &:hover, &:active, &.active {
+    color: var(--card-header-text) !important;
+    border-radius: 2px;
+    font-size: 12px;
+    width: 32px !important;
+    height          : 32px !important;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    padding: 0 !important;
+    border: 1px solid transparent !important;
+    
+    &:hover, &:active, &.active {
         border: 1px solid transparent !important;
+    }
+    
+    input {
+        clip           : rect(0, 0, 0, 0);
+        position       : absolute;
+        pointer-events : none;
     }
 }
 
 .button {
     &-0 {
         background-color: rgba($cameras-sensitivity-color-0, 0.3);
-        border: 1px solid var(--light4) !important;
+        border: 1px solid var(--sensitivity-button-0-border-color) !important;
         &:hover {
-            border: 1px solid var(--light6) !important;
+            border: 1px solid var(--sensitivity-button-0-border-color) !important;
             background-color: rgba($cameras-sensitivity-color-0, 0.4) !important;
         }
         &:active, &.active{

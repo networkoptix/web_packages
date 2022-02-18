@@ -70,6 +70,11 @@ require('./scripts/vendor/protocolcheck');
                 *ngIf="(!appStateService.ready && !newSystem) || loading"
             ></nx-pre-loader>
             <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+            <!-- test component - REMOVE AFTER TESTING -->
+            <div style="position: absolute; bottom : 20px; left : 20px;">
+                <nx-theme-switcher-component layout="test"></nx-theme-switcher-component>
+            </div>
+            <!-- end test component - REMOVE AFTER TESTING -->
         </ng-container>`,
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -108,16 +113,31 @@ export class AppComponent {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
 
-        // TODO: Replace with IU... temporary mechanism for switching between themes
-        const queryParams = new URLSearchParams(this.window.location.href.split('?')[1]);
-        const hasDarkTheme = (this.localStorageService.retrieve('theme') === 'dark');
+        // TODO: Add CMS flag after finishing tests
+        // also set default theme to "AUTO"
+        const themeSelected = this.localStorageService.retrieve('theme');
+        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+        darkThemeMq.addEventListener('change', e => {
+            if (e.matches) {
+                this.window.document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                this.window.document.documentElement.setAttribute('data-theme', 'light');
+            }
+        });
+
         if (
-            hasDarkTheme ||
-            (queryParams.get('beta') &&
-             queryParams.get('theme') === 'dark')
+            themeSelected === 'auto' ||
+            themeSelected === null
         ) {
-            !hasDarkTheme && this.localStorageService.store('theme', 'dark');
-            this.window.document.documentElement.setAttribute('data-theme', 'dark');
+            !themeSelected && this.localStorageService.store('theme', 'auto');
+            if (darkThemeMq.matches) {
+                this.window.document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        } else {
+            this.window.document.documentElement.setAttribute(
+                'data-theme',
+                this.localStorageService.retrieve('theme')
+            );
         }
 
         const url = new URL(this.window.location.href.replace('#/', ''));

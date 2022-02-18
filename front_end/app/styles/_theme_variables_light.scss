@@ -2,13 +2,21 @@
 @import "_theme_palette";
 
 :root {
-    --body-bg    : var(--additional_light2);
-    --alt-body-bg : var(--light1);
-    --header-bg  : var(--light1);
-    --header-border-color : var(--light4);
-    --body-text-color : var(--dark9);
+    --body-bg    : #{$additional_light2};
+    --alt-body-bg : #{$light1};
+    --header-bg  : #{$light1};
+    --header-border-color : #{$light4};
+    --body-text-color : #{$dark9};
+    --image-box-border-color : #{$light6};
+    --image-box-selected-border-color : #{$brand_l1};
     
-    --page-titles : #{$dark9}; // this should be only use of h1
+    --h1 : #{$dark9};
+    --h2 : #{$dark9};
+    --h3 : #{$dark9};
+    --h4 : #{$dark9};
+    --h5 : #{$dark9};
+    --h6 : #{$dark9};
+    --h7 : #{$dark9};
     
     --scrollbar-color                   : var(--light16);
     --scrollbar-thumb-bg                : var(--light10);
@@ -19,13 +27,13 @@
     --tooltip-bg : #{$dark1};
     --tooltip-color : #{$light1};
     
-    --radio-color              : #{$dark9};
+    --radio-color              : #{$dark11};
     --radio-check-color        : #{$brand_core};
-    --radio-hover-color        : #{$dark1};
+    --radio-hover-color        : #{$dark3};
     --radio-hover-check-color  : #{$brand_core};
-    --radio-active-color       : #{$dark9};
+    --radio-active-color       : #{$dark11};
     --radio-active-check-color : #{$brand_core};
-    --radio-active-hover-color : #{$dark1};
+    --radio-active-hover-color : #{$dark3};
     
     --checkbox-color              : #{$dark9};
     --checkbox-check-color        : #{$brand_core};
@@ -49,6 +57,18 @@
     --placehoder-cloud-opacity : .1;
     --placehoder-title-color : #{$dark9};
     --placehoder-body-color : #{$dark9};
+    
+    --switch-disabled-color       : #{$light8};
+    --switch-selected-color       : #{$green_main};
+    --switch-selected-hover-color : #{$green_l1};
+    --switch-button-color         : #{$light1};
+    --switch-bar-color            : #{$green_l2};
+    --switch-bar-hover-color      : #{$green_l2};
+    --switch-bar-disable-color    : #{$light12};
+    --switch-warning-color        : #{$red_l1};
+    --switch-warning-hover-color  : #{$red_l2};
+    --switch-circle-color         : #{$red_d1};
+    --switch-circle-disable-color : #{$light12};
     
     --left-menu-border-color      : transparent;
     --left-menu-l1-bg             : var(--additional_light2);
@@ -134,9 +154,15 @@
     --btn-danger-active-color  : #{$light1};
     --btn-danger-active-shadow : #{$red_d4};
     
-    --btn-header-saparator-color : var(--light4);
-    --btn-header-main-bg         : var(--light4);
-    --btn-header-main-color      : var(--dark9);
+    --btn-header-saparator-color : #{ $light4};
+    --btn-header-main-bg         : #{ $light4};
+    --btn-header-main-color      : #{$dark9};
+    
+    --tab-link-hover-bg            : #{$light3};
+    --tab-link-hover-bottom-color  : #{$light6};
+    --tab-link-active-bg           : #{$light3};
+    --tab-link-active-bottom-color : #{$light6};
+    --tab-link-selected-color      : #{$brand-core};
     
     --dropdown-menu-arrow-color : #{$light4};
     --dropdown-menu-arrow-fill-color : #{$additional_light1};
@@ -145,9 +171,25 @@
     --dropdown-menu-top-border : none;
     --dropdown-menu-shadow : 0 1rem 2rem 0 transparentize(#{$dark15}, 0.4);
     --dropdown-menu-bg : #{$additional_light1};
+    --drop-menu-systems-bg : #{$additional_light1};
+    --drop-menu-navigation-bg : #{$light1};
     --dropdown-item-active-bg : #{$light4};
     --dropdown-item-hover-bg    : #{$light3};
     --dropdown-item-hover-color : #{$dark9};
+    
+    // part of drop-menu
+    --system-tile-icon-offline-color : #{$red_l2};
+    --system-tile-name-color : #{$dark9};
+    --system-tile-owner-color : #{$dark9};
+    --system-tile-hover-bg : #{$light3};
+    --system-tile-active-bg : #{$light4};
+    --system-tile-selected-bg : #{$light5};
+    --system-tile-nav-link-color : #{$dark9};
+    --system-tile-nav-link-hover-bg : #{$light3};
+    --system-tile-nav-link-hover-color : #{$dark9};
+    --system-tile-nav-link-active-bg : #{$light5};
+    --system-tile-nav-link-active-border-color : #{$light6};
+    // *****************
     
     --card-header-bg : var(--additional_light1);
     --card-header-text : var(--dark9);

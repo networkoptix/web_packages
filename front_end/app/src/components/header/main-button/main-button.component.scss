@@ -38,11 +38,21 @@
 .dropdown {
     margin-left: 3px !important;
     & > button {
-        border: 1px solid transparent;
+        border: 1px solid var(--btn-header-main-border-color);
         background-color: var(--btn-header-main-bg);
         color: var(--btn-header-main-color);
         height: 41px !important;
         border-radius: 4px;
+        
+        &:hover {
+            background : 1px var(--btn-header-main-hover-bg) !important;
+            border     : 1px solid var(--btn-header-main-hover-border-color);
+        }
+    
+        &:active {
+            background : var(--btn-header-main-active-bg) !important;
+            border     : 1px solid var(--btn-header-main-active-border-color);
+        }
     }
     .arrow {
         display: none;
@@ -50,15 +60,17 @@
 
     &.show {
         & > button {
-            background: $light3 !important;
-            border: 1px solid $light4;
+            background: var(--btn-header-main-selected-bg) !important;
+            border: 1px solid var(--btn-header-main-selected-border-color);
+            
             &:hover {
-                background: 1px $light4 !important;
-                border: 1px solid $light5;
+                background: 1px var(--btn-header-main-hover-bg) !important;
+                border: 1px solid var(--btn-header-main-hover-border-color);
             }
+            
             &:active {
-                background: $light5 !important;
-                border: 1px solid $light6;
+                background: var(--btn-header-main-active-bg) !important;
+                border: 1px solid var(--btn-header-main-active-border-color);
             }
         }
         .arrow {
@@ -82,15 +94,16 @@
 
 .popup {
     &.arrow {
-        bottom: 0 !important;
         position: absolute !important;
         top: auto !important;
         left: 16px !important;
         z-index: 9999 !important;
-        border-bottom-color: $light6 !important;
+        border-bottom-color: var(--dropdown-menu-arrow-color) !important;
         transform: translateY(3px);
+        bottom : -1px !important;
+        
         &::after {
-            border-bottom-color: $additional_light1 !important;
+            border-bottom-color: var(--drop-menu-systems-bg) !important;
         }
     }
 }

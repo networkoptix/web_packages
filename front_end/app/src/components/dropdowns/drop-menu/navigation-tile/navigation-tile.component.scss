@@ -3,12 +3,6 @@
 @use "../../../../styles/mixins" as *;
 
 :host {
-    .active {
-        background : $light5 !important;
-        border     : 1px solid $light6 !important;
-        margin-left: 0px !important;
-    }
-
     .navigation-tile {
         display             : flex;
         position            : relative;
@@ -29,8 +23,8 @@
     #link {
         white-space   : nowrap;
         border        : 1px solid transparent;
-        border-right  : 0px;
-        border-left   : 0px;
+        border-right  : 0;
+        border-left   : 0;
         margin-left   : 1px;
         display       : block;
         border-radius : 4px;
@@ -41,12 +35,23 @@
         cursor        : pointer;
 
         &:hover {
-            background : $light3;
+            background-color : var(--system-tile-nav-link-hover-bg);
+            color : var(--system-tile-nav-link-hover-color);
         }
     }
 
     .section-title-icon {
         position: absolute;
+    
+        svg {
+            .st0, .system-offline-st0 {
+                fill : var(--system-tile-name-color);
+            }
+        
+            .system-offline-st1 {
+                fill : var(--system-tile-icon-offline-color);
+            }
+        }
     }
 
     .section-title {
@@ -74,16 +79,29 @@
     }
 
     .nav-links {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
         @extend #link;
+        color : var(--system-tile-nav-link-color);
         height: 24px !important;
 
         &:active {
-            @extend .active;
+            background : var(--system-tile-nav-link-active-bg) !important;
+        }
+        
+        &.selected {
+            background  : var(--system-tile-nav-link-active-bg) !important;
+            border      : 1px solid var(--system-tile-nav-link-active-border-color) !important;
+            margin-left : 0 !important;
         }
 
         & > a {
-            position: relative;
+            position        : relative;
+            color           : var(--system-tile-nav-link-color);
+            height          : 24px !important;
+            line-height     : 22px !important;
+            text-decoration : inherit !important;
+            @include ellipsis;
+            
             &::after {
                 content: "";
                 position: absolute;
@@ -95,11 +113,6 @@
             &.has-icon::after {
                 right: -24px !important;
             }
-            color           : $dark9;
-            height          : 24px !important;
-            line-height     : 22px !important;
-            text-decoration : inherit !important;
-            @include ellipsis;
         }
 
         .st0 {

@@ -7,10 +7,11 @@
     left: 0;
     display: inline-block;
     padding: 0 !important;
-    margin: 0px 8px;
-    border-top: none !important;
+    margin: 0 8px;
+    border-top: var(--dropdown-menu-top-border) !important;
     border-radius: 2px !important;
     overflow: hidden;
+    
     &--list {
         max-height: calc(100vh - 56px) !important;
     }
@@ -74,19 +75,19 @@
 
 .systems-grid {
     @extend .base-grid;
-    background:$additional_light1;
+    background-color : var(--drop-menu-systems-bg);
     padding: 16px;
 }
 
 .navigation-grid {
     @extend .base-grid;
-    background: $light1;
+    background-color: var(--drop-menu-navigation-bg);
     padding: 24px 16px 18px 16px !important;
     &:not(.top-border) {
-        background: $additional_light1;
+        background: var(--drop-menu-systems-bg);
     }
 }
 
 .top-border {
-    border-top: 1px solid $light4;
+    border-top: var(--dropdown-menu-top-border);
 }

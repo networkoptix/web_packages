@@ -23,8 +23,8 @@ nx-radio {
                 cursor : default !important;
             }
 
-            svg path.circle {
-                fill : var(--radio-color) !important;
+            svg .circle {
+                stroke : var(--radio-color) !important;
                 opacity : 0.3 !important;
             }
         }
@@ -46,18 +46,24 @@ nx-radio {
             opacity  : 0;
         }
     
+        svg .circle {
+            stroke-width: 2;
+        }
+    
         input ~ .check {
-            svg path.circle {
-                fill : var(--radio-color);
+            svg .circle {
+                stroke : var(--radio-color);
+                fill : none;
             }
         }
 
         input:hover ~ .check {
-            svg path.circle {
-                fill : var(--radio-hover-color);
+            svg .circle {
+                stroke : var(--radio-hover-color);
+                fill : none;
             }
     
-            svg circle {
+            svg .dot {
                 fill : var(--radio-hover-check-color);
             }
     
@@ -67,8 +73,9 @@ nx-radio {
         }
 
         input:active ~ .check {
-            svg path.circle {
-                fill : var(--radio-active-color) !important;
+            svg .circle {
+                stroke : var(--radio-active-color) !important;
+                fill : none;
             }
     
             & ~ .text {
@@ -94,7 +101,7 @@ nx-radio {
 
     &.checked {
         svg {
-            circle {
+            .dot {
                 fill    : var(--radio-check-color);
                 display : block;
             }
@@ -103,7 +110,7 @@ nx-radio {
 
     &.tristate {
         svg {
-            circle {
+            .dot {
                 fill    : rgba(var(--brand-core--rgb), .5);
                 display : block;
             }
@@ -114,7 +121,7 @@ nx-radio {
         height : 16px;
         width  : 20px;
 
-        & circle {
+        & .dot {
             display : none;
         }
     }

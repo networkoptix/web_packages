@@ -76,6 +76,11 @@
         </nx-block>
     </div>
 
+    <div class="col-12 mt-3 p-0"
+         *ngIf="CONFIG.featureFlags.themesEnabled">
+        <nx-theme-switcher-component></nx-theme-switcher-component>
+    </div>
+
     <div class="col-12 mt-3 p-0">
         <nx-block>
             <header>

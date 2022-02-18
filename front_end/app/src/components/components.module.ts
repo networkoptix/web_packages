@@ -86,6 +86,7 @@ import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';
 import { NxSystemsListComponent } from './systems-list/list.component';
+import { NxThemeSwitcherComponent } from './theme-switcher/theme-switcher.component';
 import { NxToast } from './toast/toast.component';
 import { NxToastsContainer } from './toast/toast.container';
 import { NxVendorListComponent } from './vendor-list/vendor-list.component';
@@ -118,7 +119,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         TextFieldModule,
         EditorModule,
         SharedComponentsModule,
-        PortalModule
+        PortalModule,
     ],
     declarations: [
         NxThreeDotDropdown,
@@ -182,6 +183,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxTextEditableComponent,
         NxStepperComponent,
         UpdateWebadminSessionComponent,
+        NxThemeSwitcherComponent,
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -227,7 +229,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
-        UpdateWebadminSessionComponent
+        UpdateWebadminSessionComponent,
+        NxThemeSwitcherComponent,
     ],
     exports: [
         QuicklinkModule,
@@ -292,7 +295,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         SharedComponentsModule,
         CdkStepperModule,
         TextFieldModule,
-        UpdateWebadminSessionComponent
+        UpdateWebadminSessionComponent,
+        NxThemeSwitcherComponent,
     ]
 })
 export class ComponentsModule {

@@ -7,8 +7,16 @@ html[data-theme="dark"] {
     --header-bg  : #212A2F; //$dark7;
     --header-border-color: transparent;
     --body-text-color : #A5B7C0; //$light10;
+    --image-box-border-color : #303F47; //$dark10;
+    --image-box-selected-border-color : #2592C3; //$brand_d1;
     
-    --page-titles : #F5F7F8; //$light2; // this should be only use of h1
+    --h1 : #F5F7F8; //$light2;
+    --h2 : #F5F7F8; //$light2;
+    --h3 : #F5F7F8; //$light2;
+    --h4 : #F5F7F8; //$light2;
+    --h5 : #F5F7F8; //$light2;
+    --h6 : #F5F7F8; //$light2;
+    --h7 : #F5F7F8; //$light2;
     
     --scrollbar-color                   : #35464F; //$light16;
     --scrollbar-thumb-bg                : #A5B7C0; //$light10;
@@ -49,6 +57,19 @@ html[data-theme="dark"] {
     --placehoder-cloud-opacity : 1;
     --placehoder-title-color : #E1E7EA; //$light4;
     --placehoder-body-color : #A5B7C0; //light10;
+    
+    --switch-disabled-color       : #3A4D57; //$dark12;
+    --switch-selected-color       : #32731E; //$green_d1;
+    --switch-selected-hover-color : #44A624; //$green_l1};
+    --switch-button-color         : #A5B7C0; //light10;
+    --switch-bar-color            : #3A911E; //$green_main};
+    --switch-bar-hover-color      : #3A911E; //$green_main};
+    --switch-bar-disable-color    : #263137; //$dark8;
+    --switch-warning-color        : #8E1717; //$red_d2;
+    --switch-warning-hover-color  : #C22626; //$red_main;
+    --switch-circle-color         : #AA1E1E; //$red_d1;
+    --switch-circle-disable-color : #263137; //$dark8;
+    
     
     --left-menu-border-color      : #2B383F; //$dark9;
     --left-menu-l1-bg             : #1C2327; //$dark6;
@@ -138,6 +159,12 @@ html[data-theme="dark"] {
     --btn-header-main-bg         : transparent;
     --btn-header-main-color      : #E1E7EA; //$light4;
     
+    --tab-link-hover-bg           : #1C2327; //$dark6;
+    --tab-link-hover-bottom-color : #1C2327; //$dark6;
+    --tab-link-active-bg           : #171C1F; //$dark5;
+    --tab-link-active-bottom-color : #171C1F; //$dark5;
+    --tab-link-selected-color       : #2592C3; //$brand_d1
+    
     --dropdown-menu-arrow-color      : #49626F; //$dark15;
     --dropdown-menu-arrow-fill-color : #121517; //dark4;
     
@@ -145,9 +172,25 @@ html[data-theme="dark"] {
     --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
     --dropdown-menu-shadow : 0px 7px 8px rgba(#000000, 0.2), 0px 5px 22px rgba(#000000, 0.12), 0px 12px 17px rgba(#000000, 0.14);
     --dropdown-menu-bg : #121517; //dark4;
+    --drop-menu-systems-bg    : #212A2F; //$dark7;
+    --drop-menu-navigation-bg : #263137; //$dark8
     --dropdown-item-active-bg : #B9C7CE; //$light8;
     --dropdown-item-hover-bg : #A5B7C0; //$light10;
     --dropdown-item-hover-color : #080707; //$dark2;
+    
+    // part of drop-menu
+    --system-tile-icon-offline-color : #AA1E1E; //$red_d1
+    --system-tile-name-color  : #E1E7EA; //$light4;
+    --system-tile-owner-color : #A5B7C0; //$light10;
+    --system-tile-hover-bg : #1C2327; //$dark6;
+    --system-tile-active-bg : #171C1F; //$dark5;
+    --system-tile-selected-bg : #35464F; //$dark11;
+    --system-tile-nav-link-color : #E1E7EA; //$light4;
+    --system-tile-nav-link-hover-bg    : #1C2327; //$dark6;
+    --system-tile-nav-link-hover-color : #E1E7EA; //$light4;
+    --system-tile-nav-link-active-bg           : #35464F; //$dark11;
+    --system-tile-nav-link-active-border-color : #35464F; //$dark11;
+    // *****************
     
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
