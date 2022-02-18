@@ -115,7 +115,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             this.processService.createProcess(
                 () => {
                     return this.dialogs
-                        .toggleVerificationCode()
+                        .toggleVerificationCode(this.verificationWatcher.value)
                         .then(action => {
                             if (action === 'canceled') {
                                 return Promise.reject('dialogCancel');

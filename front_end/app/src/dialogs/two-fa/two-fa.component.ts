@@ -455,7 +455,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             this.setTemplate(T_FA_STEPS.Disable2FaCode);
         } else if (this.type === 'changePassword') {
             this.setTemplate(T_FA_STEPS.ChangePassword);
-        } else if (this.type === 'verification-toggle') {
+        } else if (this.type.startsWith('verification')) {
             this.setTemplate(T_FA_STEPS.VerificationToggle);
         } else if (this.type === 'code') {
             this.accountService
