@@ -23,6 +23,9 @@ class CustomMenu(Menu):
     """
     def __init__(self, **kwargs):
         Menu.__init__(self, **kwargs)
+        debug_only_items = [
+            items.MenuItem('QA Settings', reverse('qa_settings'))
+        ] if settings.DEBUG else []
         self.children += [
             items.MenuItem(_('Dashboard'), reverse('admin:index')),
             items.Bookmarks(),
@@ -33,7 +36,7 @@ class CustomMenu(Menu):
             items.AppList(
                 _('Internal'),
                 exclude=settings.ADMIN_DASHBOARD,
-                children=[items.MenuItem('QA Settings', reverse('qa_settings'))]
+                children=[] + debug_only_items
             ),
             items.MenuItem('Help', '/static/help/cms/'),
         ]
