@@ -1183,7 +1183,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Press keys    ${LOCAL USER NAME}    CTRL+a+BACKSPACE
+        Delete All Text     ${LOCAL USER NAME}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -1211,7 +1211,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Press keys    ${LOCAL USER NAME}    CTRL+a+BACKSPACE
+        Delete All Text     ${LOCAL USER NAME}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
