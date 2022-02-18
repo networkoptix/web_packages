@@ -186,10 +186,11 @@ ${STORAGE ENABLE SWITCH}            //div[@id='isUsedForWriting0-switch-wrapper'
 ...    ${RESERVED SPACE INPUT}
 ...    ${RESERVED SPACE DROPDOWN}
 ...    ${STORAGE ENABLE SWITCH}
-${STORAGE ENABLE SWITCH STYLE}     ${STORAGE ENABLE SWITCH}//span[@class='slider round']
-${STORAGE SWITCH ENABLED COLOR}    rgba(58, 145, 30, 1)
-${STORAGE SWITCH DISABLED COLOR}   rgba(185, 199, 206, 1) 
-${STORAGE FREE SPACE VALUE}        //td[@title='/recordings/HD Witness Media']//following-sibling::td[2]
+${STORAGE ENABLE SWITCH STYLE}       ${STORAGE ENABLE SWITCH}//span[@class='slider round']
+${STORAGE SWITCH ENABLED COLOR}      rgba(58, 145, 30, 1)
+${STORAGE SWITCH DISABLED COLOR}     rgba(185, 199, 206, 1)
+${SERVER ADVANCED DISABLED COLOR}    rgba(195, 207, 213, 1)
+${STORAGE FREE SPACE VALUE}          //td[@title='/recordings/HD Witness Media']//following-sibling::td[2]
 
 # Log settings block
 ${LOG SETTINGS TITLE}               //h4[text()="${LOG SETTINGS TEXT}"]

@@ -291,7 +291,7 @@ Web Admin Test Teardown
     Element Should Be Disabled    ${PORT INPUT}
 
 8. Port field validation
-    [Tags]    C70929    cloud    webadmin
+    [Tags]    C70929    cloud    webadmin     CLOUD-8753
     Verify on Servers Page
     Verify Server Buttons Are Enabled
 
@@ -417,7 +417,7 @@ Web Admin Test Teardown
     
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    Wait Until Element is Visible    ${HM DETAILS PANEL}//table//td[@title="server 1"]
+    Wait Until Element is Visible    //nx-block//h4[@class="panel-title"]
     Execute Command Remotely    docker container stop ${server 2}[id]
 
 14. Offline system 1 server settings

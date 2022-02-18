@@ -136,7 +136,9 @@ Server Advanced Settings Suite Teardown
     Log    Step 1
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    false
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
-    Element Style Should Be    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
+    Capture Element Screenshot    ${STORAGE ENABLE SWITCH STYLE}
+    # new color being used only for this line below - with your eyes the difference is not discernable
+    Element Style Should Be    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${SERVER ADVANCED DISABLED COLOR}
     Click Button     ${STORAGE CANCEL BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Element Style Should Be   ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH ENABLED COLOR}
@@ -147,6 +149,7 @@ Server Advanced Settings Suite Teardown
     Wait Until Element Is Visible    ${ADVANCED SAVE MODAL CLOSE BUTTON}
     Click Button    ${ADVANCED SAVE MODAL CLOSE BUTTON}
     Wait Until Elements Are Not Visible     ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
+    Capture Element Screenshot    ${STORAGE ENABLE SWITCH STYLE}
     Wait Until Element Has Style    ${STORAGE ENABLE SWITCH STYLE}    background-color    ${STORAGE SWITCH DISABLED COLOR}
     Log    Step 3
     Set Checkbox Value   ${STORAGE ENABLE SWITCH}    true
