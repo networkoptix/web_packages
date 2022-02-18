@@ -41,22 +41,6 @@ export class NxKnowledgebaseService {
         this.CONFIG = configService.getConfig();
         this.accountService.get().then(account => {
             this.account = account;
-
-            this.accountService.accountSubject.subscribe(account => {
-                if (account !== this.account) {
-                    this.account = account;
-                    this.menuSubject.next(undefined);
-                    const url = this.router.url;
-                    this.router
-                        .navigateByUrl('/', { skipLocationChange: true })
-                        .then(_ => {
-                            this.router.navigateByUrl(
-                                url,
-                                { skipLocationChange: true }
-                            );
-                        });
-                }
-            });
         });
     }
 
