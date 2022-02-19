@@ -70,27 +70,28 @@
     --switch-circle-color         : #{$red_d1};
     --switch-circle-disable-color : #{$light12};
     
-    --left-menu-border-color      : transparent;
-    --left-menu-l1-bg             : var(--additional_light2);
-    --left-menu-l1-bg-hover       : var(--additional_light3);
-    --left-menu-l1-bg-active      : #{$light5};
-    --left-menu-l1-color          : #{$dark9};
-    --left-menu-l1-selected-bg    : var(--light5);
+    --left-menu-border-color         : transparent;
+    --left-menu-l1-bg                : transparent;
+    --left-menu-l1-bg-hover          : #{$additional_light3};
+    --left-menu-l1-bg-active         : #{$light5};
+    --left-menu-l1-color             : #{$dark9};
+    --left-menu-l1-selected-bg       : #{$light5};
     --left-menu-l1-selected-hover-bg : #{$light6};
-    --left-menu-l3-scroll         : var(--light5);
-    --left-menu-l3-shadow         : transparent;
-    --left-menu-l3-bg             : var(--light5);
-    --left-menu-l3-color          : #{$dark9};
-    --left-menu-l3-hover-bg       : #{$light6};
-    --left-menu-l3-hover-color    : #{$dark9};
-    --left-menu-l3-opacity        : 1;
-    --left-menu-l3-selected-bg    : var(--light16);
-    --left-menu-l3-selected-color : var(--light1);
+    --left-menu-l3-scroll            : #{$light5};
+    --left-menu-l3-shadow            : transparent;
+    --left-menu-l3-bg                : #{$light5};
+    --left-menu-l3-color             : #{$dark9};
+    --left-menu-l3-additional-color  : #{$light16};
+    --left-menu-l3-hover-bg          : #{$light6};
+    --left-menu-l3-hover-color       : #{$dark9};
+    --left-menu-l3-opacity           : 1;
+    --left-menu-l3-selected-bg       : #{$light16};
+    --left-menu-l3-selected-color    : #{$light1};
     
     --btn-close-hover-bg  : #{$additional_light2};
-    --btn-close-hover-color : #A5B7C0; //light10;
+    --btn-close-hover-color : #{$light10};
     --btn-close-active-bg : #{$additional_light3};
-    --btn-close-active-color : #5F7F8F; //$light17;
+    --btn-close-active-color : #{$light17};
     
     --btn-text-color        : #{$light16};
     --btn-text-hover-color  : #{$dark15};
@@ -191,22 +192,23 @@
     --system-tile-nav-link-active-border-color : #{$light6};
     // *****************
     
-    --card-header-bg : var(--additional_light1);
-    --card-header-text : var(--dark9);
-    --card-body-bg : var(--light1);
+    --card-header-bg : #{$additional_light1};
+    --card-header-text : #{$dark9};
+    --card-body-bg : #{$light1};
+    --card-simple-msg-color : #{$dark9};
     
-    --input-bg                 : var(--light1);
-    --input-color              : var(--dark9);
-    --input-border-color       : var(--light6);
-    --input-error-color        : var(--error);
-    --input-error-border-color : var(--error);
-    --input-hover-color        : var(--dark9);
-    --input-hover-border-color : var(--light8);
-    --input-focus-color        : var(--dark9);
-    --input-focus-border-color : var(--brand-core);
-    --input-active-bg           : var(--light1);
-    --input-active-color        : var(--dark9);
-    --input-active-border-color : var(--light6);
+    --input-bg                 : #{ $light1};
+    --input-color              : #{$dark9};
+    --input-border-color       : #{$light6};
+    --input-error-color        : #{$error};
+    --input-error-border-color : #{$error};
+    --input-hover-color        : #{$dark9};
+    --input-hover-border-color : #{$light8};
+    --input-focus-color        : #{$dark9};
+    --input-focus-border-color : #{$brand-core};
+    --input-active-bg           : #{$light1};
+    --input-active-color        : #{$dark9};
+    --input-active-border-color : #{$light6};
     
     --input-numeric-arrow-bg : #{$light1};
     --input-numeric-arrow-color : #{$dark9};

@@ -151,7 +151,8 @@
     }
 
     &.simple-error {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
+        color : var(--card-simple-msg-color);
         background-color : rgba($red_l2, .1);
         border           : 1px solid rgba($red_l2, .3);
         margin-bottom    : 8px;
@@ -172,7 +173,8 @@
     }
 
     &.simple-warning {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
+        color : var(--card-simple-msg-color);
         background-color : rgba($yellow_main, .1);
         border           : 1px solid rgba($yellow_main, .3);
         margin-bottom    : 8px;
@@ -193,7 +195,8 @@
     }
 
     &.simple-info {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
+        color : var(--card-simple-msg-color);
         background-color : rgba(var(--brand-core--rgb), .1);
         border           : 1px solid rgba(var(--brand-core--rgb), .3);
         margin-bottom    : 8px;

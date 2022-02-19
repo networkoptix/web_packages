@@ -71,22 +71,23 @@ html[data-theme="dark"] {
     --switch-circle-disable-color : #263137; //$dark8;
     
     
-    --left-menu-border-color      : #2B383F; //$dark9;
-    --left-menu-l1-bg             : #1C2327; //$dark6;
-    --left-menu-l1-bg-hover       : #3A4D57; //$dark11;
-    --left-menu-l1-bg-active      : #2B383F; //$dark9;
-    --left-menu-l1-color          : #E1E7EA; //$light4;
-    --left-menu-l1-selected-bg    : #1C2327; //$dark6;
+    --left-menu-border-color         : transparent;
+    --left-menu-l1-bg                : transparent;
+    --left-menu-l1-bg-hover          : #3A4D57; //$dark11;
+    --left-menu-l1-bg-active         : #2B383F; //$dark9;
+    --left-menu-l1-color             : #E1E7EA; //$light4;
+    --left-menu-l1-selected-bg       : #1C2327; //$dark6;
     --left-menu-l1-selected-hover-bg : #2B383F; //$dark9;
-    --left-menu-l3-scroll         : #1C2327; //$dark6;
-    --left-menu-l3-shadow         : transparent;
-    --left-menu-l3-bg             : #1C2327; //$dark6;
-    --left-menu-l3-color          : #E1E7EA; //$light4;
-    --left-menu-l3-hover-bg       : #A5B7C0; //light10;
-    --left-menu-l3-hover-color    : #080707; //$dark2
-    --left-menu-l3-opacity        : 0.6;
-    --left-menu-l3-selected-bg    : #35464F; //$light16;
-    --left-menu-l3-selected-color : #F5F7F8; //$light2;
+    --left-menu-l3-scroll            : #1C2327; //$dark6;
+    --left-menu-l3-shadow            : transparent;
+    --left-menu-l3-bg                : #1C2327; //$dark6;
+    --left-menu-l3-color             : #E1E7EA; //$light4;
+    --left-menu-l3-additional-color  : #E1E7EA; //$light4;
+    --left-menu-l3-hover-bg          : #A5B7C0; //light10;
+    --left-menu-l3-hover-color       : #080707; //$dark2
+    --left-menu-l3-opacity           : 1;
+    --left-menu-l3-selected-bg       : #35464F; //$light16;
+    --left-menu-l3-selected-color    : #F5F7F8; //$light2;
     
     --btn-close-hover-bg : #2B383F; //$dark9;
     --btn-close-hover-color : #A5B7C0; //light10;
@@ -195,6 +196,7 @@ html[data-theme="dark"] {
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;
+    --card-simple-msg-color : #E1E7EA; //$light4;
     
     --input-bg                 : #121517; //$dark4;
     --input-color              : #A5B7C0; //$light10;

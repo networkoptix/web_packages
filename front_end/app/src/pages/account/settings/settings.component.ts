@@ -7,7 +7,6 @@ import {
     OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { LocalStorageService } from 'ngx-webstorage';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';

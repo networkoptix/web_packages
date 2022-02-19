@@ -108,8 +108,10 @@
 
     &.item-disabled {
         @include typography.medium13light13;
+        
         svg .st0 {
-            fill: $light13;
+            fill: $light13 !important;
+            stroke: none !important;
         }
         .menu-level-3-icon {
             background-position: -99px -135px;
@@ -139,7 +141,7 @@
 }
 
 .menu-level-3-additional {
-    color : $light16;
+    color : var(--left-menu-l3-additional-color);
     font-family: $font-family-regular;
 }
 

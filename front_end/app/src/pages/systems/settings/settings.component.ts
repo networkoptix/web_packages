@@ -12,10 +12,10 @@ import {
     NavigationEnd,
     NavigationStart
 } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, Subscription } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -45,7 +45,7 @@ import { setServerIpAndPort } from '@utils/nx';
 
 import { NxSettingsService } from './settings.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',
@@ -84,11 +84,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     show2faRequired = false;
 
     private cancelPrevious$ = new Subject();
+    private connection$ = new Subject()
 
-    private connectionSubscription: Subscription;
-    private menuSectionSubscription: Subscription;
-    private menuSubSectionSubscription: Subscription;
-    private menuSelectedDetailsSubscription: Subscription;
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -221,13 +218,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.menuSectionSubscription = this.menuService
+        this.menuService
             .selectedSectionSubject
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged()
+            )
             .subscribe(selection => {
-                if (this.content.selectedSection === selection) {
-                    return;
-                }
-
                 this.canNavMenu(
                     this.origSelectedSection,
                     'selectedSection',
@@ -235,8 +232,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 );
             });
 
-        this.menuSubSectionSubscription = this.menuService
+        this.menuService
             .selectedSubSectionSubject
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged()
+            )
             .subscribe(selection => {
                 this.canNavMenu(
                     this.origSelectedSubSection,
@@ -245,8 +246,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 );
             });
 
-        this.menuSelectedDetailsSubscription = this.menuService
+        this.menuService
             .selectedDetailsSection
+            .pipe(
+                untilDestroyed(this),
+                distinctUntilChanged()
+            )
             .subscribe(selection => {
                 this.canNavMenu(
                     this.origSelectedDetailSection,
@@ -435,11 +440,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         this.updateMenu();
                                     });
 
-                                if (this.connectionSubscription) {
-                                    this.connectionSubscription.unsubscribe();
-                                }
-                                this.connectionSubscription = this.system.connectionSubject
-                                    .pipe(filter((connectionLost: boolean) => connectionLost))
+                                this.connection$.next(true);
+                                this.system.connectionSubject
+                                    .pipe(
+                                        takeUntil(this.connection$),
+                                        filter((connectionLost: boolean) => connectionLost))
                                     .subscribe(_ => {
                                         this.connectionLost();
                                     });
