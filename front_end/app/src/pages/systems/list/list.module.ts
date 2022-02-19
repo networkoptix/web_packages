@@ -11,7 +11,6 @@ import { NxSystemsListComponent } from '@components/systems-list/list.component'
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { NxSystemGroupsListComponent } from './list.component';
 
 const appRoutes: Routes = [
     {
@@ -19,16 +18,6 @@ const appRoutes: Routes = [
         component: NxSystemsListComponent,
         canActivate: [AuthGuard],
     },
-    {
-        path: 'groups',
-        component: NxSystemGroupsListComponent,
-        canActivate: [AuthGuard],
-    },
-    {
-        path: 'groups/:groupId',
-        component: NxSystemGroupsListComponent,
-        canActivate: [AuthGuard],
-    }
 ];
 
 @NgModule({
@@ -47,13 +36,11 @@ const appRoutes: Routes = [
     providers: [
     ],
     declarations: [
-        NxSystemGroupsListComponent
     ],
     bootstrap: [
     ],
     exports: [
         NxSystemsListComponent,
-        NxSystemGroupsListComponent
     ]
 })
 export class NxSystemsListModule {

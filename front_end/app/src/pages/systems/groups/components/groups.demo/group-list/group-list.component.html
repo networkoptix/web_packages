@@ -1,0 +1,8 @@
+<div
+  class="group-item"
+  *ngFor="let group of groups"
+>
+  <em>id: {{ group.id }} </em>
+  <input [value]="group.name" (change)="requestNameChange(group.id, $event)" placeholder="group name">
+  <input [value]="group.parentId"  (change)="requestParentIdChange(group.id, $event)" placeholder="parent id">
+</div>

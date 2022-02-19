@@ -1,0 +1,7 @@
+<h1>{{ (group$ | async)?.name }}</h1>
+
+<h2 *ngIf="(group$ | async)?.children?.length">Child Groups:</h2>
+<a *ngFor="let g of (group$ | async).children" [routerLink]="'/systems/groups/' + g.id">{{ g.name }}</a>
+
+<h2 *ngIf="(group$ | async)?.systems?.length">Systems:</h2>
+<a *ngFor="let s of (group$ | async).systems" [routerLink]="'/systems/' + s.id">{{ s.name }}</a>

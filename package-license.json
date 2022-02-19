@@ -10951,6 +10951,13 @@
             "path": "cloud_portal/front_end/node_modules/@ngneat/until-destroy",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngneat/until-destroy/README.md"
         },
+        "@ngrx/store@10.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ngrx/platform",
+            "publisher": "NgRx",
+            "path": "cloud_portal/front_end/node_modules/@ngrx/store",
+            "licenseFile": "cloud_portal/front_end/node_modules/@ngrx/store/README.md"
+        },
         "@ngtools/webpack@10.2.0": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",

@@ -1,0 +1,8 @@
+<div class="wrapper">
+    <aside>
+        <nx-system-group-tree [groups]="groupForest$ | async"></nx-system-group-tree>
+    </aside>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

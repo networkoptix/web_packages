@@ -27,6 +27,7 @@ import {
 import { FormElementsComponent } from './form-elements/form-elements.component';
 import { MasonryGridComponent } from './masonry-grid/masonry-grid.component';
 import { MultiSelectComponent } from './multi-select/multi-select.component';
+import { NgrxDemoModule } from './ngrx-demo/ngrx-demo.module';
 import { NxSandboxComponent } from './sandbox.component';
 import { SearchComponent } from './search/search.component';
 import {
@@ -80,7 +81,12 @@ const appRoutes: Routes = [
             }, {
                 path: 'tags',
                 component: TagsComponent,
-            }, {
+            },
+            {
+                path: 'ngrx-demo',
+                loadChildren: () => import('./ngrx-demo/ngrx-demo.module').then(m => m.NgrxDemoModule)
+            },
+            {
                 path: 'websocket',
                 component: WebsocketComponent
             }
@@ -101,7 +107,8 @@ const appRoutes: Routes = [
         NxGridLayoutModule,
         VmsClientModule,
         ReactiveFormsModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        NgrxDemoModule,
     ],
     providers: [
     ],

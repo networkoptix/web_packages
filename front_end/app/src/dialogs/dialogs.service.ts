@@ -51,6 +51,7 @@ import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
+import { SystemGroupSettingsModalContent }  from './system-group-settings/system-group-settings.component';
 import { NxToastService } from './toast.service';
 import {
     TransferOwnershipModalContent
@@ -634,5 +635,11 @@ export class NxDialogsService {
         const config: IParams = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(CreateSystemGroupModalContent, dialogConfig).afterClosed();
+    }
+
+    public systemGroupSettings() {
+        const config: IParams = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(SystemGroupSettingsModalContent, dialogConfig).afterClosed();
     }
 }

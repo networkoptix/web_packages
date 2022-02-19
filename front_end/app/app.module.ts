@@ -21,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { InputTrimModule } from 'ng2-trim-directive';
 import { CookieService } from 'ngx-cookie-service';
@@ -59,6 +60,7 @@ import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { AppComponent } from './app.component';
+import { systemsReducer } from './src/store/systems/systems.reducer';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -71,6 +73,9 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     imports: [
         CommonModule,
         BrowserModule,
+
+        StoreModule.forRoot({ systems: systemsReducer }),
+
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
@@ -107,7 +112,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             enabled: environment.production && !environment.isLocal,
             registrationStrategy: 'registerImmediately'
         }),
-        CdkScrollableModule
+        CdkScrollableModule,
     ],
     providers: [
         Location,

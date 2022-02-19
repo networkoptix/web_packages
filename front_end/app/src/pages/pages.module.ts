@@ -67,6 +67,16 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./systems/list/list.module').then(m => m.NxSystemsListModule)
     },
     {
+        path: 'systems/groups',
+        loadChildren: () => import('./systems/groups/groups.module').then(m => m.NxSystemGroupsModule),
+        // canActivate: [AuthGuard],
+        // uncomment to enable the feature flag:
+        // canLoad: [FeatureGuard],
+        // data: {
+        //     flags: FeatureFlagStrings.systemGroups
+        // },
+    },
+    {
         path: 'sandbox',
         loadChildren: () => import('./sandbox/sandbox.module').then(m => m.SandboxModule)
     },

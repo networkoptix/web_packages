@@ -1,0 +1,11 @@
+<div *ngFor="let group of groups" class="system-group">
+    <div class="system-group-card">
+        <h2 class="system-group-name"><a [routerLink]="'/systems/groups/' + group.id">{{ group.name }}</a></h2>
+        <div class="subgroups" *ngIf="group.children.length">Subgroups: {{ group.children.length }}</div>
+        <div class="systems" *ngIf="group.systems.length">Systems: {{ group.systems.length }}</div>
+    </div>
+    <nav *ngIf="group.systems.length">
+        <a *ngFor="let system of group.systems" [routerLink]="'/systems/' + system.id">{{ system.id }}</a>
+    </nav>
+    <nx-system-group-tree *ngIf="group.children.length" [groups]="group.children"></nx-system-group-tree>
+</div>

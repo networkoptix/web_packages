@@ -174,6 +174,7 @@ const FeatureFlagKeys = [
     'kbInstantSearch',
     'dashboard',
     'archiveSelection',
+    'systemGroups',
     'readonlyAPIs',
     'dashboardRedirect',
     'cloudOwnershipTransfer',

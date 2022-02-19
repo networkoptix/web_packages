@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
 import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
@@ -8,6 +9,8 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+
+import * as SystemsActions from '../store/systems/systems.actions';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -48,16 +51,24 @@ export class NxSystemsService implements OnDestroy {
         private storageService: NxStorageService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
-        private uriService: NxUriService
+        private uriService: NxUriService,
+        private store: Store<{ systems: Array<NxSystemWithUserInfo> }>
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
+        this._registerStoreConnection();
         if (!environment.isLocal) {
             this.systemsPoll = pollService.createPoll(() => this._getSystems(), this.CONFIG.updateInterval);
         } else {
             this.systemsSubject.next([]);
         }
         this.mergingSystems = new Set();
+    }
+
+    protected _registerStoreConnection() {
+        this.systemsSubject.subscribe((ss: Array<NxSystemWithUserInfo>) => {
+            this.store.dispatch(SystemsActions.set({ systems: ss }));
+        });
     }
 
     get isPolling() {
