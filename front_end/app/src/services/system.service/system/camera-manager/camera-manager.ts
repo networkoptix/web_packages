@@ -51,6 +51,7 @@ export class CameraManager {
                     [serverTimes, cameras] = response;
                 });
         }
+        const camerasHealth = (await this.serverManager.mediaserver.getHealthValues().toPromise())?.reply?.cameras || {};
         const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
             const backupType = deprecatedBackupType || (<any>camera).backupQuality;
             const server = serverTimes.find(({ serverId }) => serverId === parentId);
@@ -127,7 +128,8 @@ export class CameraManager {
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
+            const deviceType = camerasHealth[id.replace(/{|}/g, '')]?.info?.type || 'Camera';
+            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
         });
         this.cameras = mappedCameras;
         return mappedCameras;
