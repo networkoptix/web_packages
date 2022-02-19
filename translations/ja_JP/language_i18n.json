@@ -419,6 +419,7 @@
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only to the cameras selected for public use, and assigned only the minimum required viewing permissions. This \"Public User\" should not have system-wide access of any kind.": "このユーザーの認証情報が公開されます！公開用に選択されたカメラにのみアクセスできるカスタムの「パブリックユーザー」ロールを作成し、最小限必要な表示権限のみを割り当てる必要があります。この「パブリックユーザー」は、システム全体のいかなる種類のアクセスも持つべきではありません。",
     "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.": "サーバーはこのシステムから切り離され、新しいシステムに追加されます。データベース、ローカルユーザー、設定、録画データはそのまま残ります。",
     "The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.": "このシステムは古い API バージョンを使用します。システムを新しいバージョンにアップデートし、新しい機能にアクセスすることをお勧めします。",
+    "Themes": "Themes",
     "This account will get owner access level": "このアカウントはオーナー権限を取得します。",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "このデバイスはいくつかの分析イベントをサポートすることが報告されていますが、正確な情報はありません。",
     "This feature is not available on mobile devices.": "この機能はモバイルデバイスでは使用できません。",

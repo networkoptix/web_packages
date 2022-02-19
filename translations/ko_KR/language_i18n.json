@@ -419,6 +419,7 @@
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only to the cameras selected for public use, and assigned only the minimum required viewing permissions. This \"Public User\" should not have system-wide access of any kind.": "이 사용자의 인증정보가 노출 될 것입니다! 지정한 공공 카메라들만 접근할 수 있는 사용자지정 공공사용자 역할계정을 만들고 보기만 할 수 있는 가장 촤소한의 권한을 주십시요. 이 \"공공 사용자\" 는 어떠한 시스템 기능을 액세스 하면 안됩니다.",
     "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.": "The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.",
     "The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.": "The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.",
+    "Themes": "Themes",
     "This account will get owner access level": "This account will get owner access level",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "이 기기는 일부 분석 이벤트를 지원하는 것으로보고되었지만 정확한 정보는 없습니다.",
     "This feature is not available on mobile devices.": "This feature is not available on mobile devices.",
