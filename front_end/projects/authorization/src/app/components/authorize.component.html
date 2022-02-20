@@ -33,7 +33,6 @@
             [errorCode]="passwordErrorCode"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-password-component>
-        <!-- (isStayingLoggedIn)="stayingLoggedIn($event)" likely to be removed -->
         <nx-authorize-create-account-component
             *ngSwitchCase="AuthorizeState.create"
             [viewType]="viewType"

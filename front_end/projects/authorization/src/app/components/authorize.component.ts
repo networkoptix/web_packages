@@ -126,7 +126,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginPassword: string;
     passwordErrorCode: string;
     redirectLink: string;
-    // shouldStayLoggedIn: boolean;
 
     // create account
     createProcess: Process;
@@ -579,7 +578,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     login = () => {
-        // should pass in some data to denote whether user should stay logged in or not? (this.shouldStayLoggedIn) likely to be removed
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
@@ -606,10 +604,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     redirect = (route?: string) => {
         this.window.location.href = route || this.initialData.redirect_url || '/';
     }
-
-    // stayingLoggedIn(stayLoggedIn: boolean) {
-    //     this.shouldStayLoggedIn = stayLoggedIn;
-    // }
 
     ngOnDestroy() {}
 }
