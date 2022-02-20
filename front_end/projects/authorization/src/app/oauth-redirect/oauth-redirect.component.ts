@@ -69,7 +69,7 @@ export class NxOAuthRedirectComponent implements OnInit {
             this.route.queryParams.subscribe(async(params: any) => {
                 this.initialData = NxUtilsService.deepCopy(params);
                 this.viewType = this.initialData.view_type || 'desktop';
-                this.state = 'readyToLogin';
+                this.state = 'sendingCode';
             });
         } else {
             this.state = 'noNativeClient';
