@@ -225,7 +225,7 @@ def app_view(request):
 
     if waffle.switch_is_active(SWITCHES.server_side_meta):
         context = get_meta(request)
-        user_agent = request.META['HTTP_USER_AGENT']
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
         open_graph_crawler = re.match(SHARE_CRAWLER_REGEX, user_agent)
 
         if open_graph_crawler:
@@ -239,7 +239,7 @@ def app_view(request):
 
 
 def robots_txt(request):
-    user_agent = request.META['HTTP_USER_AGENT']
+    user_agent = request.META.get('HTTP_USER_AGENT', '')
     open_graph_crawler = re.match(SHARE_CRAWLER_REGEX, user_agent)
     allow = waffle.switch_is_active(
         SWITCHES.server_side_meta) and open_graph_crawler
