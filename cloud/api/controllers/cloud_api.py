@@ -111,14 +111,17 @@ def auto_refresh_token(no_refresh=False):
                 res.raise_for_status()
                 return res
             except requests.exceptions.HTTPError as e:
-                response_data = res.headers.get('content-type') == 'application/json' and res.json()
+                response_data = None
+                if res.headers.get('content-type') == 'application/json':
+                    response_data = res.json()
                 if not refresh_token:
                     if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                         raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                     else:
                         raise e
-                elif no_refresh:
+                elif no_refresh and response_data:
                     raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
+
             try:
                 tokens = Auth.get_refresh_token(refresh_token, ip=ip)
                 access_token = tokens["access_token"]
@@ -140,7 +143,9 @@ def auto_refresh_token(no_refresh=False):
 
             # Handles http error for wrapped request function.
             except requests.exceptions.HTTPError as e:
-                response_data = res.headers.get('content-type') == 'application/json' and res.json()
+                response_data = None
+                if res.headers.get('content-type') == 'application/json':
+                    response_data = res.json()
                 if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                     kill_tokens(request, Auth.delete_token)
                     kill_session(request)
