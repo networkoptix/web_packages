@@ -36,8 +36,8 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import AssetSerializer, ContextManifestSerializer, CustomClientSerializer, ContentManifestSerializer, GenerateCustomClientSerializer, \
-    CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
+from cms.serializers import AssetSerializer, ContextManifestSerializer, CustomClient, CustomClientSerializer, ContentManifestSerializer, \
+    GenerateCustomClientSerializer, CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
 from cms import tasks
 
 from ..controllers.documentation import DOC_CACHE
@@ -1236,6 +1236,8 @@ class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
     waffle_flag = FLAGS.custom_clients
 
     def get_queryset(self):
+        if self.request.user.is_anonymous:
+            return CustomClient.objects.none()
         return self.request.user.customclient_set.filter(created_customization__name=settings.CUSTOMIZATION)
 
     def perform_create(self, serializer):

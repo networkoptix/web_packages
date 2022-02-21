@@ -156,8 +156,7 @@ def login(request):
         raise exception
 
     if email != validate_token['username']:
-        send_login_failed_signal(__name__, email, password, request)
-        raise APIInternalException("Token does not match email.", error_code=ErrorCodes.unknown_error)
+        email = validate_token['username']
 
     try:
         user = models.Account.objects.get(email=email)

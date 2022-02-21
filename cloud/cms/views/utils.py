@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse
@@ -34,7 +35,7 @@ class QASettings(FormView):
     template_name = 'cms/qa_settings.html'
 
     def get_success_url(self):
-        return reverse('qa_settings')
+        return reverse('qa_settings') if settings.DEBUG else reverse('admin:index')
 
     def get_context_data(self, **kwargs):
         return {
