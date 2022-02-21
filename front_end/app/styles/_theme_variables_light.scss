@@ -50,6 +50,7 @@
     --auth-pill-bg : var(--light3);
     
     --border-color         : var(--light4);
+    --border-hover-color   : var(--light8);
     --horizontal-sep-color : var(--light6);
     --label-color          : var(--dark9);
     
@@ -170,7 +171,7 @@
     
     --dropdown-menu-border : none;
     --dropdown-menu-top-border : none;
-    --dropdown-menu-shadow : 0 1rem 2rem 0 transparentize(#{$dark15}, 0.4);
+    --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light10};
     --dropdown-menu-bg : #{$additional_light1};
     --drop-menu-systems-bg : #{$additional_light1};
     --drop-menu-navigation-bg : #{$light1};
@@ -192,6 +193,11 @@
     --system-tile-nav-link-active-border-color : #{$light6};
     // *****************
     
+    --tabset-bg : #{$light1};
+    --tabset-hover-bg : #{$light3};
+    --tabset-color : #{$dark12};
+    
+    --card-shadow: 0 2px 5px 0 #{$light8};
     --card-header-bg : #{$additional_light1};
     --card-header-text : #{$dark9};
     --card-body-bg : #{$light1};

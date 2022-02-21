@@ -176,7 +176,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngAfterViewInit() {
-        this.setPopoverTargets();
+        setTimeout(() => { this.setPopoverTargets(); });
     }
 
     showPopoverWithTemplate(template: TemplateRef<any>, target: any): void {

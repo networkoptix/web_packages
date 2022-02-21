@@ -50,8 +50,9 @@ html[data-theme="dark"] {
     --auth-pill-bg : #3A4D57; //$dark11;
     
     --border-color         : #35464F; //$dark11;
+    --border-hover-color   : #263137; //$dark8;
     --horizontal-sep-color : #49626F; //$dark15;
-    --label-color : #A5B7C0; //light10;
+    --label-color          : #A5B7C0; //light10;
     
     --placehoder-cloud-color : #117297; //$brand_d3
     --placehoder-cloud-opacity : 1;
@@ -171,7 +172,7 @@ html[data-theme="dark"] {
     
     --dropdown-menu-border : 1px solid #263137; //$dark8;
     --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
-    --dropdown-menu-shadow : 0px 7px 8px rgba(#000000, 0.2), 0px 5px 22px rgba(#000000, 0.12), 0px 12px 17px rgba(#000000, 0.14);
+    --dropdown-menu-shadow : 0 1rem 2rem 0 #1C2327; //$dark6;
     --dropdown-menu-bg : #121517; //dark4;
     --drop-menu-systems-bg    : #212A2F; //$dark7;
     --drop-menu-navigation-bg : #263137; //$dark8
@@ -193,6 +194,11 @@ html[data-theme="dark"] {
     --system-tile-nav-link-active-border-color : #35464F; //$dark11;
     // *****************
     
+    --tabset-bg : #0D0E0F; //$dark3;
+    --tabset-hover-bg : #1C2327; //$dark6;
+    --tabset-color : #A5B7C0; //$light10;
+    
+    --card-shadow : 0 2px 5px 0 #263137; //$dark8;
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;

@@ -54,7 +54,7 @@
         margin-bottom : 10px;
 
         &:hover {
-            box-shadow : 0 2px 5px 0 transparentize($dark15, 0.8);
+            box-shadow : var(--card-shadow);
         }
     }
 
