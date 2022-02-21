@@ -727,6 +727,13 @@ export class MergeModalContent {
             throw Error(this.unknownBothSystemsConnectedToCloud);
         }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
+            if (!this.targetSystem.id) {
+                const secondarySystem = await this.system.getServerInfo(this.serverUrl).toPromise();
+                if (secondarySystem?.id) {
+                    this.targetSystem = secondarySystem;
+                    this.setSystems();
+                }
+            }
             return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true).toPromise()
                 .then(res => {
                     if (res.error && res.error !== '0') {
@@ -1006,8 +1013,8 @@ export class MergeModalContent {
     }
 
     getSecondaryName() {
-        let name: string = this.secondarySystem.systemName || this.secondarySystem.name ||
-            this.secondarySystem?.info.systemName || this.secondarySystem?.info.name;
+        let name: string = this.secondarySystem.name || this.secondarySystem.systemName ||
+            this.secondarySystem?.info.name || this.secondarySystem?.info.systemName;
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {
             name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
         }

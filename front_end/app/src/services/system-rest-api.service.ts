@@ -525,6 +525,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    getServerInfo(remoteEndpoint: string) {
+        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
+        return this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
+    }
+
     mergeSystems(
         remoteEndpoint: string,
         remoteServerId: string,

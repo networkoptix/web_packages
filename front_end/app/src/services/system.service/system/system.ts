@@ -441,6 +441,10 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
+    getServerInfo(remoteEndpoint: string) {
+        return this.mediaserver.getServerInfo(remoteEndpoint);
+    }
+
     mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
         return this.mediaserver.mergeSystems(url, targetSystemId, dryRun, currentPassword, takeRemoteSettings);
     }
