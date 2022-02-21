@@ -172,7 +172,9 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngAfterViewInit() {
-        this.setPopoverTargets();
+        // popover targets are in ngIf blocks and need to be "translated" first
+        // ... we need to wait before set them
+        setTimeout(() => { this.setPopoverTargets(); });
     }
 
     showPopoverWithTemplate(template: TemplateRef<any>, target: any): void {
