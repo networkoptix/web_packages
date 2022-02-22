@@ -32,17 +32,20 @@ Restart
     Common Restart Logout    ${url}
     Reset to Default Storage Config
 
+Test Setup
+    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
+    ${disabled disks} =    Convert Disk String to List      ${disabled}
+    ${backup disks} =    Convert Disk String to List      ${backups}
+    Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
+    Log in to user and system    ${email}     ${system}
+    Go to Servers
+
 *** Test Cases ***
 1. Disabling storage warnings aren't shown - Main storages
     [Tags]    C81570    mode
+    [Setup]     Test Setup      disk3    disk1
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
     ${files disk0} =    Verify Recorded Video Files    disk0
 
@@ -82,14 +85,9 @@ Restart
 
 2. Disabling storage warnings aren't shown - Backup storages
     [Tags]    C81571    mode
+    [Setup]     Test Setup      disk3    disk1 disk2
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2    disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}   ${disabled}    ${backups}
-
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
     ${files disk0} =    Verify Recorded Video Files    disk0
 
@@ -129,13 +127,8 @@ Restart
 
 3. Change storage mode: Main -> Backup
     [Tags]    C81541    mode
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
+    [Setup]     Test Setup      disk3    disk2
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
@@ -197,9 +190,8 @@ Restart
 
 4. Change storage mode: Backup -> Main
     [Tags]    C81542    mode
+    [Setup]     Test Setup      config storage=${False}
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
 
     Log    Step 2
@@ -267,9 +259,8 @@ Restart
 
 5. Enable storage: Not in use -> Main
     [Tags]    C81543    mode
+    [Setup]     Test Setup      config storage=${False}
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
     ${files disk2} =    Verify Recorded Video Files    disk2
     
@@ -305,13 +296,14 @@ Restart
 
 6. Enable storage: Not in use -> Backup
     [Tags]    C81544    mode    archive
+    [Setup]     Test Setup      disk1 disk2 disk3
     Skip If Image Is    4.3_test    5.0_test
-    @{disabled} =    Create List    disk1    disk2    disk3
-    @{backups} =    Create List
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
+#    @{disabled} =    Create List    disk1    disk2    disk3
+#    @{backups} =    Create List
+#    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go To Servers
+#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+#    Go To Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
 
     Log    Step 2
@@ -394,13 +386,8 @@ Restart
 
 7. Disable storage: Main -> Not in use
     [Tags]    C81545    mode
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-
+    [Setup]     Test Setup      disk3    disk2
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
@@ -447,9 +434,10 @@ Restart
 
 8. Disable storage: Backup -> Not in use
     [Tags]    C81546    mode    archive
+    [Setup]     Test Setup      config storage=${False}
     Skip If Image Is    4.3_test    5.0_test
-    Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+#    Log    Step 1
+#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
@@ -499,9 +487,10 @@ Restart
 
 9. Changing mode state - reload page
     [Tags]    C81558    mode
+    [Setup]     Test Setup      config storage=${False}
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+#    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
 
     Log    Step 2
@@ -528,13 +517,14 @@ Restart
 
 10. Disabling storage warnings - Main storages
     [Tags]    C81562    mode
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List     disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
+    [Setup]     Test Setup      disk3    disk2
+#    @{disabled} =    Create List    disk3
+#    @{backups} =    Create List     disk2
+#    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
 
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+#    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
     Log    Step 2
@@ -581,10 +571,11 @@ Restart
 
 11. Disabling storage warnings - Backup storages
     [Tags]    C81564    mode    archive
+    [Setup]     Test Setup      config storage=${False}
     Skip If Image Is    4.3_test    5.0_test
     Log    Step 1
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+#    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
+#    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
     Wait Until Element Is Visible    ${ARCHIVE BACKUP CHECK BOX}
     ${status} =    Run Keyword And Return Status     Page Should Not Contain Element    ${ARCHIVE BACKUP STREAMS MSG}
