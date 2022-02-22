@@ -5,7 +5,6 @@ import {
     forwardRef,
     EventEmitter,
     Output,
-    SimpleChanges,
     ViewChild,
     ElementRef
 } from '@angular/core';
@@ -13,6 +12,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -106,7 +106,7 @@ export class NxGenericDropdown extends BaseDropdown {
         this.onChangeCallback(this._selectedItem);
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxGenericDropdown>) {
         if (changes.items && changes.items.currentValue) {
             this.items.forEach(item => {
                 if (item.help && !item.name.includes(item.help)) {

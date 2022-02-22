@@ -2,7 +2,6 @@ import {
     Component,
     Input,
     OnInit,
-    SimpleChanges,
     ViewEncapsulation,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -14,6 +13,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
  <nx-page-placeholder
@@ -78,7 +78,7 @@ export class NxPagePlaceholderComponent implements OnInit {
         this.setupPlaceholder();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxPagePlaceholderComponent>) {
         if (!changes.data?.firstChange) {
             this.setupPlaceholder();
         }

@@ -4,12 +4,13 @@ import {
     Input,
     OnChanges,
     Output,
-    SimpleChanges,
     TemplateRef
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +28,7 @@ export class NxToast implements OnChanges {
     constructor() {
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxToast>) {
         if (changes.toast.currentValue) {
             this.isTemplate = this.toast.textOrTpl instanceof TemplateRef;
 

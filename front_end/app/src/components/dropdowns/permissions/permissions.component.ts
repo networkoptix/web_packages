@@ -2,7 +2,6 @@ import {
     Component,
     ViewEncapsulation,
     Input,
-    SimpleChanges,
     forwardRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -10,6 +9,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -85,7 +85,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxPermissionsDropdown>) {
         if (changes.roles?.currentValue) {
             this.processAccessRoles();
             const role = this.accessRoles.filter(x =>

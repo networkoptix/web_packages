@@ -5,7 +5,6 @@ import {
     Input,
     OnInit,
     Output,
-    SimpleChanges
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -13,6 +12,8 @@ import {
     NG_VALUE_ACCESSOR,
     Validator
 } from '@angular/forms';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'nx-switch',
@@ -110,7 +111,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
         this.onTouchedCallback = fn;
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxSwitchComponent>): void {
         if (changes.checked) {
             this._value = changes.checked.currentValue;
         }

@@ -2,9 +2,7 @@ import {
     Component,
     ElementRef,
     Input,
-    OnChanges,
     OnInit,
-    SimpleChanges,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -43,7 +41,7 @@ import {
     styleUrls: ['content-block.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxContentBlockComponent implements OnInit, OnChanges {
+export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
     @Input('fixed-height') fixedHeight;
     @Input('hoverable') hoverable;
@@ -73,11 +71,5 @@ export class NxContentBlockComponent implements OnInit, OnChanges {
         this.headerClass = (this.headerClass) ? this.headerClass : '';
 
         this.headerClasses = this.headerStyle + this.headerClass;
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.layout?.currentValue) {
-            this.haveHeader = (changes.layout.currentValue !== '');
-        }
     }
 }

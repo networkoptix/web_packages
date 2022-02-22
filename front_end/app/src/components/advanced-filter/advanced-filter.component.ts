@@ -3,7 +3,6 @@ import {
     EventEmitter,
     Input,
     Output,
-    SimpleChanges
 } from '@angular/core';
 
 import {
@@ -14,6 +13,7 @@ import {
     GroupingOptions,
     SortOptions
 } from '@pages/developer-console/console/edit/console-edit.component.types';
+import { NgChanges } from '@utils/ng-changes';
 
 export enum FilterSort {
     ASC='asc',
@@ -169,7 +169,7 @@ export class NxAdvancedFilterComponent {
         return data;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAdvancedFilterComponent>) {
         if (
             changes.initialState &&
             changes.initialState.previousValue === undefined &&

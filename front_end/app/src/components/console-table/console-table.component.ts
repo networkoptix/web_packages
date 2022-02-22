@@ -4,7 +4,6 @@ import {
     EventEmitter,
     Inject, Input,
     Output,
-    SimpleChanges
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -44,6 +43,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
 @Component({
@@ -98,7 +98,7 @@ export class NxConsoleTableComponent {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
     }
 
-    async ngOnChanges({ sectionParam }: SimpleChanges) {
+    async ngOnChanges({ sectionParam }: NgChanges<NxConsoleTableComponent>) {
         if (sectionParam && (sectionParam.firstChange || sectionParam.currentValue !== sectionParam.previousValue)) {
             this.selectedManifest = null;
             this.displayedColumns = null;

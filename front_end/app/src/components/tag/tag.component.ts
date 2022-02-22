@@ -5,11 +5,11 @@ import {
     Input,
     OnInit,
     Output,
-    SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
  <nx-tag
@@ -69,7 +69,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxTagComponent>) {
         if (changes.selected?.currentValue) {
             setTimeout(() => {
                 if (!changes.selected?.currentValue) {

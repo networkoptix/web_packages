@@ -1,4 +1,6 @@
-import { Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+
+import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
  <nx-right-layout>
@@ -48,7 +50,7 @@ export class NxLayoutRightComponent {
     constructor() {
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxLayoutRightComponent>) {
         if (changes.toggle) {
             this._toggle = changes.toggle.currentValue;
         }

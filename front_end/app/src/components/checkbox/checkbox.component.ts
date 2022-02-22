@@ -6,7 +6,6 @@ import {
     forwardRef,
     OnInit,
     ViewEncapsulation,
-    SimpleChanges,
     OnChanges
 } from '@angular/core';
 import {
@@ -18,6 +17,7 @@ import {
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
+import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
  <nx-checkbox
@@ -107,7 +107,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxCheckboxComponent>): void {
         if (changes.checked) {
             this.value = changes.checked.currentValue;
             this.state = this.cbxStates[this.value];

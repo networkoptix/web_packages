@@ -1,7 +1,6 @@
 import {
     Component,
     Input,
-    SimpleChanges
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
@@ -14,6 +13,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -118,7 +118,7 @@ export class NxDropMenu extends BaseDropdown {
         });
     }
 
-    async ngOnChanges(changes: SimpleChanges) {
+    async ngOnChanges(changes: NgChanges<NxDropMenu>) {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
             // Todo: Fix so that it checks for admin correctly.
             let user: any;

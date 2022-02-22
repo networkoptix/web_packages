@@ -3,7 +3,6 @@ import {
     Input,
     OnChanges,
     OnInit,
-    SimpleChanges
 } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -13,6 +12,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 export enum mainButtonState {
     ALL='all',
@@ -52,7 +52,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
         this.systemCounter = this.systems?.length ?? 0;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxHeaderMainButtonComponent>) {
         this.systemCounter = this.systems?.length ?? 0;
     }
 

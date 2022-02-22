@@ -3,13 +3,13 @@ import {
     ViewEncapsulation,
     Input,
     forwardRef,
-    SimpleChanges
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -40,7 +40,7 @@ import { BaseDropdown } from '../injDropdown';
     ]
 })
 
-export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
+export class NxMultiSelectDropdown<Item extends Object> extends BaseDropdown {
     @Input() id: string;
     @Input('items') itemsOrig: Item[];
     @IBool() @Input() canSelectAll: CoercedBoolInput;
@@ -150,7 +150,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
         this.onChangeCallback(this.innerValue);
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxMultiSelectDropdown<Item>>): void {
         if (changes.itemsOrig) {
             this.items = changes.itemsOrig.currentValue.map(obj => ({ ...obj }));
             this.updateItems();

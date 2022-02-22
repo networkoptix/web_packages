@@ -1,12 +1,12 @@
 import {
     Component,
     Input,
-    SimpleChanges
 } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -51,7 +51,7 @@ export class NxActiveSystemDropdown extends BaseDropdown {
         this.show = false;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxActiveSystemDropdown>) {
         if (changes.activeSystem) {
             if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = { id: '0' }; // Avoid JS timing error (in console)

@@ -7,12 +7,12 @@ import {
     OnChanges,
     OnInit,
     Output,
-    SimpleChanges
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'nx-editable-heading',
@@ -62,7 +62,7 @@ export class NxEditableHeading implements OnInit, OnChanges {
         this.componentId = (this.id || this.name) + '-editable';
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxEditableHeading>) {
         if (changes.nameWatcherValue?.currentValue) {
             this.value = changes.nameWatcherValue.currentValue;
         }

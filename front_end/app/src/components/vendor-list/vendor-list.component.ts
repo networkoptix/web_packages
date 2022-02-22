@@ -6,7 +6,6 @@ import {
     OnDestroy,
     OnInit,
     Renderer2,
-    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -21,6 +20,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
  <nx-vendor-list
@@ -167,7 +167,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxVendorListComponent>) {
         if (changes.vendors) {
             this.allVendors = changes.vendors.currentValue;
             this.setVendorsShown(changes.vendors.currentValue);

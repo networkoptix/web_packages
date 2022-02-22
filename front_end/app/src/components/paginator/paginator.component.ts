@@ -1,10 +1,11 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
 @Component({
@@ -95,7 +96,7 @@ export class NxPaginatorComponent {
             });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxPaginatorComponent>) {
         if (changes.numPages && (changes.numPages.previousValue !== changes.numPages.currentValue)) {
             // TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
             if (this.CONFIG?.featureFlags.paginatorExperimental) {

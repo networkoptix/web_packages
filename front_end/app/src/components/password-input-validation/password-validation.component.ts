@@ -4,13 +4,13 @@ import {
     Input,
     OnChanges,
     Output,
-    SimpleChanges
 } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'nx-password-input-validation',
@@ -39,7 +39,7 @@ export class NxPasswordValidationComponent implements OnChanges {
         this.LANG = languageService.translations;
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxPasswordValidationComponent>): void {
         if (changes.value) {
             this.weak = (
                 this.forElement.errors &&
