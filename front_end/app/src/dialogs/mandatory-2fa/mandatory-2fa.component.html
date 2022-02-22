@@ -10,7 +10,7 @@
 
     <div class="modal-body">
         <p translate>You can enable mandatory two-factor authentication for cloud users only if two-factor authentication is enabled for your account.</p>
-        <p><span translate>Enable it in your</span>&nbsp;<a routerLink="/account/security" (click)="activeModal.close()" translate>account settings</a></p>
+        <p><span translate>Enable it in your</span>&nbsp;<span class="pseudo-anchor" (click)="activeModal.close('GOTO_SECURITY')" translate>account settings</span></p>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" (click)="activeModal.close()" translate>OK</button>

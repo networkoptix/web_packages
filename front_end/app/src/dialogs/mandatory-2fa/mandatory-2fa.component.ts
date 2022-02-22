@@ -95,7 +95,7 @@ export class Mandatory2faModalContent {
             });
     }
 
-    close() {
-        this.activeModal.close();
+    close(msg?: string) {
+        this.activeModal.close(msg);
     }
 }
