@@ -107,6 +107,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         this.templateText = {
             loginToCloud: login,
             loginToWebadmin: login,
+            system2faAuth: login,
             confirmPasswordDisconnect: {
                 header: auth.loginCloudHeader(),
                 subHeader,
