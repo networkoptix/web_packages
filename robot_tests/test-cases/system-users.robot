@@ -537,7 +537,7 @@ Reset
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 18. Share with unregistered user - brings them to registration page with code with correct email locked
-    [Tags]    email    C41889    cloud
+    [Tags]    email    C41889    cloud    CLOUD-8643
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
