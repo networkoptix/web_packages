@@ -376,6 +376,8 @@ export class NxApplyService {
         this.nonSystem$.next(nonSystem);
         this.component = component;
         this.forms = {};
+        this.applyFunction = undefined;
+        this.discardFunction = undefined;
 
         this.createComponent();
         this.applyComponentInstance = this.applyComponentRef.instance;
@@ -630,6 +632,12 @@ export class NxApplyService {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
+        }
+
+        // when using FormWatchers
+        if (!applyFunc && Object.keys(this.forms).length && this.applyComponentInstance) {
+            applyFunc = this.applyComponentInstance.save;
+            discardFunc = this.applyComponentInstance.discard;
         }
 
         const options: any = {
