@@ -35,7 +35,8 @@ import {
     createMenuContent,
     prepareSwaggerAPIDoc,
     removeProprietaryEndpoints,
-    addSeperatedAPI
+    addSeperatedAPI,
+    addAPIInfoNodesToMenu
 } from './api-file-utils';
 import type {
     APIDoc,
@@ -87,10 +88,16 @@ export class NxAPIToolService {
     activeAssetState = ''; // Not used yet
 
     APIInfoStore   : APIInfoStore = {} as APIInfoStore
+    markdownStore  : any  = {}
     APIInfoNodes = {
         api_information: 'API Information',
+        api_changelog: 'API Changelog',
         legacy: 'Legacy API',
         deprecated: 'Deprecated Endpoints'
+    }
+
+    APIInfoLegacyNodes = {
+        api_information_legacy: 'API Information',
     }
 
     loadingFailure$ = new BehaviorSubject(false); // Errors that redirect to a placeholder page.
@@ -187,7 +194,7 @@ export class NxAPIToolService {
     }
 
     isAPIInfoMenuNode = (menuNode: MenuNodeWithParent) => {
-        return !!this.APIInfoNodes[menuNode.name];
+        return !!this.APIInfoNodes[menuNode.name] || !!this.APIInfoLegacyNodes[menuNode.name];
     }
 
     addAPIDescription(apiName: string, responseInfo: APIInfo) {
@@ -404,6 +411,7 @@ export class NxAPIToolService {
                                                 // Success
                                                 const APIDoc = this.selectedServer.apiDocFull;
                                                 const mainAPIContent = createMenuContent(APIDoc);
+                                                await this.getAPIInformation(server.id, mainAPIContent, APIDoc);
                                                 this.APIDropdown.push({
                                                     value: 'api_information',
                                                     name: 'Current Version',
@@ -491,6 +499,7 @@ export class NxAPIToolService {
     makeReadOnlyAPI = () => {
         const APIDoc = this.selectedSystem.json;
         const mainAPIContent = createMenuContent(APIDoc);
+        addAPIInfoNodesToMenu(APIDoc, mainAPIContent, false);
         this.APIDropdown.push({
             value: 'api_information',
             name: 'Current Version',
@@ -587,6 +596,7 @@ export class NxAPIToolService {
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths,  deprecatedAPI.paths);
             const deprecatedMenuContent = createMenuContent(deprecatedAPI);
+            addAPIInfoNodesToMenu(apiDocFull, deprecatedMenuContent, false);
             this.APIDropdown.push({
                 value: 'deprecated',
                 name: 'Deprecated',
@@ -595,5 +605,27 @@ export class NxAPIToolService {
             });
             this.addAPIDescription(APIType, deprecatedAPI.info);
         }
+    }
+
+    async getAPIInformation(serverID: string, mainMenuContent: MenuNodeWithParent[], APIDoc: APIDoc) {
+        let markdownError = false;
+        if (this.isRestAPI(serverID)) {
+            const changeLog = this.system.serverManager.getApiChangelog(serverID).then((api: any) => {
+                this.markdownStore.api_changelog = api;
+            }).catch(() => {
+                markdownError = true;
+            });
+
+            const APIPreamble = this.system.serverManager.getApiPreamble(serverID).then((api: any) => {
+                this.markdownStore.api_information = api;
+            }).catch(() => {
+                markdownError = true;
+            });
+
+            await changeLog;
+            await APIPreamble;
+        }
+
+        addAPIInfoNodesToMenu(APIDoc, mainMenuContent, this.isRestAPI(serverID) && !markdownError);
     }
 }

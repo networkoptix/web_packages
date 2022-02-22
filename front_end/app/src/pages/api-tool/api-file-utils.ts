@@ -1,8 +1,7 @@
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
-
-import type { APIDocVersion } from '../../services/nx-config/base-config';
+import { APIDocVersion } from '@services/nx-config/base-config';
 
 import type { APIDoc, method } from './api-tool-types';
 
@@ -126,7 +125,6 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
  */
 export const createMenuContent = (API: APIDoc) => {
     const menuContent: MenuNodeWithParent[] = [];
-    addAPIInfoNodesToMenu(API, menuContent);
 
     generateMenuNodesFromCategoryTags(API, menuContent);
     generateMenuNodesFromEndpoints(API, menuContent);
@@ -182,8 +180,14 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
     });
 };
 
-const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[]) => {
-    if (API.info && API.info.description) {
-        menuNodes.push(new MenuNode('api_information', appendBaseAPIToolRoute('main'), 'API Information'));
+export const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[], restAPIInfo: boolean) => {
+    if (restAPIInfo) {
+        menuNodes.unshift(new MenuNode('api_changelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'));
+        menuNodes.unshift(new MenuNode('api_information', appendBaseAPIToolRoute('main'), 'API Information'));
+        return;
+    }
+
+    if (API?.info?.description) {
+        menuNodes.unshift(new MenuNode('api_information_legacy', appendBaseAPIToolRoute('main'), 'API Information'));
     }
 };

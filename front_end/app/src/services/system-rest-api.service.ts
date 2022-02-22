@@ -487,6 +487,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get(this.CONFIG.apiDocURL[type]).toPromise();
     }
 
+    getApiChangelog() {
+        return this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }).toPromise();
+    }
+
+    getApiPreamble() {
+        return this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }).toPromise();
+    }
+
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {

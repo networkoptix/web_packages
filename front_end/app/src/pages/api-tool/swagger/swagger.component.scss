@@ -113,6 +113,10 @@
 	}
 }
 
+nx-swagger-markdown + div#swagger-ui {
+	display: none;
+}
+
 .api-info {
 	.information-container.wrapper {
 		li {
@@ -500,7 +504,7 @@
 	height: 100%;
 }
 
-.swagger-ui .opblock-body pre.microlight, .swagger-ui .info.highlight-code pre {
+.swagger-ui .opblock-body pre.microlight, .swagger-container pre {
 	@extend .code-block-common;
 	background      : $light2 !important;
 	border	        : 1px solid $light4;
@@ -576,7 +580,11 @@
 	}
 }
 
-.swagger-ui .highlight-code {
+.swagger-container .highlight-code {
+	position: relative;
+}
+
+.swagger-container .with-line-counter {
 	width: 100% !important;
 }
 
@@ -587,10 +595,7 @@
 	}
 }
 
-.swagger-ui .highlight-code > .microlight {
-	min-height: 50px;
-}
-.swagger-ui .request-url.highlight-code >.microlight {
+.swagger-container .highlight-code > .microlight {
 	min-height: 32px;
 }
 
@@ -742,12 +747,16 @@
 	background-color: $light3;
 }
 
-.swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	@include typography.medium14dark10;
-	padding       : 4px 16px;
-	text-align    : left;
-	font-weight	  : 500;
-	max-width	  : 451px;
+.swagger-container table thead tr {
+	th, td {
+		@include typography.medium14dark10;
+		padding       : 6px 8px 6px 24px;
+		text-align    : left;
+		font-weight	  : 500;
+		max-width	  : 451px;
+		text-align    : initial;
+	    border-bottom : initial;
+	}
 }
 
 .swagger-ui table thead {
@@ -755,14 +764,20 @@
 	@include typography.medium13dark10;
 }
 
-.swagger-ui table:not(.model) tbody tr td {
+.swagger-container table:not(.model) tbody tr td {
 	@include typography.regular14dark9;
-	padding        : 8px 16px !important;
+	padding        : 14px 8px 14px 24px;
 	vertical-align : top;
 	border         : 1px solid $light3;
+	height         : 100px;
 	&.response-col_status{
 		text-transform: uppercase;
 		@include typography.medium13dark10;
+	}
+}
+.swagger-container table.parameters {
+	tbody tr td {
+		padding: 12px 8px 18px 24px;
 	}
 }
 
@@ -804,11 +819,6 @@
 	min-width : 6em;
 }
 
-.swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	text-align    : initial;
-	border-bottom : initial;
-}
-
 .swagger-ui .opblock-body {
 	table:not(.model) {
 		thead{ 
@@ -832,7 +842,7 @@
    color: $green_main;
 }
 
-.swagger-ui .opblock-body table.parameters {
+.swagger-ui .opblock-body table.parameters, nx-swagger-markdown .changes-table table {
 	thead{ 
 		display: table-header-group !important;
 		background-color: $additional_light1;
@@ -840,10 +850,12 @@
 			border-right: 1px solid $light3;
 		}
 	}
-	tbody tr:nth-child(even) {
-		background-color: $additional_light1;
-	}
 }
+
+.swagger-ui .opblock-body table.parameters tbody tr:nth-child(even) {
+		background-color: $additional_light1;
+}
+
 .swagger-ui .opblock-body table:not(.parameters, .live-responses-table):not(.model) td {
 	height         : 48px;
 	vertical-align : middle;
@@ -902,10 +914,18 @@
 .code-block-common {
 	border-radius: 2px;
 	font-size: rem(12px) !important;
-	font-weight: 400 !important;
+	font-weight: 400;
 	line-height: 1.23 !important;
 	letter-spacing: normal;
 	font-family: robotomonoregular, monospace !important;
+}
+
+.swagger-container strong code {
+	font-weight: 700 !important;
+	font-family: robotomonobold, monospace !important;
+}
+.swagger-container del code {
+	text-decoration: line-through;
 }
 
 .swagger-ui .markdown code {
@@ -915,13 +935,13 @@
 	font-family   : robotomonoregular, monospace !important;
 }
 
-.swagger-ui .code, .swagger-ui code {
+.swagger-container .code, .swagger-container code {
 	font-family: robotomonoregular, monospace;
 	font-size: rem(13px);
 	line-height: 1.23;
 }
 
-.swagger-ui .renderedMarkdown code {
+.swagger-ui .renderedMarkdown code, nx-swagger-markdown code:not(.changes-table) {
 	@extend .code-block-common;
 	padding: 2px;
 	display: inline-block;
