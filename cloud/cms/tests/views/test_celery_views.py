@@ -48,6 +48,6 @@ def test_download_result(mocker, arf, account_factory, db):
         'file_name': file_name, 'file': file_content}
     res = download_result(mock_request, mock_task_id)
     assert res.status_code == status.HTTP_200_OK
-    assert res.data.content == file_content.encode()
-    res_file_name = res.data.cookies['filename'].value
+    assert res.content == file_content.encode()
+    res_file_name = res.cookies['filename'].value
     assert res_file_name == file_name
