@@ -18,6 +18,11 @@
     --h6 : #{$dark9};
     --h7 : #{$dark9};
     
+    --svg-path-light-color: #{$light4};
+    --svg-path-dark-color: #{$dark9};
+    
+    --text-placeholder-color : #{$light16};
+    
     --scrollbar-color                   : var(--light16);
     --scrollbar-thumb-bg                : var(--light10);
     --scrollbar-thumb-border-color      : var(--additional_light1);
@@ -43,16 +48,16 @@
     --checkbox-active-check-color : #{$brand_core};
     --checkbox-active-hover-color : #{$dark1};
     
-    --auth-header-bg: var(--additional_light1);
-    --auth-header-color : var(--dark9);
-    --auth-subheader-color : var(--dark9);
-    --auth-body-bg: var(--light1);
-    --auth-pill-bg : var(--light3);
+    --auth-header-bg       : #{$additional_light1};
+    --auth-header-color    : #{$dark9};
+    --auth-subheader-color : #{$dark9};
+    --auth-body-bg         : #{$light1};
+    --auth-pill-bg         : #{$light3};
     
-    --border-color         : var(--light4);
-    --border-hover-color   : var(--light8);
-    --horizontal-sep-color : var(--light6);
-    --label-color          : var(--dark9);
+    --border-color         : #{$light4};
+    --border-hover-color   : #{$light8};
+    --horizontal-sep-color : #{$light6};
+    --label-color          : #{$dark9};
     
     --placehoder-cloud-color   : #{$brand_core};
     --placehoder-cloud-opacity : .1;
@@ -88,6 +93,27 @@
     --left-menu-l3-opacity           : 1;
     --left-menu-l3-selected-bg       : #{$light16};
     --left-menu-l3-selected-color    : #{$light1};
+    
+    // View tab ********************************
+    --view-bg                    : #{$additional_light2};
+    --view-search-bg             : #{$additional_light2};
+    --view-search-color          : #{$dark9};
+    --view-search-hover-bg       : #{$light2};
+    --view-search-hover-color    : #{$dark9};
+    --view-search-active-bg      : #{$light1};
+    --view-search-active-color   : #{$dark9};
+    
+    --control-color              : #{$light4};
+    --control-enabled-color      : #{$light16};
+    --control-hoved-bg           : #{$additional_light3};
+    --control-active-bg          : #{$light5};
+    
+    --left-menu-view-hover-bg    : #{$additional_light3};
+    --left-menu-view-selected-bg : #{$light5};
+    // end View tab ****************************
+    
+    --paginator-active-bg : #{$light16};
+    --paginator-active-color : #{$light1};
     
     --btn-close-hover-bg  : #{$additional_light2};
     --btn-close-hover-color : #{$light10};
@@ -203,7 +229,7 @@
     --card-body-bg : #{$light1};
     --card-simple-msg-color : #{$dark9};
     
-    --input-bg                 : #{ $light1};
+    --input-bg                 : #{$light1};
     --input-color              : #{$dark9};
     --input-border-color       : #{$light6};
     --input-error-color        : #{$error};

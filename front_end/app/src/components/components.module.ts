@@ -37,8 +37,6 @@ import { NxApplyComponent } from './apply/apply.component';
 import { NxCarouselComponent } from './carousel/carousel.component';
 import { NxConsoleTableComponent } from './console-table/console-table.component';
 import { NxAlertBlockComponent } from './content-block/alert/block.component';
-import { NxContentBlockComponent } from './content-block/content-block.component';
-import { NxContentBlockSectionComponent } from './content-block/section/section.component';
 import { NxCookieBannerComponent } from './cookie-banner/cookie-banner.component';
 import { NxDevelopersMenuComponent } from './developers-menu/developers-menu.component';
 import { NxAccountSettingsDropdown } from './dropdowns/account-settings/account-settings.component';
@@ -80,13 +78,11 @@ import { NxOpenClientSectionPlaceholderComponent } from './placeholders/open-cli
 import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from './placeholders/player/player-placeholder.component';
 import { NxSectionPlaceholderComponent } from './placeholders/section/section-placeholder.component';
-import { NxRadioComponent } from './radio/radio.component';
 import { NxRibbonComponent } from './ribbon/ribbon.component';
 import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';
 import { NxSystemsListComponent } from './systems-list/list.component';
-import { NxThemeSwitcherComponent } from './theme-switcher/theme-switcher.component';
 import { NxToast } from './toast/toast.component';
 import { NxToastsContainer } from './toast/toast.container';
 import { NxVendorListComponent } from './vendor-list/vendor-list.component';
@@ -132,10 +128,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
-        NxRadioComponent,
         NxAlertBlockComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
         NxExternalVideoComponent,
         // NxLayoutRightComponent,
         NxCarouselComponent,
@@ -183,14 +176,10 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxTextEditableComponent,
         NxStepperComponent,
         UpdateWebadminSessionComponent,
-        NxThemeSwitcherComponent,
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
-        NxRadioComponent,
         NxAlertBlockComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
         // NxLayoutRightComponent,
         NxCarouselComponent,
         NxRibbonComponent,
@@ -230,7 +219,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxTextEditableComponent,
         NxStepperComponent,
         UpdateWebadminSessionComponent,
-        NxThemeSwitcherComponent,
     ],
     exports: [
         QuicklinkModule,
@@ -244,10 +232,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxDropMenu,
-        NxRadioComponent,
         NxAlertBlockComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
         NxExternalVideoComponent,
         // NxLayoutRightComponent,
         NxCarouselComponent,
@@ -296,7 +281,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         CdkStepperModule,
         TextFieldModule,
         UpdateWebadminSessionComponent,
-        NxThemeSwitcherComponent,
     ]
 })
 export class ComponentsModule {

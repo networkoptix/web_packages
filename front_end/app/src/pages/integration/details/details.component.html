@@ -5,7 +5,9 @@
         <div class="p-0" style="width: 300px;">
             <button class="btn btn-default btn-back mb-3 d-flex align-items-center" routerLink="/integrations"
                     [disabled]="CONFIG.isInIframe">
-                <span class="back-arrow"></span>
+                <svg-icon nx-add-svg-src
+                          [src]="CONFIG.icons.dir + 'arrow_back.svg'"
+                          [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                 <span translate>All Integrations</span>
             </button>
 

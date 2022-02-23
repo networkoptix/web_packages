@@ -18,6 +18,11 @@ html[data-theme="dark"] {
     --h6 : #F5F7F8; //$light2;
     --h7 : #F5F7F8; //$light2;
     
+    --svg-path-light-color : #698796; //$light16;
+    --svg-path-dark-color  : #E1E7EA; //$light4;
+    
+    --text-placeholder-color : #587785; //$dark18;
+    
     --scrollbar-color                   : #35464F; //$light16;
     --scrollbar-thumb-bg                : #A5B7C0; //$light10;
     --scrollbar-thumb-border-color      : #2B383F; //$dark9;
@@ -83,12 +88,33 @@ html[data-theme="dark"] {
     --left-menu-l3-shadow            : transparent;
     --left-menu-l3-bg                : #1C2327; //$dark6;
     --left-menu-l3-color             : #E1E7EA; //$light4;
-    --left-menu-l3-additional-color  : #E1E7EA; //$light4;
+    --left-menu-l3-additional-color  : #698796; //$light16;
     --left-menu-l3-hover-bg          : #A5B7C0; //light10;
     --left-menu-l3-hover-color       : #080707; //$dark2
     --left-menu-l3-opacity           : 1;
     --left-menu-l3-selected-bg       : #35464F; //$light16;
     --left-menu-l3-selected-color    : #F5F7F8; //$light2;
+    
+    // View tab ********************************
+    --view-bg                    : #171C1F; //$dark5;
+    --view-search-bg             : #171C1F; //$dark5;
+    --view-search-color          : #A5B7C0; //$light10;
+    --view-search-hover-bg       : #0D0E0F; //$dark3;
+    --view-search-hover-color    : #A5B7C0; //$light10;
+    --view-search-active-bg      : #0D0E0F; //$dark3;
+    --view-search-active-color   : #E1E7EA; //$light4;
+    
+    --control-color              : #303F47; //dark10;
+    --control-enabled-color      : #587785; //$dark18;
+    --control-hoved-bg           : #0D0E0F; //$dark3;
+    --control-active-bg          : #0D0E0F; //$dark3;
+    
+    --left-menu-view-hover-bg    : #263137; //$dark8;
+    --left-menu-view-selected-bg : #35464F; //$light16;
+    // end View tab ****************************
+    
+    --paginator-active-bg    : #35464F; //$dark11;
+    --paginator-active-color : #F5F7F8; //$light2;
     
     --btn-close-hover-bg : #2B383F; //$dark9;
     --btn-close-hover-color : #A5B7C0; //light10;

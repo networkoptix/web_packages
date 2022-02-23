@@ -8,6 +8,8 @@ import { ComponentsModule } from '@components/components.module';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
+import { DirectivesModule } from '../../../directives/directives.module';
+
 import { NxIntegrationDetailsComponent } from './details.component';
 import { NxOverviewComponent } from './overview/overview.component';
 import { NxSetupComponent } from './setup/setup.component';
@@ -33,7 +35,8 @@ const appRoutes: Routes = [
         MenuModule,
         AngularSvgIconModule,
         RouterModule.forChild(appRoutes),
-        PipesModule
+        PipesModule,
+        DirectivesModule
     ],
     providers: [],
     declarations: [

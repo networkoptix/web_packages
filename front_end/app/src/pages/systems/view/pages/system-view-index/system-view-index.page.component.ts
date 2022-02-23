@@ -30,6 +30,8 @@ import type { ms } from '@vms-client/utils/type-aliases';
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 import { NxRibbonService } from '../../../../../components/ribbon/ribbon.service';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
+import { IConfig } from '../../../../../services/nx-config/config-types';
+import { NxConfigService } from '../../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSettingsService } from '../../../settings/settings.service';
 import { WebClientUxService, WebclientUxState } from '../../services/webclient-ux.service';
@@ -57,6 +59,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public system: NxSystem
     public systems: NxSystem[];
 
+    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     fullscreenMode: boolean;
     fullscreenToggle: boolean;
@@ -124,6 +127,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     constructor(
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private self: ElementRef,
         protected router: Router,
@@ -139,6 +143,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private settingsService: NxSettingsService
     ) {
+        this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
         this._onVmsSubjectChange = this._onVmsSubjectChange.bind(this);
         this._onRouteChange = this._onRouteChange.bind(this);

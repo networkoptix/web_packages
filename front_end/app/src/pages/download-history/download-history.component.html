@@ -4,24 +4,26 @@
     <div class="col-12 p-0" style="min-height: 80px;">
         <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
 
-        <div class="tab-set" *ngIf="tabsVisible">
-            <ul class="tab-list">
+        <div class="nx-tab-set" *ngIf="tabsVisible">
+            <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
                 <li *ngFor="let type of noteTypes"
-                    class="tab-item"
+                    class="nav-item"
                     (click)="switchTo(type)">
-                    <a href class="tab-link"
+                    <a href class="nav-link"
                        [ngClass]="{'active': currentTab === type }">
                         <span class="tab-heading" [textContent]="LANG.downloads.releasesTypes[type]() || type.name"></span>
                     </a>
                 </li>
             </ul>
-            <div class="card card-default">
-                <div class="card-body" *ngIf="activeBuilds">
-                    <div *ngFor="let release of activeBuilds">
-                        <nx-release [LANG]="LANG"
-                                    [build]="build || (release.backwardsCompatible ? release.version : release.buildNumber)"
-                                    [linkbase]="linkbase"
-                                    [release]="release"></nx-release>
+            <div class="nx-tab-set-content" >
+                <div class="card card-default">
+                    <div class="card-body" *ngIf="activeBuilds">
+                        <div *ngFor="let release of activeBuilds">
+                            <nx-release [LANG]="LANG"
+                                        [build]="build || (release.backwardsCompatible ? release.version : release.buildNumber)"
+                                        [linkbase]="linkbase"
+                                        [release]="release"></nx-release>
+                        </div>
                     </div>
                 </div>
             </div>

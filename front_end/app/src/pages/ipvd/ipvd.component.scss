@@ -1,4 +1,4 @@
-@use '../../styles/typography';
+@use "../../styles/typography";
 
 .ipvd {
     max-width : 1438px;
@@ -24,7 +24,8 @@
     }
 
     .text-placeholder {
-        @include typography.regular20light;
+        @include typography.regular20nocolor;
+        color : var(--text-placeholder-color);
         height      : 2rem;
     }
 

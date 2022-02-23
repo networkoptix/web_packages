@@ -1,54 +1,5 @@
-@use "../../../styles/theme_variables_common" as theme_vars;
+//@use "../../../styles/theme_variables_common" as theme_vars;
 
 .card-default {
     min-height: 100px;
-}
-
-.tab-set {
-    .tab-list {
-        display       : flex;
-        flex-wrap     : wrap;
-        padding-left  : 0;
-        margin-bottom : 0;
-        list-style    : none;
-        border-bottom : 1px solid theme_vars.$light4;
-        
-        
-        .tab-item {
-            
-            height        : theme_vars.rem(48px);
-            margin-bottom : -1px;
-            
-            .tab-link {
-                display                 : block;
-                border-top-left-radius  : 2px;
-                border-top-right-radius : 2px;
-                color                   : theme_vars.$dark12;
-                font-size               : theme_vars.$h5-font-size;
-                font-family             : theme_vars.$font-family-medium;
-                line-height             : 26px;
-                padding                 : 10px 20px;
-                text-decoration         : none;
-                
-                &.active {
-                    background-color : theme_vars.$light1 !important;
-                    border           : 1px solid theme_vars.$additional_light4;
-                    border-bottom    : 1px solid transparent;
-                    
-                    .tab-heading {
-                        border-bottom : 1px solid theme_vars.$additional_light4;
-                        padding       : 14px 0;
-                    }
-                }
-                
-                &:hover {
-                    background-color : transparentize(theme_vars.$light5, 0.75);
-                }
-            }
-        }
-    }
-    
-    .card {
-        border-top: none;
-    }
 }

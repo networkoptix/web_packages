@@ -257,20 +257,23 @@ button, .btn {
 .btn-back {
     padding-left : 0 !important;
 
-    .back-arrow {
-        width               : 20px;
-        height              : 20px;
-        background-image    : url("/static/images/tutorial_arrow.png") !important;
-        background-repeat   : no-repeat;
-        background-size     : 20px 20px;
-        background-position : center;
-        transform           : scaleX(-1);
-        float               : left;
-        margin-left         : .5rem;
-        margin-right        : .5rem;
-
-        @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-            background-image : url("/static/images/tutorial_arrow@2x.png") !important;
+    svg-icon {
+        margin : 0 8px;
+    
+        svg .st0 {
+            stroke : var(--btn-default-color) !important;
+        }
+    }
+    
+    &:hover {
+        svg-icon svg .st0 {
+            fill : var(--btn-default-hover-color) !important;
+        }
+    }
+    
+    &:active {
+        svg-icon svg .st0 {
+            fill : var(--btn-default-active-color) !important;
         }
     }
 }

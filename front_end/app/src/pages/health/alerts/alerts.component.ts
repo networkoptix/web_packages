@@ -20,6 +20,8 @@ import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { paramSortFunc } from '@utils/general';
 
+import { IConfig } from '../../../services/nx-config/config-types';
+import { NxConfigService } from '../../../services/nx-config/nx-config.service';
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';
 
@@ -35,6 +37,7 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
+    CONFIG: IConfig;
     filterModel;
     params: any = {};
     numFilters: number;
@@ -76,6 +79,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(
+        configService: NxConfigService,
         public healthLayoutService: NxHealthLayoutService,
         public healthService: NxHealthService,
         private route: ActivatedRoute,
@@ -85,6 +89,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private uriService: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
+        this.CONFIG = configService.getConfig();
+
         this.filterModel = {
             selects: [],
             query: ''

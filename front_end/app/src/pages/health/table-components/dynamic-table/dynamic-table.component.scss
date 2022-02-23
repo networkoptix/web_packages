@@ -8,7 +8,8 @@ nx-dynamic-table {
   cursor: default;
 
   .text-placeholder {
-    @include typography.regular20dark9;
+    @include typography.regular20nocolor;
+    color : var(--text-placeholder-color);
     height : 2rem;
   }
 
@@ -145,8 +146,8 @@ nx-dynamic-table {
             color : var(--card-header-text) !important;
 
             .text-placeholder {
+              color : var(--text-placeholder-color);
               font-size : 1.25rem;
-              color     : var(--light16);
             }
           }
 

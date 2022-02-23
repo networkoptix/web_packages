@@ -2,18 +2,18 @@
   .search-box {
     height: 44px;
     width: 100%;
-    border-bottom: 1px solid var(--light6);
+    border-bottom: 1px solid var(--border-color);
     position: relative;
-    background-color: var(--additional_light2);
+    background-color: var(--view-search-bg);
 
     // transition: background-color .2s ease-in-out;
 
     &:hover {
-      background-color: var(--light2);
+      background-color: var(--view-search-hover-bg);
     }
-
+    
     &:focus-within {
-      background-color: var(--light1);
+      background-color : var(--view-search-active-bg);
     }
 
     > .search-reset-icon {
@@ -36,19 +36,20 @@
       height: 44px;
       padding: 12px;
       &:after {
-        content: '';
+        content: "";
         position: absolute;
         left: 12px;
         top: 12px;
         right: 12px;
         bottom: 12px;
-        background-image: url('/static/images/web_interface_sprite@2x.png');
+        background-image: url("/static/images/web_interface_sprite@2x.png");
         background-size: 192px 408px;
         background-position: -50px -26px;
       }
     }
 
     > input {
+      color : var(--view-search-color);
       display: block;
       position: absolute;
       top: 0;
@@ -65,6 +66,14 @@
       // see https://networkoptix.atlassian.net/browse/CLOUD-6846
       // !important is the last resort against the global styling here
       box-shadow: none !important;
+  
+      &:hover {
+        color : var(--view-search-hover-color);
+      }
+  
+      &:focus {
+        color : var(--view-search-active-color);
+      }
 
       &::placeholder {
         color: var(--light16);
@@ -81,10 +90,10 @@
       cursor: pointer;
 
       &:hover {
-        background: var(--additional_light3);
+        background: var(--input-active-bg);
       }
       &:active {
-        background: var(--light5);
+        background: var(--input-active-bg);
       }
 
       > svg {

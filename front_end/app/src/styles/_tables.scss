@@ -33,8 +33,8 @@
                 @include regular24dark9;
 
                 .text-placeholder {
+                    color : var(--text-placeholder-color);
                     font-size : 1.25rem;
-                    color     : $light16;
                 }
             }
 

@@ -14,7 +14,9 @@
             <div class="sidebar-toggling-ear--wrapper"
                  [ngClass]="{ 'shown': isSidebarShown, 'visible': isSidebarShown || showElementsInFSM }"
                  (click)="handleSidebarTogglingEarClick()">
-                <div class="sidebar-toggling-ear"></div>
+                <div class="sidebar-toggling-ear">
+                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+                </div>
             </div>
         </div>
         <router-outlet *ngIf="hasCameras"></router-outlet>

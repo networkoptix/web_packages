@@ -58,7 +58,8 @@
 }
 
 .text-placeholder {
-    @include typography.regular20light;
+    @include typography.regular20nocolor;
+    color : var(--text-placeholder-color);
     height : 32px;
 }
 

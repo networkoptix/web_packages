@@ -6,7 +6,7 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  background-color : var(--additional_light2);
+  background-color : var(--view-bg);
 
   > .is-live {
     opacity: 0.6;
@@ -18,10 +18,10 @@
     align-items: center;
     justify-content: center;
 
-    background-color: var(--additional_light2);
-    color: var(--dark9);
-    border-left: 1px solid var(--light6);
-    border-right: 1px solid var(--light4);
+    background-color: var(--view-bg);
+    color: var(--body-text-color);
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
 
     > .line {
       display: block;
@@ -70,29 +70,29 @@
     &.active {
       opacity: 1.0;
       cursor: pointer;
-      background-color: var(--light5);
-      border-left: 1px solid var(--light8);
-      border-right: 1px solid var(--light7);
+      background-color: var(--control-active-bg);
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
       box-shadow: -2px 0 0 0 rgba(var(--dark1--rgb), 0.2);
       z-index: 5;
 
       &:hover {
-        background-color: var(--light4);
-        border-left: 1px solid var(--light7);
-        border-right: 1px solid var(--light6);
+        background-color: var(--control-active-bg);
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
       }
     }
 
     &:hover {
-      background-color: var(--light3);
-      border-left: 1px solid var(--light6);
-      border-right: 1px solid var(--light5);
+      background-color: var(--control-hoved-bg);
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
     }
 
     &:active {
-      background-color: var(--light5) !important;
-      border-left: 1px solid var(--light8) !important;
-      border-right: 1px solid var(--light7) !important;
+      background-color: var(--control-active-bg) !important;
+      border-left: 1px solid var(--border-color) !important;
+      border-right: 1px solid var(--border-color) !important;
     }
   }
 }

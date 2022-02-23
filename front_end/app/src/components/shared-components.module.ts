@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxRadioComponent } from '@components/radio/radio.component';
+import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -50,6 +54,10 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxThemeSwitcherComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxRadioComponent,
     ],
     providers: [
         NxCheckboxComponent,
@@ -62,6 +70,10 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxThemeSwitcherComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxRadioComponent,
     ],
     exports: [
         NxCheckboxComponent,
@@ -74,6 +86,10 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxThemeSwitcherComponent,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxRadioComponent,
     ]
 })
 export class SharedComponentsModule {

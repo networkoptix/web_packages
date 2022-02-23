@@ -9,6 +9,13 @@
     body {
         min-width: 160px !important;
     }
+    
+    .cloud-header-st0 {
+        stroke: var(--svg-path-light-color);
+    }
+    .cloud-header-st1 {
+        stroke : var(--svg-path-dark-color);
+    }
 
     .authorize-main {
         .auth-window {

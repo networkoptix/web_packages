@@ -4,7 +4,7 @@
 $item_height : 40px;
 
 .menu-level-1 {
-    @include typography.medium15dark9;
+    @include typography.medium15nocolor;
     position         : relative;
     line-height      : $item_height;
     background-color : var(--left-menu-l1-bg);
@@ -34,7 +34,8 @@ $item_height : 40px;
         height          : $item_height;
         line-height     : initial;
         svg .st0 {
-            fill : var(--left-menu-l1-color);
+            fill   : var(--left-menu-l1-color) !important;
+            stroke : none
         }
     }
 
@@ -57,7 +58,8 @@ $item_height : 40px;
 }
 
 .search-results-label {
-    @include typography.regular13light;
+    @include typography.regular13nocolor;
+    color : var(--text-placeholder-color);
     position : absolute;
     top      : 0;
     right    : 36px;
