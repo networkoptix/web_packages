@@ -402,11 +402,13 @@ class AccountSecurity(APIView):
         else:
             res = Account.update_2fa_settings(request, totp, False)
             Auth.delete_2fa_key(request)
+            request.session["has2fa"] = False
             return api_success(res)
 
     def delete(self, request, *args, **kwargs):
         if Account.get(request).get("account2faEnabled"):
             raise APIRequestException('Cannot delete totp while 2fa is enabled', ErrorCodes.bad_request)
+        request.session["has2fa"] = False
         return api_success(Auth.delete_2fa_key(request))
 
 
