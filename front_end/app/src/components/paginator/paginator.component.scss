@@ -1,126 +1,131 @@
 @use "../../../styles/theme_variables_common" as *;
 @use "../../styles/typography";
 :host {
-    display: flex;
-}
-// TODO: Remove this after being discovered or before 21.2 release ********
-// https://networkoptix.atlassian.net/browse/CLOUD-8667
-.five-r {
-    &.assemble-0 {
-        position : relative;
+    display : flex;
+    
+    // TODO: Remove this after being discovered or before 21.2 release ********
+    // https://networkoptix.atlassian.net/browse/CLOUD-8667
+    .five-r {
+        &.assemble-0 {
+            position : relative;
+            
+            &:after {
+                position            : absolute;
+                width               : 100%;
+                height              : 100%;
+                background-image    : url(/static/images/scrillbar-cap.png);
+                background-size     : 160px 160px;
+                background-repeat   : no-repeat;
+                content             : "";
+                background-position : -38px -5px;
+                transform           : rotate(-90deg);
+                border              : 1px solid lightgray;
+            }
+        }
         
-        &:after {
-            position            : absolute;
-            width               : 100%;
-            height              : 100%;
-            background-image    : url(/static/images/scrillbar-cap.png);
-            background-size     : 160px 160px;
-            background-repeat   : no-repeat;
-            content             : "";
-            background-position : -38px -5px;
-            transform           : rotate(-90deg);
-            border              : 1px solid lightgray;
+        &.assemble-1 {
+            position : relative;
+            
+            &:after {
+                position            : absolute;
+                width               : 100%;
+                height              : 100%;
+                background-image    : url(/static/images/scrillbar-cap.png);
+                background-size     : 160px 160px;
+                background-repeat   : no-repeat;
+                content             : "";
+                background-position : -68px -94px;
+                transform           : rotate(-90deg);
+                border              : 1px solid lightgray;
+            }
+        }
+        
+        &.assemble-2 {
+            position : relative;
+            
+            &:after {
+                position            : absolute;
+                width               : 100%;
+                height              : 100%;
+                background-image    : url(/static/images/scrillbar-cap.png);
+                background-size     : 160px 160px;
+                background-repeat   : no-repeat;
+                content             : "";
+                background-position : -38px -96px;
+                transform           : rotate(-90deg);
+                border              : 1px solid lightgray;
+            }
+        }
+        
+        &.assemble-3 {
+            position : relative;
+            
+            &:after {
+                position            : absolute;
+                width               : 100%;
+                height              : 100%;
+                background-image    : url(/static/images/scrillbar-cap.png);
+                background-size     : 160px 160px;
+                background-repeat   : no-repeat;
+                content             : "";
+                background-position : -95px -12px;
+                transform           : rotate(-90deg);
+                border              : 1px solid lightgray;
+            }
+        }
+        
+        &.assemble-4 {
+            position : relative;
+            
+            &:after {
+                position            : absolute;
+                width               : 100%;
+                height              : 100%;
+                background-image    : url(/static/images/scrillbar-cap.png);
+                background-size     : 160px 160px;
+                background-repeat   : no-repeat;
+                content             : "";
+                background-position : -38px -36px;
+                transform           : rotate(-90deg);
+                border              : 1px solid lightgray;
+            }
         }
     }
     
-    &.assemble-1 {
-        position : relative;
+    // ************************************************************************
+    
+    a.btn.btn-default {
+        @include typography.regular13nocolor;
+        color         : var(--paginator-color) !important;
+        background-color: var(--paginator-bg);
+        padding       : 0 12px !important;
+        margin-top    : 0;
+        margin-bottom : 0;
+        border-radius : 4px;
+        box-shadow    : none !important;
         
-        &:after {
-            position            : absolute;
-            width               : 100%;
-            height              : 100%;
-            background-image    : url(/static/images/scrillbar-cap.png);
-            background-size     : 160px 160px;
-            background-repeat   : no-repeat;
-            content             : "";
-            background-position : -68px -94px;
-            transform           : rotate(-90deg);
-            border              : 1px solid lightgray;
+        &:not(:first-of-type) {
+            margin-left : 6px;
         }
-    }
-    
-    &.assemble-2 {
-        position : relative;
         
-        &:after {
-            position            : absolute;
-            width               : 100%;
-            height              : 100%;
-            background-image    : url(/static/images/scrillbar-cap.png);
-            background-size     : 160px 160px;
-            background-repeat   : no-repeat;
-            content             : "";
-            background-position : -38px -96px;
-            transform           : rotate(-90deg);
-            border              : 1px solid lightgray;
+        &:hover {
+            background-color : var(--paginator-hover-bg) !important;
+            color            : var(--paginator-hover-color) !important;
         }
-    }
-    
-    &.assemble-3 {
-        position : relative;
         
-        &:after {
-            position            : absolute;
-            width               : 100%;
-            height              : 100%;
-            background-image    : url(/static/images/scrillbar-cap.png);
-            background-size     : 160px 160px;
-            background-repeat   : no-repeat;
-            content             : "";
-            background-position : -95px -12px;
-            transform           : rotate(-90deg);
-            border              : 1px solid lightgray;
+        &.active-page, &.active-page:hover {
+            background-color : var(--paginator-active-bg) !important;
+            color            : var(--paginator-active-color) !important;
         }
-    }
-    
-    &.assemble-4 {
-        position : relative;
         
-        &:after {
-            position            : absolute;
-            width               : 100%;
-            height              : 100%;
-            background-image    : url(/static/images/scrillbar-cap.png);
-            background-size     : 160px 160px;
-            background-repeat   : no-repeat;
-            content             : "";
-            background-position : -38px -36px;
-            transform           : rotate(-90deg);
-            border              : 1px solid lightgray;
+        &.page-num-btn {
+            width : 32px;
         }
-    }
-}
-// ************************************************************************
-
-a.btn.btn-default {
-    @include typography.regular13nocolor;
-    color: $light16 !important;
-    padding: 0 12px !important;
-    margin-top: 0;
-    margin-bottom: 0;
-    border-radius: 4px;
-    box-shadow: none !important;
-    
-    &:not(:first-of-type) {
-        margin-left: 6px;
-    }
-    
-    &.active-page, &.active-page:hover {
-        background-color: $light16 !important;
-        color: $light1 !important;
-    }
-    
-    &.page-num-btn {
-        width: 32px;
-    }
-    
-    &.disabled {
-        opacity          : 1;
-        pointer-events   : none;
-        position         : relative;
-        cursor           : default;
-        background-color : rgba(var(--light6--rgb), 0.2) !important;
-        color            : rgba(var(--dark9--rgb), 0.3) !important;
+        
+        &.disabled {
+            opacity          : .45;
+            pointer-events   : none;
+            cursor           : default;
+        }
     }
 }
