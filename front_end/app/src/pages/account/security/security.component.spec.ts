@@ -144,11 +144,19 @@ describe('NxAccountSecurityComponent', () => {
             expect(warning).toBeNull();
         });
 
-        it('should have a warning with at least one v5.0 system', () => {
+        it('should have a warning with at least one v5.0 system if checkbox is checked', () => {
             component.subV5Systems = [{ name: 'foo' } as any];
+            component.verificationWatcher.value = true;
             fixture.detectChanges();
             const warning = el.querySelector('.tfauth-v5-warning');
             expect(warning).toBeTruthy();
+        });
+        it('should not have a warning with at least one v5.0 system if checkbox is unchecked', () => {
+            component.subV5Systems = [{ name: 'foo' } as any];
+            component.verificationWatcher.value = false;
+            fixture.detectChanges();
+            const warning = el.querySelector('.tfauth-v5-warning');
+            expect(warning).toBeNull();
         });
     });
 });

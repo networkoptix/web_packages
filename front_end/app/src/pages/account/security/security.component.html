@@ -57,7 +57,7 @@
                         </label>
                     </div>
 
-                    <div class="tfauth-v5-warning" *ngIf="subV5Systems.length" >
+                    <div class="tfauth-v5-warning" *ngIf="subV5Systems.length && verificationWatcher.value" >
                         <h4 class="mt-0" translate>WARNING</h4>
                         <div class="float-left">
                             <span #v5WarningSpan
