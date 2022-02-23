@@ -148,6 +148,7 @@ export class LoginWebadminModalContent implements OnInit {
         };
 
         const showWrongCredentialsError = () => {
+            this.password = '';
             this.wrongCredentials = true;
             this.loginForm.controls.login_email.setErrors({
                 nx_wrong_credentials: true
