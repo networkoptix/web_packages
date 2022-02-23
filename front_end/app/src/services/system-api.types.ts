@@ -200,7 +200,7 @@ export interface ModuleInformationReply {
     version: string
 };
 
-interface LogLevelReply {
+export interface LogLevelReply {
     EC2_TRAN: string,
     HTTP: string,
     HWID: string,

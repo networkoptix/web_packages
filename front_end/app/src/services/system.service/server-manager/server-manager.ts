@@ -2,6 +2,7 @@ import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import type { APIDocType } from '@services/nx-config/base-config';
+import { LogLevel } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
@@ -134,20 +135,23 @@ export class ServerManager {
             .catch(err => Promise.reject(err));
     }
 
-    logLevel(serverId: string) {
+    logLevel(serverId: string): Promise<LogLevel> {
         return this.mediaserverConnections[serverId].logLevel().toPromise();
     }
 
-    setLogLevels(serverId: string, loggers: IParams) {
-        const promises = [];
-
-        loggers.forEach(logger => {
-            promises.push(this.mediaserverConnections[serverId].logLevel(undefined, logger.key, logger.value).toPromise());
-        });
+    setLogLevels(
+        serverId: string,
+        loggers: { key: string; value: string }[]
+    ): Promise<void> {
+        const promises = loggers.map<Promise<LogLevel>>(logger =>
+            this.mediaserverConnections[serverId]
+                .logLevel(undefined, logger.key, logger.value)
+                .toPromise()
+        );
 
         return Promise.all(promises)
             .then(() => {
-                return Promise.resolve({});
+                return Promise.resolve();
             })
             .catch(error => {
                 return Promise.reject(new Error(error));

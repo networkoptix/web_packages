@@ -2,23 +2,31 @@ import {
     Component,
     Input,
     OnChanges,
-    SimpleChanges,
     ViewEncapsulation,
-    ViewChild,
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subject, SubscriptionLike } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxApplyService, FormWatcher, Watcher } from '@services/apply.service';
+import { NxApplyService, Watcher } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import type { LogLevel, LogLevelReply } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
+import { NgChanges } from '@utils/ng-changes';
+
+type LoggerOption = DropdownItem<string>;
+
+interface Logger {
+    key: string;
+    value: string;
+    originalValue: string;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -27,65 +35,20 @@ import type { NxSystem } from '@services/system.service/system';
     styleUrls: ['logger.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-
 export class NxServerLoggerComponent implements OnChanges {
+    @Input() system: NxSystem;
+    @Input() serverId: string;
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    showLoggers: boolean;
+    showLoggers: boolean = false;
     saveLoggers: Process;
-    lockedSubscription: SubscriptionLike;
-    loading = false;
-    formWatcher: FormWatcher;
+    loading: boolean = false;
 
-    @Input() system: NxSystem;
-    @Input() serverId;
-
-    @ViewChild('logLevelsForm') logLevelsForm: NgForm;
-    loggerWatcher = new Watcher(false)
-
-    systemLoggers: any = {};
-    readonly loggerOptions: any = [];
-    cancelPrevious$ = new Subject<any>()
-
-    private setupDefaults = () => {
-        this.showLoggers = false;
-
-        this.saveLoggers = this.processService.createProcess(() => {
-            return this.system.serverManager
-                .setLogLevels(this.serverId, this.loggersToBeSaved())
-                .then((response: any) => {
-                    if (
-                        typeof (response.error) !== 'undefined' &&
-                        response.error !== '0'
-                    ) {
-                        const errorToShow = response.errorString;
-                        this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error?.())
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    } else {
-                        this.dialogsService
-                            .alert(
-                                this.LANG.dialogs.message.logLevelsSaved?.(),
-                                this.LANG.dialogs.titles.success?.()
-                            ).catch(error => {
-                                console.error(error);
-                            });
-                        this.formWatcher.saved();
-                    }
-                }, () => {
-                    this.dialogsService
-                        .alert(
-                            this.LANG.dialogs.message.logLevelsNotSaved?.(),
-                            this.LANG.dialogs.titles.error?.()
-                        ).catch(error => {
-                            console.error(error);
-                        });
-                });
-        });
-    }
+    loggerWatcher = new Watcher<boolean>(false)
+    systemLoggers: Logger[] = [];
+    readonly loggerOptions: LoggerOption[];
 
     constructor(
         configService: NxConfigService,
@@ -98,116 +61,99 @@ export class NxServerLoggerComponent implements OnChanges {
         this.LANG = language.translations;
 
         this.loggerOptions = [
-            {
-                value: 'none',
-                name: this.LANG.system.loggers.none.text(),
-                help: this.LANG.system.loggers.none.help()
-            },
-            {
-                value: 'error',
-                name: this.LANG.system.loggers.error.text(),
-                help: this.LANG.system.loggers.error.help()
-            },
-            {
-                value: 'warning',
-                name: this.LANG.system.loggers.warning.text(),
-                help: this.LANG.system.loggers.warning.help()
-            },
-            {
-                value: 'info',
-                name: this.LANG.system.loggers.info.text(),
-                help: this.LANG.system.loggers.info.help()
-            },
-            {
-                value: 'debug',
-                name: this.LANG.system.loggers.debug.text(),
-                help: this.LANG.system.loggers.debug.help()
-            },
-            {
-                value: 'verbose',
-                name: this.LANG.system.loggers.verbose.text(),
-                help: this.LANG.system.loggers.verbose.help()
-            }
-        ];
+            'none',
+            'error',
+            'warning',
+            'info',
+            'debug',
+            'verbose',
+        ].map(level => ({
+            value: level,
+            name: this.LANG.system.loggers[level].text(),
+            help: this.LANG.system.loggers[level].help()
+        }));
 
-        this.setupDefaults();
+        this.saveLoggers = this.processService.createProcess(() => {
+            return this.system.serverManager
+                .setLogLevels(
+                    this.serverId,
+                    this.systemLoggers.filter(logger =>
+                        logger.value !== logger.originalValue
+                    )
+                )
+                .then(() => {
+                    this.systemLoggers.forEach(logger => {
+                        logger.originalValue = logger.value;
+                    });
+                    this.dialogsService
+                        .alert(
+                            this.LANG.dialogs.message.logLevelsSaved(),
+                            this.LANG.dialogs.titles.success()
+                        ).catch(error => {
+                            console.error(error);
+                        });
+                }, () => {
+                    this.dialogsService
+                        .alert(
+                            this.LANG.dialogs.message.logLevelsNotSaved(),
+                            this.LANG.dialogs.titles.error()
+                        ).catch(error => {
+                            console.error(error);
+                        });
+                });
+        });
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxServerLoggerComponent>): void {
         if (changes.serverId?.previousValue) {
             this.init();
         }
     }
 
-    init = () => {
+    ngAfterViewInit(): void {
+        this.init();
+    }
+
+    init = (): void => {
         this.system.serverManager
             .logLevel(this.serverId)
-            .then(response => {
-                this.settingsToBeDisplayedOrUpdated(response.reply);
-                this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
+            .then((response: LogLevel) => {
+                this.initializeLoggerLevels(response.reply);
+                this.showLoggers = this.systemLoggers.length > 1;
                 this.loading = false;
             }).catch(console.error);
     }
 
-    ngAfterViewInit() {
-        this.init();
-    }
-
-    ngOnDestroy() {
-        // cleans up formWatcher.valueSubject subscribe
-        this.cancelPrevious$.next('cancel');
-    }
-
-    changeLog(selected, key) {
-        this.systemLoggers[key].value = selected.value;
-        this.systemLoggers[key].selected = selected;
-    }
-
-    settingsToBeDisplayedOrUpdated = loggers => {
-        this.formWatcher = new FormWatcher(this.logLevelsForm);
-        const reset = () => {
-            Object.keys(loggers).forEach(key => {
-                const value = loggers[key];
-                const { name, help } = this.loggerOptions.filter(level => {
-                    return level.value === value;
-                })[0];
-
-                this.systemLoggers[key] = {};
-                this.systemLoggers[key].key = key;
-                this.systemLoggers[key].name = name;
-                this.systemLoggers[key].help = help;
-                this.systemLoggers[key].value = value;
-                this.systemLoggers[key].originalValue = value;
-            });
-            this.formWatcher.reset();
-            this.loggerWatcher.reset();
-        };
-        reset();
-        this.cancelPrevious$.next('cancel');
-        this.formWatcher.valueSubject.pipe(
-            takeUntil(this.cancelPrevious$),
-            debounceTime(10)
-        ).subscribe(_ => {
-            this.loggerWatcher.value = this.formWatcher.changed;
+    resetForm = (): void => {
+        this.systemLoggers.forEach(logger => {
+            logger.value = logger.originalValue;
         });
+        this.loggerWatcher.reset();
+    };
+
+    initializeLoggerLevels = (loggers: LogLevelReply): void => {
+        this.systemLoggers = Object.entries(loggers).map(([key, value]) => ({
+            key,
+            value,
+            originalValue: value
+        }));
+
+        this.loggerWatcher.reset();
         this.applyService.addWatchersAndFunctionsFromChild(
             [this.loggerWatcher],
             this.saveLoggers,
-            reset
+            this.resetForm
         );
     }
 
-    loggersToBeSaved() {
-        const loggers = [];
+    selectedLevel(target: Logger): LoggerOption {
+        return this.loggerOptions.find(opt => opt.value === target.value);
+    }
 
-        Object.keys(this.systemLoggers).forEach(key => {
-            if (
-                this.systemLoggers[key].value !==
-                this.systemLoggers[key].originalValue
-            ) {
-                loggers.push({ ...this.systemLoggers[key], key });
-            }
-        });
-        return loggers;
+    onLevelSelect($selected: LoggerOption, target: Logger): void {
+        target.value = $selected.value;
+        this.loggerWatcher.value = this.systemLoggers.some(logger =>
+            logger.value !== logger.originalValue
+        );
     }
 }
