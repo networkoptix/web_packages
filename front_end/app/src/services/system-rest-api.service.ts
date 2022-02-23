@@ -514,7 +514,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     disconnectFromCloud() {
         return this.post('/rest/v1/system/cloudUnbind', { password: '' }).toPromise()
-            .then(() => this.clearTokens());
+            .then(() => {
+                if (this.isSessionOauth) {
+                    return this.clearTokens();
+                }
+            });
     }
 
     checkMergeStatus(forceReload = true) {
