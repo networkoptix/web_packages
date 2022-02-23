@@ -263,7 +263,8 @@ Force Tags    Threaded    Licenses
     Wait Until Element Is Visible    ${offline server}
     Slow    Click Element    ${offline server}    timeout=2
     Click Button    ${ACTIVATE BUTTON}
-    Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
+    Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=30
+#    Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
@@ -628,7 +629,7 @@ Force Tags    Threaded    Licenses
     END
 
     Log    SaaS and Demo time licenses
-    Remove Values From List    ${types}    starter    videowall
+    Remove Values From List    ${types}    starter    videowall    nvr
     ${t}=   Set Variable    0    # Time licenses counter
     FOR     ${type}    IN    @{types}
         ${rand}=   Evaluate    random.randint(10, 100)
