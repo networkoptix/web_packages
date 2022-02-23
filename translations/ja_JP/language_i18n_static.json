@@ -94,7 +94,7 @@
         "connectAdditional": "このアカウントはオーナー権限を取得します。",
         "createText": "アカウント作成",
         "setupText": "非クラウドシステムのセットアップ",
-        "asAccountSubheader": "として",
+        "asAccountSubheader": "ユーザー名",
         "toAccountSubheader": "宛先",
         "forAccountSubheader": "{accountEmail} 用",
         "passwordDisconnect": "%CLOUD_NAME% からシステムを切断するために",
