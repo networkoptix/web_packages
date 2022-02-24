@@ -240,7 +240,22 @@
     --card-header-bg : #{$additional_light1};
     --card-header-text : #{$dark9};
     --card-body-bg : #{$light1};
-    --card-simple-msg-color : #{$dark9};
+    
+    --card-simple-info-bg           : rgba(#{$brand_core}, .1);
+    --card-simple-info-border-color : rgba(#{$brand_core}, .3);
+    --card-simple-info-color        : #{$dark9};
+    
+    --card-simple-warning-bg           : rgba(#{$yellow_main}, .1);
+    --card-simple-warning-border-color : rgba(#{$yellow_main}, .3);
+    --card-simple-warning-color        : #{$dark9};
+    
+    --card-simple-error-bg : rgba(#{$red_l2}, .1);
+    --card-simple-error-border-color : rgba(#{$red_l2}, .3);
+    --card-simple-error-color : #{$dark9};
+    
+    --card-simple-default-bg : #{$red2};
+    --card-simple-default-color : #{$dark9};
+    --card-simple-default-border-color : #{$red1};
     
     --input-bg                 : #{$light1};
     --input-color              : #{$dark9};

@@ -24,6 +24,10 @@ $opacity-to-hex : (
     1: "FF"
 );
 
+@function color-opacity($color, $opacity) {
+    @return unquote($color + map-get($opacity-to-hex, $opacity));
+}
+
 @mixin color-opacity($property, $color, $opacity) {
     #{$property}: unquote($color + map-get($opacity-to-hex, $opacity));
 }

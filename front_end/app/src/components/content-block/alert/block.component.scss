@@ -113,8 +113,8 @@
     }
 
     &.gray {
-        background-color : $light4;
-        border           : 1px solid $light4;
+        background-color : var(--grey-section-bg);
+        border           : 1px solid var(--grey-section-bg);
         border-bottom    : none;
 
         .card--header {
@@ -133,28 +133,29 @@
     }
 
     &.simple-default {
-        background-color : $red2;
-        border           : 1px solid $red1;
+        color : var(--card-simple-default-color);
+        background-color : var(--card-simple-default-bg);
+        border           : 1px solid var(--card-simple-default-border-color);
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : $red2;
-            border-top       : 1px solid $red1;
+            background-color : var(--card-simple-default-bg);
+            border-top       : 1px solid var(--card-simple-default-border-color);
         }
 
         .card--footer {
-            background-color : $red2;
+            background-color : var(--card-simple-default-bg);
         }
     }
 
     &.simple-error {
         @include typography.regular13nocolor;
-        color : var(--card-simple-msg-color);
-        background-color : rgba($red_l2, .1);
-        border           : 1px solid rgba($red_l2, .3);
+        color : var(--card-simple-error-color);
+        background-color : var(--card-simple-error-bg);
+        border           : 1px solid var(--card-simple-error-border-color);
         margin-bottom    : 8px;
         line-height      : 18px;
 
@@ -163,20 +164,20 @@
         }
 
         .card--body {
-            background-color : rgba($red_l2, .1);
-            border-top       : 1px solid rgba($red_l2, .3);
+            background-color : var(--card-simple-error-bg);
+            border-top       : 1px solid var(--card-simple-error-border-color);
         }
 
         .card--footer {
-            background-color : rgba($red_l2, .1);
+            background-color : var(--card-simple-error-bg);
         }
     }
 
     &.simple-warning {
         @include typography.regular13nocolor;
-        color : var(--card-simple-msg-color);
-        background-color : rgba($yellow_main, .1);
-        border           : 1px solid rgba($yellow_main, .3);
+        color : var(--card-simple-warning-color);
+        background-color : var(--card-simple-warning-bg);
+        border           : 1px solid var(--card-simple-warning-border-color);
         margin-bottom    : 8px;
         line-height      : 18px;
 
@@ -185,12 +186,12 @@
         }
 
         .card--body {
-            background-color : rgba($yellow_main, .1);
-            border-top       : 1px solid rgba($yellow_main, .3);
+            background-color : var(--card-simple-warning-bg);
+            border-top       : 1px solid var(--card-simple-warning-border-color);
         }
 
         .card--footer {
-            background-color : rgba($yellow_main, .1);
+            background-color : var(--card-simple-warning-bg);
         }
     }
 

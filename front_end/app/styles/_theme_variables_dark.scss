@@ -241,7 +241,22 @@ html[data-theme="dark"] {
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;
-    --card-simple-msg-color : #E1E7EA; //$light4;
+    
+    --card-simple-info-bg           : rgba(#{$brand_d2}, .1);
+    --card-simple-info-border-color : rgba(#{$brand_d2}, .3);
+    --card-simple-info-color        : #E1E7EA; //$light4;
+    
+    --card-simple-warning-bg           : rgba(#{$yellow_d1}, .1);
+    --card-simple-warning-border-color : rgba(#{$yellow_d1}, .3);
+    --card-simple-warning-color        : #A5B7C0; //$light10;
+    
+    --card-simple-error-bg           : color-opacity($red_main, .1); // rgba(#{$red_main}, .1);
+    --card-simple-error-border-color : rgba(#{$red_main}, .3);
+    --card-simple-error-color        : #E1E7EA; //$light4;
+    
+    --card-simple-default-bg           : #C22626; //$red_main;
+    --card-simple-default-color        : #E1E7EA; //$light4;
+    --card-simple-default-border-color : #AA1E1E; //$red_d1;
     
     --input-bg                 : #121517; //$dark4;
     --input-color              : #A5B7C0; //$light10;
