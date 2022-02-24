@@ -3,13 +3,13 @@
         <nx-select
                [id]="'avail-systems'"
                [type]="'api-tool'"
-               [stillLoading]="!(APIToolService.serversLoaded$ | async)"
+               [stillLoading]="!APIToolService.selectedSystem"
                [items]="APIToolService.systemsDropdown"
                (onSelected)="onSystemChange($event)"
                [selected]="APIToolService.selectedSystem || {}">
        </nx-select>
        <nx-select
-               *ngIf="serverDropdownEnabled && APIToolService.serversDropdown.length" 
+               *ngIf="serverDropdownEnabled && APIToolService.serversDropdown.length"
                [type]="'api-tool'"
                class="mt-2"
                [id]="'avail-systems'"

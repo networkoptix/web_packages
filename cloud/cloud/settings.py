@@ -222,7 +222,8 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
         }
 
     elif USE_SQLITE:
-        DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
@@ -333,7 +334,7 @@ CACHES = {
         "OPTIONS": REDIS_CACHE['OPTIONS'],
         "LOCATION": REDIS_CACHE['LOCATION'] + '/14',
         "KEY_PREFIX": "emails",
-        "TIMEOUT": 60 * 60 # 1 hour
+        "TIMEOUT": 60 * 60  # 1 hour
     },
     "release_notes": {
         "BACKEND": REDIS_CACHE['BACKEND'],

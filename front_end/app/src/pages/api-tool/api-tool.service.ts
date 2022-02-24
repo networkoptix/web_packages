@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import {
     delay,
     distinctUntilChanged,
@@ -87,8 +87,8 @@ export class NxAPIToolService {
     activeNode: MenuNodeWithParent;
     activeAssetState = ''; // Not used yet
 
-    APIInfoStore   : APIInfoStore = {} as APIInfoStore
-    markdownStore  : any  = {}
+    APIInfoStore: APIInfoStore = {} as APIInfoStore
+    markdownStore: any = {}
     APIInfoNodes = {
         api_information: 'API Information',
         api_changelog: 'API Changelog',
@@ -301,6 +301,10 @@ export class NxAPIToolService {
             this.getServersInfo();
             return;
         }
+        const readonlyAPI = this.systemsDropdown.find(item => !!item.json);
+        if (readonlyAPI) {
+            return;
+        }
         // No more valid systems left
         this.showError();
     }
@@ -356,7 +360,9 @@ export class NxAPIToolService {
 
     private updateMediaServers() {
         this.mediaServerUpdating = true;
+        let validServerFound = false;
         if (this.system.currentServerNotBusy) {
+            console.log(this.system?.serverManager.servers?.length);
             if (this.system?.serverManager.servers?.length) {
                 this.system.serverManager
                     .initSystemMediaServers()
@@ -364,50 +370,48 @@ export class NxAPIToolService {
                         this.serversDropdown = [];
                         this.system.serverManager.servers.forEach((server) => {
                             if (server.status !== 'Offline') {
-                                this.getAPIDoc(server.id, 'main')
-                                    .then((response: APIDoc) => {
-                                        let APIDoc = response;
-                                        if (!this.isRestAPI(server.id)) {
-                                            APIDoc = removeProprietaryEndpoints(APIDoc);
-                                        }
-                                        APIDoc = prepareSwaggerAPIDoc(APIDoc);
-                                        this.setRequestUrl(APIDoc, server.id);
-                                        if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
-                                            this.serversDropdown.push({
-                                                value: server.id,
-                                                name: server.name,
-                                                apiDocFull: APIDoc,
-                                                disabled: false,
-                                                incompatible: false
-                                            });
-                                        }
-                                    }).catch(err => {
-                                        let typeOfError = 'Error';
-                                        if (err.status === 404) { // this server does not support openapi
-                                            typeOfError = 'Incompatible';
-                                        }
-                                        if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
-                                            this.serversDropdown.push({
-                                                value: server.id,
-                                                name: server.name + ' - ' + typeOfError,
-                                                apiDocFull: {} as APIDoc,
-                                                disabled: true,
-                                                incompatible: true
-                                            });
-                                        }
-                                    }).finally(async () => {
-                                        this.selectedServer = this.serversDropdown[0];
-                                        this.serversDropdown.some((server) => {
-                                            if (!server.incompatible) {
-                                                this.selectedServer = server;
+                                if (!validServerFound) {
+                                    this.getAPIDoc(server.id, 'main')
+                                        .then((response: APIDoc) => {
+                                            let APIDoc = response;
+                                            if (!this.isRestAPI(server.id)) {
+                                                APIDoc = removeProprietaryEndpoints(APIDoc);
                                             }
-                                            return !server.incompatible;
-                                        });
-                                        if (this.serversDropdown.length === this.system.serverManager.servers.length) {
-                                            if (this.selectedServer.incompatible) {
-                                                // If for whatever reason, all servers are marked as incompatible
-                                                this.tryNextSystem();
-                                            } else {
+                                            APIDoc = prepareSwaggerAPIDoc(APIDoc);
+                                            this.setRequestUrl(APIDoc, server.id);
+                                            if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
+                                                this.serversDropdown.push({
+                                                    value: server.id,
+                                                    name: server.name,
+                                                    apiDocFull: APIDoc,
+                                                    disabled: false,
+                                                    incompatible: false
+                                                });
+                                            }
+                                            validServerFound = true;
+                                        }).catch(err => {
+                                            let typeOfError = 'Error';
+                                            if (err.status === 404) { // this server does not support openapi
+                                                typeOfError = 'Incompatible';
+                                            }
+                                            if (!this.serversDropdown.find(dropDownServer => dropDownServer.value === server.id)) {
+                                                this.serversDropdown.push({
+                                                    value: server.id,
+                                                    name: server.name + ' - ' + typeOfError,
+                                                    apiDocFull: {} as APIDoc,
+                                                    disabled: true,
+                                                    incompatible: true
+                                                });
+                                            }
+                                        }).finally(async () => {
+                                            this.selectedServer = this.serversDropdown[0];
+                                            this.serversDropdown.some((server) => {
+                                                if (!server.incompatible) {
+                                                    this.selectedServer = server;
+                                                }
+                                                return !server.incompatible;
+                                            });
+                                            if (validServerFound) {
                                                 // Success
                                                 const APIDoc = this.selectedServer.apiDocFull;
                                                 const mainAPIContent = createMenuContent(APIDoc);
@@ -426,7 +430,7 @@ export class NxAPIToolService {
                                                         this.selectedAPI = queryVersion;
                                                     }
                                                 }
-                                                if (!this.selectedAPI)  this.selectedAPI = this.APIDropdown[0];
+                                                if (!this.selectedAPI) this.selectedAPI = this.APIDropdown[0];
                                                 this.displayedAPI = APIDoc;
                                                 this.setAPIInfo();
                                                 this.menuNodes = this.selectedAPI.menu;
@@ -435,15 +439,27 @@ export class NxAPIToolService {
                                                     this.activeNode = this.menuNodes[0];
                                                 }
                                                 this.isReadOnly = false;
+                                                this.mediaServerUpdating = false;
+                                                this.serversLoaded$.next(true);
+                                                if (this.serverSubscription) {
+                                                    this.serverSubscription.unsubscribe();
+                                                }
+                                                this.mediaServerErrorCount = 0;
                                             }
-                                            this.mediaServerUpdating = false;
-                                            this.serversLoaded$.next(true);
-                                            if (this.serverSubscription) {
-                                                this.serverSubscription.unsubscribe();
+                                            if (this.serversDropdown.length === this.system.serverManager.servers.length) {
+                                                if (this.selectedServer.incompatible) {
+                                                    // If for whatever reason, all servers are marked as incompatible
+                                                    this.tryNextSystem();
+                                                }
+                                                this.mediaServerUpdating = false;
+                                                this.serversLoaded$.next(true);
+                                                if (this.serverSubscription) {
+                                                    this.serverSubscription.unsubscribe();
+                                                }
+                                                this.mediaServerErrorCount = 0;
                                             }
-                                            this.mediaServerErrorCount = 0;
-                                        }
-                                    });
+                                        });
+                                }
                             } else {
                                 this.serversDropdown.push({
                                     value: server.id,
@@ -578,7 +594,7 @@ export class NxAPIToolService {
         const deprecatedAPICall = this.getAPIDoc(serverID, 'deprecated')?.then(response => {
             removeProprietaryEndpoints(response);
             modifyTagNames(response, 'deprecated');
-            deprecatedAPI =  modifyPathTags(response, 'deprecated');
+            deprecatedAPI = modifyPathTags(response, 'deprecated');
         });
 
         await legacyAPICall;
@@ -586,7 +602,7 @@ export class NxAPIToolService {
 
         if (legacyAPI) {
             apiDocFull.tags = [...apiDocFull.tags, ...legacyAPI.tags];
-            apiDocFull.paths = Object.assign(apiDocFull.paths,  legacyAPI.paths);
+            apiDocFull.paths = Object.assign(apiDocFull.paths, legacyAPI.paths);
             const APIType: APIDocVersion = 'legacy';
             addSeperatedAPI(legacyAPI, mainMenuContent, 'LEGACY');
             this.addAPIDescription(APIType, legacyAPI.info);
@@ -594,7 +610,7 @@ export class NxAPIToolService {
         if (deprecatedAPI) {
             const APIType: APIDocVersion = 'deprecated';
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
-            apiDocFull.paths = Object.assign(apiDocFull.paths,  deprecatedAPI.paths);
+            apiDocFull.paths = Object.assign(apiDocFull.paths, deprecatedAPI.paths);
             const deprecatedMenuContent = createMenuContent(deprecatedAPI);
             addAPIInfoNodesToMenu(apiDocFull, deprecatedMenuContent, false);
             this.APIDropdown.push({
@@ -608,24 +624,26 @@ export class NxAPIToolService {
     }
 
     async getAPIInformation(serverID: string, mainMenuContent: MenuNodeWithParent[], APIDoc: APIDoc) {
-        let markdownError = false;
+        let restAPIInfo = true;
         if (this.isRestAPI(serverID)) {
             const changeLog = this.system.serverManager.getApiChangelog(serverID).then((api: any) => {
                 this.markdownStore.api_changelog = api;
             }).catch(() => {
-                markdownError = true;
+                restAPIInfo = false;
             });
 
             const APIPreamble = this.system.serverManager.getApiPreamble(serverID).then((api: any) => {
                 this.markdownStore.api_information = api;
             }).catch(() => {
-                markdownError = true;
+                restAPIInfo = false;
             });
 
             await changeLog;
             await APIPreamble;
+        } else {
+            restAPIInfo = false;
         }
 
-        addAPIInfoNodesToMenu(APIDoc, mainMenuContent, this.isRestAPI(serverID) && !markdownError);
+        addAPIInfoNodesToMenu(APIDoc, mainMenuContent, restAPIInfo);
     }
 }

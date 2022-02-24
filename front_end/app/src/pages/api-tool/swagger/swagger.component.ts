@@ -111,6 +111,7 @@ export class NxSwaggerComponent implements OnChanges {
                     SwaggerUI.SwaggerUIStandalonePreset
                 ],
                 plugins: [this.OnResponsesRenderPlugin],
+                syntaxHighlight: false,
                 spec: this.APIToolService.displayedAPI,
                 filter: filter,
                 docExpansion: expand,
@@ -407,10 +408,6 @@ export class NxSwaggerComponent implements OnChanges {
                 } else {
                     contentFound = true;
                 }
-            }
-            if (parent.childElementCount > 1) {
-                // the code above adds one extra line, should be removed
-                parent.lastElementChild.remove();
             }
         } else {
             parent.innerHTML = parent.textContent; // If no lines are added, remove code highlighting elements that comes from swagger-ui
