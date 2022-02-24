@@ -39,6 +39,7 @@ subinclude:robot_tests/.hgignore
 *.log
 *.sql
 *.deb
+*.sqlite3
 
 env
 nenv
@@ -55,3 +56,4 @@ tools/docker/external.dat
 .vscode
 etc/rabbitmq
 cloud/.coverage
+quart_env/

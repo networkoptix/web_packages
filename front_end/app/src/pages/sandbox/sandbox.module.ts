@@ -35,6 +35,7 @@ import {
 import { TagsComponent } from './tags/tags.component';
 import { ToasterComponent } from './toaster/toaster.component';
 import { ValidationComponent } from './validation/validation.component';
+import { WebsocketComponent } from './websocket/websocket.component';
 
 const appRoutes: Routes = [
     {
@@ -79,7 +80,10 @@ const appRoutes: Routes = [
             }, {
                 path: 'tags',
                 component: TagsComponent,
-            },
+            }, {
+                path: 'websocket',
+                component: WebsocketComponent
+            }
         ]
     }
 ];
@@ -113,6 +117,7 @@ const appRoutes: Routes = [
         FormElementsComponent,
         TagsComponent,
         ValidationComponent,
+        WebsocketComponent
     ],
     bootstrap: [
     ],
