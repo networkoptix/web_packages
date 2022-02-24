@@ -843,6 +843,7 @@
                 "help": "(zaznamenat všechny dostupné informace)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

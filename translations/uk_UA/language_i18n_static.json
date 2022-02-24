@@ -843,6 +843,7 @@
                 "help": "(журнал усієї доступної інформації)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

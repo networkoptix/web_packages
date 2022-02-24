@@ -843,6 +843,7 @@
                 "help": "( log ข้อมูลทั้งหมดที่มี)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

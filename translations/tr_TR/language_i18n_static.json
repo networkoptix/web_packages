@@ -843,6 +843,7 @@
                 "help": "(Detaylar: Kullanılabilir tüm bilgileri günlükle)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

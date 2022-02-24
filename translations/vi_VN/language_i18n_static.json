@@ -843,6 +843,7 @@
                 "help": "(ghi nhật ký tất cả thông tin có sẵn)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

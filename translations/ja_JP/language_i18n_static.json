@@ -843,6 +843,7 @@
                 "help": "(利用可能なすべての情報をログに記録)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "ローカル",
             "usb": "USB",

@@ -843,6 +843,7 @@
                 "help": "(naplózza az összes rendelkezésre álló információt)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

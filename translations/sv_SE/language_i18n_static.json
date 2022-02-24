@@ -843,6 +843,7 @@
                 "help": "(logga all tillgänglig information)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Lokal",
             "usb": "USB",

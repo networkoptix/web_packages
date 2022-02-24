@@ -843,6 +843,7 @@
                 "help": "(자세한 정보: 모든 정보를 기록)"
             }
         },
+        "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",
