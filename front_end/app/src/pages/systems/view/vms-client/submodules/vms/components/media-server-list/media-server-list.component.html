@@ -16,16 +16,22 @@
         'online': server.status === 'Online',
         'offline': server.status === 'Offline',
         'empty': !server.cameras.length
-      }">
-      <div class="server-name"
-           (click)=changeServerVisibility(server.id)
-           [title]="server.ip">
+      }"
+    >
+
+      <div
+          class="server-name"
+          (click)=changeServerVisibility(server.id)
+          [title]="server.ip"
+      >
+        <svg-icon nx-add-svg-src
+                  [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
+                  [applyClass]="true"></svg-icon>
         <span class="name" [ngClass]="server.status" [innerHTML]="(server.name | unsafe | highlight:token)"></span>
         <span *ngIf="showIP" class="ip-info" [innerHTML]="(server.ip | unsafe | highlight:token)"></span>
-        <svg-icon nx-add-svg-src
-          [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
-          [applyClass]="true"></svg-icon>
+        <svg-icon nx-add-svg-src class="expand" [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
       </div>
+
       <div class="cameras" *ngIf="isServerExpanded[server.id]">
         <a
           class="camera"

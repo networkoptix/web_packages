@@ -113,6 +113,15 @@ html[data-theme="dark"] {
     --left-menu-view-selected-bg : #35464F; //$light16;
     // end View tab ****************************
     
+    --time-under-mouse-bg            : rgba(var(--dark9--rgb), 0.9);
+    --time-under-mouse-color         : #A5B7C0; //$light10;
+    --timeline-bg                    : #171C1F; //$dark5;
+    --timeline-scrollbar-bg          : #2B383F; //$dark9;
+    --timeline-scrollbar-hover-bg    : #263137; //$dark8;
+    --timeline-scrollbar-stripe-bg   : #587785; //$dark18;
+    --timeline-scrollbutton-bg       : rgba(var(--dark9--rgb), 0.15);
+    --timeline-scrollbutton-hover-bg : rgba(var(--dark9--rgb), 0.25);
+    
     --paginator-bg           : #1C2327; //$dark6;
     --paginator-color        : #A5B7C0; //$light10;
     --paginator-hover-bg     : #3A4D57; //$dark12;

@@ -69,6 +69,14 @@ export class NxConfigService {
         return nxConfig.isLocal;
     }
 
+    static get isDarkTheme() {
+        return nxConfig.isDarkTheme;
+    }
+
+    static set isDarkTheme(res: boolean) {
+        nxConfig.isDarkTheme = res;
+    }
+
     static resolveLocalOrCloud = <Local, Cloud>(local: Local, cloud: Cloud) => {
         return NxConfigService.isLocal ? local : cloud;
     }

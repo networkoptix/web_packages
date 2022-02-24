@@ -266,6 +266,7 @@ export const nxConfig: IConfig = {
     },
     isInIframe: false,
     isLocal: environment.isLocal,
+    isDarkTheme: false,
     layout: {
         table: {
             rows: 10

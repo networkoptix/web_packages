@@ -1,5 +1,8 @@
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+
 import { colors } from './colors';
-const baseColorHex = colors.dark15;
+
+const baseColorHex = NxConfigService.isDarkTheme ? colors.light12 : colors.dark15;
 
 export const primaryRulerSerifDrawingConfigs = {
     0: {

@@ -55,7 +55,7 @@ $current-selection-indicator-color: theme_vars.$blue1;
       position: absolute;
       top: 0;
       bottom: 0;
-      background: $tlsb-bar-bg;
+      background: var(--timeline-scrollbar-bg);
       // cursor: grab;
       min-width: 50px;
 
@@ -68,7 +68,7 @@ $current-selection-indicator-color: theme_vars.$blue1;
         display: block;
         width: 0.5px;
         height: 7px;
-        background-color: $tlsb-bar-stripe-bg;
+        background-color: var(--timeline-scrollbar-stripe-bg);
 
         &:first-child {
           margin-right: 3.5px;
@@ -80,7 +80,7 @@ $current-selection-indicator-color: theme_vars.$blue1;
       }
 
       &:hover {
-        background: $tslb-bar-hover-bg;
+        background: var(--timeline-scrollbar-hover-bg);
       }
 
       // &.grabbed {
@@ -110,13 +110,13 @@ $current-selection-indicator-color: theme_vars.$blue1;
     width: 25px;
     height: 50px;
     cursor: pointer;
-    background: rgba(var(--dark1--rgb), 0.13);
-    opacity: 0.0;
     display: none;
-    // transition: opacity 0.2s ease-in-out;
-    background-position: center center;
-    background-repeat: no-repeat;
-
+    background : var(--timeline-scrollbutton-bg) no-repeat center center;
+    
+    svg-icon svg .st0 {
+      stroke : none;
+    }
+  
     &.enabled {
       opacity: .8;
       display         : flex;
@@ -124,7 +124,7 @@ $current-selection-indicator-color: theme_vars.$blue1;
       justify-content : center;
 
       &:hover {
-        opacity: 1.0;
+        background-color: var(--timeline-scrollbutton-hover-bg);
       }
 
       svg-icon {

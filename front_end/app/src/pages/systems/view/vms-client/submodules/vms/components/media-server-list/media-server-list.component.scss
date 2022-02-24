@@ -61,30 +61,27 @@
                         background-color: var(--left-menu-l1-bg-hover);
                     }
 
-                    > svg-icon {
+                    svg-icon {
                         position: absolute;
                         left: 7px;
                         top: -2px;
                         width: 29px;
+                        
+                        &.expand {
+                            left : auto;
+                            right : 0;
+                            width : 20px;
+    
+                            svg .st0 {
+                                fill   : none !important;
+                                stroke : var(--left-menu-l1-color) !important;
+                            }
+                        }
 
                         svg path {
                             fill: var(--left-menu-l1-color) !important;
                             stroke : none;
                         }
-                    }
-
-                    &:before {
-                        // expand/collapse indicator
-                        content: "";
-                        position: absolute;
-                        right: 8px;
-                        top: 16px;
-                        width: 10px;
-                        height: 10px;
-                        cursor: pointer;
-                        background-image: url("/static/images/web_interface_sprite@2x.png");
-                        background-size: 192px 408px;
-                        background-position: -61px -49px;
                     }
 
                     .name {
@@ -113,8 +110,8 @@
                 }
 
                 &.expanded {
-                    > .server-name:before {
-                        background-position: -49px -49px;
+                    > .server-name svg-icon.expand {
+                        transform: rotate(180deg);
                     }
                     > .cameras {
                         display: block;

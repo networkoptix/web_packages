@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -25,10 +26,12 @@ export class NxThemeSwitcherComponent implements OnInit {
 
     ngOnInit() {
         this.theme = this.localStorageService.retrieve('theme');
+        NxConfigService.isDarkTheme = this.theme === 'dark';
     }
 
     setTheme(name) {
         this.theme = name;
+        NxConfigService.isDarkTheme = this.theme === 'dark';
         this.localStorageService.store('theme', name);
         this.window.document.documentElement.setAttribute('data-theme', name);
     }

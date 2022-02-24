@@ -52,6 +52,7 @@ export interface BaseConfig {
     ipvd: Ipvd;
     isInIframe: boolean;
     isLocal: boolean;
+    isDarkTheme: boolean;
     landing: Landing;
     layout: Layout;
     maintenanceTimeout: number;

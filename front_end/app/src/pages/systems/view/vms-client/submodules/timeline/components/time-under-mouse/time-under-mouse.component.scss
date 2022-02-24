@@ -1,5 +1,5 @@
-$usualBackground: rgba(var(--light6--rgb), 0.9);
-$textColor: var(--dark9);
+$usualBackground: var(--time-under-mouse-bg);
+$textColor: var(--time-under-mouse-color);
 $pressedColor: $textColor;
 
 :host {
@@ -42,7 +42,7 @@ $pressedColor: $textColor;
   }
 
   > .vertical-line {
-    content: '';
+    content: "";
     width: 2px;
     height: 30px;
     background-color: $usualBackground;
@@ -68,7 +68,7 @@ $pressedColor: $textColor;
       font-weight: bold;
       font-size: 16px;
       line-height: 1.0em;
-      font-family: 'robotobold', Roboto, Helvetica, sans-serif;
+      font-family: "robotobold", Roboto, Helvetica, sans-serif;
     }
   }
 
