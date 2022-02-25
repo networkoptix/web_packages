@@ -228,6 +228,9 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     this.updateVerificationOriginal(newState);
                     this.accountService.get(true).catch(_ => {});
                     this.applyService.reset();
+                    setTimeout(() => {
+                        this.setPopoverTargets();
+                    });
                 });
         } else {
             this.dialogs
