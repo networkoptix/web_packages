@@ -531,7 +531,7 @@ export class MergeModalContent {
                 if (this.environment.isLocal) {
                     password = this.remotePassword;
                 }
-                if (!password && !this.environment.isLocal) {
+                if (!password && !this.system.mediaserver.isSessionOauth) {
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
 
