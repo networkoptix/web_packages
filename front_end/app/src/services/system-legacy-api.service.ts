@@ -603,8 +603,8 @@ export class NxSystemAPI {
     }
 
     getEvents(
-        from: Date,
-        to = Date.now(),
+        from: number,
+        to: number,
         cameraId?: string,
         eventType?: t.EventTypes,
         actionType?: t.ActionTypes,

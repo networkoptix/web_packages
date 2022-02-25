@@ -128,7 +128,10 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
     ) {
         super(cd);
         this.CONFIG = configService.config;
-        NxThirdPartyWidgetComponent.sharedState$ ||= new SharedWidgetState(systemsService.systemsSubject.asObservable() as any, url => router.navigateByUrl(url));
+        NxThirdPartyWidgetComponent.sharedState$ ||= new SharedWidgetState(
+            systemsService.systemsSubject.asObservable() as any,
+            () => systemsService.forceUpdateSystems() as any,
+            url => router.navigateByUrl(url));
     }
 }
 

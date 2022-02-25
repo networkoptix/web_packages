@@ -231,7 +231,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-imports",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-imports/LICENSE"
         },
-        "@babel/helper-module-transforms@7.16.7": {
+        "@babel/helper-module-transforms@7.17.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -319,14 +319,14 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/types",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/types/LICENSE"
         },
-        "@eslint/eslintrc@1.1.0": {
+        "@eslint/eslintrc@1.2.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslintrc",
             "publisher": "Nicholas C. Zakas",
             "path": "cloud_portal/cloud_helper/node_modules/@eslint/eslintrc",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@eslint/eslintrc/LICENSE"
         },
-        "@humanwhocodes/config-array@0.9.3": {
+        "@humanwhocodes/config-array@0.9.5": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/humanwhocodes/config-array",
             "publisher": "Nicholas C. Zakas",
@@ -440,7 +440,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/minimist",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/minimist/LICENSE"
         },
-        "@types/node@17.0.18": {
+        "@types/node@17.0.21": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/node",
@@ -716,7 +716,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/braces",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/braces/LICENSE"
         },
-        "browserslist@4.19.1": {
+        "browserslist@4.19.3": {
             "licenses": "MIT",
             "repository": "https://github.com/browserslist/browserslist",
             "publisher": "Andrey Sitnik",
@@ -1129,7 +1129,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.71": {
+        "electron-to-chromium@1.4.73": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -1219,7 +1219,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/escape-string-regexp",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/escape-string-regexp/license"
         },
-        "eslint-config-prettier@8.3.0": {
+        "eslint-config-prettier@8.4.0": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/eslint-config-prettier",
             "publisher": "Simon Lydell",
@@ -1333,7 +1333,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks/LICENSE"
         },
-        "eslint-plugin-react@7.28.0": {
+        "eslint-plugin-react@7.29.1": {
             "licenses": "MIT",
             "repository": "https://github.com/yannickcr/eslint-plugin-react",
             "publisher": "Yannick Croissant",
@@ -1384,7 +1384,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-visitor-keys",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-visitor-keys/LICENSE"
         },
-        "eslint@8.9.0": {
+        "eslint@8.10.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslint",
             "publisher": "Nicholas C. Zakas",
@@ -3869,7 +3869,7 @@
             "path": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/concat-map",
             "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/node_modules/concat-map/LICENSE"
         },
-        "dashboard-widget-state@0.3.4": {
+        "dashboard-widget-state@0.4.2": {
             "licenses": "ISC",
             "path": "cloud_portal/front_end/app/lib/dashboard-widget-state",
             "licenseFile": "cloud_portal/front_end/app/lib/dashboard-widget-state/README.md"
@@ -5749,7 +5749,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.71": {
+        "electron-to-chromium@1.4.73": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -6131,7 +6131,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/flush-write-stream",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/flush-write-stream/LICENSE"
         },
-        "follow-redirects@1.14.8": {
+        "follow-redirects@1.14.9": {
             "licenses": "MIT",
             "repository": "https://github.com/follow-redirects/follow-redirects",
             "publisher": "Ruben Verborgh",
@@ -9385,7 +9385,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/url-loader",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/url-loader/LICENSE"
         },
-        "url-parse@1.5.7": {
+        "url-parse@1.5.10": {
             "licenses": "MIT",
             "repository": "https://github.com/unshiftio/url-parse",
             "publisher": "Arnout Kazemier",
