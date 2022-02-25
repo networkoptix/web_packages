@@ -843,7 +843,7 @@
                 "help": "（記錄所有可用資訊）"
             }
         },
-        "loggerDropdownLabel": "{ loggerName } log level",
+        "loggerDropdownLabel": "{ loggerName } 日誌等級",
         "storageToolTips": {
             "local": "Local",
             "usb": "USB",

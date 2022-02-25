@@ -843,7 +843,7 @@
                 "help": "(logga all tillgänglig information)"
             }
         },
-        "loggerDropdownLabel": "{ loggerName } log level",
+        "loggerDropdownLabel": "{ loggerName } loggnivå",
         "storageToolTips": {
             "local": "Lokal",
             "usb": "USB",
@@ -890,8 +890,8 @@
         "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare",
         "twoFaRequired": "Tvåfaktorsautentisering har aktiverats för det här kontot. Vänligen ange din verifieringskod i popup-fönstret.",
         "loggingIn": "Loggar in. Vänligen vänta.",
-        "sessionRenewed": "Session has been renewed.",
-        "failedToUpdateSession": "Updating the session failed."
+        "sessionRenewed": "Sessionen har förnyats.",
+        "failedToUpdateSession": "Det gick inte att uppdatera sessionen."
     },
     "headerLabels": {
         "healthReportForSystem": "Heath-rapport för system {systemName}"
