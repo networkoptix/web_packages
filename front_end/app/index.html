@@ -99,7 +99,7 @@
     };
     fetch('/api/utils/settings')
         .then((res) => res.json())
-        .then((data) => data && addTag(window, document, 'script', 'dataLayer', data.googleTagManagerId));
+        .then((data) => data && addTag(window, document, 'script', 'dataLayer', data?.googleTagManagerId?.trim()));
 </script>
 <!-- End Google Tag Manager -->
 
