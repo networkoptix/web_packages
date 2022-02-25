@@ -105,31 +105,31 @@ export class NxSystemsListComponent implements OnInit {
                 this.userEmail = account.email;
                 this.systemsService.getSystems(account.email);
             }
-        });
 
-        this.systemsService.systemsSubject.pipe(
-            untilDestroyed(this)
-        ).subscribe((systems) => {
-            this.systems = systems;
-            this.availableSystems.emit(systems);
-            if (this.systems === undefined) {
-                return;
-            }
-
-            this.systems.map((system) => {
-                // avoid html being interpreted
-                system.name = NxUtilsService.htmlToEntity(system.name);
-            });
-
-            if (this.location.path().startsWith(this.base)) {
-                if (this.systems.length === 1) {
-                    this.openSystem(this.systems[0]);
+            this.systemsService.systemsSubject.pipe(
+                untilDestroyed(this)
+            ).subscribe((systems) => {
+                this.systems = systems;
+                this.availableSystems.emit(systems);
+                if (this.systems === undefined) {
+                    return;
                 }
 
-                this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
+                this.systems.map((system) => {
+                    // avoid html being interpreted
+                    system.name = NxUtilsService.htmlToEntity(system.name);
+                });
 
-                this.searchSystems();
-            }
+                if (this.location.path().startsWith(this.base)) {
+                    if (this.systems.length === 1) {
+                        this.openSystem(this.systems[0]);
+                    }
+
+                    this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
+
+                    this.searchSystems();
+                }
+            });
         });
 
         this.gettingSystems = this.processService.createProcess(() => {
