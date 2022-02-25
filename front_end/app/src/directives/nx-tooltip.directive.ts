@@ -98,7 +98,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    @HostListener('mouseout')
+    @HostListener('mouseleave')
     hide() {
         this.overlayRef?.detach();
         this.destroy$.next();
