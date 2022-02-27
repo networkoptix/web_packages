@@ -246,6 +246,27 @@ class TestModelFunctions:
         assert menu.get('type', False) == menu_type
         assert len(menu.get('nodes', False)) == nodes_count
 
+    def test_get_cached_menu_different_users_get_different_menus(self, uses, account_factory, mocker):
+        uses(account=True, customization=True, menu=True)
+        user_one = account_factory(email='user_one@email.com', is_superuser=False)
+        user_two = account_factory(email='user_two@email.com', is_superuser=False)
+        condition = 'user_one_condition'
+        baker.make(MenuNode, name=f'user1 node', enabled=[self.customization], available=[
+                       self.customization], condition=condition, parent_menu=self.menu)
+        mocker.patch('cms.feature_flags.FLAGS.value_to_key', lambda node_condition: node_condition == condition)
+        mocker.patch('cms.models.feature_flag_is_active', lambda flag, user: flag and user == user_one)
+        customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
+
+        # user_one gets an extra node because they have permission
+        cached_menus = get_cached_menu(
+            customization, user=user_one, menu_type=menu_type)
+        assert len(cached_menus.get(menu_name).get('nodes', False)) == nodes_count + 1
+
+        # user_two does not have access to the extra node
+        cached_menus = get_cached_menu(
+            customization, user=user_two, menu_type=menu_type)
+        assert len(cached_menus.get(menu_name).get('nodes', False)) == nodes_count
+
     # External File Test
     def test_slugify_lower(self):
         slug = slugify('T$E%S@T', True)

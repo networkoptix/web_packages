@@ -1,6 +1,7 @@
 from enum import Enum
 import functools
 from django.core.handlers.wsgi import WSGIRequest
+from waffle import get_waffle_flag_model
 
 from rest_framework.request import Request
 
@@ -33,9 +34,9 @@ class _FlagType(type):
         attr = super().__getattribute__(name)
         return attr[1]
 
-    def name_to_key(self, name):
+    def value_to_key(self, value):
         for key in self.all_keys:
-            if super().__getattribute__(key)[0] == name:
+            if value in super().__getattribute__(key):
                 return key
         return None
 
@@ -105,6 +106,11 @@ def validate_is_superuser(*args, **kwargs):
 
 def get_feature_flag_error(flag, user):
     return f'Feature {flag} is currently not enabled for user {user}'
+
+
+def flag_is_active_for_user(user, flag_name):
+    flag = get_waffle_flag_model().get(flag_name)
+    return flag.is_active_for_user(user)
 
 
 def check_feature_flag(flags, custom_validator=None, error_class=PermissionError):

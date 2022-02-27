@@ -35,8 +35,9 @@ from model_utils import Choices
 from django.core.cache import cache, caches
 from model_utils import FieldTracker
 from waffle.models import AbstractUserFlag, keyfmt, get_cache
+from waffle import flag_is_active, switch_is_active
 
-from .feature_flags import FLAGS
+from .feature_flags import FLAGS, SWITCHES, flag_is_active_for_user
 
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
@@ -285,22 +286,31 @@ def check_user_menu_permissions(nodes, user):
         condition_met = node.pop('condition_met', False)
         beta_permission = Customization.BETA_PERMISSION_MAP.get(
             condition, None)
-        if not condition_met and condition and \
+        if feature_flag := (FLAGS.value_to_key(condition) or SWITCHES.value_to_key(condition)):
+            if not feature_flag_is_active(feature_flag, user):
+                del nodes[i]
+                continue
+        elif not condition_met and condition and \
                 not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
                     user, settings.CUSTOMIZATION, f'cms.{beta_permission}'
                 )):
             del nodes[i]
+            continue
+        permissions = node.get('permissions', [])
+        for permission_codename in permissions:
+            if not (user and UserGroupsToAssetPermissions.check_customization_permission(
+                    user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
+            )):
+                del nodes[i]
+                break
         else:
-            permissions = node.get('permissions', [])
-            for permission_codename in permissions:
-                if not (user and UserGroupsToAssetPermissions.check_customization_permission(
-                        user, settings.CUSTOMIZATION, f'cms.{permission_codename}'
-                )):
-                    del nodes[i]
-                    break
-            else:
-                node.pop('permissions', None)
-                check_user_menu_permissions(node.get('nodes', []), user)
+            node.pop('permissions', None)
+            check_user_menu_permissions(node.get('nodes', []), user)
+
+def feature_flag_is_active(feature_flag, user):
+    flag = getattr(FLAGS, feature_flag, None)
+    switch = getattr(SWITCHES, feature_flag, None)
+    return flag and flag_is_active_for_user(user, flag) or switch and switch_is_active(switch)
 
 
 def cached_doc_menu_map(customization_name, refresh=False):
@@ -3116,7 +3126,7 @@ class Flag(AbstractUserFlag):
         flag_cache = get_cache()
         flag_cache.delete_many(keys)
 
-    def is_active_for_user(self, user):
+    def is_active_for_user(self, user, customization_name=settings.CUSTOMIZATION):
         is_active = super(AbstractUserFlag, self).is_active_for_user(user)
         if is_active:
             return is_active
@@ -3136,20 +3146,14 @@ class Flag(AbstractUserFlag):
                 if group_ids.intersection(user_groups):
                     return True
 
-        return None
-
-    def is_active(self, request, customization_name=settings.CUSTOMIZATION):
-        if super().is_active(request):
-            return True
-
         if self.data_structure and self.everyone is not False and self._get_data_structure_value(customization_name):
             return True
 
-        return False
+        return None
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            if (key := FLAGS.name_to_key(self.name)) and (ds_name := FLAGS.data_structure_name(key)) and \
+            if (key := FLAGS.value_to_key(self.name)) and (ds_name := FLAGS.data_structure_name(key)) and \
                     (ds := DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,
                                                         name=ds_name).first()):
                 self.data_structure = ds

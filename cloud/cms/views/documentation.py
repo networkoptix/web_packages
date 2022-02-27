@@ -16,7 +16,6 @@ from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_por
     AssetCustomizationReview
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
-from util.base_cache import BaseCache
 from util.helpers import get_language_object_from_request, get_meilisearch_client
 import re
 from meilisearch.errors import MeiliSearchApiError
