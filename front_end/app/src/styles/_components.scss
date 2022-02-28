@@ -97,7 +97,8 @@
     }
 
     .lead {
-        @include typography.regular18dark9;
+        @include typography.regular18nocolor;
+        color : var(--body-text-color);
         margin-bottom  : 48px;
         min-height     : 28px;
         padding-bottom : 1px;
@@ -124,11 +125,11 @@
 
         h2 {
             @extend .card--header;
-            @include typography.medium18dark9;
+            @include typography.medium18nocolor;
             line-height     : unset;
             padding-top     : 103px;
             padding-bottom  : 35px;
-            background      : $additional_light1 no-repeat 50% 20px;
+            background      : var(--card-header-bg) no-repeat 50% 20px;
             background-size : auto 64px;
         }
 
@@ -143,7 +144,7 @@
         }
 
         h4 {
-            @include typography.regular14dark9;
+            @include typography.regular14nocolor;
             margin      : 20px 16px;
             line-height : 1.4;
         }

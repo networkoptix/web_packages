@@ -242,16 +242,16 @@ html[data-theme="dark"] {
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;
     
-    --card-simple-info-bg           : rgba(#{$brand_d2}, .1);
-    --card-simple-info-border-color : rgba(#{$brand_d2}, .3);
+    --card-simple-info-bg           : rgba(var(--brand_d2--rgb), .1);
+    --card-simple-info-border-color : rgba(var(--brand_d2--rgb), .3);
     --card-simple-info-color        : #E1E7EA; //$light4;
     
-    --card-simple-warning-bg           : rgba(#{$yellow_d1}, .1);
-    --card-simple-warning-border-color : rgba(#{$yellow_d1}, .3);
+    --card-simple-warning-bg           : rgba(var(--yellow_d1--rgb), .1);
+    --card-simple-warning-border-color : rgba(var(--yellow_d1--rgb), .3);
     --card-simple-warning-color        : #A5B7C0; //$light10;
     
-    --card-simple-error-bg           : color-opacity($red_main, .1); // rgba(#{$red_main}, .1);
-    --card-simple-error-border-color : rgba(#{$red_main}, .3);
+    --card-simple-error-bg           : rgba(var(--red_main--rgb), .1); // rgba(#{$red_main}, .1);
+    --card-simple-error-border-color : rgba(var(--red_main--rgb), .3);
     --card-simple-error-color        : #E1E7EA; //$light4;
     
     --card-simple-default-bg           : #C22626; //$red_main;

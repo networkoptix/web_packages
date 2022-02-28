@@ -139,9 +139,9 @@
     
     --btn-clear-bg    : transparent;
     --btn-clear-color : #{$dark9};
-    --btn-clear-hover-bg  : rgba(#{$light16}, .1);
+    --btn-clear-hover-bg  : rgba(var(--light16--rgb), .1);
     --btn-clear-hover-color  : #{$dark9};
-    --btn-clear-active-bg : rgba(#{$light16}, .15);
+    --btn-clear-active-bg : rgba(var(--light16--rgb), .15);
     --btn-clear-active-color : #{$dark9};
     
     --btn-dropdown-toggle-bg             : #{$light4};
@@ -241,16 +241,16 @@
     --card-header-text : #{$dark9};
     --card-body-bg : #{$light1};
     
-    --card-simple-info-bg           : rgba(#{$brand_core}, .1);
-    --card-simple-info-border-color : rgba(#{$brand_core}, .3);
+    --card-simple-info-bg           : rgba(var(--brand_core--rgb), .1);
+    --card-simple-info-border-color : rgba(var(--brand_core--rgb), .3);
     --card-simple-info-color        : #{$dark9};
     
-    --card-simple-warning-bg           : rgba(#{$yellow_main}, .1);
-    --card-simple-warning-border-color : rgba(#{$yellow_main}, .3);
+    --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
+    --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
     --card-simple-warning-color        : #{$dark9};
     
-    --card-simple-error-bg : rgba(#{$red_l2}, .1);
-    --card-simple-error-border-color : rgba(#{$red_l2}, .3);
+    --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
+    --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
     --card-simple-error-color : #{$dark9};
     
     --card-simple-default-bg : #{$red2};

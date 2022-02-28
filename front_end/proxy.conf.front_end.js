@@ -26,6 +26,7 @@ const PROXY_CONFIG = [
             '/static/bootstrap',
             '/static/css/main.css',
             // static content from cloud
+            '/static/lang_en_US/views/static/landing.html',
             '/static/503.html',
             '/static/customization',
             '/static/lang_ru_RU',
