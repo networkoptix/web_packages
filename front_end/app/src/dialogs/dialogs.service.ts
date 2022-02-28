@@ -45,6 +45,7 @@ import { GenericModalContent } from './generic/generic.component';
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
+import { MoveSystemToGroupModalContent } from './move-system-to-group/move-system-to-group.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
@@ -631,15 +632,21 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public createSystemGroup() {
-        const config: IParams = {};
+    public createSystemGroup(): Promise<void> {
+        const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(CreateSystemGroupModalContent, dialogConfig).afterClosed();
     }
 
     public systemGroupSettings() {
-        const config: IParams = {};
+        const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(SystemGroupSettingsModalContent, dialogConfig).afterClosed();
+    }
+
+    public moveSystemToGroup(): Promise<void> {
+        const config: Partial<DialogConfig> = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(MoveSystemToGroupModalContent, dialogConfig).afterClosed();
     }
 }

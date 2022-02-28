@@ -117,10 +117,11 @@ export class NxSystemsListComponent implements OnInit {
                 return;
             }
 
-            this.systems.map(system => {
+            this.systems.map(system => ({
+                ...system,
                 // avoid html being interpreted
-                system.name = htmlToEntity(system.name);
-            });
+                name: htmlToEntity(system.name)
+            }));
 
             if (this.location.path().startsWith(this.base)) {
                 if (this.systems.length === 1) {

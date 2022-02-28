@@ -6,7 +6,8 @@ module.exports = {
         'import',
         'node',
         'promise',
-        'standard'
+        'standard',
+        'ngrx',
     ],
     parserOptions: {
         project: './tsconfig.json',
@@ -274,6 +275,7 @@ module.exports = {
         {
             /* @typescript-eslint overrides/exclusives */
             files: ['**/*.ts'],
+            extends: ['plugin:ngrx/recommended'],
             rules: {
                 'lines-between-class-members': 'off',
                 '@typescript-eslint/lines-between-class-members': ['error', {

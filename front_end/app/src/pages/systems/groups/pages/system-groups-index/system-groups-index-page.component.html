@@ -1,6 +1,30 @@
 <div class="wrapper">
     <aside>
-        <nx-system-group-tree [groups]="groupForest$ | async"></nx-system-group-tree>
+        <div class="d-flex">
+            <button
+                class="btn btn-default mr-2"
+                (click)="newGroup()"
+                translate
+            >New group</button>
+            <button
+                class="btn btn-default"
+                (click)="moveSystem()"
+                [disabled]="!(_groupForest$ | async).length"
+                translate
+            >Move system</button>
+        </div>
+        <h2>Groups</h2>
+        <nx-system-group-tree [groups]="_groupForest$ | async"></nx-system-group-tree>
+
+        <h2>Ungrouped systems</h2>
+        <ul *ngIf="ungroupedSystems.length; else noUngrouped">
+            <li *ngFor="let system of ungroupedSystems">
+                <a [routerLink]="'/systems/' + system.id">{{ system.name }}</a>
+            </li>
+        </ul>
+        <ng-template #noUngrouped>
+            <div>(None)</div>
+        </ng-template>
     </aside>
     <div class="content">
         <router-outlet></router-outlet>

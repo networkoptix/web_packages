@@ -66,8 +66,8 @@ export class NxSystemsService implements OnDestroy {
     }
 
     protected _registerStoreConnection() {
-        this.systemsSubject.subscribe((ss: Array<NxSystemWithUserInfo>) => {
-            this.store.dispatch(SystemsActions.set({ systems: ss }));
+        this.systemsSubject.subscribe((systems: Array<NxSystemWithUserInfo>) => {
+            this.store.dispatch(SystemsActions.set({ systems }));
         });
     }
 

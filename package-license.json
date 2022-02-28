@@ -11333,6 +11333,18 @@
             "path": "cloud_portal/front_end/node_modules/@types/ws",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/ws/LICENSE"
         },
+        "@types/yargs-parser@20.2.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/yargs-parser",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/yargs-parser/LICENSE"
+        },
+        "@types/yargs@17.0.8": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/yargs",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/yargs/LICENSE"
+        },
         "@typescript-eslint/eslint-plugin@4.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
@@ -11368,6 +11380,12 @@
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/typescript-estree",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/typescript-estree/LICENSE"
+        },
+        "@typescript-eslint/utils@5.12.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/typescript-eslint/typescript-eslint",
+            "path": "cloud_portal/front_end/node_modules/@typescript-eslint/utils",
+            "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/utils/LICENSE"
         },
         "@typescript-eslint/visitor-keys@4.0.1": {
             "licenses": "MIT",
@@ -11643,6 +11661,13 @@
             "repository": "https://github.com/epoberezkin/ajv-errors",
             "path": "cloud_portal/front_end/node_modules/ajv-errors",
             "licenseFile": "cloud_portal/front_end/node_modules/ajv-errors/LICENSE"
+        },
+        "ajv-formats@2.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ajv-validator/ajv-formats",
+            "publisher": "Evgeny Poberezkin",
+            "path": "cloud_portal/front_end/node_modules/ajv-formats",
+            "licenseFile": "cloud_portal/front_end/node_modules/ajv-formats/LICENSE"
         },
         "ajv-keywords@3.5.2": {
             "licenses": "MIT",
@@ -12240,6 +12265,12 @@
             "url": "sindresorhus.com",
             "path": "cloud_portal/front_end/node_modules/binary-extensions",
             "licenseFile": "cloud_portal/front_end/node_modules/binary-extensions/license"
+        },
+        "bl@4.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/rvagg/bl",
+            "path": "cloud_portal/front_end/node_modules/bl",
+            "licenseFile": "cloud_portal/front_end/node_modules/bl/LICENSE.md"
         },
         "blocking-proxy@1.0.1": {
             "licenses": "MIT",
@@ -14078,6 +14109,14 @@
             "path": "cloud_portal/front_end/node_modules/eslint-config-standard",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-config-standard/LICENSE"
         },
+        "eslint-etc@5.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/cartant/eslint-etc",
+            "publisher": "Nicholas Jamieson",
+            "email": "nicholas@cartant.com",
+            "path": "cloud_portal/front_end/node_modules/eslint-etc",
+            "licenseFile": "cloud_portal/front_end/node_modules/eslint-etc/LICENSE"
+        },
         "eslint-import-resolver-node@0.3.6": {
             "licenses": "MIT",
             "repository": "https://github.com/import-js/eslint-plugin-import",
@@ -14109,6 +14148,13 @@
             "email": "me@benmosher.com",
             "path": "cloud_portal/front_end/node_modules/eslint-plugin-import",
             "licenseFile": "cloud_portal/front_end/node_modules/eslint-plugin-import/LICENSE"
+        },
+        "eslint-plugin-ngrx@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/timdeschryver/eslint-plugin-ngrx",
+            "publisher": "Tim Deschryver",
+            "path": "cloud_portal/front_end/node_modules/eslint-plugin-ngrx",
+            "licenseFile": "cloud_portal/front_end/node_modules/eslint-plugin-ngrx/LICENSE"
         },
         "eslint-plugin-node@11.1.0": {
             "licenses": "MIT",
@@ -19047,6 +19093,15 @@
             "path": "cloud_portal/front_end/node_modules/require-directory",
             "licenseFile": "cloud_portal/front_end/node_modules/require-directory/LICENSE"
         },
+        "require-from-string@2.0.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/floatdrop/require-from-string",
+            "publisher": "Vsevolod Strukchinsky",
+            "email": "floatdrop@gmail.com",
+            "url": "github.com/floatdrop",
+            "path": "cloud_portal/front_end/node_modules/require-from-string",
+            "licenseFile": "cloud_portal/front_end/node_modules/require-from-string/license"
+        },
         "require-main-filename@2.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/yargs/require-main-filename",
@@ -20399,6 +20454,14 @@
             "publisher": "Microsoft Corp.",
             "path": "cloud_portal/front_end/node_modules/tslib",
             "licenseFile": "cloud_portal/front_end/node_modules/tslib/LICENSE.txt"
+        },
+        "tsutils-etc@1.4.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/cartant/tsutils-etc",
+            "publisher": "Nicholas Jamieson",
+            "email": "nicholas@cartant.com",
+            "path": "cloud_portal/front_end/node_modules/tsutils-etc",
+            "licenseFile": "cloud_portal/front_end/node_modules/tsutils-etc/LICENSE"
         },
         "tsutils@3.21.0": {
             "licenses": "MIT",

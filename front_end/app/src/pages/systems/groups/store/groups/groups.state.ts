@@ -1,5 +1,9 @@
+type systemId = string;
+type groupId = string;
+type groupName = string;
+
 export interface GroupsState {
-    systemGroups: Record<string, string>,
-    groupNames: Record<string, string>,
-    groupParents: Record<string, string>,
+    systemGroups: Record<systemId, groupId>,
+    groupNames: Record<groupId, groupName>,
+    groupParents: Record<groupId, groupId>,
 }

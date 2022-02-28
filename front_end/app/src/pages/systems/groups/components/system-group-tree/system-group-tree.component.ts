@@ -8,15 +8,15 @@ import { IGroup } from '../../store/groups/groups.selectors';
     styleUrls: ['./system-group-tree.component.scss']
 })
 export class NxSystemGroupTreeComponent {
-  @Input() groups: ReadonlyArray<IGroup> = [];
-  @Output() nameChangeRequested = new EventEmitter<{ groupId: string, newName: string }>();
-  @Output() parentIdChangeRequested = new EventEmitter<{ groupId: string, newParentId: string }>();
+    @Input() groups: ReadonlyArray<IGroup> = [];
+    @Output() nameChangeRequested = new EventEmitter<{ groupId: string, newName: string }>();
+    @Output() parentIdChangeRequested = new EventEmitter<{ groupId: string, newParentId: string }>();
 
-  public requestNameChange(groupId: string, event) {
-      this.nameChangeRequested.emit({ groupId, newName: event.target.value });
-  }
+    public requestNameChange(groupId: string, event) {
+        this.nameChangeRequested.emit({ groupId, newName: event.target.value });
+    }
 
-  public requestParentIdChange(groupId: string, event) {
-      this.parentIdChangeRequested.emit({ groupId, newParentId: event.target.value });
-  }
+    public requestParentIdChange(groupId: string, event) {
+        this.parentIdChangeRequested.emit({ groupId, newParentId: event.target.value });
+    }
 }

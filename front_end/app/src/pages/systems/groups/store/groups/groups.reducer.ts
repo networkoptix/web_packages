@@ -1,4 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
+import { cloneDeep } from 'lodash-es';
 
 import * as GroupActions from './groups.actions';
 import { GroupsState } from './groups.state';
@@ -20,37 +21,43 @@ export const initialState: GroupsState = {
     },
 };
 
-const _groupsReducer = createReducer(
+export const groupsReducer = createReducer(
 
     initialState,
 
-    on(GroupActions.reset, state => ({ ...initialState })),
+    on(GroupActions.reset, _state => cloneDeep(initialState)),
 
-    on(GroupActions.load, (state, { newState }) => ({ ...newState })),
+    on(GroupActions.load, (_state, { newState }) => cloneDeep(newState)),
 
     on(GroupActions.createGroup, (state, { groupId, name, parentId }) => {
-        state.groupNames[groupId] = name;
-        state.groupParents[groupId] = parentId;
-        return state;
+        const newState = cloneDeep(state);
+        newState.groupNames[groupId] = name;
+        if (parentId) {
+            newState.groupParents[groupId] = parentId;
+        }
+        return newState;
     }),
 
     on(GroupActions.setGroupName, (state, { groupId, name }) => {
-        state.groupNames[groupId] = name;
-        return state;
+        const newState = cloneDeep(state);
+        newState.groupNames[groupId] = name;
+        return newState;
     }),
 
     on(GroupActions.setGroupParent, (state, { groupId, parentId }) => {
-        state.groupParents[groupId] = parentId;
-        return state;
+        const newState = cloneDeep(state);
+        newState.groupParents[groupId] = parentId;
+        return newState;
     }),
 
     on(GroupActions.setSystemGroup, (state, { systemId, groupId }) => {
-        state.systemGroups[systemId] = groupId;
-        return state;
+        const newState = cloneDeep(state);
+        if (groupId) {
+            newState.systemGroups[systemId] = groupId;
+        } else {
+            delete newState.systemGroups[systemId];
+        }
+        return newState;
     }),
 
 );
-
-export function groupsReducer(state, action) {
-    return _groupsReducer(state, action);
-}

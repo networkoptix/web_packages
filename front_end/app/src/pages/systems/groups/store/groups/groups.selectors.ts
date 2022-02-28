@@ -2,12 +2,10 @@ import { createSelector, createFeatureSelector } from '@ngrx/store';
 
 import { GroupsState } from './groups.state';
 
-export const selectGroupState = createFeatureSelector<GroupsState>('groups');
-
 export interface ISystem {
     id: string,
     // name: string,
-    groupId: string,
+    parentId: string,
 }
 
 export interface IGroup {
@@ -18,31 +16,28 @@ export interface IGroup {
     systems: Array<ISystem>,
 }
 
+export const selectGroupState = createFeatureSelector<GroupsState>('groups');
+
 export const selectGroup = createSelector(
     selectGroupState,
-    (state, groupId) => _groupId2Group(state, groupId)
+    (state: GroupsState, groupId: string) => _groupId2Group(state, groupId)
 );
 
-export const selectGroupList = createSelector(
-    selectGroupState,
-    state => Object.keys(state.groupNames).reduce(
-        (acc: Array<IGroup>, groupId: string) => [...acc, _groupId2Group(state, groupId)],
-        []
-    )
-);
+// export const selectGroupList = createSelector(
+//     selectGroupState,
+//     state => Object.keys(state.groupNames).map(groupId =>
+//         _groupId2Group(state, groupId)
+//     )
+// );
 
 export const selectGroupForest = createSelector(
     selectGroupState,
     state => Object.keys(state.groupNames)
-        .filter(
-            groupId => !state.groupParents[groupId]
-        ).reduce(
-            (acc: Array<IGroup>, groupId: string) => [...acc, _groupId2Group(state, groupId)],
-            []
-        )
+        .filter(groupId => !state.groupParents[groupId]) // Top-level groups
+        .map(groupId => _groupId2Group(state, groupId))
 );
 
-const _systemId2System = (state, systemId) => {
+const _systemId2System = (state: GroupsState, systemId: string): ISystem => {
     return {
         id: systemId,
         // name: state.groupNames[systemId],
@@ -50,11 +45,13 @@ const _systemId2System = (state, systemId) => {
     };
 };
 
-const _groupId2Group = (state, groupId) => {
+const _groupId2Group = (state: GroupsState, groupId: string): IGroup => {
     const childrenIds = Object.keys(state.groupParents).filter(
-        childId => state.groupParents[childId] === groupId);
+        childId => state.groupParents[childId] === groupId
+    );
     const systemIds = Object.keys(state.systemGroups).filter(
-        systemId => state.systemGroups[systemId] === groupId);
+        systemId => state.systemGroups[systemId] === groupId
+    );
     return {
         id: groupId,
         name: state.groupNames[groupId],

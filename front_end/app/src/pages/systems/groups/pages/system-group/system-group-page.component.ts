@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -10,10 +10,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxSystemWithUserInfo } from '@services/systems.service';
+import { selectSystems } from '@src/store/systems/systems.selectors';
 
 import { SystemsState } from '../../../../../store/systems/systems.state';
 import { IGroup, selectGroup } from '../../store/groups/groups.selectors';
-import { GroupsState } from '../../store/groups/groups.state';
 
 interface IGroupWithSystemDetails {
     id: string,
@@ -23,7 +23,10 @@ interface IGroupWithSystemDetails {
     systems: Array<NxSystemWithUserInfo>,
 }
 
-const setSystemDetailsForGroup = (group, systems) => {
+const setSystemDetailsForGroup = (
+    group: IGroup,
+    systems: NxSystemWithUserInfo[]
+): IGroupWithSystemDetails => {
     return {
         ...group,
         children: group.children.map(g => setSystemDetailsForGroup(g, systems)),
@@ -43,7 +46,7 @@ export class NxSystemGroupPageComponent implements OnInit, OnDestroy {
     private _titleSubscription: Subscription
     private _routeSubscription: Subscription
 
-    private _systems$: Observable<Array<NxSystemWithUserInfo>>
+    private _systems$: Observable<SystemsState> = this.store.select(selectSystems);
     private _group$: Observable<IGroup>
     public group$: Observable<IGroupWithSystemDetails>
 
@@ -52,12 +55,10 @@ export class NxSystemGroupPageComponent implements OnInit, OnDestroy {
         private language: NxLanguageProviderService,
         private pageService: NxPageService,
         protected route: ActivatedRoute,
-        private store: Store<{ groups: GroupsState, systems: SystemsState }>
+        private store: Store,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
-
-        this._systems$ = store.select('systems');
     }
 
     ngOnInit(): void {
@@ -65,7 +66,8 @@ export class NxSystemGroupPageComponent implements OnInit, OnDestroy {
             .subscribe(params => this._onRouteChange(params));
     }
 
-    protected _onRouteChange(params) {
+    // TODO: 404
+    protected _onRouteChange(params: Params): void {
         this._group$ = this.store.select(selectGroup, params.groupId);
         this._titleSubscription = this._group$.subscribe(group => {
             this.pageService.pageTitle = group.name;
@@ -76,7 +78,11 @@ export class NxSystemGroupPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this._routeSubscription && this._routeSubscription.unsubscribe();
-        this._titleSubscription && this._titleSubscription.unsubscribe();
+        if (this._routeSubscription) {
+            this._routeSubscription.unsubscribe();
+        }
+        if (this._titleSubscription) {
+            this._titleSubscription.unsubscribe();
+        }
     }
 }

@@ -1,15 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 
 import * as SystemsActions from './systems.actions';
+import type { SystemsState } from './systems.state';
 
 export const initialState = [];
 
-const _systemsReducer = createReducer(
+export const systemsReducer = createReducer(
     initialState,
-    on(SystemsActions.set, (state, { systems }) => systems),
-    on(SystemsActions.clear, state => []),
+    on(SystemsActions.set, (_state, { systems }): SystemsState => systems),
+    on(SystemsActions.clear, (_state): SystemsState => []),
 );
-
-export function systemsReducer(state, action) {
-    return _systemsReducer(state, action);
-}

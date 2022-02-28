@@ -1,15 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Observable, combineLatest } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
+import type { NxSystemWithUserInfo } from '@services/systems.service';
+import { selectSystems } from '@src/store/systems/systems.selectors';
+import { SystemsState } from '@src/store/systems/systems.state';
 
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups/groups.actions';
-import { selectGroupForest } from '../../store/groups/groups.selectors';
+import {
+    selectGroupState,
+    IGroup,
+    selectGroupForest,
+} from '../../store/groups/groups.selectors';
 import { GroupsState } from '../../store/groups/groups.state';
 
 @Component({
@@ -21,31 +30,51 @@ export class NxSystemGroupsIndexPageComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    groupForest$ = this.store.select(selectGroupForest)
+    _groupForest$: Observable<IGroup[]> = this.store.select(selectGroupForest);
+    _groups$: Observable<GroupsState> = this.store.select(selectGroupState);
+    _systems$: Observable<SystemsState> = this.store.select(selectSystems);
+    ungroupedSystems: NxSystemWithUserInfo[] = [];
 
     constructor(
         configService: NxConfigService,
         private language: NxLanguageProviderService,
         private pageService: NxPageService,
-        private store: Store<{ groups: GroupsState }>,
+        private store: Store,
         private groupsService: NxSystemGroupsService,
+        private dialogsService: NxDialogsService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.systems();
     }
 
     ngOnInit(): void {
-        this.groupsService.loadGroups().toPromise().then((response: any) => {
-            if ('systemsToGroupsHash' in response) { // TODO: remove later on
-                response.systemGroups = response.systemsToGroupsHash;
-            }
-            this.store.dispatch(GroupActions.load({ newState: <GroupsState>response }));
-        });
+        // TODO: Restore when backend endpoint is operational
+        // this.groupsService.loadGroups().toPromise().then((response: any) => {
+        //     if ('systemsToGroupsHash' in response) { // TODO: remove later on
+        //         response.systemGroups = response.systemsToGroupsHash;
+        //     }
+        //     this.store.dispatch(GroupActions.load({ newState: <GroupsState>response }));
+        // });
+
+        combineLatest([this._groups$, this._systems$])
+            .subscribe(([groups, systems]) => {
+                this.ungroupedSystems = systems.filter(s =>
+                    !groups.systemGroups[s.id]
+                );
+            });
     }
 
     ngOnDestroy(): void {}
+
+    newGroup(): void {
+        this.dialogsService.createSystemGroup();
+    }
+
+    moveSystem(): void {
+        this.dialogsService.moveSystemToGroup();
+    }
 }
 
 // export class NxSystemGroupsPageComponent implements OnInit, OnDestroy {
