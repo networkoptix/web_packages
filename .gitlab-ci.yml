@@ -222,7 +222,7 @@ frontend:
   script:
     - runJenkinsJob.sh gitlab.cloud.frontend
       "PUSH_TO_ARTIFACTORY=true"
-      "BRANCH=$CI_COMMIT_SHORT_SHA"
+      "BRANCH=$CI_COMMIT_REF_NAME"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
@@ -230,6 +230,7 @@ frontend:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHORT_SHA"
 
 .fail-on:
   stage: fail-fast
