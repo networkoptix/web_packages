@@ -1306,6 +1306,10 @@ export class NxSystemAPI {
         });
     }
 
+    getServerInfo(remoteEndpoint: string) {
+        return of({});
+    }
+
     mergeSystems(
         url: string,
         targetSystemId: string,

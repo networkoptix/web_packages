@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Storage Suite Setup
-#Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
+Test Setup        Test Setup    config storage=${False}
 Test Teardown     Restart
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
@@ -32,11 +32,17 @@ Restart
     Common Restart Logout    ${url}
     Reset to Default Storage Config
 
+Test Setup
+    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
+    ${disabled disks} =    Convert Disk String to List      ${disabled}
+    ${backup disks} =    Convert Disk String to List      ${backups}
+    Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
+    Log in to user and system    ${email}     ${system}
+    Go to Servers
+
 *** Test Cases ***
 1. Loading State of Storage Locations Block
-    [Tags]    C81803    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81803
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
@@ -45,8 +51,6 @@ Restart
 
 2. Detailed Info in Storage Locations block
     [Tags]    C81534
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     Wait Until Element Is Visible    ${STORAGE INFO BUTTON}
     Click Button    ${STORAGE INFO BUTTON}
@@ -56,16 +60,13 @@ Restart
     Should Be Equal as Numbers    5    ${count}
     
 3. Analytics DB Storage dropdown is not visible
-    [Tags]    C81740    Analytics    
-    Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
-    Go to Servers
+    [Tags]    C81740    Analytics     debug
+    [Setup]     Test Setup     email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
     Verify on Servers Page
     Wait Until Element Is Not Visible    ${ANALYTICS DROPDOWN}
     
 4. Scrolling on small resolutions in Storage Locations block
     [Tags]    C81535
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     Verify No Horizontal Scrollbar    ${STORAGE LOCATIONS TABLE}    ${STORAGE LOCATIONS TABLE}/table
     Set Window Size    600    1080
@@ -83,8 +84,6 @@ Restart
     [Tags]    C81537
     @{menu order}    Create List
     @{sorted}        Create List
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}
     @{storages} =    Get WebElements    ${STORAGE ITEM}
     FOR    ${storage}    IN    @{storages}
@@ -97,8 +96,6 @@ Restart
 
 6. Enabled, disabled and inaccessible storages appearance
     [Tags]    C81540
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry
     ...    ${STORAGE LOCATIONS BLOCK}
     ...    ${STORAGE ADD BUTTON}
@@ -123,8 +120,6 @@ Restart
 7. Width of mode column
     [Documentation]    In order to verify Step 5 of the testrail testcase, run this test case in another language. robot -V getvars.py:default:ru_RU -i C81555 test-cases
     [Tags]    C81555
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ITEM}    ${STORAGE DISABLED NOT IN USE}     ${STORAGE ENABLED MAIN}
     ${width}    ${height} =    Get Element Size    ${STORAGE DISABLED NOT IN USE}/ancestor::td
     Click Button    ${STORAGE DISABLED NOT IN USE}/parent::button
@@ -149,9 +144,6 @@ Restart
 
 8. Active Mode Lines
     [Tags]    C81557
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
-
     Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}    ${STORAGE DISABLED NOT IN USE}
 
@@ -263,19 +255,15 @@ Restart
 
 9. Reserved Non-System storage tooltip
     [Tags]    C81566
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED RESERVED}
     Mouse Over   ${STORAGE RESERVED TOOLTIP ICON}
     Wait Until Element is Visible    ${STORAGE RESERVED TOOLTIP}
 
 10. Changing of reserved space is shown in the table
-    [Tags]    C81569   
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81569
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
-    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    Wait Until Element is Visible    ${STORAGE POPOVER}     #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
     ${reserved} =    Get Substring    ${reserved}    0    2
     ${location} =    Get Location
@@ -291,13 +279,11 @@ Restart
     Reload Page
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
-    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    Wait Until Element is Visible    ${STORAGE POPOVER}       #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
     Should Contain  ${reserved}    5.0
 
 11. No Size Tooltip when Inaccessble
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
     Mouse Over    ${STORAGE INACCESSIBLE SIZE}
     Sleep    1
@@ -305,8 +291,7 @@ Restart
 
 12. Storage Locations Table without control buttons
     [Tags]    C81572
-    Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
-    Go to Servers
+    [Setup]     Test Setup      email=${server 2['owner']}     system=${server 2['cloud id']}     config storage=${False}
     Wait Until Elements Are Visible With Retry    
     ...    ${STORAGE LOCATIONS BLOCK}    
     ...    ${STORAGE ADD BUTTON}    
@@ -319,8 +304,7 @@ Restart
 
 13. Not able to load storage information
     [Tags]    C84518
-    Log in to user and system    ${server 3['owner']}     ${server 3['cloud id']}
-    Go to Servers
+    [Setup]     Test Setup      email=${server 3['owner']}     system=${server 3['cloud id']}     config storage=${False}
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE LOCATIONS PLACEHOLDER}    ${STORAGE NOT ABLE TO LOAD}
     Wait Until Element is Enabled    ${STORAGE ADD BUTTON}
     ${width}    ${height} =    Get Element Size    ${STORAGE LOCATIONS BLOCK}
@@ -330,8 +314,6 @@ Restart
     [Tags]    C81757    Analytics
     @{menu order}    Create List
     @{dropdown order}    Create List
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Click Button    ${ANALYTICS DROPDOWN}
@@ -356,8 +338,6 @@ Restart
 
 15. Cancel Changing "Analytics DB Storage"
     [Tags]    C81778    Analytics
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
     Log    Step 1
@@ -374,13 +354,9 @@ Restart
     Wait Until Elements Are Not Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
 
 16. Successful changing Analytics DB Storage plus confirmation dialog
-    [Tags]    C81779    C81775    C81776    C81777    Analytics    C81754    C81755    
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List    disk3
+    [Tags]    C81779    C81775    C81776    C81777    Analytics    C81754    C81755
+    [Setup]     Test Setup      disk3    disk3
     ${normal} =    Set Selenium Speed    0.25
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible    //span[contains(text(),"disk") and @class="ellipsis"]
     Wait Until Element is Visible    ${ANALYTICS DROPDOWN}
@@ -406,8 +382,6 @@ Restart
     Log    C81755
     Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
     Log To Console    C81755 ....... | PASS |
-    # Sleep    600
-    # Reload Page
     Log    Step 1 - C81775
     Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
     Wait Until Element Contains   ${ANALYTICS DROPDOWN}    disk1
@@ -523,16 +497,13 @@ Restart
     Set Selenium Speed    ${normal}
 
 17. Storage Location Table Space Legend Tooltip Shows
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
-    Wait Until Element is Visible    ${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
+    Wait Until Element is Visible    ${STORAGE POPOVER}     #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
 
 18. Backup Option Disabled when only One Main Storage
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE MAIN MODE}
     Click Button      ${STORAGE MAIN MODE}/parent::button
@@ -542,11 +513,7 @@ Restart
     ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${NOT IN USE}"]
 
 19. Change Storage from Main to Backup
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List    disk1
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Setup]     Test Setup      disk3    disk1
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
     Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}/parent::button
@@ -558,11 +525,7 @@ Restart
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
 
 20. Change Storage from Backup to Not in Use
-    @{disabled} =    Create List    disk3
-    @{backups} =    Create List    disk1    disk2
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Setup]     Test Setup      disk3    disk1 disk2
     Verify on Servers Page
     Wait Until Element is Visible    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
     Click Button      ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}/parent::button
@@ -575,8 +538,6 @@ Restart
 
 21. Add Storage Close button works
     [Tags]    external
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -587,8 +548,6 @@ Restart
 
 22. Add Storage Cancel button works
     [Tags]    external
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -598,17 +557,14 @@ Restart
     Wait Until Element Is Not Visible    ${ADD STORAGE MODAL}
 
 23. Detailed Info button works system has multiple storages
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click Button     ${STORAGE INFO BUTTON}
     Wait Until Element is Visible      //nx-system-metrics-component//table[contains(@class, "nx-table")]
 
 24. Detailed Info button works (system has one storage)
-    [Tags]      
-    Log in to user and system    ${server 2['owner']}     ${server 2['cloud id']}
-    Go to Servers
+    [Tags]
+    [Setup]     Test Setup      email=${server 2['owner']}     system=${server 2['cloud id']}
     Verify on Servers Page
     Wait Until Element is Visible       ${STORAGE INFO BUTTON}
     Click Button     ${STORAGE INFO BUTTON}
@@ -616,8 +572,6 @@ Restart
 
 25. Add external storage: Close dialog and Cancel
     [Tags]    C81583    external
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -635,9 +589,7 @@ Restart
     Verify Storages    5
 
 26. Add external storage: empty URL
-    [Tags]    C81584    external    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81584    external
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -653,9 +605,7 @@ Restart
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
 27. Add external storage: wrong URL
-    [Tags]    C81585    external    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81585    external
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -688,9 +638,7 @@ Restart
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
 28. Add external storage: Wrong login or password
-    [Tags]    C81589    external    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81589    external
     Verify on Servers Page
     
     Log    Step 1
@@ -755,9 +703,7 @@ Restart
     Wait Until Element is Not Visible    ${ADD STORAGE MODAL}
 
 29. Add external storage: invalid storage path
-    [Tags]    C81597    external    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81597    external
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -778,9 +724,8 @@ Restart
     Verify Storages    5
 
 30. Failed to add external storage: server is offline
-    [Tags]    C81600    external    
-    Log in to user and system    ${server 1['owner']}     ${server 2['cloud id']}
-    Go to Servers
+    [Tags]    C81600    external
+    [Setup]     Test Setup     system=${server 2['cloud id']}   config storage=${False}
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -808,9 +753,7 @@ Restart
     ...    ${SMB STORAGE DELETE BUTTON}
 
 31. Add external storage: successful scenario with password
-    [Tags]    C81599    C81587    C81595    C81596    External    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81599    C81587    C81595    C81596    External
     Verify on Servers Page
     Wait Until Element is Visible     ${STORAGE ADD BUTTON}
     Wait Until Element is Enabled     ${STORAGE ADD BUTTON}
@@ -969,9 +912,7 @@ Restart
     Cleanup External Drive
     
 32. Cancel deleting storage
-    [Tags]    C81573    deleting    
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81573    deleting
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON}
@@ -996,8 +937,6 @@ Restart
     
 33. Delete Inaccessible storage
     [Tags]    C81573    deleting
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${INACCESSIBLE STORAGE DELETE BUTTON} 
@@ -1019,6 +958,7 @@ Restart
     
 34. Backup settings block availability for owner, administrator and other users
     [Tags]    C81804    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
     FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]        
@@ -1038,21 +978,16 @@ Restart
     END
     
 35. Backup settings block is not shown if no one storage is assigned “Backup” mode
-    [Tags]    C81810    archive    
+    [Tags]    C81810    archive
+    [Setup]     Test Setup    disk1 disk2 disk3
     Skip If Image Is    4.3_test    5.0_test
-    @{disabled} =    Create List    disk3    disk1    disk2 
-    @{backups} =    Create List    
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
 
 36. Backup off
-    [Tags]    C81807    archive    
+    [Tags]    C81807    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
-    # @{disabled} =    Create List    disk3    disk2 
-    # @{backups} =    Create List    disk1
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1063,7 +998,8 @@ Restart
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
     
 37. Backup on – default settings
-    [Tags]    C81808    archive    
+    [Tags]    C81808    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1076,6 +1012,7 @@ Restart
     
 38. Backup on – custom settings
     [Tags]    C81809    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1093,12 +1030,8 @@ Restart
     
 39. It is not necessary to apply changes to make the backup settings block appear
     [Tags]    C81811    archive
+    [Setup]     Test Setup    disk1 disk2 disk3
     Skip If Image Is    4.3_test    5.0_test
-    @{disabled} =    Create List    disk3    disk1    disk2 
-    @{backups} =    Create List    
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible With Retry    
@@ -1134,6 +1067,7 @@ Restart
     
 40. Cancel Backup enabling
     [Tags]    C83183    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1152,7 +1086,8 @@ Restart
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${DISABLED SWITCH COLOR}
     
 41. Cancel Backup disabling - default settings
-    [Tags]    C83184    archive    
+    [Tags]    C83184    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1174,6 +1109,7 @@ Restart
         
 42. Cancel Backup disabling - custom settings
     [Tags]    C83185    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1208,7 +1144,8 @@ Restart
     Element Style Should Be    ${ARCHIVE BACKUP SWITCH SLIDER}    background-color    ${ENABLED SWITCH COLOR}
      
 43. Cancel resetting backup settings for system of 1 server
-    [Tags]    C83328    archive    
+    [Tags]    C83328    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1253,6 +1190,7 @@ Restart
     
 44. Reset backup settings for system of 1 server
     [Tags]    C83330    archive
+    [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
@@ -1290,12 +1228,8 @@ Restart
     Verify New Files Are Not Recorded    disk1    30    directory='HD Witness Media/hi_quality/'
     
 45. Reindex archive block owerview: only Main storage
-    [Tags]    C81605    
-    @{disabled} =    Create List    disk2    disk3     
-    @{backups} =    Create List    
-    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}  
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
+    [Tags]    C81605
+    [Setup]     Test Setup    disk2 disk3
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    ${STORAGE REINDEXING BLOCK}    ${STORAGE REINDEX MAIN BUTTON}    ${STORAGE REINDEX ARCHIVE HEADER}    ${STORAGE REINDEX ARCHIVE MSG} 
@@ -1304,15 +1238,13 @@ Restart
     Wait Until Elements Are Visible    ${STORAGE REINDEX TOOLTIP FIRST}    ${STORAGE REINDEX TOOLTIP SECOND}
     
 46. Reindex archive block owerview: Main and Backup storages
-    [Tags]    C81606    archive    
+    [Tags]    C81606    archive
     Skip If Image Is    4.3_test    5.0_test
-    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
-    Go to Servers
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    
-    ...    ${STORAGE REINDEXING BLOCK}    
-    #...    ${STORAGE REINDEXING MAIN}     
+    ...    ${STORAGE REINDEXING BLOCK}
+    #...    ${STORAGE REINDEXING MAIN}
     ...    ${STORAGE REINDEX MAIN BUTTON}
     ...    ${STORAGE REINDEX BACKUP BUTTON}
     #...    ${STORAGE REINDEXING BACKUP}

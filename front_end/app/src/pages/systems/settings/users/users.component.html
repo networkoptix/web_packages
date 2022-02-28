@@ -81,22 +81,6 @@
                       class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
                       novalidate>
                     <div class="form-group d-md-table-row d-flex flex-column">
-                        <label for="login"
-                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
-                            translate>Login</label>
-                        <input type="text" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
-                            [(ngModel)]="localUserName"
-                            (keyup)="handleUserNameChange($event.target['value'])"
-                            (blur)="handleUserNameBlur()"
-                            name="login" id="login"
-                            [readonly]="selectedUser.isLdap"
-                            [disabled]="!system.userManager.permissions.isAdmin || selectedUser.isCloud || !selectedUser.canBeEdited"
-                            maxlength="255"
-                            required>
-                        <span *ngIf="!localUserName" class="input-error mt-1 ml-2 d-block" translate>Login cannot be empty</span>
-                        <span *ngIf="emptyName" class="input-error mt-1 ml-2 d-block" translate>Please enter a valid name</span>
-                    </div>
-                    <div class="form-group d-md-table-row d-flex flex-column">
                         <label for="fullName"
                             class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
                             translate>Name</label>

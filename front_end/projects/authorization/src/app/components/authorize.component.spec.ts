@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { of } from 'rxjs';
 import { LocalStorageService } from 'ngx-webstorage';
 import { environment } from '@environments/environment'
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import {
     AuthorizeParams,
@@ -82,6 +83,7 @@ describe('NxAuthorizeComponent', () => {
                 passResetHeader: () => 'Reset Password',
                 newPassHeader: () => 'Set New Password',
                 authCode: {
+                    message: () => 'Enter a code from your authentication app to confirm it\'s really you trying to {suffix}',
                     newPass: () => 'set a new password',
                     login: () => 'log in'
                 }
@@ -185,6 +187,10 @@ describe('NxAuthorizeComponent', () => {
         retrieve: () => {}
     };
 
+    const deviceServiceMock = {
+        isMobile: () => false
+    };
+
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -221,6 +227,7 @@ describe('NxAuthorizeComponent', () => {
                 { provide: Router, useValue: {} },
                 { provide: ElementRef, useValue: {} },
                 { provide: LocalStorageService, useValue: localStorageMock },
+                { provide: DeviceDetectorService, useValue: deviceServiceMock },
                 { provide: WINDOW, useValue: window }
             ]
         }).compileComponents()

@@ -2,7 +2,7 @@ import type { MenuNodeWithParent } from '@components/developers-menu/developers-
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
 
-import type { APIDocType } from '../../services/nx-config/base-config';
+import type { APIDocType } from '@services/nx-config/base-config';
 
 import type { APIDoc, method } from './api-tool-types';
 
@@ -129,7 +129,6 @@ export const mergeAPIDocs = (mainAPI: APIDoc, mergingAPI: APIDoc) => {
  */
 export const createMenuContent = (API: APIDoc) => {
     const menuContent: MenuNodeWithParent[] = [];
-    addAPIInfoNodesToMenu(API, menuContent);
 
     generateMenuNodesFromCategoryTags(API, menuContent);
     generateMenuNodesFromEndpoints(API, menuContent);
@@ -171,14 +170,16 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
         const endpointObj = Object.entries(API.paths[endpoint]);
         endpointObj.forEach((method: method) => {
             const subMenuTag = method[1].tags[0];
-            const HTTPMethod = method[0];
-            const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
+            if (!subMenuTag.includes('Proprietary')) {
+                const HTTPMethod = method[0];
+                const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
 
-            const url = generateNodeURL(endpoint, HTTPMethod);
-            const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
-            const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
-            methodNode.parentNode = subMenuNode;
-            subMenuNode?.nodes?.push(methodNode);
+                const url = generateNodeURL(endpoint, HTTPMethod);
+                const APIRouteName = generateAPIRouteName(endpoint, HTTPMethod);
+                const methodNode: MenuNodeWithParent = new MenuNode(APIRouteName, url, method[1].summary || APIRouteName);
+                methodNode.parentNode = subMenuNode;
+                subMenuNode?.nodes.push(methodNode);
+            }
         });
     });
 };

@@ -92,6 +92,7 @@ export class MergeModalContent {
     readonly serverNotAvailable: string = 'serverNotAvailable';
     readonly systemOffline: string = 'systemOffline';
     readonly systemOfflineUrl: string = 'systemOfflineUrl';
+    readonly targetSystemBoundToCloud: string = 'targetSystemBoundToCloud';
     readonly unknownError: string = 'unknownError';
 
     machine: StateMachine;
@@ -438,11 +439,11 @@ export class MergeModalContent {
                         }
                         // Handling for rest errors.
                         if (err.errorString) {
-                            if (err.errorString.includes('Merge error. Both systems have same server')) {
+                            if (err.errorString.includes(this.LANG.dialogs.merge.restError.duplicateServer)) {
                                 err.message = this.duplicateServers;
-                            } else if (err.errorString.includes('Cannot merge systems bound to the cloud')) {
-                                err.message = 'targetSystemBoundToCloud';
-                            } else if (err.errorString.includes('Cannot merge two Cloud Systems with different owners')) {
+                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.useCloudMerge)) {
+                                err.message = this.targetSystemBoundToCloud;
+                            } else if (err.errorString.includes(this.LANG.dialogs.merge.restError.differentCloudOwners)) {
                                 err.message = this.differentOwners;
                             }
                         }
@@ -733,6 +734,13 @@ export class MergeModalContent {
             throw Error(this.unknownBothSystemsConnectedToCloud);
         }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
+            if (!this.targetSystem.id) {
+                const secondarySystem = await this.system.getServerInfo(this.serverUrl).toPromise();
+                if (secondarySystem?.id) {
+                    this.targetSystem = secondarySystem;
+                    this.setSystems();
+                }
+            }
             return this.system.mergeSystems(this.serverUrl, this.targetSystem.id, true).toPromise()
                 .then(res => {
                     if (res.error && res.error !== '0') {
@@ -1012,8 +1020,8 @@ export class MergeModalContent {
     }
 
     getSecondaryName() {
-        let name: string = this.secondarySystem.systemName || this.secondarySystem.name ||
-            this.secondarySystem?.info.systemName || this.secondarySystem?.info.name;
+        let name: string = this.secondarySystem.name || this.secondarySystem.systemName ||
+            this.secondarySystem?.info.name || this.secondarySystem?.info.systemName;
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {
             name = this.LANG.dialogs.merge.serverAtUrl?.({ url: this.cleanUrl || this.serverUrl });
         }

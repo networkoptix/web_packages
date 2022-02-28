@@ -263,7 +263,8 @@ Force Tags    Threaded    Licenses
     Wait Until Element Is Visible    ${offline server}
     Slow    Click Element    ${offline server}    timeout=2
     Click Button    ${ACTIVATE BUTTON}
-    Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
+    Check For Alert    ${FAILED TO ACTIVATE LICENSE TEXT}    timeout=30
+#    Check For Alert    ${FAILED TO ACTIVATE - CONNECTION TIMEOUT TEXT}    timeout=10
     ${input val}=   Get Formatted Key Input
     Should Be Equal As Strings    ${input val}    ${key}
 
@@ -478,7 +479,7 @@ Force Tags    Threaded    Licenses
     ${exp ts}=   Get Current Date    time_zone=UTC    increment=-365d    result_format=datetime
     ${key}=   Generate Licenses    order_type=saas    fixed_expiration_ts=${exp ts}
     ${hwids}=   Get Server HWIDs    ${CLOUD AUTH}    https://${QA BURBANK IP}:${system 2}[port]
-    Add License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${system 2}[port]    ${key}    ${hwids[1]}
+    Add License    ${CLOUD AUTH}    https://${QA BURBANK IP}:${system 2}[port]    ${key}    ${hwids}[1]
     ${activated}=   License Is Activated    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system 2}[port]    ${key}
     Should Be True    ${activated}
     Restart Server    https://${QA BURBANK IP}:${system 2}[port]   ${LOCAL AUTH}
@@ -607,7 +608,7 @@ Force Tags    Threaded    Licenses
     ${n}=   Set Variable    0
     ${types}=   Create List    digital    analogencoder    iomodule    vmax    starter    videowall    nvr
     # A dict to store number of activated licenses of each type
-    ${types counter}=   Create Dictionary    digital=0    analogencoder=0    iomodule=0    vmax=0    starter=0    videowall=0
+    ${types counter}=   Create Dictionary    digital=0    analogencoder=0    iomodule=0    vmax=0    videowall=0    starter=0
     FOR     ${type}    IN    @{types}
         ${rand}=   Evaluate    random.randint(10, 100)
         Set To Dictionary    ${types counter}    ${type}=${rand}
@@ -628,7 +629,7 @@ Force Tags    Threaded    Licenses
     END
 
     Log    SaaS and Demo time licenses
-    Remove Values From List    ${types}    starter    videowall
+    Remove Values From List    ${types}    starter    videowall    nvr
     ${t}=   Set Variable    0    # Time licenses counter
     FOR     ${type}    IN    @{types}
         ${rand}=   Evaluate    random.randint(10, 100)

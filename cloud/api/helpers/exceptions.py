@@ -9,7 +9,8 @@ from typing import Union, List, Tuple, Dict, Callable
 
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.http import QueryDict, HttpResponseRedirect
+from requests.exceptions import HTTPError
+from django.http import HttpResponse, QueryDict, HttpResponseRedirect
 from rest_framework.exceptions import UnsupportedMediaType, ValidationError
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -421,7 +422,7 @@ def kill_tokens(request, delete_token=None):
         if token:
             try:
                 delete_token(request, token)
-            except (APINotAuthorisedException, APILogicException):
+            except (APINotAuthorisedException, APILogicException, HTTPError):
                 pass
             request.session[key] = None
 
@@ -464,7 +465,7 @@ def handle_exceptions(func):
         # noinspection PyBroadException
         try:
             data = func(*args, **kwargs)
-            if not isinstance(data, Response) and not isinstance(data, HttpResponseRedirect):
+            if not isinstance(data, (Response, HttpResponseRedirect, HttpResponse)):
                 return Response(data, status=status.HTTP_200_OK)
             return data
         except Exception as exception:

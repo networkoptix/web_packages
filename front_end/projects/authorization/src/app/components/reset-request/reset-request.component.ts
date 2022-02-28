@@ -36,7 +36,6 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Output() resetEmailChange = new EventEmitter<string>();
     @Input() loginEmail: string;
     @Input() confirm: boolean;
-    @Input() loginProcess: Process;
     @Input() errorCode: string;
     @Input() resetRequestProcess: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();

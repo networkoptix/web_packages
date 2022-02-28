@@ -537,7 +537,7 @@ Reset
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 18. Share with unregistered user - brings them to registration page with code with correct email locked
-    [Tags]    email    C41889    cloud
+    [Tags]    email    C41889    cloud    CLOUD-8643
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
@@ -547,7 +547,7 @@ Reset
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    system_invite
+    ${code}=   Get Code From Email    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    ${LOCAL USER NAME HEADER}
@@ -619,7 +619,7 @@ Reset
     FOR    ${link}  IN  @{activation link}
         check in list    ${expected links}    ${link}
     END
-    ${activation code}=   Get Code From Email    ${server 1['cloud auth']}    ${random email}    activate_account
+    ${activation code}=   Get Code From Email    ${random email}    activate_account
     Delete Email    ${email}
     Close Mailbox
     Go To    ${url}/authorize/activate/${activation code}
@@ -1183,7 +1183,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Press keys    ${LOCAL USER NAME}    CTRL+a+BACKSPACE
+        Delete All Text     ${LOCAL USER NAME}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -1211,7 +1211,7 @@ Reset
         Click Element    //span[text()="Local+advancedViewer"]
         
         Log    Step 2
-        Press keys    ${LOCAL USER NAME}    CTRL+a+BACKSPACE
+        Delete All Text     ${LOCAL USER NAME}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${USER CANCEL}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}

@@ -127,7 +127,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     loginPassword: string;
     passwordErrorCode: string;
     redirectLink: string;
-    // shouldStayLoggedIn: boolean;
 
     // create account
     createProcess: Process;
@@ -358,6 +357,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
+    handleVerificationExpiration(process) {
+        if (this.loginEmail && this.loginPassword) {
+            this.login().then(
+                ({ code, link }) => {
+                    this.loginCode = code;
+                    this.redirectLink = link;
+                    process.run();
+                });
+        } else {
+            this.clientType = ClientType.renewWeb;
+            this.setCurrentState(AuthorizeState.email);
+        }
+    }
+
     initProcesses() {
         const timeoutMs = 3000;
         this.checkEmailProcess = this.processService.createProcess(
@@ -445,7 +458,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             },
             err => {
-                if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
+                if (err?.resultCode === 'notAuthorized') {
+                    this.handleVerificationExpiration(this.checkAuthCodeProcess);
+                } else if (err?.resultCode === 'invalidTotp' || err?.errorText === '2FA is required') {
                     this.authCodeErrorCode = 'wrongAuthCode';
                 } else {
                     console.error('err from checkAuthCodeProcess', err);
@@ -469,7 +484,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 }
             },
             err => {
-                if (err?.resultCode === 'notAuthorized' || err?.errorText === '2FA is required') {
+                if (err?.resultCode === 'notAuthorized') {
+                    this.handleVerificationExpiration(this.checkBackupCodeProcess);
+                } else if (err?.resultCode === 'invalidBackupCode' || err?.errorText === '2FA is required') {
                     this.backupCodeErrorCode = 'wrongBackupCode';
                 } else {
                     console.error('err from checkBackupCodeProcess', err);
@@ -543,11 +560,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 console.error('err in resetPassword process', err);
                 if (err.errorText === '2FA is required') {
                     this.currentState = AuthorizeState.auth;
-                } else if (err.errorText === 'unauthorized') {
+                } else if (['unauthorized', 'badUsername'].includes(err.errorText)) {
                     // loginCode is either invalid or already used
                     this.toastService.notify(
                         this.LANG.authorize.newPassInvalidCode(),
-                        'error',
+                        'danger'
                     );
                 } else {
                     this.handleCloudConnectionError(err, this.resetPasswordProcess);
@@ -562,7 +579,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     login = () => {
-        // should pass in some data to denote whether user should stay logged in or not? (this.shouldStayLoggedIn) likely to be removed
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
@@ -589,10 +605,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     redirect = (route?: string) => {
         this.window.location.href = route || this.initialData.redirect_url || '/';
     }
-
-    // stayingLoggedIn(stayLoggedIn: boolean) {
-    //     this.shouldStayLoggedIn = stayLoggedIn;
-    // }
 
     ngOnDestroy() {}
 }

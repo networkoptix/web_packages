@@ -9,6 +9,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
@@ -119,12 +120,13 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private router: Router,
         private applyService: NxApplyService,
         private cloudApi: NxCloudApiService,
         private dialogService: NxDialogsService,
         private menuService: NxMenuService,
         private processService: NxProcessService,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -338,9 +340,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.is2faDialogActive = await this.dialogService
             .toggleSystem2fa(this.system, this.system2faEnabled)
             .then(res => {
-                if (!res || res === 'cancel') {
+                if (!res || res === 'cancel' || res === 'GOTO_SECURITY') {
                     this.system2faEnabled = !this.system2faEnabled;
                     this.applyService.forms.systemAndSecuritySettingsForm.originalForm.system2faEnabled = this.system2faEnabled;
+
+                    if (res === 'GOTO_SECURITY') {
+                        // let apply service process to finish
+                        setTimeout(() => {
+                            this.router
+                                .navigate(['/account/security'])
+                                .catch(error => {
+                                    console.error(error);
+                                });
+                        });
+                    }
                 }
             }).finally(() => {
                 this.is2faDialogActive = undefined;

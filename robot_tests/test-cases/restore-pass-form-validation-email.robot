@@ -84,9 +84,14 @@ Test Email Invalid
     [Arguments]   ${email}
     Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     IF    '${email}' == '${EMPTY}'
-        Press Keys    ${RESTORE PASSWORD EMAIL INPUT}    CTRL+a+BACKSPACE
+        Delete All Text    ${RESTORE PASSWORD EMAIL INPUT}
+        Sleep    1
+        Click Element    //h3
+        Delete All Text    ${RESTORE PASSWORD EMAIL INPUT}
+        Sleep    1
+        Click Element    //h3
     END
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
+    Run Keyword Unless  '${email}' == '${EMPTY}'    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
     Run Keyword Unless    '${email}'=='${EMAIL UNREGISTERED}' or '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Check Email Outline    ${email}
     Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check Error Content and Reset Button Disabled

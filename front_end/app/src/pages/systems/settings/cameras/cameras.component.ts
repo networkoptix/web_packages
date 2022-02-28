@@ -644,7 +644,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 id: this.selectedCamera.id,
                 name: this.cameraNameWatcher.value,
                 audioEnabled: this.audioEnabledWatcher.value,
-                overrideAr: `${this.selectedAspectWatcher.value}` || '',
+                overrideAr: `${this.selectedAspectWatcher.value === this.selectedCamera.defaultRatio
+                    ? ''
+                    : this.selectedAspectWatcher.value}`,
                 rotation: `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled: this.recordingWatcher.value,
                 motionType: this.motionType,
@@ -935,8 +937,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }) + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
             this.selectedCamera = cameras[cameraIndex];
-            const { vendor, model, url, parentName, groupId, addParamsRaw } = this.selectedCamera;
-            this.settingsDisabled = !!groupId || !addParamsRaw.find(({ name }) => name === 'VideoLayout');
+            const { vendor, model, url, parentName, deviceType } = this.selectedCamera;
+            this.settingsDisabled = (deviceType !== 'Camera' || !vendor);
             const deviceColumn = [
                 new InfoBlockSection([
                     new InfoBlockLine(this.LANG.common.vendor(), vendor),

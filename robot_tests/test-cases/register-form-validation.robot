@@ -81,13 +81,13 @@ ${valid email}          noptixqa+valid@gmail.com
 
 32. Common Password qweasd123                       mark        hamill      ${valid email}            ${common password}                 True
     [tags]    C41860    Password
-33. Cyrillic Password Кенгшщзх                      mark        hamill      ${valid email}            ${CYRILLIC TEXT}                   True
+33. Cyrillic Password Кенгшщзх                      mark        hamill      ${valid email}            ${CYRILLIC TEXT}s                  True
     [tags]    C41860    Password
-34. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★            mark        hamill      ${valid email}            ${SMILEY TEXT}                     True
+34. Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★            mark        hamill      ${valid email}            ${SMILEY TEXT}s                    True
     [tags]    C41860    Password
-35. Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}                      True
+35. Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}s                     True
     [tags]    C41860    Password
-36. TM Password qweasdzxc123®™                      mark        hamill      ${valid email}            ${TM TEXT}                         True
+36. TM Password qweasdzxc123®™                      mark        hamill      ${valid email}            ${TM TEXT}s                        True
     [tags]    C41860    Password
 37. Leading Space Password                          mark        hamill      ${valid email}            ${SPACE}${BASE PASSWORD}           True
     [tags]    C41860    Password

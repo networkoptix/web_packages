@@ -81,7 +81,6 @@ Storage Suite Teardown
         Delete Virtual Disk    ${disk[${n}]}[img]    ${disk[${n}]}[folder]
     END
     Remove Directory    networkdisk/*
-    Remove All Files    networkdisk/*
     Close All Browsers
 
 Verify Storages
@@ -96,7 +95,7 @@ Verify Storages
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
     Should be Equal as Numbers    ${disks}    ${storages number}
     Run Keyword If    ${login}    Run Keywords
-    ...    Log Out    AND
+    ...    Log Out    add_delay=1    AND
     ...    Log    ${storages number} storage(s) for ${system} verified .....| PASS |    DEBUG     console=${console}
 
 Turn on Recording
@@ -385,4 +384,17 @@ Wait Until Storages Are Outdated and Refresh
     Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}     timeout=65
     Click Element    ${RELOAD ICON} 
     Wait Until Elements Are Visible    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN} 
-    
+
+Convert Disk String to List
+    [Arguments]   ${string}
+    IF    '${string}' != '${None}'
+        ${length} =     Get Length   ${string}
+    ELSE
+        ${length} =    Set Variable    0
+    END
+    IF   ${length} > 5
+        @{list} =   Split String    ${string}    ${SPACE}
+    ELSE
+        ${list} =   Create List     ${string}
+    END
+    [Return]    ${list}

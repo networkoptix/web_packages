@@ -4,7 +4,6 @@ Resource     variables-env.robot
 Resource     Resources/front-end-resources.robot
 Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
-# Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 Library      String
 Library      DateTime
@@ -12,7 +11,7 @@ Library      Collections
 Library      OperatingSystem
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
-Library      NoptixImapLibrary
+Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL}
 Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
@@ -315,22 +314,26 @@ Validate Register Email Received
 Get Email Link
     [Arguments]    ${recipient}    ${link type}    ${timeout}=120
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
-    Run Keyword If    "${link type}"=="activate"    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    Run Keyword If    "${link type}"=="restore_password"    Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
-    Run Keyword If    "${link type}"=="register"    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ${links}    Get NX Links From Email    ${email}    ${link type}
-    log    ${links}
+    ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
+    IF    "${link type}"=="activate"
+        Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    ELSE IF    "${link type}"=="restore_password"    
+        Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    ELSE
+        ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
+        ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
+        Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    END
+    ${links}=   Get NX Links From Email    ${email}    ${link type}
     Delete Email    ${email}
     Close Mailbox
     Return From Keyword    ${links}
 
 Activate
     [Arguments]    ${email}
-    ${code}=   Get Code From Email    ${auth}    ${email}    activate_account
-    Go To    ${ENV}/authorize/activate/${code}
+    ${link}=   Get Email Link    ${email}    activate
+    Go To    ${link}
+
     Wait Until Elements Are Visible
     ...    ${ACTIVATION SUCCESS}
     ...    ${ACTIVATION SUCCESS ICON}
@@ -976,7 +979,7 @@ Get Random Available Port
     [Return]    ${port}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=old    ${network}=bridge
+    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=new    ${network}=bridge
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
@@ -1188,7 +1191,7 @@ Verify Element Does Not Scroll
     Should Be Equal As Numbers    ${original x}    ${new x}
 
 Delete All Text
-    [Arguments]    ${input}
+    [Arguments]    ${input}     ${replaceText}=${False}     ${replaceWith}=${None}
     ${text}=   Get Text    ${input}
     ${value}=   Get Element Attribute    ${input}    value
     ${innertext}=    Get Element Attribute    ${input}    innertext
@@ -1207,6 +1210,7 @@ Delete All Text
     FOR    ${n}    IN RANGE    ${length}
         Press Keys    None     BACKSPACE 
     END
+    Run Keyword If    ${replaceText}    Press Keys    None   ${replaceWith}
 
 #Delete All Content Editable Text
 #    [Arguments]    ${input}
@@ -1330,3 +1334,13 @@ Remove Server From System
     Detach Server From System    ${server url}    ${server auth}
     ${id}=    Get Server Id    ${system url}    ${system auth}    ${server name}
     Remove Resource From System    ${system url}    ${system auth}    ${id}
+
+Get container IP by name
+    [Arguments]    ${name}
+    Acquire Lock    get_id_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${ip}=   Execute Command    docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${name}
+    Close Connection
+    Release Lock    get_id_lock
+    [Return]    ${ip}

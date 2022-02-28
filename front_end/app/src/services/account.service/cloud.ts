@@ -173,7 +173,14 @@ export class CloudAccount extends BaseAccount {
             .logout()
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
-                this.cookieService.deleteAll();
+                // cookieService.deleteAll doesn't remove all the cookies most of the time
+                // known cookies getting deleted here are the csrftoken and system/code cookies
+                const cookies = this.cookieService.getAll();
+                for (const cookie in cookies) {
+                    if (cookie !== 'language') {
+                        this.cookieService.delete(cookie);
+                    }
+                }
                 if (!doNotRedirect) {
                     this.router
                         .navigate([this.CONFIG.redirect.unauthorised])

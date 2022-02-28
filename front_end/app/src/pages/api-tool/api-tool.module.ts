@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MarkdownModule } from 'ngx-markdown';
 
 import { ComponentsModule } from '@components/components.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -12,6 +13,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { NxAPIToolComponent } from './api-tool.component';
 import { NxAPIToolDropdownsComponent } from './dropdowns/api-tool-dropdowns.component';
 import { NxCopyToClipboardComponent } from './swagger/copy-to-clipboard/copy-to-clipboard.component';
+import { NxSwaggerAPIInformationComponent } from './swagger/swagger-api-information/swagger-api-information.component';
 import { NxSwaggerDropdownComponent } from './swagger/swagger-dropdown/swagger-dropdown.component';
 import { NxSwaggerSpinnerComponent } from './swagger/swagger-spinner/swagger-spinner.component';
 import { NxSwaggerTextareaComponent } from './swagger/swagger-textarea/swagger-textarea.component';
@@ -37,6 +39,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         PipesModule,
+        MarkdownModule.forRoot(),
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
         FormsModule
@@ -51,6 +54,7 @@ const appRoutes: Routes = [
         NxSwaggerDropdownComponent,
         NxSwaggerTextareaComponent,
         NxSwaggerSpinnerComponent,
+        NxSwaggerAPIInformationComponent
     ],
     bootstrap: [],
     entryComponents: [

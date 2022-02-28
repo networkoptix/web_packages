@@ -311,8 +311,13 @@ header {
             background-color: $light4;
             .dropdown-item-container .dropdown-item {
                 font-size: rem(14px) !important;
-                &:hover {
+                &:hover:not(.selected) {
                     background-color : $light5 !important;
+                }
+                &.selected {
+                    .item-icon .storage-cloud,.api-icon {
+                            fill: $light1;
+                        }
                 }
             }
         }

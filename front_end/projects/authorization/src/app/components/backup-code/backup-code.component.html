@@ -12,11 +12,14 @@
                 [svgStyle]="{'width.px': '36', 'height.px': '36'}"
                 [applyClass]="true"></svg-icon>
         </button>
-        <h3 class="authorize-header">{{ LANG.authorize.loginCloudHeader() }}</h3>
+        <h3 class="authorize-header">{{header}}</h3>
     </div>
     <div class="authorize-subheader">
-        <span class="sub-header">{{ LANG.authorize.asAccountSubheader() }}</span>
-        <span class="for-account" (click)="setCurrentState.emit('email')">{{loginEmail}}</span>
+        <div class="d-flex justify-content-center align-items-center">
+            <span class="sub-header">{{subHeader}}</span>
+            <span class="for-account" (click)="setCurrentState.emit('email')">{{loginEmail}}</span>
+        </div>
+        <p *ngIf="subHeaderSuffix" class="mt-2 mb-0">{{subHeaderSuffix}}</p>
     </div>
 </header>
 <main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
@@ -66,7 +69,7 @@
                 <span class="pl-1" translate>Back</span>
             </button>
             <nx-process-button
-                buttonText="{{ 'Log In' | translate }}"
+                buttonText="{{ (clientType === 'connectSystemToCloud' ? 'Next' : 'Log In') | translate }}"
                 [form]="backupCodeForm"
                 [clickFn]="sendCode"
                 [process]="checkBackupCodeProcess">

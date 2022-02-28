@@ -93,7 +93,7 @@ Force Tags        Threaded
 
     Log    Step 4
     Click Element    ${IPVD SUBMIT A REQUEST}
-    Wait until Element is Visible    ${IPVD FEEDBACK}
+    Wait until Elements Are Visible    ${IPVD FEEDBACK}    ${IPVD FEEDBACK CLOSE BUTTON}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD FEEDBACK}
 

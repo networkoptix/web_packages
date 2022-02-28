@@ -42,7 +42,7 @@ Restart
 4. works at registration page on account activation success
     [tags]    email
     Go To    ${url}/authorize/register
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
     Register    mark    hamill    ${random email}    ${password}
     Activate    ${random email}
     Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True
@@ -53,7 +53,7 @@ Restart
     ${random email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/authorize/register
     Register    'mark'    'hamill'    ${random email}    ${password}
-    ${link}    Get Email Link    ${random email}    authorize/activate
+    ${link}    Get Email Link    ${random email}    activate
     Go To    ${link}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
     Go To    ${link}
@@ -100,7 +100,7 @@ Restart
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/authorize/register
     Register    mark    hamill    ${random email}    ${password}
-    ${link}    Get Email Link    ${random email}    authorize/activate
+    ${link}    Get Email Link    ${random email}    activate
     ${link}    Strip String    ${link}
     Go To    ${link}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
@@ -122,7 +122,7 @@ Restart
     END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
-    ${link}    Get Email Link    ${random email}    authorize/restore_password
+    ${link}    Get Email Link    ${random email}    restore_password
     Go To    ${link}
     Wait Until Element Is Visible    ${RESET PASSWORD INPUT}
     Input Text    ${RESET PASSWORD INPUT}    ${new password}
@@ -135,7 +135,7 @@ Restart
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/authorize/register
     Register    mark    hamill    ${random email}    ${password}
-    ${link}    Get Email Link    ${random email}    authorize/activate
+    ${link}    Get Email Link    ${random email}    activate
     ${link}    Strip String    ${link}
     Go To    ${link}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
@@ -157,7 +157,7 @@ Restart
     END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
-    ${link}    Get Email Link    ${random email}    authorize/restore_password
+    ${link}    Get Email Link    ${random email}    restore_password
     Go To    ${link}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}
     Input Text    ${RESET PASSWORD INPUT}    ${EMPTY}
@@ -171,7 +171,7 @@ Restart
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Go To    ${url}/authorize/register
     Register    mark    hamill    ${random email}    ${password}
-    ${link}    Get Email Link    ${random email}    authorize/activate
+    ${link}    Get Email Link    ${random email}    activate
     ${link}    Strip String    ${link}
     Go To    ${link}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
@@ -193,7 +193,7 @@ Restart
     END
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
-    ${link}    Get Email Link    ${random email}    authorize/restore_password
+    ${link}    Get Email Link    ${random email}    restore_password
     Go To    ${link}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}
     Input Text    ${RESET PASSWORD INPUT}    ${password}

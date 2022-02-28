@@ -116,7 +116,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 this.setPopoverTargets();
             });
 
-        // TODO: Replace with API logic
         this.applyService.initPageWatcher(
             this.applyContainer,
             this.processService.createProcess(
@@ -140,7 +139,10 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             () => {
                 this.applyService.reset();
             },
-            [this.verificationWatcher]
+            [this.verificationWatcher],
+            undefined,
+            undefined,
+            true
         );
     }
 
@@ -176,6 +178,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngAfterViewInit() {
+        // popover targets are in ngIf blocks and need to be "translated" first
+        // ... we need to wait before set them
         setTimeout(() => { this.setPopoverTargets(); });
     }
 
@@ -199,8 +203,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     @HostListener('document:click', ['$event.target'])
     onMouseClick(targetElement) {
-        if (targetElement.className !== 'pseudo-anchor') {
-            this.popover?.close();
+        if (targetElement.className !== 'pseudo-anchor' && this.popover) {
+            this.popover.close();
             this.popover = undefined;
         }
     }

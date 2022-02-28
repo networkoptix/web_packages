@@ -56,7 +56,10 @@
     </div>
 
     <div class="modal-body">
-        <span translate>If you ever lose access to your mobile authentication app, you can use this code to verify your identity.</span>
+        <div id="backupText">
+            <p translate>If you don't have access to your mobile authentication app, you can use these codes to verify your identity.</p>
+            <p translate>Previously generated codes are no longer valid.</p>
+        </div>
 
         <div class="code-area">
             <div class="code-area-code" *ngFor="let code of newCodes; let idx=index;">
@@ -142,6 +145,11 @@
                     <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a
                         minute.
                     </div>
+                    <div
+                        class="input-error"
+                        *ngIf="loginPassword.touched && loginPassword.errors?.required"
+                        translate
+                    >Password is required</div>
                     <div class="input-error" *ngIf="loginPassword.touched && loginPassword.errors?.pattern">
                         {{LANG.passwordRequirements.requiredMessage()}}</div>
                 </ng-container>

@@ -9,6 +9,8 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
+import { NxToast } from '@components/toast/toast.component';
+import { NxToastsContainer } from '@components/toast/toast.container';
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -41,7 +43,7 @@ import { NxTagComponent } from './tag/tag.component';
         FormsModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
     ],
     declarations: [
         NxCheckboxComponent,
@@ -54,6 +56,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxToastsContainer,
+        NxToast,
         NxThemeSwitcherComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
@@ -70,6 +74,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxToastsContainer,
+        NxToast,
         NxThemeSwitcherComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
@@ -86,6 +92,8 @@ import { NxTagComponent } from './tag/tag.component';
         NxProcessCancelButtonComponent,
         NxTagComponent,
         NxTooltipComponent,
+        NxToastsContainer,
+        NxToast,
         NxThemeSwitcherComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,

@@ -8,6 +8,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
+import { NxUtilsService } from '@services/utils.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -41,29 +42,36 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
                 filter(data => data !== undefined && data.id !== this.system?.id))
             .subscribe(system => {
                 this.system = system;
-
-                if (this.system.useRest) {
-                    this.system
-                        .getLicenseSummaries()
-                        .then((response: any) => {
-                            if (response && Object.keys(response).length) {
-                                this.setLicenses(response);
-                            }
-                        }, () => {
-                            // something went wrong - use legacy info
-                            this.licenses = this.licensesLegacyInfo;
-                        });
-                } else {
-                    this.licenses = this.licensesLegacyInfo;
-                }
+                this.getLicenses();
             });
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.licensesLegacyInfo?.currentValue) {
-            if (!this.system.useRest) {
-                this.licenses = this.licensesLegacyInfo;
-            }
+        if (
+            changes.licensesLegacyInfo?.currentValue &&
+            !NxUtilsService.isEqual(
+                changes.licensesLegacyInfo.currentValue,
+                changes.licensesLegacyInfo.previousValue
+            )
+        ) {
+            this.getLicenses();
+        }
+    }
+
+    getLicenses() {
+        if (this.system.useRest) {
+            this.system
+                .getLicenseSummaries()
+                .then((response: any) => {
+                    if (response && Object.keys(response).length) {
+                        this.setLicenses(response);
+                    }
+                }, () => {
+                    // something went wrong - use legacy info
+                    this.licenses = this.licensesLegacyInfo;
+                });
+        } else {
+            this.licenses = this.licensesLegacyInfo;
         }
     }
 

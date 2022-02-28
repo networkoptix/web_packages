@@ -30,13 +30,10 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
             data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
-        try:
-            res = Auth.verify_2fa_code(data["verification_code"], data["code"])
-        except APIInternalException:
-            raise APIRequestException(
-                "Invalid verification code.", error_code=ErrorCodes.bad_request)
+        res = Auth.verify_2fa_code(data["verification_code"], data["code"])
 
         if request.user and request.user.is_authenticated:
+            Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
         return api_success(res)
 
@@ -60,14 +57,10 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
             data=request.query_params)
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
-        try:
-            res = Auth.verify_backup_code(
-                data["verification_code"], data["code"])
-        except APIInternalException:
-            raise APIRequestException(
-                "Invalid verification code.", error_code=ErrorCodes.bad_request)
+        res = Auth.verify_backup_code(data["verification_code"], data["code"])
 
         if request.user and request.user.is_authenticated:
+            Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
 
         return api_success(res)

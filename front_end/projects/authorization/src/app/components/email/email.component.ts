@@ -3,6 +3,7 @@ import {
     OnInit, Output, SimpleChanges, ViewChild
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
@@ -34,6 +35,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendEmail: any;
+    isMobile = true;
     @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
     header: string;
     subHeader: string;
@@ -46,7 +48,8 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     constructor(
         language: NxLanguageProviderService,
-        configService: NxConfigService
+        configService: NxConfigService,
+        private deviceService: DeviceDetectorService
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -68,6 +71,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.sendEmail = () => {
             this.loginEmailChange.emit(this.loginEmail);
         };
+        this.isMobile = this.deviceService.isMobile();
     }
 
     ngOnChanges(changes: SimpleChanges) {

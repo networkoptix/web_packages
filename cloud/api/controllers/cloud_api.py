@@ -115,17 +115,19 @@ def auto_refresh_token(no_refresh=False):
                 res.raise_for_status()
                 return res
             except requests.exceptions.HTTPError as e:
-                response_data = res.headers.get(
-                    'content-type') == 'application/json' and res.json()
+                response_data = None
+                if res.headers.get('content-type') == 'application/json':
+                    response_data = res.json()
                 if not refresh_token:
                     if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                         raise APINotAuthorisedException(
                             response_data["errorText"], response_data["resultCode"])
                     else:
                         raise e
-                elif no_refresh:
+                elif no_refresh and response_data:
                     raise APINotAuthorisedException(
                         response_data["errorText"], response_data["resultCode"])
+
             try:
                 tokens = Auth.get_refresh_token(refresh_token, ip=ip)
                 access_token = tokens["access_token"]
@@ -147,8 +149,9 @@ def auto_refresh_token(no_refresh=False):
 
             # Handles http error for wrapped request function.
             except requests.exceptions.HTTPError as e:
-                response_data = res.headers.get(
-                    'content-type') == 'application/json' and res.json()
+                response_data = None
+                if res.headers.get('content-type') == 'application/json':
+                    response_data = res.json()
                 if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                     kill_tokens(request, Auth.delete_token)
                     kill_session(request)
@@ -412,21 +415,36 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def merge(request, master_system_id, slave_system_id, headers=None):
-        if hasattr(request, "session"):
-            refresh_token = request.session.get("refresh_token")
-        else:
-            refresh_token = request.get("refresh_token")
-        masterToken = Auth.get_refresh_token(
-            refresh_token, scope=f"cloudSystemId={master_system_id}")["access_token"]
-        slaveToken = Auth.get_refresh_token(
-            refresh_token, scope=f"cloudSystemId={slave_system_id}")["access_token"]
+    def merge(request, master_system_id, slave_system_id, email=None, password=None, headers=None):
+        master_system = System.get(request, master_system_id).get('systems', [])[0]
+        auth = None
         params = {
-            "systemId": slave_system_id,
-            "masterSystemAccessToken": masterToken,
-            "slaveSystemAccessToken": slaveToken
+            "systemId": slave_system_id
         }
-        return post_wrapper(System.get_request_url("merged_systems/", master_system_id), json=params, headers=headers)
+
+        if int(master_system.get('version', '')[0] or 0) > 4:
+            if hasattr(request, "session"):
+                refresh_token = request.session.get("refresh_token")
+            else:
+                refresh_token = request.get("refresh_token")
+            master_token = Auth.get_refresh_token(
+                refresh_token,
+                scope=f"cloudSystemId={master_system_id}"
+            ).get("access_token")
+            slave_token = Auth.get_refresh_token(
+                refresh_token,
+                scope=f"cloudSystemId={slave_system_id}"
+            ).get("access_token")
+            params.update({
+                "masterSystemAccessToken": master_token,
+                "slaveSystemAccessToken": slave_token
+            })
+        else:
+            headers = None
+            auth = {"email": email, "password": password}
+            params["password"] = password
+
+        return post_wrapper(System.get_request_url("merged_systems/", master_system_id), json=params, headers=headers, auth=auth)
 
     @staticmethod
     @validate_response
@@ -827,6 +845,8 @@ class Auth(object):
 
         if scope:
             params["scope"] = scope
+        else:
+            params["scope"] = f"{settings.CLOUD_PORTAL_URL} cloudSystemId=*"
 
         if grant_type == Auth.GRANT_TYPE.password:
             params.update({

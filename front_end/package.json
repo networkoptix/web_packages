@@ -98,6 +98,7 @@
     "ngx-cookie-service": "3.0.4",
     "ngx-device-detector": "1.4.2",
     "ngx-file-drop": "8.0.8",
+    "ngx-markdown": "^11.0.0",
     "ngx-mask": "11.1.4",
     "ngx-order-pipe": "2.0.1",
     "ngx-quicklink": "^0.2.6",

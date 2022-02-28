@@ -488,6 +488,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get<APIDoc>(this.CONFIG.apiDocURL[type]).toPromise();
     }
 
+    getApiChangelog() {
+        return this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }).toPromise();
+    }
+
+    getApiPreamble() {
+        return this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }).toPromise();
+    }
+
     backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {
@@ -507,7 +515,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     disconnectFromCloud() {
         return this.post('/rest/v1/system/cloudUnbind', { password: '' }).toPromise()
-            .then(() => this.clearTokens());
+            .then(() => {
+                if (this.isSessionOauth) {
+                    return this.clearTokens();
+                }
+            });
     }
 
     checkMergeStatus(forceReload = true) {
@@ -518,6 +530,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    getServerInfo(remoteEndpoint: string) {
+        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
+        return this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
+    }
+
     mergeSystems(
         remoteEndpoint: string,
         remoteServerId: string,
@@ -526,7 +543,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         takeRemoteSettings = true
     ) {
         const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
-        remoteEndpoint = remoteEndpoint.replace(/https?s:\/\/(?:.*@)?/, '');
+        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
         const request = remoteServerId
             ? of({ id: remoteServerId, cloudSystemId: '' })
             : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
@@ -572,7 +589,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     // remoteCertificatePem          : '', // Currently optional.
                     mergeOneServer: false,
                     ignoreIncompatible: false,
-                    ignoreOfflineServerDuplicates: false
+                    ignoreOfflineServerDuplicates: true
                 };
                 return this.post<t.MergeSystems>('/rest/v1/system/merge', data);
             })

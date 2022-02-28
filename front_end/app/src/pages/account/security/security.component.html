@@ -34,7 +34,7 @@
                 </ng-template>
 
                 <ng-template #popLegend2faTemplate>
-                    <div *ngFor="let system of twoFaSystems | slice:0:4; let i=index" class="d-flex align-items-center">
+                    <div *ngFor="let system of twoFaSystems | slice:0:(twoFaSystems.length <= 5) ? 5 : 4; let i=index" class="d-flex align-items-center">
                         <svg-icon nx-add-svg-src
                                   class="d-inline-block"
                                   [src]="CONFIG.icons.dir + 'system_nocolor.svg'"
@@ -42,7 +42,7 @@
                                   [applyClass]="true"></svg-icon>
                         <span class="system-name ml-1">{{system.name}}</span>
                     </div>
-                    <div class="reminder" *ngIf="twoFaSystems.length > 4"
+                    <div class="reminder" *ngIf="twoFaSystems.length > 5"
                          [innerText]="'security.twoFa.systemsRemainder' | translate: { count: twoFaSystems.length - 4 }"></div>
                 </ng-template>
 
@@ -57,7 +57,7 @@
                         </label>
                     </div>
 
-                    <div class="tfauth-v5-warning" *ngIf="subV5Systems.length" >
+                    <div class="tfauth-v5-warning" *ngIf="subV5Systems.length && verificationWatcher.value" >
                         <h4 class="mt-0" translate>WARNING</h4>
                         <div class="float-left">
                             <span #v5WarningSpan
@@ -68,7 +68,7 @@
                 </ng-container>
 
                 <ng-template #popLegendSubV5Template>
-                    <div *ngFor="let system of subV5Systems | slice:0:4; let i=index" class="d-flex align-items-center">
+                    <div *ngFor="let system of subV5Systems | slice:0:(subV5Systems.length <= 5) ? 5 : 4; let i=index" class="d-flex align-items-center">
                         <svg-icon
                             nx-add-svg-src
                             class="d-inline-block"
@@ -77,7 +77,7 @@
                             [applyClass]="true"></svg-icon>
                         <span class="system-name ml-1">{{system.name}}</span>
                     </div>
-                    <div class="reminder" *ngIf="subV5Systems.length > 4"
+                    <div class="reminder" *ngIf="subV5Systems.length > 5"
                         [innerText]="'security.twoFa.systemsRemainder' | translate: {count: subV5Systems.length - 4}"></div>
                 </ng-template>
 

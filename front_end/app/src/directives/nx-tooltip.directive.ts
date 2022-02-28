@@ -110,7 +110,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    @HostListener('mouseout')
+    @HostListener('mouseleave')
     hide() {
         this.close();
     }

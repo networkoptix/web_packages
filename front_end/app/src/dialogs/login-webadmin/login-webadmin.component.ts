@@ -69,7 +69,6 @@ export class LoginWebadminModalContent implements OnInit {
     login: Process;
     next: string;
     password: string;
-    remember: boolean;
     hideErrors: boolean = true;
 
     wrongCredentials: boolean;
@@ -81,7 +80,6 @@ export class LoginWebadminModalContent implements OnInit {
         this.auth = { email: this.storageService.email };
         this.next = '';
         this.password = '';
-        this.remember = true;
         this.wrongCredentials = false;
     }
 
@@ -176,7 +174,19 @@ export class LoginWebadminModalContent implements OnInit {
             this.next = nextUrl[1];
         }
         this.password = '';
+
+        const showAccountBlockedError = () => {
+            this.loginForm.controls.login_password.markAsPristine();
+            this.loginForm.controls.login_password.markAsUntouched();
+
+            this.accountBlocked = true;
+            this.loginForm.controls.login_password.setErrors({
+                nx_account_blocked: true
+            });
+        };
+
         const showWrongCredentialsError = () => {
+            this.password = '';
             this.wrongCredentials = true;
             this.loginForm.controls.login_email.setErrors({
                 nx_wrong_credentials: true
@@ -191,15 +201,8 @@ export class LoginWebadminModalContent implements OnInit {
             notFound: showWrongCredentialsError,
             invalidParameter: showWrongCredentialsError,
             notAuthorized: showWrongCredentialsError,
-            accountBlocked: () => {
-                this.loginForm.controls.login_password.markAsPristine();
-                this.loginForm.controls.login_password.markAsUntouched();
-
-                this.accountBlocked = true;
-                this.loginForm.controls.login_password.setErrors({
-                    nx_account_blocked: true
-                });
-            }
+            serviceUnavailable: showAccountBlockedError,
+            accountBlocked: showAccountBlockedError
         };
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError();
         this.login = this.processService.createProcess(() => {
@@ -211,7 +214,7 @@ export class LoginWebadminModalContent implements OnInit {
             return this.account.login(
                 this.auth.email,
                 this.password,
-                this.remember
+                true
             );
         }, {
             ignoreUnauthorized: true,

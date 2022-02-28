@@ -1,0 +1,7 @@
+#!/bin/bash
+pabot --pabotlib --ordering order.txt -e merge -e integrations --output first_pass_full.xml --log first_pass_log.html --report first_pass_report.html -L trace test-cases
+rm *.png
+pabot --pabotlib --ordering order.txt --rerunfailed first_pass_full.xml --output retry_failed.xml --log retry_failed_log.html --report retry_failed_report.html -L trace test-cases
+rm *.png
+pabot --pabotlib --ordering order.txt --rerunfailed retry_failed.xml --output retry_failed_2nd_pass.xml --log retry_failed_2nd_log.html --report retry_failed_2nd_report.html -L trace test-cases
+rebot --merge --output pabot_merged.xml -r merged_report.html -l merged_log.html first_pass_full.xml retry_failed.xml retry_failed_2nd_pass.xml

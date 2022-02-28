@@ -270,6 +270,10 @@ class TestSystemAPI:
             assert refresh_token == mock_refresh_token
             return {'access_token': mock_token_lookup[scope]}
 
+        def mock_get_system(request, system_id):
+            return {'systems': [{'id': system_id, 'version': '5.0.0.11111'}]}
+
+        mocker.patch('api.controllers.cloud_api.System.get', mock_get_system)
         mocker.patch(
             'api.controllers.cloud_api.Auth.get_refresh_token', mock_get_refresh_token)
         merge = unwrap(System.merge)(request, self.system_id,
@@ -281,7 +285,8 @@ class TestSystemAPI:
                 'masterSystemAccessToken': master_token,
                 'slaveSystemAccessToken': slave_token
             },
-            headers=self.headers
+            headers=self.headers,
+            auth=None
         )
         assert merge.json() == self.sample_data
 

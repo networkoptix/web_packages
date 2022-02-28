@@ -14,5 +14,5 @@ ${RESET SUCCESS INSTRUCTION}          //p[contains(text(),"${RESET SUCCESS INSTR
 ${RESET SUCCESS LOG IN LINK}          //div[contains(@class,'process-success')]//a[contains(@class,'btn btn-primary')]
 ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
-${RESET PASSWORD EMAIL SENT}          ${RESET PASSWORD FORM}/div[@class="email-sent"]
+${RESET PASSWORD EMAIL SENT}          ${RESET PASSWORD FORM}/div[contains(@class, "email-sent")]
 ${RESET LOGIN BUTTON}                 ${RESET PASSWORD FORM}/following-sibling::footer//button[contains(text(), "${LOG IN BUTTON TEXT}")]

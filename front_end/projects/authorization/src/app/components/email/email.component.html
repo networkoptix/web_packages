@@ -69,7 +69,11 @@
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="left">
-            <button *ngIf="['loginToCloud', 'loginToWebadmin', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)"
+            <button 
+                *ngIf="
+                    ['loginToCloud', 'loginToWebadmin', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)
+                    && !isMobile
+                "
                 class="btn text-button no-padding"
                 (click)="setCurrentState.emit('create')"
                 type="button"

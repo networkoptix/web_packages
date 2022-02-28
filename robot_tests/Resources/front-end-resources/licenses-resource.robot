@@ -63,6 +63,7 @@ Remove all keys from system
         Remove License    ${LOCAL AUTH}    https://${QA BURBANK IP}:${port}    ${lic}[key]
     END
     Restart Server    https://${QABURBANK IP}:${port}    ${LOCAL AUTH}
+    Sleep    30
     [Return]    ${port}
 
 Open Licenses Page
@@ -216,5 +217,5 @@ Validate License Info
 
     ${key status}=   Get Key Status    ${key}
     ${key server}=   Get Key Server    ${key}
-    Run keyword and ignore error    Should Be Equal As Strings    ${key status}    ${status}
-    Run keyword and ignore error    Should Be Equal As Strings    ${key server}    ${server ${server num}}
+    Run keyword and continue on failure     Should Be Equal As Strings    ${key status}    ${status}
+    Run keyword and continue on failure     Should Be Equal As Strings    ${key server}    ${server ${server num}}

@@ -1,3 +1,4 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
@@ -5,22 +6,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { DeviceDetectorModule } from 'ngx-device-detector';
 
-import { AppComponent } from './app.component';
+import { GenericDialogModule } from '@dialogs/generic/generic.module';
+import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
+import { NxUriCacheService } from '@services/uri-cache.service';
+import { WINDOWS_PROVIDERS } from '@services/window-provider';
 
 import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import { NxAuthorizeModule } from './components/authorize.module';
-import { GenericDialogModule } from '@dialogs/generic/generic.module';
 import { NxOAuthRedirectModule } from './oauth-redirect/oauth-redirect.module';
-
-import { WINDOWS_PROVIDERS } from '@services/window-provider';
-import { NxUriCacheService } from '@services/uri-cache.service';
-
-import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -54,7 +52,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         OverlayModule,
         GenericDialogModule,
         NxOAuthRedirectModule,
-        NxAuthorizeModule
+        NxAuthorizeModule,
     ],
     providers: [
         NxUriCacheService,

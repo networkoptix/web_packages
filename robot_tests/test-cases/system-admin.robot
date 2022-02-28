@@ -412,7 +412,7 @@ ${password}    ${BASE PASSWORD}
     END
 
 21. Left menu search: Search mechanics
-    [Tags]    C81762    webadmin    cloud    search
+    [Tags]    C81762    webadmin    cloud    search 
     Log in to system    ${system}    ${system}[owner]
 
     Log    Step 1
@@ -437,7 +437,8 @@ ${password}    ${BASE PASSWORD}
     Set Suite Variable    ${viewer id}
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
-    Should Be Equal As Numbers    ${num users found}    11
+    Capture Page Screenshot
+    Should Be Equal As Numbers    ${num users found}    6
     
     Log    Step 4
     ${name} =    Get Text    ${all users found}[0]

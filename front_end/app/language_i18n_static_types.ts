@@ -384,6 +384,7 @@ export interface DialogsMerge {
     primarySystemOffline:               any;
     primarySystemUnavailable:           any;
     recommendSupport:                   RecommendSupport;
+    restError:                          RESTError;
     secondaryCannotMerge:               any;
     secondarySystemUnavailable:         any;
     serverAtUrl:                        any;
@@ -408,6 +409,12 @@ export interface RecommendSupport {
     a_recommend:  any;
     b_support:    any;
     c_proceeding: any;
+}
+
+export interface RESTError {
+    duplicateServer:      any;
+    useCloudMerge:        any;
+    differentCloudOwners: any;
 }
 
 export interface DialogsMessage {
@@ -1566,6 +1573,7 @@ const typeMap: any = {
         { json: "primarySystemOffline", js: "primarySystemOffline", typ: "any" },
         { json: "primarySystemUnavailable", js: "primarySystemUnavailable", typ: "any" },
         { json: "recommendSupport", js: "recommendSupport", typ: r("RecommendSupport") },
+        { json: "restError", js: "restError", typ: r("RESTError") },
         { json: "secondaryCannotMerge", js: "secondaryCannotMerge", typ: "any" },
         { json: "secondarySystemUnavailable", js: "secondarySystemUnavailable", typ: "any" },
         { json: "serverAtUrl", js: "serverAtUrl", typ: "any" },
@@ -1589,6 +1597,11 @@ const typeMap: any = {
         { json: "a_recommend", js: "a_recommend", typ: "any" },
         { json: "b_support", js: "b_support", typ: "any" },
         { json: "c_proceeding", js: "c_proceeding", typ: "any" },
+    ], false),
+    "RESTError": o([
+        { json: "duplicateServer", js: "duplicateServer", typ: "any" },
+        { json: "useCloudMerge", js: "useCloudMerge", typ: "any" },
+        { json: "differentCloudOwners", js: "differentCloudOwners", typ: "any" },
     ], false),
     "DialogsMessage": o([
         { json: "system2faEnabled", js: "system2faEnabled", typ: "any" },

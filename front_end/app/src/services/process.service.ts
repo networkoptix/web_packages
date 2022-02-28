@@ -279,7 +279,7 @@ export const formatError = (
         error = error.error;
         // Unpack nested error
     }
-    if (errorCodes && error?.errorString &&
+    if (error.error !== '4' && errorCodes && error?.errorString &&
         (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
     ) {
         delete error.errorString;

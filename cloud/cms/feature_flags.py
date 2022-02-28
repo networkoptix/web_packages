@@ -55,6 +55,7 @@ class FLAGS(metaclass=_FlagType):
     bookmarks = ('View Bookmarks', 'bookmarks', '%BOOKMARKS_ENABLED%')
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
     dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
+    archive_selection = ('Archive Selection', 'archiveSelection', '%ARCHIVE_SELECTION_ENABLED%')
     themes_enabled = ('Enable themes', 'themesEnabled', '%THEMES_ENABLED%')
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
@@ -68,7 +69,6 @@ class SWITCHES(metaclass=_FlagType):
     landing_page = ('Landing Page', 'landingPage')
     kb_instant_search = ('KnowledgeBase Instant Search', 'kbInstantSearch')
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
-    archive_selection = ('Archive Selection', 'archiveSelection')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
     cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer')
 

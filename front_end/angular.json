@@ -68,6 +68,7 @@
               "app/styles/main.scss"
             ],
             "scripts": [
+              "node_modules/marked/lib/marked.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

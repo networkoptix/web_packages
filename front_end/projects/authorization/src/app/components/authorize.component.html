@@ -1,3 +1,5 @@
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+
 <div class="authorize-main" [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
     <div class="auth-window" [ngSwitch]="currentState"
         [ngClass]="{ 'window-w': viewType === 'web', 'window-d': viewType === 'desktop', 'window-m': viewType === 'mobile' }"
@@ -31,7 +33,6 @@
             [errorCode]="passwordErrorCode"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-password-component>
-        <!-- (isStayingLoggedIn)="stayingLoggedIn($event)" likely to be removed -->
         <nx-authorize-create-account-component
             *ngSwitchCase="AuthorizeState.create"
             [viewType]="viewType"
@@ -69,7 +70,6 @@
             [confirm]="confirmRequest"
             [(resetEmail)]="resetPasswordEmail"
             [loginEmail]="loginEmail"
-            [loginProcess]="loginPostExternalProcess"
             [resetRequestProcess]="resetRequestProcess"
             [errorCode]="resetRequestErrorCode"
             (setCurrentState)="setCurrentState($event)"

@@ -88,9 +88,11 @@ class GenericKeywords(object):
 #         for x in range(len(text)):
 #             element.send_keys(Keys.BACKSPACE)
     @keyword
-    def get_random_email(self, email, extra=""):
+    def get_random_email(self, email, sendemail=False, extra=""):
+        if not sendemail:
+            email = email.replace('sendemail', '')
         index = email.find('@')
-        email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
+        email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
         return email
 
     @keyword

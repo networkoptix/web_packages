@@ -156,8 +156,7 @@ def login(request):
         raise exception
 
     if email != validate_token['username']:
-        send_login_failed_signal(__name__, email, password, request)
-        raise APIInternalException("Token does not match email.", error_code=ErrorCodes.unknown_error)
+        email = validate_token['username']
 
     try:
         user = models.Account.objects.get(email=email)
@@ -403,11 +402,13 @@ class AccountSecurity(APIView):
         else:
             res = Account.update_2fa_settings(request, totp, False)
             Auth.delete_2fa_key(request)
+            request.session["has2fa"] = False
             return api_success(res)
 
     def delete(self, request, *args, **kwargs):
         if Account.get(request).get("account2faEnabled"):
             raise APIRequestException('Cannot delete totp while 2fa is enabled', ErrorCodes.bad_request)
+        request.session["has2fa"] = False
         return api_success(Auth.delete_2fa_key(request))
 
 

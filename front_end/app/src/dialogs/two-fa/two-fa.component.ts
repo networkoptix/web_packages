@@ -13,6 +13,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+import { CookieService } from 'ngx-cookie-service';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import {
@@ -29,6 +30,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
 import { htmlToEntity, pickFrom } from '@utils/general';
 
 export enum T_FA_STEPS {
@@ -93,6 +95,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     public tfaCode: string;
 
     private code: string;
+    private listenFor2faActivation = false;
 
     // static property is needed for unit tests
     @ViewChild('loginForm') loginForm: NgForm;
@@ -173,14 +176,29 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         private systemsService: NxSystemsService,
         private cloudApiService: NxCloudApiService,
         private elem: ElementRef<HTMLElement>,
+        private cookieService: CookieService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
 
         this.setupDefaults();
     }
+
+    // Using fetch api because angular http request is canceled when page is unloading.
+    private removeUnverified2faKey = () => {
+        const options = {
+            method: 'delete',
+            headers: {
+                'x-CSRFToken': this.cookieService.get('csrftoken')
+            },
+            keepalive: true
+        };
+        fetch(`${this.CONFIG.apiBase}/account/security`, options)
+            .catch(() => { console.error('something went wrong'); });
+    };
 
     ngOnInit() {
         pickFrom(
@@ -204,6 +222,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             return this.accountService
                 .verify(this.password)
                 .then((result: any) => {
+                    this.listenFor2faActivation = true;
+                    this.window.addEventListener('beforeunload', this.removeUnverified2faKey);
                     return this.accountService.get2FaKey();
                 });
         }, {
@@ -252,6 +272,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                 this.setTemplate(T_FA_STEPS.WizardCode);
             }
         });
+
+        const codeProcessUnauthorizedHandles = () => {
+            this.notAuthorized = true;
+            this.codeForm.controls.tfaCodeInput.markAsTouched();
+            this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
+            this.renderer.selectRootElement('#tfaCodeInput').focus();
+        };
 
         this.codeProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
@@ -311,15 +338,14 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     };
                     this.toastService.show(this.LANG.common.generalError(), options);
                 },
-                forbidden: () => {
-                    this.notAuthorized = true;
-                    this.codeForm.controls.tfaCodeInput.markAsTouched();
-                    this.codeForm.controls.tfaCodeInput.setErrors({ invalid: true });
-                    this.renderer.selectRootElement('#tfaCodeInput').focus();
-                }
+                forbidden: codeProcessUnauthorizedHandles,
+                notAuthorized: codeProcessUnauthorizedHandles,
+                invalidTotp: codeProcessUnauthorizedHandles
             }
         }, response => {
             if (response.account2faEnabled) {
+                this.listenFor2faActivation = false;
+                this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
                 this.setTemplate(T_FA_STEPS.WizardFinish);
             }
 
@@ -329,40 +355,12 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             }
         });
 
-        // Adapted from full codeProcess for verification code toggle for now
-        // TODO: Replace with digest auth toggle
         this.verificationProcess = this.processService.createProcess(() => {
             if (this.tfaCode === '') {
                 return Promise.reject({ resultCode: 'missingParam' });
             }
 
-            // Don't need to get backup codes or refresh session when toggle verification
-            if (this.type === 'verification-disable') {
-                return this.accountService.update2fa('', this.tfaCode, 'toggle');
-            } else {
-                // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
-                return this.accountService.get2FaBackupCode().then((response: any) => {
-                    if (response.errorText !== undefined) {
-                        return Promise.reject({ resultCode: 'noBackupCodes' });
-                    }
-                    this.newCodes = response.map(code => code.backup_code);
-
-                    return this.refreshSession()
-                        .then(result => {
-                            if (result.resultCode === 'ok') {
-                                return this.accountService.update2fa(
-                                    '',
-                                    this.tfaCode,
-                                    'toggle'
-                                );
-                            }
-
-                            return Promise.reject({ resultCode: result.errorText });
-                        }, err => {
-                            return Promise.reject({ resultCode: err.error.resultCode });
-                        });
-                });
-            }
+            return this.accountService.update2fa('', this.tfaCode, 'toggle');
         }, {
             ignoreUnauthorized: true,
             ignoreError: true,
@@ -502,6 +500,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     close = (action?: string) => {
+        if (this.listenFor2faActivation) {
+            this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
+        }
         this.resetDefaults();
         this.dialogRef.close(action || 'changed');
     }
@@ -509,6 +510,9 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     /* Needs to be an arrow function to access this
     when passed to <nx-cancel-button> as [discardFn] */
     closeWizard = (action?: string) => {
+        if (this.listenFor2faActivation) {
+            this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
+        }
         if (action === 'deactivate') {
             this.accountService.deactivate2FaKey()
                 .catch(err => {

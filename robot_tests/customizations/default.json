@@ -56,8 +56,8 @@
     "COLOR LIGHT16"              : "#698796",
     "COLOR LIGHT16 RGB"          : "rgba(105, 135, 150, 1)",
 
-    "COLOR ALIGHT2 RGBA"         : "rgba(240, 243, 244, 1)",
-    "COLOR ALIGHT2 RGB"          : "rgba(240, 243, 244, 1)",
+    "COLOR ALIGHT2 RGBA"         : "rgba(240, 242, 244, 1)",
+    "COLOR ALIGHT2 RGB"          : "rgba(240, 242, 244, 1)",
     "COLOR ALIGHT3 RGB"          : "rgba(230, 235, 237, 1)",
     "COLOR ALIGHT4 RGB"          : "rgba(240, 242, 244, 1)",
 

@@ -17,10 +17,10 @@ def get_variables(cust="default", lang="en_US", env="cloud-test"):
     env_json = {"ENV": env}
 
     # open up the customization file we want and create a dictionary called customization_json
-    with codecs.open("customizations/" + cust + ".json", 'r') as customization_variables:
+    with codecs.open("customizations/" + cust + ".json", encoding="utf-8") as customization_variables:
         customization_json = json.load(customization_variables)
         # open up the translation file we want and create a dictionary called translation_variables
-        with codecs.open("translations/variables_language_" + lang + ".json", 'r') as translation_variables:
+        with codecs.open("translations/variables_language_" + lang + ".json", encoding="utf-8") as translation_variables:
             translation_variables = translation_variables.read()
 
             # for each key in customizaion_json find the key surrounded by % and replace it with that key's value

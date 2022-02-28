@@ -520,7 +520,7 @@ Account Suite Tear Down
 26. After account deletion user is deleted from all systems that were shared with this user
     [Tags]    C69862    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[admin]
+    Share    ${server 1}[cloud auth]    ${server 1}[cloud id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
     Share    ${server 1}[cloud auth]    ${server 2}[cloud id]    ${ACCESS ROLES}[viewer]    ${random email}     ${permissions}[viewer]
     Share    ${server 1}[cloud auth]    ${server 3}[cloud id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
     Go To    ${url}/account
@@ -549,7 +549,7 @@ Account Suite Tear Down
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
 27. After account deletion user can create account with the same email again
-    [Tags]    C69864    delete_account      deb
+    [Tags]    C69864    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -563,9 +563,9 @@ Account Suite Tear Down
     
     Go To    ${url}/register
     Register    mark    hamil    ${random email}    ${password}    
-    Activate    ${random email}
-    Click Button      ${LOG IN BUTTON}
-    Log In    ${random email}    ${password}    button=None    reset=${True}
+    Activate Account   ${random email}    ${password}
+    Click Element      ${LOG IN BTN REGISTER ACCOUNT PAGE}
+    Log In    ${random email}    ${password}    button=None
 
 28. Deletion attempt when Delete Account button is disabled (via API)
     [Tags]    C76389        delete_account

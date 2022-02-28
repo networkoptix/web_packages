@@ -10,16 +10,16 @@ cloud_database:
     database: '$DB_NAME'
 
 cloud_db:
-    url: 'https://$CLOUD_DB_HOST/cdb'
+    url: 'https://$CLOUD_PORTAL_HOST/cdb'
 
 cloud_portal:
     url: 'https://$CLOUD_PORTAL_HOST'
 
 cloud_storage:
-    url: 'https://$CLOUD_DB_HOST/storage'
+    url: 'https://$CLOUD_PORTAL_HOST/storage'
 
 cloud_storages:
-    url: 'https://$CLOUD_DB_HOST/storages'
+    url: 'https://$CLOUD_PORTAL_HOST/storages'
 
 trafficRelay:
     host: 'relay-bur.vmsproxy.hdw.mx'

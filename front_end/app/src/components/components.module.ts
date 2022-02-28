@@ -83,8 +83,6 @@ import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';
 import { NxSystemsListComponent } from './systems-list/list.component';
-import { NxToast } from './toast/toast.component';
-import { NxToastsContainer } from './toast/toast.container';
 import { NxVendorListComponent } from './vendor-list/vendor-list.component';
 import { NxAssetExplorerWidgetComponent } from './widgets/asset-explorer/asset-explorer-widget.component';
 import { NxBookmarksWidgetComponent } from './widgets/bookmarks/bookmarks-widget.component';
@@ -148,8 +146,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
         NxInfoBlockComponent,
-        NxToastsContainer,
-        NxToast,
         NxSystemTileComponent,
         NxNavigationTileComponent,
         NxAdditionalSystemsTileComponent,
@@ -197,7 +193,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
-        NxToastsContainer,
         NxInfoBlockComponent,
         NxOverlayModalComponent,
         NxDevelopersMenuComponent,
@@ -251,7 +246,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         NxPlayerPlaceholderComponent,
-        NxToastsContainer,
         NxInfoBlockComponent,
         NxSystemTileComponent,
         NxNavigationTileComponent,

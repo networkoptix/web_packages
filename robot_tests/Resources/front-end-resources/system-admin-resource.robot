@@ -1,5 +1,6 @@
 *** Settings ***
 Library    String
+Resource    ../../resource.robot
 Library    Collections
 *** Keywords ***
 
@@ -92,9 +93,11 @@ Validate Success Dialog
 # UI - actions
 Change System Name
     [Arguments]    ${new name}    ${save}=${True}
-    Press Keys    ${SYSTEM NAME}    CTRL+a+BACKSPACE    ${new name}
+    Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=1
+    Delete All Text     ${SYSTEM NAME}      replaceText=${True}     replaceWith=${new name}
+#    Press Keys    ${SYSTEM NAME}    ${new name}
     #Execute JavaScript    document.getElementById("systemName-editable").innerHTML = "${new name}";
-    Press Keys    ${SYSTEM NAME}    ENTER
+#    Press Keys    ${SYSTEM NAME}    ENTER
     Wait until elements are visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     IF    ${save}
         Click Button    ${SAVE BUTTON}

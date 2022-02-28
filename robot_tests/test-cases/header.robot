@@ -265,7 +265,7 @@ Force Tags        cloud
 
 23. Many systems: Check dropdown content if 17 or more systems
     [Tags]        many_sys   CLOUD-6778    
-    Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}
+    Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}      ${permissions}[cloudAdmin]
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Reload Page    # User doesn't see the system shared with them without reloading the page
     Validate on Systems Page    search=True

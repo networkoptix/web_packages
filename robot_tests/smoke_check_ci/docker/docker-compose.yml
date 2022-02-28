@@ -1,11 +1,13 @@
 version: '3.3'
 services:
-    smoke_check:
+    run_smoke_check:
         network_mode: bridge
-        image: cloud_portal_smoke_check
+        image: smoke_check
         shm_size: "256M"
+        volumes:
+            - /test_results:/robot_tests/smoke_check_ci/test_results
 
-#    mediaserver:
-#        network_mode: bridge
-#        image: mediaserver
-#        shm_size: "256M"
+    mediaserver:
+        network_mode: bridge
+        image: mediaserver
+        shm_size: "256M"

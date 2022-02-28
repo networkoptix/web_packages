@@ -383,6 +383,8 @@ export class NxApplyService {
         this.nonSystem$.next(nonSystem);
         this.component = component;
         this.forms = {};
+        this.applyFunction = undefined;
+        this.discardFunction = undefined;
 
         this.createComponent();
         this.applyComponentInstance = this.applyComponentRef.instance;
@@ -409,7 +411,8 @@ export class NxApplyService {
         form: NgForm,
         saveFunction: Process,
         discardFunction?: () => void,
-        owner?: any
+        owner = undefined,
+        nonSystem = true
     ) {
         const updateOriginalForm = () => {
             const forms = this.applyComponentInstance.forms;
@@ -475,6 +478,8 @@ export class NxApplyService {
                 }, Promise.resolve({ result: 'ok' })
             );
         };
+
+        this.nonSystem$.next(nonSystem);
 
         if (this.applyComponentRef) {
             const formatInitial = () => {
@@ -661,6 +666,12 @@ export class NxApplyService {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
+        }
+
+        // when using FormWatchers
+        if (!applyFunc && Object.keys(this.forms).length && this.applyComponentInstance) {
+            applyFunc = this.applyComponentInstance.save;
+            discardFunc = this.applyComponentInstance.discard;
         }
 
         const config: Partial<DialogConfig> = {

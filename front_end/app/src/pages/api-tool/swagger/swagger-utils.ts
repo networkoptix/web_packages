@@ -22,11 +22,9 @@ const createSpan = (className: string) => {
  */
 export const highlightAllCode = (element: HTMLElement) => {
     const lines = element.querySelectorAll('div');
-    if (!lines.length || !brackets.includes(lines[0].innerText[0])) return; // not json
-
+    if (!lines.length || !brackets.includes(lines[0].innerText[0]) || lines.length > 1000) return; // not json or code block too large
     for (const line of lines) {
         highlight(line);
-        insertFocusPositionElement(line);
     };
 };
 
