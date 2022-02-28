@@ -1,7 +1,6 @@
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
-
 import type { APIDocType } from '@services/nx-config/base-config';
 
 import type { APIDoc, method } from './api-tool-types';

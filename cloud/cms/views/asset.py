@@ -36,8 +36,9 @@ from cms.controllers import filldata, generate_structure, modify_db, structure, 
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
 from cms.permissions import IsSuperuser
-from cms.serializers import AssetSerializer, CustomClient, CustomClientSerializer, ContentManifestSerializer, \
-    GenerateCustomClientSerializer, CheckPackageCustomClientSerializer, PackageDownloadIdSerializer
+from cms.serializers import AssetManifestSerializer, AssetSerializer, CustomClient, CustomClientSerializer, \
+    ContentManifestSerializer, GenerateCustomClientSerializer, CheckPackageCustomClientSerializer, \
+    PackageDownloadIdSerializer
 from cms import tasks
 
 from ..controllers.documentation import DOC_CACHE

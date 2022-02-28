@@ -1,5 +1,5 @@
 @use '../../../../styles/typography';
-@use '../../../../../styles/theme_variables' as *;
+@use '../../../../../styles/theme_variables_common' as *;
 
 markdown {
     position: relative;
@@ -30,9 +30,9 @@ markdown {
                     @include typography.medium14dark1;
                     padding-left: 20px;
                 }
-            } 
+            }
         }
-        td { 
+        td {
             height: 25px !important;
             padding: 15px 8px 8px 24px;
         }
@@ -63,10 +63,10 @@ markdown {
                     border: .7px solid $red_l2;
                     background-color: $red_l2;
                     &:first-of-type {
-                        transform: rotate(-45deg);   
+                        transform: rotate(-45deg);
                     }
                     &:nth-of-type(2) {
-                        transform: rotate(45deg);  
+                        transform: rotate(45deg);
                     }
                 }
             }
@@ -76,7 +76,7 @@ markdown {
                     border: .8px solid $green_l1;
                     background-color: $green_l1;
                     &:first-of-type {
-                        transform: rotate(90deg);   
+                        transform: rotate(90deg);
                     }
                 }
             }

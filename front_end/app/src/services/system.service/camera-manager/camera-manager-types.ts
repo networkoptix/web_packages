@@ -17,6 +17,7 @@ export interface ICamera {
     controlEnabled: boolean;
     defaultRatio: number;
     dewarpingParams: string;
+    deviceType: string;
     disableDualStreaming: boolean;
     failoverPriority: string;
     groupId: string;
