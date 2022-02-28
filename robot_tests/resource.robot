@@ -1334,3 +1334,13 @@ Remove Server From System
     Detach Server From System    ${server url}    ${server auth}
     ${id}=    Get Server Id    ${system url}    ${system auth}    ${server name}
     Remove Resource From System    ${system url}    ${system auth}    ${id}
+
+Get container IP by name
+    [Arguments]    ${name}
+    Acquire Lock    get_id_lock
+    Open Connection    ${QA BURBANK IP}
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
+    ${ip}=   Execute Command    docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${name}
+    Close Connection
+    Release Lock    get_id_lock
+    [Return]    ${ip}

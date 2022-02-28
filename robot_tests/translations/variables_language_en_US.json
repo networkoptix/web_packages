@@ -566,5 +566,10 @@
     "2FA SETTINGS MODAL HEADER TEXT"       :    "Two-factor authentication settings",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1" :    " Verification code from the authentication app will be requested only to log in to systems that require two-factor authentication. ",
     "2FA SETTINGS MODAL DESCRIPTION TEXT2" :    " Verification code from the authentication app will be requested on every login with Nx Cloud account. ",
-    "2FA SETTINGS MODAL INSTRUCTIONS TEXT" :    "Enter verification code from your authentication app to continue"
+    "2FA SETTINGS MODAL INSTRUCTIONS TEXT" :    "Enter verification code from your authentication app to continue",
+    "VIEW PAGE WEBM TEXT"                  :    "webm",
+    "VIEW PAGE TRANSPORT TEXT"             :    "Transport",
+    "VIEW PAGE HLS TEXT"                   :    "hls",
+    "VIEW PAGE CAMERA OFFLINE TEXT"        :    "Offline",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT" :    "Authentication required"
 }
