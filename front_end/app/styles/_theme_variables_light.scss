@@ -59,6 +59,13 @@
     --horizontal-sep-color : #{$light6};
     --label-color          : #{$dark9};
     
+    //--nav-dropdown-bg           : transparent;
+    //--nav-dropdown-color        : #{$dark9};
+    //--nav-dropdown-hover-bg     : #{$light2};
+    //--nav-dropdown-hover-color  : #{$dark9};
+    //--nav-dropdown-active-bg    : #{$light3};
+    //--nav-dropdown-active-color : #{$dark9};
+    
     --placehoder-cloud-color   : #{$brand_core};
     --placehoder-cloud-opacity : .1;
     --placehoder-title-color : #{$dark9};
@@ -75,6 +82,10 @@
     --switch-warning-hover-color  : #{$red_l2};
     --switch-circle-color         : #{$red_d1};
     --switch-circle-disable-color : #{$light12};
+    
+    --developer-menu-bg : #{$additional_light2};
+    --developer-menu-base-color : #{$dark10};
+    
     
     --left-menu-border-color         : transparent;
     --left-menu-l1-bg                : transparent;
@@ -195,8 +206,8 @@
     --btn-danger-active-color  : #{$light1};
     --btn-danger-active-shadow : #{$red_d4};
     
-    --btn-header-saparator-color : #{ $light4};
-    --btn-header-main-bg         : #{ $light4};
+    --btn-header-saparator-color : #{$light4};
+    --btn-header-main-bg         : #{$light4};
     --btn-header-main-color      : #{$dark9};
     
     --tab-link-hover-bg            : #{$light3};
@@ -235,6 +246,8 @@
     --tabset-bg : #{$light1};
     --tabset-hover-bg : #{$light3};
     --tabset-color : #{$dark12};
+    
+    --table-alt-row-bg : #{$additional_light1};
     
     --card-shadow: 0 2px 5px 0 #{$light8};
     --card-header-bg : #{$additional_light1};

@@ -412,8 +412,16 @@ p {
     @include font-source($font-family-bold, $font-size-base, $dark9);
 }
 
+@mixin bold13dark9nocolor {
+    @include font-source($font-family-bold, $font-size-base);
+}
+
 @mixin bold16dark9 {
     @include font-source($font-family-bold, rem(16px), $dark9);
+}
+
+@mixin bold16nocolor {
+    @include font-source($font-family-bold, rem(16px));
 }
 // BOLD
 

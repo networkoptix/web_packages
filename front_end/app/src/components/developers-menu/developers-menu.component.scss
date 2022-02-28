@@ -17,14 +17,15 @@
 }
 
 .activated-highlight {
-    background: $light16 !important;
-    color: $light1 !important;
+    background-color: var(--left-menu-l3-selected-bg) !important;
+    color: var(--left-menu-l3-selected-color) !important;
     &:hover {
         cursor: unset;
     }
 
     & + div.left-menu-arrow > svg-icon > svg > g > polyline {
-        stroke: $light1 !important;
+        stroke: var(--left-menu-l3-selected-color) !important;
+        fill: none;
     }
 }
 
@@ -32,7 +33,7 @@
     transform: rotate(0) !important;
 }
 
-.seperator{
+.seperator {
     display: block;
     text-align: center;
     overflow: hidden;
@@ -68,7 +69,8 @@
 }
 
 .base-level {
-    @include typography.regular14dark10;
+    @include typography.regular14nocolor;
+    color : var(--developer-menu-base-color);
     position: relative;
     cursor: pointer;
     user-select: none;
@@ -80,7 +82,8 @@
         align-items: center;
     }
     &:hover {
-        background: $light4;
+        background-color: var(--left-menu-l3-hover-bg);
+        color: var(--left-menu-l3-hover-color);
     }
 
     & >.left-menu-arrow {
@@ -92,6 +95,10 @@
             align-items: center;
             svg-icon {
                 transform: rotate(-90deg);
+                
+                svg .st0 {
+                    fill: none;
+                }
             }
     }
 }
@@ -115,7 +122,8 @@
 
 .menu-level-1 {
     @extend .base-level;
-    @include typography.medium15dark9;
+    @include typography.medium15nocolor;
+    color : var(--left-menu-l1-color);
 
     & > .menu-link {
         padding-left: 42px;

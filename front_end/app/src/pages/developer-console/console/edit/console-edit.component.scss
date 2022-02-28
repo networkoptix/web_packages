@@ -17,11 +17,11 @@ section {
     margin-bottom: 16px;
 
     label {
-        @include typography.regular14dark10;
+        @include typography.regular14nocolor;
     }
 
     span:not(.input-error) {
-        @include typography.regular14light10;
+        @include typography.regular14nocolor;
     }
 
     input, div {
@@ -33,13 +33,13 @@ section {
     }
 
     div {
-        @include typography.regular13light10;
+        @include typography.regular13nocolor;
     }
 }
 
 .apply-wrapper {
-    background: $additional_light2;
-    border-top: 1px solid $light4;
+    background: var(--body-bg);
+    border-top: 1px solid var(--border-color);
     margin: -1px 0 -16px 0;
     position: sticky;
     bottom: 0;

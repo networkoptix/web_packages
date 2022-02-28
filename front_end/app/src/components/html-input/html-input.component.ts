@@ -1,6 +1,9 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+
 import { DEFAULT_EDITOR_CONFIG } from './editor-config';
 
 @Component({
@@ -18,15 +21,26 @@ import { DEFAULT_EDITOR_CONFIG } from './editor-config';
 export class NxHTMLComponent implements ControlValueAccessor {
     @Input() editorOverrides: Record<any, any>;
 
+    CONFIG: IConfig;
     preloaderHeight = DEFAULT_EDITOR_CONFIG.min_height;
     editorSettings;
     valueLoaded = false;
     #value = '';
 
+    constructor(
+        configService: NxConfigService,
+    ) {
+        this.CONFIG = configService.getConfig();
+    }
+
     ngOnInit() {
         this.editorSettings = {
             ...DEFAULT_EDITOR_CONFIG,
-            ...(this.editorOverrides || {})
+            ...(this.editorOverrides || {}),
+            ...{
+                skin: this.CONFIG.isDarkTheme ? 'oxide-dark' : '',
+                content_css: this.CONFIG.isDarkTheme ? 'dark' : ''
+            }
         };
     }
 

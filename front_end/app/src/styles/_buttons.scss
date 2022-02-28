@@ -73,7 +73,7 @@ button, .btn {
     }
 
     &:hover:not([disabled]):not(.disabled) {
-        background-color : var(--btn-default-hover-bg);
+        background-color : var(--btn-default-hover-bg) !important;
         box-shadow       : inset 0 -1px 0 0 var(--btn-default-hover-shadow) !important;
     }
 
@@ -107,7 +107,7 @@ button, .btn {
         //box-shadow       : inset 0 1px 0 0 $light8 !important;
     }
     
-    .arrow-flip svg-icon svg g polyline.st0 {
+    svg-icon svg g polyline.st0 {
         stroke : var(--btn-dropdown-toggle-color);
         fill : none;
     }

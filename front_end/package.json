@@ -1,6 +1,6 @@
 {
   "name": "cloud-portal",
-  "version": "21.1.0",
+  "version": "22.1.0",
   "scripts": {
     "ng": "ng",
     "serve": "export CLOUD_TARGET=local && npm run serve:cloud",

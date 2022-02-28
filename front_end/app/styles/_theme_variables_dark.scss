@@ -59,6 +59,13 @@ html[data-theme="dark"] {
     --horizontal-sep-color : #49626F; //$dark15;
     --label-color          : #A5B7C0; //light10;
     
+    //--nav-dropdown-bg           : ;
+    //--nav-dropdown-color        : ;
+    //--nav-dropdown-hover-bg     : ;
+    //--nav-dropdown-hover-color  : ;
+    //--nav-dropdown-active-bg    : ;
+    //--nav-dropdown-active-color : ;
+    
     --placehoder-cloud-color : #117297; //$brand_d3
     --placehoder-cloud-opacity : 1;
     --placehoder-title-color : #E1E7EA; //$light4;
@@ -76,6 +83,8 @@ html[data-theme="dark"] {
     --switch-circle-color         : #AA1E1E; //$red_d1;
     --switch-circle-disable-color : #263137; //$dark8;
     
+    --developer-menu-bg: #171C1F; //$dark5;
+    --developer-menu-base-color : #879FAB; //$light13;
     
     --left-menu-border-color         : transparent;
     --left-menu-l1-bg                : transparent;
@@ -236,6 +245,8 @@ html[data-theme="dark"] {
     --tabset-bg : #0D0E0F; //$dark3;
     --tabset-hover-bg : #1C2327; //$dark6;
     --tabset-color : #A5B7C0; //$light10;
+    
+    --table-alt-row-bg: #171C1F; //$dark5;
     
     --card-shadow : 0 2px 5px 0 #263137; //$dark8;
     --card-header-bg : #1C2327; //$dark6;

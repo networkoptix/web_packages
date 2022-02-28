@@ -1129,7 +1129,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.73": {
+        "electron-to-chromium@1.4.74": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -1333,7 +1333,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks/LICENSE"
         },
-        "eslint-plugin-react@7.29.1": {
+        "eslint-plugin-react@7.29.2": {
             "licenses": "MIT",
             "repository": "https://github.com/yannickcr/eslint-plugin-react",
             "publisher": "Yannick Croissant",
@@ -5749,7 +5749,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.73": {
+        "electron-to-chromium@1.4.74": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -11255,6 +11255,12 @@
             "path": "cloud_portal/front_end/node_modules/@types/long",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/long/LICENSE"
         },
+        "@types/marked@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/marked",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/marked/LICENSE"
+        },
         "@types/minimatch@3.0.5": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
@@ -12822,7 +12828,7 @@
             "path": "cloud_portal/front_end/node_modules/clone",
             "licenseFile": "cloud_portal/front_end/node_modules/clone/LICENSE"
         },
-        "cloud-portal@21.1.0": {
+        "cloud-portal@22.1.0": {
             "licenses": "UNLICENSED",
             "private": [],
             "path": "cloud_portal/front_end"
@@ -13894,6 +13900,15 @@
             "url": "https://mathiasbynens.be/",
             "path": "cloud_portal/front_end/node_modules/emoji-regex",
             "licenseFile": "cloud_portal/front_end/node_modules/emoji-regex/LICENSE-MIT.txt"
+        },
+        "emoji-toolkit@6.6.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/joypixels/emoji-toolkit",
+            "publisher": "JoyPixels",
+            "email": "support@joypixels.com",
+            "url": "https://www.joypixels.com",
+            "path": "cloud_portal/front_end/node_modules/emoji-toolkit",
+            "licenseFile": "cloud_portal/front_end/node_modules/emoji-toolkit/LICENSE.md"
         },
         "emojis-list@3.0.0": {
             "licenses": "MIT",
@@ -16457,6 +16472,12 @@
             "path": "cloud_portal/front_end/node_modules/karma",
             "licenseFile": "cloud_portal/front_end/node_modules/karma/LICENSE"
         },
+        "katex@0.13.24": {
+            "licenses": "MIT",
+            "repository": "https://github.com/KaTeX/KaTeX",
+            "path": "cloud_portal/front_end/node_modules/katex",
+            "licenseFile": "cloud_portal/front_end/node_modules/katex/LICENSE"
+        },
         "keycode@2.2.1": {
             "licenses": "MIT",
             "repository": "https://github.com/timoxley/keycode",
@@ -16810,6 +16831,13 @@
             "url": "https://github.com/jonschlinkert",
             "path": "cloud_portal/front_end/node_modules/map-visit",
             "licenseFile": "cloud_portal/front_end/node_modules/map-visit/LICENSE"
+        },
+        "marked@2.1.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/markedjs/marked",
+            "publisher": "Christopher Jeffrey",
+            "path": "cloud_portal/front_end/node_modules/marked",
+            "licenseFile": "cloud_portal/front_end/node_modules/marked/LICENSE.md"
         },
         "md5.js@1.3.5": {
             "licenses": "MIT",
@@ -17261,6 +17289,14 @@
             "publisher": "Georgi Peltekov",
             "path": "cloud_portal/front_end/node_modules/ngx-file-drop",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-file-drop/README.md"
+        },
+        "ngx-markdown@11.1.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/jfcere/ngx-markdown",
+            "publisher": "Jean-Francois Cere",
+            "email": "jfcere@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/ngx-markdown",
+            "licenseFile": "cloud_portal/front_end/node_modules/ngx-markdown/LICENSE"
         },
         "ngx-mask@11.1.4": {
             "licenses": "MIT",
