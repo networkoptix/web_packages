@@ -130,6 +130,7 @@ export interface Authorize {
     termsAndConditionsHelpText: any;
     copiedToClipboard:          any;
     authCode:                   AuthCode;
+    emailSent:                  any;
 }
 
 export interface AuthCode {
@@ -1340,6 +1341,7 @@ const typeMap: any = {
         { json: "termsAndConditionsHelpText", js: "termsAndConditionsHelpText", typ: "any" },
         { json: "copiedToClipboard", js: "copiedToClipboard", typ: "any" },
         { json: "authCode", js: "authCode", typ: r("AuthCode") },
+        { json: "emailSent", js: "emailSent", typ: "any" },
     ], false),
     "AuthCode": o([
         { json: "message", js: "message", typ: "any" },
