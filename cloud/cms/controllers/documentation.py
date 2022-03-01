@@ -65,7 +65,12 @@ class SearchableCache(BaseCache):
         self.current_settings = None
         super().__init__(*args, **kwargs)
         client = get_meilisearch_client()
-        self.search_index = client.get_or_create_index(self.cache_key)
+        try:
+            self.search_index = client.get_or_create_index(self.cache_key)
+        except MeiliSearchCommunicationError:
+            # Prevents failure on django checks pipeline
+            pass
+
         self.fields_from_doc = self.custom_settings.pop('fields')
 
     # @ignore_index_not_found
