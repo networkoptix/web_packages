@@ -23,7 +23,7 @@ coreschema==0.0.4
 coverage==5.5
 cryptography==3.3.2
 cssutils==1.0.2
-Django==2.2.26
+Django==2.2.27
 django-admin-tools==0.8.1
 django-autocomplete-light==3.3.4
 django-celery-beat==1.5.0
@@ -83,7 +83,7 @@ numpy==1.22.0
 oauthlib==3.1.1
 packaging==20.9
 pandas==1.2.2
-Pillow==9.0.0
+Pillow==9.0.1
 pluggy==0.13.1
 prompt-toolkit==3.0.15
 py==1.10.0
