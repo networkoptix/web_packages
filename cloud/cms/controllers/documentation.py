@@ -46,18 +46,18 @@ def html2plain(html):
     return fixup_markdown_formatting(text)
 
 
-def ignore_index_not_found(func):
-    """Not sure if this needed anymore
-    """
-    @wraps(func)
-    def _ignore_index_not_found(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except MeiliSearchApiError as e:
-            if e.error_code != 'index_not_found':
-                raise e
+# def ignore_index_not_found(func):
+#     """Not sure if this needed anymore
+#     """
+#     @wraps(func)
+#     def _ignore_index_not_found(*args, **kwargs):
+#         try:
+#             return func(*args, **kwargs)
+#         except MeiliSearchApiError as e:
+#             if e.error_code != 'index_not_found':
+#                 raise e
 
-    return _ignore_index_not_found
+#     return _ignore_index_not_found
 
 class SearchableCache(BaseCache):
     def __init__(self, *args, **kwargs):
@@ -66,21 +66,27 @@ class SearchableCache(BaseCache):
         super().__init__(*args, **kwargs)
         client = get_meilisearch_client()
         self.search_index = client.index(self.cache_key)
+        try:
+            self.search_index.get_stats()
+            self.check_and_update_custom_settings()
+        except (MeiliSearchApiError, MeiliSearchCommunicationError) as e:
+            if isinstance(e, MeiliSearchApiError):
+                client.create_index('documentation')
 
-        self.fields_from_doc = self.custom_settings.pop('fields')
+        self.fields_from_doc = self.custom_settings.pop('displayedAttributes')
 
-    @ignore_index_not_found
+    # @ignore_index_not_found
     def check_and_update_custom_settings(self):
         if self.custom_settings:
             try:
                 self.current_settings = self.search_index.get_settings()
-                if any(self.current_settings[key] != value for key, value in self.custom_settings.items()):
+                if any(self.current_settings.get(key, not value) != value for key, value in self.custom_settings.items()):
                     self.search_index.update_settings(self.custom_settings)
             except (TypeError, MeiliSearchCommunicationError) as e:
                 # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
                 logger.info(e)
 
-    @ignore_index_not_found
+    # @ignore_index_not_found
     def clear_cache(self):
         super().clear_cache()
         try:
@@ -122,9 +128,12 @@ class SearchableCache(BaseCache):
                 # TypeError is raised when switch is enabled but no master key provided
                 logger.warning(e)
 
+ATTRIBUTES = ['title', 'shortDescription', 'version', 'id', 'labels', 'kbMenus']
 
 SEARCH_SETTINGS = {
-    'fields': ['title', 'shortDescription', 'version', 'id', 'labels', 'kbMenus'],
+    'displayedAttributes': ATTRIBUTES,
+    'searchableAttributes': ATTRIBUTES,
+    'sortableAttributes': ATTRIBUTES,
     'filterableAttributes': ['labels', 'kbMenus'],
 }
 DOC_CACHE = SearchableCache(cache_key='documentation', search_settings=SEARCH_SETTINGS)
@@ -135,8 +144,7 @@ def inline_styles(body, css):
     if css and body:
         css = '.article-content { ' + css + ' }'
         css = sass.compile(string=css)
-        html = f'<style>{css}</style>{body}'
-        return html
+        return f'<style>{css}</style>{body}'
     return body
 
 
@@ -169,19 +177,17 @@ def split_blocks(html):
                     "contentHTML": node_contentHTML,
                     "content": node_content
                 })
+            elif current_block:
+                current_block['content'] += f'{" " if current_block["content"] else ""}{node_content}'
+                current_block['contentHTML'] += node_contentHTML
             else:
-                if current_block:
-                    current_block['content'] += f'{" " if current_block["content"] else ""}{node_content}'
-                    current_block['contentHTML'] += node_contentHTML
-                else:
-                    current_block = {
-                        "type": node_type,
-                        "contentHTML": node_contentHTML,
-                        "content": node_content
-                    }
-        else:
-            if current_block and (current_block.get('content') or current_block.get('contentHTML')):
-                blocks.append(current_block)
+                current_block = {
+                    "type": node_type,
+                    "contentHTML": node_contentHTML,
+                    "content": node_content
+                }
+        if current_block and (current_block.get('content') or current_block.get('contentHTML')):
+            blocks.append(current_block)
     return blocks
 
 

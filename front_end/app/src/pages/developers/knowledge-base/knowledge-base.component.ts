@@ -154,7 +154,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     fetchSearchHandler({ query, page }) {
         return this.cloudApi.documentationInstantSearch(
-            this.route.snapshot.paramMap.get('kb-name'),  query, { page }
+            this.kbService.menuNameSubject.value,  query, { page }
         ).pipe(
             catchError(err => {
                 console.error(

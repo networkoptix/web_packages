@@ -227,28 +227,35 @@ def kb_search(request, name):
     if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
         raise APIInternalException(SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
 
+    def get_param(param, default=None):
+        default = default or []
+        return [param for param in request.query_params.get(param, '').split(',') if param] or default
+
     query = request.query_params.get('query', '')
-    kb_menus_filter = [name] if name else request.query_params.get('kbMenus', '').split(',')
-    labels_filter = request.query_params.get('labels', '').split(',')
-    filter_counts = request.query_params.get('filterCounts', '*').split(',')
+    kb_menus_filter = [name] if name else get_param('kbMenus')
+    labels_filter = get_param('labels')
+    filter_counts = get_param('filterCounts')
     crop_length = int(request.query_params.get('cropLength', 150))
-    to_highlight = request.query_params.get('highlight', '*').split(',')
+    to_highlight = get_param('highlight', ["*"])
     perPage = int(request.query_params.get('perPage', 10))
     page = int(request.query_params.get('page', 1))
 
-    index = get_meilisearch_client().index('documentation')
-    try:
-        index_updated = index.fetch_info().updated_at
-    except MeiliSearchApiError as e:
-        index_updated = False
+    client = get_meilisearch_client()
+    index = client.index('documentation')
 
-    if not index_updated:
+    try:
+        number_of_docs = index.get_stats().get('numberOfDocuments', 0)
+    except MeiliSearchApiError:
+        client.create_index('documentation')
+        number_of_docs = 0
+
+    if not number_of_docs:
         docs_json = sync_search_for_menu(request, name)
         if not docs_json:
             raise APIInternalException(SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
 
-    kb_menus_filter = [f'kbMenus = {kb}' for kb in kb_menus_filter if kb]
-    labels_filter = [f'labels = {label}' for label in labels_filter if label]
+    kb_menus_filter = [f"kbMenus = '{kb}'" for kb in kb_menus_filter if kb]
+    labels_filter = [f"labels = '{label}'" for label in labels_filter if label]
 
     options = {
         'attributesToHighlight': to_highlight,
@@ -259,7 +266,7 @@ def kb_search(request, name):
         'offset': page * perPage - perPage
     }
 
-    raw_results = index.search(query, options)
+    raw_results = index.search(query, {key: val for key, val in options.items() if val})
     doc_keys = ['body', 'title', 'shortDescription', 'labels', 'kbMenus', 'id']
     unformatted = ['kbMenus']
     docs = [
