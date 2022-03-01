@@ -3,7 +3,7 @@
     "License": "BSD License",
     "Name": "Django",
     "URL": "https://www.djangoproject.com/",
-    "Version": "2.2.26"
+    "Version": "2.2.27"
   },
   {
     "License": "BSD License",
@@ -21,7 +21,7 @@
     "License": "Historical Permission Notice and Disclaimer (HPND)",
     "Name": "Pillow",
     "URL": "https://python-pillow.org",
-    "Version": "9.0.0"
+    "Version": "9.0.1"
   },
   {
     "License": "MIT License",
