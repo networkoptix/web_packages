@@ -8,13 +8,17 @@
 
 <ng-template #normalCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock
+            [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"
+            class="article-content"></div>
     </div>
 </ng-template>
 
 <ng-template #contentCard let-node="node" let-index="index">
     <div [ngClass]="{'narrow-section': node.cardClass === CardClasses.NORMAL}">
-        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'" class="article-content"></div>
+        <div (NxProjectedLinkHandler)="projectedLinkHandler($event)" NxProjectedCodeBlock
+            [innerHTML]="(index === 0 ? pageNode.title + node.content : node.content) | safe:'html'"
+            class="article-content"></div>
     </div>
 </ng-template>
 
@@ -34,10 +38,8 @@
     <nx-block type="mt-3" header-style="side">
         <header>
             <div *ngIf="node.cardIcon" class="heading-icon">
-                <svg-icon nx-add-svg-src
-                    [src]="CONFIG.icons.dir + node.cardIcon"
-                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
-                ></svg-icon>
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + node.cardIcon"
+                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
             </div>
             <p>{{node.cardLead}}</p>
             <h3>{{node.title}}</h3>
@@ -60,52 +62,65 @@
 
 <ng-template #resultBlock let-doc="doc">
     <div class=" narrow-section my-2">
-        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch($event)" [innerHTML]="doc.title" class="doc-link"></a>
+        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch($event)" [innerHTML]="doc.title"
+            class="doc-link"></a>
         <p *ngIf="doc.snippet as content" [innerHTML]=" content | safe:'html'"></p>
     </div>
 </ng-template>
 
 <ng-template #searchResultsTemplate let-results="results">
-    <h2 class="results-heading">{{results.length ? ('Search Results:' | translate) : ('No Matching Search Results' | translate)}}</h2>
+    <h2 class="results-heading">
+        <ng-template #resultsHeading>
+            <ng-template #noResults>
+                <ng-container translate>No Matching Search Results</ng-container>
+            </ng-template>
+            <ng-container *ngIf="results.length; else noResults" translate>Search Results:</ng-container>
+        </ng-template>
+        <ng-container *ngIf="searchLoading && CONFIG.featureFlags.kbInstantSearch; else resultsHeading">
+            <ng-template #updatingResults>
+                <ng-container translate>Updating Results...</ng-container>
+            </ng-template>
+            <ng-container *ngIf="!results.length; else updatingResults" translate>Fetching Results...</ng-container>
+        </ng-container>
+    </h2>
     <ng-container *ngFor="let doc of results">
         <ng-container *ngTemplateOutlet="resultBlock;context{doc:doc}"></ng-container>
     </ng-container>
     <div *ngIf="currentSearchResultPage < totalSearchResultPages" class="more-results">
-        <div *ngIf="!loadingNext;else moreLoading"
-            (click)="fetchNext()"
-            (nxOnIntersect)="fetchNext()"
+        <div *ngIf="!loadingNext;else moreLoading" (click)="fetchNext()" (nxOnIntersect)="fetchNext()"
             [intersectionDebounce]="CONFIG.search.debounceTime"></div>
     </div>
 </ng-template>
 <!-- End of Search Results Templates -->
 
 <div *ngIf="kbService.basePath" [ngClass]="kbService.basePath !== 'content' ? 'page-wrapper' : 'content-only'">
-    <nx-developers-menu *ngIf="kbService.menuName"
-        [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
-        [service]="kbService"
-        [searchEnabled]="false"
-        (onClick)="handleClick($event)"
-        (relatedLinks)="relatedLinks$.next($event)"
-        (handlePrefetch)="prefetchDocument($event)"></nx-developers-menu>
+    <nx-developers-menu *ngIf="kbService.menuName" [ngClass]="{'with-ribbon': ribbonService.context.visibility}"
+        [service]="kbService" [searchEnabled]="false" (onClick)="handleClick($event)"
+        (relatedLinks)="relatedLinks$.next($event)" (handlePrefetch)="prefetchDocument($event)"></nx-developers-menu>
     <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
-            <nx-search *ngIf="!kbService.contentAssetId"
-                [ngModel]="search"
-                (ngModelChange)="updateSearchQuery($event)"
-                [placeholder]="'Knowledgebase Search' | translate"
-                layout="compact"></nx-search>
+            <nx-search *ngIf="!kbService.contentAssetId" [ngModel]="search" (ngModelChange)="updateSearchQuery($event)"
+                [placeholder]="'Knowledgebase Search' | translate" layout="compact"></nx-search>
             <ng-container *ngIf="pageNode.cardClass !== 'article'">
                 <ng-container *ngIf="searchMode; else displayContent">
-                    <ng-container *ngIf="!searchLoading; else preloader">
-                        <ng-container *ngTemplateOutlet="searchResultsTemplate;context{results:(searchResults$ | async)}"></ng-container>
+                    <ng-container *ngIf="!searchLoading || CONFIG.featureFlags.kbInstantSearch; else preloader">
+                        <ng-container
+                            *ngTemplateOutlet="searchResultsTemplate;context{results:(searchResults$ | async)}">
+                        </ng-container>
                     </ng-container>
                 </ng-container>
                 <ng-template #displayContent>
                     <ng-template #innerContent>
                         <ng-container *ngFor="let node of pageNode.nodes; let i = index">
-                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node, index:i}"></ng-container>
-                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node, index:i}"></ng-container>
-                            <ng-container *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node, index:i}"></ng-container>
+                            <ng-container
+                                *ngTemplateOutlet="node.cardClass === CardClasses.NORMAL ? normalCard: undefined;context{node:node, index:i}">
+                            </ng-container>
+                            <ng-container
+                                *ngTemplateOutlet="node.cardClass === CardClasses.SIDE ? sideCard: undefined;context{node:node, index:i}">
+                            </ng-container>
+                            <ng-container
+                                *ngTemplateOutlet="node.cardClass === CardClasses.CONTENT ? contentCard: undefined;context{node:node, index:i}">
+                            </ng-container>
                         </ng-container>
                     </ng-template>
                     <div *ngIf="kbService.basePath === 'content';else innerContent" class="card">
@@ -117,9 +132,11 @@
                             <ng-template #related>
                                 <span translate>RELATED TOPICS</span>
                             </ng-template>
-                            <span *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT ARTICLE:</span>
+                            <span *ngIf="(relatedLinks$ | async).type === 'next';else related" translate>NEXT
+                                ARTICLE:</span>
                         </h4>
-                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url" [queryParams]="{'state': link.state}">
+                        <a *ngFor="let link of (relatedLinksFiltered$ | async)" [routerLink]="link.url"
+                            [queryParams]="{'state': link.state}">
                             {{link.display_name || link.name}}
                         </a>
                     </div>

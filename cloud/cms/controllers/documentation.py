@@ -73,15 +73,28 @@ class SearchableCache(BaseCache):
             if isinstance(e, MeiliSearchApiError):
                 client.create_index('documentation')
 
-        self.fields_from_doc = self.custom_settings.pop('displayedAttributes')
+        self.fields_from_doc = [*self.custom_settings.pop('displayedAttributes'), 'blocks']
+
+    def check_if_settings_changed(self):
+        for key, value in self.custom_settings.items():
+            current_value = self.current_settings.get(key, not value)
+            if isinstance(value, list):
+                value = set(value)
+                current_value = set(value)
+                changes = value.symmetric_difference(current_value)
+                if changes:
+                    return True
+            elif value != current_value:
+                return True
 
     # @ignore_index_not_found
     def check_and_update_custom_settings(self):
         if self.custom_settings:
             try:
                 self.current_settings = self.search_index.get_settings()
-                if any(self.current_settings.get(key, not value) != value for key, value in self.custom_settings.items()):
+                if self.check_if_settings_changed() or True:
                     self.search_index.update_settings(self.custom_settings)
+                    self.search_index.delete_all_documents()
             except (TypeError, MeiliSearchCommunicationError) as e:
                 # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
                 logger.info(e)
@@ -102,7 +115,6 @@ class SearchableCache(BaseCache):
         Args:
             doc: Doc to be added to cache
         """
-        self.check_and_update_custom_settings()
         super().__setitem__(lookup_key, doc)
 
         if isinstance(doc, list):
@@ -117,9 +129,9 @@ class SearchableCache(BaseCache):
             try:
                 self.search_index.add_documents(
                     [{
+                        **from_doc,
                         'cacheKey': lookup_key,
-                        'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks'])),
-                        **from_doc
+                        'body': html2plain('\n'.join(block['contentHTML'] for block in doc['blocks']))
                     }],
                     primary_key='cacheKey'
                 )
@@ -128,7 +140,7 @@ class SearchableCache(BaseCache):
                 # TypeError is raised when switch is enabled but no master key provided
                 logger.warning(e)
 
-ATTRIBUTES = ['title', 'shortDescription', 'version', 'id', 'labels', 'kbMenus']
+ATTRIBUTES = ['title', 'shortDescription', 'body', 'version', 'id', 'labels', 'kbMenus']
 
 SEARCH_SETTINGS = {
     'displayedAttributes': ATTRIBUTES,

@@ -50,10 +50,10 @@ import { highlight } from '@utils/general';
 import { NxKnowledgebaseService } from './knowledge-base.service';
 
 export enum CardClasses {
-    NORMAL='text',
-    CONTENT='content',
-    SIDE='side',
-    ARTICLE='article'
+    NORMAL = 'text',
+    CONTENT = 'content',
+    SIDE = 'side',
+    ARTICLE = 'article'
 }
 
 @UntilDestroy({ checkProperties: false })
@@ -154,7 +154,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     fetchSearchHandler({ query, page }) {
         return this.cloudApi.documentationInstantSearch(
-            this.kbService.menuNameSubject.value,  query, { page }
+            this.kbService.menuNameSubject.value, query, { page }
         ).pipe(
             catchError(err => {
                 console.error(
@@ -386,9 +386,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         const [snapshot, isContentType] = this.updateSelectedKBandGetSnapshot();
         this.appStateService.altBackground = !isContentType;
         this.updateSelectedMenu(snapshot, isContentType);
-        this.loading = true;
         this.ribbonService.hide();
-        this.clearSearch();
+        if (!this.CONFIG.featureFlags.kbInstantSearch) {
+            this.clearSearch();
+        }
         return this.getFirstDoc();
     }
 
@@ -472,6 +473,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             .docMenuMap[this.kbService.basePath]
             ?.[this.kbService.kbName];
         if (this.kbService.menuName !== menuName || !this.kbService.menuName) {
+            this.loading = true;
             this.kbService.menuName = menuName;
         }
         if (!this.kbService.menuName) {
@@ -538,7 +540,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.kbService.activeAssetIdSubject,
             this.relatedLinks$
         ]).pipe(
-            map(latest =>  this.filterRelatedLinks(latest))
+            map(latest => this.filterRelatedLinks(latest))
         );
 
         this.setupRouteSubscription();
@@ -579,7 +581,7 @@ export class KnowledgeNode {
         public cardClass: CardClasses,
         public cardIcon?: string,
         public cardLead?: string
-    ) {}
+    ) { }
 
     // Factory methods
     static normalHeader(

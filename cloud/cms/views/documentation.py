@@ -236,6 +236,7 @@ def kb_search(request, name):
     labels_filter = get_param('labels')
     filter_counts = get_param('filterCounts')
     crop_length = int(request.query_params.get('cropLength', 150))
+    attributes_to_crop = get_param('attributesToCrop', ['*'])
     to_highlight = get_param('highlight', ["*"])
     perPage = int(request.query_params.get('perPage', 10))
     page = int(request.query_params.get('page', 1))
@@ -260,6 +261,7 @@ def kb_search(request, name):
     options = {
         'attributesToHighlight': to_highlight,
         'cropLength': crop_length,
+        'attributesToCrop': attributes_to_crop,
         'facetsDistribution': filter_counts,
         'filter': [*kb_menus_filter, *labels_filter],
         'limit': perPage,
