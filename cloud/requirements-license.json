@@ -278,7 +278,7 @@
     },
     "Django": {
         "name": "Django",
-        "version": "2.2.26",
+        "version": "2.2.27",
         "webLinks": [
             "https://www.djangoproject.com/",
             "https://github.com/django/django"
@@ -965,7 +965,7 @@
     },
     "Pillow": {
         "name": "Pillow",
-        "version": "9.0.0",
+        "version": "9.0.1",
         "webLinks": [
             "https://python-pillow.org/",
             "https://github.com/python-pillow/Pillow"
