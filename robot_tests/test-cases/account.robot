@@ -549,7 +549,7 @@ Account Suite Tear Down
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
 27. After account deletion user can create account with the same email again
-    [Tags]    C69864    delete_account
+    [Tags]    C69864    delete_account      deb
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -563,9 +563,9 @@ Account Suite Tear Down
     
     Go To    ${url}/register
     Register    mark    hamil    ${random email}    ${password}    
-    Activate Account   ${random email}    ${password}
-    Click Element      ${LOG IN BTN REGISTER ACCOUNT PAGE}
-    Log In    ${random email}    ${password}    button=None
+    Activate    ${random email}
+    Click Button      ${LOG IN BUTTON}
+    Log In    ${random email}    ${password}    button=None    reset=${True}
 
 28. Deletion attempt when Delete Account button is disabled (via API)
     [Tags]    C76389        delete_account

@@ -1,4 +1,8 @@
+from http import server
+from sre_constants import FAILURE
+from xml.etree.ElementTree import iselement
 import requests
+from robot.libraries.BuiltIn import BuiltIn
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth, AuthBase
 from robot.api.deco import keyword, library
 from robot.api import logger
@@ -29,10 +33,9 @@ class BearerAuth(AuthBase):
 
 
 @library
-class ServerAPI(object):
-
-    def __init__(self, image):
-        self.image = image
+class ServerAPI:
+    def __init__(self):
+        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
 
     def _login(self, server_url, username, password):
         data = {
@@ -182,9 +185,9 @@ class ServerAPI(object):
 
     @keyword
     def detach_server_from_cloud(self, serverUrl, auth):
-        body = {
-            "currentPassword": auth[1],
-            "password": auth[1]
+        body= {
+            "currentPassword":auth[1],
+            "password":auth[1]
         }
         r = requests.post(f'{serverUrl}/api/detachFromCloud', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
                           verify=False)
@@ -296,8 +299,7 @@ class ServerAPI(object):
 
     @keyword
     def set_system_name(self, serverUrl, auth, newName):
-        r = requests.get(f'{serverUrl}/api/systemSettings?systemName={newName}', auth=HTTPBasicAuth(auth[0], auth[1]),
-                         verify=False)
+        r = requests.get(f'{serverUrl}/api/systemSettings?systemName={newName}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
 
     @keyword
     def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value):
@@ -427,12 +429,6 @@ class ServerAPI(object):
         return r.json()
 
     @keyword
-    def set_system_settings_via_api(self, auth, serverUrl, settingKey, settingValue):
-        r = requests.get(f'{serverUrl}/api/systemSettings?{settingKey}={settingValue}',
-                         auth=HTTPBasicAuth('admin', 'qweasd 123'), verify=False)
-        return r.json()
-
-    @keyword
     def get_customizations(self, auth):
         r = requests.get(f'https://ireg.hdw.mx/api/v1/public/products/nxcloud/instances/prod/',
                          auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
@@ -446,9 +442,10 @@ class ServerAPI(object):
     def set_system_settings(self, auth, serverUrl, settings):
         query = "/api/systemSettings?"
         for key, val in zip(settings.keys(), settings.values()):
-            query = query + f'{key}={val}&'
-        query = query[:-1]
-        r = requests.get(f'{serverUrl}{query}', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
+            settings[key] = str(val).lower()
+        #    query = query + f'{key}={val}&'
+        #query = query[:-1]
+        r = requests.get(f'{serverUrl}{query}', params=settings, auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
         return r.json()
 
     @keyword

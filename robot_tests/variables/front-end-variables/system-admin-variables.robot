@@ -29,6 +29,15 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    videoTrafficEncryptionForced=false
 ...    sessionLimitMinutes=0
 
+&{default settings5}
+...    autoDiscoveryEnabled=${true}
+...    statisticsAllowed=${true}
+...    cameraSettingsOptimization=${true}
+...    auditTrailEnabled=${true}
+...    trafficEncryptionForced=${false}
+...    videoTrafficEncryptionForced=${false}
+...    sessionLimitMinutes=${0}
+
 &{default advanced settings}
 ...    autoDiscoveryEnabled=true
 ...    statisticsAllowed=true
