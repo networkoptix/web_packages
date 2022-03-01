@@ -240,10 +240,7 @@ def kb_search(request, name):
     try:
         index_updated = index.fetch_info().updated_at
     except MeiliSearchApiError as e:
-        if e.error_code == 'index_not_found':
-            index_updated = False
-        else:
-            raise e
+        index_updated = False
 
     if not index_updated:
         docs_json = sync_search_for_menu(request, name)
