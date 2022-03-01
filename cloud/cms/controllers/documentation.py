@@ -46,18 +46,18 @@ def html2plain(html):
     return fixup_markdown_formatting(text)
 
 
-# def ignore_index_not_found(func):
-#     """Not sure if this needed anymore
-#     """
-#     @wraps(func)
-#     def _ignore_index_not_found(*args, **kwargs):
-#         try:
-#             return func(*args, **kwargs)
-#         except MeiliSearchApiError as e:
-#             if e.error_code != 'index_not_found':
-#                 raise e
+def ignore_index_not_found(func):
+    """Not sure if this needed anymore
+    """
+    @wraps(func)
+    def _ignore_index_not_found(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except MeiliSearchApiError as e:
+            if e.error_code != 'index_not_found':
+                raise e
 
-#     return _ignore_index_not_found
+    return _ignore_index_not_found
 
 class SearchableCache(BaseCache):
     def __init__(self, *args, **kwargs):
@@ -65,15 +65,11 @@ class SearchableCache(BaseCache):
         self.current_settings = None
         super().__init__(*args, **kwargs)
         client = get_meilisearch_client()
-        try:
-            self.search_index = client.get_or_create_index(self.cache_key)
-        except MeiliSearchCommunicationError:
-            # Prevents failure on django checks pipeline
-            pass
+        self.search_index = client.index(self.cache_key)
 
         self.fields_from_doc = self.custom_settings.pop('fields')
 
-    # @ignore_index_not_found
+    @ignore_index_not_found
     def check_and_update_custom_settings(self):
         if self.custom_settings:
             try:
@@ -84,7 +80,7 @@ class SearchableCache(BaseCache):
                 # get_settings was throwing a weird unsupported operand error only on hard refresh of a kb article page
                 logger.info(e)
 
-    # @ignore_index_not_found
+    @ignore_index_not_found
     def clear_cache(self):
         super().clear_cache()
         try:

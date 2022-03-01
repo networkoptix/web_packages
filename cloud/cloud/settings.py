@@ -811,9 +811,9 @@ FILLDATA_TIMEOUT = 60
 SUPERUSER_DOMAIN = '@networkoptix.com'
 
 # Instant Search Configuration
-if not LOCAL_ENVIRONMENT:
-    MEILISEARCH_ENDPOINT = f'http://{os.getenv("MEILI_ENDPOINT")}:7700'
-    MEILISEARCH_MASTER_KEY = os.getenv('MEILI_MASTER_KEY')
+if (endpoint := os.getenv('MEILI_ENDPOINT')) and (master_key := os.getenv('MEILI_MASTER_KEY')):
+    MEILISEARCH_ENDPOINT = f'http://{endpoint}:7700'
+    MEILISEARCH_MASTER_KEY = master_key
 else:
     MEILISEARCH_ENDPOINT = 'http://localhost:7700'
     MEILISEARCH_MASTER_KEY = 'qweasd1234'
