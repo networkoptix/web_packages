@@ -27,8 +27,10 @@ dictConfig({
 app = Quart(__name__)
 # Eventually add db auth.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Database url should be 'mysql+pymysql://{username}:{password}@{db_host}:{db_port}/{db_name}'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI') or 'sqlite:///test.sqlite3'
 db = SQLAlchemy(app)
+db.create_all(app=app)
 
 
 class PrintDebug:
@@ -54,7 +56,7 @@ def generate_uuid():
 
 
 class Group(db.Model):
-    id = db.Column(db.String(16), primary_key=True, default=generate_uuid)
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     name = db.Column(db.String(80), nullable=False)
     owner_account_email = db.Column(db.String(255), nullable=False)
     parent_group_id = db.Column(db.String(16), db.ForeignKey(id), nullable=True)
@@ -90,8 +92,8 @@ class Group(db.Model):
 
 
 class System(db.Model):
-    id = db.Column(db.String(16), primary_key=True, default=generate_uuid)
-    group_id = db.Column(db.String(16), db.ForeignKey('group.id'), nullable=True)
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    group_id = db.Column(db.String(36), db.ForeignKey('group.id'), nullable=True)
 
     def __repr__(self):
         return f'<System {self.id}>'
@@ -448,9 +450,8 @@ async def ws():
     return await websocket.close(400, 'Missing cookies')
 
 
-@app.route('/')
-async def index():
-    return await current_app.send_static_file('index.html')
-
 if __name__ == "__main__":
+    @app.route('/')
+    async def index():
+        return await current_app.send_static_file('index.html')
     app.run()
