@@ -99,7 +99,7 @@ export function paramSortFunc<Param = unknown>(
 export function mapValuesToStrings(
     obj: Record<string, unknown>
 ): Record<string, string | string[]> {
-    Object.values(obj).forEach(([key, value]) => {
+    Object.entries(obj).forEach(([key, value]) => {
         if (Array.isArray(value)) {
             obj[key] = value.map(String);
         // } else if (typeof value === 'object') {
