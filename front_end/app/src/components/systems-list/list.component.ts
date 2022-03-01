@@ -107,19 +107,20 @@ export class NxSystemsListComponent implements OnInit {
                 this.systemsService.getSystems(account.email);
             }
 
-        this.systemsService.systemsSubject.pipe(
-            untilDestroyed(this)
-        ).subscribe(systems => {
-            this.systems = systems;
-            this.availableSystems.emit(systems);
-            if (this.systems === undefined) {
-                return;
-            }
+            this.systemsService.systemsSubject.pipe(
+                untilDestroyed(this)
+            ).subscribe(systems => {
+                this.systems = systems;
+                this.availableSystems.emit(systems);
+                if (this.systems === undefined) {
+                    return;
+                }
 
-            this.systems.forEach(system => {
-                // avoid html being interpreted
-                system.name = htmlToEntity(system.name);
-            });
+                this.systems.map(system => ({
+                    ...system,
+                    // avoid html being interpreted
+                    name: htmlToEntity(system.name)
+                }));
 
                 if (this.location.path().startsWith(this.base)) {
                     if (this.systems.length === 1) {
