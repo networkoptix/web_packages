@@ -599,7 +599,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     reactivate = () => {
-        return this.cloudService.reactivate(this.loginEmail);
+        return this.cloudService.reactivate(this.loginEmail)
+            .then(() => {
+                this.toastService.notify(
+                    this.LANG.authorize.emailSent(),
+                    'success'
+                );
+            });
     }
 
     redirect = (route?: string) => {

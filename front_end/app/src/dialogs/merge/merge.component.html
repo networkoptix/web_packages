@@ -90,7 +90,7 @@
                 <label class="mt-2" for="adminLogin" translate>Login</label>
                 <input class="form-control" name="adminLogin" disabled value="admin"/>
             </div>
-            <div *ngIf="!environment.isLocal || !system.mediaserver.isSessionOauth || !targetSystem.cloudSystemId" class="form-group"
+            <div *ngIf="!system.mediaserver.isSessionOauth || !targetSystem.cloudSystemId" class="form-group"
                 [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
                 <label for="adminPassword" translate>Password</label>
                 <input class="form-control"
@@ -197,7 +197,7 @@
                     {{LANG.dialogs.merge.recommendSupport.c_proceeding()}}
                 </p>
             </div>
-            <div *ngIf="!environment.isLocal" class="form-group"
+            <div *ngIf="!system.mediaserver.isSessionOauth" class="form-group"
                 [ngClass]="{ 'mb-merge': !machine.state.show.passwordError }">
                 <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
                 <input class="form-control"
@@ -205,7 +205,7 @@
                         #confirmMergeInput
                         [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
                         id="cloudOwnerPassword" autocomplete="new-password"
-                        name="cloudOwnerPassword" type="password" [required]="!environment.isLocal"
+                        name="cloudOwnerPassword" type="password" [required]="!system.mediaserver.isSessionOauth"
                         (ngModelChange)="passwordChange(cloudOwnerPassword)"
                         [ngModel]="machine.state.template.passwordValue"
                         (blur)="passwordChange(cloudOwnerPassword)"

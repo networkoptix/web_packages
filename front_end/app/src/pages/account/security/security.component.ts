@@ -232,6 +232,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
                     this.updateVerificationOriginal(newState);
+                    this.accountService.get(true).catch(_ => {});
                     this.applyService.reset();
                     setTimeout(() => {
                         this.setPopoverTargets();
@@ -245,6 +246,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
                     this.updateVerificationOriginal(newState);
+                    this.accountService.get(true).catch(_ => {});
                     this.applyService.reset();
                 });
         }

@@ -106,7 +106,6 @@ export class NxSystemsListComponent implements OnInit {
                 this.userEmail = account.email;
                 this.systemsService.getSystems(account.email);
             }
-        });
 
         this.systemsService.systemsSubject.pipe(
             untilDestroyed(this)
@@ -117,21 +116,21 @@ export class NxSystemsListComponent implements OnInit {
                 return;
             }
 
-            this.systems.map(system => ({
-                ...system,
+            this.systems.forEach(system => {
                 // avoid html being interpreted
-                name: htmlToEntity(system.name)
-            }));
+                system.name = htmlToEntity(system.name);
+            });
 
-            if (this.location.path().startsWith(this.base)) {
-                if (this.systems.length === 1) {
-                    this.openSystem(this.systems[0]);
+                if (this.location.path().startsWith(this.base)) {
+                    if (this.systems.length === 1) {
+                        this.openSystem(this.systems[0]);
+                    }
+
+                    this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
+
+                    this.searchSystems();
                 }
-
-                this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
-
-                this.searchSystems();
-            }
+            });
         });
 
         this.gettingSystems = this.processService.createProcess(() => {
