@@ -812,8 +812,8 @@ SUPERUSER_DOMAIN = '@networkoptix.com'
 
 # Instant Search Configuration
 if not LOCAL_ENVIRONMENT:
-    MEILISEARCH_ENDPOINT = os.getenv('MEILISEARCH_ENDPOINT')
-    MEILISEARCH_MASTER_KEY = os.getenv('MEILISEARCH_MASTER_KEY')
+    MEILISEARCH_ENDPOINT = os.getenv('MEILI_ENDPOINT')
+    MEILISEARCH_MASTER_KEY = os.getenv('MEILI_MASTER_KEY')
 else:
     MEILISEARCH_ENDPOINT = 'http://localhost:7700'
     MEILISEARCH_MASTER_KEY = 'qweasd1234'
