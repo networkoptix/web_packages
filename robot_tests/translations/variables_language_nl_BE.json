@@ -524,7 +524,7 @@
     "PASSWORD IS REQUIRED TEXT": "Wachtwoord is vereist",
     "2FA BACKUP CODE BTN TEXT": "Geen toegang tot authenticatie-app?",
     "2FA LOG IN CLOUD TEXT": "Log in op Nx Cloud",
-    "2FA CODE INSTRUCTIONS TEXT": "Voer een code van uw authenticator-app in om te bevestigen dat u het echt bent die probeert in te loggen",
+    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "Hulp Nodig?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Contact opnemen met ondersteuning",
     "2FA AUTH CODE BTN TEXT": "Gebruik authenticatiecode",
@@ -537,5 +537,10 @@
     "2FA SETTINGS MODAL HEADER TEXT": "Tweestapsverificatie instellingen",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Verificatiecode van de authenticatie-app wordt alleen gevraagd om in te loggen op systemen die authenticatie in twee stappen vereisen. ",
     "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Verificatiecode van de authenticatie-app wordt gevraagd bij elke login met Nx Cloud-account. ",
-    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Voer verificatiecode van uw authenticatie-app in om door te gaan"
+    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Voer verificatiecode van uw authenticatie-app in om door te gaan",
+    "VIEW PAGE WEBM TEXT": "webm",
+    "VIEW PAGE TRANSPORT TEXT": "Transport",
+    "VIEW PAGE HLS TEXT": "hls",
+    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
 }

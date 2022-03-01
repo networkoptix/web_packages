@@ -524,7 +524,7 @@
     "PASSWORD IS REQUIRED TEXT": "Изисква се парола",
     "2FA BACKUP CODE BTN TEXT": "No access to authentication app?",
     "2FA LOG IN CLOUD TEXT": "Log in to Nx Cloud",
-    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authenticator app to confirm it's really you trying to log in",
+    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "Need help?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Contact support",
     "2FA AUTH CODE BTN TEXT": "Use authentication code",
@@ -537,5 +537,10 @@
     "2FA SETTINGS MODAL HEADER TEXT": "Two-factor authentication settings",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Verification code from the authentication app will be requested only to log in to systems that require two-factor authentication. ",
     "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Verification code from the authentication app will be requested on every login with Nx Cloud account. ",
-    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Enter verification code from your authentication app to continue"
+    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Enter verification code from your authentication app to continue",
+    "VIEW PAGE WEBM TEXT": "webm",
+    "VIEW PAGE TRANSPORT TEXT": "Transport",
+    "VIEW PAGE HLS TEXT": "hls",
+    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
 }

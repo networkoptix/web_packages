@@ -524,7 +524,7 @@
     "PASSWORD IS REQUIRED TEXT": "Lösenord krävs",
     "2FA BACKUP CODE BTN TEXT": "Ingen tillgång till autentiseringsapp?",
     "2FA LOG IN CLOUD TEXT": "Logga in på Nx Cloud",
-    "2FA CODE INSTRUCTIONS TEXT": "Ange en kod från din autentiseringsapp för att bekräfta att det verkligen är du som försöker logga in",
+    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "Behöver du hjälp?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Kontakta support",
     "2FA AUTH CODE BTN TEXT": "Ange autentiseringskod",
@@ -537,5 +537,10 @@
     "2FA SETTINGS MODAL HEADER TEXT": "Inställningar för tvåfaktorsautentisering",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Verifieringskod från autentiseringsappen begärs bara för att logga in på system som kräver tvåfaktorsautentisering. ",
     "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Verifieringskod från autentiseringsappen kommer att begäras vid varje inloggning med Nx Cloud-konto. ",
-    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Ange verifieringskod från din autentiseringsapp för att fortsätta"
+    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Ange verifieringskod från din autentiseringsapp för att fortsätta",
+    "VIEW PAGE WEBM TEXT": "webm",
+    "VIEW PAGE TRANSPORT TEXT": "Transport",
+    "VIEW PAGE HLS TEXT": "hls",
+    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
 }

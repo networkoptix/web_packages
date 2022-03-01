@@ -127,7 +127,7 @@
         "termsAndConditionsHelpText": "Wyrażenie zgody na warunki i politykę prywatności",
         "copiedToClipboard": "Skopiowane do schowka",
         "authCode": {
-            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "ustaw nowe hasło",
             "login": "zaloguj się"
         }
@@ -349,6 +349,11 @@
                 "a_recommend": "Zalecamy skonsultowanie się z",
                 "b_support": "wsparcie",
                 "c_proceeding": "przed kontynuowaniem."
+            },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
             },
             "secondaryCannotMerge": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym. Zaktualizuj {targetSystem} do {downloadHTML} aby połączyć systemy.",
             "secondarySystemUnavailable": "System {targetSystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
@@ -756,7 +761,8 @@
         "search_ipvd": "Wyszukaj według modelu lub producenta",
         "selected": "{count, plural, =0{# wybrane} one{# wybranych} other{# wybranych}}",
         "vendor": "Producent",
-        "vendors": "Producenci"
+        "vendors": "Producenci",
+        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found"
     },
     "servers": {
         "analyticsDataPolicyError": "Błąd z usuwaniem lub przechowywaniem danych analitycznych",
@@ -860,6 +866,10 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "niedostępny"
+    },
+    "tile": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
@@ -1041,8 +1051,8 @@
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
             "systemsRemainder": "and {count} more...",
-            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
-            "v5WarningExplanation": "{count, plural, =0{These systems} one{This system} other{These systems}} will be fully accessible as soon as {count, plural, =0{they are} one{it is} other{they are}} upgraded to the 5.0 version.",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
+            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
         }
     },

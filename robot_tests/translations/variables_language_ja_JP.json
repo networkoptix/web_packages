@@ -524,7 +524,7 @@
     "PASSWORD IS REQUIRED TEXT": "パスワードが必要です",
     "2FA BACKUP CODE BTN TEXT": "認証アプリにアクセスできませんか？",
     "2FA LOG IN CLOUD TEXT": "Nx Cloud にログイン",
-    "2FA CODE INSTRUCTIONS TEXT": "認証アプリのコードを入力して、本当にログインしようとしていることを確認してください",
+    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "お困りですか？",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "お問い合わせ",
     "2FA AUTH CODE BTN TEXT": "認証コードを使用",
@@ -537,5 +537,10 @@
     "2FA SETTINGS MODAL HEADER TEXT": "二要素認証の設定",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " 認証アプリの確認コードは、二要素認証を必要とするシステムにログインする場合にのみ要求されます。 ",
     "2FA SETTINGS MODAL DESCRIPTION TEXT2": " 認証アプリの確認コードは、 Nx Cloud アカウントでログインするたびに要求されます。 ",
-    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "続行するには、認証アプリに表示された確認コードを入力してください"
+    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "続行するには、認証アプリに表示された確認コードを入力してください",
+    "VIEW PAGE WEBM TEXT": "webm",
+    "VIEW PAGE TRANSPORT TEXT": "Transport",
+    "VIEW PAGE HLS TEXT": "hls",
+    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
 }

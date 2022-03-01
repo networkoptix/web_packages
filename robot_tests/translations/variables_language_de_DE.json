@@ -524,7 +524,7 @@
     "PASSWORD IS REQUIRED TEXT": "Passwort ist erforderlich",
     "2FA BACKUP CODE BTN TEXT": "Kein Zugang zur Authentifizierungs-App?",
     "2FA LOG IN CLOUD TEXT": "Anmelden bei Nx Cloud",
-    "2FA CODE INSTRUCTIONS TEXT": "Geben Sie einen Code von Ihrer Authentifizierungs-App ein, um zu bestätigen, dass Sie wirklich versuchen, sich anzumelden",
+    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
     "2FA BACKUP CODE HELP TEXT": "Brauchen Sie Hilfe?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Support kontaktieren",
     "2FA AUTH CODE BTN TEXT": "Authentifizierungscode verwenden",
@@ -537,5 +537,10 @@
     "2FA SETTINGS MODAL HEADER TEXT": "Einstellungen für die Zwei-Faktor-Authentifizierung",
     "2FA SETTINGS MODAL DESCRIPTION TEXT1": " Der Verifizierungscode aus der Authentifizierungs-App wird nur für die Anmeldung bei Systemen verlangt, die eine Zwei-Faktor-Authentifizierung erfordern. ",
     "2FA SETTINGS MODAL DESCRIPTION TEXT2": " Der Verifizierungscode aus der Authentifizierungs-App wird bei jeder Anmeldung mit dem Nx Cloud-Konto angefordert. ",
-    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Geben Sie den Verifizierungscode aus Ihrer Authentifizierungs-App ein, um fortzufahren"
+    "2FA SETTINGS MODAL INSTRUCTIONS TEXT": "Geben Sie den Verifizierungscode aus Ihrer Authentifizierungs-App ein, um fortzufahren",
+    "VIEW PAGE WEBM TEXT": "webm",
+    "VIEW PAGE TRANSPORT TEXT": "Transport",
+    "VIEW PAGE HLS TEXT": "hls",
+    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
 }
