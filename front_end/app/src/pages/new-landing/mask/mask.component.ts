@@ -6,11 +6,11 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    SimpleChanges
 } from '@angular/core';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { NxLandingService } from '../landing.service';
 
@@ -59,7 +59,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxMaskComponent>) {
         if (
             this.landingService.introAnimationFinished$.value &&
             changes.scrollPosition.previousValue !== changes.scrollPosition.currentValue

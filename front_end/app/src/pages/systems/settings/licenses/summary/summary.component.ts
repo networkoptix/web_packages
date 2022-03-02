@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual } from 'lodash-es';
 import { filter } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -46,7 +47,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
             });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxLicenseSummaryComponent>) {
         if (
             changes.licensesLegacyInfo?.currentValue &&
             !isEqual(

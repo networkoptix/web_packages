@@ -3,7 +3,6 @@ import {
     OnDestroy,
     Input,
     OnChanges,
-    SimpleChanges,
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -15,6 +14,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -96,7 +96,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxLicenseTrialComponent>): void {
         if (changes.licenses && changes.licenses.currentValue) {
             this.haveTrialLicense = changes.licenses.currentValue.find(lic => {
                 return lic.key === this.trialLicense;

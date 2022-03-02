@@ -4,7 +4,6 @@ import {
     Output,
     EventEmitter,
     OnChanges,
-    SimpleChanges,
     OnInit,
     ViewEncapsulation,
     Inject,
@@ -34,6 +33,7 @@ import {
     clearPseudoAnchors,
     PseudoAnchorTarget,
 } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 function yesNo(bVal: unknown): string {
     if (bVal === undefined || bVal === null) {
@@ -318,7 +318,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.targets = clearPseudoAnchors(this.targets);
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<CamTableComponent>) {
         if (changes.elements) {
             if (changes.elements.firstChange ||
                     (!changes.elements.firstChange &&

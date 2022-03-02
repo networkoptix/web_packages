@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
@@ -15,6 +15,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { ConsoleMode } from '../console.component.types';
 
@@ -106,7 +107,7 @@ export class NxDevConsoleEditComponent {
     }
 
     ngOnChanges(
-        { contextList: { currentValue, previousValue, firstChange } }: SimpleChanges
+        { contextList: { currentValue, previousValue, firstChange } }: NgChanges<NxDevConsoleEditComponent>
     ) {
         if (firstChange || currentValue !== previousValue) {
             if (!this.asset) {

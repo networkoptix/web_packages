@@ -5,7 +5,6 @@ import {
     LOCALE_ID,
     Input,
     OnInit,
-    SimpleChanges,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -56,6 +55,7 @@ import {
 import type { NxSystem } from '@services/system.service/system';
 import { ChildRoutes, NxUriService } from '@services/uri.service';
 import { cleanId, cleanSmbUrl } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 enum MODE_INDEX {
     MAIN = 0,
@@ -160,7 +160,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.init();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxSystemStorageComponent>): void {
         const previousServerId = changes.serverId.previousValue;
         if (changes.serverId.currentValue !== previousServerId) {
             const previousServer = this.system.serverManager.servers

@@ -2,9 +2,10 @@ import {
     Component,
     Input,
     OnInit,
-    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'nx-bool-icon',
@@ -25,7 +26,7 @@ export class BoolIconComponent implements OnInit {
     ngOnInit() {
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<BoolIconComponent>) {
         if (changes.value) {
             this.value = changes.value.currentValue;
             this.additional = '';

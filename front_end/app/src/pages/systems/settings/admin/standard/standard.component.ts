@@ -5,7 +5,6 @@ import {
     ViewChild,
     ElementRef,
     OnChanges,
-    SimpleChanges,
     OnDestroy
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -26,6 +25,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { delayInitial } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 const HR_MINS = 60;
 const DAY_HRS = 24;
@@ -180,7 +180,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             .find(system => system.id === this.system.id)?.system2faEnabled;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxSystemStandardAdminComponent>) {
         if (changes.settings && this.system.isOnline) {
             const { previousValue, currentValue, firstChange } = changes.settings;
             if (

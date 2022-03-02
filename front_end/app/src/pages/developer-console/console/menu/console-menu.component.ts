@@ -1,10 +1,11 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NgChanges } from '@utils/ng-changes';
 
 export interface ConsoleMenuNode {
     title: string,
@@ -42,7 +43,7 @@ export class NxDevConsoleMenuComponent {
         ].includes(this.sectionParam);
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxDevConsoleMenuComponent>) {
         const {
             menu: { currentValue: menu }
         } = changes;

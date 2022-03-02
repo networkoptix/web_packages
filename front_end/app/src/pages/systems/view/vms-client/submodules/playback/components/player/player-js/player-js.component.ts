@@ -8,10 +8,10 @@ import {
     EventEmitter,
     ViewEncapsulation,
     OnChanges,
-    SimpleChanges,
 } from '@angular/core';
 import videojs from 'video.js';
 
+import { NgChanges } from '@utils/ng-changes';
 import {
     LoggerDecorator,
     BASE64_SINGLE_TRANSPARENT_PIXEL
@@ -114,7 +114,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         });
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: NgChanges<PlayerJsComponent>): void {
         const prevMode = changes.mode?.previousValue || -1;
         this.mode = this.mode ?? PLAYBACK_MODE.LIVE;
 

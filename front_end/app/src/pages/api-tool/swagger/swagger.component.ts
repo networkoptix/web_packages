@@ -3,7 +3,7 @@ import {
     Component, ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
-    Inject, Input, OnChanges, OnInit, Renderer2, SimpleChanges,
+    Inject, Input, OnChanges, OnInit, Renderer2,
     ViewChild,
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
@@ -26,6 +26,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import { isUUID } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 import { getPathAndMethodFromNodeName } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
@@ -481,7 +482,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxSwaggerComponent>) {
         if (changes.activeNode.currentValue) {
             const node: MenuNode = changes.activeNode.currentValue;
             const isSingleView = this.isAPIRouteNode(node);

@@ -5,7 +5,6 @@ import {
     LOCALE_ID,
     Input,
     OnChanges,
-    SimpleChanges,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
@@ -24,6 +23,7 @@ import {
 } from '@services/system.service/storage-manager/storage';
 import type { NxSystem } from '@services/system.service/system';
 import { bitsToString } from '@utils/bits-to-string';
+import { NgChanges } from '@utils/ng-changes';
 
 type GbOrTb = 'GB' | 'TB';
 class BitConverter {
@@ -188,7 +188,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         this.CONFIG = configService.config;
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxSystemAdvancedStorageComponent>): void {
         if (changes.system || changes.serverId) {
             this.init();
         }

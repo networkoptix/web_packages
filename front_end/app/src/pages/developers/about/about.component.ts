@@ -239,6 +239,9 @@ export interface AboutNode {
     icon: string;
     newWindow?: boolean;
     nodes?: AboutNode[];
+
+    aniIcon?: string;
+    currentIcon?: string;
 }
 
 export interface AboutAsset {

@@ -7,7 +7,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     ViewChild
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,6 +19,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -147,7 +147,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<CamViewComponent>) {
         if (changes.activeCamera.currentValue) {
             this.showCameraAnalytics = this.showAnalytics &&
                 changes.activeCamera.currentValue.isAnalyticsSupported;

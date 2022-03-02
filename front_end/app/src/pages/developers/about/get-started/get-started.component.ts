@@ -1,10 +1,11 @@
-import { Component, Input, Inject, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Inject, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { AboutNode } from '../about.component';
 import { ErrorStateManager } from '../error-state/error-state-manager';
@@ -44,7 +45,7 @@ export class NxGetStartedComponent implements OnChanges {
         );
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxGetStartedComponent>): void {
         const getStartedNode = cloneDeep(changes.getStartedNode.currentValue);
         getStartedNode.nodes.forEach(step => {
             const images = step.icon.split(' ');

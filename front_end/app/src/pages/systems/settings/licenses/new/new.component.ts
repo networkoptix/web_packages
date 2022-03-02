@@ -3,7 +3,6 @@ import {
     OnDestroy,
     Input,
     OnChanges,
-    SimpleChanges,
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -17,6 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
 import { htmlToEntity } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -173,7 +173,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxLicenseNewComponent>): void {
         if (changes.servers && changes.servers.currentValue) {
             this.serverOptions = [];
 

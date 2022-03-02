@@ -4,7 +4,6 @@ import {
     OnDestroy,
     Input,
     OnChanges,
-    SimpleChanges,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -20,6 +19,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
+import { NgChanges } from '@utils/ng-changes';
 
 import { getDynamicLicense } from '../licenses.component';
 
@@ -58,7 +58,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<NxLicenseDetailComponent>): void {
         if (changes.licenses && changes.licenses.currentValue) {
             this.orderedLicense = [];
             this.newlyAddedLicense = this.formatLicenseKey(

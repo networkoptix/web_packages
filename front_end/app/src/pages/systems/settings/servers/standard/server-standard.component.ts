@@ -1,6 +1,5 @@
 import {
     Component,
-    SimpleChanges,
     OnChanges,
     OnDestroy,
     Input,
@@ -32,6 +31,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { cleanId } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 export interface DropdownStorage {
     name: string,
@@ -150,7 +150,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxSystemStandardServerComponent>) {
         if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
             this.fullInfoPath = this.uriService.getSystemSettingsRoute({
                 systemId: this.system.id,

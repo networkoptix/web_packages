@@ -4,7 +4,6 @@ import {
     ViewChild,
     ElementRef,
     OnChanges,
-    SimpleChanges,
     AfterContentChecked,
     ChangeDetectionStrategy,
     HostListener,
@@ -16,6 +15,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { MotionMaskRenderer } from './MotionMaskRenderer';
 import { MotionMaskState } from './MotionMaskState';
@@ -53,7 +53,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         this.initMask();
     }
 
-    ngOnChanges({ initialMask, height, width }: SimpleChanges) {
+    ngOnChanges({ initialMask, height, width }: NgChanges<NxMotionDetectionOverlay>) {
         const initialMaskChanged = initialMask &&
             !initialMask.isFirstChange() &&
             this.motionMask;

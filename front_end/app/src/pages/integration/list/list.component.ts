@@ -2,7 +2,6 @@ import {
     Component,
     OnDestroy,
     Input,
-    SimpleChanges,
     OnChanges
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -12,6 +11,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'integrations-list-component',
@@ -41,7 +41,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.ribbonService.hide();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxIntegrationsListComponent>) {
         if (changes.list.currentValue) {
             const haveInReviewOrDraft = changes.list.currentValue
                 .some(plugin => plugin.pending || plugin.draft);

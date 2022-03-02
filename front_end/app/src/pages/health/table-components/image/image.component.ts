@@ -5,9 +5,10 @@ import {
     OnChanges,
     Output,
     OnDestroy,
-    SimpleChanges
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -51,7 +52,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxImageComponent>) {
         if (!(Object.keys(changes).length === 1 && changes.state)) {
             const firstChange = Object.values(changes)
                 .reduce(

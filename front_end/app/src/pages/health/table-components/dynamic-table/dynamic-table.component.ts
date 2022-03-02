@@ -5,7 +5,6 @@ import {
     Output,
     EventEmitter,
     OnChanges,
-    SimpleChanges,
     OnInit,
     ViewEncapsulation,
     ViewChild,
@@ -26,6 +25,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
 
 import { NxHealthLayoutService } from '../../health-layout.service';
 import { NxHealthService } from '../../health.service';
@@ -276,7 +276,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         return item ? item.id : undefined;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxDynamicTableComponent>) {
         let resetURI;
 
         if (changes.headers) {
