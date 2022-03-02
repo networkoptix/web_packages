@@ -127,10 +127,11 @@
         "termsAndConditionsHelpText": "Vink aan om akkoord te gaan met de algemene voorwaarden en het privacybeleid",
         "copiedToClipboard": "Gekopieerd naar het klembord",
         "authCode": {
-            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
+            "message": "Voer een code van uw authenticatie-app in om te bevestigen dat u het echt bent die probeert {suffix}",
             "newPass": "stel een nieuw wachtwoord in",
             "login": "inloggen"
-        }
+        },
+        "emailSent": "Email sent!"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",
@@ -351,9 +352,9 @@
                 "c_proceeding": "voordat u verder gaat."
             },
             "restError": {
-                "duplicateServer": "Merge error. Both systems have same server",
-                "useCloudMerge": "Cannot merge systems bound to the cloud",
-                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+                "duplicateServer": "Fout bij samenvoegen. Beide systemen hebben dezelfde server",
+                "useCloudMerge": "Kan systemen gekoppeld aan de cloud niet samenvoegen",
+                "differentCloudOwners": "Kan twee Cloud-systemen met verschillende eigenaren niet samenvoegen"
             },
             "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
             "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -762,7 +763,7 @@
         "selected": "{count, plural, =0{# geselecteerd} one{# geselecteerd} other{# geselecteerd}}",
         "vendor": "Fabrikant",
         "vendors": "Fabrikanten",
-        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found"
+        "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",
@@ -868,7 +869,7 @@
         "unavailable": "niet beschikbaar"
     },
     "tile": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "groupCount": "{count, plural, =0{# Groepen} one{# Groep} other{# Groepen}}",
         "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "toastMessage": {
@@ -1051,8 +1052,8 @@
         "twoFa": {
             "twoFADescription": "Momenteel heb je er <span id=\"target2FaSystems\">{count, plural, =0{# zulke systemen} one{# zo'n systeem} other{# zulke systemen}}</span>.",
             "systemsRemainder": "en {count} meer...",
-            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
-            "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
+            "v5Warning": "Je hebt er <span id=\"targetV5\">{count, plural, =0{# systemen} one{# systeem} other{# systemen}}</span> met softwareversie lager dan 5.0. {count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} is niet toegankelijk via <strong>%VMS_NAME% Client</strong> omdat eerdere versies van %VMS_NAME% Client geen tweefactorauthenticatie ondersteunen, dus u kunt geen verificatiecode voor uw account invoeren.",
+            "v5WarningExplanation": "Maken {count, plural, =0{deze systemen} one{dit systeem} other{deze systemen}} volledig toegankelijke upgrade {count, plural, =0{hen} one{het} other{hen}} naar softwareversie 5.0 of schakel het selectievakje uit.",
             "disableWarning": "Je hebt {count, plural, one{# systeem} other{# systemen}} die {count, plural, one{vereist} other{vereist}} authenticatie in twee stappen. Je kunt niet inloggen op {count, plural, one{dit systeem} other{deze systemen}}."
         }
     },

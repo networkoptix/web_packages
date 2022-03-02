@@ -524,7 +524,7 @@
     "PASSWORD IS REQUIRED TEXT": "Mot de passe requis",
     "2FA BACKUP CODE BTN TEXT": "Vous n'avez pas accès à l'application d'authentification ?",
     "2FA LOG IN CLOUD TEXT": "Connectez-vous à Nx Cloud",
-    "2FA CODE INSTRUCTIONS TEXT": "Enter a code from your authentication app to confirm it's really you trying to log in",
+    "2FA CODE INSTRUCTIONS TEXT": "Entrez un code de votre application d'authentification pour confirmer que c'est vraiment vous essayez de vous connecter",
     "2FA BACKUP CODE HELP TEXT": "Besoin d'aide ?",
     "2FA BACKUP CODE CONTACT SUPPORT TEXT": "Contacter le support technique",
     "2FA AUTH CODE BTN TEXT": "Utiliser le code d'authentification",
@@ -541,6 +541,6 @@
     "VIEW PAGE WEBM TEXT": "webm",
     "VIEW PAGE TRANSPORT TEXT": "Transport",
     "VIEW PAGE HLS TEXT": "hls",
-    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
-    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
+    "VIEW PAGE CAMERA OFFLINE TEXT": "Hors ligne",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentification requise"
 }
