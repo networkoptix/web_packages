@@ -3,12 +3,20 @@
 </ng-template>
 
 <ng-template #techBlock let-tech="tech">
-    <div class="tech-block" 
-        [title]="tech.title" 
+    <div class="tech-block"
+        [title]="tech.title"
         [routerLink]="tech.url || router.url"
-        [ngClass]="{'disabled': !tech.url}" 
+        [ngClass]="{'disabled': !tech.url}"
         [tabIndex]="tech.url ? 1 : -1">
-        <img [src]="CONFIG.images.dirDevelopers + tech.icon">
+        <svg-icon
+            nx-add-svg-src
+            *ngIf="tech.icon.includes('.svg')"
+            [svgStyle]="{'width.px': '56', 'height.px': '56'}"
+            [src]="CONFIG.images.dirDevelopers + tech.icon"
+        ></svg-icon>
+        <img
+            *ngIf="!tech.icon.includes('.svg')"
+            [src]="CONFIG.images.dirDevelopers + tech.icon">
     </div>
 </ng-template>
 
@@ -45,5 +53,5 @@
             </div>
         </ng-container>
     </ng-container>
-    
+
 </section>

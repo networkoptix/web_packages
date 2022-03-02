@@ -10,6 +10,20 @@ html[data-theme="dark"] {
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;
     
+    --spot-gradient : radial-gradient(
+                    ellipse farthest-corner at center center,
+                    #303F47 0,
+                    #2B383F 3%,
+                    #263137 5%,
+                    #212A2F 10%,
+                    #1C2327 15%,
+                    #171C1F 20%,
+                    #121517 23%,
+                    #0D0E0F 25%,
+                    #080707 30%,
+                    #000000 40%
+    );
+    
     --h1 : #F5F7F8; //$light2;
     --h2 : #F5F7F8; //$light2;
     --h3 : #F5F7F8; //$light2;
@@ -56,6 +70,7 @@ html[data-theme="dark"] {
     
     --border-color         : #35464F; //$dark11;
     --border-hover-color   : #263137; //$dark8;
+    --border-active-color  : #1C2327; //$dark6;
     --horizontal-sep-color : #49626F; //$dark15;
     --label-color          : #A5B7C0; //light10;
     
@@ -249,6 +264,7 @@ html[data-theme="dark"] {
     --table-alt-row-bg: #171C1F; //$dark5;
     
     --card-shadow : 0 2px 5px 0 #263137; //$dark8;
+    --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;
@@ -268,6 +284,14 @@ html[data-theme="dark"] {
     --card-simple-default-bg           : #C22626; //$red_main;
     --card-simple-default-color        : #E1E7EA; //$light4;
     --card-simple-default-border-color : #AA1E1E; //$red_d1;
+    
+    --card-capability-intro-color : #A5B7C0; //$light10;
+    --card-capability-icon        : #2592C3; //$brand-d1;
+    --card-capability-h3          : #E1E7EA; //$light4;
+    
+    --support-lang-wrapper-bg    : #121517; //$dark4
+    --support-lang-wrapper-color : #A5B7C0; //$light10;
+    --support-tech-apple-color : #E1E7EA; //$light4;
     
     --input-bg                 : #121517; //$dark4;
     --input-color              : #A5B7C0; //$light10;

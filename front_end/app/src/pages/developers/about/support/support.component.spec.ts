@@ -93,11 +93,11 @@ describe('NxSupportComponent', () => {
 
     it('should show the correct background on left side', () => {
         const leftBackground = el.nativeElement.querySelector('.left-image > svg-icon').dataset.src;
-        expect(leftBackground).toBe(configMock.config.icons.dir + expectedLeftBackground);
+        expect(leftBackground).toBe(configMock.config.images.dirDevelopers + expectedLeftBackground);
     });
 
     it('should show the correct background on right side', () => {
         const rightBackground = el.nativeElement.querySelector('.right-image > svg-icon').dataset.src;
-        expect(rightBackground).toBe(configMock.config.icons.dir + expectedRightBackground);
+        expect(rightBackground).toBe(configMock.config.images.dirDevelopers + expectedRightBackground);
     });
 });

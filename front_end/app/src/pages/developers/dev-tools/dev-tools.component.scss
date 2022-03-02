@@ -3,13 +3,15 @@
 @use "app/src/styles/_bootstrap_utils" as bootstrap;
 
 .heading {
-    @include typography.regular24dark9;
+    @include typography.regular24nocolor;
+    color : var(--body-text-color);
     margin-bottom: 48px;
 }
 
 .heading-link {
     @extend .heading;
     cursor: pointer;
+    
     &:hover {
         text-decoration: underline;
     }
@@ -22,7 +24,7 @@
     margin: 96px auto 0 auto;
     max-width: 1440px;
     padding: 0 16px;
-    color: $dark10;
+    
     @include bootstrap.media-breakpoint-down(xs) {
         margin-top: 36px !important;
         padding: 0 21px;
@@ -41,7 +43,7 @@
     cursor: pointer;
     min-height: 242px;
     & > header {
-        background: $additional_light1;
+        background-color: var(--card-header-bg);
         padding: 16px 0 18px 16px;
         & > svg-icon > svg {
             height: 48px;

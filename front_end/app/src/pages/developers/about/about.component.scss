@@ -8,7 +8,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    color: $dark10;
+    
     @include bootstrap.media-breakpoint-down(xs) {
         margin: 44px 0 16px 0;
     }
@@ -22,7 +22,8 @@
         }
     }
     & > p {
-        @include typography.regular14dark9;
+        @include typography.regular14nocolor;
+        color : var(--body-text-color);
         margin: 10px 0 25px 0;
         text-align: center;
         line-height: 18px;

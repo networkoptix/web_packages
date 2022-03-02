@@ -1,9 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-    <g fill="none" fill-rule="evenodd">
-        <g fill="#FFF" fill-rule="nonzero">
-            <g>
-                <path d="M15 0v5h5v2h-5v6h5v2h-5v5h-2v-2H3.094C1.385 18 0 16.687 0 15.067V4.933C0 3.313 1.385 2 3.094 2H13V0h2zm-2 4H3.043c-.535 0-.976.375-1.036.858L2 4.97v10.058c0 .498.403.908.921.964l.122.007H13V4z" transform="translate(-779 -425) translate(762 409) translate(17 16)"/>
-            </g>
-        </g>
+    <g fill="#FFF" fill-rule="nonzero">
+        <path class="st0" d="M15 0v5h5v2h-5v6h5v2h-5v5h-2v-2H3.094C1.385 18 0 16.687 0 15.067V4.933C0 3.313 1.385 2 3.094 2H13V0h2zm-2 4H3.043c-.535 0-.976.375-1.036.858L2 4.97v10.058c0 .498.403.908.921.964l.122.007H13V4z" transform="translate(-779 -425) translate(762 409) translate(17 16)"/>
     </g>
 </svg>

@@ -32,7 +32,10 @@
                                         <a class="media btn btn-default download-button"
                                            *ngIf="downloadButton" [href]="downloadButton.url">
                                             <div class="media-left">
-                                                <span class="download-link"></span>
+                                                <svg-icon
+                                                    nx-add-svg-src
+                                                    [src]="CONFIG.images.dir + 'download.svg'"
+                                                ></svg-icon>
                                             </div>
                                             <div class="media-body text-left">
                                                 <h3 translate>Download %VMS_NAME%</h3>

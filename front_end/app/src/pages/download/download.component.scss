@@ -32,20 +32,6 @@
         }
     }
     
-    .download-link {
-        display           : inline-block;
-        width             : 32px;
-        height            : 32px;
-        background-repeat : no-repeat;
-        background-size   : 32px 32px;
-        
-        background-image  : url("/static/images/download.png") !important;
-        
-        @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-            background-image : url("/static/images/download@2x.png") !important;
-        }
-    }
-    
     .mobile-link {
         display           : inline-block;
         width             : 140px;
@@ -102,6 +88,10 @@
             display         : flex;
             align-items     : center;
             justify-content : center;
+            
+            svg-icon svg .st0 {
+                fill : var(--h3);
+            }
         }
         
         .media-body {

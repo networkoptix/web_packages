@@ -191,7 +191,7 @@ export function setupConfig(): IConfig {
                 { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
             ],
             devTools: '/static/images/icons/dev_tools/',
-            backgrounds: '/static/images/icons/backgrounds/',
+            backgrounds: '/static/images/developers/backgrounds/',
             dir: '/static/images/icons/standard/',
             dirDevtools: '/static/images/icons/dev_tools/',
             dirButtons: '/static/images/icons/buttons/',

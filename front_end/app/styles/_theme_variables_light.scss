@@ -10,6 +10,20 @@
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
     
+    --spot-gradient : radial-gradient(
+            ellipse farthest-corner at center center,
+            #A5B7C0 0,
+            #AFBFC7 3%,
+            #B9C7CE 5%,
+            #C3CFD5 10%,
+            #CDD7DC 15%,
+            #D7DFE3 20%,
+            #E1E7EA 23%,
+            #EBEFF1 25%,
+            #F5F7F8 30%,
+            #FFFFFF 40%
+    );
+    
     --h1 : #{$dark9};
     --h2 : #{$dark9};
     --h3 : #{$dark9};
@@ -56,6 +70,7 @@
     
     --border-color         : #{$light4};
     --border-hover-color   : #{$light8};
+    --border-active-color  : #{$light10};
     --horizontal-sep-color : #{$light6};
     --label-color          : #{$dark9};
     
@@ -250,6 +265,7 @@
     --table-alt-row-bg : #{$additional_light1};
     
     --card-shadow: 0 2px 5px 0 #{$light8};
+    --card-active-shadow: 0 2px 5px 0 #{$light10};
     --card-header-bg : #{$additional_light1};
     --card-header-text : #{$dark9};
     --card-body-bg : #{$light1};
@@ -269,6 +285,14 @@
     --card-simple-default-bg : #{$red2};
     --card-simple-default-color : #{$dark9};
     --card-simple-default-border-color : #{$red1};
+    
+    --card-capability-intro-color : #{$light10};
+    --card-capability-icon : #{$brand-core};
+    --card-capability-h3 : #{$light1};
+    
+    --support-lang-wrapper-bg : #{$light4};
+    --support-lang-wrapper-color : #{$light16};
+    --support-tech-apple-color : #{$dark1};
     
     --input-bg                 : #{$light1};
     --input-color              : #{$dark9};

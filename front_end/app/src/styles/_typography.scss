@@ -259,6 +259,10 @@ p {
 @mixin regular24dark9 {
     @include font-source($font-family-regular, $font-size-xlg, $dark9);
 }
+
+@mixin regular24nocolor {
+    @include font-source($font-family-regular, $font-size-xlg);
+}
 // REGULAR
 
 // MEDIUM
@@ -340,6 +344,10 @@ p {
 
 @mixin medium14light1-50 {
     @include font-source($font-family-medium, $h5-font-size, rgba($light1, 0.5));
+}
+
+@mixin medium14nocolor {
+    @include font-source($font-family-medium, $h5-font-size);
 }
 
 @mixin medium14light1 {
