@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import APIInternalException, APIRequestException, ErrorCodes, api_success, require_params
+from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
 
 
 class TwoFactorPermissionsMixin:
@@ -15,6 +15,14 @@ class TwoFactorPermissionsMixin:
         if self.request.method == "GET":
             return [AllowAny()]
         return super().get_permissions()
+
+    def get_user_from_code(self, code):
+        try:
+            token = Auth.validate_token(code)
+            return token.get("username", "")
+        # If the request fails the worst case is we don't add 2fa to the user's session.
+        except APINotAuthorisedException:
+            return ""
 
 
 class CreateBackupCodeSerializer(serializers.Serializer):
@@ -49,8 +57,9 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_2fa_code(data["verification_code"], data["code"])
+        email = self.get_user_from_code(data["code"])
 
-        if request.user and request.user.is_authenticated:
+        if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
         return api_success(res)
@@ -75,8 +84,9 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_backup_code(data["verification_code"], data["code"])
+        email = self.get_user_from_code(data["code"])
 
-        if request.user and request.user.is_authenticated:
+        if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
 
@@ -136,7 +146,8 @@ def get_active_backup_codes(request):
                      request_body=openapi.Schema(
                          type=openapi.TYPE_OBJECT,
                          properties={
-                             "verification_code": openapi.Schema(description="A 2fa code from your 2fa app.", type=openapi.TYPE_STRING)
+                             "verification_code": openapi.Schema(description="A 2fa code from your 2fa app.",
+                                                                 type=openapi.TYPE_STRING)
                          },
                          required=["verification_code"]
                      ))
@@ -146,7 +157,7 @@ def add_2fa_to_session(request):
     """
     Verifies the current user's access_token using a 2fa code.
     """
-    require_params(request, ("verification_code", ))
+    require_params(request, ("verification_code",))
     verification_code = request.data.get("verification_code")
     res = Auth.verify_2fa_code(verification_code, request.session.get("access_token"))
 
