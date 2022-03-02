@@ -334,14 +334,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     this.systemNoAccess = true;
                                     return;
                                 }
-                                if (
-                                    system?.system2faEnabled &&
-                                    !this.account.totpExistsForAccount
-                                ) {
-                                    this.systemName = system.name;
-                                    this.show2faRequired = true;
-                                    return;
-                                }
                                 if (this.systemId === this.system?.id) {
                                     return;
                                 }

@@ -3,61 +3,53 @@
 <div *ngIf="systems" class="auth-visible" [ngClass]="{'m-2': showCompact, 'container': !showCompact}">
     <nx-no-systems *ngIf="!systems.length"></nx-no-systems>
     <ng-container *ngIf="systems.length">
-        <nx-page-placeholder
-            *ngIf="show2faRequired; else listOfSystems"
-            type="FAILED_TO_ACCESS_2FA"
-            [data]="{ systemName: chosenSystemName }"
-            withFooter [showMainButton]="true">
-        </nx-page-placeholder>
-        <ng-template #listOfSystems>
-            <div class="search-block row border-bottom" *ngIf="!disableSearch && showSearch">
-                <nx-search class="col-sm-9 col-md-8 col-lg-6 input-overlay"
-                           [ngModel]="search"
-                           (ngModelChange)="setSearch($event)"
-                           layout='compact'
-                           placeholder='Search systems'
-                           instant
-                ></nx-search>
-            </div>
-            <div *ngIf="systems.length">
-                <h1 *ngIf="!showCompact" class="old-h12 p-0 mb-3 mt-3"><span>{{search.value &&
-                        filteredSystems.length}}&nbsp;</span>
-                    <span translate>Systems</span>&nbsp;{{search.value && 'found'}}
-                </h1>
-                <div class="row">
-                    <ng-container *ngFor="let system of filteredSystems; trackBy: trackItem">
-                        <div *ngIf="!systemsToShow || systemsToShow.includes(system.id)"
-                            class="col-sm-12 mb-3 mb-lg-0 system-button"
-                            [ngClass]="{'col-lg-4 col-xl-3': size === 'full', 'col-md-6': size !== 'compact', 'col-12': size === 'compact'}">
-                            <div class="card card-condensed hoverable">
-                                <div class="card-body" (click)="openSystem(system)">
-                                    <h2 class="old-h12 d-block"
-                                        [innerHTML]="(system.name | unsafe | highlight:search.value)">
-                                    </h2>
-                                    <span class="user-name"
-                                        [innerHTML]="(getSystemOwnerName(system, userEmail) | unsafe | highlight:search.value)"></span>
-                                    <div class="system-list-bottom-bar">
-                                        <nx-tag style="display: block; margin-top: 24px;"
-                                            type="{{CONFIG.system.status[system.stateOfHealth]?.style || CONFIG.system.status.default.style}}"
-                                            *ngIf="canShowTag(system)">
-                                            <ng-container>{{LANG.systemStatuses[system.stateOfHealth]() ||
-                                                system.stateOfHealth
-                                                }}</ng-container>
-                                        </nx-tag>
-                                        <nx-client-button [system]="system" [actionType]="(system) ? 'default' : 'primary'"
-                                            *ngIf="canShowButton(system)"></nx-client-button>
-                                        <svg-icon [ngClass]="{ 'margin-system-list-status': canShowTag(system) }"
-                                            *ngIf="needToConfigureTwoFactor(system)" nx-add-svg-src
-                                            [src]="CONFIG.icons.dir + 'lock.svg'" [svgStyle]="{'height.px': '20'}"
-                                            [applyClass]="true"></svg-icon>
-                                    </div>
+        <div class="search-block row border-bottom" *ngIf="!disableSearch && showSearch">
+            <nx-search class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+                        [ngModel]="search"
+                        (ngModelChange)="setSearch($event)"
+                        layout='compact'
+                        placeholder='Search systems'
+                        instant
+            ></nx-search>
+        </div>
+        <div *ngIf="systems.length">
+            <h1 *ngIf="!showCompact" class="old-h12 p-0 mb-3 mt-3"><span>{{search.value &&
+                    filteredSystems.length}}&nbsp;</span>
+                <span translate>Systems</span>&nbsp;{{search.value && 'found'}}
+            </h1>
+            <div class="row">
+                <ng-container *ngFor="let system of filteredSystems; trackBy: trackItem">
+                    <div *ngIf="!systemsToShow || systemsToShow.includes(system.id)"
+                        class="col-sm-12 mb-3 mb-lg-0 system-button"
+                        [ngClass]="{'col-lg-4 col-xl-3': size === 'full', 'col-md-6': size !== 'compact', 'col-12': size === 'compact'}">
+                        <div class="card card-condensed hoverable">
+                            <div class="card-body" (click)="openSystem(system)">
+                                <h2 class="old-h12 d-block"
+                                    [innerHTML]="(system.name | unsafe | highlight:search.value)">
+                                </h2>
+                                <span class="user-name"
+                                    [innerHTML]="(getSystemOwnerName(system, userEmail) | unsafe | highlight:search.value)"></span>
+                                <div class="system-list-bottom-bar">
+                                    <nx-tag style="display: block; margin-top: 24px;"
+                                        type="{{CONFIG.system.status[system.stateOfHealth]?.style || CONFIG.system.status.default.style}}"
+                                        *ngIf="canShowTag(system)">
+                                        <ng-container>{{LANG.systemStatuses[system.stateOfHealth]() ||
+                                            system.stateOfHealth
+                                            }}</ng-container>
+                                    </nx-tag>
+                                    <nx-client-button [system]="system" [actionType]="(system) ? 'default' : 'primary'"
+                                        *ngIf="canShowButton(system)"></nx-client-button>
+                                    <svg-icon [ngClass]="{ 'margin-system-list-status': canShowTag(system) }"
+                                        *ngIf="needToConfigureTwoFactor(system)" nx-add-svg-src
+                                        [src]="CONFIG.icons.dir + 'lock.svg'" [svgStyle]="{'height.px': '20'}"
+                                        [applyClass]="true"></svg-icon>
                                 </div>
                             </div>
                         </div>
-                    </ng-container>
-                </div>
+                    </div>
+                </ng-container>
             </div>
-        </ng-template>
+        </div>
     </ng-container>
     <nx-footer *ngIf="!showCompact && !show2faRequired"></nx-footer>
 </div>

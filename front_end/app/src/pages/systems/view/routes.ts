@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { TwofaGuard } from '@guards/twofaGuard';
+
 import { AuthGuard } from '../../../routeGuards';
 
 import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component';
@@ -9,7 +11,7 @@ export const routes: Routes = [
     {
         path: '',
         component: NxSystemViewIndexPageComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, TwofaGuard],
         children: [
             {
                 path: ':cameraId',

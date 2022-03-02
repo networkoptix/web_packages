@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@src/menu';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { ApplyGuard, AuthGuard } from '@src/routeGuards';
@@ -28,7 +29,7 @@ export const cloudSettingsRoutes: Routes = [
     {
         path: '',
         component: NxSystemSettingsComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, TwofaGuard],
         children: [
             {
                 path: '',

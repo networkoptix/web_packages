@@ -9,6 +9,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@src/menu';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { AuthGuard, SystemGuard } from '@src/routeGuards';
@@ -49,7 +50,7 @@ const appRoutes: Routes = [
     {
         path: '',
         component: NxHealthComponent,
-        canActivate: [AuthGuard, SystemGuard],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         children: [
             {
                 path: '',
