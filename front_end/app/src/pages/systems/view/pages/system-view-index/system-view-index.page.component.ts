@@ -267,6 +267,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         account.id,
                         account.email
                     );
+                    this.settingsService.system = this.system;
                     this._log('local system created', this.system);
                     return Promise.resolve();
                 }
