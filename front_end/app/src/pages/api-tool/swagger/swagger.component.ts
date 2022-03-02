@@ -51,6 +51,7 @@ export class NxSwaggerComponent implements OnChanges {
     swaggerMenuDescription = { title: '', description: '' }
 
     // Misc properties
+    markdownComponentShowing = false;
     RTSPRequestShowing = false;
     singleAPIRouteShowing = false;
     singleRoutePath: string;
@@ -441,6 +442,7 @@ export class NxSwaggerComponent implements OnChanges {
             const node: MenuNode = changes.activeNode.currentValue;
             const isSingleView = this.isAPIRouteNode(node);
             const expand = isSingleView ? 'full' : 'list';
+            this.markdownComponentShowing = this.APIToolService.APIInfoNodes[this.APIToolService.activeNode.name];
 
             if (!this.APIToolService.isAPIInfoMenuNode(node)) {
                 this.setSwaggerDescription(node, expand);

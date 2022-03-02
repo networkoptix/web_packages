@@ -167,7 +167,7 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
         endpointObj.forEach((method: method) => {
             const subMenuTag = method[1].tags[0];
             if (!subMenuTag.includes('Proprietary')) {
-                const HTTPMethod = method[0];
+                const HTTPMethod = endpoint === RTSPRoute ? RTSPMethod : method[0];
                 const subMenuNode = parentMenuNodes.find(node => node.name === subMenuTag);
 
                 const url = generateNodeURL(endpoint, HTTPMethod);

@@ -362,7 +362,6 @@ export class NxAPIToolService {
         this.mediaServerUpdating = true;
         let validServerFound = false;
         if (this.system.currentServerNotBusy) {
-            console.log(this.system?.serverManager.servers?.length);
             if (this.system?.serverManager.servers?.length) {
                 this.system.serverManager
                     .initSystemMediaServers()

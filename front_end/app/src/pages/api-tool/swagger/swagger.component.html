@@ -1,7 +1,7 @@
 <ng-container *ngIf="!APIToolService.outDatedSystem">
     <ng-container  #swagger *ngIf="APIToolService.menuNodes; else preloader">
         <div *ngIf="APIToolService.activeNode" [class.single-api-route-showing]="singleAPIRouteShowing" [ngClass]="{'api-info': APIToolService.APIInfoLegacyNodes[APIToolService.activeNode.name]}">
-            <div style="padding: 0 1rem 1rem" class="swagger-description">
+            <div *ngIf="!markdownComponentShowing" style="padding: 0 1rem 1rem" class="swagger-description">
                 <h2>{{ this.swaggerMenuDescription.title }}</h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
                     <p class="description-path">{{ this.singleRoutePath }}</p>
@@ -10,11 +10,11 @@
                 <p class="mt-3" *ngIf="this.swaggerMenuDescription.description" [innerHTML]="this.swaggerMenuDescription.description | safe:'html'">
                 </p>
             </div>
-            <nx-swagger-markdown *ngIf="APIToolService.APIInfoNodes[APIToolService.activeNode.name]"
+            <nx-swagger-markdown *ngIf="markdownComponentShowing"
                 [data]="APIToolService.markdownStore[APIToolService.activeNode.name]"></nx-swagger-markdown>
-            <div id="swagger-ui" #viewContainerRef 
-                [class.RTSP-request]='RTSPRequestShowing' 
-                [class.single-api-route-showing]="singleAPIRouteShowing" 
+            <div id="swagger-ui" #viewContainerRef
+                [class.RTSP-request]='RTSPRequestShowing'
+                [class.single-api-route-showing]="singleAPIRouteShowing"
             ></div>
         </div>
     </ng-container>
@@ -23,4 +23,3 @@
 <ng-template #preloader>
     <nx-pre-loader></nx-pre-loader>
 </ng-template>
- 
