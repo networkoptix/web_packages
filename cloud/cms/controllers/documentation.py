@@ -92,7 +92,7 @@ class SearchableCache(BaseCache):
         if self.custom_settings:
             try:
                 self.current_settings = self.search_index.get_settings()
-                if self.check_if_settings_changed() or True:
+                if self.check_if_settings_changed():
                     self.search_index.update_settings(self.custom_settings)
                     self.search_index.delete_all_documents()
             except (TypeError, MeiliSearchCommunicationError) as e:
