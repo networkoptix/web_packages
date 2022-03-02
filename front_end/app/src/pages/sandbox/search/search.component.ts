@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import type { SearchFilter } from '@components/search/search.component';
 import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { NxMenuService } from '@src/menu/menu.service';
     styleUrls: ['search.component.scss']
 })
 export class SearchComponent {
-    filter: any;
+    filter: SearchFilter;
 
     constructor(
         private menuService: NxMenuService,
@@ -22,6 +23,7 @@ export class SearchComponent {
             query: '',
             selects: [
                 {
+                    id: '0',
                     label: 'Minimum Resolution',
                     items: [
                         { value: '0', name: 'All' },
@@ -45,6 +47,7 @@ export class SearchComponent {
             ],
             multiselects: [
                 {
+                    id: '1',
                     label: 'Types',
                     items: [
                         { id: 'Camera', label: 'Camera' },
@@ -58,14 +61,17 @@ export class SearchComponent {
             ],
             tags: [
                 {
+                    id: '0',
                     label: 'Access Control',
                     value: false
                 },
                 {
+                    id: '1',
                     label: 'Analytics',
                     value: false
                 },
                 {
+                    id: '2',
                     label: 'PCIM',
                     value: false
                 }

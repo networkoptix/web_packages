@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+// import { Location } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -13,20 +13,26 @@ import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
-import { isArray } from 'rxjs/internal-compatibility';
 import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import {
+    ButtonArrowType,
+    NxSearchService,
+    SearchModel,
+} from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
 
 /* Usage
@@ -54,22 +60,36 @@ import { NxUriService } from '@services/uri.service';
 
  */
 
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
 export interface SearchTag {
     id: string,
     label: string,
     value: boolean,
 }
 
-export interface SearchFilter {
-    query: string,
+interface MultiSelectItem {
+    id: string;
+    label: string;
+}
+
+export interface SearchFilter extends SearchModel {
     tags?: SearchTag[],
-    selects?: any,
-    multiselects?: any,
-    search?: any
+    selects?: Array<{
+        id: string;
+        label: string;
+        items: DropdownItem<string>[];
+        selected: DropdownItem<string>;
+        css?: string;
+    }>,
+    multiselects?: Array<{
+        id: string;
+        label: string;
+        items: MultiSelectItem[];
+        selected: string[];
+        singular?: string;
+        searchLabel?: string;
+        searchLabelSingular?: string;
+    }>,
+    search?: string;
 }
 
 @UntilDestroy()
@@ -86,17 +106,16 @@ export interface SearchFilter {
 })
 
 export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
-    @Input() layout;
-    @Input() layoutMod; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
-    @Input() placeholder;
+    @Input() layout: 'search' | 'selectors' | 'compact' | 'full' = 'full';
+    @Input() layoutMod: boolean; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
+    @Input() placeholder: string;
     @IBool() @Input() instant: CoercedBoolInput;
 
-    @Output() onFocus: EventEmitter<any> = new EventEmitter();
-    @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
+    @Output() onFocus = new EventEmitter<void>();
+    @Output() onFocusOut = new EventEmitter<void>();
 
-    public placeholderText: string;
-    public numberFilters = 0;
-    public filterSelected;
+    public numberFilters: number = 0;
+    public filtersSelected: string = '';
     public localFilter: SearchFilter = { query: '' };
 
     CONFIG: IConfig;
@@ -104,29 +123,25 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private debounceShortTime: number;
     private debounceTime: number;
-    private params: any = {};
-    private searchUpdated: any = Subject;
-    private modelUpdated: any = Subject;
+    private params: Params = {};
+    private searchUpdated = new Subject<string>();
+    private modelUpdated = new Subject<void>();
 
     showAdvancedOptions: boolean;
-    buttonArrowTypeUp: ButtonArrowType;
-    buttonArrowTypeDown: ButtonArrowType;
-    advSearch = false;
+    buttonArrowTypeUp: ButtonArrowType = ButtonArrowType.up;
+    buttonArrowTypeDown: ButtonArrowType = ButtonArrowType.down;
 
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private _route: ActivatedRoute,
-        private location: Location,
+        // private location: Location,
         private uri: NxUriService,
         private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
-
-        this.buttonArrowTypeUp = ButtonArrowType.up;
-        this.buttonArrowTypeDown = ButtonArrowType.down;
 
         // TODO: remove if no issues found post 21.1 QA (soon)
         // Causing issues with routing when manually input params into url
@@ -138,24 +153,24 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         //         this.modelChanged(false);
         //     });
         // });
-
-        this.searchUpdated = new Subject<any>();
-        this.modelUpdated = new Subject<any>();
     }
 
-    ngOnInit() {
-        this.placeholderText = (typeof this.placeholder === 'function') ? this.placeholder() : ''; // optional param
-        this.debounceShortTime = this.instant ? 0 : this.CONFIG.search.debounceShortTime; // optional param
-        this.debounceTime = this.instant ? 0 : this.CONFIG.search.debounceTime; // optional param
-        this.layout = (this.layout !== undefined) ? this.layout : 'full';
-        this.showAdvancedOptions = !(this.layout === 'full'); // hide advanced search in "full" layout
-        this.filterSelected = '';
+    ngOnInit(): void {
+        if (this.instant) {
+            this.debounceShortTime = 0;
+            this.debounceTime = 0;
+        } else {
+            this.debounceShortTime = this.CONFIG.search.debounceShortTime;
+            this.debounceTime = this.CONFIG.search.debounceTime;
+        }
+        this.showAdvancedOptions = this.layout !== 'full';
+        // hide advanced search in "full" layout
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
         this._route.queryParams.subscribe(params => {
             this.params = params;
-            this.updateFilter(undefined, false);
+            this.updateFilter();
         });
 
         this.searchUpdated
@@ -167,57 +182,52 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         this.modelUpdated
             .pipe(untilDestroyed(this), debounceTime(this.debounceShortTime))
-            .subscribe(data => {
+            .subscribe(() => {
                 this.modelChanged();
             });
     }
 
-    ngOnDestroy() {
-    }
+    ngOnDestroy(): void {}
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
-    };
-
-    private onChangeCallback = (_: any) => {
-    };
+    private onTouchedCallback = () => {};
+    private onChangeCallback = (_: SearchFilter) => {};
 
     // Set touched on blur
-    onBlur() {
+    onBlur(): void {
         this.onTouchedCallback();
     }
 
-    onSearchType(value: any) {
+    onSearchType(value: string): void {
         this.searchUpdated.next(value);
     }
 
-    onModelChange(value: any) {
-        this.modelUpdated.next(value);
+    onModelChange(): void {
+        this.modelUpdated.next();
     }
 
-    updateFilter(params?, resetUri?) {
+    // See TODO in constructor, remove params argument at that time
+    updateFilter(params?): void {
         if (params?.value) {
             this.params = params.value;
         }
 
         this.localFilter.query = this.localFilter.search || '';
 
-        if (this.params.search && this.params.search.length > 0) {
+        if (this.params.search?.length) {
             this.localFilter.query = this.params.search;
 
             this.searchService.getMatchPatterns(this.localFilter);
         }
 
-        if (this.localFilter.tags && this.localFilter.tags.length) {
-            this.localFilter.tags.forEach(tag => {
-                tag.value = false;
-            });
+        if (this.localFilter.tags?.length) {
+            this.localFilter.tags.forEach(tag => { tag.value = false; });
             if (this.params.tags) {
-                this.params.tags
+                (this.params.tags as string)
                     .split(',')
                     .forEach(tagName => {
-                        this.localFilter.tags.find(tag => {
+                        this.localFilter.tags.forEach(tag => {
                             if (tag.id === tagName) {
                                 tag.value = true;
                             }
@@ -226,86 +236,66 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             }
         }
 
-        if (
-            this.localFilter.selects &&
-            this.localFilter.selects.length
-        ) {
-            this.localFilter
-                .selects
-                .find(select => {
-                    if (this.params[select.id]) {
-                        select.selected =
-                            select.items.find(item =>
-                                item.value === this.params[select.id]);
-                    } else {
-                        if (!select.selected) {
-                            select.selected = { value: '0', name: 'All' };
-                        }
-                    }
-                });
-        }
+        this.localFilter.selects?.forEach(select => {
+            if (this.params[select.id]) {
+                select.selected = select.items.find(item =>
+                    item.value === this.params[select.id]
+                );
+            } else {
+                if (!select.selected) {
+                    select.selected = { value: '0', name: 'All' };
+                }
+            }
+        });
 
-        if (
-            this.localFilter.multiselects &&
-            this.localFilter.multiselects.length
-        ) {
-            this.localFilter
-                .multiselects
-                .find(select => {
-                    if (this.params[select.id]) {
-                        select.selected = isArray(this.params[select.id])
-                            ? this.params[select.id]
-                            : this.params[select.id].split(',');
-                    } else {
-                        select.selected = [];
-                    }
-                });
-        }
+        this.localFilter.multiselects?.forEach(select => {
+            if (this.params[select.id]) {
+                select.selected = this.params[select.id].split(',');
+            } else {
+                select.selected = [];
+            }
+        });
 
-        this.numberOfOptionsSelected();
-        // the component relaying on model change may not be ready
-        // this.modelChanged(resetUri);
+        this.generateFiltersSelectedLabel();
     }
 
-    writeValue(value: any): void {
+    writeValue(value: SearchFilter): void {
         // Avoid localFilter update if filter in not initialized (page refresh)
-        if (value &&
-            ((value.tags?.length) ||
-                (value.selects?.length) ||
-                    (value.multiselects?.length) ||
-                    (value.tags?.length !== this.localFilter.tags?.length))
+        if (
+            value && (
+                value.tags?.length ||
+                value.selects?.length ||
+                value.multiselects?.length ||
+                value.tags?.length !== this.localFilter.tags?.length
+            )
         ) {
             if (isEqual(this.localFilter, value)) {
                 return;
             }
             this.localFilter = cloneDeep(value);
-            this.advSearch = (this.localFilter.selects && this.localFilter.selects.length) ||
-                (this.localFilter.multiselects && this.localFilter.multiselects.length) ||
-                (this.localFilter.tags && this.localFilter.tags.length);
 
             // Update model with query params
             this.params = this._route.snapshot.queryParams;
-            this.updateFilter(undefined, false);
+            this.updateFilter();
         }
     }
 
     // From ControlValueAccessor interface
-    registerOnChange(fn: any) {
+    registerOnChange(fn: (value: SearchFilter) => void): void {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    registerOnTouched(fn: any) {
+    registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    toggleOptions() {
+    toggleAdvOptions(): void {
         this.showAdvancedOptions = !this.showAdvancedOptions;
         this.scrollMechanicsService.offsetSubject.next(this.showAdvancedOptions);
-        return false;
     }
 
-    numberOfOptionsSelected() {
+    generateFiltersSelectedLabel(): void {
         // No need to run this function while ngModel's writeValue initializes
         if (Object.keys(this.localFilter).length === 0) {
             return;
@@ -313,133 +303,124 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         this.placeholder = this.placeholder || this.LANG.search.Search(); // optional param
         this.numberFilters = 0;
-        this.filterSelected = '';
+        this.filtersSelected = '';
 
         let flag = 0;
         let tagsSelected = '';
         let selectsSelected = '';
         let multiSelectsSelected = '';
 
-        if (this.localFilter.tags) {
-            this.localFilter.tags.forEach(filter => {
-                if (filter.value) {
-                    this.numberFilters++;
-                    if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied']?.();
-                    } else {
-                        tagsSelected = filter.label;
-                    }
-                    flag++;
+        this.localFilter.tags?.forEach(filter => {
+            if (filter.value) {
+                this.numberFilters += 1;
+                if (this.numberFilters > 1) {
+                    selectsSelected = this.LANG.search.appliedFilters({
+                        count: this.numberFilters
+                    });
+                } else {
+                    tagsSelected = filter.label;
                 }
-            });
-        }
+                flag += 1;
+            }
+        });
 
-        if (this.localFilter.selects && this.localFilter.selects.length) {
-            this.localFilter.selects.forEach(select => {
-                if (select.selected && select.selected.value !== '0') { // not default value
-                    this.numberFilters++;
-                    if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + '&nbsp;' + this.LANG.search['filters applied']?.();
-                    } else {
-                        selectsSelected = select.label + '&nbsp;&ndash;&nbsp;' + select.selected.name;
-                    }
-                    flag++;
+        this.localFilter.selects?.forEach(select => {
+            if (select.selected && select.selected.value !== '0') { // not default value
+                this.numberFilters += 1;
+                if (this.numberFilters > 1) {
+                    selectsSelected = this.LANG.search.appliedFilters({
+                        count: this.numberFilters
+                    });
+                } else {
+                    selectsSelected = `${select.label}&nbsp;&ndash;&nbsp;${select.selected.name}`;
                 }
-            });
-        }
+                flag += 1;
+            }
+        });
 
-        if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
-            this.localFilter.multiselects.forEach(select => {
-                this.numberFilters += select.selected.length;
+        this.localFilter.multiselects?.forEach(select => {
+            this.numberFilters += select.selected.length;
 
-                if (select.selected.length > 0) {
-                    flag++;
+            if (select.selected.length > 0) {
+                flag += 1;
+            }
 
-                    let label;
-                    if (select.selected.length === 1) {
-                        label = select.label;
+            let label: string;
+            if (select.selected.length === 1) {
+                label = select.label;
 
-                        if (select.singular) {
-                            label = select.singular;
-                        }
-
-                        label += ' &ndash; ';
-
-                        if (select.searchLabelSingular || select.searchLabelSingular === '') {
-                            label = select.searchLabelSingular;
-                        }
-
-                        multiSelectsSelected = label + select.items.find(item => {
-                            return (item.label.name || item.id) === select.selected[0];
-                        }).label;
-                    } else {
-                        if (select.searchLabel || select.searchLabel === '') {
-                            label = select.searchLabel;
-                        } else {
-                            label = select.label.toLowerCase();
-                        }
-
-                        multiSelectsSelected = select.selected.length + ' ' + label;
-                    }
+                if (select.singular) {
+                    label = select.singular;
                 }
-            });
-        }
+
+                label += ' &ndash; ';
+
+                if (select.searchLabelSingular !== undefined) {
+                    label = select.searchLabelSingular;
+                }
+
+                const selectedLabel = select.items
+                    .find(item => item.id === select.selected[0])
+                    .label;
+                multiSelectsSelected = `${label}${selectedLabel}`;
+            } else if (select.selected.length > 1) {
+                label = select.searchLabel ?? select.label.toLowerCase();
+                multiSelectsSelected = `${select.selected.length} ${label}`;
+            }
+        });
         if (flag === 1) {
-            this.filterSelected = tagsSelected || selectsSelected || multiSelectsSelected;
+            // Only one category of filter selected
+            // i.e. 1 tag, 1 select, or 1 multiselect
+            this.filtersSelected = tagsSelected ||
+                selectsSelected ||
+                multiSelectsSelected;
         } else {
-            this.filterSelected = this.LANG.search.appliedFilters({ count: this.numberFilters });
-        }
-    }
-
-    clearFilters() {
-        if (this.localFilter.tags) {
-            this.localFilter.tags.forEach(filter => {
-                filter.value = false;
-            });
-        }
-
-        if (this.localFilter.selects) {
-            this.localFilter.selects.forEach(filter => {
-                filter.selected = filter.items[0];
-            });
-        }
-
-        if (this.localFilter.multiselects) {
-            this.localFilter.multiselects.forEach(filter => {
-                filter.selected = [];
+            this.filtersSelected = this.LANG.search.appliedFilters({
+                count: this.numberFilters
             });
         }
     }
 
-    resetFilters() {
+    clearFilters(): void {
+        this.localFilter.tags?.forEach(filter => { filter.value = false; });
+
+        this.localFilter.selects?.forEach(filter => {
+            filter.selected = filter.items[0];
+        });
+
+        this.localFilter.multiselects?.forEach(filter => {
+            filter.selected = [];
+        });
+    }
+
+    resetFilters(): void {
         this.clearFilters();
         this.numberFilters = 0;
-        this.filterSelected = '';
+        this.filtersSelected = '';
 
-        this.modelChanged(true);
+        this.modelChanged();
     }
 
-    resetQuery() {
+    resetQuery(): void {
         this.localFilter.query = '';
-        this.modelChanged(true);
+        this.modelChanged();
     }
 
-    setOnFocus() {
+    setOnFocus(): void {
         this.onFocus.emit();
     }
 
-    setOnFocusOut() {
+    setOnFocusOut(): void {
         this.onFocusOut.emit();
     }
 
-    setRouteParams(resetUri?): Promise<any> {
-        const hasExistingParams = !!Object.values(this.params).filter(val => val).length;
-        const queryParams: IParams = {};
+    setRouteParams(): Promise<void | boolean | null> {
+        const hasExistingParams = Object.values(this.params).some(Boolean);
+        const queryParams: Params = {};
 
-        let selectedTags;
         queryParams.tags = undefined;
-        if (this.localFilter.tags && this.localFilter.tags.length) {
-            selectedTags = this.localFilter.tags.filter(tag => tag.value);
+        if (this.localFilter.tags?.length) {
+            const selectedTags = this.localFilter.tags.filter(tag => tag.value);
             if (selectedTags.length) {
                 queryParams.tags = selectedTags.map(elm => elm.id).join(',');
             }
@@ -450,71 +431,64 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             queryParams.search = this.localFilter.query;
         }
 
-        if (this.localFilter.selects && this.localFilter.selects.length) {
-            this.localFilter.selects.forEach(select => {
-                queryParams[select.id] = undefined;
-                if (select.selected && +select.selected.value !== 0) {
-                    queryParams[select.id] = select.selected.value;
-                }
-            });
-        }
-
-        if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
-            this.localFilter.multiselects.forEach(select => {
-                queryParams[select.id] = undefined;
-                if (select.selected?.length) {
-                    queryParams[select.id] = select.selected.join(',');
-                }
-            });
-        }
-        this.uri.pageOffset = window.pageYOffset;
-
-        let modelChanged = false;
-        Object.keys(queryParams).forEach(key => {
-            if (queryParams[key] !== this.params[key]) {
-                modelChanged = true;
+        this.localFilter.selects?.forEach(select => {
+            queryParams[select.id] = undefined;
+            if (select.selected && select.selected.value !== '0') {
+                queryParams[select.id] = select.selected.value;
             }
         });
 
-        if (modelChanged) {
+        this.localFilter.multiselects?.forEach(select => {
+            queryParams[select.id] = undefined;
+            if (select.selected?.length) {
+                queryParams[select.id] = select.selected.join(',');
+            }
+        });
+        this.uri.pageOffset = window.pageYOffset;
+
+        if (!isEqual(queryParams, this.params)) {
             // make sure we reset page on new model
             queryParams.page = undefined;
-            const hasUpdatedParams = !!Object.values(queryParams).filter(val => val).length;
+            const hasUpdatedParams = Object.values(queryParams).some(Boolean);
             const replaceUrl = hasExistingParams && hasUpdatedParams;
 
-            return this.uri.updateURI(this.uri.getURL(), queryParams, replaceUrl);
+            return this.uri.updateURI(
+                this.uri.getURL(),
+                queryParams,
+                replaceUrl
+            );
+        } else {
+            return Promise.resolve(null);
         }
-
-        return Promise.resolve({ notUpdated: true });
     }
 
-    modelChanged(resetUri?) {
-        this.setRouteParams(resetUri)
+    modelChanged() {
+        this.setRouteParams()
             .then(response => {
-                if (response.notUpdated) {
+                if (response === null) {
                     return;
                 }
-                this.numberOfOptionsSelected();
+                this.generateFiltersSelectedLabel();
                 this.onChangeCallback(this.localFilter);
             });
     }
 
-    canShowSelectors() {
-        return this.localFilter.selects && this.localFilter.selects.length ||
-            this.localFilter.multiselects && this.localFilter.multiselects.length;
+    get canShowTags(): boolean {
+        return !!this.localFilter.tags?.length;
     }
 
-    canShowSelectorsAndTags() {
-        return this.localFilter.tags && this.localFilter.tags.length ||
-            this.localFilter.selects && this.localFilter.selects.length ||
-            this.localFilter.multiselects && this.localFilter.multiselects.length;
+    get canShowSelectors(): boolean {
+        return !!(
+            this.localFilter.selects?.length ||
+            this.localFilter.multiselects?.length
+        );
     }
 
-    navArrow(direction) {
+    navArrow(direction: ButtonArrowType): void {
         this.searchService.navDirection = direction;
     }
 
-    navSelect() {
+    navSelect(): void {
         this.searchService.navSelected();
     }
 }

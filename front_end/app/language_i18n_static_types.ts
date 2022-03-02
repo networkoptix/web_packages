@@ -816,8 +816,6 @@ export interface Search {
     Search:            any;
     analytics:         any;
     analyticsSelected: any;
-    "filter applied":  any;
-    "filters applied": any;
     appliedFilters:    any;
     hardwareType:      any;
     hardwareTypes:     any;
@@ -1966,8 +1964,6 @@ const typeMap: any = {
         { json: "Search", js: "Search", typ: "any" },
         { json: "analytics", js: "analytics", typ: "any" },
         { json: "analyticsSelected", js: "analyticsSelected", typ: "any" },
-        { json: "filter applied", js: "filter applied", typ: "any" },
-        { json: "filters applied", js: "filters applied", typ: "any" },
         { json: "appliedFilters", js: "appliedFilters", typ: "any" },
         { json: "hardwareType", js: "hardwareType", typ: "any" },
         { json: "hardwareTypes", js: "hardwareTypes", typ: "any" },

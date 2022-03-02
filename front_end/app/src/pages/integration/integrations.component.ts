@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { SearchFilter } from '@components/search/search.component';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -27,7 +28,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     allElements: any;
     elements: any;
-    filterModel: any = {};
+    filterModel: SearchFilter = { query: '', tags: [] };
     params: any;
     account: any;
     selectors = {
@@ -38,7 +39,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         psim: false
     };
 
-    private emptyFilter: any = {};
     private integrationSubscription: Subscription;
     private uriSubscription: Subscription;
 
@@ -46,12 +46,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
 
         this.allElements = [];
-
-        this.emptyFilter = {
-            query: ''
-        };
-        this.filterModel = this.emptyFilter;
-        this.filterModel.tags = [];
     }
 
     constructor(configService: NxConfigService,
@@ -174,7 +168,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         }
     }
 
-    modelChanged(searchModel): void {
+    modelChanged(searchModel: SearchFilter): void {
         this.filterModel = cloneDeep(searchModel);
         this.setFilter();
     }

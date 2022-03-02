@@ -6,7 +6,10 @@ import { combineLatest, of } from 'rxjs';
 import { delay, switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { SearchTag, SearchFilter } from '@components/search/search.component';
+import type {
+    SearchTag,
+    SearchFilter
+} from '@components/search/search.component';
 import { NxAccountService, Account } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -30,23 +33,15 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
 
     allElements: Bookmark[];
     elements: Bookmark[];
-    filterModel: SearchFilter = { query: '' };
+    filterModel: SearchFilter = { query: '', tags: [] };
     system: NxSystem;
     account: Account;
     restEndpointUsed = true;
-
-    private emptyFilter: any = {};
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
 
         this.allElements = [];
-
-        this.emptyFilter = {
-            query: ''
-        };
-        this.filterModel = this.emptyFilter;
-        this.filterModel.tags = [];
     }
 
     constructor(
@@ -116,7 +111,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     }
 
     setTags(): void {
-        const uniqueTags = new Set();
+        const uniqueTags = new Set<string>();
         this.allElements.forEach((bookmark: Bookmark) => {
             bookmark.tagsFormatted = [];
             bookmark.tags.forEach((tag: string) => {
@@ -124,11 +119,11 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                 bookmark.tagsFormatted.push({ type: 'default', label: tag });
             });
         });
-        this.filterModel.tags = Array.from(uniqueTags).map(
-            (tag: string): SearchTag =>  {
-                return { id: tag, label: tag, value: false };
-            }
-        );
+        this.filterModel.tags = Array.from(uniqueTags).map<SearchTag>(tag => ({
+            id: tag,
+            label: tag,
+            value: false
+        }));
 
         this.filterModel = cloneDeep(this.filterModel);
     }
@@ -162,8 +157,8 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
 
         if (this.filterModel.tags?.length) {
             const selectedTags: string[] = this.filterModel.tags
-                .filter((tag: SearchTag) => tag.value)
-                .map((tag: SearchTag) => tag.label);
+                .filter(tag => tag.value)
+                .map(tag => tag.label);
 
             if (selectedTags.length) {
                 this.elements = this.elements.filter((item: Bookmark) => {

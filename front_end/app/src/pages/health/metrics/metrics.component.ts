@@ -13,6 +13,7 @@ import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { SearchFilter } from '@components/search/search.component';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -40,7 +41,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     LANG: LanguageI18NStaticTypes;
     account;
 
-    filterModel;
+    filterModel: SearchFilter = { query: '' };
     system: NxSystem;
     metricId;
     initialId;
@@ -92,10 +93,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-
-        this.filterModel = {
-            query: ''
-        };
     }
 
     ngOnInit(): void {
@@ -229,7 +226,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    modelChanged(model) {
+    modelChanged(model: SearchFilter) {
         if (this.filterModel.query !== model.query) {
             this.filterModel.query = model.query;
             this.search();

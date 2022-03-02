@@ -14,6 +14,7 @@ import { isEqual, cloneDeep } from 'lodash-es';
 import { of, SubscriptionLike } from 'rxjs';
 import { delay, throttleTime } from 'rxjs/operators';
 
+import type { SearchFilter } from '@components/search/search.component';
 import { environment } from '@environments/environment';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
@@ -38,7 +39,7 @@ interface Params {
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
     CONFIG: IConfig;
-    filterModel;
+    filterModel: SearchFilter = { query: '', selects: [] };
     params: any = {};
     numFilters: number;
     metricId;
@@ -90,11 +91,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-
-        this.filterModel = {
-            selects: [],
-            query: ''
-        };
     }
 
     private sortAlertsFunc() {
@@ -245,7 +241,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.healthLayoutService.resetActiveEntity();
     }
 
-    modelChanged(model) {
+    modelChanged(model: SearchFilter) {
         if (!isEqual(this.filterModel, model)) { // avoid unnecessary trips
             this.healthService.tableReady = false;
             this.filterModel = cloneDeep(model);
@@ -352,7 +348,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
                 singleSelect = singleSelect ||
-                (select.selected.value > 0) ||
                 (select.selected.value !== '0'); // 0 is default choice
             });
         }

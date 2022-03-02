@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import type { SearchFilter } from '@components/search/search.component';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -177,7 +178,7 @@ export class NxHealthService {
         };
     }
 
-    itemsSearch(values, filter) {
+    itemsSearch(values, filter: SearchFilter) {
         let items: any = {};
 
         function filterItem(c, queryTerms) {
@@ -212,7 +213,7 @@ export class NxHealthService {
         return items;
     }
 
-    alertsSearch(values, filter) {
+    alertsSearch(values, filter: SearchFilter) {
         let alarms;
         let types;
         let servers;
