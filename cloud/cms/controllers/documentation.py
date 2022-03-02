@@ -80,7 +80,7 @@ class SearchableCache(BaseCache):
             current_value = self.current_settings.get(key, not value)
             if isinstance(value, list):
                 value = set(value)
-                current_value = set(value)
+                current_value = set(current_value)
                 changes = value.symmetric_difference(current_value)
                 if changes:
                     return True
