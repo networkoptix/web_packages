@@ -4,8 +4,9 @@
 @import "~bootstrap/scss/mixins/breakpoints";
 
 .nodes-container {
-    background: $additional_light2;
+    background: transparent;
     overflow-y: auto;
+    
     @include media-breakpoint-down(sm) {
         overflow-y: hidden;
         max-height: none !important;

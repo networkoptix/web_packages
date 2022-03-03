@@ -48,7 +48,7 @@ svg {
 }
 
 .error-label {
-    @include typography.regular13dark9;
+    @include typography.regular13nocolor;
     color : $error !important;
 }
 
@@ -121,7 +121,7 @@ h1 .badge {
 }
 
 .disabled {
-    color  : $light10 !important;
+    color  : var(--elements-disabled) !important;
     cursor : default !important;
 }
 

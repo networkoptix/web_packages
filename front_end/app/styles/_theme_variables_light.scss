@@ -32,6 +32,8 @@
     --h6 : #{$dark9};
     --h7 : #{$dark9};
     
+    --elements-disabled : #{$light10};
+    
     --svg-path-light-color: #{$light4};
     --svg-path-dark-color: #{$dark9};
     
@@ -184,12 +186,12 @@
     --btn-tag-selected-active-bg         : #{$light18};
     --btn-tag-selected-color             : #{$light1};
     
-    --btn-arrow-bg             : #3A4D57; //TBD;
-    --btn-arrow-color          : #F5F7F8; //TBD;
-    --btn-arrow-hover-bg       : #303F47; //TBD;
-    --btn-arrow-hover-color    : #F5F7F8; //TBD;
-    --btn-arrow-selected-bg    : #2B383F; //TBD;
-    --btn-arrow-selected-color : #D7DFE3; //TBD;
+    --btn-arrow-bg             : #{$light4};
+    --btn-arrow-color          : #{$light16};
+    --btn-arrow-hover-bg       : #{$light5};
+    --btn-arrow-hover-color    : #{$light16};
+    --btn-arrow-selected-bg    : #{$light6};
+    --btn-arrow-selected-color : #{$light16};
     
     --btn-default-bg           : #{$light4};
     --btn-default-color        : #{$dark9};
@@ -243,6 +245,8 @@
     --dropdown-item-active-bg : #{$light4};
     --dropdown-item-hover-bg    : #{$light3};
     --dropdown-item-hover-color : #{$dark9};
+    --dropdown-item-selected-bg : #{$light16};
+    --dropdown-item-selected-color : #{$light1};
     
     // part of drop-menu
     --system-tile-icon-offline-color : #{$red_l2};
@@ -257,6 +261,19 @@
     --system-tile-nav-link-active-bg : #{$light5};
     --system-tile-nav-link-active-border-color : #{$light6};
     // *****************
+    
+    --swagger-get-bg    : #{$blue9};
+    --swagger-put-bg    : #{$orange_l1};
+    --swagger-delete-bg : #{$red_l1};
+    --swagger-patch-bg  : #{$cyan400};
+    --swagger-post-bg   : #{$green_l1};
+    --swagger-btn-execute-bg : #{$blue1};
+    --swagger-btn-execute-color : #{$light1};
+    --swagger-btn-value-text-color : #{$dark9};
+    --swagger-btn-key-text-color : #{$purple500};
+    --swagger-btn-value-number-color : #{$green_main};
+    --swagger-textarea-color : #{$light12};
+    --swagger-required-color : rgba(var(--red_main--rgb), .6);
     
     --tabset-bg : #{$light1};
     --tabset-hover-bg : #{$light3};

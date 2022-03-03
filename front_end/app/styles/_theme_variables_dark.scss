@@ -32,6 +32,8 @@ html[data-theme="dark"] {
     --h6 : #F5F7F8; //$light2;
     --h7 : #F5F7F8; //$light2;
     
+    --elements-disabled : #3A4D57; //$dark12;
+    
     --svg-path-light-color : #698796; //$light16;
     --svg-path-dark-color  : #E1E7EA; //$light4;
     
@@ -183,10 +185,10 @@ html[data-theme="dark"] {
     --btn-tag-selected-active-bg : #263137; //$dark8
     --btn-tag-selected-color     : #E1E7EA; //$light4;
     
-    --btn-arrow-bg : #3A4D57; //$dark12;
-    --btn-arrow-color : #F5F7F8; //$light2;
-    --btn-arrow-hover-bg    : #303F47; //$dark10;
-    --btn-arrow-hover-color : #F5F7F8; //$light2;
+    --btn-arrow-bg             : #3A4D57; //$dark12;
+    --btn-arrow-color          : #F5F7F8; //$light2;
+    --btn-arrow-hover-bg       : #303F47; //$dark10;
+    --btn-arrow-hover-color    : #F5F7F8; //$light2;
     --btn-arrow-selected-bg    : #2B383F; //$dark9;
     --btn-arrow-selected-color : #D7DFE3; //$light5;
     
@@ -240,8 +242,10 @@ html[data-theme="dark"] {
     --drop-menu-systems-bg    : #212A2F; //$dark7;
     --drop-menu-navigation-bg : #263137; //$dark8
     --dropdown-item-active-bg : #B9C7CE; //$light8;
-    --dropdown-item-hover-bg : #A5B7C0; //$light10;
-    --dropdown-item-hover-color : #080707; //$dark2;
+    --dropdown-item-hover-bg : #35464F; //dark11;
+    --dropdown-item-hover-color : #E1E7EA; //$light4;
+    --dropdown-item-selected-bg    : #35464F; //dark11;
+    --dropdown-item-selected-color : #E1E7EA; //$light4;
     
     // part of drop-menu
     --system-tile-icon-offline-color : #AA1E1E; //$red_d1
@@ -256,6 +260,19 @@ html[data-theme="dark"] {
     --system-tile-nav-link-active-bg           : #35464F; //$dark11;
     --system-tile-nav-link-active-border-color : #35464F; //$dark11;
     // *****************
+    
+    --swagger-get-bg    : #{$blue12};
+    --swagger-put-bg    : #{$orange_d1};
+    --swagger-delete-bg : #{$red_d1};
+    --swagger-patch-bg  : #{$cyan600};
+    --swagger-post-bg   : #{$green_d1};
+    --swagger-btn-execute-bg    : #{$blue13};
+    --swagger-btn-execute-color : #{$light4};
+    --swagger-btn-value-text-color   : #{$light10};
+    --swagger-btn-key-text-color     : #{$purple400};
+    --swagger-btn-value-number-color : #{$green_d2};
+    --swagger-textarea-color : #{$light10};
+    --swagger-required-color : #{$red_main};
     
     --tabset-bg : #0D0E0F; //$dark3;
     --tabset-hover-bg : #1C2327; //$dark6;

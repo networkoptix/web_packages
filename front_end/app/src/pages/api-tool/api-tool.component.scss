@@ -6,20 +6,21 @@
 
 .page-wrapper {
     min-height: 100%;
-    background: #fff !important;
+    background: var(--alt-body-bg) !important;
+    
     @include media-breakpoint-down(sm) {
-        background: $additional_light2 !important;
+        background: var(--body-bg) !important;
         overflow-x: hidden;
 	}
 }
 
 .fixed-sidebar {
     overflow-x: hidden;
-    overflow-y: overlay !important;
+    overflow-y: auto !important;
 	margin        : 0 !important;
 	padding-left  : 0 !important;
 	padding-right : 0 !important;
-    background: $additional_light2;
+    background: var(--developer-menu-bg);
     height: 100% !important;
 
 	@include media-breakpoint-down(sm) {
@@ -44,7 +45,7 @@
 	nx-developers-menu {
         position: sticky;
         word-break: break-word;
-        background: $additional_light2;
+        background: var(--developer-menu-bg);
         margin: 1rem -1rem 1rem -1rem;
         grid-column: span 12;
         grid-row: 1 / -1;
@@ -61,14 +62,14 @@
         }
 
         @include media-breakpoint-down(sm){
-            margin: 0px 16px;
+            margin: 0 16px;
         }
 
         div.left-menu-arrow > svg-icon > svg {
             width: 16px !important;
             height: 16px !important;
             > g > polyline  {
-                stroke: $dark10;
+                stroke: $light16;
             }
         }
 
@@ -86,13 +87,11 @@
 .swagger-container {
     margin-top: 22px;
     padding-left: 4px !important;
+    background : var(--alt-body-bg) !important;
 }
 
 @include media-breakpoint-down(sm) {
-    .swagger-container {
-        background: $light1 !important;
-    }
     .block-container {
-        padding: 0px 0px !important;
+        padding: 0 0 !important;
     }
 }

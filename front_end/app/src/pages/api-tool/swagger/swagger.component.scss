@@ -7,7 +7,7 @@
 
 :host{
 	@include media-breakpoint-down(sm){
-		margin: 0px 16px;
+		margin: 0 16px;
 	}
 }
 
@@ -141,7 +141,7 @@
 .swagger-ui {
 	/*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 	font-family : $font-family-regular;
-	color       : $dark9;
+	color       : var(--body-text-color);
 }
 
 .swagger-ui .filter-container {
@@ -171,10 +171,10 @@
 	height           : 32px;
 	font-size        : rem(13px);
 	line-height      : 1.428571429;
-	color            : $dark9;
-	background-color : $light1;
+	color            : var(--input-color) !important;
+	background-color : var(--input-bg) !important;
 	background-image : none;
-	border           : 1px solid $light6;
+	border           : 1px solid var(--input-border-color) !important;
 	border-radius    : 2px;
 	transition       : none;
 	box-shadow       : none;
@@ -183,7 +183,8 @@
 		color: #fff;
 	}
 	&:disabled{
-		background-color: $light2;
+		background-color: var(--elements-disabled);
+		
 		&::placeholder {
 			color: $light2;
 		}
@@ -203,7 +204,7 @@
 	font-size: rem(13px);
 	line-height: 1.23;
 	span {
-		color: $dark9 !important;
+		color: var(--body-text-color) !important;
 	}
 }
 
@@ -219,9 +220,9 @@
 	margin           : 0 0 15px;
 	max-width        : 890px;
 	box-shadow       : none;
-	background-color : $light1 !important;
+	background-color : var(--card-body-bg) !important;
 	background-clip  : border-box;
-	border           : 1px solid $light3 !important;
+	border           : 1px solid var(--border-color) !important;
 	border-radius    : 2px;
 }
 
@@ -238,36 +239,44 @@
 .swagger-ui .media-type-wrapper {
 	position: absolute;
 	padding: 1px 4px;
-	right: 0px;
+	right: 0;
 	margin-top: 10px;
 	border-radius: 2px;
 	letter-spacing: normal;
 	display: inline-block;
 	line-height: 1.23;
-	border: solid 1px $additional_light8;
-	background: $additional_light7;
+	border: solid 1px var(--alt-body-bg);
+	background: var(--alt-body-bg);
+	
 	.media-type {
 		background: none;
 		font-size: rem(13px);
 		line-height: 16px;
 		font-family: robotomonoregular, monospace !important;
-		color: $additional_dark1 !important
+		color: var(--body-text-color) !important
 	}
 }
 
 .swagger-ui .opblock-body .opblock-section-header {
 	box-shadow: none;
 	padding: 8px 16px;
+	
 	&:first-of-type {
-		padding: 0px 16px;
+		padding: 0 16px;
 	}
 }
 
 .swagger-ui .opblock .opblock-section-header {
+	color            : var(--body-text-color);
+	background-color : var(--card-header-bg);
+	
 	h4 {
-		@include typography.medium20dark9;
+		@include typography.medium20nocolor;
+		color : var(--body-text-color);
 		flex   : initial;
 		margin : initial;
+		background-color: var(--card-header-bg);
+		
 		&.parameter__name {
 			margin-top: -7px;
 		}
@@ -312,8 +321,10 @@
 }
 
 .swagger-ui .opblock .opblock-summary-description {
-	@include typography.medium14dark9;
+	@include typography.medium14nocolor;
+	color : var(--body-text-color);
 	padding-right: 20px;
+	
 	@media screen and (max-width: 670px) {
 		max-width: calc(100% - 18rem);
 	}
@@ -324,7 +335,7 @@
 	align-items      : center;
 	padding          : 12px;
 	cursor           : pointer;
-	background-color : $additional_light1 !important;
+	background-color : var(--card-header-bg) !important;
 	position         : relative;
 
 	&::after {
@@ -353,7 +364,7 @@
 
 
 .swagger-ui .opblock.is-open .opblock-summary {
-	border-bottom : 1px solid $light3 !important;
+	border-bottom : 1px solid var(--border-color) !important;
 
 	&::after {
 		transform  : translateY(-50%) scaleY(-1);
@@ -400,41 +411,45 @@
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method, .swagger-description .opblock-method.POST {
-	background : $green_l1;
+	background : var(--swagger-post-bg);
 }
 
 .swagger-ui .opblock.opblock-patch .opblock-summary-method, .swagger-description .opblock-method.PATCH {
-	background : $cyan400;
+	background : var(--swagger-patch-bg);
 }
 
 .swagger-ui .opblock.opblock-delete .opblock-summary-method, .swagger-description .opblock-method.DELETE {
-	background : $red_l1;
+	background : var(--swagger-delete-bg);
 }
 
 .swagger-ui .opblock.opblock-put .opblock-summary-method, .swagger-description .opblock-method.PUT {
-	background : #FF7D20;
+	background : var(--swagger-put-bg);
 }
 
 .swagger-ui .opblock.opblock-get .opblock-summary-method, .swagger-description .opblock-method.GET {
-	background : $blue9;
+	background : var(--swagger-get-bg);
 }
 
 .swagger-ui .tab-header .opblock-title {
-	@include typography.medium18dark1;
+	@include typography.medium18nocolor;
+	color : var(--body-text-color);
 }
 
 .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
-	@include typography.regular13dark9;
+	@include typography.regular13nocolor;
+	color : var(--body-text-color);
 	margin  : 0;
-	padding : 0px 15px;
+	padding : 0 15px;
 }
 
 .swagger-ui .opblock-description-wrapper h4, .swagger-ui .opblock-external-docs-wrapper h4, .swagger-ui .opblock-title_normal h4 {
-	@include typography.regular13dark9;
+	@include typography.regular13nocolor;
+	color : var(--body-text-color);
 }
 
 .swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-external-docs-wrapper p, .swagger-ui .opblock-title_normal p {
-	@include typography.regular13dark9;
+	@include typography.regular13nocolor;
+	color : var(--body-text-color);
 	margin      : 0 !important;
 }
 
@@ -447,12 +462,15 @@
 }
 
 .swagger-ui .responses-inner {
-	padding: 0px 16px 8px 16px;
+	padding: 0 16px 8px 16px;
 	h4 {
-		@include typography.medium14dark9;
+		@include typography.regular13nocolor;
+		color : var(--body-text-color);
 		margin-top: 16px;
+		
 		&.example-response {
-			@include typography.medium20dark9;
+			@include typography.medium20nocolor;
+			color : var(--body-text-color);
 			margin-top: 32px;
 			margin-bottom: 20px;
 		}
@@ -474,7 +492,8 @@
 
 .swagger-ui .response-col_description {
 	width: auto;
-	border-left: 1px solid $light3 !important;
+	border-left: 1px solid var(--border-color) !important;
+	
 	h5 {
 		padding-bottom: 8px !important;
 		margin-top: 5px;
@@ -485,12 +504,14 @@
 }
 
 .swagger-ui .response-col_links {
-	@include typography.regular13dark9;
+	@include typography.regular13nocolor;
+	color : var(--body-text-color);
 }
 
 
 .swagger-ui .response-col_status .response-undocumented {
-    @include typography.regular13dark9;
+	@include typography.regular13nocolor;
+	color : var(--body-text-color);
 }
 
 .swagger-ui .info.highlight-code pre {
@@ -502,10 +523,10 @@
 
 .swagger-ui .opblock-body pre.microlight, .swagger-ui .info.highlight-code pre {
 	@extend .code-block-common;
-	background      : $light2 !important;
-	border	        : 1px solid $light4;
+	background      : var(--body-bg) !important;
+	border	        : 1px solid var(--border-color);
 	font-family     : robotomonoregular, monospace;
-	color           : $dark9;
+	color           : var(--body-text-color);
 	width           : 100%;
 	margin-top	    : 10px;
 	padding	        : .8em 0.5em .8em 1em !important;
@@ -514,16 +535,17 @@
 .swagger-ui .model-box {
 	width: auto !important;
 	overflow-x: auto;
-	background: $light2;
+	background: var(--body-bg);
 	font-size: 12px;
-	border: 1px solid $light4;
-	color: $additional_dark1 !important;
+	border: 1px solid var(--border-color);
+	color: var(--body-text-color) !important;
+	
 	.model {
 		table-layout: fixed !important;
 		font-family: robotomonoregular, monospace;
 		font-weight: 400;
 		.property-row td:nth-child(1) {
-			color:$additional_dark1 !important;
+			color: var(--body-text-color) !important;
 			font-family: robotomonomedium, robotomonoregular, monospace;
 			font-weight: 500 !important;
 		}
@@ -540,20 +562,20 @@
 				display: inline-block;
 				min-width: 50px;
 				&.pointer, &.model-toggle {
-					min-width: 0px;
+					min-width: 0;
 				}
 			}
 			span.pointer + span {
-				min-width: 0px;
+				min-width: 0;
 				> span {
-					min-width: 0px;
+					min-width: 0;
 				}
 			}
 			word-wrap: break-word !important;
 			.renderedMarkdown {
 				display: inline-block;
 				p {
-					margin-bottom: 0px;
+					margin-bottom: 0;
 					font-family: robotomonoregular, monospace;
 				}
 			}
@@ -566,7 +588,7 @@
 		}
 	}
 	.prop-type, .property.primitive, .prop-format, .model {
-		color: $additional_dark1 !important;
+		color: var(--body-text-color) !important;
 		font-size: 12px;
 		font-style: normal;
 		margin-right: 12px;
@@ -635,7 +657,7 @@
 	display: none;
 }
 .swagger-ui div.is-disabled .btn.btn-dropdown-toggle {
-	background-color: $light2 !important;
+	background-color: var(--body-bg) !important;
 	svg-icon {
 		display: none;
 	}
@@ -651,16 +673,17 @@
 }
 
 .swagger-ui .btn-group {
-	padding: 0px;
+	padding: 0;
 	display: block;
 }
 
 .swagger-ui .btn {
 	background    : initial;
 	@include button;
-	@include typography.medium14dark9;
-	background-color : $light4 !important;
-	box-shadow       : inset 0 -1px 0 0 $light7 !important;
+	@include typography.medium14nocolor;
+	color : var(--btn-default-color);
+	background-color : var(--btn-default-bg) !important;
+	box-shadow       : inset 0 -1px 0 0 var(--btn-default-shadow) !important;
 	min-width: 89px;
 
 	&.btn-dropdown-toggle {
@@ -668,25 +691,26 @@
 	}
 
 	&:hover:not([disabled]):not(.disabled) {
-		background-color : $light6 !important;
-		box-shadow       : inset 0 -1px 0 0 $light8;
+		background-color : var(--btn-default-hover-bg) !important;
+		box-shadow       : inset 0 -1px 0 0 var(--btn-default-hover-shadow);
 	}
 
 	&:active,
 	&.active {
-		background-color : $light6 !important;
-		box-shadow       : inset 0 1px 0 0 $light8 !important;
+		background-color : var(--btn-default-active-bg) !important;
+		box-shadow       : inset 0 1px 0 0 var(--btn-default-active-shadow) !important;
 	}
 
 	&.execute {
 		margin: 12px 0 11px 16px;
 		width: 215px;
-		background-color: $blue1 !important;
-		color           : $light1 !important;
+		background-color: var(--swagger-btn-execute-bg) !important;
+		color           : var(--swagger-btn-execute-color) !important;
 	}
 
 	&.cancel {
-		@include typography.medium14dark9;
+		@include typography.medium14nocolor;
+		color : var(--btn-default-color);
 	}
 
 	&.btn-clear {
@@ -703,8 +727,7 @@
 }
 
 .swagger-ui select {
-	color              : $dark9 !important;
-	box-shadow         : inset 0 -1px 0 0 $light7;
+	color              : var(--body-text-color) !important;
 	font-family        : $font-family-medium;
 	border             : none !important;
 	border-radius      : 2px;
@@ -733,7 +756,7 @@
 	border-collapse : collapse;
 	&:not(.model) {
 		width           : 100%;
-		border          : 1px solid $light3;
+		border          : 1px solid var(--border-color);
 	}
 }
 
@@ -742,7 +765,8 @@
 }
 
 .swagger-ui table thead tr td, .swagger-ui table thead tr th {
-	@include typography.medium14dark10;
+	@include typography.medium14nocolor;
+	color : var(--body-text-color);
 	padding       : 4px 16px;
 	text-align    : left;
 	font-weight	  : 500;
@@ -755,13 +779,16 @@
 }
 
 .swagger-ui table:not(.model) tbody tr td {
-	@include typography.regular14dark9;
+	@include typography.regular14nocolor;
+	color : var(--body-text-color);
 	padding        : 8px 16px !important;
 	vertical-align : top;
-	border         : 1px solid $light3;
+	border         : 1px solid var(--border-color);
+	
 	&.response-col_status{
 		text-transform: uppercase;
-		@include typography.medium13dark10;
+		@include typography.medium13nocolor;
+		color : var(--body-text-color);
 	}
 }
 
@@ -816,31 +843,32 @@
 		tbody tr td:first-of-type {
 			width: 25%;
 			min-width: 25%;
-			@include typography.medium14dark10;
+			@include typography.medium14nocolor;
+			color : var(--body-text-color);
 		}
 	}
 }
 
 .swagger-container  .bracket, .value-text {
-	color: $dark9;
+	color: var(--swagger-btn-value-text-color);
 }
 .swagger-container span.key-text {
-   color: $purple500;
+   color: var(--swagger-btn-key-text-color);
 }
 .swagger-container  span.value-number {
-   color: $green_main;
+   color: var(--swagger-btn-value-number-color);
 }
 
 .swagger-ui .opblock-body table.parameters {
 	thead{
 		display: table-header-group !important;
-		background-color: $additional_light1;
+		background-color: var(--card-header-bg);
 		tr th:first-of-type {
-			border-right: 1px solid $light3;
+			border-right: 1px solid var(--border-color);
 		}
 	}
 	tbody tr:nth-child(even) {
-		background-color: $additional_light1;
+		background-color: var(--card-header-bg);
 	}
 }
 .swagger-ui .opblock-body table:not(.parameters, .live-responses-table):not(.model) td {
@@ -850,7 +878,8 @@
 
 .swagger-ui .parameter__name {
 	margin-right : initial;
-	@include typography.bold16dark9;
+	@include typography.bold16nocolor;
+	color : var(--body-text-color);
 }
 
 .swagger-ui .opblock-section.opblock-section-request-body {
@@ -868,20 +897,20 @@
 
 .swagger-ui .parameter__name.required:after {
 	content   : "";
-	color     : rgba(255, 0, 0, .6)
+	color     : var(--swagger-required-color);
 }
 
 .swagger-ui .parameter__name.required span {
 	content   : "";
-	color     : rgba(255, 0, 0, .6)
+	color     : var(--swagger-required-color);
 }
 
 .swagger-ui .table-container {
-	padding : 0px 16px 8px 16px;
+	padding : 0 16px 8px 16px;
 }
 
 .swagger-ui table.model tr.description {
-	color: $additional_dark1;
+	color: var(--body-text-color);
 }
 
 .swagger-ui .responses-table {
@@ -910,7 +939,7 @@
 .swagger-ui .markdown code {
 	@extend .code-block-common;
 	padding       : 1px 6px;
-	border		  : 1px solid $light4;
+	border		  : 1px solid var(--border-color);
 	font-family   : robotomonoregular, monospace !important;
 }
 
@@ -924,9 +953,9 @@
 	@extend .code-block-common;
 	padding: 2px;
 	display: inline-block;
-	color: $additional_dark1;
-	border: solid 1px $additional_light8;
-	background: $additional_light7;
+	color: var(--card-header-text);
+	border: solid 1px var(--border-color);
+	background: var(--card-header-bg);
 }
 
 pre, .text-area {
@@ -934,11 +963,13 @@ pre, .text-area {
 	margin: 10px 0 8px 0;
 	padding: .8em 0.5em 1em 1em !important;
 	counter-reset: line;
-	color         : $dark9 !important;
+	color         : var(--body-text-color) !important;
+	
 	& > div {
 		position: relative;
 		padding-left: 22px;
 		margin-bottom: -14px;
+		
 		&:before {
 			line-height: 18px;
 			text-align: right;
@@ -949,14 +980,14 @@ pre, .text-area {
 			position: absolute;
 			left: 0;
 			top: 0;
-			color: $light12;
+			color: var(--swagger-textarea-color);
 			font-weight: 400 !important;
 		}
 	}
 }
 .text-area {
-	background-color: $light1;
-	border: 1px solid $light4;
+	background-color: var(--alt-body-bg);
+	border: 1px solid var(--border-color);
 	& > div {
 		padding-left: 20px !important;
 		margin-bottom: auto;

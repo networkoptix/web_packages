@@ -206,21 +206,21 @@ header {
                 }
 
                 &.selected {
-                    background-color : $light16 !important;
-                    color            : $light1 !important;
+                    background-color : var(--dropdown-item-selected-bg) !important;
+                    color            : var(--dropdown-item-selected-color) !important;
 
                     .text-muted {
-                        background-color : $light16 !important;
-                        color            : $light1 !important;
+                        background-color : var(--dropdown-item-selected-bg) !important;
+                        color            : var(--dropdown-item-selected-color) !important;
                     }
 
                     &:hover {
-                        color : $light1 !important;
+                        color : var(--dropdown-item-selected-color) !important;
                     }
                 }
 
                 &:focus {
-                    background-color : $light4;
+                    background-color : var(--dropdown-item-active-bg);
                 }
 
                 & > span:first-child {
@@ -303,16 +303,20 @@ header {
     }
 
     &-api-tool {
-        background-color: $light4;
+        //background-color: $light4;
+        
         .btn.btn-dropdown-toggle {
             font-size: rem(14px) !important;
         }
+        
         .dropdown-menu {
-            background-color: $light4;
+            //background-color: $light4;
+            
             .dropdown-item-container .dropdown-item {
                 font-size: rem(14px) !important;
+                
                 &:hover:not(.selected) {
-                    background-color : $light5 !important;
+                    //background-color : $light5 !important;
                 }
                 &.selected {
                     .item-icon .storage-cloud,.api-icon {
