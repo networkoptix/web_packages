@@ -8,16 +8,12 @@ Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        integrations    Threaded 
 
-*** Variables ***
-${url}        ${ENV}/integrations
-${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
-@{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 *** Test Cases ***
 1. Integration Store title and URL are correct
     [Tags]    C54622
     Go To Integrations Page
-    Wait Until Location Is    ${url}
+    Wait Until Location Is    ${url integrations}
     Title Should Be    ${title}
     Validate Integrations Landing Page
 
@@ -78,15 +74,15 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     ${number of tiles}=   Get Number of Integration Tiles
     Should be equal as numbers    ${initial number of tiles}   ${number of tiles}
     ${actual url}=   Get Location
-    Should be equal as strings    ${actual url}    ${url}
+    Should be equal as strings    ${actual url}    ${url integrations}
 
     Input Text     ${INTEGRATIONS SEARCH INPUT}    vis
-    Wait Until Location is    ${url}?search=vis
+    Wait Until Location is    ${url integrations}?search=vis
     Each Integration Tile Contains    vis    Vis
 
     Log    Step 3
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]
-    Wait Until Location Is    ${url}?search=vis&tags=objectDetection
+    Wait Until Location Is    ${url integrations}?search=vis&tags=objectDetection
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
     Each Integration Tile Contains    Object Detection    ${EMPTY}
     ${current}=   Number of Integrations Should be Lower    ${number of tiles}
@@ -94,7 +90,7 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 
     Log    Step 4
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]
-    Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?search=vis&tags=automation,objectDetection
     Wait Until Element is Visible    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
     ${current}=   Number of Integrations Should be Higher    ${current}
     Each Integration Tile Contains    vis    Vis
@@ -104,7 +100,7 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     Log    Step 5
     Click Element     ${INTEGRATIONS SEARCH CLOSE BUTTON}
     Textfield Should Contain    ${INTEGRATIONS SEARCH INPUT}    ${EMPTY}
-    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?tags=automation,objectDetection
     Each Integration Tile Contains    Object Detection    ${EMPTY}
     Each Integration Tile Contains    Automation    ${EMPTY}
     ${current}=   Number of Integrations Should be Higher    ${current}
@@ -113,25 +109,25 @@ ${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[3]//span[contains(@class, "tag-close-icon")]
     ${loc}    Get Location
     log    ${loc}
-    Wait Until Location Is    ${url}?tags=automation
+    Wait Until Location Is    ${url integrations}?tags=automation
     Each Integration Tile Contains    Automation    ${EMPTY}
     ${current}=   Number of Integrations Should be Lower    ${current}
 
     Log    Step 7
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[1]//span[contains(@class, "tag-close-icon")]
-    Wait Until Location Is    ${url}
+    Wait Until Location Is    ${url integrations}
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=automation
+    Wait Until Location Is    ${url integrations}?tags=automation
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Back
-    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go Back
-    Wait Until Location Is    ${url}?search=vis&tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?search=vis&tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Lower    ${current}
     Go Forward
-    Wait Until Location Is    ${url}?tags=automation,objectDetection
+    Wait Until Location Is    ${url integrations}?tags=automation,objectDetection
     ${current}=   Number of Integrations Should be Higher    ${current}
     Go To Integrations Page
 

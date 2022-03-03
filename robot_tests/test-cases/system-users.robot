@@ -7,21 +7,6 @@ Test Teardown     Users Test Tear Down
 Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-@{TMP USERS}
-@{server auth}    admin    qweasd 123
-${mode}    cloud
-
-*** Keywords ***
-
-Reset
-    Close All Browsers
-    Run Keyword If    '''${mode}'''=='''cloud'''    Open Browser and go to URL    ${url}
-    ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
-
-
 *** Test Cases ***
 1. Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884    cloud

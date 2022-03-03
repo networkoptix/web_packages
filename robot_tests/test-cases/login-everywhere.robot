@@ -1,24 +1,10 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
+Test Setup        login-everywhere-resource.Restart
+Test Teardown     Run Keyword If Test Failed    login-everywhere-resource.Open New Browser On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
-
-*** Variables ***
-${email}    ${EMAIL OWNER}
-${email invalid}    aodehurgjaegir
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Open New Browser On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-Restart
-    Common Restart Logout    ${url}
 
 *** Test Cases ***
 1. works at registration page before submit

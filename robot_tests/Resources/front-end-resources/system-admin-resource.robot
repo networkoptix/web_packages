@@ -1,9 +1,4 @@
-*** Settings ***
-Library    String
-Resource    ../../resource.robot
-Library    Collections
 *** Keywords ***
-
 # Setups and teardowns
 System Admin Suite Setup
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
@@ -382,3 +377,24 @@ Reset Settings To Default
     ELSE
         Set System Settings    ${auth}    ${server url}    ${default settings}
     END
+System Offline Suite Setup
+    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
+    ${rand}=   Generate Random String
+    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
+    Set Suite Variable    ${system}
+    Stop Docker Server    ${system}[id]
+
+    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
+    Set Suite Variable    ${extra system}
+    Sleep    30
+    Open browser and go to URL    ${ENV}
+
+System Offline Suite Teardown
+    Delete Base System    ${system}
+    Delete Base System    ${extra system}
+    Close All Browsers
+
+System Offline Restart
+    Common Restart Logout    ${ENV}
+    Log in to user and system   ${system}[owner]    ${system}[cloud id]
+    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}

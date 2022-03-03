@@ -1,30 +1,10 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart
+Test Setup        register-resource.Restart
 Test Teardown     Open New Browser and Reset DB On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
-
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
-
-*** Keywords ***
-Restart
-    Common Restart Logout    ${url}
-
-Open New Browser and Reset DB On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-Clear Register Fields
-    Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
-    Clear Element Text    ${REGISTER PASSWORD INPUT}
-    Clear Element Text    ${REGISTER LAST NAME INPUT}
-    Clear Element Text    ${REGISTER FIRST NAME INPUT}
-    Clear Element Text    ${REGISTER EMAIL INPUT}
 
 *** Test Cases ***
 1. Should open register page in anonymous state by clicking Register button on top right corner

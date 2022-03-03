@@ -6,12 +6,6 @@ Test Teardown     NONE
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        form    Threaded
 
-*** Variables ***
-${url}                  ${ENV}
-${name}                 Nx Automated QA
-${message}              This is an automated test message.
-
-
 *** Test Cases ***                   Expect Success     Your Name       Email                  Message
 1. Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
     [tags]    C48969    Valid    IPVD
@@ -27,25 +21,3 @@ ${message}              This is an automated test message.
     [tags]    C48969    Invalid    IPVD
 7. Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
     [tags]    C48969    Invalid    IPVD
-
-
-*** Keywords ***
-Test Submit Request Message
-    [Arguments]    ${Expect Success}    ${Your Name}    ${Email}    ${Message}
-    Go To IPVD page
-    Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
-    Click Element    ${IPVD SUBMIT A REQUEST}
-    Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    Element Text Should Be    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK FOR CAMERAS PAGE}
-    Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
-    Run Keyword If    ${Expect Success}==True    On Success    ${Email}
-    ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent
-
-On Success
-    [Arguments]    ${email}
-    Validate Message Sent
-    # Commented out as we don't have access to the current email and it gets changed at random
-    #Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    #${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
-    #Delete Email    ${email}
-

@@ -13,5 +13,19 @@ Resource     front-end-resources/change-pass-form-validation-resource.robot
 Resource     front-end-resources/licenses-resource.robot
 Resource     front-end-resources/integrations-resource.robot
 Resource     front-end-resources/storage-resource.robot
+Resource     front-end-resources/view-page-resource.robot
+Resource     front-end-resources/customizations-resource.robot
+Resource     front-end-resources/downloads-resource.robot
+Resource     front-end-resources/footer-resource.robot
+Resource     front-end-resources/history-resource.robot
+Resource     front-end-resources/integrations-getintouch-form-validation-resource.robot
+Resource     front-end-resources/login-dialog-resource.robot
+Resource     front-end-resources/login-everywhere-resource.robot
+Resource     front-end-resources/login-form-validation-resource.robot
+Resource     front-end-resources/register-resource.robot
+Resource     front-end-resources/share-form-validation-resource.robot
+Resource     front-end-resources/system-settings-menu-resource.robot
 Resource     front-end-resources/2fa-resource.robot
-
+Resource     front-end-resources/account-resource.robot
+Resource     front-end-resources/activate-resource.robot
+Resource     front-end-resources/change-pass-resource.robot

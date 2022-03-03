@@ -1,20 +1,9 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Teardown     Restart
+Test Teardown     customizations-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded    Customizations
-
-*** Variables ***
-${email}             ${EMAIL OWNER}
-${password}          ${BASE PASSWORD}
-${url}               ${ENV}
-${503 URL}           ${url}/static/503.html
-
-*** Keywords ***
-Restart
-    Close All Browsers
-    Open Browser and go to URL    ${url}
 
 *** Test Cases ***
 1. Verify List of Available Languages

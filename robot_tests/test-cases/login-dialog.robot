@@ -1,30 +1,10 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Setup
-Test Setup        Restart
+Suite Setup       login-dialog-resource.Setup
+Test Setup        login-dialog-resource.Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
-
-*** Variables ***
-${email}    ${EMAIL OWNER}
-${email invalid}    aodehurgjaegir
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Open New Browser On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-Setup
-    Open Browser and go to URL    ${url}
-    ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Set Suite Variable    ${login user}    ${user}
-
-Restart
-    Go To    ${url}
-    Common Restart Logout    ${url}
 
 *** Test Cases ***
 1. Can be opened in anonymous state

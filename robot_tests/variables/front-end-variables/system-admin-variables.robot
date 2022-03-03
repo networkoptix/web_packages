@@ -7,6 +7,7 @@ ${GENERAL LINK}            //a[@id="general"]
 ${USERS LINK}              //a[@id="users"]
 ${SYSTEM SETTINGS FORM}    //form[@name="systemSettingsForm"]
 ${SECURITY FORM}           //form[@name="systemAndSecuritySettingsForm"]
+${password}    ${BASE PASSWORD}
 
 ${ENABLE AUTO DISCOVERY CHECKBOX}     //*[@id="autoDiscoveryEnabled"]
 ${SEND ANONYMOUS USAGE CHECKBOX}      //*[@id="statisticsAllowed"]

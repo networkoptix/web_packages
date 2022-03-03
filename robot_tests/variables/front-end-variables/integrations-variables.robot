@@ -1,4 +1,8 @@
 *** Variables ***
+${url integrations}        ${ENV}/integrations
+${title}      ${VMS_NAME} ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
+@{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+
 #Integration Landing Page
 ${INTEGRATIONS COMPONENT}             //nx-app//integrations-component/div[@class="intergations"]
 ${INTEGRATIONS SEARCH}                ${INTEGRATIONS COMPONENT}//nx-search[@name="filterModel"]/div[@class="nx-search"]

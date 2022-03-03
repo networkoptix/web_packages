@@ -6,51 +6,6 @@ Test Teardown     Advanced Server Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Server Advanced Settings Suite Teardown
 Force Tags        advanced server
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Server Advanced Settings Suite Setup
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
-    Set Suite Variable     ${random}    ${random}
-    ${owner}=    Register and activate account with random email    mark    hamil    ${password}
-    ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
-    Set Suite Variable    &{server}    &{server} 
-    Open Browser and go to URL    ${url}
-    
-    Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server}[owner]
-    ...    ELSE   Set Suite Variable     ${user in charge}    admin
-    Sleep    20
-
-Advanced Server Settings Test Setup
-    [Arguments]    ${server}=&{server}    ${user}=${user in charge}    ${verify}=${True}
-    Skip If Irrelevant
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
-    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
-
-Cloud Test Setup
-    [Arguments]    ${server}    ${user}    ${verify}
-    Log in to system    ${server}    ${user}    validate=${True}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Sleep    1
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page
-
-Web Admin Test Setup
-    [Arguments]    ${server}    ${user}    ${verify}
-    Log in to system    ${server}    ${user}    validate=${True}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Sleep    1
-    Click Link    ${SERVERS LINK}
-    Verify on Servers Page
-
-Advanced Server Test Teardown
-    Log out
-
-Server Advanced Settings Suite Teardown
-    Close All Browsers
-    Delete Base System    ${server}
 
 *** Test Cases ***
 1. Advanced server settings availability

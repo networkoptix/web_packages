@@ -398,3 +398,17 @@ Convert Disk String to List
         ${list} =   Create List     ${string}
     END
     [Return]    ${list}
+
+Restart
+    # ${status} =    Run Keyword And Return Status    Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON} 
+    Set Window Size    1920    1080
+    Common Restart Logout    ${url}
+    Reset to Default Storage Config
+
+Test Setup
+    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
+    ${disabled disks} =    Convert Disk String to List      ${disabled}
+    ${backup disks} =    Convert Disk String to List      ${backups}
+    Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
+    Log in to user and system    ${email}     ${system}
+    Go to Servers

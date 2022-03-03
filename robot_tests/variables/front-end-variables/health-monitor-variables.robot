@@ -1,4 +1,7 @@
 *** Variables ***
+${url}    ${ENV}
+${password}    ${BASE PASSWORD}
+
 ${HM INFORMATION TAB LINK}               //header/nav//a[text()="${INFORMATION TEXT}"]
 
 ${HM SYSTEM OFFLINE}                     //h2[contains(text(), "${SYSTEM OFFLINE TEXT}")]

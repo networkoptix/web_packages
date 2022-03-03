@@ -1,6 +1,10 @@
 *** Variables ***
 
-#2fa
+${email}                                    ${EMAIL OWNER}
+${password}                                 ${BASE PASSWORD}
+${url}                                      ${ENV}
+
+#2fa web elements
 ${2FA SWITCH}                               //nx-account-security-component//nx-switch//input[@id="2fa-active-status-switch"]//..
 ${2FA SWITCH ENABLED}                       //nx-account-security-component//input[(@id="2fa-active-status-switch") and (@class="selected")]//..
 ${2FA SWITCH DISABLED}                      //nx-account-security-component//input[(@id="2fa-active-status-switch") and (@class="")]//..

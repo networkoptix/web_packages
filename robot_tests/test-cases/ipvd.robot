@@ -3,7 +3,7 @@ Library           OperatingSystem
 Library           DateTime
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
-Test Setup        Restart
+Test Setup        ipvd-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded 
 

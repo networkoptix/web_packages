@@ -6,12 +6,6 @@ Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        form    Threaded
 
-*** Variables ***
-${url}    ${ENV}
-${existing email}       ${EMAIL VIEWER}
-${valid email}          noptixqa+valid@gmail.com
-
-
 *** Test Cases ***                              FIRST       LAST        EMAIL                     PASS                               CHECKED
 1. Invalid Email 1 noptixqagmail.com               mark        hamill      noptixqagmail.com         ${BASE PASSWORD}                   True
     [tags]    C41557
@@ -115,41 +109,3 @@ ${valid email}          noptixqa+valid@gmail.com
     [tags]    C41556
 48. Empty All                                       ${EMPTY}    ${EMPTY}    ${SPACE}                  ${EMPTY}                           False
     [tags]    C41556
-
-*** Keywords ***
-Test Register Invalid
-    [Arguments]    ${first}    ${last}    ${email}    ${pass}    ${checked}
-    Reload Page
-    # These two lines are because Hebrew has double quotes in its text.
-    # This makes for issues with strings in xpaths.  These lines convert to single quotes if the language is Hebrew
-    Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL INVALID}
-    ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
-    Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}
-    ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-    Wait Until Elements Are Visible
-    ...    ${REGISTER FIRST NAME INPUT}
-    ...    ${REGISTER LAST NAME INPUT}
-    ...    ${REGISTER EMAIL INPUT}
-    ...    ${REGISTER PASSWORD INPUT}
-    ...    ${CREATE ACCOUNT BUTTON}
-    Elements Should Not Be Visible    ${EMAIL INVALID}
-    ...    ${EMAIL ALREADY REGISTERED}
-    ...    ${EMAIL IS REQUIRED}
-    ...    ${PASSWORD BADGE}
-    ...    ${PASSWORD IS REQUIRED}
-    ...    ${PASSWORD SPECIAL CHARS}
-    ...    ${PASSWORD IS WEAK}
-    ...    ${FIRST NAME IS REQUIRED}
-    ...    ${LAST NAME IS REQUIRED}
-    ...    ${TERMS AND CONDITIONS ERROR}
-    Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
-    Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
-    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    createAccountPassword
-    Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
-    Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
-    Run Keyword Unless    "${last}"=="hamill"    Check Last Name Outline    ${last}
-    Run Keyword Unless    "${checked}"=="True"    Check Terms and Conditions Error
-
-Restart
-    Close Browser
-    Open Browser and go to URL    ${url}/authorize?client_type=create

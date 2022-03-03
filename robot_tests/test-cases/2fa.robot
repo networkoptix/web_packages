@@ -1,46 +1,12 @@
 *** Settings ***
 Resource          ../resource.robot
-Resource    ../Resources/front-end-resources/2fa-resource.robot
-Suite Setup       Setup
-Test Setup        Restart
+Suite Setup       2fa-resource.Setup
+Test Setup        2fa-resource.Restart
 Test Teardown     2fa Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    2fa Suite Teardown
 Force Tags        Threaded
 
-*** Variables ***
-${email}    ${EMAIL OWNER}
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
 
-*** Keywords ***
-Open New Browser On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
-
-Setup
-    Open Browser and go to URL    ${url}
-    ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Set Suite Variable    ${login user}    ${user}
-    ${rand}=   Generate Random String
-    ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${login user}    add users=${False}
-    Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
-    Set Suite Variable    ${system}    ${system}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE}
-    Set Suite Variable    ${system}
-    Set Suite Variable    ${local system}
-    Sleep    6
-
-Restart
-    Go To    ${url}
-    Common Restart Logout    ${url}
-
-2fa Suite Teardown
-    Close All Browsers
-    Delete Base System    ${system}
-
-2fa Test Teardown
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
-    Toggle 2fa Off Api    ${login user}    ${password}    verification_code=${totp}
 
 *** Test Cases ***
 1. Enable and perform login with 2fa

@@ -1,4 +1,13 @@
 *** Variables ***
+${url}    ${ENV}
+${password}     ${BASE PASSWORD}
+${existing email}       ${EMAIL VIEWER}
+${EMAIL IS REQUIRED}   //p[contains(@class,'error-label') and contains(text(),"${ENTER EMAIL TEXT}")]
+${EMAIL INVALID}       //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
+${EMAIL IS REQUIRED HEBREW}   //p[contains(@class,'error-label') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL INVALID HEBREW}       //p[contains(@class,'error-label') and contains(text(),"${EMAIL INVALID TEXT}")]
+${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-password-input[contains(@class,'ng-invalid')]//input
+
 ${RESET PASSWORD FORM}                //form[@name="resetForm" or @name="resetPasswordForm"]
 ${RESET PASSWORD OK BUTTON}           ${RESET PASSWORD FORM}//button[contains(@class,"btn btn-primary")]
 ${RESTORE PASSWORD EMAIL INPUT}       //nx-authorize-reset-request-component//input[@type="email" and @id="resetPasswordEmail"]
