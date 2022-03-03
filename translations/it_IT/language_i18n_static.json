@@ -753,8 +753,6 @@
         "Search": "Ricerca",
         "analytics": "Analitica",
         "analyticsSelected": "eventi di Analitica",
-        "filter applied": "filtro applicato",
-        "filters applied": "filtri applicati",
         "appliedFilters": "{count, plural, =0{# filtri} one{# filtro} other{# filtri}} applicato",
         "hardwareType": "Tipo",
         "hardwareTypes": "Tipi",

@@ -131,7 +131,7 @@
             "newPass": "définir un nouveau mot de passe",
             "login": "se connecter"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "E-mail envoyé !"
     },
     "cameraFilters": {
         "H265": "Caméras H.265",
@@ -753,8 +753,6 @@
         "Search": "Recherche",
         "analytics": "Analytiques",
         "analyticsSelected": "événements analytiques",
-        "filter applied": "filtre appliqué",
-        "filters applied": "filtres appliqués",
         "appliedFilters": "{count, plural, =0{# filtres} one{# filtre} other{# filtres}} appliqué",
         "hardwareType": "Type",
         "hardwareTypes": "Types",

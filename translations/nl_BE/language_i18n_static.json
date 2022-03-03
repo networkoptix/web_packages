@@ -131,7 +131,7 @@
             "newPass": "stel een nieuw wachtwoord in",
             "login": "inloggen"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "Email verzonden!"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",
@@ -428,8 +428,8 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
+            "serversDetach": "Ontkoppel server { title } van het huidige systeem?",
+            "serversReset": "Server { title } resetten naar standaardwaarden?",
             "serversRestart": "Server { title } herstarten"
         },
         "tooltips": {
@@ -753,8 +753,6 @@
         "Search": "Zoek",
         "analytics": "Analytics",
         "analyticsSelected": "analytics evenementen",
-        "filter applied": "filter toegepast",
-        "filters applied": "filters toegepast",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} toegepast",
         "hardwareType": "Type",
         "hardwareTypes": "Types",

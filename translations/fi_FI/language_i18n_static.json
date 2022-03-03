@@ -753,8 +753,6 @@
         "Search": "Etsi",
         "analytics": "Analytiikka",
         "analyticsSelected": "analytiikka-tapahtumat",
-        "filter applied": "suodatinta käytetty",
-        "filters applied": "suodattimia käytetty",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Tyyppi",
         "hardwareTypes": "Tyypit",

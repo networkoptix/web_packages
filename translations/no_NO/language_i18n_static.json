@@ -753,8 +753,6 @@
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",
-        "filter applied": "filtrert visning",
-        "filters applied": "filtrert visning",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Skriv",
         "hardwareTypes": "Typer",

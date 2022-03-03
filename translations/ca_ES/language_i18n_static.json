@@ -753,8 +753,6 @@
         "Search": "Cerca",
         "analytics": "Analítica",
         "analyticsSelected": "esdeveniments d'analítica",
-        "filter applied": "filtre aplicat",
-        "filters applied": "filtres aplicats",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Tipus",
         "hardwareTypes": "Tipus",

@@ -753,8 +753,6 @@
         "Search": "Keresés",
         "analytics": "Analitika",
         "analyticsSelected": "analitikai események",
-        "filter applied": "alkalmazott szűrő",
-        "filters applied": "alkalmazott szűrők",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Típus",
         "hardwareTypes": "Típusok",

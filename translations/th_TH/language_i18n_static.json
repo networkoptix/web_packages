@@ -753,8 +753,6 @@
         "Search": "ค้นหา",
         "analytics": "การวิเคราะห์",
         "analyticsSelected": "วิเคราะห์เหตุการณ์",
-        "filter applied": "ใช้ตัวกรอง",
-        "filters applied": "ใช้ตัวกรอง",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "ประเภท",
         "hardwareTypes": "ประเภท",

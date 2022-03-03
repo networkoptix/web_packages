@@ -753,8 +753,6 @@
         "Search": "Zoeken",
         "analytics": "Analytics",
         "analyticsSelected": "analytics events",
-        "filter applied": "filter toegepast",
-        "filters applied": "filters toegepast",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Type",
         "hardwareTypes": "Types",

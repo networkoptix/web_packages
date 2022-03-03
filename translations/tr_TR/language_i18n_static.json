@@ -753,8 +753,6 @@
         "Search": "Arama",
         "analytics": "Analiz",
         "analyticsSelected": "analiz Etkinliği",
-        "filter applied": "filtre uygulandı",
-        "filters applied": "filtreler uygulandı",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Tür",
         "hardwareTypes": "Türler",

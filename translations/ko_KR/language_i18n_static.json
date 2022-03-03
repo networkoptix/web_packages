@@ -753,8 +753,6 @@
         "Search": "검색",
         "analytics": "분석",
         "analyticsSelected": "분석 이벤트",
-        "filter applied": "필터 적용되었음",
-        "filters applied": "필터들이 적용되었음",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "형식",
         "hardwareTypes": "유형들",

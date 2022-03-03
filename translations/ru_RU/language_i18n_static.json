@@ -753,8 +753,6 @@
         "Search": "Поиск",
         "analytics": "Аналитика",
         "analyticsSelected": "события аналитики",
-        "filter applied": "фильтр применен",
-        "filters applied": "фильтры применены",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Тип",
         "hardwareTypes": "Типы",

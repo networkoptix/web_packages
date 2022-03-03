@@ -753,8 +753,6 @@
         "Search": "חיפוש",
         "analytics": "אנליטיקה",
         "analyticsSelected": "אירועי אנליטיקה",
-        "filter applied": "מסננים הופעלו",
-        "filters applied": "מסננים הופעלו",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "סוג",
         "hardwareTypes": "סוגים",

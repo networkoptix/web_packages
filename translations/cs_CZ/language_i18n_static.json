@@ -753,8 +753,6 @@
         "Search": "Hledat",
         "analytics": "Analýzy",
         "analyticsSelected": "analytické události",
-        "filter applied": "aplikovány filtry",
-        "filters applied": "aplikovány filtry",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Typ",
         "hardwareTypes": "Typy",

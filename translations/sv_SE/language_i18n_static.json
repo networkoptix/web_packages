@@ -131,7 +131,7 @@
             "newPass": "ange nytt lösenord",
             "login": "logga in"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "Epost skickad!"
     },
     "cameraFilters": {
         "H265": "H.265 kameror",
@@ -753,8 +753,6 @@
         "Search": "Sök",
         "analytics": "Analys",
         "analyticsSelected": "analyshändelse",
-        "filter applied": "filter används",
-        "filters applied": "filter används",
         "appliedFilters": "{count, plural, =0{# filter} one{# filter} other{# filter}} tillämpas",
         "hardwareType": "Typ",
         "hardwareTypes": "Typer",

@@ -753,8 +753,6 @@
         "Search": "Pesquisar",
         "analytics": "Analytics",
         "analyticsSelected": "evento de Analytics",
-        "filter applied": "filter applied",
-        "filters applied": "filters applied",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Tipo",
         "hardwareTypes": "Types",

@@ -131,7 +131,7 @@
             "newPass": "新しいパスワードを設定",
             "login": "ログイン"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "メールを送信しました！"
     },
     "cameraFilters": {
         "H265": "H.265カメラ",
@@ -753,8 +753,6 @@
         "Search": "検索",
         "analytics": "分析",
         "analyticsSelected": "分析イベント",
-        "filter applied": "フィルターが適用されました",
-        "filters applied": "フィルターが適用されました",
         "appliedFilters": "{count, plural, =0{# フィルター} one{# フィルター} other{# フィルター}} 適用中",
         "hardwareType": "タイプ",
         "hardwareTypes": "タイプ",

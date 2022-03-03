@@ -753,8 +753,6 @@
         "Search": "Tìm kiếm",
         "analytics": "Phân tích",
         "analyticsSelected": "sự kiện phân tích",
-        "filter applied": "áp dụng bộ lọc",
-        "filters applied": "bộ lọc được áp dụng",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Kiểu",
         "hardwareTypes": "Các loại",

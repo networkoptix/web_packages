@@ -753,8 +753,6 @@
         "Search": "搜索",
         "analytics": "分析",
         "analyticsSelected": "分析事件",
-        "filter applied": "已使用的筛选项",
-        "filters applied": "已使用的筛选项",
         "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "类型",
         "hardwareTypes": "类型",
