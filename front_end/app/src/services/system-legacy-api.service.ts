@@ -831,6 +831,12 @@ export class NxSystemAPI {
         );
     }
 
+    getModuleInfoUsingUrl(url: string) {
+        return this.http.get<t.NormalResponse<t.ModuleInformationReply>>(
+            `${url}/api/moduleInformation`
+        );
+    }
+
     detachFromSystem(currentPassword: string, serverId?: string) {
         return this.post<t.NormalResponse<any>>('/api/detachFromSystem', {
             currentPassword

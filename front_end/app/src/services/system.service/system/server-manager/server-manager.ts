@@ -127,6 +127,10 @@ export class ServerManager {
         }
     }
 
+    getModuleInfoUsingUrl(url: string) {
+        return this.mediaserver.getModuleInfoUsingUrl(url);
+    }
+
     changeServerPort(port: number, serverId: string) {
         return this.mediaserverConnections[serverId].changePort(port)
             .catch(err => Promise.reject(err));

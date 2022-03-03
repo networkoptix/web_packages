@@ -728,7 +728,15 @@ export class MergeModalContent {
         }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             if (!this.targetSystem.id) {
-                const secondarySystem = await this.system.getServerInfo(this.serverUrl).toPromise();
+                let secondarySystem: any;
+                if (this.system.useRest) {
+                    secondarySystem = await this.system.getServerInfo(this.serverUrl).toPromise();
+                } else {
+                    secondarySystem = (await this.system.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
+                    if (secondarySystem) {
+                        secondarySystem.isNew = secondarySystem.serverFlags.includes('SF_NewSystem');
+                    }
+                }
                 if (secondarySystem?.id) {
                     this.targetSystem = secondarySystem;
                     this.setSystems();

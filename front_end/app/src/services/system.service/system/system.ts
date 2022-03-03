@@ -1050,6 +1050,10 @@ export class NxSystem extends System {
         return this.serverManager.getModuleInfo(serverId);
     }
 
+    getModuleInfoUsingUrl(url: string) {
+        return this.serverManager.getModuleInfoUsingUrl(url);
+    }
+
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
