@@ -1,19 +1,4 @@
-*** Settings ***
-Library    SeleniumLibrary
-Resource    ../../resource.robot
-
-*** Variables ***
-${email}       ${EMAIL OWNER}
-${password}    ${BASE PASSWORD}
-@{auth}        ${email}    ${password}
-${url}         ${ENV}
-${camera name1}=    good cam 1
-${camera name2}=    unauth cam
-${camera name3}=    offline cam
-${camera name4}=    good cam 2
-
 *** Keywords ***
-
 View Page Suite Setup
     ${random}=   Generate Random String
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}

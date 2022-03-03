@@ -7,6 +7,7 @@ ${GENERAL LINK}            //a[@id="general"]
 ${USERS LINK}              //a[@id="users"]
 ${SYSTEM SETTINGS FORM}    //form[@name="systemSettingsForm"]
 ${SECURITY FORM}           //form[@name="systemAndSecuritySettingsForm"]
+${password}    ${BASE PASSWORD}
 
 ${ENABLE AUTO DISCOVERY CHECKBOX}     //*[@id="autoDiscoveryEnabled"]
 ${SEND ANONYMOUS USAGE CHECKBOX}      //*[@id="statisticsAllowed"]
@@ -28,6 +29,15 @@ ${ALLOW SYSTEM OPTIMIZE CHECKBOX}     //*[@id="cameraSettingsOptimization"]
 ...    trafficEncryptionForced=false
 ...    videoTrafficEncryptionForced=false
 ...    sessionLimitMinutes=0
+
+&{default settings5}
+...    autoDiscoveryEnabled=${true}
+...    statisticsAllowed=${true}
+...    cameraSettingsOptimization=${true}
+...    auditTrailEnabled=${true}
+...    trafficEncryptionForced=${false}
+...    videoTrafficEncryptionForced=${false}
+...    sessionLimitMinutes=${0}
 
 &{default advanced settings}
 ...    autoDiscoveryEnabled=true

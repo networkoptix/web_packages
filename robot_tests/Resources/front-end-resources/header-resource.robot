@@ -1,5 +1,3 @@
-*** Settings ***
-Library    SeleniumLibrary
 *** Keywords ***
 # Setups & Teardowns
 Header Suite Setup

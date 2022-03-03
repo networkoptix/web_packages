@@ -2,43 +2,10 @@
 Resource          ../resource.robot
 Suite Setup       Storage Suite Setup
 Test Setup        Test Setup    config storage=${False}
-Test Teardown     Restart
+Test Teardown     storage-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
-*** Variables ***
-${QA BURBANK IP}     10.1.5.239
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
-${storage string 2}    ${EMPTY}
-${camera}      D8-D4-3C-60-F0-D3
-${camera url}    http://192.168.0.27/
-${camera manufacturer}    Sony
-${camera user}    admin
-${camera password}    QAbur777$
-${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
-${disk location}    /media/nxwitness-storages/disk1
-${backup initialized}    ${FALSE}
-${change focus}    //h4[contains(text(),"Storage")]
-@{disk size}    80000    30000    30000    12000    12000
-${networkdisk}    //${QA BURBANK IP}/networkdisk
-${drives}    5
-
-*** Keywords ***
-Restart
-    # ${status} =    Run Keyword And Return Status    Element Should Not Be Visible    ${INACCESSIBLE STORAGE DELETE BUTTON} 
-    Set Window Size    1920    1080
-    Common Restart Logout    ${url}
-    Reset to Default Storage Config
-
-Test Setup
-    [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
-    ${disabled disks} =    Convert Disk String to List      ${disabled}
-    ${backup disks} =    Convert Disk String to List      ${backups}
-    Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
-    Log in to user and system    ${email}     ${system}
-    Go to Servers
 
 *** Test Cases ***
 1. Loading State of Storage Locations Block

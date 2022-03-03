@@ -1,9 +1,4 @@
-*** Settings ***
-Library    String
-Resource    ../../resource.robot
-Library    Collections
 *** Keywords ***
-
 # Setups and teardowns
 System Admin Suite Setup
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
@@ -40,7 +35,8 @@ System Admin Test Restart
         ...    AND    Sleep    10
 
     Set System Name    ${server url}    ${system}[local auth]    ${system}[name]
-    Set System Settings via API    ${system}[local auth]    ${server url}    videoTrafficEncryptionForced    false
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
+    Set System Settings    ${system}[local auth]    ${server url}    ${settings}
     Set System Settings    ${system}[local auth]    ${server url}    ${default advanced settings}
 # Waits
 Wait until settings are visible
@@ -119,8 +115,8 @@ Change Input for Advanced Setting
 Change Setting
     [Arguments]    ${locator}    ${buttons}=${True}
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected     ${locator}    ${True}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
+    ${selected}=   Set Variable If    ${status}==True    False
+    ...    ${status}==False    True
     Set Checkbox Value    ${locator}    ${selected}
     Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     [Return]    ${selected}
@@ -237,8 +233,8 @@ Settings on page should match settings on server
 Setting on page matches server
     [Arguments]    ${locator}    ${key}    ${server url}=${server url}
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${locator}    ${True}
-    ${string}=   Convert To String    ${status}
-    ${selected}=   Convert To Lowercase    ${string}
+    ${selected}=   Convert To String    ${status}
+    #${selected}=   Convert To Lowercase    ${string}
     Run Keyword And Continue On Failure    Evaluate System Settings via API     ${local auth}    ${server url}    ${key}    ${selected}
 
 Input on page matches server
@@ -339,7 +335,17 @@ Connect To Cloud
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    Dictionary should contain item    ${settings}[reply][settings]    ${key}    ${expected value}
+    IF    '${IMAGE}' == '5.0_test'
+        IF    '${expected value}' == 'true' or '${expected value}' == 'false'
+            ${expected value}=   Convert To Title Case    ${expected value}
+        END
+        Dictionary should contain item    ${settings}    ${key}    ${expected value}
+    ELSE
+        IF    '${expected value}' == 'True' or '${expected value}' == 'False'
+            ${expected value}=   Convert To Lower Case    ${expected value}
+        END
+        Dictionary should contain item    ${settings}[reply][settings]    ${key}    ${expected value}
+    END
 
 Evaluate Log Level via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${value}
@@ -352,7 +358,7 @@ Evaluate Log Level via API
 Checkbox Is Selected
     [Arguments]    ${locator}    ${state}
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
-    Should Be True    $selected == $state
+    Should Be True    ${selected} == ${state}
 
 Close Modal If There
     ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
@@ -363,3 +369,32 @@ Close Modal If There
 Show Advanced Settings
     ${location}=   Get Location
     Go To    ${location}${ADVANCED SETTINGS}
+
+Reset Settings To Default
+    [Arguments]    ${auth}    ${server url}
+    IF    "${IMAGE}" == "5.0_test"
+        Set System Settings    ${auth}    ${server url}    ${default settings5}
+    ELSE
+        Set System Settings    ${auth}    ${server url}    ${default settings}
+    END
+System Offline Suite Setup
+    ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
+    ${rand}=   Generate Random String
+    ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
+    Set Suite Variable    ${system}
+    Stop Docker Server    ${system}[id]
+
+    ${extra system}=   Create Base System    system_admin_offline_2_${rand}    image=${IMAGE}    owner=${owner}
+    Set Suite Variable    ${extra system}
+    Sleep    30
+    Open browser and go to URL    ${ENV}
+
+System Offline Suite Teardown
+    Delete Base System    ${system}
+    Delete Base System    ${extra system}
+    Close All Browsers
+
+System Offline Restart
+    Common Restart Logout    ${ENV}
+    Log in to user and system   ${system}[owner]    ${system}[cloud id]
+    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}

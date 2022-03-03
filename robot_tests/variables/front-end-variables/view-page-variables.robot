@@ -1,6 +1,15 @@
 *** Variables ***
 
-#view-page
+${email}                                      ${EMAIL OWNER}
+${password}                                   ${BASE PASSWORD}
+@{auth}                                       ${email}    ${password}
+${url}                                        ${ENV}
+${camera name1}=                              good cam 1
+${camera name2}=                              unauth cam
+${camera name3}=                              offline cam
+${camera name4}=                              good cam 2
+
+#view-page web elements
 ${SERVER LIST}                                //nx-system-view-index-page//div[@class="server-list"]
 ${SERVER LIST MENU}                           //nx-system-view-index-page//media-server-list
 ${SERVER LIST INFO OFF BTN}                   //nx-system-view-index-page//media-server-list//div[@class="details-toggler"]

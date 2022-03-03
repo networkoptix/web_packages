@@ -734,6 +734,7 @@ export interface PageTitles {
     view:                   any;
     apiTool:                any;
     security:               any;
+    twofaRequired:          any;
 }
 
 export interface PasswordRequirements {
@@ -1894,6 +1895,7 @@ const typeMap: any = {
         { json: "view", js: "view", typ: "any" },
         { json: "apiTool", js: "apiTool", typ: "any" },
         { json: "security", js: "security", typ: "any" },
+        { json: "twofaRequired", js: "twofaRequired", typ: "any" },
     ], false),
     "PasswordRequirements": o([
         { json: "common", js: "common", typ: "any" },

@@ -1,11 +1,11 @@
 *** Keywords ***
 Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
-    Run keyword If    ${is enabled}==${True}    Open Browser and go to URL    ${url}
+    Run keyword If    ${is enabled}==${True}    Open Browser and go to URL    ${url integrations}
     ...    ELSE    Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
 
 Go To Integrations Page
-    Go To    ${url}
+    Go To    ${url integrations}
     Validate Integrations Landing Page
 
 Validate Integrations Landing Page

@@ -6,8 +6,6 @@ Test Teardown     System Admin Test Restart
 Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    threaded
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
 
 *** Test Cases ***
 # WEBADMIN
@@ -57,7 +55,7 @@ ${password}    ${BASE PASSWORD}
     Validate Password Input Error    Password is required
 
     Log    Step 3 - empty login
-    Connect To Cloud    ${SPACE}    ${password}    success=False
+    Connect To Cloud    ${SPACE}    system-admin-variables.${password}    success=False
     Validate Email Input Error    Email is required
 
     Log    Step 4 - wrong password
@@ -66,13 +64,13 @@ ${password}    ${BASE PASSWORD}
 
     Log    Step 5 - not existing account
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Connect To Cloud    ${email}    ${password}    success=False
+    Connect To Cloud    ${email}    system-admin-variables.${password}    success=False
     Validate Email Input Error    Account not found
 
     Log    Step 6 - not activated account
     ${email}=   Get Random Email    ${BASE EMAIL}
     Register Account    Not    Activated    ${email}    ${password}
-    Connect To Cloud    ${email}    ${password}    success=False
+    Connect To Cloud    ${email}    system-admin-variables.${password}    success=False
     Wait until element is visible    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
     ${error text}=   Get Text    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
     Run Keyword and continue on failure    Should be equal as strings   ${error text}    Account isn't activated. Please log in to Nx Cloud and follow provided instructions.
@@ -98,7 +96,7 @@ ${password}    ${BASE PASSWORD}
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
     Click Button    ${CONNECT TO CLOUD BUTTON}
-    Connect To Cloud    ${system}[owner]    ${password}    success=True
+    Connect To Cloud    ${system}[owner]    system-admin-variables.${password}    success=True
     Validate Cloud Block    True
 
 7. Check UI for local not owner when connected to cloud

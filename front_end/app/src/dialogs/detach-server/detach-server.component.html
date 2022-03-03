@@ -14,7 +14,7 @@
                 <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
                     <p class="mb-0" translate>The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.</p>
                     <p [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }" translate>Cloud users will not be transferred to the new system.</p>
-                    <span *ngIf="system.mediaserver.requiresPassword" translate>Enter password for your account to continue</span><span>.</span>
+                    <span *ngIf="system.mediaserver.requiresPassword" translate>Enter password for your account to continue.</span>
                 </div>
                 <ng-container *ngIf="system.mediaserver.requiresPassword">
                     <input class="form-control"

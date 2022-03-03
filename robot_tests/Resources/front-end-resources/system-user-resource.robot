@@ -23,7 +23,7 @@ Users Suite Setup
     # ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
     # Set Suite Variable    ${system 2}    &{system 2}
 
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
+    Run Keyword If    '''${mode}'''=='''cloud'''    system-user-resource.Cloud Suite Setup
     ...    ELSE    Web Admin Suite Setup
 
 Web Admin Suite Setup
@@ -553,3 +553,8 @@ Check If User Is Enabled/Disabled
         Exit For Loop If    '${state}'=='${True}' or '${state}'=='${False}'
     END
     [Return]    ${state}
+
+Reset
+    Close All Browsers
+    Run Keyword If    '''${mode}'''=='''cloud'''    Open Browser and go to URL    ${url}
+    ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}

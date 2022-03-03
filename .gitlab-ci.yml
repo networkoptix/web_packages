@@ -52,6 +52,19 @@ stages:
       changes:
         - front_end/**/*
 
+.get_target_branch_script:
+  script:
+  - set -e
+  - if [[ "$CI_COMMIT_REF_PROTECTED" == "true" ]]; then
+  -   TARGET_BRANCH_NAME=${CI_COMMIT_REF_NAME}
+  - else
+  -   TARGET_BRANCH_NAME=$(get_target_protected_branch.py
+        --gitlab-server-url=${CI_SERVER_URL}
+        --gitlab-token=$(cat /vault/secrets/gitlab.jenkins.token)
+        --project-id=${CI_PROJECT_ID}
+        --merge-request-iid=${CI_MERGE_REQUEST_IID})
+  - fi
+
 no-changes:
   extends: .retries
   stage: check
@@ -232,9 +245,10 @@ frontend:
   stage: build
   image: nx/ci
   script:
+    - !reference [.get_target_branch_script, script]
     - runJenkinsJob.sh gitlab.cloud.frontend
       "PUSH_TO_ARTIFACTORY=true"
-      "BRANCH=$CI_COMMIT_REF_NAME"
+      "BRANCH=$TARGET_BRANCH_NAME"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
       "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"

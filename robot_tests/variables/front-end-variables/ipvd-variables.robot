@@ -1,4 +1,9 @@
 *** Variables ***
+
+${url}                  ${ENV}
+${name}                 Nx Automated QA
+${message}              This is an automated test message.
+
 #IPVD
 ${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
 ${IPVD LANDING PAGE TEXT}             //ipvd//p

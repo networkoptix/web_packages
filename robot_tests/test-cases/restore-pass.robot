@@ -2,22 +2,11 @@
 Resource          ../resource.robot
 
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
+Test Setup        Restart Restore Pass
+Test Teardown     Run Keyword If Test Failed    restore-pass-resource.Open New Browser On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags
 
-*** Variables ***
-${password}    ${BASE PASSWORD}
-${url}         ${ENV}
-
-*** Keywords ***
-Restart
-    Common Restart Logout    ${url}
-
-Open New Browser On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
     
 *** Test Cases ***
 1. Reset password email sent screen

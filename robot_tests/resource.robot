@@ -14,7 +14,7 @@ Library      SSHLibrary
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL}
-Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
+Library      NoptixLibrary/ServerAPI.py
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
@@ -837,7 +837,7 @@ Create Local Users via API
     &{liveViewer} =    Create Dictionary
     &{viewer} =    Create Dictionary
     FOR    ${user}    IN    @{locals}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    Local+${user}    Local User    ${password}    is cloud=${False}
         Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
         Set To Dictionary    ${local users}    ${user}=&{${user}}
     END
@@ -1003,7 +1003,7 @@ Create Docker Server
     [Return]    ${server}
 
 Create Base System
-    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}
+    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}    ${password}=${BASE PASSWORD}
     [Documentation]    Creates a docker server, and optionally connects to cloud, creates users, and adds storage.
     ...
     ...                Returned keys and value types:
@@ -1016,18 +1016,18 @@ Create Base System
     ...                name: ""
     ...                owner: ""
     ...                port: ""
-    ${local auth}=   Create List    admin    ${base password}
+    ${local auth}=   Create List    admin    ${password}
     ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
     Sleep    5
-    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}
+    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
     # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
     Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
-    ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${base password}
-    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${BASE PASSWORD}
+    ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${password}
+    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${password}
     # If add users is true add local users.  Add cloud users if both are true.
     @{local users}=    Get Dictionary Keys    ${role names}
-    ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${BASE PASSWORD}
+    ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${password}
     ${cloud users}=    Run Keyword If    $add_users and $owner   Register and Activate Generic Users
     Run Keyword If    $add_users and $owner    Add Cloud Users    ${cloud auth}    ${cloud users}    ${system id}
 
@@ -1054,18 +1054,18 @@ Delete Accounts
     END
 
 Delete Base System
-    [Arguments]     ${system}
+    [Arguments]     ${system}    ${password}=${BASE PASSWORD}
     [Documentation]    Wipe out all resources related to the system
-    Run Keyword If    $system['owner']    Disconnect    ${system}[owner]    ${base password}    ${system}[cloud id]
+    Run Keyword If    $system['owner']    Disconnect    ${system}[owner]    ${password}    ${system}[cloud id]
     Run Keyword If    $system['cloud users']    Delete Accounts    ${system['cloud users'].values()}
 
     Delete Docker Server    ${system}[id]
 
     # Delete user if he doesn't own any cloud systems
     Run Keyword If    not $system['owner']    Return From Keyword    True
-    ${systems}=    Get Account Systems    ${system}[owner]    ${base password}
+    ${systems}=    Get Account Systems    ${system}[owner]    ${password}
     ${num systems}=   Evaluate    len($systems)
-    Run Keyword If    ${num systems} == 0    Delete Account    ${system}[owner]    ${base password}
+    Run Keyword If    ${num systems} == 0    Delete Account    ${system}[owner]    ${password}
 
 
 Create Custom Network
@@ -1305,17 +1305,21 @@ Create system and attach to cloud
 Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
-    &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
-    Sleep    5
-    ${Setup Cloud System json}=    Save Cloud System Credentials
-    ...    ${auth}
-    ...    ${server ip}
-    ...    ${bind json["authKey"]}
-    #...    ${bind json["name"]}
-    ...    ${bind json["id"]}
-    ...    ${bind json["ownerAccountEmail"]}
-    Return From Keyword    ${bind json["id"]}
-    
+    IF    '5' in $IMAGE
+        ${system id}=   API Connect To Cloud    ${cloud auth}   ${server ip}    ${cloud host}    ${system name}
+        Return From Keyword    ${system id}
+    ELSE
+        &{bind json}=    Bind System    ${cloud auth}    ${cloud host}    ${system name}
+        Sleep    5
+        ${Setup Cloud System json}=    Save Cloud System Credentials
+        ...    ${auth}
+        ...    ${server ip}
+        ...    ${bind json["authKey"]}
+        #...    ${bind json["name"]}
+        ...    ${bind json["id"]}
+        ...    ${bind json["ownerAccountEmail"]}
+        Return From Keyword    ${bind json["id"]}
+    END
 
 Log Out via API
     [Arguments]    ${validate}=${True}

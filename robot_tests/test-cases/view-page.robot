@@ -1,6 +1,5 @@
 *** Settings ***
 Resource          ../resource.robot
-Resource    ../Resources/front-end-resources/view-page-resource.robot
 Suite Setup       View Page Suite Setup
 Test Setup        View Page Test Setup
 Test Teardown     restart and log out

@@ -10,6 +10,7 @@ import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
+import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
     {
         path: '',
         component: NxHealthComponent,
-        canActivate: [AuthGuard, SystemGuard],
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         children: [
             {
                 path: '',

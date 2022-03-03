@@ -475,9 +475,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_cloud_system_users(self, auth, systemId):
-        r = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}',
-                         auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-
+        r = requests.get(f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
         return r.json()['sharing']
 
     @keyword
@@ -520,8 +518,7 @@ class CloudPortalAPI(object):
         code = self.get_code_from_email(email, "activate_account")
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
-        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPDigestAuth(email, password), json={"code": code},
-                          verify=False)
+        r = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)
         return r.json()
 
     @keyword

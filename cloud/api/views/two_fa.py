@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import APIInternalException, APIRequestException, ErrorCodes, api_success
+from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
 from api.serializers import CreateBackupCodeSerializer, DeleteBackupCodeSerializer, TwoFaSerializer, CloudResponseSerializer, VerificationSerializer
 
 
@@ -16,6 +16,14 @@ class TwoFactorPermissionsMixin:
         if self.request.method == "GET":
             return [AllowAny()]
         return super().get_permissions()
+
+    def get_user_from_code(self, code):
+        try:
+            token = Auth.validate_token(code)
+            return token.get("username", "")
+        # If the request fails the worst case is we don't add 2fa to the user's session.
+        except APINotAuthorisedException:
+            return ""
 
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
     permission_classes = [IsAuthenticatedOrTokenHasScope]
@@ -31,8 +39,9 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_2fa_code(data["verification_code"], data["code"])
+        email = self.get_user_from_code(data["code"])
 
-        if request.user and request.user.is_authenticated:
+        if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
         return api_success(res)
@@ -58,8 +67,9 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_backup_code(data["verification_code"], data["code"])
+        email = self.get_user_from_code(data["code"])
 
-        if request.user and request.user.is_authenticated:
+        if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
             request.session["has2fa"] = True
 

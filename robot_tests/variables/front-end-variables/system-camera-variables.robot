@@ -1,4 +1,9 @@
 *** Variables ***
+${email}       ${EMAIL OWNER}
+${password}    ${BASE PASSWORD}
+@{auth}        ${email}    ${password}
+${url}         ${ENV}
+
 ${CAMERAS LINK}                              //nx-menu//a[@id="cameras"]
 ${EDITABLE TITLE}                            //nx-text-editable
 ${CAMERAS VIEW BUTTON}                       //nx-block//header//button[@id="view-camera"]

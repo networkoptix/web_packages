@@ -3,8 +3,6 @@ Resource          ../resource.robot
 Test Teardown     Close Browser
 Force Tags        Threaded
 
-*** Variables ***
-${url}    ${ENV}
 
 *** Test Cases ***
 1. 404 page shows when going to a url that doesn't exist and gives a link back to home page

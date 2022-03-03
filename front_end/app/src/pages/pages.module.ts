@@ -102,6 +102,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
     {
+        path: 'twofa-required',
+        loadChildren: () => import('./twofa-required/twofa-required.module').then(m => m.TwofaRequiredModule)
+    },
+    {
         path: 'ipvd',
         loadChildren: () => import('./ipvd/ipvd.module').then(m => m.IpvdModule)
     },

@@ -210,9 +210,6 @@ export class NxSystemsListComponent implements OnInit {
                 url: this.menusService.getUrl(system.id, this.endpoint),
                 label: system.name
             });
-        } else if (this.needToConfigureTwoFactor(system) && !this.account.totpExistsForAccount) {
-            this.chosenSystemName = system.name;
-            this.show2faRequired = true;
         } else {
             this.updateEndpoint(system.id);
             this.headerService.show$ = false;

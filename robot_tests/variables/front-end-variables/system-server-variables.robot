@@ -1,4 +1,8 @@
 *** Variables ***
+${password}                         ${BASE PASSWORD}
+${url}                              ${ENV}
+@{server auth}                      admin    ${password}
+
 ${SERVERS LINK}                     //nx-menu//a[@id="servers"]
 ${SERVER NAME}                      //header//h2
 ${IP}                               //header//p[contains(text(),"${IP TEXT}")]

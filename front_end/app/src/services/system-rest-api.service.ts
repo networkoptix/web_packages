@@ -404,6 +404,15 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.userRequest;
     }
 
+    public getCurrentServerInfo(): Observable<any> {
+        return this.get('/rest/v1/servers/this');
+    }
+
+    public checkIfConnectedToServer(serverId: string): Observable<boolean> {
+        return this.getCurrentServerInfo()
+            .pipe(map(data => this.cleanId(data.id) === serverId));
+    }
+
     public isSessionFresh() {
         if (this.CONFIG.newSystem || !this.accessToken) {
             return of(false);

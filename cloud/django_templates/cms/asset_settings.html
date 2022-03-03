@@ -25,7 +25,7 @@
             <p>No assets exist for this asset type.</p>
         {% endif %}
     {% else %}
-        <p><a href="{% url 'download_package' asset.id %}" {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}>Download package (zip)</a></p>
+        <p><a href="{% url 'download_package' asset.id %}" {% if asset.is_cloud_portal or asset.is_vms or not asset.latest_version%}onclick="event.preventDefault(); pollPackage(false)"{% else %}download{% endif %}>Download package (zip)</a></p>
         <p><a href="{% url 'download_package' asset.id %}?draft" {% if asset.is_cloud_portal or asset.is_vms %}onclick="event.preventDefault(); pollPackage(true)"{% else %}download{% endif %}>Download package draft (zip)</a></p>
     {% endif %}
 </div>

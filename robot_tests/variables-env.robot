@@ -101,8 +101,7 @@ ${EMAIL NOPERM}                       ${TEST EMAIL}+noperm${BASE EMAIL DOMAIN}
 ${BASE PASSWORD}                      qweasd 123
 ${ALT PASSWORD}                       qweasd1234
 
-${TEST FIRST NAME}                    testFirstName
-${TEST LAST NAME}                     testLastName
+
 
 #Related to Auto Tests system
 ${AUTO TESTS}                         Auto Tests

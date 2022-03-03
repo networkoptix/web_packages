@@ -2,16 +2,9 @@
 Resource          ../resource.robot
 Suite Setup       Open Restore Password Dialog With Code
 Test Template     Test Password Invalid
-Test Teardown     Run Keyword If Test Failed    Restart
+Test Teardown     Run Keyword If Test Failed    Restart Restore Pass Form Password
 Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        email    form
-
-*** Variables ***
-${url}    ${ENV}
-${password}    ${BASE PASSWORD}
-${existing email}       ${EMAIL VIEWER}
-
-${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-password-input[contains(@class,'ng-invalid')]//input
 
 *** Test Cases ***                                    NEW PW
 1. Empty New Password                                    ${EMPTY}
@@ -66,33 +59,3 @@ ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-passw
     [tags]    C41876    Password
 24. Good 4 QWE123!@#                                      ${upper number symbol password}
     [tags]    C41876    Password
-
-*** Keywords ***
-Open Restore Password Dialog With Code
-    ${user} =   Register Random User
-    Open Browser and go to URL    ${url}/authorize
-    Send "Restore Password" Email   ${user}
-    Get Restore Code and Open the Link    ${user}
-    Set Suite Variable    ${user}   ${user}
-    ${speed normal} =  Get Selenium Speed
-    Set Suite Variable      ${speed normal}    ${speed normal}
-    Set Selenium Speed    .01
-
-Test Password Invalid
-    [Arguments]   ${new pw}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Input Text    ${RESET PASSWORD INPUT}    ${new pw}
-    #Check New Password Badge    ${new pw}
-    Check Password Badge    ${new pw}    ${SAVE PASSWORD}
-    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Click Button    ${SAVE PASSWORD}
-    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    resetPassword
-
-Restart
-    Close Browser
-    Delete Account    ${user}    ${password}
-    Open Restore Password Dialog With Code
-
-Teardown
-    Close Browser
-    Delete Account    ${user}    ${password}
-    Set Selenium Speed     ${speed normal}

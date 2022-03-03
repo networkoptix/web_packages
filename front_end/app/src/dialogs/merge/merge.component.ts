@@ -614,7 +614,7 @@ export class MergeModalContent {
                     this.handleMergeError(res);
                 }
             }, error => {
-                if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+                if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
                     return this.handleOldSession(this.mergingProcess);
                 } else if (error.status === 403 || error.errorId === this.CONFIG.servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));

@@ -64,6 +64,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     swaggerMenuDescription = { title: '', description: '' };
 
     // Misc properties
+    markdownComponentShowing = false;
     RTSPRequestShowing = false;
     singleAPIRouteShowing = false;
     singleRoutePath: string;
@@ -487,6 +488,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             const node: MenuNode = changes.activeNode.currentValue;
             const isSingleView = this.isAPIRouteNode(node);
             const expand = isSingleView ? 'full' : 'list';
+            this.markdownComponentShowing = this.APIToolService.APIInfoNodes[this.APIToolService.activeNode.name];
 
             if (!this.openAPIJSONService.determineIsInfoNode(node)) {
                 this.setSwaggerDescription(node, expand);

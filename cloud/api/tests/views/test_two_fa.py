@@ -80,7 +80,7 @@ class TestTwoFAViews:
         request.user = self.user
 
         assert view(request).status_code == 200
-        assert mock_verify_2fa.call_count == 2
+        assert mock_verify_2fa.call_count == 1
 
         # Valid Post
         request = arf.post(f'/2fa/verification')
@@ -100,7 +100,7 @@ class TestTwoFAViews:
         view = BackupCode().as_view()
 
         assert view(request).status_code == 200
-        assert mock_verify_backup_code.call_count == 2
+        assert mock_verify_backup_code.call_count == 1
 
 
     def test_backup_code_post_and_delete(self, create_user, arf, mocker):

@@ -392,6 +392,14 @@ export class NxSystemAPI {
         return this.userRequest;
     }
 
+    public getCurrentServerInfo(): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
+    public checkIfConnectedToServer(serverId: string): Observable<boolean> {
+        throw Error(this.notImplementedMsg);
+    }
+
     protected getNonce(login: string, url?: string) {
         const params: any = {
             userName: login

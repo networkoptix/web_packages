@@ -1,4 +1,11 @@
 *** Variables ***
+${url}    ${ENV}
+${existing email}       ${EMAIL VIEWER}
+${valid email}          noptixqa+valid@gmail.com
+${password}    ${BASE PASSWORD}
+${url}         ${ENV}
+@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
+
 ${REGISTER FORM}                      //nx-authorize-create-account-component
 ${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//form//input[@id='firstName']
 ${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//form//input[@id='lastName']
