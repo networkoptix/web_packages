@@ -52,7 +52,7 @@ export class EditModalContent {
     settings: ContentSettings;
     contextList: ContextManifest[] = [];
 
-    STRUCTURE_TYPE = ConfigType
+    STRUCTURE_TYPE = ConfigType;
     errors: Record<string, string[]> = {};
     processDisabled = false;
     name = '';
@@ -66,7 +66,7 @@ export class EditModalContent {
             selected : DropdownItem,
             options  : DropdownItem[]
         }
-    } = {}
+    } = {};
 
     constructor(
         configService: NxConfigService,
@@ -222,16 +222,16 @@ export class EditModalContent {
 
     close = (result?: { id: string; action: string }) => {
         this.dialogRef.close(result);
-    }
+    };
 
     clearError = field => {
         if (field in this.errors) {
             delete this.errors[field];
         }
         this.processDisabled = !!Object.keys(this.errors).length;
-    }
+    };
 
     updateDropdown = (fieldName: string, item: DropdownItem) => {
         this.values[fieldName] = item.value;
-    }
+    };
 }

@@ -89,8 +89,8 @@ export class NxDashboardComponent implements DashboardGroup {
     gridSize = 0;
     activeCellIndex = -1;
     hoverCellIndex = -1;
-    settingsDownloadLink: SafeUrl = ''
-    backupDownloadLink = ''
+    settingsDownloadLink: SafeUrl = '';
+    backupDownloadLink = '';
     dragEnabled: boolean;
     cards: WidgetCard[];
     menu: DashboardConfiguration[] = [];
@@ -152,7 +152,7 @@ export class NxDashboardComponent implements DashboardGroup {
         }
     }
 
-    isFirstPartyWidget = NxDynamicWidgetComponent.findWidget
+    isFirstPartyWidget = NxDynamicWidgetComponent.findWidget;
 
     /**
      * Handles updating order when cards are dragged
@@ -291,7 +291,7 @@ export class NxDashboardComponent implements DashboardGroup {
         if (widgetUrl || devServer) {
             setTimeout(() => this.addWidget());
         }
-    }
+    };
 
     updateSelectedDashboard = (dashboardId, dashboardToAddIfNotExisting?: DashboardConfiguration) => {
         if (!this.menu.find(({ id }) => id === dashboardId) && dashboardToAddIfNotExisting) {
@@ -299,7 +299,7 @@ export class NxDashboardComponent implements DashboardGroup {
         }
         this.updateCards(dashboardId);
         this.router.navigate([], { queryParams: { dashboardId } });
-    }
+    };
 
     private updateCards(activeId: string, menu: DashboardConfiguration[] = this.menu) {
         // Default to show systems widget if not configured

@@ -64,7 +64,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     username: string;
     role: string;
 
-    passwordChanged: boolean = false
+    passwordChanged: boolean = false;
     userEnabledFormWatcher: FormWatcher;
     userRoleFormWatcher: FormWatcher;
     userSettingsFormWatcher: FormWatcher;
@@ -366,7 +366,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             return;
         }
         this.passwordChanged = true;
-    }
+    };
 
     public setPermission(role: NxSystemRole) {
         const userRole = role?.name ?? this.selectedUser.accessRole;

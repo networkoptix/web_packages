@@ -37,7 +37,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     cloudShowing: 'fixed' | 'absolute' = 'fixed';
     isLoggedIn: null | boolean = null;
 
-    CONFIG: IConfig
+    CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     constructor(
@@ -91,7 +91,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
                 this.headerService.createAccountButtonType = 'primary';
             }
         }
-    }
+    };
 
     getElementPosition(elm: HTMLElement) {
         const rect = elm.getBoundingClientRect();

@@ -34,12 +34,12 @@ export class LoggerConfig {
     /**
      * Log the NxLogger object instance or just the logged item and stack trace.
      */
-    logLoggerObject: boolean
+    logLoggerObject: boolean;
 
     /**
      * Pretty print formats console output when logLoggerObject === false else prints { logged, trace }
      */
-    prettyPrint: boolean
+    prettyPrint: boolean;
 
     constructor(config: Partial<LoggerConfig> = {}) {
         Object.assign(this, { ...defaultConfig, ...config });
@@ -103,7 +103,7 @@ export class NxLogger<T> {
         config: Partial<LoggerConfig> = new LoggerConfig()
     ) => <T>(
         errorOrAnyToLog: T, logIdentifier = config.logIdentifier
-    ) => new NxLogger<T>({ ...config, logIdentifier }, errorOrAnyToLog)
+    ) => new NxLogger<T>({ ...config, logIdentifier }, errorOrAnyToLog);
 
     // Helpers
 
@@ -147,5 +147,5 @@ export class NxLogger<T> {
             ...prettyTrace,
             prettyFooter
         ].forEach(logWithStyles);
-    }
+    };
 }

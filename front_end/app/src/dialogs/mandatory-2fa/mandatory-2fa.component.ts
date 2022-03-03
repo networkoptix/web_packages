@@ -101,7 +101,7 @@ export class Mandatory2faModalContent {
 
     close = (msg?: string) => {
         this.dialogRef.close(msg);
-    }
+    };
 
     cancel = () => this.close('cancel');
 }

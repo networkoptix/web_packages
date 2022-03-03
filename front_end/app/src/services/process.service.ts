@@ -16,7 +16,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService } from './session.service';
 
-type Handler = (...args: any[]) => any
+type Handler = (...args: any[]) => any;
 
 const logError = (...args) => console.error(args);
 
@@ -95,7 +95,7 @@ export class Process {
             this.onComplete
         );
         return this;
-    }
+    };
 
     // Handler method wrappers
 

@@ -20,8 +20,8 @@ import {
     providedIn: 'root'
 })
 export class PlaybackService implements OnDestroy {
-    protected _logPrefix: string = 'PLAYBACK_SERVICE ::'
-    protected _logDisable: boolean = true
+    protected _logPrefix: string = 'PLAYBACK_SERVICE ::';
+    protected _logDisable: boolean = true;
 
     protected _log(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
@@ -75,7 +75,7 @@ export class PlaybackService implements OnDestroy {
             requestAnimationFrame(() => this.onAnimationFrame());
     }
 
-    protected _animationFrameRequestHandler: number
+    protected _animationFrameRequestHandler: number;
 
     public onAnimationFrame(): void {
         this.handleAnimationFrame();
@@ -92,7 +92,7 @@ export class PlaybackService implements OnDestroy {
 
     protected _subject = new BehaviorSubject<PlaybackState>(
         createInitialStoppedState()
-    )
+    );
 
     protected _emit(): void {
         this._subject.next(this.state);
@@ -103,7 +103,7 @@ export class PlaybackService implements OnDestroy {
         return this._subject;
     }
 
-    public livePaused$ = new BehaviorSubject<boolean | 'restartVideo'>(false)
+    public livePaused$ = new BehaviorSubject<boolean | 'restartVideo'>(false);
 
     public get livePaused() {
         return <boolean | 'restartVideo'>!!this.livePaused$.value;
@@ -113,7 +113,7 @@ export class PlaybackService implements OnDestroy {
         this.livePaused$.next(value);
     }
 
-    protected _state: PlaybackState = createInitialStoppedState()
+    protected _state: PlaybackState = createInitialStoppedState();
 
     public get state(): PlaybackState {
         return this._state;
@@ -321,7 +321,7 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    protected _previousFrameTime: ms
+    protected _previousFrameTime: ms;
 
     public handleAnimationFrame() {
         const thisFrameTime = Date.now();
@@ -573,7 +573,7 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    protected _prevState: PlaybackState
+    protected _prevState: PlaybackState;
 
     public save() {
         this._prevState = { ...this.state };

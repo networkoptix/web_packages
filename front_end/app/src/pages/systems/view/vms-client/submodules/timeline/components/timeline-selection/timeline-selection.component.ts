@@ -35,18 +35,18 @@ const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;
     styleUrls: ['./timeline-selection.component.scss']
 })
 export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewInit {
-    protected timelineSubscription: Subscription
-    protected selectionSubscription: Subscription
-    protected selectionStatus: TimelineSelectionServiceStatus
+    protected timelineSubscription: Subscription;
+    protected selectionSubscription: Subscription;
+    protected selectionStatus: TimelineSelectionServiceStatus;
 
     @ViewChild('selectedRange')
-    protected selectedRangeView: ElementRef<HTMLDivElement>
+    protected selectedRangeView: ElementRef<HTMLDivElement>;
 
     @ViewChild('leftEar')
-    protected leftEarView: ElementRef<HTMLDivElement>
+    protected leftEarView: ElementRef<HTMLDivElement>;
 
     @ViewChild('rightEar')
-    protected rightEarView: ElementRef<HTMLDivElement>
+    protected rightEarView: ElementRef<HTMLDivElement>;
 
     public get dateStrings() {
         if (!this.selectionStatus || !this.selectionStatus.isActive) {

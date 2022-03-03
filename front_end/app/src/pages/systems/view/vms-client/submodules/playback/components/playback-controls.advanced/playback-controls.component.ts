@@ -12,8 +12,8 @@ import { PlaybackService } from '../../services/playback.service';
     styleUrls: ['./playback-controls.component.scss']
 })
 export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
-    protected subscription: Subscription
-    protected state: PlaybackState
+    protected subscription: Subscription;
+    protected state: PlaybackState;
 
     constructor(
         public playback: PlaybackService,

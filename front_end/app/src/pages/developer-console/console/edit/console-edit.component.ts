@@ -173,7 +173,7 @@ export class NxDevConsoleEditComponent {
 
     onDownloadClick = () => {
         this.downloadClick = true;
-    }
+    };
 
     discard = () => {
         this.consoleService.targetState = { id: this.asset.id, download: false };
@@ -181,7 +181,7 @@ export class NxDevConsoleEditComponent {
         this.router.navigateByUrl(
             `/developers/${this.route.snapshot.params.section}${params ? '?' + params : ''}`
         );
-    }
+    };
 
     clearErrors(structureName) {
         delete this.errors[structureName];

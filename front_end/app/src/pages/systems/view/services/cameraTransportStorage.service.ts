@@ -9,7 +9,7 @@ import { PlaybackTransport } from '../view.types';
     providedIn: 'root'
 })
 export class CameraTransportStorageService {
-    user = ''
+    user = '';
     constructor(
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService

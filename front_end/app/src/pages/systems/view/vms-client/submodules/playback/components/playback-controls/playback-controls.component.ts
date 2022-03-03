@@ -9,7 +9,7 @@ import { TimelineSelectionService } from '@vms-client/submodules/timeline/servic
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
-type BtnClassesEnum = 'play' | 'pause'
+type BtnClassesEnum = 'play' | 'pause';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -19,15 +19,15 @@ type BtnClassesEnum = 'play' | 'pause'
 })
 @LoggerDecorator('PLAYBACK CONTROLS ::', true)
 export class PlaybackControlsComponent implements OnInit {
-    _log: Function
-    _warn: Function
+    _log: Function;
+    _warn: Function;
 
-    @Input() enabled: boolean
+    @Input() enabled: boolean;
 
-    protected subscription: Subscription
-    protected state: PlaybackState
+    protected subscription: Subscription;
+    protected state: PlaybackState;
 
-    public btnClass: BtnClassesEnum = 'play'
+    public btnClass: BtnClassesEnum = 'play';
 
     public handleClick() {
         if (!this.enabled) {

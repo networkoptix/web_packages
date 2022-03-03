@@ -40,8 +40,8 @@ import { PlaybackService } from '../../../services/playback.service';
 })
 @LoggerDecorator('HLS PLAYER ::', true)
 export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-    _log: Function
-    _warn: Function
+    _log: Function;
+    _warn: Function;
 
     @Input() rotation: number;
 
@@ -57,8 +57,8 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         return this.videoView?.nativeElement;
     }
 
-    protected playbackSubscription: Subscription
-    protected state: PlaybackState
+    protected playbackSubscription: Subscription;
+    protected state: PlaybackState;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -97,7 +97,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
                     }
                 });
         }
-    }
+    };
 
     public ngAfterViewInit(): void {
         this.playbackSubscription = this.playback.subject.subscribe(
@@ -188,7 +188,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
         }, 30 * 1000);
     }
 
-    protected hls: Hls
+    protected hls: Hls;
 
     protected _startPlayback() {
         this._log('starting playback', { ...this.state });

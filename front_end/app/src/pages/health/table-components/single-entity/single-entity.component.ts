@@ -77,4 +77,4 @@ export class NxSingleEntityComponent implements OnChanges {
 
 export type SectionLookup = {
     [key: string]: [InfoBlockSection]
-}
+};

@@ -68,7 +68,7 @@ export class AddUserModalContent {
 
     preSubmit = () => {
         this.hideErrors = false;
-    }
+    };
 
     setPermission(role) {
         this.selectedPermission = role;
@@ -127,5 +127,5 @@ export class AddUserModalContent {
 
     close = (msg?: string) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

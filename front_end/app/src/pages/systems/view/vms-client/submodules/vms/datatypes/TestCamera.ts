@@ -10,11 +10,11 @@ import {
 import { _getNextRecord, _isThereRecord } from './utils';
 
 export class TestCamera implements ICamera {
-    protected _birdViewTree: BirdViewTree
+    protected _birdViewTree: BirdViewTree;
 
-    public readonly rotation: int = 0
+    public readonly rotation: int = 0;
 
-    public readonly isVirtual: boolean = false
+    public readonly isVirtual: boolean = false;
 
     public get archiveRange() {
         return this._archiveRange;

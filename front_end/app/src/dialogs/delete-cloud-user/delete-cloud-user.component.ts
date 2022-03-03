@@ -66,7 +66,7 @@ export class DeleteCloudUserModalContent {
 
     close = (msg: string | boolean = false) => {
         this.dialogRef.close(msg);
-    }
+    };
 
     clearErrors() {
         this.deleteForm.form.controls.password.setErrors({});

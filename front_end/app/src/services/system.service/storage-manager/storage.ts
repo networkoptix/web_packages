@@ -5,7 +5,7 @@ import { cleanId } from '@utils/general';
 /**
  * TODO: Need to add better types to some of the system-api methods
  */
-export type StorageResponses = [GetStorages[], any, any, any]
+export type StorageResponses = [GetStorages[], any, any, any];
 
 export enum STORAGE_TYPES {
     LOCAL = 'local',
@@ -154,7 +154,7 @@ export class CurrentStorageState {
             return aUrl < bUrl ? -1 : 1;
         }
         return typeOrder.indexOf(aType) - typeOrder.indexOf(bType);
-    }
+    };
 
     #countMainAndBackup = (
         main = true
@@ -166,14 +166,14 @@ export class CurrentStorageState {
         this.#metadataStorageId = cleanId(metadataStorageId || '');
         this.#hasAnalyticsData = hasAnalyticsData;
         this.#hasPlugins = hasPlugins;
-    }
+    };
 
     #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
 
     checkAnalytics = (storage: Storage) => ({
         analyticsDbLocation: storage.storageId === this.#metadataStorageId,
         canStoreAnalyticsDb: this.#checkCanStoreAnalytics(storage)
-    })
+    });
 }
 
 /**
@@ -331,7 +331,7 @@ export class Storage extends StorageDataStructure {
             url: this.urlWithCredentials,
             usedForWriting: this.usedForWriting
         } : null;
-    }
+    };
 
     constructor(storageDataInputs?: Partial<StorageDataStructure>) {
         super(storageDataInputs);

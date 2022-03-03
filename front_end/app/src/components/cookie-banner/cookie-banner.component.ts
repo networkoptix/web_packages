@@ -14,8 +14,8 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     styleUrls: ['./cookie-banner.component.scss']
 })
 export class NxCookieBannerComponent implements OnInit {
-    CONFIG: IConfig
-    cookieBannerReviewed: boolean
+    CONFIG: IConfig;
+    cookieBannerReviewed: boolean;
 
     constructor(
         private config: NxConfigService,

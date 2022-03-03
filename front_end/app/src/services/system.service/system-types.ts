@@ -93,7 +93,7 @@ interface NameValue {
     value: string;
 }
 
-type AdditionalParam = NameValue
+type AdditionalParam = NameValue;
 
 export interface NxCamera {
     id: string;

@@ -1,10 +1,10 @@
-export type int = number
-export type float = number
+export type int = number;
+export type float = number;
 
-export type percentage = float
+export type percentage = float;
 
-export type ms = number
-export type px = number
+export type ms = number;
+export type px = number;
 
 export interface CanvasGeometry {
     width: px,
@@ -12,6 +12,6 @@ export interface CanvasGeometry {
     dpr: int,
 }
 
-export type GUID = string
+export type GUID = string;
 
-export type sign = -1 | 0 | 1
+export type sign = -1 | 0 | 1;

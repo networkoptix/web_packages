@@ -2,8 +2,8 @@ import { AnimatedFloat } from './AnimatedFloat';
 import { IAnimated } from './IAnimated';
 import { EASING } from './easing-functions';
 
-type int = number
-type durationMs = number
+type int = number;
+type durationMs = number;
 
 export class AnimatedInteger extends AnimatedFloat implements IAnimated<int> {
     static DEFAULT_VALUE = 0;

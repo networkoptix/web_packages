@@ -15,5 +15,5 @@ export class NxUrlValidatorDirective implements Validator {
         const domainReg = new RegExp(/^(https?:\/\/)?(([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,})(:\d{1,5})?$/i);
         const forbidden = !ipReg.test(control.value) && !domainReg.test(control.value);
         return forbidden ? { forbiddenUrl: { value: control.value } } : null;
-    }
+    };
 }

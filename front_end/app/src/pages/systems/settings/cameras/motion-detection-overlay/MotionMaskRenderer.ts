@@ -45,8 +45,8 @@ export class MotionMaskRenderer {
     public interactions: Subscription;
     private brandColor: string;
 
-    public columns = MotionMaskState.matrixColumns
-    public rows = MotionMaskState.matrixRows
+    public columns = MotionMaskState.matrixColumns;
+    public rows = MotionMaskState.matrixRows;
 
     constructor(
         private motionMask: MotionMaskState,
@@ -323,9 +323,9 @@ export class MotionMaskRenderer {
     /**
      * Cached render instructions
      */
-    maskRenderInstructions: (() => void)[] = []
+    maskRenderInstructions: (() => void)[] = [];
 
-    selectionRenderInstructions: (() => void)[] = []
+    selectionRenderInstructions: (() => void)[] = [];
 
     /**
      * Adds fill color for each cell
@@ -352,7 +352,7 @@ export class MotionMaskRenderer {
                 this.maskRenderInstructions.push(instruction);
             }
         );
-    }
+    };
 
     /**
      * Iterates through cells and draws outline for each
@@ -378,7 +378,7 @@ export class MotionMaskRenderer {
                 shadow
             )
         ));
-    }
+    };
 
     /**
      * Draw cell borders, black for zone edges, brand color for selection edges, light gray for grid.
@@ -515,7 +515,7 @@ export class MotionMaskRenderer {
         this.maskRenderInstructions.push(() => {
             this.ctx.shadowBlur = 0;
         });
-    }
+    };
 
     /**
      * Hover and selection outline
@@ -559,7 +559,7 @@ export class MotionMaskRenderer {
             this.width,
             this.height
         ));
-    }
+    };
 
     private renderMask = () =>
         this.maskRenderInstructions.forEach(instruction => instruction());
@@ -583,7 +583,7 @@ export class MotionMaskRenderer {
             this.selectionRenderInstructions,
             true
         );
-    }
+    };
 
     private renderSelection = () =>
         this.selectionRenderInstructions.forEach(instruction => instruction());

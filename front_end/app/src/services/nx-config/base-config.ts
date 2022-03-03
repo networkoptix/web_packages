@@ -111,7 +111,7 @@ export interface BaseConfig {
     webadminRoutesLookup: RouteCheckTuple[]
 }
 
-export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string]
+export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string];
 
 export interface Developers {
     landing: {
@@ -152,7 +152,7 @@ export interface LicenseType {
     deactivationsAllowed: number
 }
 
-export type LicenseTypes = LicenseType[]
+export type LicenseTypes = LicenseType[];
 
 export interface Capabilities {
     cloudMerge?: boolean;
@@ -191,9 +191,9 @@ export const FeatureFlagStrings = FeatureFlagKeys.reduce((obj, key) => {
 
 export type FeatureFlags = {
     [key in FeatureFlagType]?: boolean
-}
+};
 
-export type APIDocType = 'main' | 'legacy' | 'deprecated'
+export type APIDocType = 'main' | 'legacy' | 'deprecated';
 export interface APIDocURL {
     main: string;
     legacy: string;

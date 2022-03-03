@@ -26,13 +26,13 @@ const MAIN_MOUSE_BUTTON = 0;
     styleUrls: ['./time-under-mouse.component.scss']
 })
 export class TimeUnderMouseComponent implements OnInit, OnDestroy {
-    protected subscription: Subscription
+    protected subscription: Subscription;
 
-    public date: string = ''
-    public time: string = ''
+    public date: string = '';
+    public time: string = '';
 
-    protected _honestOffset: px
-    protected _visualOffset: px
+    protected _honestOffset: px;
+    protected _visualOffset: px;
 
     constructor(
         languageService: NxLanguageProviderService,

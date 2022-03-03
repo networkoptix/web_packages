@@ -97,7 +97,7 @@ export class MessageModalContent implements OnInit {
 
     close = (msg: string | boolean = false) => {
         this.dialogRef.close(msg);
-    }
+    };
 
     initForm() {
         this.placeholder = '';

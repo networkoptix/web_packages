@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class FpsMeterService {
-  protected _isInstalled: boolean = false
+  protected _isInstalled: boolean = false;
 
   public install() {
       if (!this._isInstalled) {

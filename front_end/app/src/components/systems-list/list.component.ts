@@ -32,7 +32,7 @@ type Endpoint = Partial<{
     view: boolean;
     information: boolean;
     settings: boolean;
-}>
+}>;
 
 @UntilDestroy()
 @Component({

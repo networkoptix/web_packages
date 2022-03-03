@@ -20,10 +20,10 @@ export class SelectTimeRangeModalContent {
     hideErrors = true;
     start: Date;
     end: Date;
-    startDate: string
-    startTime: string
-    endDate: string
-    endTime: string
+    startDate: string;
+    startTime: string;
+    endDate: string;
+    endTime: string;
 
     @Input() closable = true;
 
@@ -41,7 +41,7 @@ export class SelectTimeRangeModalContent {
     public closeModal = $event => {
         $event.preventDefault();
         return this.close(false);
-    }
+    };
 
     public handleChange(v: string, a: 'start' | 'end', b: 'Date' | 'Time') {
         this[a + b] = v;
@@ -64,7 +64,7 @@ export class SelectTimeRangeModalContent {
         } else {
             return this.close({ start, end });
         }
-    }
+    };
 
     ngOnInit() {
         this.start = new Date(this.selection.range.start - this._timezoneOffset);
@@ -83,5 +83,5 @@ export class SelectTimeRangeModalContent {
 
     close = (msg: boolean | {}) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

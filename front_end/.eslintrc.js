@@ -197,7 +197,7 @@ module.exports = {
         'quote-props': ['error', 'as-needed'],
         quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
         'rest-spread-spacing': ['error', 'never'],
-        semi: ['error', 'always'],
+        semi: 'error',
         'semi-spacing': ['error', { before: false, after: true }],
         'space-before-blocks': ['error', 'always'],
         'space-before-function-paren': ['error', {
@@ -288,6 +288,8 @@ module.exports = {
                     builtinGlobals: false
                 }],
                 '@typescript-eslint/prefer-includes': 'error',
+                semi: 'off',
+                '@typescript-eslint/semi': 'error',
                 'space-before-function-paren': 'off',
                 '@typescript-eslint/space-before-function-paren': ['error', {
                     anonymous: 'always',

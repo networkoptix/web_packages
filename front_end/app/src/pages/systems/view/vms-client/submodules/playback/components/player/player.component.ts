@@ -33,8 +33,8 @@ import { PlaybackService } from '../../services/playback.service';
 })
 @LoggerDecorator('PLAYER (WRAPPER) ::', true)
 export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
-    _log: Function
-    _warn: Function
+    _log: Function;
+    _warn: Function;
 
     LANG: LanguageI18NStaticTypes;
 
@@ -49,16 +49,16 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
     public errorPlayback: boolean = false;
     public errorPlaybackDescription: string;
 
-    public rotateDeg: number = 0
+    public rotateDeg: number = 0;
 
     private transportChangeByError: boolean = false;
 
-    public handleClick: (e: MouseEvent) => void
+    public handleClick: (e: MouseEvent) => void;
 
     private serverErrors = {
         cannotDecrypt: 'Cannot decrypt media',
         setupPassword: 'Please set up camera password'
-    }
+    };
 
     constructor(
         translateService: NxLanguageProviderService,

@@ -104,10 +104,10 @@ export enum ConsoleSection {
 }
 
 export class ListSerializer<Initial, Serialized> {
-    #serializer: (data: Initial[]) => Serialized[]
+    #serializer: (data: Initial[]) => Serialized[];
     editManifest: ModalManifest;
     downloadManifest: ModalManifest;
-    data: Serialized[] = []
+    data: Serialized[] = [];
 
     constructor(
         route: string,
@@ -163,7 +163,7 @@ export class ListSerializer<Initial, Serialized> {
                 downloadAsync: createDownloadAsyncValues(item),
                 settingsModal: createSettingsModalValues(item)
             }));
-    }
+    };
 }
 
-export type AdditionalFilter = <Data>(data: Data[]) => Data[]
+export type AdditionalFilter = <Data>(data: Data[]) => Data[];

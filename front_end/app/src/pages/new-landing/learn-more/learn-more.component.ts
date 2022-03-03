@@ -14,14 +14,14 @@ import { NxLandingService } from '../landing.service';
     styleUrls: ['./learn-more.component.scss']
 })
 export class NxLearnMoreComponent implements OnChanges {
-    @Input() scrollPosition: number
-    @Input() screenHeight: number
+    @Input() scrollPosition: number;
+    @Input() screenHeight: number;
 
-    visible = true
+    visible = true;
     isVisibleBreakpoints = {
         scrollPosition: 91,
         screenHeight: 690
-    }
+    };
 
     constructor(
         public landingService: NxLandingService,
@@ -42,7 +42,7 @@ export class NxLearnMoreComponent implements OnChanges {
             return false;
         };
         return true;
-    }
+    };
 
     onClick() {
         if (this.landingService.contentStartRef) {

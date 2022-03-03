@@ -12,7 +12,7 @@ export class NxProcessCancelButtonComponent {
     @Input() process: Process;
     @Input() discardFn: () => void;
     @Input() buttonText: string;
-    @Input() customClass = ''
+    @Input() customClass = '';
     @Input() showDiscard = false;
 
     handleClick() {

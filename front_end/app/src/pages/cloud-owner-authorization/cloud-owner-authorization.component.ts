@@ -14,8 +14,8 @@ import { WINDOW } from '@services/window-provider';
     template: ''
 })
 export class CloudOwnerAuthorizationComponent implements OnInit {
-    CONFIG: IConfig
-    LANG: LanguageI18NStaticTypes
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,

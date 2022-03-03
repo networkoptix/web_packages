@@ -18,7 +18,7 @@ export class SectionApplyExampleComponent {
 
     // section 1
     section1InputWatcher = new Watcher<string>();
-    section1Watcher: SectionWatcher
+    section1Watcher: SectionWatcher;
     saveSection1: Process;
 
     get section1Input() {
@@ -35,7 +35,7 @@ export class SectionApplyExampleComponent {
         additionalProperty2: 2
     });
 
-    section2Watcher: SectionWatcher
+    section2Watcher: SectionWatcher;
     saveSection2: Process;
 
     get section2Input() {
@@ -48,7 +48,7 @@ export class SectionApplyExampleComponent {
 
     // section 3
     section3InputWatcher = new Watcher<string>();
-    section3Watcher: SectionWatcher
+    section3Watcher: SectionWatcher;
     saveSection3: Process;
 
     get section3Input() {

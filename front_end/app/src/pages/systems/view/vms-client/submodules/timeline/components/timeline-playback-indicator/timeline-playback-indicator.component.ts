@@ -32,14 +32,14 @@ const PRIMARY_WIDTH = 140;
     styleUrls: ['./timeline-playback-indicator.component.scss']
 })
 export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
-    protected playbackSubscription: Subscription
-    protected timelineSubscription: Subscription
-    public visible: boolean = false
-    public timeMs: ms
-    public date: String
-    public time: String
-    public honestOffset: px
-    public visibleOffset: px
+    protected playbackSubscription: Subscription;
+    protected timelineSubscription: Subscription;
+    public visible: boolean = false;
+    public timeMs: ms;
+    public date: String;
+    public time: String;
+    public honestOffset: px;
+    public visibleOffset: px;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -93,7 +93,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         };
     }
 
-    protected _svgArrowPoints: string = ''
+    protected _svgArrowPoints: string = '';
 
     public get svgArrowPoints() {
         return this._svgArrowPoints;

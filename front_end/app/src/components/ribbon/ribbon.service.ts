@@ -15,7 +15,7 @@ export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
 
 @Injectable({ providedIn: 'root' })
 export class NxRibbonService {
-    LANG: LanguageI18NStaticTypes
+    LANG: LanguageI18NStaticTypes;
     context = {
         visibility: false,
         message: '',

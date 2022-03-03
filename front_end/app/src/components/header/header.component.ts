@@ -111,7 +111,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     rightNavWidthCollapsed$ = new BehaviorSubject(0);
     tabsWidth$ = new BehaviorSubject(0);
     windowWidth$ = new BehaviorSubject(0);
-    breadcrumbWidth$ = new BehaviorSubject<number[]>([])
+    breadcrumbWidth$ = new BehaviorSubject<number[]>([]);
     combinedWidths$ = new BehaviorSubject(new CombinedWidths());
 
     getUrlSystemId;
@@ -281,7 +281,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             ).getPropertyValue(
                 'margin-right'
             )) + element.offsetWidth)
-    )
+    );
 
     ngOnDestroy() {}
 

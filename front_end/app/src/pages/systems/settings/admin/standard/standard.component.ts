@@ -38,10 +38,10 @@ type LimitSessionTimeItem = {
     id: number;
     max: number;
     default?: number;
-}
+};
 
 class AlexaSettings {
-    static CUSTOM_PROPERTY_ENDPOINT = 'alexa'
+    static CUSTOM_PROPERTY_ENDPOINT = 'alexa';
 
     constructor(
         public enabled = false,
@@ -56,12 +56,12 @@ class AlexaSettings {
             input.selectedSystem || selectedSystem,
             input.accountLinked || false,
             input.eventRulesSetup || false
-        )
+        );
 
     static cleanObservable = selectedSystem => map(
         AlexaSettings.clean(selectedSystem),
         AlexaSettings.clean(selectedSystem)
-    )
+    );
 }
 
 @UntilDestroy()
@@ -132,7 +132,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.LANG = language.translations;
     }
 
-    DAY_MINS = DAY_MINS // For template access
+    DAY_MINS = DAY_MINS; // For template access
 
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
@@ -375,7 +375,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     this.eventRulesBeingSetup = false;
                 })
             ).toPromise();
-    }
+    };
 
     #updateAlexa = (settings: AlexaSettings) =>
         this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
@@ -412,7 +412,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             eventRulesSetup,
             selectedSystem: enabled ? this.system.id : selectedSystem
         });
-    }
+    };
 
     toggleSystemSelected = () => {
         if (this.alexaSettings.selectedSystem === this.system.id) {
@@ -431,5 +431,5 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             selectedSystem:
             this.system.id
         });
-    }
+    };
 }

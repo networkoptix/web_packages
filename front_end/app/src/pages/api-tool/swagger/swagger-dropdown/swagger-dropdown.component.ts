@@ -8,7 +8,7 @@ import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system
     styleUrls: ['./swagger-dropdown.component.scss']
 })
 export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
-    @Input() swaggerSelect
+    @Input() swaggerSelect;
     dropdownOptions = [];
     isDisabled = true;
     disabledMutationObserver: MutationObserver;
@@ -22,7 +22,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         this.APIToolService.preventNextChangeDetection = true;
         this.swaggerSelect.value = e.value;
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
-    }
+    };
 
     onMultiSelect = (e: any) => {
         this.APIToolService.preventNextChangeDetection = true;
@@ -36,7 +36,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         }
 
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
-    }
+    };
 
     ngOnInit() {
         const options: NodeListOf<HTMLOptionElement> = this.swaggerSelect.querySelectorAll('option');

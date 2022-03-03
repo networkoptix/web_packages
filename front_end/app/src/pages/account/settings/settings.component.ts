@@ -147,7 +147,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
     displayErrors = () => {
         this.hideErrors = false;
-    }
+    };
 
     deleteUser() {
         this.dialogs.deleteCloudUser(this.cloudApiService)

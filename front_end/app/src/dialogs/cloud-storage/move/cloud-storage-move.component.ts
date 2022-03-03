@@ -142,7 +142,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     // Other instance methods
     close = (msg?: string) => {
         this.dialogRef.close(msg);
-    }
+    };
 
     setTargetSystem({ value, state }: DropdownItem) {
         this.target$.next(value as string);

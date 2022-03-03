@@ -65,7 +65,7 @@ export class RemoveSystemModalContent {
 
         this.renderer.selectRootElement('#password').focus();
         return true;
-    }
+    };
 
     ngOnInit() {
         pickFrom(this.dialogData, ['system'], this);
@@ -100,5 +100,5 @@ export class RemoveSystemModalContent {
 
     close = (withResult?: boolean) => {
         this.dialogRef.close(withResult);
-    }
+    };
 }

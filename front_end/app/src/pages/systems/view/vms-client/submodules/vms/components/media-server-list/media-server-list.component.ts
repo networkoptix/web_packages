@@ -17,15 +17,15 @@ import { VideoManagementSystemService } from '../../services/vms.service';
     styleUrls: ['media-server-list.component.scss']
 })
 export class MediaServerListComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig
-    protected _vmsStateSubscription: Subscription
-    protected _mediaservers: Array<MediaServer>
-    public showIP: boolean = false
-    public token: string = ''
+    CONFIG: IConfig;
+    protected _vmsStateSubscription: Subscription;
+    protected _mediaservers: Array<MediaServer>;
+    public showIP: boolean = false;
+    public token: string = '';
 
-    public mediaservers: Array<MediaServer>
+    public mediaservers: Array<MediaServer>;
 
-    public previewLoaded = {}
+    public previewLoaded = {};
 
     public handlePreviewLoaded(cid) {
         this.previewLoaded[cid] = true;
@@ -37,9 +37,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
 
     public isServerExpanded: {
         [serverId: string]: boolean
-    } = {}
+    } = {};
 
-    public activeCameraId: string
+    public activeCameraId: string;
 
     constructor(
         private localStorage: LocalStorageService,

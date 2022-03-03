@@ -39,7 +39,7 @@ export class RestartServerModalContent {
     serverId: string;
     needsUpdate: boolean;
     restartServer: Process;
-    private applyService: NxApplyService
+    private applyService: NxApplyService;
 
     constructor(
         configService: NxConfigService,
@@ -242,5 +242,5 @@ export class RestartServerModalContent {
 
     close = (msg?: string) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

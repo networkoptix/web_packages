@@ -9,16 +9,16 @@ export enum Auth {
 export class MenuNode {
     public icon?: string;
     public currentRoute?: boolean;
-    public accepted?: boolean
+    public accepted?: boolean;
     public draft?: boolean;
     public pending?: boolean;
     public indented?: boolean;
     // eslint-disable-next-line camelcase
     public asset_type?: any;
     public order?: number;
-    public state?: 'pending' | 'draft'
+    public state?: 'pending' | 'draft';
     public breadcrumbs: MenuNode[];
-    public queryParamsHandling: QueryParamsHandling = ''
+    public queryParamsHandling: QueryParamsHandling = '';
     public htmlID?: string;
 
     constructor(

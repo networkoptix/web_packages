@@ -17,12 +17,12 @@ import type { EmitInfo, Store, ReadonlyAPI } from './api-tool-service-types';
 export class NxReadonlyAPIService {
     isEnabled = true;
     currentReadonlyAPI$ = new BehaviorSubject<ReadonlyAPI>(null);
-    readonlyAPIEmitter$ = new Subject<EmitInfo<OpenAPIJSON>>()
+    readonlyAPIEmitter$ = new Subject<EmitInfo<OpenAPIJSON>>();
     emitReadOnlyAPI(info: OpenAPIJSON, disabled = false, error = '') {
         this.readonlyAPIEmitter$.next({ info, disabled, error });
     }
 
-    readonlyAPIStore: Store<ReadonlyAPI> = {}
+    readonlyAPIStore: Store<ReadonlyAPI> = {};
 
     get currentReadonlyAPI() { return this.currentReadonlyAPI$.value; }
     set currentReadonlyAPI(api: ReadonlyAPI) { this.currentReadonlyAPI$.next(api); }
@@ -71,7 +71,7 @@ export class NxReadonlyAPIService {
             }
         }
         return false;
-    }
+    };
 
     setReadonlyAPI(id: number = null) {
         if (!this.isEnabled) return;

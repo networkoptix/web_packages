@@ -505,7 +505,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         }
         this.resetDefaults();
         this.dialogRef.close(action || 'changed');
-    }
+    };
 
     /* Needs to be an arrow function to access this
     when passed to <nx-cancel-button> as [discardFn] */
@@ -521,7 +521,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         }
         this.resetDefaults();
         this.close('canceled');
-    }
+    };
 
     next() {
         switch (this.currentStep) {

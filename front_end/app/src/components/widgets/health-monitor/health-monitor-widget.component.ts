@@ -70,7 +70,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         shareReplay()
     );
 
-    static manifestLookup = {}
+    static manifestLookup = {};
 
     static systems$ = new BehaviorSubject<NxSystemWithUserInfo[]>([]);
     system: NxSystem;
@@ -104,13 +104,13 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
             }
             return alarms;
         }, {});
-    }))
+    }));
 
     LEVEL_LOOKUP = {
         error: 'Error',
         warning: 'Warning',
         offline: 'Offline'
-    }
+    };
 
     small$ = this.alarmsFilteredByResource$.pipe(
         map(alarms => getLeafNodes(
@@ -125,7 +125,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
             ).reduce(summarizeByLevel, {});
             return result;
         }, {} as Record<string, Record<string, any>>))
-    )
+    );
 
     large$ = this.alarmsFilteredByResource$.pipe(
         map(alarms => {
@@ -158,7 +158,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
             }))));
             return getLeafNodes(buildUpState).filter(node => node instanceof Object && !Array.isArray(node));
         })
-    )
+    );
 
     displayedColumns: string[] = ['resource', 'level', 'message'];
 
@@ -175,9 +175,9 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
             const selectedSystem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
             this.updateSystem(selectedSystem, systems);
         })
-    )
+    );
 
-    resourceHeading = '(All Resources)'
+    resourceHeading = '(All Resources)';
 
     updateResourceHeading = () => {
         const values = Object.values(this.card.config.resources).filter(({ value }) => value);
@@ -186,7 +186,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
             joined, { name }, i, arr
         ) => `${joined}${i && arr.length > 2 ? ',' : ''}${i && arr.length > 1 ? ' ' : ''}${arr.length > 1 && i === arr.length - 1 ? 'and ' : ''}${name}`, '') as string;
         this.resourceHeading = `(${all ? 'All Resources' : otherHeading})`;
-    }
+    };
 
     handleShowAction = ({ id = '', resourceId = '', key = '', name = '', ...element } = {}) => {
         console.log(element);
@@ -197,7 +197,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         const segments = [name, this.card.config.resources[key]?.name, this.selectedSystem.name, 'Health Monitor'];
         const label = segments.reduce((combined, segment) => !segment ? combined : combined ? `${combined} - ${segment}` : segment, '');
         this.showAction({ url, label });
-    }
+    };
 
     updateSystem = async (system: DropdownItem, systemsToTry = []) => {
         const nextSystem = this.systemService.createSystem(this.accountService.email, system.value);
@@ -233,13 +233,13 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         this.card.config.updateInterval = this.card.config.updateInterval ?? NxHealthMonitorWidgetComponent.BASE_CONFIG.updateInterval;
         this.updateResourceHeading();
         this.refreshData();
-    }
+    };
 
     refreshData = () => {
         this.healthMonitorAge = 0;
         this.loading = Date.now();
         this.updater$.next('update');
-    }
+    };
 
     constructor(
         cd: ChangeDetectorRef,

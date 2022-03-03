@@ -17,12 +17,12 @@ import { FpsMeterService } from '../../../../../../../services/fps-meter.service
     styleUrls: ['./camera-page.component.scss']
 })
 export class CameraPageComponent implements OnInit, OnDestroy {
-    public id: string
-    public camera: ICamera
+    public id: string;
+    public camera: ICamera;
 
-    protected _routeSubscription: Subscription
-    protected _vmsStateSubscription: Subscription
-    protected _animationFrameRequestHandler: number
+    protected _routeSubscription: Subscription;
+    protected _vmsStateSubscription: Subscription;
+    protected _animationFrameRequestHandler: number;
 
     constructor(
         private route: ActivatedRoute,

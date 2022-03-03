@@ -1,3 +1,3 @@
 import { IMediaServer } from './IMediaServer';
 
-export type MediaServer = IMediaServer
+export type MediaServer = IMediaServer;

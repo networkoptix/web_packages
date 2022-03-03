@@ -19,7 +19,7 @@ import { WINDOW } from '@services/window-provider';
 })
 export class Nx404Component {
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig
+    CONFIG: IConfig;
     environment = environment;
     redirecting = true;
 

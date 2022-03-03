@@ -43,14 +43,14 @@ export class PackageHandler {
     total = 0;
     downloadUrl = '';
     errors = [];
-    #state$: BehaviorSubject<PackageHandler> = new BehaviorSubject(null)
-    state$ = this.#state$.pipe(filter(state => !!state))
+    #state$: BehaviorSubject<PackageHandler> = new BehaviorSubject(null);
+    state$ = this.#state$.pipe(filter(state => !!state));
 
     #START = 0.15;
 
     cancelProcess = () => {
         this.#done$.next('canceled');
-    }
+    };
 
     constructor(
         private id: string | number,
@@ -184,5 +184,5 @@ export class DownloadAsyncModalContent implements ModalContent {
 
     close = (result?: string) => {
         this.dialogRef.close(result);
-    }
+    };
 }

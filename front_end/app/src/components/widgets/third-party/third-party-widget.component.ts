@@ -26,7 +26,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         { name: '4 x 2', value: { cols: 4, rows: 2 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
         { name: '4 x 6', value: { cols: 4, rows: 6 } }
-    ]
+    ];
 
     static sharedState$: SharedWidgetState;
 
@@ -34,7 +34,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         source: '',
         editSource: '',
         devMode: false
-    }
+    };
 
     static MAX_SIZE = 250000;
 
@@ -117,7 +117,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
                 otherName = file.name;
             }
         });
-    }
+    };
 
     constructor(
         configService: NxConfigService,

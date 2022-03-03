@@ -8,7 +8,7 @@ import { float, int, ms } from '@vms-client/utils/type-aliases';
 
 import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
 
-type signType = int // -1 | 0 | 1
+type signType = int; // -1 | 0 | 1
 
 @Component({
     selector: 'zoom-controls',
@@ -16,10 +16,10 @@ type signType = int // -1 | 0 | 1
     styleUrls: ['./zoom-controls.component.scss']
 })
 export class ZoomControlsComponent implements OnInit, OnDestroy {
-    protected timelineSubscription: Subscription
-    protected vmsSubscription: Subscription
-    protected state: TimelineServiceStatus
-    public disabled: boolean = true
+    protected timelineSubscription: Subscription;
+    protected vmsSubscription: Subscription;
+    protected state: TimelineServiceStatus;
+    public disabled: boolean = true;
     public canZoomIn: boolean = false;
     public canZoomOut: boolean = false;
 
@@ -32,7 +32,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this.onVmsSubjectChange = this.onVmsSubjectChange.bind(this);
     }
 
-    protected _animationFrameRequestHandler: number
+    protected _animationFrameRequestHandler: number;
 
     public onAnimationFrame(): void {
         this.performZoomingStep();
@@ -77,8 +77,8 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this.canZoomOut = (!this.disabled && this.state?.zoom?.canZoomOut) || false;
     }
 
-    protected _zoomingSign: signType = 0
-    protected _zoomingStartedTimestamp: ms
+    protected _zoomingSign: signType = 0;
+    protected _zoomingStartedTimestamp: ms;
 
     public startZooming($event: MouseEvent, sign: signType) {
         if ($event.button !== 0) {

@@ -110,7 +110,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     fullInfoPath: string;
     cameraViewPath: string;
     alerts: Alert[];
-    saveSettings: Process
+    saveSettings: Process;
     various: ISelect;
     auto: ISelect;
     aspectRatios: ISelect[];
@@ -817,7 +817,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     toggleMotionEnabled = () => {
         this.motionEnabled = !this.motionEnabled;
-    }
+    };
 
     disableMotion = () => {
         this.motionEnabled = false;
@@ -827,7 +827,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             return { name, id, enabled, value };
         });
         this.updateMotionWarning();
-    }
+    };
 
     enableMotion = (updateModes = false) => {
         this.motionEnabled = true;
@@ -843,7 +843,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         } else {
             this.updateMotionWarning();
         }
-    }
+    };
 
     updateMotionWarning() {
         const [
@@ -990,7 +990,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         } else {
             this.noCameras = true;
         }
-    }
+    };
 
     private updateAlerts() {
         const currentAlerts = (this.alerts || []).find(({ cameraId }) =>

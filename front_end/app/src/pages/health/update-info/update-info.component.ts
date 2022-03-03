@@ -55,7 +55,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         // arrow function because "this"
         this.updateHealth.emit(true);
         this.ribbonService.hide();
-    }
+    };
 
     initUpdateTime() {
         if (this.timerSubscription) {

@@ -46,7 +46,7 @@ export class NxServerLoggerComponent implements OnChanges {
     saveLoggers: Process;
     loading: boolean = false;
 
-    loggerWatcher = new Watcher<boolean>(false)
+    loggerWatcher = new Watcher<boolean>(false);
     systemLoggers: Logger[] = [];
     readonly loggerOptions: LoggerOption[];
 
@@ -122,7 +122,7 @@ export class NxServerLoggerComponent implements OnChanges {
                 this.showLoggers = this.systemLoggers.length > 1;
                 this.loading = false;
             }).catch(console.error);
-    }
+    };
 
     resetForm = (): void => {
         this.systemLoggers.forEach(logger => {
@@ -144,7 +144,7 @@ export class NxServerLoggerComponent implements OnChanges {
             this.saveLoggers,
             this.resetForm
         );
-    }
+    };
 
     selectedLevel(target: Logger): LoggerOption {
         return this.loggerOptions.find(opt => opt.value === target.value);

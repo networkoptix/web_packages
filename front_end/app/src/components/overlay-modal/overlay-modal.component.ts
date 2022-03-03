@@ -36,7 +36,7 @@ interface Server {
     styleUrls: ['overlay-modal.component.scss']
 })
 export class NxOverlayModalComponent implements OnInit {
-    system: NxSystem
+    system: NxSystem;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     servers: Partial<Server>[] = [];
@@ -44,7 +44,7 @@ export class NxOverlayModalComponent implements OnInit {
     serverId: string;
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
-    oneCheckAtATime = false
+    oneCheckAtATime = false;
     showOverlay = false;
     refreshMessage: string;
 

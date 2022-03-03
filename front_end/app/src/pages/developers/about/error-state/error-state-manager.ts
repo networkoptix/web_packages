@@ -20,11 +20,11 @@ type AboutNodeFields = 'assetId'
     | 'blocks'
     | 'asset'
     | 'nodes'
-    | 'subtitle'
+    | 'subtitle';
 
 type BaseErrorConfig = {
     [key in AboutNodeFields]: string | ErrorConfig
-}
+};
 
 interface ErrorConfig extends Partial<BaseErrorConfig> {
     nodes?: ErrorConfig

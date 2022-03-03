@@ -36,7 +36,7 @@ export class MoveSystemToGroupModalContent implements OnInit {
     systemNameOptions: SystemNameOption[];
 
     selectedGroup: GroupNameOption;
-    targetGroupOptions: GroupNameOption[]
+    targetGroupOptions: GroupNameOption[];
 
     moveSystemProcess: Process;
 
@@ -83,7 +83,7 @@ export class MoveSystemToGroupModalContent implements OnInit {
 
     close = (): void => {
         this.dialogRef.close();
-    }
+    };
 
     generateTargetGroupOptions(selectedSysId: string): void {
         this.targetGroupOptions = [];

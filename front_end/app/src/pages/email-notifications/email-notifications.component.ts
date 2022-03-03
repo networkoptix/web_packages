@@ -78,23 +78,23 @@ const getTestEvents = (systemId?: string) => [
 })
 export class EmailNotificationsComponent {
     CONFIG: IConfig;
-    account$: Observable<Account>
+    account$: Observable<Account>;
     systems$: Observable<DropdownItem[]>;
     users$ = new BehaviorSubject<any[]>([]);
     usersSelected$: Observable<string>;
-    selectedSystem$ = new BehaviorSubject<DropdownItem>(null)
+    selectedSystem$ = new BehaviorSubject<DropdownItem>(null);
     system: NxSystem;
     subject = '';
     messageHtml = '';
     messageText = '';
-    payload = ''
+    payload = '';
     response = '';
     endpoint = '';
-    payloadPreview = ''
+    payloadPreview = '';
     attachments = [];
     sending = false;
     cachedCustom;
-    notificationTypes: DropdownItem<Partial<EmailNotification>>[] = getTestEvents()
+    notificationTypes: DropdownItem<Partial<EmailNotification>>[] = getTestEvents();
 
     selectedNotificationType = this.notificationTypes[0];
 
@@ -174,7 +174,7 @@ export class EmailNotificationsComponent {
         isEnabled
     }) => isEnabled).map(({
         accountFullName: label, accountEmail: id
-    }) => ({ label, id, value: id === this.accountService.email }))
+    }) => ({ label, id, value: id === this.accountService.email }));
 
     handleFileDrop = files => {
         files.forEach(({ fileEntry }) => {
@@ -198,7 +198,7 @@ export class EmailNotificationsComponent {
                 fileReader.readAsDataURL(fileEntry);
             }
         });
-    }
+    };
 
     removeAttachment(index) {
         this.attachments.splice(index);

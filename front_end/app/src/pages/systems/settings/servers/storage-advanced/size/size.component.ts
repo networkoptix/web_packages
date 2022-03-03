@@ -33,7 +33,7 @@ type CachedSizes = Record<string, { vms: number, total: number }>;
 })
 export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewInit {
     @Input() store: Storage;
-    @Input() cachedSizes: CachedSizes = {}
+    @Input() cachedSizes: CachedSizes = {};
 
     LANG: LanguageI18NStaticTypes;
 

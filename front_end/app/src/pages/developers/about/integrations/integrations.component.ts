@@ -26,7 +26,7 @@ export class NxIntegrationsComponent implements OnInit {
     currentWindowWidth: number;
     scrollIndex = 0;
     pluginCount = 0;
-    integrationsShortDescription = ''
+    integrationsShortDescription = '';
     integrations;
 
     @HostListener('window:resize') onResize() {

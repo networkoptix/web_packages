@@ -301,5 +301,5 @@ export class LoginWebadminModalContent implements OnInit {
 
     close = msg => {
         this.dialogRef.close(msg);
-    }
+    };
 }

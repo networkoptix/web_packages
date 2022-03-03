@@ -194,7 +194,7 @@ export interface Downloads {
     releaseUrl: string
 }
 
-type OpenAPIJSONType = 'VMS'
+type OpenAPIJSONType = 'VMS';
 
 export interface OpenAPIJSON {
     id: number,

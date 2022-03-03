@@ -37,7 +37,7 @@ export class AddStorageModalContent {
     serverId: string;
     storageManager: StorageManager;
     storageForm: FormGroup;
-    cancelPolls: () => any
+    cancelPolls: () => any;
     storageFormValueSubscription: Subscription;
 
     addStorage: Process;
@@ -92,7 +92,7 @@ export class AddStorageModalContent {
         const forbidden =
             !ipReg.test(control.value) && !domainReg.test(control.value);
         return forbidden ? { forbiddenUrl: true } : null;
-    }
+    };
 
     ngOnInit() {
         pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
@@ -249,7 +249,7 @@ export class AddStorageModalContent {
     preSubmit = () => {
         this.urlChecked = true;
         this.passwordChecked = true;
-    }
+    };
 
     goBack() {
         this.alreadyCheckedAndExists = false;
@@ -258,5 +258,5 @@ export class AddStorageModalContent {
     close = (msg?: string) => {
         this.storageForm.reset();
         this.dialogRef.close(msg);
-    }
+    };
 }

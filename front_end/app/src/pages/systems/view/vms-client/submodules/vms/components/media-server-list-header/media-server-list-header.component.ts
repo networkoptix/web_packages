@@ -18,8 +18,8 @@ export class NxMediaServerListHeaderComponent implements OnInit {
     }
 
     // filterToken: string = ''
-    public ipVisibilityState: boolean = false
-    public token: string = ''
+    public ipVisibilityState: boolean = false;
+    public token: string = '';
 
     onFilterTokenChange(token: string) {
         this.filterTokenChange.emit(this.token);

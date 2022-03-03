@@ -42,8 +42,8 @@ const MOUSE_HIDE_UNTIL_PX = 8;
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
 
-    protected _state: TimelineServiceStatus
-    protected _stateSubscription: Subscription
+    protected _state: TimelineServiceStatus;
+    protected _stateSubscription: Subscription;
     private updateCanvas = new Subject();
     private unsub$ = new Subject();
 
@@ -62,7 +62,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         );
     }
 
-    public readonly archiveSelectionEnabled: boolean = false
+    public readonly archiveSelectionEnabled: boolean = false;
 
     protected _onTimelineStatusChange(s: TimelineServiceStatus) {
         if (s.canvasGeometryUpdateRequested) {
@@ -70,9 +70,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    protected _animationFrameRequestHandler: number
+    protected _animationFrameRequestHandler: number;
 
-    protected _pinchDestructor: Function
+    protected _pinchDestructor: Function;
 
     public ngOnInit(): void {
         this._stateSubscription = this.timeline.subject.subscribe(
@@ -169,10 +169,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
-    protected _mouseDownScreenX: px = 0
-    protected _mouseNotReleasedYet: boolean = false
-    public hideTimeUnderMouse: boolean = false
-    public isDragging: boolean = false
+    protected _mouseDownScreenX: px = 0;
+    protected _mouseNotReleasedYet: boolean = false;
+    public hideTimeUnderMouse: boolean = false;
+    public isDragging: boolean = false;
 
     public canvasMouseDownHandler(e: MouseEvent|TouchEvent): void {
         if (e instanceof MouseEvent && e.button !== 0) {

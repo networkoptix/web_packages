@@ -30,7 +30,7 @@ export enum UpdateTriggers {
     ANALYTICS='analytics'
 }
 
-export type TriggerUpdateCallback = () => void
+export type TriggerUpdateCallback = () => void;
 
 /**
  * StorageState class should only handle managing the storage state data stream.
@@ -50,18 +50,18 @@ export class StorageState extends BaseManager {
             this.#updater$.next(dataToRefresh);
         }
         return this.storageState$;
-    }
+    };
 
     poll = (dataToPoll: UpdateTriggers): [Observable<CurrentStorageState>, TriggerUpdateCallback] => {
         return [this.storageState$, () => this.update(dataToPoll)];
-    }
+    };
 
     /**
      * Triggers update events, similar to redux action/reducer pattern.
      */
     #updater$ = new Subject<UpdateTriggers>();
 
-    #updateOn = (trigger: UpdateTriggers) => this.#updater$.pipe(startWith(trigger), filter(updater => updater === trigger), switchMap(() => this.serverId$))
+    #updateOn = (trigger: UpdateTriggers) => this.#updater$.pipe(startWith(trigger), filter(updater => updater === trigger), switchMap(() => this.serverId$));
 
     // State update handlers - These need to be arrow functions because "this" is fun.
     #getStorageInfoHandler = id => this.serverManager.mediaserver.getStoragesInfo({ id }).pipe(startWith(false), map(info => typeof info === 'boolean' ? info : info.map(({ typeId, name, ...store }) => ({ ...store, canUpdate: true }))));

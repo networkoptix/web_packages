@@ -108,7 +108,7 @@ export class NxAboutComponent {
             return;
         }
         return true;
-    }
+    };
 
     private updatePageMeta = () => {
         this.menusService.getMenu(this.menuName).pipe(
@@ -118,7 +118,7 @@ export class NxAboutComponent {
             }),
             untilDestroyed(this)
         ).toPromise();
-    }
+    };
 
     private mapToAboutNode = ({
         name,
@@ -159,7 +159,7 @@ export class NxAboutComponent {
         if (state || this.account?.is_superuser) {
             this.showRibbon(id, state);
         }
-    }
+    };
 
     private fetchUpdatedDocs = () => {
         const { state } = this.route.snapshot.queryParams;
@@ -170,7 +170,7 @@ export class NxAboutComponent {
             untilDestroyed(this),
             tap(this.mapDocToNodes(state))
         ).toPromise();
-    }
+    };
     // Not quiet sure what this was originally doing, probably handles if a user was logged out or session gets invalidated
     // private checkAccount = (
     //     account
@@ -225,9 +225,9 @@ export class NxAboutComponent {
     }
 };
 
-export type AboutStructureNode = {template: AboutTemplates, node: AboutNode}
+export type AboutStructureNode = {template: AboutTemplates, node: AboutNode};
 
-export type AboutStructure = AboutStructureNode[]
+export type AboutStructure = AboutStructureNode[];
 
 export interface AboutNode {
     title: string;

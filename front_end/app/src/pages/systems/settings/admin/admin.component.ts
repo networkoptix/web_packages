@@ -73,7 +73,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     merging: boolean;
     editMode = false;
     enableEdit = false;
-    connectToCloudProcess: Process
+    connectToCloudProcess: Process;
 
     settingsForSystem;
     systemName: string;
@@ -412,7 +412,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         });
                 });
             });
-    }
+    };
 
     delete() {
         if (!this.system.isMine) {

@@ -36,7 +36,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         state?: 'pending' | 'draft'
     }>();
     // eslint-disable-next-line lines-between-class-members
-    @Output() relatedLinks = new EventEmitter<RelatedLinks>()
+    @Output() relatedLinks = new EventEmitter<RelatedLinks>();
     @Input()  queryParamsOnInternalRoute: QueryParamsHandling = undefined;
     @Input()  searchEnabled = true;
     @Input()  service;
@@ -118,7 +118,7 @@ export class NxDevelopersMenuComponent implements OnInit {
 
         findActiveNode(this.menuNodes, activeAssetId, activeAssetState);
         this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
-    }
+    };
 
     toggleOpen(node: MenuNode) {
         const getRootNode = (name, nodesToCheck = this.displayedMenuNodes, rootNode: MenuNodeWithParent[] = []) => {
@@ -179,7 +179,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             this.openNodes.push(node.name || node.display_name);
             loopProtector++; // Just in case the nodes have an invalid structure for whatever reason
         }
-    }
+    };
 
     updateSearchQuery({ query }) {
         if (query !== '' && query === this.searchQuery$.value) return;

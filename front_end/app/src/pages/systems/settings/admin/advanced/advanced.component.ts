@@ -202,5 +202,5 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
             return systemSettings;
         }, this.systemSettings);
-    }
+    };
 }

@@ -25,7 +25,7 @@ export class NxDevConsoleMenuComponent {
     @Input() sectionParam: ConsoleSection;
 
     CONFIG: IConfig;
-    TYPES = ConsoleMode
+    TYPES = ConsoleMode;
 
     showAdditionalLinks = false;
     loading = true;

@@ -643,7 +643,7 @@ export class NxCloudApiService {
             .catch(error => {
                 console.error(error);
             });
-    }
+    };
 
     getTimeSinceLogin() {
         return this.http.get<any>(this.CONFIG.apiBase + '/account/timeSincePassword');
@@ -700,19 +700,19 @@ export class CustomClientAPI {
             body.base_vms = baseVms;
         }
         return this.http.post<t.CustomClient>(this.apiBase, body);
-    }
+    };
 
     retrieve = id => {
         return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
-    }
+    };
 
     list = () => {
         return this.http.get<t.CustomClient[]>(this.apiBase);
-    }
+    };
 
     update = (id, name, values) => {
         return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
-    }
+    };
 
     partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
         if (name !== undefined) {
@@ -720,23 +720,23 @@ export class CustomClientAPI {
         }
         data.values = { ...(data.values || {}), ...values };
         return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
-    }
+    };
 
     destroy = id => {
         return this.http.delete(`${this.apiBase}${id}/`);
-    }
+    };
 
     getManifest = () => {
         return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
-    }
+    };
 
     generatePackage = <Id, DownloadId = {downloadId: string}>(id: Id) => {
         return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
-    }
+    };
 
     checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
         return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
-    }
+    };
 
-    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`
+    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
 }

@@ -22,11 +22,11 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() time: string;
     @Input() url: string;
     @Input() lightBackground = false;
-    @Input() motionPreview = false
+    @Input() motionPreview = false;
     @Input() preloader = false;
     @Input() aspect: string = 'Auto';
     @Output() loaded = new EventEmitter<boolean>();
-    show: boolean
+    show: boolean;
 
     get imageClass() {
         return this.motionPreview

@@ -49,7 +49,7 @@ export class TimelineScrollbarRelativeService {
             canScrollLeft: false,
             canScrollRight: false
         }
-    )
+    );
 
     protected _emit() {
         this._subject.next({

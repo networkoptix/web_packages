@@ -43,10 +43,10 @@ export interface FilterUpdatePayload {
 })
 export class NxAdvancedFilterComponent {
     @Output() onClose = new EventEmitter();
-    @Output() updateFilter = new EventEmitter<FilterUpdatePayload>()
+    @Output() updateFilter = new EventEmitter<FilterUpdatePayload>();
     @Input() filter: DataStructureFilter;
     @Input() field: string;
-    @Input() data: Record<string, string>[] = []
+    @Input() data: Record<string, string>[] = [];
     @Input() initialState: FilterState;
     @Input() activeFilter: string | false = false;
 
@@ -57,12 +57,12 @@ export class NxAdvancedFilterComponent {
         [GroupingOptions.DATE_AUTO]: 'shortDate',
         [GroupingOptions.DATE_MONTH]: 'MMMM, y',
         default: 'short'
-    }
+    };
 
     currentState: FilterState = {
         sort: FilterSort.NONE,
         selections: []
-    }
+    };
 
     FILTER_SORT = FilterSort;
     GROUPING_OPTIONS = GroupingOptions;
@@ -122,7 +122,7 @@ export class NxAdvancedFilterComponent {
         const bValue = sanitizeSortValue(b[this.field]);
 
         return aValue === bValue ? 0 : aValue > bValue ? sortValue : -sortValue;
-    }
+    };
 
     groupCompare(a, b) {
         if (!this.filter.grouping || this.filter.grouping === GroupingOptions.TEXT) {
@@ -167,7 +167,7 @@ export class NxAdvancedFilterComponent {
         }
 
         return data;
-    }
+    };
 
     ngOnChanges(changes: NgChanges<NxAdvancedFilterComponent>) {
         if (

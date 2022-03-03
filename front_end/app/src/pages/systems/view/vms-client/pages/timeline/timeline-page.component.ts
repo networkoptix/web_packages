@@ -15,7 +15,7 @@ export class TimelinePageComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    protected _animationFrameRequestHandler: number
+    protected _animationFrameRequestHandler: number;
 
     public ngOnInit(): void {
         const now = Date.now();

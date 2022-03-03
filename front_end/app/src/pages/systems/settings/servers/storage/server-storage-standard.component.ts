@@ -107,7 +107,7 @@ export class NxSystemStorageComponent implements OnInit {
     reindexingStorages: MODE[] = [];
     previouslyReserved = new Set<string>();
     beingUpdated: string[] = [];
-    cachedSizes: Record<string, { vms: number, total: number }> = {}
+    cachedSizes: Record<string, { vms: number, total: number }> = {};
 
     stopReindex$ = new Subject<TARGET_STORAGE>();
     currentStorageState: CurrentStorageState;
@@ -120,14 +120,14 @@ export class NxSystemStorageComponent implements OnInit {
         this.scrollOffset$.pipe(distinctUntilChanged())
     ]).pipe(
         map(([offset, scroll]) => offset - scroll + 22) // margin offset
-    )
+    );
 
     isBackupOn: Watcher<boolean>;
     modeWatchers: Record<string, Watcher<string, NxSystemStorageComponent>> = {};
 
     ddWidth: number;
     modes: Mode[];
-    STATUS = STORAGE_STATUS
+    STATUS = STORAGE_STATUS;
 
     cleanSmbUrl = cleanSmbUrl;
 
@@ -246,7 +246,7 @@ export class NxSystemStorageComponent implements OnInit {
             this.currentStorageState = null;
             this.setupWatchers();
         });
-    }
+    };
 
     pollStats = async (update: boolean = false): Promise<void> => {
         this.cancelPolling$.next('cancel previous');
@@ -314,7 +314,7 @@ export class NxSystemStorageComponent implements OnInit {
             }),
             takeUntil(this.cancelPolling$)
         ).subscribe();
-    }
+    };
 
     setupWatchers = (): void => {
         const modeWatchers = Object.entries(this.modeWatchers);
@@ -394,7 +394,7 @@ export class NxSystemStorageComponent implements OnInit {
                 }
             );
         }
-    }
+    };
 
     setDefaultBackupSettings = async () => {
         if (this.system.useRest) {
@@ -457,7 +457,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.isBackupOn.value = true;
         this.backupState = true;
         return Promise.resolve();
-    }
+    };
 
     turnOffBackup = async (retries = 5): Promise<void> => {
         this.isBackupOn.originalValue = !retries;
@@ -491,9 +491,9 @@ export class NxSystemStorageComponent implements OnInit {
             this.isBackupOn.value = false;
             this.backupState = false;
         }
-    }
+    };
 
-    normalizeId = (id: unknown): string => `{${cleanId(id || '')}}`
+    normalizeId = (id: unknown): string => `{${cleanId(id || '')}}`;
 
     getIconSrc(store: Storage): string {
         const svgName = this.updatingModes.includes(store.storageId) || !store.storageType
@@ -534,7 +534,7 @@ export class NxSystemStorageComponent implements OnInit {
             !this.updatingModes.includes(storageId)
         ).length;
         return noStorages || !onlineStorages;
-    }
+    };
 
     getModes(store: Storage): Mode[] {
         const checkDisabled = mode => ({
@@ -577,7 +577,7 @@ export class NxSystemStorageComponent implements OnInit {
     checkDisabled = (store: Storage): boolean =>
         store.status !== STORAGE_STATUS.REINDEXING && store.status !== STORAGE_STATUS.IN_USE ||
         this.updatingModes.includes(store.storageId) ||
-        this.selectMode(store).value === 'modeNotUsed'
+        this.selectMode(store).value === 'modeNotUsed';
 
     changeMode(
         {
@@ -751,7 +751,7 @@ export class NxSystemStorageComponent implements OnInit {
         });
     }
 
-    backupState$ = new BehaviorSubject(false)
+    backupState$ = new BehaviorSubject(false);
 
     get backupState(): boolean {
         return this.backupState$.value;

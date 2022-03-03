@@ -30,14 +30,14 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         { name: '4 x 3', value: { cols: 4, rows: 3 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
         { name: '8 x 6', value: { cols: 8, rows: 6 } }
-    ]
+    ];
 
     static BASE_CONFIG = {
         selectedSystem: '',
         selectedCamera: '',
         autoUpdate: true,
         updateInterval: 1
-    }
+    };
 
     static cloudApi: NxCloudApiService;
     static updateSystems$ = new Subject();
@@ -47,7 +47,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         shareReplay()
     );
 
-    CUSTOM_LABELS = ['Select System', 'Select Camera', 'Auto Update']
+    CUSTOM_LABELS = ['Select System', 'Select Camera', 'Auto Update'];
 
     static systems$ = new BehaviorSubject<NxSystemWithUserInfo[]>([]);
     updater$ = new Subject();
@@ -69,7 +69,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
             const selectedSystem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
             this.updateSystem(selectedSystem);
         })
-    )
+    );
 
     thumbnailsUpdater$ = new BehaviorSubject(Date.now());
 
@@ -89,7 +89,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
                 [cleanId(id)]: { previewUrl, name }
             };
         }, {}))
-    )
+    );
 
     refreshThumbnail = () => this.thumbnailsUpdater$.next(Date.now());
 
@@ -108,12 +108,12 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
                 this.card.config.selectedCamera = this.selectedCamera.value;
             }
         })
-    )
+    );
 
     initCameras = () => {
         this.system = this.systemService.createSystem(this.accountService.email, this.card.config.selectedSystem);
         return this.system.getMediaServersAndCameras(true);
-    }
+    };
 
     updateSystem(system: DropdownItem) {
         this.selectedSystem = system;
@@ -129,11 +129,11 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
 
     refreshCameras = () => {
         this.updater$.next('update');
-    }
+    };
 
     updateContainerSize = size => {
         this.size = size;
-    }
+    };
 
     constructor(
         cd: ChangeDetectorRef,

@@ -57,16 +57,16 @@ const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
 })
 @LoggerDecorator('SYSTEM VIEW CAMERA PAGE ::', true)
 export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, AfterViewInit {
-    _log: Function
-    _warn: Function
+    _log: Function;
+    _warn: Function;
 
     private readonly isMobile: boolean;
     private readonly isChrome: boolean;
     public readonly isMobileSafari: boolean;
-    public id: string
-    public camera: ICamera
-    public system: NxSystem
-    public previewUrl = ''
+    public id: string;
+    public camera: ICamera;
+    public system: NxSystem;
+    public previewUrl = '';
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -75,25 +75,25 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     onShowElements: any;
     onMoveShowElements: any;
 
-    protected _routeSubscription: Subscription
-    protected _vmsStateSubscription: Subscription
-    protected _uxStateSubscription: Subscription
-    protected _playbackSubscription: Subscription
+    protected _routeSubscription: Subscription;
+    protected _vmsStateSubscription: Subscription;
+    protected _uxStateSubscription: Subscription;
+    protected _playbackSubscription: Subscription;
 
-    protected _animationFrameRequestHandler: number
+    protected _animationFrameRequestHandler: number;
 
-    public settingsShown: boolean = false
+    public settingsShown: boolean = false;
 
-    public availableTransportsAndResolutions$ = new BehaviorSubject<AvailableTransportsAndResolutions>({})
-    public transports$ = new BehaviorSubject<PlaybackTransport[]>([])
+    public availableTransportsAndResolutions$ = new BehaviorSubject<AvailableTransportsAndResolutions>({});
+    public transports$ = new BehaviorSubject<PlaybackTransport[]>([]);
     public qualities$ = new BehaviorSubject<any>({});
     public visibleQualities$ = new BehaviorSubject<PlaybackQuality[]>([]);
-    public selectedTransport$ = new BehaviorSubject<PlaybackTransport>(undefined)
-    public selectedQuality$ = new BehaviorSubject<PlaybackQuality>(undefined)
+    public selectedTransport$ = new BehaviorSubject<PlaybackTransport>(undefined);
+    public selectedQuality$ = new BehaviorSubject<PlaybackQuality>(undefined);
 
     public drawQualityDivider$ = new BehaviorSubject<string>('');
 
-    public controlsShown: boolean = false
+    public controlsShown: boolean = false;
     public canViewArchives = false;
     public showPlayerSection = true;
     public cameraError: string;
@@ -138,7 +138,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         );
     }
 
-    public readonly archiveSelectionEnabled: boolean
+    public readonly archiveSelectionEnabled: boolean;
 
     protected onPlaybackChange(s: PlaybackState) {
         let time = '';
@@ -387,7 +387,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public getRecordsInProgress: string // cameraId
+    public getRecordsInProgress: string; // cameraId
 
     protected _updateAvailableTransportsAndResolutions() {
         this.availableTransportsAndResolutions =
@@ -516,7 +516,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
     }
 
-    protected _newlyRecordedIntervalHandle
+    protected _newlyRecordedIntervalHandle;
 
     public startPollingForNewlyRecordedChunks() {
         timer(0, 10 * 1000).pipe(takeUntil(this.unsub$)).subscribe(() => {

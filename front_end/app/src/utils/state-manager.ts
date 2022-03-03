@@ -13,7 +13,7 @@ export class StateManager<State, GetStateArgs> {
     private tearDown$ = new Subject<any>();
     private _args$ = new BehaviorSubject<GetStateArgs>(null);
 
-    state$ = this._state$.pipe(filter(state => state !== null))
+    state$ = this._state$.pipe(filter(state => state !== null));
 
     constructor(
         private getState: (args: GetStateArgs) => Observable<State>,

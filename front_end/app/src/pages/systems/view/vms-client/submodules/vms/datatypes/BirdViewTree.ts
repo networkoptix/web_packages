@@ -58,8 +58,8 @@ export class BirdViewTree {
         }
     }
 
-    protected _treeRoot: BirdViewTreeNode
-    protected _newlyRecorded: CameraArchive = []
+    protected _treeRoot: BirdViewTreeNode;
+    protected _newlyRecorded: CameraArchive = [];
 
     protected _initTree() {
         this._treeRoot = new BirdViewTreeNode(
@@ -138,7 +138,7 @@ export class BirdViewTree {
             ? this._spareArchiveDetails(node.startMs, node.centerMs, minGapMs)
             : this._spareArchiveDetails(node.centerMs, node.endMs, minGapMs);
         node.setChild(part, minGapMs, records, perfect);
-    }
+    };
 
     protected _undetalizeArchiveSubRange(firstIndex: int, lastIndex: int, minGapMs) {
         const records = [];
@@ -291,7 +291,7 @@ export class BirdViewTree {
 }
 
 export class BirdViewTreeNode {
-    protected _intervalCenterMs: ms
+    protected _intervalCenterMs: ms;
 
     public get startMs() {
         return this._startMs;

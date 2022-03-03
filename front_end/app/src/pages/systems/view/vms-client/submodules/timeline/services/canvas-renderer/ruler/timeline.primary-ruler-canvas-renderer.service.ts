@@ -47,9 +47,9 @@ export class TimelinePrimaryRulerCanvasRendererService {
         }
     }
 
-    protected _prevIntervals: Array<IrregularLengthInterval> = []
-    protected _lastIntervalChanges = {}
-    protected _intervalWeightAnimations = {}
+    protected _prevIntervals: Array<IrregularLengthInterval> = [];
+    protected _lastIntervalChanges = {};
+    protected _intervalWeightAnimations = {};
 
     protected _haveIntervalsChanged(newIntervals: Array<IrregularLengthInterval>) {
         if (this._prevIntervals.length !== newIntervals.length) {

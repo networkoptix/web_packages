@@ -24,12 +24,12 @@ export interface TimelineServiceStatus {
 })
 export class TimelineService {
     public readonly renderFps: number;
-    protected _fullRange: TimeRange = new TimeRange(0, 0)
-    protected _visibleRange: TimeRange = new TimeRange(0, 0)
-    protected _canvasGeometry: CanvasGeometry = { width: 0, height: 0, dpr: 1 }
+    protected _fullRange: TimeRange = new TimeRange(0, 0);
+    protected _visibleRange: TimeRange = new TimeRange(0, 0);
+    protected _canvasGeometry: CanvasGeometry = { width: 0, height: 0, dpr: 1 };
 
-    protected _subject = new Subject<TimelineServiceStatus>()
-    protected _canvasGeometryUpdateRequested: boolean = true
+    protected _subject = new Subject<TimelineServiceStatus>();
+    protected _canvasGeometryUpdateRequested: boolean = true;
 
     public constructor(
         protected vms: VideoManagementSystemService,
@@ -228,10 +228,10 @@ export class TimelineService {
         // TODO: check why not calling emit() here
     }
 
-    protected _scrollAnimationStartTime: ms
-    protected _initialScrollMs: ms
-    protected _targetScrollMs: ms
-    protected _animationStep: int = 0
+    protected _scrollAnimationStartTime: ms;
+    protected _initialScrollMs: ms;
+    protected _targetScrollMs: ms;
+    protected _animationStep: int = 0;
 
     public get targetScrollMs() {
         return this._targetScrollMs || this.visibleRange.start;

@@ -50,7 +50,7 @@ export class AddWidgetModalContent {
         this.selectedWidget.value.size = size;
     }
 
-    isFirstPartyWidget = NxDynamicWidgetComponent.findWidget
+    isFirstPartyWidget = NxDynamicWidgetComponent.findWidget;
 
     updateSelected(selected) {
         this.selectedWidget = null;
@@ -93,7 +93,7 @@ export class AddWidgetModalContent {
             this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise();
         }
         this.downloadingThirdParty = false;
-    }
+    };
 
     ngOnInit() {
         pickFrom(
@@ -127,5 +127,5 @@ export class AddWidgetModalContent {
 
     close = (msg?: WidgetCard) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

@@ -24,7 +24,7 @@ export class NxPageService {
     LANG: LanguageI18NStaticTypes;
 
     updater$ = new Subject();
-    metaLookup: MetaLookup = {}
+    metaLookup: MetaLookup = {};
 
     constructor(
         configService: NxConfigService,
@@ -61,7 +61,7 @@ export class NxPageService {
         return { ...baseLangMeta, type, image: this.getRoot() + image };
     }
 
-    findMatchingMeta = url => (lookupDict): Record<string, any> => Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {}
+    findMatchingMeta = url => (lookupDict): Record<string, any> => Object.entries(lookupDict).find(([partialPath]) => url.startsWith(partialPath))?.[1] || {};
 
     getPathMeta(url) {
         const findIn = this.findMatchingMeta(url);
@@ -71,7 +71,7 @@ export class NxPageService {
         };
     }
 
-    generateDefaultMeta = (url: string): Record<string, string> => ({ ...this.getBaseMeta(), ...this.getPathMeta(url) })
+    generateDefaultMeta = (url: string): Record<string, string> => ({ ...this.getBaseMeta(), ...this.getPathMeta(url) });
 
     /**
      * Use this method to update a pages metadata.
@@ -164,5 +164,5 @@ export class NxPageService {
             .catch(error => {
                 console.error(error);
             });
-    }
+    };
 }

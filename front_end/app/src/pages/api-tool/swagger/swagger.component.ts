@@ -61,7 +61,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     currentAPIDoc: APIDoc;
     swagger: SwaggerUI;
     swaggerLoading$ = new BehaviorSubject(false);
-    swaggerMenuDescription = { title: '', description: '' }
+    swaggerMenuDescription = { title: '', description: '' };
 
     // Misc properties
     RTSPRequestShowing = false;
@@ -69,8 +69,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     singleRoutePath: string;
     singleRouteMethod: string;
     customComponentsRendering = false;
-    componentMap: componentMap = {} // Contains references to created componentRefs, which makes it possible to manually destroy them
-    textareaMap: textareaMap = {} // textAreas innerHTMLs are preserved here to be reapplied to code blocks
+    componentMap: componentMap = {}; // Contains references to created componentRefs, which makes it possible to manually destroy them
+    textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
 
     constructor(public APIToolSystemService: NxAPIToolSystemService,
                 public openAPIJSONService: NxOpenAPIJSONService,
@@ -100,7 +100,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         // TODO: new way to get API info store info
         // return !this.APIToolService.APIInfoStore[node.name] && !node.nodes.length && method;
         return !node.nodes.length && method;
-    }
+    };
 
     private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list') {
         const selection = expand === 'full' ? node.parentNode?.name || node.name : node.name;
@@ -179,7 +179,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         return this.APIToolSystemService.isRestAPI()
             ? ['get', 'put', 'post', 'delete', 'options', 'head', 'patch'] // 5.0
             : ['get', 'trace', 'post', 'delete', 'options', 'head', 'patch']; // below 5.0
-    }
+    };
 
     private handlePotentialRTSPRoute = request => {
         const urlPath = new URL(request.url).pathname.slice(1);
@@ -192,7 +192,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         } else {
             this.RTSPRequestShowing = false;
         }
-    }
+    };
 
     private handleOldSession = () => {
         this.loginService.currentSystem = this.APIToolSystemService.currentSystem;
@@ -213,7 +213,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private handleRTSPRequest = request => {
         // replace http with rtsp (for display only, does not actually send an rtsp request)
         request.url = 'rtsp' + request.url.slice(5);
-    }
+    };
 
     private authenticateRequest = request => {
         const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections[this.APIToolSystemService.currentServerId].generateHeaders();
@@ -226,7 +226,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             // below 5.0
             this.setAuthParam(request);
         }
-    }
+    };
 
     private setAuthParam = request => {
         const systemMediaServerConnections = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections;
@@ -237,7 +237,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const potentialAmpersand = Url.search ? '&' : '';
         Url.search += potentialAmpersand + 'auth=' + authParam;
         request.url = Url.toString();
-    }
+    };
 
     // swagger-ui plugin system
     private OnResponsesRenderPlugin = () => ({
@@ -271,7 +271,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.customComponentsRendering = false;
             this.swaggerLoading$.next(false);
         }, 0);
-    }
+    };
 
     private addSpinner = singleAPIRoute => {
         const opblocks = this.document.querySelectorAll('.opblock-summary');
@@ -284,7 +284,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 opblock.insertAdjacentElement('afterend', element);
             }
         }
-    }
+    };
 
     private addButtonEventListeners = () => {
         // Clicking on execute or try-it-out/cancel button triggers a rerender
@@ -300,14 +300,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 }
             });
         }
-    }
+    };
 
     private changeRequestBodyText = () => {
         const requestBody: HTMLElement = this.document.querySelector('.opblock-title.parameter__name');
         if (requestBody) {
             requestBody.innerText = 'Body';
         };
-    }
+    };
 
     private modifyCodeBlocksAndTextareas = () => {
         const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
@@ -323,14 +323,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 highlightAllCode(element);
             }
         }
-    }
+    };
 
     private removeInputPlaceholders = () => {
         const inputs = this.document.querySelectorAll('input');
         for (const input of inputs) {
             input.removeAttribute('placeholder');
         }
-    }
+    };
 
     private modifyTitlesInResponse = () => {
         const visibleResponseSections = this.document.querySelectorAll('.btn-group');
@@ -348,7 +348,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 titles[4].classList.add('example-response');
             }
         }
-    }
+    };
 
     private addCustomTextareas() {
         const textareas = this.document.body.querySelectorAll('textarea:not(.custom-textarea):not([readonly])');
@@ -380,7 +380,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const label = this.document.createElement('label');
         label.innerHTML = '<div class="media-type-wrapper"><div class="media-type">application/json</div></div>';
         return label;
-    }
+    };
 
      /** Moves the example response and schema outside of the response table, also adds a label.  */
      private moveExampleResponse = () => {
@@ -395,7 +395,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                  responses.appendChild(exampleResponse);
              }
          }
-     }
+     };
 
     private addTabItemEventListener = () => {
         const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
@@ -407,7 +407,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 }, 0);
             });
         }
-    }
+    };
 
     generateComponent(componentClass: any) {
         const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
@@ -432,7 +432,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const clipboardElement = this.generateComponent(NxCopyToClipboardComponent).element;
 
         parent.insertAdjacentElement('afterend', clipboardElement);
-    }
+    };
 
     addLineCounter = (parent: HTMLElement) => {
         const lines =  parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
@@ -458,7 +458,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         } else {
             parent.innerHTML = parent.innerText; // If no lines are added, remove code highlighting elements that comes from swagger-ui
         };
-    }
+    };
 
     private addLabelToRequest = () => {
         const requestModelExample = this.document.querySelector('.opblock-description-wrapper .model-example:not(.with-label)');
@@ -467,7 +467,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             requestModelExample.insertBefore(label, requestModelExample.firstChild);
             requestModelExample.classList.add('with-label');
         }
-    }
+    };
 
     private insertCustomDropdown = () => {
         const selects = this.document.body.querySelectorAll<HTMLSelectElement>('select:not(.custom-dropdown):not(.content-type)');
@@ -480,7 +480,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             select.classList.add('custom-dropdown');
             select.insertAdjacentElement('beforebegin', element);
         }
-    }
+    };
 
     ngOnChanges(changes: NgChanges<NxSwaggerComponent>) {
         if (changes.activeNode.currentValue) {

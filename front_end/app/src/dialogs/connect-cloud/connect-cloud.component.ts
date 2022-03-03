@@ -168,9 +168,9 @@ export class ConnectCloudModalContent implements OnInit {
         }
 
         close.finally(() => this.close(true));
-    }
+    };
 
     close = (msg?: boolean) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

@@ -80,5 +80,5 @@ export class TransferOwnershipModalContent implements OnInit {
 
     close = () => {
         this.dialogRef.close();
-    }
+    };
 }

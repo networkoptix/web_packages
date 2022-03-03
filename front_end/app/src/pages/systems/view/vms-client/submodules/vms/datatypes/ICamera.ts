@@ -1,7 +1,7 @@
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
-export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized'
+export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized';
 
 export interface ISimpleTimeRange {
     start: ms,
@@ -14,7 +14,7 @@ export interface ISimpleTimeRange {
     overlapsWith(r: SimpleTimeRange): boolean,
 }
 
-export type IRecord = ISimpleTimeRange
+export type IRecord = ISimpleTimeRange;
 
 export class SimpleTimeRange {
     constructor(
@@ -54,7 +54,7 @@ export class SimpleTimeRange {
     }
 }
 
-export type CameraArchive = Array<IRecord>
+export type CameraArchive = Array<IRecord>;
 
 export interface AvailableTransportsAndResolutions {
     [s: string]: Array<PlaybackQuality>, // means: [s: PlaybackTransport]

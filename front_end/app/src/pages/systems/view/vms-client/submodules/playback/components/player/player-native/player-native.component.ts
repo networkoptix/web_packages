@@ -113,7 +113,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
             this.playback.unpause();
             this._log('PIPELINE_ERROR_EXTERNAL_RENDERER_FAILED ->');
         }
-    }
+    };
 
     public ngAfterViewInit(): void {
         this.playbackSubscription = this.playback.subject.subscribe(

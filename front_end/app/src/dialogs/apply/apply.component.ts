@@ -42,10 +42,10 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
 
     close = (msg: string = 'canceled') => {
         this.dialogRef.close(msg);
-    }
+    };
 
     discard = () => {
         this.dialogRef.close('discarded');
         return this.discardFunc?.();
-    }
+    };
 }

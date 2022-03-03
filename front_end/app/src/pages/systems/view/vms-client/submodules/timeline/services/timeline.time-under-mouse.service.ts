@@ -17,12 +17,12 @@ export interface TimelineTimeUnderMouseServiceStatus {
     providedIn: 'root'
 })
 export class TimelineTimeUnderMouseService {
-    protected _isMouseInside: boolean = false
-    protected _timeUnderMouse: ms = -1
-    protected _offsetX: px = -1
-    protected _pressed: boolean = false
+    protected _isMouseInside: boolean = false;
+    protected _timeUnderMouse: ms = -1;
+    protected _offsetX: px = -1;
+    protected _pressed: boolean = false;
 
-    protected _subject = new Subject<TimelineTimeUnderMouseServiceStatus>()
+    protected _subject = new Subject<TimelineTimeUnderMouseServiceStatus>();
 
     protected _emit() {
         this._subject.next({

@@ -130,7 +130,7 @@ export class DisconnectModalContent {
 
     close = (msg?: boolean) => {
         this.dialogRef.close(msg);
-    }
+    };
 
     private disconnectLocal() {
         this.mediaServerApi = this.systemApiService

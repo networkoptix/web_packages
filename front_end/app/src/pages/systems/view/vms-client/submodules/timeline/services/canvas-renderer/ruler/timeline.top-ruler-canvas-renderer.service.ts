@@ -60,7 +60,7 @@ export class TimelineTopRulerCanvasRendererService {
         this._interval = undefined;
     }
 
-    protected _interval: IrregularLengthInterval
+    protected _interval: IrregularLengthInterval;
 
     public getInterval() {
         if (!this._interval) {
@@ -83,7 +83,7 @@ export class TimelineTopRulerCanvasRendererService {
         }
     }
 
-    protected _serifTimes: Array<ms>
+    protected _serifTimes: Array<ms>;
 
     public getSerifTimes() {
         if (!this._serifTimes) {

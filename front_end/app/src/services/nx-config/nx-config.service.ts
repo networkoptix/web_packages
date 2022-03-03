@@ -79,7 +79,7 @@ export class NxConfigService {
 
     static resolveLocalOrCloud = <Local, Cloud>(local: Local, cloud: Cloud) => {
         return NxConfigService.isLocal ? local : cloud;
-    }
+    };
 
-    public resolveLocalOrCloud = NxConfigService.resolveLocalOrCloud
+    public resolveLocalOrCloud = NxConfigService.resolveLocalOrCloud;
 }

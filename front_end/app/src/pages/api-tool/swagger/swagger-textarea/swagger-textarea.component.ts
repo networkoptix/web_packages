@@ -117,7 +117,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
                 line.innerHTML = '<br>';
             }
         }
-    }
+    };
 
     /**
       * Focus the swagger-textarea's focus position to the right position
@@ -134,7 +134,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         selection.addRange(range);
         element.focus();
         focusPositionElement.remove();
-    }
+    };
 
     setTextareaText = () => {
         const element =  this.customTextareaRef.nativeElement;
@@ -149,7 +149,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         const setValue = Object.getOwnPropertyDescriptor(this.window.HTMLTextAreaElement?.prototype, 'value')?.set;
         setValue?.call(this.textarea, textContent);
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
-    }
+    };
 
     ngOnDestroy() {
         this.attributeMutationObserver.disconnect();

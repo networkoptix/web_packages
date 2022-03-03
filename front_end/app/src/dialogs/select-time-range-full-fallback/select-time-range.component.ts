@@ -29,8 +29,8 @@ export class SelectTimeRangeModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     hideErrors = true;
-    start: DateDict
-    end: DateDict
+    start: DateDict;
+    end: DateDict;
 
     @Input() closable = true;
 
@@ -67,7 +67,7 @@ export class SelectTimeRangeModalContent {
     public closeModal = $event => {
         $event.preventDefault();
         return this.close(false);
-    }
+    };
 
     public handleChange(v: string, a: 'start' | 'end', b: 'year' | 'month' | 'day' | 'hour' | 'minute') {
         this[a][b] = parseInt(v) || 1;
@@ -90,7 +90,7 @@ export class SelectTimeRangeModalContent {
         } else {
             return this.close({ start, end });
         }
-    }
+    };
 
     ngOnInit() {
         this.start = this._dateDictFromTimeStamp(this.selection.range.start);
@@ -99,5 +99,5 @@ export class SelectTimeRangeModalContent {
 
     close = (msg: boolean | {}) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

@@ -17,7 +17,7 @@ interface NameValue {
 type MediaStreamInfo = any;
 
 export class Camera implements ICamera {
-    protected _birdViewTree: BirdViewTree
+    protected _birdViewTree: BirdViewTree;
 
     public get archiveRange() {
         return this._archiveRange;
@@ -27,9 +27,9 @@ export class Camera implements ICamera {
         return this._archive;
     }
 
-    protected _mediaStreams: Array<MediaStreamInfo> = []
+    protected _mediaStreams: Array<MediaStreamInfo> = [];
 
-    protected _rotation: int = 0
+    protected _rotation: int = 0;
 
     constructor(
         public readonly id: string,

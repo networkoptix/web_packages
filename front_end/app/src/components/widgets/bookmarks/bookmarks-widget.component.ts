@@ -44,11 +44,11 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
     static SIZES = [
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
         { name: '4 x 6', value: { cols: 4, rows: 6 } }
-    ]
+    ];
 
     static BASE_CONFIG = {
         selectedSystem: ''
-    }
+    };
 
     static cloudApi: NxCloudApiService;
     static updateSystems$ = new Subject();

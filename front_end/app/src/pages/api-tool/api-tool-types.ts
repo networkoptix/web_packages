@@ -10,7 +10,7 @@ export interface MethodInfo {
     tags: string[]
 }
 
-export type method = [string, MethodInfo]
+export type method = [string, MethodInfo];
 
 export interface APIInfo {
     title: string,

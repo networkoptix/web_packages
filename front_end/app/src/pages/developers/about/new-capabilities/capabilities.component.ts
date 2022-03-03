@@ -20,7 +20,7 @@ export class NxNewCapabilitiesComponent implements OnInit {
     svg = {
         width: '72',
         height: '76'
-    }
+    };
 
     constructor(
         configService: NxConfigService,

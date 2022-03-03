@@ -28,9 +28,9 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
     calculationProperties = {
         scrollSpeedCoefficient: 0.0005,
         maskCoefficient: 2.4
-    }
+    };
 
-    CONFIG: IConfig
+    CONFIG: IConfig;
 
     constructor(
         configService: NxConfigService,
@@ -49,7 +49,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         return 0.166 * (
             1 - (scrollPosition * scrollSpeedCoefficient * maskCoefficient)
         );
-    }
+    };
 
     ngOnInit() {
         // 1200 ms is an arbitrary number, it just matters that the scale is changed before the intro animation is finished

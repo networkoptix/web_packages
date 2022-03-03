@@ -193,5 +193,5 @@ export class ResetServerModalContent {
 
     close = (msg?: string) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

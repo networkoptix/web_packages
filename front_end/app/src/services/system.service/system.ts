@@ -96,7 +96,7 @@ export class NxSystem extends System {
     userManager: UserManager;
     serverManager: ServerManager;
     cameraManager: CameraManager;
-    storageManager: StorageManager
+    storageManager: StorageManager;
 
     private _subscribersCount = new BehaviorSubject<number>(0);
     private attempts = 0; // used to limit consecutive api call attempts
@@ -698,7 +698,7 @@ export class NxSystem extends System {
             console.error(errors);
             return false;
         });
-    }
+    };
 
     #removeAlexaRules = async (existingRules: EventRule[], user: NxSystemUser, alarmResourceName: string, doCommandResourceName: string) => {
         const toRemove = existingRules.filter(({
@@ -715,7 +715,7 @@ export class NxSystem extends System {
         return Promise.all(toRemove.map(({
             id
         }) => this.mediaserver.removeEventRule(id).toPromise().catch(errors => errors)));
-    }
+    };
 
     /**
      * Event Helpers
@@ -739,7 +739,7 @@ export class NxSystem extends System {
         useSource,
         actionResourceId,
         additionalResources
-    })
+    });
 
     static getEventCondition = (
         resourceName: string,
@@ -781,7 +781,7 @@ export class NxSystem extends System {
             reasonCode: 'none',
             resourceName
         };
-    }
+    };
 
     static baseRule = {
         system: false,
@@ -789,7 +789,7 @@ export class NxSystem extends System {
         eventState: 'Undefined',
         disabled: false,
         aggregationPeriod: 0
-    }
+    };
 
     static getRuleId = (
         caption: string,
@@ -807,7 +807,7 @@ export class NxSystem extends System {
             ([cap, action]) => cap === caption && action === actionType
         );
         return existingRule?.[2] || `{${uuid()}}`;
-    }
+    };
 
     static createRule = (
         { actionParams, eventCondition, ...rule }: RawRule,
@@ -818,7 +818,7 @@ export class NxSystem extends System {
         ...rule,
         actionParams: JSON.stringify(actionParams),
         eventCondition: JSON.stringify(eventCondition)
-    })
+    });
 
     /**
      * Methods and properties below need to be refactored and moved to respective manager classes.

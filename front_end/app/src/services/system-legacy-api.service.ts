@@ -1390,5 +1390,5 @@ export class NxSystemAPI {
     /**
      * Alias removeResource which is used for deleting event rules.
      */
-    removeEventRule = this.removeResource
+    removeEventRule = this.removeResource;
 }

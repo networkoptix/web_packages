@@ -16,7 +16,7 @@ export class ServerManager {
         [serverId: string]: NxSystemAPI | NxSystemRestAPI;
     };
 
-    servers: NxSystemServer[] = []
+    servers: NxSystemServer[] = [];
     moduleInfo: ModuleInfo;
 
     constructor(

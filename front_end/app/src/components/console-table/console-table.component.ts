@@ -70,7 +70,7 @@ export class NxConsoleTableComponent {
     filterStates: Record<string, FilterState> = {};
     fixedWidths = {};
     noItems = false;
-    ignoreActive = false
+    ignoreActive = false;
 
     selectedManifest: ConsoleManifest;
     selectedData: TableDataSource;
@@ -188,13 +188,13 @@ export class NxConsoleTableComponent {
         this.selectedData.updateFilters({ [fieldName]: payload.filter }, fieldName, payload.state);
     };
 
-    updatePageParam = this.#paramUpdaterFactory('page')
+    updatePageParam = this.#paramUpdaterFactory('page');
 
-    updatePerPageParam = this.#paramUpdaterFactory('perPage')
+    updatePerPageParam = this.#paramUpdaterFactory('perPage');
 
     updateSearchParam = ({ query } = { query: '' }) => {
         this.#paramUpdaterFactory('search')(query);
-    }
+    };
 
     updateData() {
         this.update$.next('update');
@@ -202,7 +202,7 @@ export class NxConsoleTableComponent {
 
     updatePageState = ({ page, search, perPage = 0 }) => {
         this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search, perPage: perPage || this.selectedManifest.perPage });
-    }
+    };
 
     resetSearch() {
         this.updateSearchParam({ query: '' });
@@ -234,9 +234,9 @@ export class NxConsoleTableComponent {
         }
     }
 
-    asyncInProgress = {}
+    asyncInProgress = {};
     asyncErrors = {};
-    cancelHandlers = {}
+    cancelHandlers = {};
 
     handleAsync = async asyncSettings => {
         const apiLookup: Partial<Record<ModalType, ConsoleSection>> = {
@@ -292,7 +292,7 @@ export class NxConsoleTableComponent {
                     this.asyncInProgress[asyncSettings.lookupKey] = `(${state ? Math.floor(state.current / state.total) : 0}%)`;
             }
         });
-    }
+    };
 
     updateTableSize({ width, height }) {
         this.noResultsHeight = height;
@@ -309,22 +309,22 @@ export class TableDataSource extends DataSource<any> {
     #baseData$: BehaviorSubject<any[]> = new BehaviorSubject([]);
     #itemsPerPage$: BehaviorSubject<number> = new BehaviorSubject(null);
     #currentPage$: BehaviorSubject<number> = new BehaviorSubject(null);
-    #displayedColumns$: BehaviorSubject<string[]> = new BehaviorSubject([])
+    #displayedColumns$: BehaviorSubject<string[]> = new BehaviorSubject([]);
     #numberOfItems$ = new BehaviorSubject(0);
     #additionalFilters$: BehaviorSubject<Record<string, AdditionalFilter>> = new BehaviorSubject({});
     search$: BehaviorSubject<string> = new BehaviorSubject(null);
     noSearchMatches$ = new BehaviorSubject(false);
     numberOfPages$ = new BehaviorSubject(0);
-    showAdvanced$ = this.#baseData$.pipe(map(data => data.length > this.minItemsAdvanced))
+    showAdvanced$ = this.#baseData$.pipe(map(data => data.length > this.minItemsAdvanced));
     minItemsAdvanced = 0;
-    filterStates: Map<string, FilterState> = new Map()
+    filterStates: Map<string, FilterState> = new Map();
 
     perPage$ = combineLatest([
         this.#numberOfItems$,
         this.#itemsPerPage$
     ]).pipe(
         map(([items, perPage]) => Math.min(items, perPage))
-    )
+    );
 
     updateFilters(filtersToUpdate: Record<string, AdditionalFilter>, fieldName: string, filterState: FilterState) {
         if (this.filterStates.get(fieldName)?.sort !== filterState.sort) {
@@ -392,7 +392,7 @@ export class TableDataSource extends DataSource<any> {
             this.#numberOfItems$.next(data.length);
 
             return data.slice(start, end);
-        }))
+        }));
 
     constructor(
         data,

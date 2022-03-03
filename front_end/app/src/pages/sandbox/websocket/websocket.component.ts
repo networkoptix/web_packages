@@ -73,7 +73,7 @@ export class WebsocketComponent implements OnInit {
         } else {
             this.socketData = data;
         }
-    }
+    };
 
     sendGroupAction(action: string) {
         if (!this.systemGroupsData.connection$) {

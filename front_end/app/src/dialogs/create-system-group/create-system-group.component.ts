@@ -79,5 +79,5 @@ export class CreateSystemGroupModalContent implements OnInit {
 
     close = (): void => {
         this.dialogRef.close();
-    }
+    };
 }

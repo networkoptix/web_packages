@@ -20,7 +20,7 @@ interface Platform {
 })
 export class IntegrationService implements OnDestroy {
     CONFIG: IConfig;
-    account: Account
+    account: Account;
 
     pluginsSubject = new BehaviorSubject(undefined);
     pluginSubject = new BehaviorSubject({});

@@ -17,7 +17,7 @@ export class NxPaginatorComponent {
     @Input() numPages: number;
     @Input() pagesToShow: number;
     @Input() tempDisabled = false;
-    @Input() showPrevNext = false
+    @Input() showPrevNext = false;
 
     CONFIG: IConfig;
     showExperimental: boolean = false;

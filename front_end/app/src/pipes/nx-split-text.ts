@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 export type extraParams = {
     length: number,
     translateParams: {}
-}
+};
 
 @Pipe({ name: 'translateAndSplitText' })
 export class TextTransformPipe implements PipeTransform {

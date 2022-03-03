@@ -46,17 +46,17 @@ import { sidebarLayout } from '../sidebarLayout.cfg';
 })
 @LoggerDecorator('SYSTEM VIEW INDEX PAGE ::', true)
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
-    _log: Function
-    _warn: Function
+    _log: Function;
+    _warn: Function;
     private systemsSubscription: Subscription;
 
-    protected _state: VmsState
-    protected _vmsStateSubscription: Subscription
-    protected _routerParamsSubscription: Subscription
-    protected _uxStateSubscription: Subscription
+    protected _state: VmsState;
+    protected _vmsStateSubscription: Subscription;
+    protected _routerParamsSubscription: Subscription;
+    protected _uxStateSubscription: Subscription;
 
-    public systemId: string
-    public system: NxSystem
+    public systemId: string;
+    public system: NxSystem;
     public systems: NxSystem[];
 
     CONFIG: IConfig;
@@ -67,12 +67,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     onShowElements: any;
     onMoveShowElements: any;
 
-    public initialized: boolean = false
-    public initializedWithError: boolean = false
-    public isSidebarShown: boolean = false
+    public initialized: boolean = false;
+    public initializedWithError: boolean = false;
+    public isSidebarShown: boolean = false;
 
-    public hasCameras: boolean = true
-    private cancelPoll$ = new Subject<string>()
+    public hasCameras: boolean = true;
+    private cancelPoll$ = new Subject<string>();
 
     // public animated: boolean = false
 
@@ -103,7 +103,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected _windowWidth = 1024 // should be larger than the threshold
+    protected _windowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
     public onResize(event) {

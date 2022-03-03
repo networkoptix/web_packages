@@ -40,9 +40,9 @@ export class NxAPIToolSystemService {
         updating: false,
         errorCount: 0,
         errorCountLimit: 4
-    }
+    };
 
-    currentServerId$ = new BehaviorSubject<string>(null)
+    currentServerId$ = new BehaviorSubject<string>(null);
     serverEmitter$ = new Subject<EmitInfo<ServerInfo>>();
     serversLoading$ = new BehaviorSubject(true);
     private serverSubscription: Subscription;
@@ -60,7 +60,7 @@ export class NxAPIToolSystemService {
 
     loading$ = new BehaviorSubject(true);
     loadingFailure$ = new BehaviorSubject(false); // Errors that redirect to a placeholder page.
-    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = ''
+    loadingErrorType: '' | 'NO_SYSTEM_FOUND_API_TOOL' | 'SYSTEM_FAILED_TO_LOAD_API_TOOL' = '';
     outDatedSystem$ = new BehaviorSubject(false);
 
     get currentSystemId() { return this.currentSystemId$.value; }
@@ -300,7 +300,7 @@ export class NxAPIToolSystemService {
             ? this.headerService.lastActive : systems.find(system => this.systemIsOnline(system));
 
         return onlineSystem;
-    }
+    };
 
     async tryNextSystem() {
         if (environment.isLocal) {
@@ -355,13 +355,13 @@ export class NxAPIToolSystemService {
         this.loading$.next(false);
         this.serversLoading$.next(false);
         this.outDatedSystem$.next(true);
-    }
+    };
 
     showError = () => {
         this.loadingFailure$.next(true);
         this.loadingErrorType = environment.isLocal ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
         this.serverSubscription?.unsubscribe();
-    }
+    };
 
     setQueryParams = (param: string, newValue: string) => {
         if (environment.isLocal && param === 'system') return;
@@ -370,7 +370,7 @@ export class NxAPIToolSystemService {
         queryParams[param] = newValue;
         this.queryParams = queryParams;
         this.uri.updateURI(this.uri.getURL(), queryParams);
-    }
+    };
 
     initializeAPITool = () => {
         const initialSystems = this.systemsService.systems || [];
@@ -393,7 +393,7 @@ export class NxAPIToolSystemService {
                 systemsSubjectSubscription?.unsubscribe();
             }
         });
-    }
+    };
 
     // Helpers
     isRestAPI(serverID = this.currentServerId) {
@@ -422,7 +422,7 @@ export class NxAPIToolSystemService {
 
     private makeLSKey = (systemId: string, type: APIDocType) => {
         return systemId + ' api-tool JSON ' + type;
-    }
+    };
 
     private retrieveJSONFromLocalStorage = (type: APIDocType): APIDoc => {
         if (this.queryParams.disableCache) return null;
@@ -431,7 +431,7 @@ export class NxAPIToolSystemService {
         const cachedItem = this.localStorage.retrieve(this.makeLSKey(this.currentSystemId, type));
         if (version !== cachedItem?.version) return null; // invalidate cache if system version changes
         return cachedItem?.json;
-    }
+    };
 
     private storeJSONInLocalStorage = (json: APIDoc, type: APIDocType) => {
         if (this.queryParams.disableCache) return null;
@@ -439,12 +439,12 @@ export class NxAPIToolSystemService {
         const version = this.systemVersion;
         const cacheObject = { version, json };
         this.localStorage.store(this.makeLSKey(this.currentSystemId, type), cacheObject);
-    }
+    };
 
     private disableManualSystemChanging = () => {
         this.systemChangeLockout = true;
         setTimeout(() => {
             this.systemChangeLockout = false;
         }, (this.CONFIG.apiTool.manualSystemChangeCooldown));
-    }
+    };
 }

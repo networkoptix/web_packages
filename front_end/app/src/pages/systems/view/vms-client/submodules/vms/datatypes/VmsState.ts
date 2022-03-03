@@ -27,7 +27,7 @@ export type CameraDict = {
     // [id: GUID]: ICamera
     // keys can't be a type aliases, sadly, due to TypeScript limitations
     [id: string]: ICamera
-}
+};
 
 export interface CameraNotSelectedVmsState extends AbstractVmsState {
     mode: VMS_MODE.CAMERA_NOT_SELECTED,
@@ -80,4 +80,4 @@ export function createCameraSelectedState(
     }
 }
 
-export type VmsState = NotInitializedVmsState | CameraNotSelectedVmsState | CameraSelectedVmsState
+export type VmsState = NotInitializedVmsState | CameraNotSelectedVmsState | CameraSelectedVmsState;

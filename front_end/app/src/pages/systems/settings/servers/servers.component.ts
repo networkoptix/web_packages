@@ -41,7 +41,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     system: NxSystem;
     serverIdFromParams;
     selectedServer;
-    serverId$ = new BehaviorSubject('')
+    serverId$ = new BehaviorSubject('');
 
     advanced: boolean;
     isOffline = false;

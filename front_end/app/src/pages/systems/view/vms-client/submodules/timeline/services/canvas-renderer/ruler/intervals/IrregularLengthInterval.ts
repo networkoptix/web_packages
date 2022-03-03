@@ -8,4 +8,4 @@ export type IrregularLengthInterval =
     'half-year' |
     'quarter-year' |
     'month' |
-    RegularLengthInterval
+    RegularLengthInterval;

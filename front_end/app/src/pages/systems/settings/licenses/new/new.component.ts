@@ -225,7 +225,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
     displayErrors = () => {
         this.hideErrors = false;
-    }
+    };
 
     ngOnDestroy(): void {
     }

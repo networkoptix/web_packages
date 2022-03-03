@@ -110,13 +110,13 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     handleClick = (click: ClickEvent) => {
         if (click.clearSearch) this.clearSearch();
-    }
+    };
 
     clearSearch = () => {
         this.searchLoading = false;
         this.searchResults$.next([]);
         this.searchMode = false;
-    }
+    };
 
     navigateSearch(event) {
         const openNewWindow = event?.metaKey || event?.ctrlKey;
@@ -140,7 +140,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             ...this.parseResults(results)
         ]);
         this.loadingNext = false;
-    }
+    };
 
     fetchNext = () => {
         this.loadingNext = true;
@@ -272,7 +272,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(url);
         });
         this.ribbonService.hide();
-    }
+    };
 
     private addReviewActions(reviewId: any, draftActions: RibbonActionInput[]) {
         const process = this.processService.createProcess(() => {
@@ -341,7 +341,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
                 tap(this.renderDoc(state))
             );
         }
-    }
+    };
 
     private renderDoc = state =>
         ({
@@ -368,7 +368,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             );
             this.loading = false;
             setTimeout(this.addCustomScripts);
-        }
+        };
 
     private addCustomScripts = () => {
         Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
@@ -380,7 +380,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         if (this.scriptDiv?.nativeElement) {
             this.renderer2.appendChild(this.scriptDiv?.nativeElement, myScript);
         }
-    }
+    };
 
     private initializeMenu = () => {
         const [snapshot, isContentType] = this.updateSelectedKBandGetSnapshot();
@@ -391,7 +391,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.clearSearch();
         }
         return this.getFirstDoc();
-    }
+    };
 
     private updatePageNode(
         originalTitle: any,
@@ -511,7 +511,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.kbService.assetIds = [];
             getAllIds(menu.nodes);
         }
-    }
+    };
 
     private getFirstDoc = () => {
         const traverseToFirst = (

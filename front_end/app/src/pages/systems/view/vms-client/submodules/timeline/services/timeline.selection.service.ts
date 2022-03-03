@@ -45,12 +45,12 @@ export interface TimelineSelectionServiceStatus {
     providedIn: 'root'
 })
 export class TimelineSelectionService {
-    protected _isActive: boolean = false
-    protected _selectedRange: TimeRange = new TimeRange(0, 0)
+    protected _isActive: boolean = false;
+    protected _selectedRange: TimeRange = new TimeRange(0, 0);
 
-    protected _dragMode: SELECTION_DRAG_MODE = SELECTION_DRAG_MODE.NO_DRAGGING
-    protected _dragAnchorPx: px = 0
-    protected _dragAnchorMs: ms = 0
+    protected _dragMode: SELECTION_DRAG_MODE = SELECTION_DRAG_MODE.NO_DRAGGING;
+    protected _dragAnchorPx: px = 0;
+    protected _dragAnchorMs: ms = 0;
 
     constructor(
         protected timeline: TimelineService,
@@ -80,7 +80,7 @@ export class TimelineSelectionService {
             range: new TimeRange(0, 0),
             pixelRange: { left: 0, right: 0 }
         }
-    )
+    );
 
     public get subject() {
         return this._subject;
@@ -112,7 +112,7 @@ export class TimelineSelectionService {
         return this._pixelRange;
     }
 
-    protected _pixelRange: PixelRange = { left: 0, right: 0 }
+    protected _pixelRange: PixelRange = { left: 0, right: 0 };
 
     protected updatePixelRange() {
         this._pixelRange = {
@@ -127,12 +127,12 @@ export class TimelineSelectionService {
     //     this._emit()
     // }
 
-    protected _leftEar: HTMLElement
+    protected _leftEar: HTMLElement;
     public set leftEar(e: HTMLElement) {
         this._leftEar = e;
     }
 
-    protected _rightEar: HTMLElement
+    protected _rightEar: HTMLElement;
     public set rightEar(e: HTMLElement) {
         this._rightEar = e;
     }
@@ -162,7 +162,7 @@ export class TimelineSelectionService {
         });
     }
 
-    protected _$background: HTMLElement
+    protected _$background: HTMLElement;
 
     public set $background(b: HTMLElement) {
         this._$background = b;
@@ -234,7 +234,7 @@ export class TimelineSelectionService {
         }
     }
 
-    protected _lastMouseMove: MouseEvent
+    protected _lastMouseMove: MouseEvent;
 
     public handleMouseMove(e: MouseEvent) {
         this._lastMouseMove = e;
@@ -409,7 +409,7 @@ export class TimelineSelectionService {
         this._emit();
     }
 
-    protected _animationFrameHandle: number
+    protected _animationFrameHandle: number;
 
     public onAnimationFrame() {
         this._animationFrameHandle = requestAnimationFrame(this.onAnimationFrame);

@@ -1,1 +1,1 @@
-export type CounterState = number
+export type CounterState = number;

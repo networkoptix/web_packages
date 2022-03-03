@@ -21,7 +21,7 @@ export class WebClientUxService {
 
     protected _subject = new BehaviorSubject<WebclientUxState>({
         ...webClientUxInitialState
-    })
+    });
 
     protected _emit(): void {
         this._subject.next(this.state);
@@ -31,7 +31,7 @@ export class WebClientUxService {
         return this._subject;
     }
 
-    protected _state: WebclientUxState = { ...webClientUxInitialState }
+    protected _state: WebclientUxState = { ...webClientUxInitialState };
 
     public get state(): WebclientUxState {
         return { ...this._state };

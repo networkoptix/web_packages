@@ -1,5 +1,5 @@
-type uint = number // positive integer
-type ms = uint
+type uint = number; // positive integer
+type ms = uint;
 
 interface DurationDict {
     years: uint,

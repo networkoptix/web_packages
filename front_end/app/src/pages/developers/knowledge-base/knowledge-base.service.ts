@@ -23,7 +23,7 @@ export class NxKnowledgebaseService {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    account: Account
+    account: Account;
 
     basePath = '';
     contentAssetId: number;

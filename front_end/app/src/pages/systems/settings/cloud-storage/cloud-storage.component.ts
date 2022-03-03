@@ -306,7 +306,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     private handleCloudStorageDisabled = () => {
         this.cloudStorageSystemEnabled = false;
-    }
+    };
 }
 
 export const emptyUsage: IUsageStats = {
@@ -327,4 +327,4 @@ export interface IUsageStats {
     delayFromLive: UsageTypes
 }
 
-type UsageTypes = '&mdash;' | number
+type UsageTypes = '&mdash;' | number;

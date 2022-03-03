@@ -24,9 +24,9 @@ export class NxSystemGroupsService {
         this._handleGroupsReceived = this._handleGroupsReceived.bind(this);
     }
 
-    protected _groups: IGroups = null
+    protected _groups: IGroups = null;
 
-    protected _subject = new BehaviorSubject<IGroups>({ ...EMPTY_GROUPS_OBJECT })
+    protected _subject = new BehaviorSubject<IGroups>({ ...EMPTY_GROUPS_OBJECT });
 
     public get subject() {
         return this._subject;

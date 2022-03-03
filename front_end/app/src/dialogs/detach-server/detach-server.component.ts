@@ -104,5 +104,5 @@ export class DetachServerModalContent {
 
     close = (msg?: string) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

@@ -14,7 +14,7 @@ export class SystemGroupSettingsModalContent implements OnInit {
     @ViewChild('systemGroupSettingsForm') form;
 
     systemGroupSettingsProcess: Process;
-    code = ''
+    code = '';
 
     constructor(
         private processService: NxProcessService,
@@ -42,5 +42,5 @@ export class SystemGroupSettingsModalContent implements OnInit {
 
     close = () => {
         this.dialogRef.close();
-    }
+    };
 }

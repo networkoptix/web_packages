@@ -5,7 +5,7 @@ import { filter } from 'rxjs/operators';
 export type TargetState = {
     id: number;
     download: boolean;
-}
+};
 
 @Injectable({
     providedIn: 'root'

@@ -79,5 +79,5 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
 
     close = () => {
         this.dialogRef.close();
-    }
+    };
 }

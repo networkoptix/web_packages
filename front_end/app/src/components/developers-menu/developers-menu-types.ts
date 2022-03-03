@@ -1,6 +1,6 @@
 import type { MenuNode } from '../../services/menus.service.types';
 
-export type MenuNodeWithParent = MenuNode & {parentNode?: MenuNode}
+export type MenuNodeWithParent = MenuNode & {parentNode?: MenuNode};
 
 export interface RelatedLinks {
     type: string,

@@ -43,12 +43,12 @@ export class NxSystemGroupPageComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private _titleSubscription: Subscription
-    private _routeSubscription: Subscription
+    private _titleSubscription: Subscription;
+    private _routeSubscription: Subscription;
 
     private _systems$: Observable<SystemsState> = this.store.select(selectSystems);
-    private _group$: Observable<IGroup>
-    public group$: Observable<IGroupWithSystemDetails>
+    private _group$: Observable<IGroup>;
+    public group$: Observable<IGroupWithSystemDetails>;
 
     constructor(
         configService: NxConfigService,

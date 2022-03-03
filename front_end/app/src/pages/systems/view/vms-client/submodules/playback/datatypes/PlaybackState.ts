@@ -47,7 +47,7 @@ export interface LivePlaybackState extends AbstractPlaybackState {
     error: string
 }
 
-export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState
+export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState;
 
 export function createInitialStoppedState(
     quality: PlaybackQuality = 'auto',

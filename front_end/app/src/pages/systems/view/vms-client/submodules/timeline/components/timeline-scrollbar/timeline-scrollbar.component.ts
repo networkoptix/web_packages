@@ -39,8 +39,8 @@ const MIN_BAR_WIDTH_PX = 50;
 })
 @LoggerDecorator('TIMELINE SCROLLBAR ::', true)
 export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
-    _log: Function
-    _warn: Function
+    _log: Function;
+    _warn: Function;
 
     CONFIG: IConfig;
 
@@ -59,7 +59,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public canScrollLeft: boolean = false;
     public canScrollRight: boolean = false;
 
-    public isBarGrabbed: boolean = false
+    public isBarGrabbed: boolean = false;
     private useTouch: boolean = false;
     private lastTouched: TouchEvent;
 
@@ -107,7 +107,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
-    protected _magnification: float
+    protected _magnification: float;
 
     public barLeftPx: px = 0;
     public barWidthPx: px = 0;
@@ -290,8 +290,8 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this.scrollbarRelative.handleButtonRightMouseDown();
     }
 
-    protected _prevMouseUpTime: number
-    protected _doubleClickDelay: number = 300 // ms
+    protected _prevMouseUpTime: number;
+    protected _doubleClickDelay: number = 300; // ms
     public buttonLeftHandleMouseUp() {
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
@@ -324,7 +324,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this.scrollbarRelative.handleButtonRightDblClick();
     }
 
-    protected _animationFrameRequestHandler: number
+    protected _animationFrameRequestHandler: number;
 
     public onAnimationFrame(): void {
         this.scrollbarRelative.updateIfMouseIsDown();

@@ -1,4 +1,4 @@
-export type EASING = 'linear' | 'ease-in-out' | 'ease-in-out-sine'
+export type EASING = 'linear' | 'ease-in-out' | 'ease-in-out-sine';
 
 export function linear(x: number): number {
     return x;

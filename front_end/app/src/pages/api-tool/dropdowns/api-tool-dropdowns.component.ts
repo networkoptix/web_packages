@@ -25,16 +25,16 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     readonly environment = environment;
 
     system : DropdownItem;
-    systems: DropdownItem[] = []
+    systems: DropdownItem[] = [];
     hasSeparator = false;
     hasSystems = false;
 
     server : DropdownItem;
-    servers: DropdownItem[] = []
+    servers: DropdownItem[] = [];
     serverDropdownEnabled = false; // current design has server dropdown permanently disabled
 
     type : DropdownItem;
-    types: DropdownItem[] = []
+    types: DropdownItem[] = [];
 
     constructor(
         private configService: NxConfigService,
@@ -164,5 +164,5 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         this.server = undefined;
         this.types = [];
         this.type = undefined;
-    }
+    };
 }

@@ -3,18 +3,18 @@ import { Component, Input } from '@angular/core';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
-type InputType = 'small' | 'wide' | 'adaptive'
+type InputType = 'small' | 'wide' | 'adaptive';
 @Component({
     selector: 'nx-landing-content-block',
     templateUrl: './landing-content-block.component.html',
     styleUrls: ['./landing-content-block.component.scss']
 })
 export class NxContentLandingBlockComponent {
-    CONFIG: IConfig
+    CONFIG: IConfig;
 
-    @Input() type: InputType
-    @Input() title: string
-    @Input() content: string
+    @Input() type: InputType;
+    @Input() title: string;
+    @Input() content: string;
     @Input() svg = 'eye_closed';
     @Input() url = '';
     @Input() externalLink = false;
@@ -32,7 +32,7 @@ export class NxContentLandingBlockComponent {
             width: '40',
             height: '24'
         }
-    }
+    };
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();

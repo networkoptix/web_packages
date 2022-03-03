@@ -84,7 +84,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     show2faRequired = false;
 
     private cancelPrevious$ = new Subject();
-    private connection$ = new Subject()
+    private connection$ = new Subject();
 
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;

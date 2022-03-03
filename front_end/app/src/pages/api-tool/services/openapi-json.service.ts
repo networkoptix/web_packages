@@ -22,7 +22,7 @@ export class NxOpenAPIJSONService {
     currentAPIDoc$ = new BehaviorSubject<APIDoc>(null);
     currentType$ = new BehaviorSubject<string>(null);
     queuedServerChange: string = null;
-    APIStore: Store<APIData> = {} // Storing JSONs, API Info (part of jsons), and Menus for developers-menu
+    APIStore: Store<APIData> = {}; // Storing JSONs, API Info (part of jsons), and Menus for developers-menu
     APITypes: { [key: string]: APIType } = {
         main: {
             type: 'main',
@@ -32,13 +32,13 @@ export class NxOpenAPIJSONService {
             type: 'deprecated',
             displayName: 'Deprecated'
         }
-    }
+    };
 
-    APIInfoNodes = ['API Information']
+    APIInfoNodes = ['API Information'];
     isInfoNode = false; // info nodes don't display swagger routes
     isReadOnly = false;
 
-    APITypeEmitter = new Subject<EmitInfo<APIType>>()
+    APITypeEmitter = new Subject<EmitInfo<APIType>>();
     emitAPIType(type: APIType, disabled = false, error = '') {
         this.APITypeEmitter.next({ info: type, disabled, error });
     }
@@ -160,13 +160,13 @@ export class NxOpenAPIJSONService {
         this.isReadOnly = true;
         this.currentAPIDoc = readonlyAPI.api.content;
         this.setMenuNodes(readonlyAPI.menu);
-    }
+    };
 
     setMenuNodes = (menu: MenuNodeWithParent[]) => {
         this.menuNodes = menu;
         this.activeNode = this.menuNodes[0];
         this.navigateToMenuNodeFromURL();
-    }
+    };
 
     createAPIStore(serverID: string, api: APIDoc) {
         this.APIStore[serverID] = {
@@ -193,7 +193,7 @@ export class NxOpenAPIJSONService {
      */
     setAPIInfo = (info: APIInfo) => {
         this.currentAPIDoc.info = info;
-    }
+    };
 
     setAPIType = (serverID, type) => {
         this.currentType = type;
@@ -203,11 +203,11 @@ export class NxOpenAPIJSONService {
 
         this.setAPIInfo(info);
         this.setMenuNodes(menu);
-    }
+    };
 
     determineIsInfoNode = (node: MenuNodeWithParent) => {
         return this.APIInfoNodes.includes(node.name);
-    }
+    };
 
     navigateToMenuNodeFromURL = () => {
         if (this.menuNodes) {
@@ -221,5 +221,5 @@ export class NxOpenAPIJSONService {
                 this.menuNodes = this.menuSubject.value.nodes; // trigger change detection;
             }
         }
-    }
+    };
 }

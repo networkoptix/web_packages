@@ -9,7 +9,7 @@ import { WINDOW } from './window-provider';
     providedIn: 'root'
 })
 export class NxSessionService {
-    readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI']
+    readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
     loginStateSubject = new ReplaySubject<string>(0);
     language$ = new ReplaySubject<string>(0);
     private session: LocalStorageService;

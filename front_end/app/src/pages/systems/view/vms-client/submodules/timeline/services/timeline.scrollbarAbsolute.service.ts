@@ -25,8 +25,8 @@ export interface TimelineScrollbarAbsoluteServiceStatus extends TimelineScrollba
     providedIn: 'root'
 })
 export class TimelineScrollbarAbsoluteService {
-    protected _logPrefix: string = 'SCROLLBAR_ABSOLUTE_SERVICE ::'
-    protected _logDisable: boolean = true
+    protected _logPrefix: string = 'SCROLLBAR_ABSOLUTE_SERVICE ::';
+    protected _logDisable: boolean = true;
 
     protected _log(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
@@ -60,7 +60,7 @@ export class TimelineScrollbarAbsoluteService {
         honestLeft: 0,
         width: 0,
         honestWidth: 0
-    })
+    });
 
     protected _emit() {
         this._subject.next({

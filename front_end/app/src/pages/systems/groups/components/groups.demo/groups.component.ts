@@ -12,8 +12,8 @@ import { GroupsState } from '../../store/groups/groups.state';
 })
 export class NgrxDemoGroupsComponent {
     state$: Observable<GroupsState> = this.store.select(selectGroupState);
-    groupList$ = this.store.select(selectGroupList)
-    groupForest$ = this.store.select(selectGroupForest)
+    groupList$ = this.store.select(selectGroupList);
+    groupForest$ = this.store.select(selectGroupForest);
 
     constructor(private store: Store) { }
 

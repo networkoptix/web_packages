@@ -12,8 +12,8 @@ import { PlaybackService } from '../../services/playback.service';
     styleUrls: ['./playback-state-indicator.component.scss']
 })
 export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
-    protected subscription: Subscription
-    public state: PlaybackState
+    protected subscription: Subscription;
+    public state: PlaybackState;
 
     @Input() enabled: boolean;
 

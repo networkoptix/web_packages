@@ -23,23 +23,23 @@ interface layer {
     styleUrls: ['./background-graphic.component.scss']
 })
 export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
-    @Input() scrollPosition: number
+    @Input() scrollPosition: number;
     CONFIG: IConfig;
     componentInitialized = false;
     isSafari: boolean;
     layers: layer[] = [];
 
-    graphicPaths = ['1', '2', '3', '4', '5', '6', '7', 'contrast']
+    graphicPaths = ['1', '2', '3', '4', '5', '6', '7', 'contrast'];
 
     svgProperties = {
         defaultWidth: 1920,
         defaultHeight: 1080
-    }
+    };
 
     calculationProperties = {
         scrollSpeedCoefficient: 0.0005,
         layerDistanceCoefficient: 0.00005
-    }
+    };
 
     constructor(
         configService: NxConfigService,
@@ -69,13 +69,13 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
                 )
             ))
         );
-    }
+    };
 
     // Converts layer size to scale
     getScale = (layer: number) => {
         const { defaultWidth } = this.svgProperties;
         return 0.25 * (this.layerSize(defaultWidth, layer) / (defaultWidth));
-    }
+    };
 
     recalculateScale = () => {
         for (let i = 0; i < this.layers.length; i++) {
@@ -88,7 +88,7 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
             }
             this.layers[i].scale = this.getScale(currLayer);
         }
-    }
+    };
 
     ngAfterViewInit() {
         setTimeout(() => {

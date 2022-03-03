@@ -11,8 +11,8 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
     styleUrls: ['./system-page.component.scss']
 })
 export class SystemPageComponent implements OnInit {
-    protected _state: VmsState
-    protected _subscription: Subscription
+    protected _state: VmsState;
+    protected _subscription: Subscription;
 
     public get mediaServers(): Array<MediaServer> {
         return this._state && this._state.mode !== VMS_MODE.NOT_INITIALIZED

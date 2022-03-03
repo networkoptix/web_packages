@@ -9,7 +9,7 @@ import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
 import { ContextManifest } from './nx-cloud-api.types';
 
-type createButtonType = 'default' | 'primary'
+type createButtonType = 'default' | 'primary';
 interface MenuNodeNavProps {
     url: string;
     // eslint-disable-next-line camelcase
@@ -29,7 +29,7 @@ export class NxHeaderService {
     public currentLocation$ = new BehaviorSubject<any>({});
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
 
-    public dynamicRoutes = {}
+    public dynamicRoutes = {};
 
     constructor(
         private router: Router,

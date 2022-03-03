@@ -44,7 +44,7 @@ export type extNgForm = {
     hasChange: boolean,
     changedFields: Set<string>,
     subscr: Subscription,
-}
+};
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -62,7 +62,7 @@ export type extNgForm = {
 export class Watcher<T extends any, Owner = any> {
     originalValue: T;
     valueSubject = new BehaviorSubject<T>(undefined);
-    identity: Symbol
+    identity: Symbol;
 
     constructor(value?: T, public owner: Owner = null, identifier = 'Watcher') {
         this.value = value;
@@ -89,7 +89,7 @@ export class Watcher<T extends any, Owner = any> {
     // Resets the value of the watcher to the first value that was not undefined.
     reset = () => {
         this.valueSubject.next(this.originalValue);
-    }
+    };
 
     static extendedWatcherFactory<T extends any, Extended extends { [key: string]: any }>(
         value: T, extendedProperties: Extended
@@ -106,7 +106,7 @@ export class Watcher<T extends any, Owner = any> {
 export class SectionWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(undefined);
-    identity: Symbol
+    identity: Symbol;
 
     constructor(
         public watchers: Watcher<any>[],
@@ -143,11 +143,11 @@ export class SectionWatcher {
 
     private updateHash = () => {
         this.valueSubject.next(this.value);
-    }
+    };
 
     reset = () => {
         this.watchers.forEach(watcher => watcher.reset());
-    }
+    };
 }
 
 export class FormWatcher {
@@ -185,18 +185,18 @@ export class FormWatcher {
         const { value } = this.valueSubject;
         Object.assign(this.originalValue, value);
         this.form.reset(value);
-    }
+    };
 
     reset = () => {
         this.valueSubject.next(this.originalValue);
         this.form.reset(this.originalValue);
-    }
+    };
 
     saved = () => {
         this.originalValue = this.value;
         this.changed = false;
         this.reset();
-    }
+    };
 }
 
 @UntilDestroy()
@@ -227,7 +227,7 @@ export class FormWatcher {
  */
 export class NxApplyService {
     public applyComponentRef: ComponentRef<NxApplyComponent>;
-    private applyComponentInstance: NxApplyComponent
+    private applyComponentInstance: NxApplyComponent;
     private applyFunctions: Process[] = [];
     private applyFormFunctions: Process[] = [];
     private applyFunction: Process;
@@ -240,7 +240,7 @@ export class NxApplyService {
     private form: NgForm;
     private watchers: Watcher<any>[];
 
-    private updatedWatchers$ = new Subject<string>()
+    private updatedWatchers$ = new Subject<string>();
     applyOnNavSubject = new BehaviorSubject('');
     isOnline$ = new BehaviorSubject(true);
 
@@ -625,7 +625,7 @@ export class NxApplyService {
             applyComponentRef.instance.isOnline = isOnline;
         });
         return sectionWatcher;
-    }
+    };
 
     open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
         const positionStrategy = this.overlay

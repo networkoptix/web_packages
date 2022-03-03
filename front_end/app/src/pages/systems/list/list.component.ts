@@ -48,7 +48,7 @@ class GroupTile {
     }
 }
 
-type Tile = GroupTile | SystemTile
+type Tile = GroupTile | SystemTile;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -74,7 +74,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
     search: { value: string } = { value: '' };
     openClient: unknown;
     systems: SystemTile[];
-    currentIndexes: number[] = []
+    currentIndexes: number[] = [];
     filteredTiles: Tile[] = [];
     account: Account;
     endpoint: Record<string, boolean> = {};

@@ -1,18 +1,18 @@
 import { IAnimated } from './IAnimated';
 import { easeInOutSine, EASING } from './easing-functions';
 
-type float = number
-type durationMs = number
-type timeStampMs = number
+type float = number;
+type durationMs = number;
+type timeStampMs = number;
 
 export class AnimatedFloat implements IAnimated<float> {
-    protected _value: float
-    protected _target: float
-    protected _lastChange: timeStampMs
+    protected _value: float;
+    protected _target: float;
+    protected _lastChange: timeStampMs;
 
-    static DEFAULT_VALUE = 0.0
-    static DEFAULT_ANIMATION_DURATION = 200
-    static DEFAULT_EASING: EASING = 'ease-in-out-sine'
+    static DEFAULT_VALUE = 0.0;
+    static DEFAULT_ANIMATION_DURATION = 200;
+    static DEFAULT_EASING: EASING = 'ease-in-out-sine';
 
     constructor(
         initialValue: float = AnimatedFloat.DEFAULT_VALUE,

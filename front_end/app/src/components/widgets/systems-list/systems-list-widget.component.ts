@@ -16,15 +16,15 @@ export class NxSystemsListWidgetComponent extends FirstPartyWidget {
         { name: 'Small', value: { cols: 4, rows: 4 } },
         { name: 'Medium', value: { cols: 8, rows: 4 } },
         { name: 'Large', value: { cols: 16, rows: 4 } }
-    ]
+    ];
 
-    static SELECTED_SIZE = 1
+    static SELECTED_SIZE = 1;
 
     static BASE_CONFIG = {
         editMode: false,
         searchEnabled: true,
         systems: null
-    }
+    };
 
     get systemsToShow() {
         return Object.entries(this.card.config.systems || {}).map(([key, { show }]: [string, any]) => show ?? true ? key : null).filter(val => val);

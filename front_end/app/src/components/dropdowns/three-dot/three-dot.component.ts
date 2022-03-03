@@ -33,7 +33,7 @@ import { BaseDropdown } from '../injDropdown';
 
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
-    @Input() componentId: string = 'three-dot-menu'
+    @Input() componentId: string = 'three-dot-menu';
 
     constructor(
         languageService: NxLanguageProviderService,

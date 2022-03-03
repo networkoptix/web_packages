@@ -28,10 +28,10 @@ type tweakedMs = ms;
     providedIn: 'root'
 })
 export class VideoManagementSystemService {
-    static readonly statusRefreshInterval = 15000
+    static readonly statusRefreshInterval = 15000;
 
-    protected _logPrefix: string = 'VMS_SERVICE ::'
-    protected _logDisable: boolean = true
+    protected _logPrefix: string = 'VMS_SERVICE ::';
+    protected _logDisable: boolean = true;
 
     protected _log(...args: any[]) {
         if (isDevMode() && !this._logDisable) {
@@ -61,7 +61,7 @@ export class VideoManagementSystemService {
         this._emit();
     }
 
-    protected _subject = new BehaviorSubject<VmsState>(createNotInitializedState())
+    protected _subject = new BehaviorSubject<VmsState>(createNotInitializedState());
     protected _selectedCamera = new BehaviorSubject<ICamera>(undefined);
 
     protected _emit(): void {
@@ -73,13 +73,13 @@ export class VideoManagementSystemService {
         return this._subject;
     }
 
-    protected _systemId: string = undefined
+    protected _systemId: string = undefined;
 
     public get systemId(): string {
         return this._systemId;
     }
 
-    protected _state: VmsState = createNotInitializedState()
+    protected _state: VmsState = createNotInitializedState();
 
     public get state(): VmsState {
         return this._state;
@@ -93,7 +93,7 @@ export class VideoManagementSystemService {
         this._selectedCamera.next(camera);
     }
 
-    protected _serverTimes: Array<ServerTimeInfo>
+    protected _serverTimes: Array<ServerTimeInfo>;
 
     public set serverTimes(st: Array<ServerTimeInfo>) {
         this._log('serverTimes set', st.map(i => i.timeZoneOffset), st);

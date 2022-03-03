@@ -52,14 +52,14 @@ export class SelectTimeRangeModalContent {
         } else {
             return this.close({ start, end });
         }
-    }
+    };
 
     close = (action: boolean | {}) => {
         this.dialogRef.close(action);
-    }
+    };
 
     // Not used?
-    public activeTab: string = 'start'
+    public activeTab: string = 'start';
 
     // Not used?
     public activateTab(name: 'start' | 'end') {

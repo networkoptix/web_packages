@@ -23,14 +23,14 @@ import { ConsoleMenuNode } from './menu/console-menu.component';
 export class NxDevConsoleComponent {
     CONFIG: IConfig;
     modes: ConsoleMode[] = [ConsoleMode.EDIT];
-    CONSOLE_MODE = ConsoleMode
+    CONSOLE_MODE = ConsoleMode;
 
     menu: ConsoleMenuNode[];
     base: string;
     sectionParam: ConsoleSection;
     selectedMode: ConsoleMode;
     manifest: ContentManifest;
-    currentEdit
+    currentEdit;
 
     constructor(
         configService: NxConfigService,
@@ -108,7 +108,7 @@ export class NxDevConsoleComponent {
         }
 
         return { sectionParam, mode, id, context };
-    }
+    };
 }
 
 export const forUnitTest = {

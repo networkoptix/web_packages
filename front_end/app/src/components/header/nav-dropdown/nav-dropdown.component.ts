@@ -14,10 +14,10 @@ import { BaseDropdown } from '../../dropdowns/injDropdown';
     styleUrls: [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
 })
 export class NxNavDropdownComponent extends BaseDropdown {
-    @ViewChild('dropDownButton') dropDownButton: ElementRef<HTMLButtonElement>
+    @ViewChild('dropDownButton') dropDownButton: ElementRef<HTMLButtonElement>;
     @Input() nodeLocation;
     @Input() dropdownNode;
-    @Input() enableDropdownOnly = false
+    @Input() enableDropdownOnly = false;
 
     name = '';
     offset = 0;

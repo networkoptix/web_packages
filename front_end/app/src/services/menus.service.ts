@@ -63,7 +63,7 @@ export class NxMenusService {
                 };
                 return newMenu;
             }, {});
-    }
+    };
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
         let menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
@@ -105,7 +105,7 @@ export class NxMenusService {
                     return filteredMenu;
                 })
             ) as Observable<MenuStructure>;
-    }
+    };
 
     filterMenu = (menu: MenuStructure, auth: Auth) => {
         const checkNodes = (nodes: MenuNode[], node: MenuNode) => {
@@ -119,7 +119,7 @@ export class NxMenusService {
         };
         menu.nodes = (menu.nodes || []).reduce(checkNodes, []);
         return menu;
-    }
+    };
 
     cleanEmptyNodes = (menu: MenuNode[], checkAsset = false) => (menu || []).reduce((menu, node: MenuNode) => {
         const nodes = this.cleanEmptyNodes(node.nodes, checkAsset);
@@ -157,7 +157,7 @@ export class NxMenusService {
             });
         }
         return nodes;
-    }, [])
+    }, []);
 
     private translateNode = (lang?, breadcrumbs: MenuNode[] = []) => (node: MenuNode) => {
         if (!node) {
@@ -185,7 +185,7 @@ export class NxMenusService {
 
         const nodes = node.nodes?.map(this.translateNode(lang, [...breadcrumbs, node])) || [];
         return { ...node, display_name, name, nodes, breadcrumbs };
-    }
+    };
 
     getUrl(systemId: string, endpoint = this.endpoint, home = false) {
         const url = environment.isLocal ? '/settings' : '/systems/' + systemId;

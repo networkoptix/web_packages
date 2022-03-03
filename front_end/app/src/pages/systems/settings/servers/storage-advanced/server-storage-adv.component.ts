@@ -27,8 +27,8 @@ import { NgChanges } from '@utils/ng-changes';
 
 type GbOrTb = 'GB' | 'TB';
 class BitConverter {
-    private _bits = new Watcher<number>()
-    private _unit = new Watcher<GbOrTb>()
+    private _bits = new Watcher<number>();
+    private _unit = new Watcher<GbOrTb>();
 
     get watcher(): [Watcher<number>, Watcher<GbOrTb>] {
         return [this._bits, this._unit];
@@ -65,7 +65,7 @@ class BitConverter {
     }
 
     private bitsGb = 1073741824;
-    private bitsTb = 1073741824 * 1024
+    private bitsTb = 1073741824 * 1024;
 
     get GB(): number {
         const roundBy = this.bitsGb;
@@ -99,7 +99,7 @@ class BitConverter {
 }
 
 class FreeSpace {
-    private freeExcludeReserved: BitConverter
+    private freeExcludeReserved: BitConverter;
 
     constructor(free: BitConverter, private reserved: BitConverter) {
         this.freeExcludeReserved = new BitConverter(free.bits + reserved.bits);

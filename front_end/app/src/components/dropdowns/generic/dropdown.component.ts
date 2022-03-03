@@ -61,14 +61,14 @@ export class NxGenericDropdown extends BaseDropdown {
         top?: number,
         width?: number,
         offsetTop?: number
-    }
+    };
 
     @Input() allowHTML = false;
 
     @Output() onSelected = new EventEmitter<DropdownItem>();
 
     dropdownType: string;
-    nativeElementTop = 0
+    nativeElementTop = 0;
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 

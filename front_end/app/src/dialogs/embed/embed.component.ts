@@ -105,5 +105,5 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     close = () => {
         this.dialogRef.close();
-    }
+    };
 }

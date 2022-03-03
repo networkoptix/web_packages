@@ -36,7 +36,7 @@ export class NxInfoBlockComponent implements OnInit {
     @Input() infoLineStyle: InfoLineStyle = InfoLineStyle.WIDE;
     @Input() removeTopMargin = false;
 
-    heightCache = {}
+    heightCache = {};
 
     CONFIG: IConfig;
     singleColumn: boolean;

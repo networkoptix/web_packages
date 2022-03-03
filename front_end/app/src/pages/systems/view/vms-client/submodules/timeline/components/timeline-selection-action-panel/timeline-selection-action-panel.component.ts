@@ -27,7 +27,7 @@ import { msDurationToString } from './utils';
 const THROTTLE_MS = 50;
 const EAR_WIDTH = 120;
 
-type ssRange = { start: number, end: number }
+type ssRange = { start: number, end: number };
 
 @Component({
     selector: 'timeline-selection-action-panel',
@@ -35,9 +35,9 @@ type ssRange = { start: number, end: number }
     styleUrls: ['./timeline-selection-action-panel.component.scss']
 })
 export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy, AfterViewInit {
-    protected subscription: Subscription
-    protected status: TimelineSelectionServiceStatus
-    protected system: NxSystem
+    protected subscription: Subscription;
+    protected status: TimelineSelectionServiceStatus;
+    protected system: NxSystem;
 
     public get duration(): string {
         return msDurationToString(
@@ -68,7 +68,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         return this.self.nativeElement;
     }
 
-    public duration$: Observable<String>
+    public duration$: Observable<String>;
 
     public ngOnInit(): void {
         this.subscription = this.selection.subject.subscribe(this.onSubjectChange);
@@ -112,7 +112,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         this.subscription.unsubscribe();
     }
 
-    protected _prev
+    protected _prev;
 
     public onSubjectChange(s: TimelineSelectionServiceStatus) {
         this.status = s;
@@ -150,5 +150,5 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         if (result['start']) {
             this.selection.range = result as TimeRange;
         }
-    }
+    };
 }

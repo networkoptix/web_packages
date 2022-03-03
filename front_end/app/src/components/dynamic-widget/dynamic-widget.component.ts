@@ -46,9 +46,9 @@ export class NxDynamicWidgetComponent {
      */
     static findWidget = identifier => {
         return NxDynamicWidgetComponent.WIDGETS.find(({ IDENTIFIER }) => IDENTIFIER === identifier);
-    }
+    };
 
-    static getFirstPartyWidgetConfigs = () => NxDynamicWidgetComponent.WIDGETS.map(FirstPartyWidget.getConfig)
+    static getFirstPartyWidgetConfigs = () => NxDynamicWidgetComponent.WIDGETS.map(FirstPartyWidget.getConfig);
 
     @ViewChild('widgetTarget', { read: ViewContainerRef }) widgetTarget: ViewContainerRef;
 
@@ -72,7 +72,7 @@ export class NxDynamicWidgetComponent {
     saveSettings = async (editMode = false) => {
         this.syncChanges.emit();
         this.card.editMode = editMode;
-    }
+    };
 
     showAction = action => this.openAction.emit(action);
 

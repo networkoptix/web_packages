@@ -13,7 +13,7 @@ import { TimelineRecordsCanvasRendererService } from './timeline.records-canvas-
     providedIn: 'root'
 })
 export class TimelineCanvasRendererService {
-    protected CONFIG: IConfig
+    protected CONFIG: IConfig;
 
     constructor(
         protected timeline: TimelineService,

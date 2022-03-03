@@ -1,4 +1,4 @@
-export type MEDIA_SERVER_STATUS = 'Online' | 'Offline' | 'Unauthorized'
+export type MEDIA_SERVER_STATUS = 'Online' | 'Offline' | 'Unauthorized';
 
 export interface INxViewMediaServer {
     id: string,
@@ -8,7 +8,7 @@ export interface INxViewMediaServer {
     status: MEDIA_SERVER_STATUS
 }
 
-export type CAMERA_STATUS = 'Online' | 'Offline' | 'Recording' | 'Unauthorized'
+export type CAMERA_STATUS = 'Online' | 'Offline' | 'Recording' | 'Unauthorized';
 
 export interface INxViewCamera {
     id: string,
@@ -17,7 +17,7 @@ export interface INxViewCamera {
     status: CAMERA_STATUS
 }
 
-export type PlaybackQuality = 'auto' | 'low' | 'high' | string
+export type PlaybackQuality = 'auto' | 'low' | 'high' | string;
 // any 640x480-like resolution definition works, too
 
-export type PlaybackTransport = 'hls' | 'webm' | 'mpegts' | 'mjpeg' | 'mp4' | 'mkv' | 'rtsp'
+export type PlaybackTransport = 'hls' | 'webm' | 'mpegts' | 'mjpeg' | 'mp4' | 'mkv' | 'rtsp';

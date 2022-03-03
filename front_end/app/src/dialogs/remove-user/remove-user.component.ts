@@ -64,5 +64,5 @@ export class RemoveUserModalContent {
 
     close = () => {
         this.dialogRef.close();
-    }
+    };
 }

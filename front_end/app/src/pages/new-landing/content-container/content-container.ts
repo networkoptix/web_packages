@@ -30,7 +30,7 @@ interface dataInput {
     styleUrls: ['./content-container.component.scss']
 })
 export class NxContentContainerComponent implements AfterViewInit {
-    @ViewChild('content') contentStartRef: ElementRef
+    @ViewChild('content') contentStartRef: ElementRef;
     @Input() screenWidth: number;
     // Dummy Data
     @Input() data: dataInput = {
@@ -140,7 +140,7 @@ export class NxContentContainerComponent implements AfterViewInit {
             //     svg     : 'camera'
             // }
         ]
-    }
+    };
 
     constructor(public landingService: NxLandingService) {
 

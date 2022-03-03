@@ -8,8 +8,8 @@ import { MarkdownComponent } from 'ngx-markdown';
     encapsulation: ViewEncapsulation.None
 })
 export class NxSwaggerAPIInformationComponent {
-    @ViewChild('markdownRef') markdown: MarkdownComponent
-    @Input() data = ''
+    @ViewChild('markdownRef') markdown: MarkdownComponent;
+    @Input() data = '';
 
     constructor() {}
 

@@ -108,5 +108,5 @@ export class ChangePasswordModalContent {
 
     close = (msg: string | boolean = false) => {
         this.dialogRef.close(msg);
-    }
+    };
 }

@@ -23,7 +23,7 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
     static SIZES = [
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } }
-    ]
+    ];
 
     static BASE_CONFIG = {
         assetTypes: [
@@ -36,13 +36,13 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
         maxAge: 60,
         showAdmin: true,
         showPreviews: true
-    }
+    };
 
     ACTION_ICONS = {
         preview: '🖥️',
         settings: '⚙️',
         download: '💾'
-    }
+    };
 
     CONFIG: IConfig;
     loading = true;
@@ -50,7 +50,7 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
     dataSource$: Observable<{last: string, data: ExplorerNode[]}>;
     hasChild = (_: number, node: ExplorerNode) => !!node.children && node.children.length > 0;
 
-    updater$ = new BehaviorSubject(null)
+    updater$ = new BehaviorSubject(null);
 
     refreshData() {
         this.loading = true;

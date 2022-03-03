@@ -29,4 +29,4 @@ export class GroupTile {
     }
 }
 
-export type Tile = GroupTile | SystemTile
+export type Tile = GroupTile | SystemTile;

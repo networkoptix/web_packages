@@ -66,7 +66,7 @@ export class FirstPartyWidget extends BaseFirstPartyWidget {
      *
      * Example NxHealthMonitorWidgetComponent.registerWidget()
      */
-    static registerWidget = registerWidget
+    static registerWidget = registerWidget;
 
     /**
      * Serializes the widget for use in either rendering or for saving to json or cloud
