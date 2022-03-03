@@ -20,6 +20,14 @@ const proxyTargetConfig = {
         host: 'https://10.1.5.196:7011',
         cloud: defaultCloud
     },
+    amir1: {
+        host: 'https://10.0.0.120:7001',
+        cloud: defaultCloud
+    },
+    amir2: {
+        host: 'https://10.0.0.153:7001',
+        cloud: defaultCloud
+    },
     webpi: {
         host: 'https://10.1.5.111:7001',
         cloud: 'https://dev3.cloud.hdw.mx'

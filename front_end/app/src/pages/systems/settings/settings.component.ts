@@ -744,7 +744,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getCameraStatusIcon({ status, scheduleEnabled }) {
-        if (scheduleEnabled && !['Online', 'Recording'].includes(status)) {
+        if (scheduleEnabled && !(status === 'Recording')) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
         }
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[
