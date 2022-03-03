@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import * as GroupActions from '../../store/groups/groups.actions';
-import { selectGroupList, selectGroupForest } from '../../store/groups/groups.selectors';
+import { selectGroupState, selectGroupList, selectGroupForest } from '../../store/groups/groups.selectors';
 import { GroupsState } from '../../store/groups/groups.state';
 
 @Component({
@@ -12,13 +12,11 @@ import { GroupsState } from '../../store/groups/groups.state';
     styleUrls: ['groups.component.scss']
 })
 export class NgrxDemoGroupsComponent {
-    state$: Observable<GroupsState>
+    state$: Observable<GroupsState> = this.store.select(selectGroupState);
     groupList$ = this.store.select(selectGroupList)
     groupForest$ = this.store.select(selectGroupForest)
 
-    constructor(private store: Store<{ groups: GroupsState }>) {
-        this.state$ = store.select('groups');
-    }
+    constructor(private store: Store) { }
 
     reset() {
         this.store.dispatch(GroupActions.reset());

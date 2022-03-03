@@ -23,12 +23,12 @@ export const selectGroup = createSelector(
     (state: GroupsState, groupId: string) => _groupId2Group(state, groupId)
 );
 
-// export const selectGroupList = createSelector(
-//     selectGroupState,
-//     state => Object.keys(state.groupNames).map(groupId =>
-//         _groupId2Group(state, groupId)
-//     )
-// );
+export const selectGroupList = createSelector(
+    selectGroupState,
+    state => Object.keys(state.groupNames).map(groupId =>
+        _groupId2Group(state, groupId)
+    )
+);
 
 export const selectGroupForest = createSelector(
     selectGroupState,

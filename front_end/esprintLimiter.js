@@ -20,4 +20,17 @@ const threadLimit = Math.floor(threads / 2);
 const workers = Math.min(memLimit, threadLimit);
 const limit = memLimit >= threadLimit ? 'CPU' : 'RAM';
 console.log(`Running esprint with ${workers} workers (${limit} limited)`);
-childProcess.execSync(`esprint check --fix --workers=${workers}`);
+childProcess.exec(
+    `esprint check --fix --workers=${workers}`,
+    (error, stdout, stderr) => {
+        if (error) {
+            console.error(error);
+        }
+        if (stdout) {
+            console.log(stdout);
+        }
+        if (stderr) {
+            console.error(stderr);
+        }
+    }
+);

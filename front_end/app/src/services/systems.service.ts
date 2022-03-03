@@ -52,7 +52,7 @@ export class NxSystemsService implements OnDestroy {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         private uriService: NxUriService,
-        private store: Store<{ systems: Array<NxSystemWithUserInfo> }>
+        private store: Store,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();

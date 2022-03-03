@@ -4,13 +4,9 @@ import * as CounterActions from './counter.actions';
 
 export const initialState = 0;
 
-const _counterReducer = createReducer(
+export const counterReducer = createReducer(
     initialState,
-    on(CounterActions.increment, state => state + 1),
-    on(CounterActions.decrement, state => state - 1),
-    on(CounterActions.reset, state => 0)
+    on(CounterActions.increment, (state): number => state + 1),
+    on(CounterActions.decrement, (state): number => state - 1),
+    on(CounterActions.reset, (state): number => 0)
 );
-
-export function counterReducer(state, action) {
-    return _counterReducer(state, action);
-}

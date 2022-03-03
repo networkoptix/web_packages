@@ -20,15 +20,15 @@ export const initialState: GroupsState = {
     },
 };
 
-const _groupsReducer = createReducer(
+export const groupsReducer = createReducer(
 
     initialState,
 
-    on(GroupActions.reset, state => ({ ...initialState })),
+    on(GroupActions.reset, (state): GroupsState => ({ ...initialState })),
 
-    on(GroupActions.load, (state, { newState }) => ({ ...newState })),
+    on(GroupActions.load, (state, { newState }): GroupsState => ({ ...newState })),
 
-    on(GroupActions.createGroup, (state, { groupId, name, parentId }) => ({
+    on(GroupActions.createGroup, (state, { groupId, name, parentId }): GroupsState => ({
         ...state,
         groupNames: {
             ...state.groupNames,
@@ -40,7 +40,7 @@ const _groupsReducer = createReducer(
         }
     })),
 
-    on(GroupActions.setGroupName, (state, { groupId, name }) => ({
+    on(GroupActions.setGroupName, (state, { groupId, name }): GroupsState => ({
         ...state,
         groupNames: {
             ...state.groupNames,
@@ -48,7 +48,7 @@ const _groupsReducer = createReducer(
         }
     })),
 
-    on(GroupActions.setGroupParent, (state, { groupId, parentId }) => ({
+    on(GroupActions.setGroupParent, (state, { groupId, parentId }): GroupsState => ({
         ...state,
         groupParents: {
             ...state.groupParents,
@@ -56,7 +56,7 @@ const _groupsReducer = createReducer(
         }
     })),
 
-    on(GroupActions.setSystemGroup, (state, { systemId, groupId }) => ({
+    on(GroupActions.setSystemGroup, (state, { systemId, groupId }): GroupsState => ({
         ...state,
         systemGroups: {
             ...state.systemGroups,
@@ -65,7 +65,3 @@ const _groupsReducer = createReducer(
     })),
 
 );
-
-export function groupsReducer(state, action) {
-    return _groupsReducer(state, action);
-}
