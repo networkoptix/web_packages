@@ -31,7 +31,7 @@
                 (onAction)="checkStatus()">
             </nx-alert-block>
             <nx-alert-block
-                *ngIf="!environment.isLocal && selectedServer.internalStatus === CONFIG.servers.status.restarting"
+                *ngIf="selectedServer.internalStatus === CONFIG.servers.status.restarting"
                 type="info"
                 id="restarting"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
