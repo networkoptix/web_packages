@@ -79,6 +79,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
 
+    systemTransferInProcess: boolean = false;
+    newSystemOwner: string = '';
+    // TODO: Get these from system
+
     private setupDefaults() {
         this.advanced = (this.router.url.includes('/advanced') ||
             this.route.snapshot.routeConfig.path === 'advanced');
@@ -530,5 +534,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.environment.isLocal && this.router.navigate(['settings']) ||
                 this.router.navigate([`systems/${this.system.id}`]);
         }
+    }
+
+    acceptOwnershipTransfer(): void {
+        // TODO
+    }
+
+    rejectOwnershipTransfer(): void {
+        // TOOD
     }
 }

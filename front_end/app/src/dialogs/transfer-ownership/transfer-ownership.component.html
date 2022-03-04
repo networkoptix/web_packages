@@ -18,58 +18,40 @@
         </button>
     </div>
     <ng-container *ngIf="!transferComplete else transferSuccessTemplate">
-        <div class="modal-body">
+        <div class="modal-body mb-4">
             <div class="form-group">
-                <label for="newOwnerEmail" translate>New owner email</label>
-                <nx-email-input
-                    class="form-component"
-                    id="newOwnerEmail"
-                    name="newOwnerEmail"
-                    componentId="newOwnerEmail"
+                <label for="newOwnerInput" translate>New system owner</label>
+                <input
+                    #newOwnerInput="ngModel"
+                    class="form-control"
+                    id="newOwnerInput"
+                    name="newOwnerInput"
                     [(ngModel)]="newOwner"
-                    [form]="transferOwnershipForm"
-                    [setFocus]="true"
-                    #newOwnerEmail="ngModel"
-                ></nx-email-input>
-                <div class="col-12 ml-n2 d-flex">
-                    <ng-container *ngIf="newOwnerEmail.errors">
-                        <ng-container *ngIf="newOwnerEmail.touched">
-                            <span
-                                *ngIf="newOwnerEmail.errors.required"
-                                class="input-error"
-                                translate
-                            >Email is required</span>
-                            <span
-                                *ngIf="newOwnerEmail.errors.pattern"
-                                class="input-error"
-                                translate
-                            >Please enter a valid Email</span>
-                            <span
-                                *ngIf="newOwnerEmail.errors.accountDoesNotExist"
-                                class="input-error"
-                                translate
-                            >User not found</span>
-                        </ng-container>
-                    </ng-container>
-                </div>
+                    [placeholder]="'User' | translate"
+                    autofocus
+                    required
+                >
+                <p class="subtext mt-2" translate>Enter the name of the future system owner</p>
             </div>
             <div class="form-group">
-                <label for="permissionsSelect" translate>Your new role in the current system</label>
-                <nx-permissions-select
+                <!-- <label for="permissionsSelect" translate>Your new role in the current system</label> -->
+                <!-- <nx-permissions-select
                     id="permissionsSelect"
                     name="permissionsSelect"
                     [system]="system"
                     [roles]="system.accessRoles"
                     [(ngModel)]="newRole"
-                ></nx-permissions-select>
+                ></nx-permissions-select> -->
                 <!-- <span class="help-block" [innerText]="accessDescription"></span> -->
+                <p translate>Your new role in the current system:</p>
+                <p id="new-role-text">{{ newRole }}</p>
             </div>
         </div>
         <div class="modal-footer">
             <nx-process-button
                 [process]="transferOwnership"
                 [form]="transferOwnershipForm"
-                [buttonText]="'Transfer' | translate"
+                [buttonText]="'Send Request' | translate"
             ></nx-process-button>
             <nx-cancel-button
                 [process]="transferOwnership"
@@ -80,26 +62,21 @@
 </form>
 
 <ng-template #transferSuccessTemplate>
-    <div id="successBody" class="modal-body d-flex flex-column align-items-center">
+    <div class="modal-body d-flex flex-column align-items-center mb-4">
         <svg-icon
             nx-add-svg-src
             class="mt-1 mb-2"
             [svgStyle]="{ 'height.px': '79' }"
-            [src]="CONFIG.icons.dirSectionPlaceholder + 'success_placeholder.svg'"
+            [src]="CONFIG.icons.dirSectionPlaceholder + 'mail_placeholder.svg'"
         ></svg-icon>
-        <h2 class="mt-1" translate>Owner changed</h2>
-        <span class="mt-1" translate>New system owner:</span>
-        <div class="d-flex align-items-center">
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{ 'height.px': '25' }"
-                [src]="CONFIG.icons.dir + 'user.svg'"
-            ></svg-icon>
-            <span id="newOwner">// TODO</span>
-        </div>
+        <p id="request-sent" class="mt-1" translate>Request has been sent</p>
+        <p class="subtext mt-1" translate>Ownership change will occur as soon as the new owner accepts the request</p>
+    </div>
+    <div class="modal-footer">
         <button
-            class="btn btn-primary min-w-100 mt-4 mb-4"
+            class="btn btn-primary"
             (click)="activeModal.close()"
+            [style.width.px]="100"
             translate
         >OK</button>
     </div>

@@ -337,6 +337,10 @@ p {
     @include font-source($font-family-medium, $h4-font-size, $dark17);
 }
 
+@mixin medium16dark9 {
+    @include font-source($font-family-medium, rem(16px), $dark9);
+}
+
 @mixin medium17dark9 {
     @include font-source($font-family-medium, $h3-alt-size, $dark9);
 }

@@ -1,6 +1,13 @@
 @use '../../styles/typography';
 
-#successBody #newOwner {
-    @include typography.medium13light16;
-    line-height: 25px; // Match SVG icon height
+.subtext {
+    @include typography.regular13light16;
+}
+
+#new-role-text {
+    @include typography.medium14dark9;
+}
+
+#request-sent {
+    @include typography.medium16dark9;
 }

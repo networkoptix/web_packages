@@ -63,6 +63,10 @@ export class UserManager {
             this.currentUser?.isLocalOwner;
     }
 
+    get currentOwner(): NxSystemUser {
+        return this.users.find(user => user.isCloudOwner);
+    }
+
     isAdmin(user: NxSystemRole) {
         return user.permissions &&
             user.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
