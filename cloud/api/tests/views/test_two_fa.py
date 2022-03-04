@@ -6,18 +6,20 @@ from uuid import uuid4
 from rest_framework.request import Request
 import pytest
 
+
 class TestTwoFAViews:
-    auth_mock_path = 'api.controllers.cloud_api.Auth.'
+    auth_mock_path = 'cloud.controllers.cloud_api.Auth.'
 
     @pytest.fixture()
     def create_user(self, django_user_model):
-        self.user = django_user_model(email = 'testemail@email.com')
+        self.user = django_user_model(email='testemail@email.com')
 
     def make_uuids(self, amount):
-        return map(lambda x : str(uuid4()), [None]*amount)
+        return map(lambda x: str(uuid4()), [None]*amount)
 
     def test_two_factor_permissions_mixin(self, arf):
         mockPermissionClass = str(uuid4())
+
         class MockAPIView:
             def __init__(self, method):
                 if(method == 'get'):
@@ -67,7 +69,6 @@ class TestTwoFAViews:
         assert isinstance(verification_code, CharField)
         assert verification_code.required == True
 
-
     def test_two_factor_verification(self, create_user, arf, mocker):
         mock_verify_2fa = mocker.patch(self.auth_mock_path + 'verify_2fa_code', return_value=True)
         mock_generate_2fa_key = mocker.patch(self.auth_mock_path + 'generate_2fa_key', return_value=True)
@@ -90,7 +91,6 @@ class TestTwoFAViews:
         args, kwargs = mock_generate_2fa_key.call_args_list[0]
         assert isinstance(args[0], Request)
 
-
     def test_backup_code_get(self, create_user, arf, mocker):
         mock_verify_backup_code = mocker.patch(self.auth_mock_path + 'verify_backup_code', return_value=True)
         access_token, code, verification_code = self.make_uuids(3)
@@ -104,10 +104,14 @@ class TestTwoFAViews:
 
 
     def test_backup_code_post_and_delete(self, create_user, arf, mocker):
-        backup_code_one, backup_code_two, backup_code_three = self.make_uuids(3)
-        mock_get_active_backup_codes = mocker.patch(self.auth_mock_path + 'get_active_backup_codes', return_value=[{'backup_code': backup_code_one}, {'backup_code': backup_code_two}])
-        mock_delete_backup_codes =  mocker.patch(self.auth_mock_path + 'delete_backup_codes', return_value=True)
-        mock_generate_backup_code =  mocker.patch(self.auth_mock_path + 'generate_backup_code')
+        backup_code_one, backup_code_two, backup_code_three = self.make_uuids(
+            3)
+        mock_get_active_backup_codes = mocker.patch(self.auth_mock_path + 'get_active_backup_codes', return_value=[
+                                                    {'backup_code': backup_code_one}, {'backup_code': backup_code_two}])
+        mock_delete_backup_codes = mocker.patch(
+            self.auth_mock_path + 'delete_backup_codes', return_value=True)
+        mock_generate_backup_code = mocker.patch(
+            self.auth_mock_path + 'generate_backup_code')
         view = BackupCode().as_view()
 
         count = random.randint(1, 10)
@@ -128,10 +132,11 @@ class TestTwoFAViews:
         assert isinstance(args[0], Request)
         assert count in args
 
-
         # DELETE
-        delete_backup_codes_string = backup_code_one + ',' + backup_code_two + ',' + backup_code_three
-        request = arf.delete('/2fa/backup', {'backup_codes': delete_backup_codes_string})
+        delete_backup_codes_string = backup_code_one + \
+            ',' + backup_code_two + ',' + backup_code_three
+        request = arf.delete(
+            '/2fa/backup', {'backup_codes': delete_backup_codes_string})
         request.user = self.user
 
         assert view(request).status_code == 200
@@ -140,22 +145,25 @@ class TestTwoFAViews:
         assert delete_backup_codes_string in args
 
     def test_get_active_backup_codes(self, create_user, arf, mocker):
-        mock_get_active_backup_codes =  mocker.patch(self.auth_mock_path + 'get_active_backup_codes')
+        mock_get_active_backup_codes = mocker.patch(
+            self.auth_mock_path + 'get_active_backup_codes')
         req = arf.get('/')
         req.user = self.user
-        response =  get_active_backup_codes(req)
+        response = get_active_backup_codes(req)
         args, kwargs = mock_get_active_backup_codes.call_args_list[0]
 
         assert response.status_code == 200
         assert isinstance(args[0], Request)
 
     def test_add_2fa_to_session(self, create_user, arf, mocker):
-        mock_verify_2fa_code = mocker.patch(self.auth_mock_path + 'verify_2fa_code')
-        verification_code, access_token =  self.make_uuids(2)
+        mock_verify_2fa_code = mocker.patch(
+            self.auth_mock_path + 'verify_2fa_code')
+        verification_code, access_token = self.make_uuids(2)
         req = arf.post('/', {'verification_code': verification_code})
         req.session = {'access_token': access_token}
         req.user = self.user
         response = add_2fa_to_session(req)
 
         assert response.status_code == 200
-        mock_verify_2fa_code.assert_called_once_with(verification_code, access_token)
+        mock_verify_2fa_code.assert_called_once_with(
+            verification_code, access_token)

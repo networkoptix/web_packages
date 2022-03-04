@@ -11,7 +11,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from util.helpers import get_language_object_from_request
-from api.helpers.exceptions import api_success
+from cloud.helpers.exceptions import api_success
 from cms.models import Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions
 
@@ -118,7 +118,7 @@ def get_integrations(request):
     if not request.user.is_anonymous:
         draft_integrations = integrations.filter(
             Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
-        if has_draft_permission: 
+        if has_draft_permission:
             draft_integrations = integrations
         if request.user.is_superuser:
             draft_integrations = integrations

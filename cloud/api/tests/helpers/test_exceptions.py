@@ -4,7 +4,7 @@ from random import randint
 import pytest
 from unittest.mock import call
 
-from api.helpers.exceptions import *
+from cloud.helpers.exceptions import *
 
 
 class TestExceptions:
@@ -61,7 +61,7 @@ class TestExceptions:
 
         # Test with cookies
         mock_create_response_with_cookies = mocker.patch(
-            'api.helpers.exceptions.create_response_with_cookies')
+            'cloud.helpers.exceptions.create_response_with_cookies')
         api_success(data=test_data, status_code=test_status_code,
                     cookies=test_cookies)
         mock_create_response_with_cookies.assert_called_once_with(
@@ -373,7 +373,8 @@ class TestExceptions:
         mock_page_url = str(uuid4())
         mock_user_email = str(uuid4())
         mock_ip = str(uuid4())
-        mocker.patch('api.helpers.exceptions.get_client_ip', return_value=mock_ip)
+        mocker.patch('cloud.helpers.exceptions.get_client_ip',
+                     return_value=mock_ip)
         mock_session_time = 0
         mock_exception = APIException(str(uuid4()), status.HTTP_404_NOT_FOUND)
         mock_log_level = mock_exception.log_level()
@@ -388,7 +389,8 @@ class TestExceptions:
 
         expected_login_type = 'email and password'
         expected_error_message = f'{mock_exception.__class__.__name__}:{mock_exception.error_text}({mock_exception.error_code})\nUser: {mock_user_email} Login: {expected_login_type} Session Time: {mock_session_time} IP: {mock_ip}\n{mock_page_url} Request: {mock_data}'
-        error_formatted = log_error(mock_request, mock_exception, mock_log_level)
+        error_formatted = log_error(
+            mock_request, mock_exception, mock_log_level)
         assert error_formatted.startswith(expected_error_message)
 
     def test_kill_session(self, mocker):
@@ -401,7 +403,8 @@ class TestExceptions:
         mock_logout.assert_called_once_with(mock_request)
 
     def handler_test_with(self, mock_request, mock_exception, mock_log_error):
-        expected_log_level = mock_exception.log_level() if hasattr(mock_exception, 'log_level') else logging.ERROR
+        expected_log_level = mock_exception.log_level() if hasattr(
+            mock_exception, 'log_level') else logging.ERROR
         result = handler(mock_request, mock_exception)
         assert isinstance(result, Response)
         if hasattr(mock_exception, 'error_text'):
@@ -413,8 +416,9 @@ class TestExceptions:
         return result
 
     def test_handler(self, mocker):
-        mock_log_error = mocker.patch('api.helpers.exceptions.log_error')
-        mock_kill_session = mocker.patch('api.helpers.exceptions.kill_session')
+        mock_log_error = mocker.patch('cloud.helpers.exceptions.log_error')
+        mock_kill_session = mocker.patch(
+            'cloud.helpers.exceptions.kill_session')
         mock_request = mocker.MagicMock()
         mock_request.session = {}
 
@@ -441,11 +445,13 @@ class TestExceptions:
 
         # Test other exception
         other_exception = Exception(str(uuid4()))
-        response = self.handler_test_with(mock_request, other_exception, mock_log_error)
+        response = self.handler_test_with(
+            mock_request, other_exception, mock_log_error)
         assert response.data['errorText'] == 'Unexpected error somewhere inside'
 
     def test_handle_exceptions(self, mocker):
-        mock_exception_handler = mocker.patch('api.helpers.exceptions.handler')
+        mock_exception_handler = mocker.patch(
+            'cloud.helpers.exceptions.handler')
         mock_response = str(uuid4())
         mock_decorated_function = mocker.MagicMock()
         mock_decorated_function.return_value = mock_response

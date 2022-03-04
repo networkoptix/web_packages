@@ -9,9 +9,9 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from api.account_backend import get_ip
-from api.controllers import cloud_api, cloud_gateway
-from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import api_success, require_params, \
+from cloud.controllers import cloud_api, cloud_gateway
+from cloud.controllers.cloud_api import Auth
+from cloud.helpers.exceptions import api_success, require_params, \
     APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
 from api.serializers import *
 
@@ -30,14 +30,17 @@ password__body = openapi.Schema(type=openapi.TYPE_STRING)
 slave_system_id__body = openapi.Schema(type=openapi.TYPE_STRING,
                                        description="The system that disappears after the cloud merge completes.")
 system_id__body = openapi.Schema(type=openapi.TYPE_STRING)
-system_name__body = openapi.Schema(type=openapi.TYPE_STRING, description="Name of the system.")
-totp__body = openapi.Schema(type=openapi.TYPE_STRING, description="Verification code from 2fa app.")
+system_name__body = openapi.Schema(
+    type=openapi.TYPE_STRING, description="Name of the system.")
+totp__body = openapi.Schema(
+    type=openapi.TYPE_STRING, description="Verification code from 2fa app.")
 user_email__body = openapi.Schema(type=openapi.TYPE_STRING)
 user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_refresh_from_request(request):
-    refresh_token = request.session.get('refresh_token', request.data.get('refresh_token'))
+    refresh_token = request.session.get(
+        'refresh_token', request.data.get('refresh_token'))
     if not refresh_token:
         raise APINotAuthorisedException('No refresh token was found')
     return refresh_token
@@ -82,7 +85,8 @@ def list_systems(request):
 def sharing(request, system_id):
     if request.method == 'GET':
         if not request.user.is_authenticated:
-            raise APINotAuthorisedException('User is not authorized', ErrorCodes.not_authorized)
+            raise APINotAuthorisedException(
+                'User is not authorized', ErrorCodes.not_authorized)
         # get authorized user here
         data = cloud_api.System.users(request, system_id)
         return api_success(data['sharing'])
@@ -160,7 +164,8 @@ def get_auth(request, system_id):
     data = cloud_api.System.get_nonce(request, system_id)
     nonce = data["nonce"]
     realm = settings.CLOUD_CONNECT['password_realm']
-    cred = cloud_api.Account.create_temporary_credentials(request, credential_type='short')
+    cred = cloud_api.Account.create_temporary_credentials(
+        request, credential_type='short')
     login = cred['login']
     password = cred['password']
     return api_success({
@@ -249,7 +254,8 @@ def merge(request):
             raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
                                       error_data={'password': ['Not recognized']})
         except APIInternalException as e:
-            raise APIRequestException(e.error_text, ErrorCodes.cloud_invalid_response, error_data=e.error_data)
+            raise APIRequestException(
+                e.error_text, ErrorCodes.cloud_invalid_response, error_data=e.error_data)
     else:
         if not request.session["refresh_token"]:
             require_params(request, ("refresh_token",))
@@ -291,7 +297,8 @@ def disconnect(request):
         else:
             require_params(request, ('email', 'password'))
             with cloud_api.TempLogin(request.data['email'].lower(), request.data['password']) as credentials:
-                cloud_api.System.unbind(credentials.tokens, request.data['system_id'])
+                cloud_api.System.unbind(
+                    credentials.tokens, request.data['system_id'])
     except APINotAuthorisedException:
         raise APIRequestException('User action was not allowed.', ErrorCodes.wrong_password,
                                   error_data={'password': ['Not recognized.']})
@@ -372,10 +379,12 @@ def proxy(request, system_id, system_url):
         password = request.session['password']
 
     if request.method == 'GET':
-        data = cloud_gateway.get(system_id, system_url, email=email, password=password)
+        data = cloud_gateway.get(
+            system_id, system_url, email=email, password=password)
         return api_success(data)
     elif request.method == 'POST':
-        data = cloud_gateway.post(system_id, system_url, request.data, email=email, password=password)
+        data = cloud_gateway.post(
+            system_id, system_url, request.data, email=email, password=password)
         return api_success(data)
 
     return None

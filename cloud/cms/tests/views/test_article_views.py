@@ -16,7 +16,7 @@ class TestArticle:
             su_asset = su_accepted or su_draft or su_pending
             non_superuser = non_superuser or non_su_asset
             superuser = superuser or su_asset
- 
+
             if customization or non_su_asset or su_asset:
                 self.customization = customization_factory()
 
@@ -24,7 +24,7 @@ class TestArticle:
 
             if superuser:
                 self.superuser = account_factory()
-            
+
             if non_superuser:
                 self.non_superuser = account_factory(
                     email='non@super.com', is_superuser=False)
@@ -34,11 +34,11 @@ class TestArticle:
             if su_accepted:
                 self.superuser_accepted_article = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.article, account=self.superuser))
-            
+
             if su_draft:
                 self.superuser_draft_article = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.article, account=self.superuser, draft=True))
-            
+
             if su_pending:
                 self.superuser_pending_article = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.article, account=self.superuser, state=AssetCustomizationReview.REVIEW_STATES.pending))
@@ -48,21 +48,21 @@ class TestArticle:
             if non_su_accepted:
                 self.non_superuser_accepted_article = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.article, account=self.non_superuser))
-            
+
             if non_su_draft:
                 self.non_superuser_draft_article = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.article, account=self.non_superuser, draft=True))
-            
+
             if non_su_pending:
                 self.non_superuser_pending_article = next(asset_factory(
                     asset_type=AssetType.ASSET_TYPES.article, account=self.non_superuser, state=AssetCustomizationReview.REVIEW_STATES.pending))
-        
+
 
         return helper
 
     def get_article_with(self, user, article_id=None, state=None):
         request = self.arf.get(
-            f'/api/article/{article_id}?state={state}&id={article_id}')
+            f'/api/cms/article/{article_id}?state={state}&id={article_id}')
         request.session = {}
         request.user = user
         return get_article(request, article_id)
@@ -76,7 +76,7 @@ class TestArticle:
     def test_get_article_404(self, uses):
         uses(su_accepted=True, non_superuser=True)
         response = self.get_article_with(self.non_superuser, article_id=self.non_existing_article_id)
- 
+
         assert response.data.get('errorText', '') == ARTICLE_NOT_FOUND
 
     def test_get_draft_article_200(self, uses):

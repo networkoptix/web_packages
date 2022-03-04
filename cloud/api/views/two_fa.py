@@ -6,8 +6,8 @@ from rest_framework import decorators
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
-from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
+from cloud.controllers.cloud_api import Auth
+from cloud.helpers.exceptions import api_success, APINotAuthorisedException
 from api.serializers import CreateBackupCodeSerializer, DeleteBackupCodeSerializer, TwoFaSerializer, CloudResponseSerializer, VerificationSerializer
 
 
@@ -24,6 +24,7 @@ class TwoFactorPermissionsMixin:
         # If the request fails the worst case is we don't add 2fa to the user's session.
         except APINotAuthorisedException:
             return ""
+
 
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
     permission_classes = [IsAuthenticatedOrTokenHasScope]

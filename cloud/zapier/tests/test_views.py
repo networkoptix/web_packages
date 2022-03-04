@@ -8,18 +8,20 @@ from rest_framework.request import Request
 
 import pytest
 from conftest import generate_uuids
-from api.helpers.exceptions import APIException, ErrorCodes, APINotAuthorisedException
+from cloud.helpers.exceptions import APIException, ErrorCodes, APINotAuthorisedException
 from zapier.views import *
 from zapier.models import *
 from unittest.mock import MagicMock
 from model_bakery import baker
 from uuid import uuid4
 
+
 class TestZapierViews:
     @pytest.mark.no_db
     def test_zapier_exception(self, mocker):
         mock_log_error = mocker.patch('zapier.views.log_error')
         item_one, item_two = generate_uuids(2)
+
         def mock_func():
             return {'item': item_one}
 
@@ -38,8 +40,10 @@ class TestZapierViews:
         assert handler().data == {'item': item_two}
 
         # Test with API Exception error
-        APIExceptionInstance = APIException('Mock error text', ErrorCodes.bad_request)
+        APIExceptionInstance = APIException(
+            'Mock error text', ErrorCodes.bad_request)
         test_arg = str(uuid4())
+
         @zapier_exceptions
         def mock_func(*args, **kwargs):
             raise APIExceptionInstance
@@ -49,11 +53,13 @@ class TestZapierViews:
             assert mock_func(test_arg).status_code == 500
         except Exception:
             pass
-        mock_log_error.assert_called_once_with(test_arg, APIExceptionInstance, logging.WARNING)
+        mock_log_error.assert_called_once_with(
+            test_arg, APIExceptionInstance, logging.WARNING)
 
         # Test with Exception error
         ExceptionInstance = Exception()
         test_arg = str(uuid4())
+
         @zapier_exceptions
         def mock_func(*args, **kwargs):
             raise ExceptionInstance
@@ -67,25 +73,29 @@ class TestZapierViews:
         assert response.status_code == 503
         assert response.data['resultCode'] == status.HTTP_503_SERVICE_UNAVAILABLE
         assert response.data['errorText'] == 'System unavailable or offline'
-        mock_log_error.assert_called_with(test_arg, ExceptionInstance, logging.WARNING)
+        mock_log_error.assert_called_with(
+            test_arg, ExceptionInstance, logging.WARNING)
 
     @pytest.mark.no_db
     def test_authenticate(self, arf, mocker):
         mock_email, mock_password, mock_user = generate_uuids(3)
-        mock_auth_authenticate = mocker.patch('django.contrib.auth.authenticate', return_value = mock_user)
+        mock_auth_authenticate = mocker.patch(
+            'django.contrib.auth.authenticate', return_value=mock_user)
 
         request = arf.get('/')
         # Need base64 encoded string
-        auth_string =  f'{mock_email}:{mock_password}'.encode('ascii')
+        auth_string = f'{mock_email}:{mock_password}'.encode('ascii')
         base64_string = base64.b64encode(auth_string).decode('ascii')
         request.META['HTTP_AUTHORIZATION'] = f'basic {base64_string}'
-        returned_user, returned_email, returned_password = authenticate(request)
+        returned_user, returned_email, returned_password = authenticate(
+            request)
 
         # Test valid
         assert returned_email == mock_email
         assert returned_password == mock_password
         assert returned_user == mock_user
-        mock_auth_authenticate.assert_called_once_with(request=request, username=mock_email, password=mock_password)
+        mock_auth_authenticate.assert_called_once_with(
+            request=request, username=mock_email, password=mock_password)
 
         # Test raises exception
         mock_auth_authenticate.return_value = None
@@ -96,7 +106,8 @@ class TestZapierViews:
     def generate_mock_authenticate(self, mocker, account_factory):
         self.email, self.password = generate_uuids(2)
         self.user = account_factory(prepare_only=True)
-        self.mock_authenticate = mocker.patch('zapier.views.authenticate', return_value=[self.user, self.email,self.password])
+        self.mock_authenticate = mocker.patch('zapier.views.authenticate', return_value=[
+                                              self.user, self.email, self.password])
 
     @pytest.mark.no_db
     def test_increment_rule(self):
@@ -112,11 +123,15 @@ class TestZapierViews:
 
     @pytest.mark.no_db
     def test_make_rule(self, mocker):
-        mock_post = mocker.patch('api.controllers.cloud_gateway.post', return_value=True)
-        mock_random_uuid = mocker.patch('zapier.views.random_uuid', return_value = str(uuid4()))
-        email, password, system_id, caption, description, source, zapier_trigger = generate_uuids(7)
+        mock_post = mocker.patch(
+            'cloud.controllers.cloud_gateway.post', return_value=True)
+        mock_random_uuid = mocker.patch(
+            'zapier.views.random_uuid', return_value=str(uuid4()))
+        email, password, system_id, caption, description, source, zapier_trigger = generate_uuids(
+            7)
         # Test generic event
-        make_rule('Generic Event', email, password, system_id, caption=caption, description=description, source=source, zapier_trigger=zapier_trigger)
+        make_rule('Generic Event', email, password, system_id, caption=caption,
+                  description=description, source=source, zapier_trigger=zapier_trigger)
         action_params = json.dumps({"additionalResources": ["{00000000-0000-0000-0000-100000000000}",
                                                             "{00000000-0000-0000-0000-100000000001}"],
                                     "allUsers": False,
@@ -155,9 +170,11 @@ class TestZapierViews:
             "system": False
         }
 
-        mock_post.assert_called_once_with(system_id, 'ec2/saveEventRule', data, email, password)
+        mock_post.assert_called_once_with(
+            system_id, 'ec2/saveEventRule', data, email, password)
 
-        make_rule('Http Action', email, password, system_id, caption=caption, description=description, source=source, zapier_trigger=zapier_trigger)
+        make_rule('Http Action', email, password, system_id, caption=caption,
+                  description=description, source=source, zapier_trigger=zapier_trigger)
         action_params = json.dumps({"allUsers": False,
                                     "durationMs": 5000,
                                     "forced": True,
@@ -199,7 +216,8 @@ class TestZapierViews:
             "system": False
         }
 
-        mock_post.assert_called_with(system_id, 'ec2/saveEventRule', data, email, password)
+        mock_post.assert_called_with(
+            system_id, 'ec2/saveEventRule', data, email, password)
 
     # make_or_increment_rule fixtures and tests
     @pytest.fixture()
@@ -207,9 +225,9 @@ class TestZapierViews:
         self.mock_make_rule = mocker.patch('zapier.views.make_rule')
         self.mock_increment_rule = mocker.patch('zapier.views.increment_rule')
 
-
     def make_generated_rule(self, direction='Nx to Zapier', make_model=True):
-        self.email, self.system_id, self.caption, self.source, self.password, self.description, self.target_url = generate_uuids(7)
+        self.email, self.system_id, self.caption, self.source, self.password, self.description, self.target_url = generate_uuids(
+            7)
         if make_model:
             self.generated_rule = baker.make(GeneratedRule,
                                              email=self.email,
@@ -219,18 +237,18 @@ class TestZapierViews:
                                              direction=direction)
 
     def call_make_or_increment_rule(self, action):
-        make_or_increment_rule( action,
-                                self.email,
-                                self.system_id,
-                                self.caption,
-                                self.password,
-                                self.description,
-                                self.source,
-                                self.target_url)
+        make_or_increment_rule(action,
+                               self.email,
+                               self.system_id,
+                               self.caption,
+                               self.password,
+                               self.description,
+                               self.source,
+                               self.target_url)
 
     @pytest.mark.no_db
     def test_generic_event_make(self, db, mock_make_and_increment):
-        action='Generic Event'
+        action = 'Generic Event'
         self.make_generated_rule(make_model=False)
         self.call_make_or_increment_rule(action)
 
@@ -281,8 +299,8 @@ class TestZapierViews:
     @pytest.mark.no_db
     def test_get_systems(self, generate_mock_authenticate, arf, mocker):
         name, id = generate_uuids(2)
-        mock_cloud_api_system_list = mocker.patch('api.controllers.cloud_api.System.list',
-                                                   return_value={'systems': [{'stateOfHealth': 'online', 'name': name, 'id': id}]})
+        mock_cloud_api_system_list = mocker.patch('cloud.controllers.cloud_api.System.list',
+                                                  return_value={'systems': [{'stateOfHealth': 'online', 'name': name, 'id': id}]})
         mock_api_success = mocker.patch('zapier.views.api_success')
         request = arf.get('/')
         get_systems_call = get_systems(request)
@@ -299,7 +317,8 @@ class TestZapierViews:
         assert kwargs['one_customization'] == False
 
         # Test the zap_list is what is expected
-        mock_api_success.assert_called_once_with({'systems': [{'name': name, 'system_id': id}]})
+        mock_api_success.assert_called_once_with(
+            {'systems': [{'name': name, 'system_id': id}]})
 
         assert get_systems_call.status_code == 200
 
@@ -308,21 +327,25 @@ class TestZapierViews:
         arg_one, arg_two = generate_uuids(2)
         arg_three = '+44 3'
         assert encode_url({'arg_one': arg_one, 'arg_two': arg_two, 'arg_three': arg_three}) == (
-                          f'api/createEvent?arg_one={arg_one}&arg_two={arg_two}&arg_three=%2B44%203')
+            f'api/createEvent?arg_one={arg_one}&arg_two={arg_two}&arg_three=%2B44%203')
 
     @pytest.mark.no_db
     def test_zapier_send_generic_event(self, generate_mock_authenticate, arf, mocker):
         if settings.CI:
-            pytest.skip('Bug with html_sanitizer on 3.8 alpine causes test to fail')
+            pytest.skip(
+                'Bug with html_sanitizer on 3.8 alpine causes test to fail')
 
         source, caption, systemId, description = generate_uuids(4)
-        mock_make_or_increment_rule = mocker.patch('zapier.views.make_or_increment_rule')
-        mock_cloud_gateway_get = mocker.patch('api.controllers.cloud_gateway.get')
+        mock_make_or_increment_rule = mocker.patch(
+            'zapier.views.make_or_increment_rule')
+        mock_cloud_gateway_get = mocker.patch(
+            'cloud.controllers.cloud_gateway.get')
         request = arf.post('/', data={'description': description,
-                            'source': source,
-                            'caption': caption,
-                            'systemId': systemId})
-        query_params = {'source': source, 'caption': caption, 'description': description}
+                                      'source': source,
+                                      'caption': caption,
+                                      'systemId': systemId})
+        query_params = {'source': source,
+                        'caption': caption, 'description': description}
 
         zapier_send_generic_event(request)
 
@@ -338,7 +361,8 @@ class TestZapierViews:
                                                             description=description,
                                                             source=source)
 
-        mock_cloud_gateway_get.assert_called_once_with(systemId, encode_url(query_params), self.email, self.password)
+        mock_cloud_gateway_get.assert_called_once_with(
+            systemId, encode_url(query_params), self.email, self.password)
 
     @pytest.mark.no_db
     def test_nx_http_actions(self, db, arf):
@@ -376,13 +400,16 @@ class TestZapierViews:
     def test_subscribe_webhook(self, generate_mock_authenticate, db, mocker, arf):
         self.user.save()
         if settings.CI:
-            pytest.skip('Bug with html_sanitizer on 3.8 alpine causes test to fail')
+            pytest.skip(
+                'Bug with html_sanitizer on 3.8 alpine causes test to fail')
 
         systemId, caption, target = generate_uuids(3)
-        mock_make_or_increment_rule = mocker.patch('zapier.views.make_or_increment_rule')
+        mock_make_or_increment_rule = mocker.patch(
+            'zapier.views.make_or_increment_rule')
         query_params = {"system_id": systemId, "caption": caption}
         url_link = generate_subscribe_url_link(query_params)
-        request = arf.post(f'/?system_id={systemId}&caption={caption}', {'target_url': target })
+        request = arf.post(
+            f'/?system_id={systemId}&caption={caption}', {'target_url': target})
         request.session = {}
 
         # Test does not exist

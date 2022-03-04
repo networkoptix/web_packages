@@ -6,7 +6,7 @@ from django.conf import settings
 from math import ceil
 from rest_framework import status
 
-from api.helpers.exceptions import (
+from cloud.helpers.exceptions import (
     APIInternalException, api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from api.serializers import MenusSerializer
 from cms.controllers.integration import make_integrations_json
@@ -29,16 +29,18 @@ state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the page. Ex: draft, published, or pending",
                                        type=openapi.TYPE_STRING)
 filter__query_param = openapi.Parameter("filter", openapi.IN_QUERY,
-                                       description="Search string which documentation pages are filtered against",
-                                       type=openapi.TYPE_STRING)
-id__query_param = openapi.Parameter("id", openapi.IN_PATH, type=openapi.TYPE_STRING)
+                                        description="Search string which documentation pages are filtered against",
+                                        type=openapi.TYPE_STRING)
+id__query_param = openapi.Parameter(
+    "id", openapi.IN_PATH, type=openapi.TYPE_STRING)
 
 
 @swagger_auto_schema(
     method="GET",
     operation_description="Returns a documentation page",
     manual_parameters=[state__query_param],
-    responses={'200': openapi.Response('Documentation Page', DocumentationPageSerializer)}
+    responses={'200': openapi.Response(
+        'Documentation Page', DocumentationPageSerializer)}
 )
 @api_view(("GET", ))
 @permission_classes((CanViewDevelopers, ))
@@ -48,7 +50,8 @@ def get_page(request, doc_id):
     review = request.query_params.get('state') in ('pending', 'review')
     language = get_language_object_from_request(request)
 
-    doc = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.documentation, id=doc_id).first()
+    doc = Asset.objects.filter(
+        asset_type__type=AssetType.ASSET_TYPES.documentation, id=doc_id).first()
 
     # If doc is not found, then return a 404
     if doc:
@@ -56,13 +59,15 @@ def get_page(request, doc_id):
             raise APIForbiddenException(error_data={'id': doc_id},
                                         error_text='Not allowed to view this preview')
 
-        docs_json = generate_doc_json([doc], language=language, draft=draft, review=review)
+        docs_json = generate_doc_json(
+            [doc], language=language, draft=draft, review=review)
         if docs_json:
             ser = DocumentationPageSerializer(data=docs_json[0])
             ser.is_valid()
             return api_success(ser.data)
 
-    raise APINotFoundException(error_data={'id': doc_id}, error_text=PAGE_NOT_FOUND)
+    raise APINotFoundException(
+        error_data={'id': doc_id}, error_text=PAGE_NOT_FOUND)
 
 
 def find_article(nodes, doc_id):
@@ -92,19 +97,22 @@ def kb_for_article(request, doc_id):
         contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
     ).first()
     if not doc:
-        raise APINotFoundException(error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
+        raise APINotFoundException(
+            error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
     nodes = doc.nodes.all()
     menus = {node.get_parent() for node in nodes}
     for menu in menus:
         if menu.base_url and menu.url and menu.enabled:
             return {'base': menu.base_url, 'kb_name': menu.url}
-    raise APINotFoundException(error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
+    raise APINotFoundException(
+        error_data={'id': doc_id}, error_text=KB_NOT_FOUND)
 
 
 # Simple filter for checking that each space delimited string exists somewhere in the doc
 # For more complicated filtering we will probably need to check out something like Haystack
 def simple_filter(docs, filter_query):
-    filter_regex = re.compile(rf'(?:^|\W)(.{{0,{SEARCH_SNIPPET_PADDING}}}({re.escape(filter_query)}).{{0,{SEARCH_SNIPPET_PADDING}}})(?:$|\W)', re.IGNORECASE | re.DOTALL)
+    filter_regex = re.compile(
+        rf'(?:^|\W)(.{{0,{SEARCH_SNIPPET_PADDING}}}({re.escape(filter_query)}).{{0,{SEARCH_SNIPPET_PADDING}}})(?:$|\W)', re.IGNORECASE | re.DOTALL)
     matched_docs = []
     for doc in docs:
         matched = False
@@ -128,8 +136,10 @@ def simple_filter(docs, filter_query):
         short_description_match = filter_regex.match(doc['shortDescription'])
         if short_description_match:
             matched = True
-            doc_dict['shortDescriptionMatchStart'] = short_description_match.start(2)
-            doc_dict['shortDescriptionMatchEnd'] = short_description_match.end(2)
+            doc_dict['shortDescriptionMatchStart'] = short_description_match.start(
+                2)
+            doc_dict['shortDescriptionMatchEnd'] = short_description_match.end(
+                2)
 
         for block in doc.get('blocks', []):
             block_content = block.get('content', '')
@@ -177,7 +187,8 @@ def sync_search_for_menu(request, name):
     cache_key = f'!!{settings.CUSTOMIZATION}--kb--{name}'
     docs = DOC_CACHE[cache_key]
     language = get_language_object_from_request(request)
-    knowledgebase_menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+    knowledgebase_menu = get_cached_menu(
+        settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
     if not knowledgebase_menu:
         raise APINotFoundException(f'Knowledgebase {name} not found')
     knowledgebase = knowledgebase_menu['nodes']
@@ -190,7 +201,7 @@ def sync_search_for_menu(request, name):
 @api_view(("GET", ))
 @permission_classes((CanViewDevelopers, ))
 @handle_exceptions
-def sync_search(request, name = None):
+def sync_search(request, name=None):
     """Force sync either instant search for either a single knowledgebase or for all docs.
 
     This will mostly be available for admins in case something weird happens where the instant search gets in a weird state.
@@ -208,7 +219,7 @@ def sync_search(request, name = None):
             ),
             language=get_language_object_from_request(request),
             force_update=True
-        )
+    )
 
     if docs:
         return api_success(docs)
@@ -225,7 +236,8 @@ SEARCH_INDEX_NOT_FOUND = 'Instant Search index for "documentation" not found. Ne
 @handle_exceptions
 def kb_search(request, name):
     if not settings.MEILISEARCH_ENDPOINT or not settings.MEILISEARCH_MASTER_KEY:
-        raise APIInternalException(SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
+        raise APIInternalException(
+            SEARCH_NOT_CONFIGURED, status.HTTP_501_NOT_IMPLEMENTED)
 
     def get_param(param, default=None):
         default = default or []
@@ -253,7 +265,8 @@ def kb_search(request, name):
     if not number_of_docs:
         docs_json = sync_search_for_menu(request, name)
         if not docs_json:
-            raise APIInternalException(SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
+            raise APIInternalException(
+                SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
 
     kb_menus_filter = [f"kbMenus = '{kb}'" for kb in kb_menus_filter if kb]
     labels_filter = [f"labels = '{label}'" for label in labels_filter if label]
@@ -273,7 +286,8 @@ def kb_search(request, name):
     unformatted = ['kbMenus']
     docs = [
         {
-            key: val.replace('</em> <em>', ' ').replace('</em>', '</strong>').replace('<em>', '<strong class="highlighted">') if isinstance(val, str) and key not in unformatted else val
+            key: val.replace('</em> <em>', ' ').replace('</em>', '</strong>').replace(
+                '<em>', '<strong class="highlighted">') if isinstance(val, str) and key not in unformatted else val
             for key, val in hit['_formatted'].items()
             if key in doc_keys
         }
@@ -295,7 +309,8 @@ def kb_search(request, name):
 
 @swagger_auto_schema(method="GET",
                      operation_description="Returns an array of all documentation pages. Can be filtered",
-                     manual_parameters=[filter__query_param, page__query_param, page_size__query_param, kb_name__path_param],
+                     manual_parameters=[
+                         filter__query_param, page__query_param, page_size__query_param, kb_name__path_param],
                      responses={'200': DocumentsSerializer()})
 @api_view(("GET", ))
 @permission_classes((CanViewDevelopers, ))
@@ -308,16 +323,19 @@ def get_pages(request, name):
     cache_key = f'!!{settings.CUSTOMIZATION}--kb--{name}'
     docs = DOC_CACHE[cache_key]
     if not docs:
-        knowledgebase_menu = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+        knowledgebase_menu = get_cached_menu(
+            settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
         if not knowledgebase_menu:
             raise APINotFoundException(f'Knowledgebase {name} not found')
         knowledgebase = knowledgebase_menu['nodes']
         docs = []
         populate_docs_from_knowledgebase(knowledgebase, docs)
         DOC_CACHE[cache_key] = docs
-        docs_json = generate_doc_json(docs, language=language, trust_cache=False)
+        docs_json = generate_doc_json(
+            docs, language=language, trust_cache=False)
     else:
-        docs_json = generate_doc_json(docs, language=language, trust_cache=True)
+        docs_json = generate_doc_json(
+            docs, language=language, trust_cache=True)
     if filter_query:
         docs_json = simple_filter(docs_json, filter_query)
 
@@ -356,9 +374,11 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
                     )
                     if docs:
                         node['asset'] = docs[0]
-                        node['assetKB'] = find_asset_knowledgebase(asset, base_url)
+                        node['assetKB'] = find_asset_knowledgebase(
+                            asset, base_url)
                 elif asset_type == AssetType.ASSET_TYPES.integration:
-                    integrations = make_integrations_json([asset], language=language, user=user)
+                    integrations = make_integrations_json(
+                        [asset], language=language, user=user)
                     if integrations:
                         node['asset'] = integrations[0]
         if node.get('nodes', None):
@@ -373,12 +393,14 @@ def prepare_menu_dict(parent, base_url, language, global_contexts=None, global_c
             )
 
 
-menu_name__path_param = openapi.Parameter('name', openapi.IN_PATH, description='Menu Name', type=openapi.TYPE_STRING)
+menu_name__path_param = openapi.Parameter(
+    'name', openapi.IN_PATH, description='Menu Name', type=openapi.TYPE_STRING)
 
 
 @swagger_auto_schema(method="GET",
                      operation_description="Returns a serialized version of a menu with assets",
-                     manual_parameters=[menu_name__path_param, state__query_param],
+                     manual_parameters=[
+                         menu_name__path_param, state__query_param],
                      responses={'200': MenusSerializer()})
 @api_view(("GET",))
 @permission_classes((CanViewDevelopers,))
@@ -387,9 +409,11 @@ def menu_to_endpoint(request, name):
     cache_id = f'!!{settings.CUSTOMIZATION}-{language.code}--struct--{name}'
     state = request.GET.get('state', '')
 
-    menu_dict = (not state and DOC_CACHE[cache_id]) or generate_menu_dict(request, name, language, cache_id, state)
+    menu_dict = (not state and DOC_CACHE[cache_id]) or generate_menu_dict(
+        request, name, language, cache_id, state)
 
     return api_success(menu_dict)
+
 
 def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
     language = language or get_language_object_from_request(request)
@@ -397,20 +421,25 @@ def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
     state = state or request.GET.get('state', '')
     draft = state == 'draft' and request.user.is_superuser
     review = state == 'review' and request.user.is_superuser
-    show_superuser_draft_review = (draft or review) and request.user.is_superuser
+    show_superuser_draft_review = (
+        draft or review) and request.user.is_superuser
 
     if show_superuser_draft_review:
-        menu_dict = Menu.generate_menu(menu_name=name, customization_name=settings.CUSTOMIZATION)
+        menu_dict = Menu.generate_menu(
+            menu_name=name, customization_name=settings.CUSTOMIZATION)
     else:
-        menu_dict = get_cached_menu(settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
+        menu_dict = get_cached_menu(
+            settings.CUSTOMIZATION, name, menu_type=Menu.MENU_TYPES.docs_struct)
 
     if not menu_dict:
         raise APINotFoundException(f'Menu {name} not found')
 
     base_url = menu_dict['base_url']
     cloud_portal = get_cloud_portal_asset()
-    global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
-    global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+    global_contexts = Context.objects.filter(
+        asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
+    global_contexts_dict = global_contexts_to_dict(
+        global_contexts, cloud_portal)
 
     prepare_menu_dict(
         menu_dict['nodes'],

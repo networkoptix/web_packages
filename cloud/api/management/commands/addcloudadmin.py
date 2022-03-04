@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from api.controllers import cloud_api
-from api.helpers.exceptions import APINotFoundException, APINotAuthorisedException
+from cloud.controllers import cloud_api
+from cloud.helpers.exceptions import APINotFoundException, APINotAuthorisedException
 from api.models import Account
 from notifications.models import Message
 
@@ -15,7 +15,8 @@ class Command(BaseCommand):
         parser.add_argument("password", type=str)
 
     def activate_account(self, account):
-        message = Message.objects.filter(user_email__iexact=account.email).last()
+        message = Message.objects.filter(
+            user_email__iexact=account.email).last()
         code = message.message.get("code") if message else ""
         if code:
             try:

@@ -214,16 +214,16 @@ export class NxCloudApiService {
 
     @staffSWBypass
     getIntegrations() {
-        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
+        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/cms/integrations');
     }
 
     getIntegrationsCount() {
-        return this.http.get<t.IntegrationCount>(this.CONFIG.apiBase + '/integration_count');
+        return this.http.get<t.IntegrationCount>(this.CONFIG.apiBase + '/cms/integration_count');
     }
 
     @staffSWBypass
     getIntegrationBy(id: number, status: string) {
-        let uri = this.CONFIG.apiBase + '/integration/' + id;
+        let uri = this.CONFIG.apiBase + '/cms/integration/' + id;
         uri += (status) ? '?' + status : '';
 
         return this.http.get<Array<t.Integration>>(uri);
@@ -267,7 +267,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     getOpenAPIJSONs() {
-        return this.http.get<{data: t.OpenAPIJSON[]}>(this.CONFIG.apiBase + '/openapi_jsons');
+        return this.http.get<{data: t.OpenAPIJSON[]}>(this.CONFIG.apiBase + '/cms/openapi_jsons');
     }
 
     // not used, except in debug
@@ -527,13 +527,13 @@ export class NxCloudApiService {
     }
 
     acceptAgreement(reviewId: string) {
-        return this.http.post(this.CONFIG.apiBase + '/accept_agreement', {
+        return this.http.post(this.CONFIG.apiBase + '/cms/accept_agreement', {
             review_id: reviewId
         }).toPromise();
     }
 
     acceptReview(reviewId: number) {
-        return this.http.post(this.CONFIG.apiBase + '/accept_review', {
+        return this.http.post(this.CONFIG.apiBase + '/cms/accept_review', {
             review_id: reviewId
         }).toPromise().then(response => {
             this.cacheService.clearData();
@@ -590,7 +590,7 @@ export class NxCloudApiService {
         if (state) {
             params = params.set('state', state.replace('pending', 'review'));
         }
-        const route = `${this.CONFIG.apiBase}/documentation${endpoint}?${params.toString()}`;
+        const route = `${this.CONFIG.apiBase}/cms/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
         return this.http.get<any>(route).pipe(catchError(error => {
             if (error.status === 404) {
@@ -608,18 +608,18 @@ export class NxCloudApiService {
             return throwError(new Error('Instant search feature not enabled'));
         }
         const params = mapValuesToStrings({ query, ...options });
-        const route = `${this.CONFIG.apiBase}/documentation/kb/${name}/search?`;
+        const route = `${this.CONFIG.apiBase}/cms/documentation/kb/${name}/search?`;
         return this.http.get<any>(route,  { params });
     }
 
     getDocAsset(assetId) {
-        const route = `${this.CONFIG.apiBase}/documentation/${assetId}`;
+        const route = `${this.CONFIG.apiBase}/cms/documentation/${assetId}`;
         return this.http.get<t.DocAsset>(route)
             .pipe(catchError(_ => of(<t.DocAsset>{ blocks: [], id: null, shortDescription: null, title: null })));
     }
 
     findArticleKB(assetId) {
-        return this.http.get<any>(`${this.CONFIG.apiBase}/documentation/find_kb/${assetId}`).pipe(catchError(error => {
+        return this.http.get<any>(`${this.CONFIG.apiBase}/cms/documentation/find_kb/${assetId}`).pipe(catchError(error => {
             if (error.status === 404) {
                 if (error.error.errorText === 'Kb not found') {
                     this.router.navigate(['/'], { skipLocationChange: true }).then(_ =>

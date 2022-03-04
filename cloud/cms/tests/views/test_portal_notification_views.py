@@ -93,13 +93,13 @@ def test_correct_handler_used(mocker, account_factory, arf, db):
         'cms.views.portal_notifications.mark_read', return_value=expected_mark_read)
 
     # GET handled by get_notifications
-    get_request = arf.get('/api/portal_notifications')
+    get_request = arf.get('/api/cms/portal_notifications')
     get_request.user = account_factory()
     res = notifications(get_request)
     assert res.data == expected_notifications
 
     # POST handled by mark_read
-    get_request = arf.post('/api/portal_notifications')
+    get_request = arf.post('/api/cms/portal_notifications')
     get_request.user = account_factory()
     res = notifications(get_request)
     assert res.data == expected_mark_read

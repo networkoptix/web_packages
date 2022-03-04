@@ -10,15 +10,14 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.cache import caches
 
-from api.helpers.exceptions import APINotAuthorisedException
+from cloud.controllers import cloud_api
 from api.models import Account
-from api.controllers import cloud_api
+
 from notifications import notifications_api
 from notifications.engines import email_engine
 from notifications.notifications_api import log_push_result, get_push_devices_from_targets, get_system_with_users
 from notifications.models import RESULT_STATES, Message, PushNotification, SystemEmail
 from util.helpers import get_language_for_email
-from api.controllers.cloud_api import System
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +76,7 @@ def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], sessi
 
             try:
                 if not users:
-                    users = System.users(session, message.system_id) if session.get('access_token') else {'sharing': []}
+                    users = cloud_api.System.users(session, message.system_id) if session.get('access_token') else {'sharing': []}
 
             except:
                 message.result = RESULT_STATES.failure
@@ -99,6 +98,7 @@ def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], sessi
             if not isinstance(email_content, dict) or 'userFullName' in email_content:
                 pass
             elif send_individual and (user := Account.objects.filter(email=email).first()):
+                # TODO: Need to break dependencies on Account
                 email_content['userFullName'] = user.get_full_name()
             else:
                 email_content['userFullName'] = email
@@ -339,6 +339,7 @@ def send_push_notification(notification_id, request_data, device_ids=None, count
 @shared_task
 def send_to_all_users(notification_id, message, customizations, force=False):
     # if forced and not testing dont apply any filters to send to all users
+    # TODO: Need to break dependencies on Account
     users = Account.objects.exclude(activated_date=None, last_login=None).filter(
         customization__in=customizations)
 

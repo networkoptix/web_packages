@@ -30,8 +30,8 @@ from drf_yasg.utils import swagger_auto_schema, no_body
 from queue import SimpleQueue
 from waffle.mixins import WaffleFlagMixin
 
-from api.helpers.exceptions import APINotFoundException, APIForbiddenException, api_success, handle_exceptions, require_params
-from api.helpers.permissions import make_customization_visible_to_user
+from cloud.helpers.exceptions import APINotFoundException, APIForbiddenException, api_success, handle_exceptions, require_params
+from cms.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html, documentation, zendesk
 from cms.forms import *
 from cms.models import PackagesCache, UserGroupsToAssetPermissions
@@ -984,7 +984,8 @@ def download_async_package(request, asset_id):
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def upload_image(request, asset_id, ds_id, content_uuid=None):
     file = request.data.get('file')
-    content_file = base.File(file, name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + file.name.split('.')[-1].lower())
+    content_file = base.File(
+        file, name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + file.name.split('.')[-1].lower())
     asset = Asset.objects.filter(id=asset_id).first()
     ds = DataStructure.objects.filter(id=ds_id).first()
     ext_file = ExternalFile.objects.create(

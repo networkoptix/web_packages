@@ -13,8 +13,8 @@ from bs4 import BeautifulSoup
 from drf_yasg.utils import swagger_auto_schema
 from zapier.models import ZapHook, GeneratedRule
 
-from api.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
-from api.controllers import cloud_api, cloud_gateway
+from cloud.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
+from cloud.controllers import cloud_api, cloud_gateway
 
 from cloud import settings
 
@@ -60,8 +60,10 @@ def authenticate(request):
     if "HTTP_AUTHORIZATION" in request.META:
         credentials = request.META['HTTP_AUTHORIZATION'].split()
         if credentials[0].lower() == "basic":
-            email, password = base64.b64decode(credentials[1]).decode('utf-8').split(':', 1)
-            user = django.contrib.auth.authenticate(request=request, username=email, password=password)
+            email, password = base64.b64decode(
+                credentials[1]).decode('utf-8').split(':', 1)
+            user = django.contrib.auth.authenticate(
+                request=request, username=email, password=password)
 
     if user is None:
         raise APINotAuthorisedException('Username or password are invalid')
@@ -73,8 +75,10 @@ def increment_rule(rule):
     rule.times_used += 1
     rule.save()
 
+
 def random_uuid():
     return str(uuid.uuid4())
+
 
 def sanitize(text):
     return BeautifulSoup(text, "lxml").text
@@ -175,9 +179,11 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
 
 def make_or_increment_rule(action, email, system_id, caption, password=None,
                            description=None, source=None, target_url=None):
-    rules_query = GeneratedRule.objects.filter(email=email, system_id=system_id, caption=caption)
+    rules_query = GeneratedRule.objects.filter(
+        email=email, system_id=system_id, caption=caption)
     if action == 'Generic Event':
-        rules_query = rules_query.filter(source=source, direction="Zapier to Nx").first()
+        rules_query = rules_query.filter(
+            source=source, direction="Zapier to Nx").first()
 
         if not rules_query:
             make_rule(action, email, password, system_id,
@@ -191,7 +197,8 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
     elif action == 'Http Action':
         rules_query = rules_query.filter(direction="Nx to Zapier")
         if not rules_query.exists():
-            make_rule(action, email, password, system_id, caption=caption, zapier_trigger=target_url)
+            make_rule(action, email, password, system_id,
+                      caption=caption, zapier_trigger=target_url)
             GeneratedRule(email=email, system_id=system_id, caption=caption, direction="Nx to Zapier",
                           times_used=0).save()
 
@@ -208,17 +215,21 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
 @zapier_exceptions
 def get_systems(request):
     user, email, password = authenticate(request)
-    data = cloud_api.System.list(request, email=email, password=password, one_customization=False)
+    data = cloud_api.System.list(
+        request, email=email, password=password, one_customization=False)
     zap_list = {'systems': []}
 
     for system in data['systems']:
         if system['stateOfHealth'] == 'online':
-            zap_list['systems'].append({'name': system['name'], 'system_id': system['id']})
+            zap_list['systems'].append(
+                {'name': system['name'], 'system_id': system['id']})
 
     return api_success(zap_list)
 
+
 def encode_url(query_params):
     return f"api/createEvent?{urlencode(query_params).replace('+', '%20')}"
+
 
 @swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
@@ -232,7 +243,8 @@ def zapier_send_generic_event(request):
 
     query_params = {"source": source, "caption": caption}
 
-    description = sanitize(request.data['description']) if 'description' in request.data else ""
+    description = sanitize(
+        request.data['description']) if 'description' in request.data else ""
 
     if description:
         query_params['description'] = description
@@ -259,7 +271,8 @@ def nx_http_action(request):
     if hooks_event.exists():
         for hook in hooks_event:
             hook.deliver_hook(None, {'caption': caption})
-            make_or_increment_rule('Hook Fired', hook.user.email, system_id, caption)
+            make_or_increment_rule(
+                'Hook Fired', hook.user.email, system_id, caption)
 
         return Response({'message': "Webhook fired for " + caption}, status=200)
 
@@ -278,6 +291,7 @@ def ping(request):
 
 def generate_subscribe_url_link(query_params):
     return f'{CLOUD_INSTANCE_URL}/zapier/?{urlencode(query_params)}'
+
 
 @swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
@@ -298,7 +312,8 @@ def subscribe_webhook(request):
 
     url_link = generate_subscribe_url_link(query_params)
 
-    make_or_increment_rule('Http Action', email, system_id, caption, password=password, target_url=url_link)
+    make_or_increment_rule('Http Action', email, system_id,
+                           caption, password=password, target_url=url_link)
     zap_hook = ZapHook(user=user, event=event, target=target)
     zap_hook.save()
     return Response({'message': 'Webhook created for ' + caption, 'link': url_link}, status=200)

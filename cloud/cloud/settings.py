@@ -426,12 +426,12 @@ LOGGING = {
             'propagate': False,
             'handlers': ['console']
         },
-        'api.helpers.exceptions': {
+        'cloud.helpers.exceptions': {
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
-        'api.controllers.cloud_gateway': {
+        'cloud.controllers.cloud_gateway': {
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
@@ -446,7 +446,7 @@ LOGGING = {
             'propagate': False,
             'handlers': ['console']
         },
-        'api.controller.cloud_api': {
+        'cms.controllers.cloud_api': {
             'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']

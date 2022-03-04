@@ -3,6 +3,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth import get_user_model
 from dal import autocomplete
 
+# Forms use some models from cms, maybe move to main app
 from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
 from notifications.models import CloudNotification, PushSubscription
 

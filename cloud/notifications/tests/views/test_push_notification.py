@@ -104,15 +104,15 @@ class TestCloudSystemBasicAuthentication(WithInstanceFixture):
             str(uuid4()) for _ in range(6)]
         mock_request = mocker.MagicMock()
         mock_clouddb_account_get = mocker.patch(
-            'api.controllers.cloud_api.Account.get', side_effect=APINotAuthorisedException(test_error))
+            'cloud.controllers.cloud_api.Account.get', side_effect=APINotAuthorisedException(test_error))
         mock_clouddb_system_get = mocker.patch(
-            'api.controllers.cloud_api.System.basic_get', return_value={'systems': [system]})
+            'cloud.controllers.cloud_api.System.basic_get', return_value={'systems': [system]})
         mock_credentials = mocker.MagicMock()
         mock_credentials.tokens = tokens
         mock_temp_login_instance = mocker.MagicMock()
         mock_temp_login_instance.__enter__.return_value = mock_credentials
         mock_temp_login = mocker.patch(
-            'api.controllers.cloud_api.TempLogin', return_value=mock_temp_login_instance)
+            'cloud.controllers.cloud_api.TempLogin', return_value=mock_temp_login_instance)
 
         login = f'{user}:{password}'
 
@@ -153,7 +153,7 @@ class TestCloudAccountBasicAuthentication(WithInstanceFixture):
         mock_request.data = {}
         test_account = account_factory(email)
         mock_clouddb_account_get = mocker.patch(
-            'api.controllers.cloud_api.Account.get', return_value={'email': email})
+            'cloud.controllers.cloud_api.Account.get', return_value={'email': email})
 
         assert instance.authenticate_credentials(
             email, password, mock_request)[0] == test_account
@@ -172,9 +172,9 @@ class TestCloudSessionAuthentication(WithInstanceFixture):
         cloud_db_account = {'email': email}
         session_login = {'login': login, 'password': password}
         mock_clouddb_account_get = mocker.patch(
-            'api.controllers.cloud_api.Account.get', return_value=cloud_db_account)
+            'cloud.controllers.cloud_api.Account.get', return_value=cloud_db_account)
         mock_clouddb_account_temp_credentials = mocker.patch(
-            'api.controllers.cloud_api.Account.create_temporary_credentials', return_value=session_login)
+            'cloud.controllers.cloud_api.Account.create_temporary_credentials', return_value=session_login)
         mock_request = mocker.MagicMock()
         mock_request.data = {}
         mock_request._request.user.email = email
@@ -203,7 +203,8 @@ class TestCloudSessionAuthentication(WithInstanceFixture):
 
 
 def test_push_notification(arf, account_factory, db, mocker, default_customization):
-    mocker.patch('notifications.views.push_notification.get_mobile_compatible_customization', return_value=default_customization)
+    mocker.patch('notifications.views.push_notification.get_mobile_compatible_customization',
+                 return_value=default_customization)
     title, body, payload_key, payload_value, options_key, options_value, target, system_id = [
         str(uuid4()) for _ in range(8)]
     data = {

@@ -5,8 +5,8 @@ from django.core.cache import caches
 from rest_framework import serializers
 from django.core.exceptions import ValidationError
 
-from api.controllers.cloud_api import System
-from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+from cloud.controllers.cloud_api import System
+from cloud.helpers.exceptions import APILogicException, APINotAuthorisedException
 from cms.models import get_cloud_portal_asset
 from notifications.models import PushSubscription, PushDevice, PushNotification, SystemEmail
 from notifications.conf import get_sns_client
@@ -16,7 +16,8 @@ import logging
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 PROVIDERS = tuple(PushDevice.PROVIDERS._identifier_map.keys())
-PROVIDERS_REVERSE_MAP = {i: name for name, i in PushDevice.PROVIDERS._identifier_map.items()}
+PROVIDERS_REVERSE_MAP = {i: name for name,
+                         i in PushDevice.PROVIDERS._identifier_map.items()}
 
 FCM_ERRORS = {
     'MismatchSenderId': 'Device token does not match with the current configuration',
@@ -42,18 +43,23 @@ def get_aws_platform_arns(customization_name):
 
 class NotificationSerializer(serializers.Serializer):
     class NotificationDataSerializer(serializers.Serializer):
-        title = serializers.CharField(required=False, allow_blank=True, max_length=255, default='')
-        body = serializers.CharField(required=False, allow_blank=True, default='')
+        title = serializers.CharField(
+            required=False, allow_blank=True, max_length=255, default='')
+        body = serializers.CharField(
+            required=False, allow_blank=True, default='')
         payload = serializers.DictField(required=False, default={})
         options = serializers.DictField(required=False, default={})
 
         def validate(self, data):
             if len(data['title'] + data['body'] + json.dumps(data['payload'])) > PushNotification.SIZE_LIMIT:
-                raise serializers.ValidationError(f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
+                raise serializers.ValidationError(
+                    f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
             return data
 
-    systemId = serializers.UUIDField(allow_null=False, label='ID of target system')
-    targets = serializers.ListField(child=serializers.CharField(min_length=1), label='List of emails')
+    systemId = serializers.UUIDField(
+        allow_null=False, label='ID of target system')
+    targets = serializers.ListField(
+        child=serializers.CharField(min_length=1), label='List of emails')
     notification = NotificationDataSerializer()
 
 
@@ -73,7 +79,8 @@ class SubscriptionSerializer(serializers.Serializer):
     isEnabled = serializers.BooleanField(required=False)
     deviceInfo = serializers.DictField(required=False)
     type = serializers.ChoiceField(choices=PUSHDEVICE_TYPES, required=False)
-    provider = serializers.ChoiceField(choices=PROVIDERS, required=False, default='firebase_legacy')
+    provider = serializers.ChoiceField(
+        choices=PROVIDERS, required=False, default='firebase_legacy')
     userId = serializers.CharField(required=False, allow_blank=True)
 
     def validate(self, data):
@@ -111,7 +118,8 @@ class SubscriptionSerializer(serializers.Serializer):
                 return ['all']
 
             try:
-                systems = System.list(self.context['request'], email=request_data['username'], password=request_data['password'])
+                systems = System.list(
+                    self.context['request'], email=request_data['username'], password=request_data['password'])
                 systems = [system['id'] for system in systems['systems']]
 
                 for system in value[:]:
@@ -124,9 +132,11 @@ class SubscriptionSerializer(serializers.Serializer):
                 if isinstance(exception, APINotAuthorisedException):
                     raise serializers.ValidationError('Invalid credentials')
                 elif isinstance(exception, APILogicException):
-                    raise serializers.ValidationError(f'APILogicException: {str(exception)}')
+                    raise serializers.ValidationError(
+                        f'APILogicException: {str(exception)}')
                 else:
-                    raise serializers.ValidationError('Cannot authenticate at this time')
+                    raise serializers.ValidationError(
+                        'Cannot authenticate at this time')
         else:
             return value
 
@@ -137,11 +147,14 @@ class SubscriptionSerializer(serializers.Serializer):
             )[0]
             instance.subscriptions.set([subscription])
         elif systems:
-            existing_subscriptions = PushSubscription.objects.filter(system_id__in=systems)
-            systems = list(set(systems) - {str(system) for system in existing_subscriptions.values_list('system_id', flat=True)})
+            existing_subscriptions = PushSubscription.objects.filter(
+                system_id__in=systems)
+            systems = list(set(
+                systems) - {str(system) for system in existing_subscriptions.values_list('system_id', flat=True)})
             instance.subscriptions.set(existing_subscriptions)
             for system in systems:
-                system = PushSubscription.objects.create(type=PushSubscription.SUB_TYPES.cloud, system_id=system)
+                system = PushSubscription.objects.create(
+                    type=PushSubscription.SUB_TYPES.cloud, system_id=system)
                 instance.subscriptions.add(system)
         elif type(systems) == list:
             instance.subscriptions.clear()
@@ -153,7 +166,8 @@ class SubscriptionSerializer(serializers.Serializer):
             if 'model' in device_info:
                 instance.model = device_info['model']
             if 'os' in device_info:
-                instance.os = getattr(PushDevice.OS, device_info['os'], PushDevice.OS.web)
+                instance.os = getattr(
+                    PushDevice.OS, device_info['os'], PushDevice.OS.web)
         return instance
 
     def create_platform_endpoint(self, instance):
@@ -162,22 +176,26 @@ class SubscriptionSerializer(serializers.Serializer):
         platform_arns = get_aws_platform_arns(settings.CUSTOMIZATION)
         platform_arn = platform_arns[provider]
         if not platform_arn:
-            raise serializers.ValidationError(f'ARN is not configured for provider {provider}')
+            raise serializers.ValidationError(
+                f'ARN is not configured for provider {provider}')
 
         sns_client = get_sns_client()
         try:
             if provider == 'baidu':
                 platform_endpoint = sns_client.create_platform_endpoint(
                     PlatformApplicationArn=platform_arn, Token=instance.registration_id,
-                    Attributes={'UserId': user_id, 'ChannelId': instance.registration_id}
+                    Attributes={'UserId': user_id,
+                                'ChannelId': instance.registration_id}
                 )
                 instance.baidu_user_id = user_id
             else:
-                platform_endpoint = sns_client.create_platform_endpoint(PlatformApplicationArn=platform_arn, Token=instance.registration_id)
+                platform_endpoint = sns_client.create_platform_endpoint(
+                    PlatformApplicationArn=platform_arn, Token=instance.registration_id)
         except botocore.exceptions.ClientError as client_error:
             logger.warning(f'Provider: {provider}, Device Id: {instance.registration_id}, UserId: {user_id}, PlatformARN: {platform_arn}\n'
                            f'Boto3 ClientError: {client_error}')
-            raise serializers.ValidationError({'message': 'Error registering the provided token'})
+            raise serializers.ValidationError(
+                {'message': 'Error registering the provided token'})
 
         endpoint_arn = platform_endpoint.get('EndpointArn')
         instance.arn = endpoint_arn
@@ -249,7 +267,7 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PushDevice
-        fields = ['type', 'deviceInfo','systems', 'isEnabled', 'provider']
+        fields = ['type', 'deviceInfo', 'systems', 'isEnabled', 'provider']
 
     def get_systems(self, obj):
         return [sub.system_id for sub in obj.subscriptions.all()]
@@ -281,18 +299,25 @@ def validate_serialized_attachments(attachments):
 
 
 class SystemEmailSerializer(serializers.ModelSerializer):
-    systemId = serializers.CharField(source='system_id', required=False, allow_blank=True)
+    systemId = serializers.CharField(
+        source='system_id', required=False, allow_blank=True)
     subject = serializers.CharField()
-    messageHtml = serializers.CharField(source='message_html', required=False, allow_blank=True)
-    messageText = serializers.CharField(source='message_text', required=False, allow_blank=True)
-    targets = serializers.ListField(required=True, child=serializers.EmailField(), allow_empty=False)
-    attachments = serializers.ListField(validators=[validate_serialized_attachments], required=False)
-    messageId = serializers.IntegerField(source='pk', required=False, read_only=True)
+    messageHtml = serializers.CharField(
+        source='message_html', required=False, allow_blank=True)
+    messageText = serializers.CharField(
+        source='message_text', required=False, allow_blank=True)
+    targets = serializers.ListField(
+        required=True, child=serializers.EmailField(), allow_empty=False)
+    attachments = serializers.ListField(
+        validators=[validate_serialized_attachments], required=False)
+    messageId = serializers.IntegerField(
+        source='pk', required=False, read_only=True)
 
     class Meta:
         model = SystemEmail
-        fields = ('systemId', 'subject', 'messageHtml', 'messageText', 'targets', 'attachments', 'messageId')
-    
+        fields = ('systemId', 'subject', 'messageHtml',
+                  'messageText', 'targets', 'attachments', 'messageId')
+
     def create(self, customization=settings.CUSTOMIZATION):
         self.is_valid(True)
         return SystemEmail(**self.validated_data, customization=customization)

@@ -3,10 +3,11 @@ from rest_framework.decorators import api_view, permission_classes
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from api.helpers.exceptions import require_params, api_success
+from cloud.helpers.exceptions import require_params, api_success
 from notifications.models import Message
 
-email__body = openapi.Schema(type=openapi.TYPE_STRING, description="Target users email.")
+email__body = openapi.Schema(
+    type=openapi.TYPE_STRING, description="Target users email.")
 type__body = openapi.Schema(type=openapi.TYPE_STRING,
                             description="Type of email you are extracting code from")
 
@@ -20,6 +21,8 @@ type__body = openapi.Schema(type=openapi.TYPE_STRING,
 def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data
-    message = Message.objects.filter(user_email__iexact=data['email'], type=data['type']).last()
-    code = message.message.get('code', 'Does not exist') if message else 'Does not exist'
+    message = Message.objects.filter(
+        user_email__iexact=data['email'], type=data['type']).last()
+    code = message.message.get(
+        'code', 'Does not exist') if message else 'Does not exist'
     return api_success({"code": code})

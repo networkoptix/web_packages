@@ -5,7 +5,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 from django.conf import settings
 
-from api.helpers.exceptions import validate_mediaserver_response
+from cloud.helpers.exceptions import validate_mediaserver_response
 
 logger = logging.getLogger(__name__)
 

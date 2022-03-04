@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.exceptions import ValidationError
 
-from api.helpers.exceptions import api_success, require_params
+from cloud.helpers.exceptions import api_success, require_params
 from cms.models import PortalNotification
 from cms.serializers import PortalNotificationIdSerializer, PortalNotificationListSerializer, PortalNotificationSerializer
 

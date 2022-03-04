@@ -6,9 +6,9 @@ from uuid import uuid4
 import pytest
 from rest_framework import status
 
-import api.controllers.cloud_api as cloud_api
-from api.controllers.cloud_api import *
-from api.helpers.exceptions import *
+import cloud.controllers.cloud_api as cloud_api
+from cloud.controllers.cloud_api import *
+from cloud.helpers.exceptions import *
 from api.tests.utils import MockResponse, unwrap
 
 PatchedResponse = Callable[[Optional[dict]], MagicMock]
@@ -78,7 +78,7 @@ class TestAPIWrappers:
 
     def test_cdb_logger(self, mocker):
         mock_logger = mocker.patch(
-            'api.controllers.cloud_api.logger', mocker.MagicMock())
+            'cloud.controllers.cloud_api.logger', mocker.MagicMock())
 
         for status_code in [200, 300, 400, 500]:
             message, cdb_response, request_headers = generate_args(3)
@@ -96,7 +96,8 @@ class TestAPIWrappers:
                 mock_logger.info.assert_called_with(message)
 
     def test_sanitize_log(self):
-        to_sanitize = str({key: str(uuid4()) for key, val in SANITIZED_FIELDS.items()})
+        to_sanitize = str({key: str(uuid4())
+                           for key, val in SANITIZED_FIELDS.items()})
         sanitized = str(SANITIZED_FIELDS)
 
         assert sanitize_log(to_sanitize) == sanitized
@@ -273,9 +274,9 @@ class TestSystemAPI:
         def mock_get_system(request, system_id):
             return {'systems': [{'id': system_id, 'version': '5.0.0.11111'}]}
 
-        mocker.patch('api.controllers.cloud_api.System.get', mock_get_system)
+        mocker.patch('cloud.controllers.cloud_api.System.get', mock_get_system)
         mocker.patch(
-            'api.controllers.cloud_api.Auth.get_refresh_token', mock_get_refresh_token)
+            'cloud.controllers.cloud_api.Auth.get_refresh_token', mock_get_refresh_token)
         merge = unwrap(System.merge)(request, self.system_id,
                                      self.slave_system_id, headers=self.headers)
         cloud_api_post_mock.assert_called_with(

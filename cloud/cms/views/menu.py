@@ -1,7 +1,7 @@
 from django.http.request import QueryDict
 from cms.feature_flags import FLAGS, check_feature_flag
 import time
-from api.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
+from cloud.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
 from django.conf import settings
 
 from dal import autocomplete
@@ -53,7 +53,7 @@ def menu_cancel_sync(request):
         raise APINotFoundException(f'Sync log with log_id {log_id} not found')
 
     ZendeskSyncLog.cancel_existing_sync(log_id)
-    
+
     return api_success(f'Syncing canceled for {log_id}')
 
 

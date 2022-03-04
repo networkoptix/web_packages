@@ -1,4 +1,4 @@
-from api.helpers.exceptions import ErrorCodes
+from cloud.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
 from api.views import utils
 
@@ -24,7 +24,8 @@ def cloud_capabilities(request):
 def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings):
     cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache')
     cache_mock.return_value = cloud_capabilities
-    expected = {'integrationStoreEnabled': cloud_capabilities.get('integration_store_enabled', False)}
+    expected = {'integrationStoreEnabled': cloud_capabilities.get(
+        'integration_store_enabled', False)}
 
     cache_capabilities = utils.get_cloud_capabilities_from_cache()
     cache_mock.assert_called_with(settings.CUSTOMIZATION, 'cloud_capabilities')
@@ -103,7 +104,8 @@ class TestVisitedKey:
         try:
             date_parser.parse(response.data['visited'])
         except ValueError:
-            pytest.fail(f'Expected datetime in response, got: {response.data["visited"]}')
+            pytest.fail(
+                f'Expected datetime in response, got: {response.data["visited"]}')
 
 
 class TestLanguage:
@@ -147,7 +149,8 @@ class TestLanguage:
 @pytest.fixture
 def download_user(active_user):
     group = Group.objects.create(name='downloader')
-    releases_permission = Permission.objects.filter(codename='can_view_release').first()
+    releases_permission = Permission.objects.filter(
+        codename='can_view_release').first()
     group.permissions.add(releases_permission)
     active_user.groups.add(group)
     return active_user
@@ -160,8 +163,10 @@ class TestDownloadHistory:
     def setup(self, download_user, mocker, arf):
         self.user = download_user
         self.arf = arf
-        self.settings_mock = mocker.patch.object(utils, 'get_settings_from_cache')
-        self.settings_mock.return_value = {'publicReleases': True, 'showAllBetas': True}
+        self.settings_mock = mocker.patch.object(
+            utils, 'get_settings_from_cache')
+        self.settings_mock.return_value = {
+            'publicReleases': True, 'showAllBetas': True}
 
     def make_request(self):
         request = self.arf.get('/api/utils/downloads/history')
@@ -211,7 +216,8 @@ class DownloadsBase:
     @pytest.fixture(autouse=True)
     def setup(self, download_user, mocker, arf, downloads_json, updates_json, settings_from_cache):
         def mock_requests(*args, **kwargs):
-            url = kwargs.get('method', '') or (args[0] if len(args) >= 1 else None)
+            url = kwargs.get('method', '') or (
+                args[0] if len(args) >= 1 else None)
             if 'downloads.json' in url:
                 return MockResponse(json=downloads_json)
             elif 'updates.json' in url:
@@ -221,7 +227,8 @@ class DownloadsBase:
         self.updates_json = updates_json
         self.arf = arf
         self.user = download_user
-        self.settings_mock = mocker.patch.object(utils, 'get_settings_from_cache')
+        self.settings_mock = mocker.patch.object(
+            utils, 'get_settings_from_cache')
         self.settings_mock.return_value = settings_from_cache
         self.downloads_request = mocker.patch.object(utils.requests, 'get')
         self.downloads_request.side_effect = mock_requests
@@ -322,7 +329,8 @@ class TestDownloads(DownloadsBase):
 class TestGetSettings:
     @pytest.fixture(autouse=True)
     def setup(self, settings_from_cache, mocker, arf, active_user):
-        self.settings_mock = mocker.patch.object(utils, 'get_settings_from_cache')
+        self.settings_mock = mocker.patch.object(
+            utils, 'get_settings_from_cache')
         self.settings_mock.return_value = settings_from_cache
         self.arf = arf
         self.user = active_user
@@ -413,7 +421,8 @@ class TestGetSettings:
 
 class TestIPVD:
     def test_post(self, arf, mocker):
-        cache_mock = mocker.patch.object(utils.cache, 'delete', return_value=True)
+        cache_mock = mocker.patch.object(
+            utils.cache, 'delete', return_value=True)
         request = arf.post('/api/ipvd')
 
         # Test cache cleared
@@ -446,7 +455,8 @@ class TestIPVD:
 
 
 def test_cloud_capabilities_view(arf, mocker):
-    capabilities_mock = mocker.patch.object(utils, 'get_cloud_capabilities_from_cache')
+    capabilities_mock = mocker.patch.object(
+        utils, 'get_cloud_capabilities_from_cache')
     capabilities_mock.return_value = mocker.sentinel.capabilities
     request = arf.get('/api/utils/cloudCapabilities/')
     response = utils.cloud_capabilities(request)

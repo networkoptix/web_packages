@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from api.helpers.exceptions import api_success
+from cloud.helpers.exceptions import api_success
 from cms.models import OpenAPIJSON
 
 id_route_param = openapi.Parameter("json_id", openapi.IN_PATH,
@@ -39,7 +39,7 @@ def get_openapi_json(request, json_id=None):
         json = OpenAPIJSON.objects.get(id=json_id)
     except OpenAPIJSON.DoesNotExist:
         return api_success(JSON_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = OpenAPIJSONSerializer(json)
 
     return api_success(serializer.data)

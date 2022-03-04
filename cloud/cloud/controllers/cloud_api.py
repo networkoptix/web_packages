@@ -13,11 +13,13 @@ from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
+from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
                                     APINotAuthorisedException, APINotFoundException, get_client_ip,
                                     kill_session, kill_tokens)
 
 logger = logging.getLogger(__name__)
+
+# See if we can break to its own package
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL

@@ -14,8 +14,8 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
-from api.helpers.exceptions import (
+from cloud.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
+from cloud.helpers.exceptions import (
     api_success, APINotAuthorisedException, APILogicException, clean_passwords
 )
 from api.models import Account
@@ -33,13 +33,15 @@ logger = logging.getLogger(__name__)
 
 
 def get_mobile_compatible_customization():
-    mobile_customizations = caches['push_config'].get('mobile_customizations', {})
+    mobile_customizations = caches['push_config'].get(
+        'mobile_customizations', {})
     current_customization = settings.CUSTOMIZATION
     if current_customization not in mobile_customizations:
         current_portal = get_cloud_portal_asset(current_customization)
         mobile_customizations[current_customization] = current_portal.read_global_value(
             '%PUSH_CUSTOMIZATION%') or current_customization
-        caches['push_config'].set('mobile_customizations', mobile_customizations)
+        caches['push_config'].set(
+            'mobile_customizations', mobile_customizations)
     return Customization.objects.get(name=mobile_customizations[current_customization])
 
 
@@ -61,17 +63,22 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
             try:
                 # System credentials should fail account.get and raise an exception
                 Clouddb_Account.get(request, email=user, password=password)
-                raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
+                raise exceptions.AuthenticationFailed(
+                    'Must use system credentials, not account credentials')
             except (APINotAuthorisedException, APILogicException):
                 try:
-                    system_response = Clouddb_System.basic_get(user, password, user)
+                    system_response = Clouddb_System.basic_get(
+                        user, password, user)
                     if 'systems' in system_response and system_response['systems'][0]:
                         request.data['system'] = system_response['systems'][0]
-                        authentication_cache.set(f'{user}:{password}', request.data['system'])
+                        authentication_cache.set(
+                            f'{user}:{password}', request.data['system'])
                     else:
-                        raise exceptions.AuthenticationFailed('Invalid system credentials')
+                        raise exceptions.AuthenticationFailed(
+                            'Invalid system credentials')
                 except APINotAuthorisedException:
-                    raise exceptions.AuthenticationFailed('Invalid system credentials')
+                    raise exceptions.AuthenticationFailed(
+                        'Invalid system credentials')
 
         system_account = AnonymousUser()
         system_account.is_system = True
@@ -81,11 +88,13 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
 class CloudAccountBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
         try:
-            clouddb_account = Clouddb_Account.get(request, email=user, password=password)
+            clouddb_account = Clouddb_Account.get(
+                request, email=user, password=password)
         except (APINotAuthorisedException, APILogicException):
             raise exceptions.AuthenticationFailed('Invalid email/password')
 
-        account = Account.objects.filter(email=clouddb_account['email']).first()
+        account = Account.objects.filter(
+            email=clouddb_account['email']).first()
 
         request.data['username'] = user
         request.data['password'] = password
@@ -99,18 +108,22 @@ class CloudSessionAuthentication(SessionAuthentication):
             account = getattr(request._request, 'user', None)
             if request.session and 'access_token' in request.session and 'refresh_token' in request.session:
                 clouddb_account = Clouddb_Account.get(request)
-                credentials = Clouddb_Account.create_temporary_credentials(request, credential_type='short')
+                credentials = Clouddb_Account.create_temporary_credentials(
+                    request, credential_type='short')
                 request.session['login'] = credentials['login']
                 request.session['password'] = credentials['password']
             elif request.session and 'login' in request.session and 'password' in request.session:
-                clouddb_account = Clouddb_Account.get(request, request.session['login'], request.session['password'])
+                clouddb_account = Clouddb_Account.get(
+                    request, request.session['login'], request.session['password'])
             else:
                 return None
         except APINotAuthorisedException:
-            raise exceptions.AuthenticationFailed('Invalid email/password for cloud_db.')
+            raise exceptions.AuthenticationFailed(
+                'Invalid email/password for cloud_db.')
 
         if not account.email.endswith('@networkoptix.com'):
-            raise exceptions.AuthenticationFailed('Must authenticate with an @networkoptix.com account')
+            raise exceptions.AuthenticationFailed(
+                'Must authenticate with an @networkoptix.com account')
 
         request.data['clouddb_account'] = clouddb_account
         request.data['username'] = request.session['login']
@@ -139,8 +152,10 @@ def push_notification(request):
 
     notification_object = PushNotification.objects.create(
         title=data['notification']['title'], body=data['notification']['body'],
-        payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
-        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
+        payload=payload_str, options=options_str, raw_targets=json.dumps(
+            data['targets']),
+        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization(
+        )
     )
 
     transaction.on_commit(lambda: send_push_notification.apply_async(
@@ -153,7 +168,8 @@ def push_notification(request):
 
 class DeviceSubscriptionListView(RetrieveAPIView):
     serializer_class = DeviceSubscriptionsSerializer
-    authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
+    authentication_classes = (
+        CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -167,7 +183,8 @@ class DeviceSubscriptionListView(RetrieveAPIView):
 
 
 class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
-    authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
+    authentication_classes = (
+        CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
 
@@ -179,9 +196,12 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
 
         if 'deviceToken' in self.kwargs:
             self.request.data['deviceToken'] = self.kwargs['deviceToken']
-            provider = self.request.query_params.get('provider') or self.request.data.get('provider', 'firebase_legacy')
-            provider = getattr(PushDevice.PROVIDERS, provider, PushDevice.PROVIDERS.firebase_legacy)
-            device = self.get_queryset().filter(registration_id=self.request.data['deviceToken'], provider=provider).first()
+            provider = self.request.query_params.get(
+                'provider') or self.request.data.get('provider', 'firebase_legacy')
+            provider = getattr(PushDevice.PROVIDERS, provider,
+                               PushDevice.PROVIDERS.firebase_legacy)
+            device = self.get_queryset().filter(
+                registration_id=self.request.data['deviceToken'], provider=provider).first()
 
         return device
 
@@ -205,7 +225,8 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         return Response(
-            {'status': 'created', **DeviceSubscriptionsSerializer(instance).data},
+            {'status': 'created', **
+                DeviceSubscriptionsSerializer(instance).data},
             status=status.HTTP_201_CREATED,)
 
     def update(self, request, *args, **kwargs):
@@ -235,7 +256,3 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise Http404
-
-
-
-

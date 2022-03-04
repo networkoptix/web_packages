@@ -7,8 +7,8 @@ import django
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from api.controllers import cloud_api
-from api.helpers import exceptions
+from cloud.controllers import cloud_api
+from cloud.helpers import exceptions
 from api.models import Account
 from notifications.models import Message, Event, Feedback, PushDevice, PushNotification
 from cms.models import Asset, get_cloud_portal_asset
@@ -132,7 +132,8 @@ def get_system_with_users(notification_object, request_data):
             if request_data['system']['id'] == notification_object.raw_system_id:
                 system = request_data['system'].copy()
             else:
-                log_push_result(notification_object, 'System credentials do not match target system')
+                log_push_result(notification_object,
+                                'System credentials do not match target system')
                 return None
         else:
             system = cloud_api.System.basic_get(
@@ -141,11 +142,14 @@ def get_system_with_users(notification_object, request_data):
             system = system['systems'][0]
 
         if system:
-            users = cloud_api.System.basic_users(request_data['username'], request_data['password'], system['id'])
-            system['users'] = {user.get('accountEmail', None) for user in users['sharing']}
+            users = cloud_api.System.basic_users(
+                request_data['username'], request_data['password'], system['id'])
+            system['users'] = {user.get('accountEmail', None)
+                               for user in users['sharing']}
     except Exception as exception:
         if isinstance(exception, exceptions.APINotAuthorisedException):
-            log_push_result(notification_object, 'Invalid cloud credentials for system')
+            log_push_result(notification_object,
+                            'Invalid cloud credentials for system')
         elif isinstance(exception, exceptions.APILogicException):
             log_push_result(
                 notification_object, f'APILogicException: ' +
@@ -174,7 +178,8 @@ def process_fcm_push_response(responses, notification_object, dry_run=False):
                             notification_object, f'FCM Error: {result["error"]}. Token no longer valid, deleting device',
                             device_token=token
                         )
-                        PushDevice.objects.filter(registration_id=token).delete()
+                        PushDevice.objects.filter(
+                            registration_id=token).delete()
                     elif result['error'] == 'InvalidApnsCredential':
                         log_push_result(
                             notification_object,
@@ -186,7 +191,8 @@ def process_fcm_push_response(responses, notification_object, dry_run=False):
                         )
                     else:
                         resend_tokens.append(token)
-                        log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
+                        log_push_result(
+                            notification_object, f'FCM Error: {result["error"]}', device_token=token)
 
     if not resend_tokens and not dry_run and not error:
         notification_object.state = PushNotification.RESULT_STATES.success
@@ -204,10 +210,12 @@ def get_push_devices_from_targets(notification_object, system_users):
     for account in target_accounts:
         targets.remove(account.email)
         if not account.is_active:
-            log_push_result(notification_object, f'User {account.email} is not activated', logging.WARNING)
+            log_push_result(
+                notification_object, f'User {account.email} is not activated', logging.WARNING)
 
     for target in targets:
-        log_push_result(notification_object, f'User {target} not found', logging.ERROR)
+        log_push_result(notification_object,
+                        f'User {target} not found', logging.ERROR)
 
     return PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts, user__is_active=True,

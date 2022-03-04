@@ -21,7 +21,7 @@ class TestReleaseNotes:
         self.existing_release_note_id = self.release_notes[0].id
 
     def get_release_note(self, arf=None, asset_id=None, user=None, draft=False, pending=False):
-        request_url = f'/api/release-notes/{asset_id}?'
+        request_url = f'/api/cms/release-notes/{asset_id}?'
         if draft:
             request_url = request_url + 'draft'
         if pending:
@@ -70,7 +70,7 @@ class TestReleaseNotes:
         assert response.data == RELEASE_NOTES_REVIEW_FORBIDDEN
 
     def get_release_notes(self, arf=None, user=None):
-        request_url = f'/api/release-notes'
+        request_url = f'/api/cms/release-notes'
         request = arf.get(request_url)
         request.session = {}
         request.user = user

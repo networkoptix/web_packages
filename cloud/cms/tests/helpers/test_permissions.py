@@ -2,7 +2,7 @@ import pytest
 from uuid import uuid4
 from model_bakery import baker
 
-from api.helpers.permissions import *
+from cms.helpers.permissions import *
 from cms.models import Asset, Customization
 
 

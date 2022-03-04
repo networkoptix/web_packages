@@ -11,7 +11,7 @@ def test_sanitize_html(arf, temp_superuser):
     <p><span style="font-weight: normal">regular text</span></p>
     '''
 
-    req = arf.post('/api/sanitize_html', data={'html': html})
+    req = arf.post('/api/cms/sanitize_html', data={'html': html})
     req.user = temp_superuser
     resp = sanitize_html(req)
     assert resp.status_code == status.HTTP_200_OK

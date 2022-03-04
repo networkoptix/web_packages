@@ -57,20 +57,20 @@ class TestDocumentation:
 
     def get_page_with(self, user, asset_id, state=''):
         request = self.arf.get(
-            f'/api/documentation/{self.non_existing_asset_id}?state={state}')
+            f'/api/cms/documentation/{self.non_existing_asset_id}?state={state}')
         request.session = {}
         request.user = user
         return get_page(request, asset_id)
 
     def get_pages_with(self, kb_name, user):
-        request = self.arf.get(f'/api/documentation/kb/{kb_name}')
+        request = self.arf.get(f'/api/cms/documentation/kb/{kb_name}')
         request.session = {}
         request.user = user
         return get_pages(request, kb_name)
 
     def kb_for_article_with(self, asset_id, user):
         request = self.arf.get(
-            f'/api/documentation/find_kb/{asset_id}')
+            f'/api/cms/documentation/find_kb/{asset_id}')
         request.session = {}
         request.user = user
         return kb_for_article(request, asset_id)
@@ -126,7 +126,7 @@ class TestDocumentation:
     @pytest.mark.slow
     def test_menu_to_endpoint(self):
         request = self.arf.get(
-            f'/api/documentation/struct/{self.test_struct_name}')
+            f'/api/cms/documentation/struct/{self.test_struct_name}')
         request.session = {}
         request.user = self.superuser
         response = menu_to_endpoint(request, self.test_struct_name)

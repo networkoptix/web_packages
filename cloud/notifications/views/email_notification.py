@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.conf import settings
 
-from api.helpers.exceptions import api_success, require_params
+# Maybe move helpers to package
+from cloud.helpers.exceptions import api_success, require_params
 from notifications.views.push_notification import CloudSessionAuthentication, CloudSystemBasicAuthentication, IsAuthenticatedUserOrSystem
 from notifications.serializers import SystemEmailSerializer
 

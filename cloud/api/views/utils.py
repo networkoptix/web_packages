@@ -18,7 +18,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
-from api.helpers.exceptions import handle_exceptions, require_params,\
+from cloud.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \

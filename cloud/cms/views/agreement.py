@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from api.helpers.exceptions import (
+from cloud.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.asset_json import get_review_matching_current_version
 from cms.controllers.filldata import global_contexts_to_dict, ContextProcessor

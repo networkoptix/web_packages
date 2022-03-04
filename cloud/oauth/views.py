@@ -8,8 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api.account_backend import get_ip
-from api.controllers.cloud_api import Auth, System
-from api.helpers.exceptions import (
+from cloud.controllers.cloud_api import Auth, System
+from cloud.helpers.exceptions import (
     require_params, api_success, APILogicException, APINotAuthorisedException, APIRequestException, ErrorCodes
 )
 
@@ -19,33 +19,54 @@ response_type_description = "Valid options are code or token."
 scope_description = "Scope for the oauth token."
 signature_description = "HMAC-SHA256 string used to validate oauth redirect_uri for system."
 
-access_token_param = openapi.Parameter('access_token', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-authorization_code_param = openapi.Parameter('code', openapi.IN_QUERY, type=openapi.TYPE_STRING)
-client_id_param = openapi.Parameter('client_id', openapi.IN_QUERY, required=True, description=client_description, type=openapi.TYPE_STRING)
-email_param = openapi.Parameter('email', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-grant_type_param = openapi.Parameter('grant_type', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-password_param = openapi.Parameter('password', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-redirect_uri_param = openapi.Parameter('redirect_uri', openapi.IN_QUERY, required=True, description=redirect_uri_description, type=openapi.TYPE_STRING)
-refresh_token_param = openapi.Parameter('refresh_token', openapi.IN_QUERY, description=response_type_description, type=openapi.TYPE_STRING)
-response_type_param = openapi.Parameter('response_type', openapi.IN_QUERY, required=True, description=response_type_description, type=openapi.TYPE_STRING)
-scope_param = openapi.Parameter('scope', openapi.IN_QUERY, required=True, description=scope_description, type=openapi.TYPE_STRING)
-signature_param = openapi.Parameter('signature', openapi.IN_QUERY, required=True, description=signature_description, type=openapi.TYPE_STRING)
+access_token_param = openapi.Parameter(
+    'access_token', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+authorization_code_param = openapi.Parameter(
+    'code', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+client_id_param = openapi.Parameter(
+    'client_id', openapi.IN_QUERY, required=True, description=client_description, type=openapi.TYPE_STRING)
+email_param = openapi.Parameter(
+    'email', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+grant_type_param = openapi.Parameter(
+    'grant_type', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+password_param = openapi.Parameter(
+    'password', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+redirect_uri_param = openapi.Parameter(
+    'redirect_uri', openapi.IN_QUERY, required=True, description=redirect_uri_description, type=openapi.TYPE_STRING)
+refresh_token_param = openapi.Parameter(
+    'refresh_token', openapi.IN_QUERY, description=response_type_description, type=openapi.TYPE_STRING)
+response_type_param = openapi.Parameter(
+    'response_type', openapi.IN_QUERY, required=True, description=response_type_description, type=openapi.TYPE_STRING)
+scope_param = openapi.Parameter('scope', openapi.IN_QUERY, required=True,
+                                description=scope_description, type=openapi.TYPE_STRING)
+signature_param = openapi.Parameter(
+    'signature', openapi.IN_QUERY, required=True, description=signature_description, type=openapi.TYPE_STRING)
 
 access_token__body = openapi.Schema(type=openapi.TYPE_STRING)
-authorization_code__body = openapi.Schema(description="An authorization code.", type=openapi.TYPE_STRING)
-client_id__body = openapi.Schema(description=client_description, type=openapi.TYPE_STRING)
+authorization_code__body = openapi.Schema(
+    description="An authorization code.", type=openapi.TYPE_STRING)
+client_id__body = openapi.Schema(
+    description=client_description, type=openapi.TYPE_STRING)
 client_token__body = openapi.Schema(type=openapi.TYPE_STRING)
-description__body = openapi.Schema(description="Who is the client and what is it for.", type=openapi.TYPE_STRING)
-grant_type__body = openapi.Schema(description="Valid options are authorization_code, password or refresh_token", type=openapi.TYPE_STRING)
+description__body = openapi.Schema(
+    description="Who is the client and what is it for.", type=openapi.TYPE_STRING)
+grant_type__body = openapi.Schema(
+    description="Valid options are authorization_code, password or refresh_token", type=openapi.TYPE_STRING)
 email__body = openapi.Schema(type=openapi.TYPE_STRING)
-name__body = openapi.Schema(description="The name of the application", type=openapi.TYPE_STRING)
+name__body = openapi.Schema(
+    description="The name of the application", type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
-redirect_uri__body = openapi.Schema(description=redirect_uri_description, type=openapi.TYPE_STRING)
+redirect_uri__body = openapi.Schema(
+    description=redirect_uri_description, type=openapi.TYPE_STRING)
 refresh_token__body = openapi.Schema(type=openapi.TYPE_STRING)
-response_type__body = openapi.Schema(description=response_type_description, type=openapi.TYPE_STRING)
-scope__body = openapi.Schema(description=scope_description, type=openapi.TYPE_STRING)
-signature__body = openapi.Schema(description=signature_description, type=openapi.TYPE_STRING)
-token__body = openapi.Schema(description="An access or refresh token.", type=openapi.TYPE_STRING)
+response_type__body = openapi.Schema(
+    description=response_type_description, type=openapi.TYPE_STRING)
+scope__body = openapi.Schema(
+    description=scope_description, type=openapi.TYPE_STRING)
+signature__body = openapi.Schema(
+    description=signature_description, type=openapi.TYPE_STRING)
+token__body = openapi.Schema(
+    description="An access or refresh token.", type=openapi.TYPE_STRING)
 
 successful_authenticate_response = openapi.Response(
     description="Returns a redirect link with a valid access code.",
@@ -93,17 +114,20 @@ successful_token_response = openapi.Response(
 )
 
 
-SYSTEM_PATTERN = re.compile(r"cloudSystemId=([\w\d]{8}-[\w\d]{4}-[\w\d]{4}-[\w\d]{4}-[\w\d]{12})")
+SYSTEM_PATTERN = re.compile(
+    r"cloudSystemId=([\w\d]{8}-[\w\d]{4}-[\w\d]{4}-[\w\d]{4}-[\w\d]{12})")
 
 
 def check_signature(signature, scope, redirect_uri):
     system_id = SYSTEM_PATTERN.search(scope)
     if not system_id:
-        raise APIRequestException("Scope is missing a valid system id", error_code=ErrorCodes.bad_request)
+        raise APIRequestException(
+            "Scope is missing a valid system id", error_code=ErrorCodes.bad_request)
     try:
         System.validate_signature(system_id.group(1), signature, redirect_uri)
     except APILogicException:
-        raise APIRequestException("Signature does not match.", error_code=ErrorCodes.bad_request)
+        raise APIRequestException(
+            "Signature does not match.", error_code=ErrorCodes.bad_request)
 
 
 def get_param(request, name):
@@ -127,7 +151,8 @@ def build_redirect_url(url, code, state):
     redirect_params = urllib.parse.parse_qs(parsed_redirect.query)
     redirect_params.update(set_params_for_redirect(code, state))
 
-    updated_redirect_params = urllib.parse.urlencode(redirect_params, doseq=True)
+    updated_redirect_params = urllib.parse.urlencode(
+        redirect_params, doseq=True)
     return f"{parsed_redirect.geturl().split('?')[0]}?{updated_redirect_params}"
 
 
@@ -151,9 +176,11 @@ def build_redirect_url(url, code, state):
 @api_view(["POST"])
 @permission_classes((AllowAny, ))
 def authenticate(request):
-    require_params(request, ("client_id", "email", "password", "response_type"))
+    require_params(request, ("client_id", "email",
+                             "password", "response_type"))
     if get_param(request, "response_type") != Auth.RESPONSE_TYPE.code:
-        raise APIRequestException("Invalid value for response_type. It must be code.", error_code=ErrorCodes.bad_request)
+        raise APIRequestException(
+            "Invalid value for response_type. It must be code.", error_code=ErrorCodes.bad_request)
 
     ip = get_ip(request)
     redirect_uri = get_param(request, "redirect_uri") or "/"
@@ -235,7 +262,8 @@ def logout(request):
         try:
             Auth.delete_token(temporary_session, access_token)
         except (APILogicException, APINotAuthorisedException):
-            raise APINotAuthorisedException("Invalid cloud access and refresh token", ErrorCodes.not_authorized)
+            raise APINotAuthorisedException(
+                "Invalid cloud access and refresh token", ErrorCodes.not_authorized)
 
     # At this point the access_token is valid and the refresh might be valid
     try:
@@ -275,10 +303,11 @@ def register_client(request):
 
 @swagger_auto_schema(methods=["GET"],  # auto_schema=None,
                      operation_description="Returns new access and refresh tokens.",
-                     manual_parameters=[client_id_param, authorization_code_param, email_param, grant_type_param, password_param, refresh_token_param, response_type_param, scope_param, signature_param],
+                     manual_parameters=[client_id_param, authorization_code_param, email_param, grant_type_param,
+                                        password_param, refresh_token_param, response_type_param, scope_param, signature_param],
                      responses={
                          200: successful_token_response
-                     })
+})
 @swagger_auto_schema(methods=["POST"],  # auto_schema=None,
                      operation_description="Returns new access and refresh tokens.",
                      request_body=openapi.Schema(
@@ -294,10 +323,10 @@ def register_client(request):
                              "scope": scope__body,
                              "signature": signature__body
                          }
-                     ),
-                     responses={
+),
+    responses={
                          200: successful_token_response
-                     })
+})
 @api_view(["GET", "POST"])
 @permission_classes((AllowAny, ))
 def token(request):
@@ -314,13 +343,15 @@ def token(request):
         if refresh_token:
             grant_type = Auth.GRANT_TYPE.refresh_token
 
-    response_type = get_param(request, "response_type") or Auth.RESPONSE_TYPE.token
+    response_type = get_param(
+        request, "response_type") or Auth.RESPONSE_TYPE.token
 
     scope = get_param(request, 'scope')
     ip = get_ip(request)
 
     if grant_type == Auth.GRANT_TYPE.password:
-        require_params(request, ("email", "password", "client_id", "redirect_uri"))
+        require_params(request, ("email", "password",
+                                 "client_id", "redirect_uri"))
         email = get_param(request, "email")
         password = get_param(request, "password")
         client_id = get_param(request, "client_id")
@@ -331,7 +362,8 @@ def token(request):
             check_signature(signature, scope, redirect_uri)
 
         if response_type == Auth.RESPONSE_TYPE.code:
-            res = Auth.get_code(email, password, client_id=client_id, ip=ip, redirect_uri=redirect_uri, scope=scope)
+            res = Auth.get_code(email, password, client_id=client_id,
+                                ip=ip, redirect_uri=redirect_uri, scope=scope)
             return redirect(build_redirect_url(redirect_uri, res.get('code'), state))
 
     elif response_type == Auth.RESPONSE_TYPE.token:
@@ -342,7 +374,8 @@ def token(request):
             require_params(request, ("refresh_token",))
             return api_success(Auth.get_refresh_token(refresh_token, ip=ip, scope=scope))
 
-    raise APIRequestException("Invalid grant_type and response_type combination", ErrorCodes.bad_request)
+    raise APIRequestException(
+        "Invalid grant_type and response_type combination", ErrorCodes.bad_request)
 
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
