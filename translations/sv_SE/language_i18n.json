@@ -176,6 +176,7 @@
     "Enter login": "Ange inloggning",
     "Enter password": "Ange lösenord",
     "Enter password for your account to continue": "Ange lösenord för ditt konto för att fortsätta",
+    "Enter password for your account to continue.": "Enter password for your account to continue.",
     "Enter password to continue.": "Ange lösenord för att fortsätta.",
     "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "Ange följande parametrar i autentiseringsappen för att länka den till ditt %CLOUD_NAME% -konto.",
     "Enter verification code": "Ange verifieringskod",

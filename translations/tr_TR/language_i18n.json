@@ -176,6 +176,7 @@
     "Enter login": "Enter login",
     "Enter password": "Enter password",
     "Enter password for your account to continue": "Devam etmek için hesabınızın şifresini girin",
+    "Enter password for your account to continue.": "Enter password for your account to continue.",
     "Enter password to continue.": "Devam etmek için parola girin.",
     "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.",
     "Enter verification code": "Enter verification code",

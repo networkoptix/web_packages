@@ -430,7 +430,7 @@
             "removeUser": "Remove user",
             "serversDetach": "Detach server { title } from current system?",
             "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }"
+            "serversRestart": "Restart server { title }?"
         },
         "tooltips": {
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
@@ -676,7 +676,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "view": "Se kameraer",
         "apiTool": "API testing tool",
-        "security": "Security"
+        "security": "Security",
+        "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
         "integrations": "The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like %VMS_NAME%, all available in %CLOUD_NAME% so that you can find solutions to build and customize your IP Video system.",

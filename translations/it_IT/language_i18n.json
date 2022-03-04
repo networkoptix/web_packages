@@ -176,6 +176,7 @@
     "Enter login": "Inserire login",
     "Enter password": "Inserire la password",
     "Enter password for your account to continue": "Inserisci la password per il tuo account per continuare",
+    "Enter password for your account to continue.": "Enter password for your account to continue.",
     "Enter password to continue.": "Inserire la password per continuare.",
     "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "Inserisci i seguenti parametri nell'app di autenticazione per collegarla al tuo account %CLOUD_NAME%.",
     "Enter verification code": "Enter verification code",
