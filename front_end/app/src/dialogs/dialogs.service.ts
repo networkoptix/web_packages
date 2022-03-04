@@ -27,6 +27,7 @@ import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ApplyModalContent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
+import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
@@ -651,5 +652,16 @@ export class NxDialogsService {
         };
 
         return this.createModal(TransferOwnershipModalContent, options, params);
+    }
+
+    public client2faWarning(): Promise<void> {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {};
+
+        return this.createModal(Client2faWarningModalContent, options, params);
     }
 }

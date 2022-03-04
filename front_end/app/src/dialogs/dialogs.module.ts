@@ -18,6 +18,7 @@ import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ApplyModalContent, NxModalApplyComponent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
+import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
@@ -93,7 +94,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         AddWidgetModalContent,
         ConnectCloudModalContent,
         SelectTimeRangeModalContent,
-        TransferOwnershipModalContent
+        TransferOwnershipModalContent,
+        Client2faWarningModalContent,
     ],
     providers: [
         NxDialogsService,

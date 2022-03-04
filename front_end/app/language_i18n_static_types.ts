@@ -285,7 +285,7 @@ export interface Dialogs {
     renewAuth:     RemoveSystem;
     titles:        DialogsTitles;
     tooltips:      Tooltips;
-    twoFactor:     RemoveSystem;
+    twoFactor:     DialogsTwoFactor;
 }
 
 export interface AddUser {
@@ -432,7 +432,7 @@ export interface DialogsMessage {
     sent:                    any;
     subject:                 Subject;
     title:                   Title;
-    twoFactor:               TwoFactor;
+    twoFactor:               MessageTwoFactor;
 }
 
 export interface Placeholders {
@@ -453,7 +453,7 @@ export interface Title {
     ipvd_feedback_page:   any;
 }
 
-export interface TwoFactor {
+export interface MessageTwoFactor {
     required:     any;
     configure:    any;
     accountLink:  any;
@@ -461,10 +461,9 @@ export interface TwoFactor {
 }
 
 export interface RemoveSystem {
-    action:         any;
-    message:        any;
-    title:          any;
-    wizardWarning?: any;
+    action:  any;
+    message: any;
+    title:   any;
 }
 
 export interface DialogsTitles {
@@ -491,6 +490,14 @@ export interface DialogsTwoFa {
     wizardWarningDescr: any;
     installAuthApp:     any;
     nowEnabled:         any;
+}
+
+export interface DialogsTwoFactor {
+    action:            any;
+    message:           any;
+    title:             any;
+    wizardWarning:     any;
+    unsupportedSystem: any;
 }
 
 export interface Downloads {
@@ -1484,7 +1491,7 @@ const typeMap: any = {
         { json: "renewAuth", js: "renewAuth", typ: r("RemoveSystem") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
-        { json: "twoFactor", js: "twoFactor", typ: r("RemoveSystem") },
+        { json: "twoFactor", js: "twoFactor", typ: r("DialogsTwoFactor") },
     ], false),
     "AddUser": o([
         { json: "alreadyExists", js: "alreadyExists", typ: "any" },
@@ -1618,7 +1625,7 @@ const typeMap: any = {
         { json: "sent", js: "sent", typ: "any" },
         { json: "subject", js: "subject", typ: r("Subject") },
         { json: "title", js: "title", typ: r("Title") },
-        { json: "twoFactor", js: "twoFactor", typ: r("TwoFactor") },
+        { json: "twoFactor", js: "twoFactor", typ: r("MessageTwoFactor") },
     ], false),
     "Placeholders": o([
         { json: "feedback", js: "feedback", typ: "any" },
@@ -1635,7 +1642,7 @@ const typeMap: any = {
         { json: "ipvd_feedback_device", js: "ipvd_feedback_device", typ: "any" },
         { json: "ipvd_feedback_page", js: "ipvd_feedback_page", typ: "any" },
     ], false),
-    "TwoFactor": o([
+    "MessageTwoFactor": o([
         { json: "required", js: "required", typ: "any" },
         { json: "configure", js: "configure", typ: "any" },
         { json: "accountLink", js: "accountLink", typ: "any" },
@@ -1645,7 +1652,6 @@ const typeMap: any = {
         { json: "action", js: "action", typ: "any" },
         { json: "message", js: "message", typ: "any" },
         { json: "title", js: "title", typ: "any" },
-        { json: "wizardWarning", js: "wizardWarning", typ: u(undefined, "") },
     ], false),
     "DialogsTitles": o([
         { json: "error", js: "error", typ: "any" },
@@ -1669,6 +1675,13 @@ const typeMap: any = {
         { json: "wizardWarningDescr", js: "wizardWarningDescr", typ: "any" },
         { json: "installAuthApp", js: "installAuthApp", typ: "any" },
         { json: "nowEnabled", js: "nowEnabled", typ: "any" },
+    ], false),
+    "DialogsTwoFactor": o([
+        { json: "action", js: "action", typ: "any" },
+        { json: "message", js: "message", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
+        { json: "wizardWarning", js: "wizardWarning", typ: "any" },
+        { json: "unsupportedSystem", js: "unsupportedSystem", typ: "any" },
     ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },
