@@ -122,7 +122,7 @@ export class NxSystemAPI {
     }
 
     public setAccessTokenAsCookie() {
-        throw (this.notImplementedMsg);
+        throw new Error(this.notImplementedMsg);
     }
 
     protected cookieLogin(auth, remember = false, maxAge = 365) {

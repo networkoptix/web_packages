@@ -137,7 +137,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             !system.serverManager.servers ||
                             system.serverManager.servers.length === 0
                         ) {
-                            throw system;
+                            throw new Error();
                         }
                         return system;
                     }),

@@ -1,3 +1,23 @@
+/**
+ * https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/eslint-plugin#extension-rules
+ *
+ * "In some cases, ESLint provides a rule itself, but it doesn't support
+ * TypeScript syntax; either it crashes, or it ignores the syntax, or it
+ * falsely reports against it. In these cases, we create what we call an
+ * extension rule; a rule within our plugin that has the same functionality,
+ * but also supports TypeScript."
+ *
+ * @param {string} rule Rule name
+ * @param {string | Array} value Rule value + options
+ * @returns Object with JS rule turned off and TS rule activated (unpack this)
+ */
+function tsExtension(rule, value = 'error') {
+    return {
+        [rule]: 'off',
+        [`@typescript-eslint/${rule}`]: value,
+    };
+}
+
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
@@ -33,7 +53,7 @@ module.exports = {
         'brace-style': ['error', '1tbs', { allowSingleLine: true }],
         camelcase: ['error', { properties: 'never' }],
         'comma-dangle': ['error', 'only-multiline'],
-        'comma-spacing': ['error', { before: false, after: true }],
+        'comma-spacing': 'error',
         'comma-style': ['error', 'last'],
         'computed-property-spacing': ['error', 'never'],
         'constructor-super': 'error',
@@ -42,7 +62,7 @@ module.exports = {
         'dot-notation': ['error', { allowKeywords: true }],
         'eol-last': 'error',
         eqeqeq: ['error', 'always', { null: 'ignore' }],
-        'func-call-spacing': ['error', 'never'],
+        'func-call-spacing': 'error',
         'generator-star-spacing': ['error', { before: true, after: true }],
         indent: ['error', 4, {
             SwitchCase: 1,
@@ -71,7 +91,7 @@ module.exports = {
             //     "on"         : "colon"
             // }
         }],
-        'keyword-spacing': ['error', { before: true, after: true }],
+        'keyword-spacing': 'error',
         'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
         'new-cap': ['error', { newIsCap: true, capIsNew: false, properties: true }],
         'new-parens': 'error',
@@ -267,36 +287,51 @@ module.exports = {
     },
     overrides: [
         {
-            files: ['**/*.spec.ts'],
-            rules: {
-                'dot-notation': 'off'
-            }
-        },
-        {
-            /* @typescript-eslint overrides/exclusives */
-            files: ['**/*.ts'],
+            files: ['*.ts'],
             extends: ['plugin:ngrx/recommended'],
             rules: {
-                'lines-between-class-members': 'off',
-                '@typescript-eslint/lines-between-class-members': ['error', {
+                ...tsExtension('brace-style', [
+                    'error',
+                    '1tbs',
+                    { allowSingleLine: true }
+                ]),
+                ...tsExtension('comma-spacing'),
+                ...tsExtension('dot-notation', [
+                    'error',
+                    { allowKeywords: true }
+                ]),
+                ...tsExtension('func-call-spacing'),
+                ...tsExtension('keyword-spacing'),
+                ...tsExtension('lines-between-class-members', ['error', {
                     exceptAfterSingleLine: true
-                }],
-                'no-dupe-class-members': 'off',
-                '@typescript-eslint/no-dupe-class-members': 'error',
-                'no-redeclare': 'off',
-                '@typescript-eslint/no-redeclare': ['error', {
+                }]),
+                ...tsExtension('no-array-constructor'),
+                ...tsExtension('no-dupe-class-members'),
+                ...tsExtension('no-extra-parens', ['error', 'functions']),
+                ...tsExtension('no-implied-eval'),
+                ...tsExtension('no-redeclare', ['error', {
                     builtinGlobals: false
-                }],
+                }]),
+                ...tsExtension('no-throw-literal'),
+                ...tsExtension('no-unused-expressions', ['error', {
+                    allowShortCircuit: true,
+                    allowTernary: true,
+                    allowTaggedTemplates: true
+                }]),
                 '@typescript-eslint/prefer-includes': 'error',
-                semi: 'off',
-                '@typescript-eslint/semi': 'error',
-                'space-before-function-paren': 'off',
-                '@typescript-eslint/space-before-function-paren': ['error', {
+                ...tsExtension('semi'),
+                ...tsExtension('space-before-function-paren', ['error', {
                     anonymous: 'always',
                     named: 'never',
                     asyncArrow: 'always'
-                }],
+                }]),
             },
+        },
+        {
+            files: ['*.spec.ts'],
+            rules: {
+                '@typescript-eslint/dot-notation': 'off',
+            }
         },
     ]
 };

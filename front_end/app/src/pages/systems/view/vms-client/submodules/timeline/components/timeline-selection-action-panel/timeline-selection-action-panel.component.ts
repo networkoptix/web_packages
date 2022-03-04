@@ -146,7 +146,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     }
 
     public _onTimeSetDialogDone = (result: boolean | ssRange) => {
-        // eslint-disable-next-line dot-notation
+        // eslint-disable-next-line @typescript-eslint/dot-notation
         if (result['start']) {
             this.selection.range = result as TimeRange;
         }

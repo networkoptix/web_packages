@@ -61,7 +61,7 @@ describe('Licenses (Summary)', () => {
                 component = fixture.componentInstance;
                 el = fixture.debugElement;
 
-                component['CONFIG'].licenseTypes = [
+                component.CONFIG.licenseTypes = [
                     { name: 'time', title: 'Time', deactivationsAllowed: 3 }, {
                         name: 'trial',
                         title: 'Trial',

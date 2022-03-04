@@ -63,7 +63,7 @@ export class NxSystemLicensesComponent implements OnInit {
                         takeUntil(this.resetSystem$),
                         map(system => {
                             if (!system.servers || system.servers.length === 0) {
-                                throw system;
+                                throw new Error();
                             }
                         }),
                         retryWhen(err => err.pipe(delay(1000)))
@@ -203,7 +203,7 @@ export class NxSystemLicensesComponent implements OnInit {
                                     !system.servers ||
                                     system.servers.length === 0
                                 ) {
-                                    throw system;
+                                    throw new Error();
                                 }
                             }),
                             retryWhen(err => err.pipe(delay(1000)))

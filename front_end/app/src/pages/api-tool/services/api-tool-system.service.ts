@@ -207,7 +207,7 @@ export class NxAPIToolSystemService {
                         return system;
                     }
                     if (!system || !system.serverManager.servers || system.serverManager.servers.length === 0) {
-                        throw system;
+                        throw new Error();
                     }
                 }),
                 retryWhen(err => {

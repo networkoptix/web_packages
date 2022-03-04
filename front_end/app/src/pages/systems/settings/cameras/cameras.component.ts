@@ -546,7 +546,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         }),
                         map((system: NxSystem) => {
                             if (!system.cameraManager.cameras) {
-                                throw system;
+                                throw new Error();
                             }
                         }),
                         retryWhen(err => err.pipe(delay(1000)))
