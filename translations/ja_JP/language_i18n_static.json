@@ -430,7 +430,7 @@
             "removeUser": "ユーザーを削除",
             "serversDetach": "現在のシステムからサーバー { title } を切り離しますか？",
             "serversReset": "サーバー { title } をデフォルトにリセットしますか？",
-            "serversRestart": "Restart server { title }?"
+            "serversRestart": "サーバー { title } を再起動しますか？"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -677,7 +677,7 @@
         "view": "カメラを表示",
         "apiTool": "API テスト ツール",
         "security": "セキュリティ",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "二要素認証が必要です"
     },
     "pageDescriptions": {
         "integrations": "インテグレーションマーケットプレイスは、%VMS_NAME% などのVMS製品とシームレスに統合する製品の集中型エコシステムであり、すべて %CLOUD_NAME% で利用できるため、IPビデオシステムを構築およびカスタマイズするためのソリューションを見つけることができます。",

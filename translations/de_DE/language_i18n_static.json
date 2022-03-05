@@ -430,7 +430,7 @@
             "removeUser": "Nutzer entfernen",
             "serversDetach": "Server { title } vom aktuellen System abkoppeln?",
             "serversReset": "Server { title } auf Standardwerte zurücksetzen?",
-            "serversRestart": "Restart server { title }?"
+            "serversRestart": "Server { title } neu starten?"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -677,7 +677,7 @@
         "view": "Kameras ansehen",
         "apiTool": "API-Testing Tool",
         "security": "Sicherheit",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Zwei-Faktor-Authentifizierung erforderlich"
     },
     "pageDescriptions": {
         "integrations": "Der Integrations Marketplace ist ein zentralisiertes Ökosystem von Produkten, die sich nahtlos in VMS-Produkte wie %VMS_NAME% integrieren lassen. Sie sind alle in %CLOUD_NAME% verfügbar, sodass Sie Lösungen zum Aufbau und zur Anpassung Ihres IP-Videosystems finden können.",

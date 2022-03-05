@@ -430,7 +430,7 @@
             "removeUser": "Gebruiker verwijderen",
             "serversDetach": "Ontkoppel server { title } van het huidige systeem?",
             "serversReset": "Server { title } resetten naar standaardwaarden?",
-            "serversRestart": "Restart server { title }?"
+            "serversRestart": "Server { title } opnieuw starten?"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -677,7 +677,7 @@
         "view": "Bekijk camera's",
         "apiTool": "API testing tool",
         "security": "Beveiliging",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Tweestapsverificatie vereist"
     },
     "pageDescriptions": {
         "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",

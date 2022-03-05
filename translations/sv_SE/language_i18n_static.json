@@ -430,7 +430,7 @@
             "removeUser": "Ta bort användare",
             "serversDetach": "Koppla bort server { title } från nuvarande system?",
             "serversReset": "Återställ servern { title } till standard?",
-            "serversRestart": "Restart server { title }?"
+            "serversRestart": "Starta om server { title }?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -677,7 +677,7 @@
         "view": "Visa kameror",
         "apiTool": "API-testverktyg",
         "security": "Säkerhet",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Tvåfaktorsautentisering krävs"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",

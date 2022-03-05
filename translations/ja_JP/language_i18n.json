@@ -176,7 +176,7 @@
     "Enter login": "ログイン名を入力",
     "Enter password": "パスワードを入力",
     "Enter password for your account to continue": "アカウントのパスワードを入力して続行してください",
-    "Enter password for your account to continue.": "Enter password for your account to continue.",
+    "Enter password for your account to continue.": "アカウントのパスワードを入力して続行してください。",
     "Enter password to continue.": "続行するにはパスワードを入力してください",
     "Enter the following parameters into authentication app to link it to your %CLOUD_NAME% account.": "次のパラメーターを認証アプリに入力して、 %CLOUD_NAME% アカウントにリンクします。",
     "Enter verification code": "認証コードを入力してください",
