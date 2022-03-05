@@ -14,7 +14,7 @@
         border-bottom    : 1px solid var(--border-color);
 
         th {
-            @include medium13dark9;
+            @include medium13nocolor;
             color : var(--card-header-text) !important;
             //display        : inline-block;
             white-space    : normal;
@@ -72,7 +72,7 @@
             &:hover {
                 td {
                     color      : var(--card-header-text) !important;;
-                    background : var(--brand-core-t90);
+                    background : var(--table-row-hover-bg);
                 }
             }
 
@@ -84,7 +84,6 @@
             td {
                 @include regular13nocolor;
                 color : var(--label-color) !important;
-                background-color: var(--card-body-bg);;
                 display        : table-cell;
                 vertical-align : middle;
                 padding        : rem(4px) 1rem rem(4px) 0;

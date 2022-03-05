@@ -1,1 +1,1 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">	<path class="st0" d="M13 13V3H19V13H25L16 22L7 13H13Z"		  fill="#A5B7C0"/>	<path class="st0" d="M5 29V26H27V29H5Z"		  fill="#A5B7C0"/></svg>
+<svg viewBox="0 0 32 32"	 xmlns="http://www.w3.org/2000/svg">	<!-- path class is global -->	<path class="icon-with-fill" d="M13 13V3H19V13H25L16 22L7 13H13Z"/>	<path class="icon-with-fill" d="M5 29V26H27V29H5Z"/></svg>

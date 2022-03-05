@@ -70,7 +70,7 @@
         
         &:hover {
             border-color     : var(--border-hover-color) !important;
-            //background-color : rgba(var(--light5--rgb), .25) !important;
+            background-color : var(--btn-download-hover-bg) !important;
         }
         
         &:active {
@@ -89,15 +89,16 @@
             align-items     : center;
             justify-content : center;
             
-            svg-icon svg .st0 {
-                fill : var(--h3);
+            svg-icon svg .icon-with-fill {
+                fill : var(--body-text-color) !important;
             }
         }
         
         .media-body {
             width : auto;
             
-            h3 {
+            h3, .h7 {
+                color : var(--body-text-color) !important;
                 margin : 0;
             }
         }
@@ -117,6 +118,10 @@
             margin-bottom : 1rem;
             font-size     : rem(12px);
         }
+    }
+    
+    .version-panel {
+        border-left: 1px solid var(--border-color);
     }
     
     h2.version-number {

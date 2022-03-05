@@ -10,7 +10,7 @@ nx-app {
     }
 
     .altMainBackground {
-        background-color: $light1 !important;
+        background-color: var(--alt-body-bg) !important;
     }
 
     .placeholder {

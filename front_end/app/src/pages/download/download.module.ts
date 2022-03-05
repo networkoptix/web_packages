@@ -8,6 +8,7 @@ import {
     Routes
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY as empty } from 'rxjs';
 
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         PipesModule,
+        AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes)
     ],
     providers: [

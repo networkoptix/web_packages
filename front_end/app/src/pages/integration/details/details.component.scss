@@ -1,42 +1,44 @@
-@use 'bootstrap_utils' as bootstrap;
+@use "bootstrap_utils" as bootstrap;
 @use "../../../styles/mixins" as *;
 
-
-integration-detail-component {
-
-    // .integration-details {}
-
+:host {
     .menu {
         background-color : var(--light5);
         padding          : .5rem 0 0;
-
+        
         .menu-level-2 {
-            border-radius: 2px;
+            border-radius : 2px;
         }
     }
-
+    
     .right-menu {
-        position: absolute;
-
+        position : absolute;
+        
         @include bootstrap.media-breakpoint-down(md) {
-            position: inherit;
+            position : inherit;
         }
     }
-}
-
-a {
-    cursor: pointer;
-}
-
-:host .add-ellipsis {
-    @include ellipsis;
-}
-
-#info- {
-    &support-, &developer- {
-        &email, &name, &url, &phone, &terms {
-            word-break    : break-word;
-            hyphens       : auto;
+    
+    a {
+        cursor : pointer;
+    }
+    
+    .add-ellipsis {
+        @include ellipsis;
+    }
+    
+    #info- {
+        &support-, &developer- {
+            &email, &name, &url, &phone, &terms {
+                word-break : break-word;
+                hyphens    : auto;
+            }
+        }
+    }
+    
+    .platform-icons {
+        svg-icon {
+            margin-right: 4px;
         }
     }
 }

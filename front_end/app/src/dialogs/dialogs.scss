@@ -259,6 +259,10 @@ nx-modal-wizard {
 
         & > * {
             margin : 0 0.5rem 0 0 !important;
+            
+            &:last-child {
+                margin : 0 !important;
+            }
         }
 
         button {

@@ -132,9 +132,13 @@
                                         <div>
                                             <label class="group-label" translate>Supported Platforms</label>
                                         </div>
-                                        <div class="d-flex">
-                                            <ng-container *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons; first as isFirst">
-                                                <img [alt]="'icon of ' + icon.name" [src]="icon.src" [title]="icon.name" [ngClass]="{'ml-0': isFirst}">
+                                        <div class="platform-icons">
+                                            <ng-container *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
+                                                <svg-icon
+                                                    nx-add-svg-src
+                                                    [svgStyle]="{'width.px': '16', 'height.px': '16'}"
+                                                    [src]="icon.src"
+                                                ></svg-icon>
                                             </ng-container>
                                         </div>
                                     </div>

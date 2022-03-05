@@ -51,7 +51,7 @@ nx-dynamic-table {
     }
 
     .table-header {
-      @include typography.medium15dark9;
+      @include typography.medium15nocolor;
       color : var(--card-header-text) !important;
       font-weight      : 500 !important;
       background-color : var(--card-header-bg);
@@ -122,7 +122,7 @@ nx-dynamic-table {
         }
 
         th {
-          @include typography.medium13dark9;
+          @include typography.medium13nocolor;
           color            : var(--card-header-text) !important;
           background-color : var(--card-header-bg);
           font-weight      : 500 !important;
@@ -142,7 +142,7 @@ nx-dynamic-table {
           }
 
           &.table-title {
-            @include typography.regular24dark9;
+            @include typography.regular24nocolor;
             color : var(--card-header-text) !important;
 
             .text-placeholder {
@@ -203,12 +203,15 @@ nx-dynamic-table {
           height : rem(24px);
 
           &:hover {
-            color      : var(--dark9);
-            background : var(--brand-core-t90);
+            td {
+              color      : var(--card-header-text) !important;;
+              background : var(--table-row-hover-bg);
+            }
           }
 
           &.selected, &:active, &:focus {
-            background : var(--light16);
+            color            : var(--light1) !important;
+            background-color : var(--light16);
 
             td {
               &, span {
@@ -232,7 +235,7 @@ nx-dynamic-table {
           }
 
           td {
-            @include typography.regular12dark9;
+            @include typography.regular12nocolor;
             color       : var(--label-color) !important;
             padding     : 0 16px 0 0;
             line-height : 1rem;
@@ -251,7 +254,8 @@ nx-dynamic-table {
       }
 
       &-header {
-        @include typography.regular13dark9;
+        @include typography.regular13nocolor;
+        color : var(--body-text-color);
         padding          : 0.5rem 1rem;
         background-color : var(--additional_light1);
         border           : 1px solid var(--light3);
@@ -261,7 +265,8 @@ nx-dynamic-table {
         overflow-wrap    : break-word;
 
         .results {
-          @include typography.medium13dark9;
+          @include typography.medium13nocolor;
+          color : var(--body-text-color);
           font-weight : 500 !important;
           line-height : 16px;
         }

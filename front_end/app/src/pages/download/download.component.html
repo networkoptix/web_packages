@@ -1,6 +1,5 @@
 <div class="container" *ngIf="canViewDownloads && LANG">
     <h1 class="old-h12" translate>Download</h1>
-
     <div class="p-0">
         <div class="nx-tab-set" *ngIf="sortedPlatforms.length">
             <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
@@ -17,7 +16,7 @@
             <div class="nx-tab-set-content" *ngIf="activePlatform">
                     <div class="card card-default">
                         <div class="card-body flex-md">
-                            <div class="col-md-4 pl-md-4 order-2 order-md-2 border-left-md">
+                            <div class="col-md-4 pl-md-4 order-2 order-md-2 version-panel">
                                 <b translate>Latest version</b>
                                 <h2 class="version-number d-flex"><b>{{downloadsData.version}}</b></h2>
                                 <p>
@@ -34,6 +33,7 @@
                                             <div class="media-left">
                                                 <svg-icon
                                                     nx-add-svg-src
+                                                    [svgStyle]="{'width.px': '32', 'height.px': '32'}"
                                                     [src]="CONFIG.images.dir + 'download.svg'"
                                                 ></svg-icon>
                                             </div>

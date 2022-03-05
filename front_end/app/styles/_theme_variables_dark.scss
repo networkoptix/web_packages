@@ -34,6 +34,7 @@ html[data-theme="dark"] {
     
     --elements-disabled : #3A4D57; //$dark12;
     
+    --svg-std-icon-fill : #3A4D57; //$dark12;
     --svg-path-light-color : #698796; //$light16;
     --svg-path-dark-color  : #E1E7EA; //$light4;
     
@@ -155,6 +156,8 @@ html[data-theme="dark"] {
     --paginator-active-bg    : #35464F; //$dark11;
     --paginator-active-color : #F5F7F8; //$light2;
     
+    --btn-download-hover-bg : #A5B7C0; //$light10;
+    
     --btn-close-hover-bg : #2B383F; //$dark9;
     --btn-close-hover-color : #A5B7C0; //light10;
     --btn-close-active-bg : #121517; //$dark4;
@@ -225,12 +228,13 @@ html[data-theme="dark"] {
     --btn-header-saparator-color : #A5B7C0; //light10;
     --btn-header-main-bg         : transparent;
     --btn-header-main-color      : #E1E7EA; //$light4;
+    --btn-header-main-hover-bg   : #35464F; //dark11;
     
-    --tab-link-hover-bg           : #1C2327; //$dark6;
+    --tab-link-hover-bg           : #35464F; //dark11;
     --tab-link-hover-bottom-color : #1C2327; //$dark6;
     --tab-link-active-bg           : #171C1F; //$dark5;
     --tab-link-active-bottom-color : #171C1F; //$dark5;
-    --tab-link-selected-color       : #2592C3; //$brand_d1
+    --tab-link-selected-color       : #2FA2DB; //$brand-core;
     
     --dropdown-menu-arrow-color      : #49626F; //$dark15;
     --dropdown-menu-arrow-fill-color : #121517; //dark4;
@@ -274,11 +278,14 @@ html[data-theme="dark"] {
     --swagger-textarea-color : #{$light10};
     --swagger-required-color : #{$red_main};
     
+    --footer-color : rgba(var(--light10--rgb), .65);
+    
     --tabset-bg : #0D0E0F; //$dark3;
     --tabset-hover-bg : #1C2327; //$dark6;
     --tabset-color : #A5B7C0; //$light10;
     
     --table-alt-row-bg: #171C1F; //$dark5;
+    --table-row-hover-bg : #35464F; //$dark11;
     
     --card-shadow : 0 2px 5px 0 #263137; //$dark8;
     --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;

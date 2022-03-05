@@ -16,7 +16,7 @@
         user-select         : none;
 
         .st0 {
-            fill : $dark9;
+            fill : var(--body-text-color);
         }
     }
 
@@ -45,6 +45,7 @@
     
         svg {
             .st0, .system-offline-st0 {
+                stroke : none;
                 fill : var(--system-tile-name-color);
             }
         
@@ -114,9 +115,11 @@
                 right: -24px !important;
             }
         }
-
+    
         .st0 {
-            fill : $light13;
+            fill         : none;
+            stroke-width : 1px;
+            stroke       : var(--system-tile-nav-link-color) !important;
         }
     }
 }

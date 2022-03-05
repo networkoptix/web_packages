@@ -18,12 +18,16 @@
         width: 20px;
         top: 0;
         bottom: 0;
+        
         & > svg {
             vertical-align: top;
+            
             & > .st0{
-                fill-rule: evenodd;
-                clip-rule: evenodd;
-                fill: $light4;
+                fill-rule    : evenodd;
+                clip-rule    : evenodd;
+                stroke       : var(--btn-header-main-color) !important;
+                stroke-width : 1px;
+    
             }
         }
     }

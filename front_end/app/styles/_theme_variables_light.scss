@@ -34,6 +34,7 @@
     
     --elements-disabled : #{$light10};
     
+    --svg-std-icon-fill : #{$light16};
     --svg-path-light-color: #{$light4};
     --svg-path-dark-color: #{$dark9};
     
@@ -75,13 +76,6 @@
     --border-active-color  : #{$light10};
     --horizontal-sep-color : #{$light6};
     --label-color          : #{$dark9};
-    
-    //--nav-dropdown-bg           : transparent;
-    //--nav-dropdown-color        : #{$dark9};
-    //--nav-dropdown-hover-bg     : #{$light2};
-    //--nav-dropdown-hover-color  : #{$dark9};
-    //--nav-dropdown-active-bg    : #{$light3};
-    //--nav-dropdown-active-color : #{$dark9};
     
     --placehoder-cloud-color   : #{$brand_core};
     --placehoder-cloud-opacity : .1;
@@ -156,6 +150,8 @@
     --paginator-active-bg : #{$light16};
     --paginator-active-color : #{$light1};
     
+    --btn-download-hover-bg : #{$light5};
+    
     --btn-close-hover-bg  : #{$additional_light2};
     --btn-close-hover-color : #{$light10};
     --btn-close-active-bg : #{$additional_light3};
@@ -226,6 +222,7 @@
     --btn-header-saparator-color : #{$light4};
     --btn-header-main-bg         : #{$light4};
     --btn-header-main-color      : #{$dark9};
+    --btn-header-main-hover-bg   : #{$light2};
     
     --tab-link-hover-bg            : #{$light3};
     --tab-link-hover-bottom-color  : #{$light6};
@@ -279,7 +276,10 @@
     --tabset-hover-bg : #{$light3};
     --tabset-color : #{$dark12};
     
+    --footer-color : #{$light16};
+    
     --table-alt-row-bg : #{$additional_light1};
+    --table-row-hover-bg : rgba(var(--brand_core--rgb), .9);
     
     --card-shadow: 0 2px 5px 0 #{$light8};
     --card-active-shadow: 0 2px 5px 0 #{$light10};

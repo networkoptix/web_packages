@@ -3,7 +3,7 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
 <style type="text/css">
-	.st0 {fill-rule:evenodd;clip-rule:evenodd;fill:none !important;stroke:#2B383F;stroke-width:2;stroke-linecap:round;stroke-miterlimit:100;}
+	.st0 {fill-rule:evenodd;clip-rule:evenodd;fill:none;stroke:#2B383F;stroke-width:2;stroke-linecap:round;stroke-miterlimit:100;}
 </style>
 <polyline class="st0" points="11,19 4,12 11,5 "/>
 <line class="st0" x1="20" y1="12" x2="4" y2="12"/>

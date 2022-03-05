@@ -184,11 +184,11 @@ export function setupConfig(): IConfig {
         icons: {
             default: '/static/images/integration/integration_tile_preview_plugin.svg',
             platforms: [
-                { name: 'mac', src: '/static/images/integration/integration_tile_os_mac.svg' },
-                { name: 'android', src: '/static/images/integration/integration_tile_os_android.svg' },
-                { name: 'arm', src: '/static/images/integration/integration_tile_os_arm.svg' },
-                { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
-                { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
+                { name: 'mac', src: '/static/images/icons/platforms/mac.svg' },
+                { name: 'android', src: '/static/images/icons/platforms/android.svg' },
+                { name: 'arm', src: '/static/images/icons/platforms/arm.svg' },
+                { name: 'linux', src: '/static/images/icons/platforms/linux.svg' },
+                { name: 'windows', src: '/static/images/icons/platforms/windows.svg' }
             ],
             devTools: '/static/images/icons/dev_tools/',
             backgrounds: '/static/images/developers/backgrounds/',
