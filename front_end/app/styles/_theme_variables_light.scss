@@ -235,7 +235,7 @@
     
     --dropdown-menu-border : none;
     --dropdown-menu-top-border : none;
-    --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light10};
+    --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light4};
     --dropdown-menu-bg : #{$additional_light1};
     --drop-menu-systems-bg : #{$additional_light1};
     --drop-menu-navigation-bg : #{$light1};
@@ -281,11 +281,12 @@
     --table-alt-row-bg : #{$additional_light1};
     --table-row-hover-bg : rgba(var(--brand_core--rgb), .9);
     
-    --card-shadow: 0 2px 5px 0 #{$light8};
+    --card-shadow: 0 2px 5px 0 #{$light4};
     --card-active-shadow: 0 2px 5px 0 #{$light10};
     --card-header-bg : #{$additional_light1};
     --card-header-text : #{$dark9};
     --card-body-bg : #{$light1};
+    --card-hover-bg : #{$light1};
     
     --card-simple-info-bg           : rgba(var(--brand_core--rgb), .1);
     --card-simple-info-border-color : rgba(var(--brand_core--rgb), .3);

@@ -34,7 +34,7 @@ html[data-theme="dark"] {
     
     --elements-disabled : #3A4D57; //$dark12;
     
-    --svg-std-icon-fill : #3A4D57; //$dark12;
+    --svg-std-icon-fill : #587785; //$dark18;
     --svg-path-light-color : #698796; //$light16;
     --svg-path-dark-color  : #E1E7EA; //$light4;
     
@@ -241,7 +241,7 @@ html[data-theme="dark"] {
     
     --dropdown-menu-border : 1px solid #263137; //$dark8;
     --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
-    --dropdown-menu-shadow : 0 1rem 2rem 0 #1C2327; //$dark6;
+    --dropdown-menu-shadow : none;
     --dropdown-menu-bg : #121517; //dark4;
     --drop-menu-systems-bg    : #212A2F; //$dark7;
     --drop-menu-navigation-bg : #263137; //$dark8
@@ -287,11 +287,12 @@ html[data-theme="dark"] {
     --table-alt-row-bg: #171C1F; //$dark5;
     --table-row-hover-bg : #35464F; //$dark11;
     
-    --card-shadow : 0 2px 5px 0 #263137; //$dark8;
+    --card-shadow : none;
     --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;
     --card-header-bg : #1C2327; //$dark6;
     --card-header-text : #E1E7EA; //$light4;
     --card-body-bg   : #121517; //$dark4;
+    --card-hover-bg : #263137; //$dark8;
     
     --card-simple-info-bg           : rgba(var(--brand_d2--rgb), .1);
     --card-simple-info-border-color : rgba(var(--brand_d2--rgb), .3);

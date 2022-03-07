@@ -29,7 +29,7 @@
 
     &[disabled], &[readonly],
     fieldset[disabled] & {
-        opacity : .3;
+        opacity : .4;
 
         &:hover, &:focus {
             border-color : var(--input-border-color) !important;
