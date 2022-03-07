@@ -205,8 +205,10 @@ Change Duration Time Interval
            ...    Click Link    ${TIME DURATION NEW SELECTION}
            ...    ELSE    Exit For Loop
     END
-
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    
+    ${element_xpath}=       Replace String      ${TIME DURATION INTERVAL BUTTON}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
     Click Link    ${TIME DURATION NEW SELECTION}
     Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
