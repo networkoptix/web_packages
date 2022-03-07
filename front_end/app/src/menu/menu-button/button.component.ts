@@ -38,13 +38,13 @@ export class NxMenuButtonComponent {
         this.CONFIG = configService.config;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.caption = (typeof this.button.label === 'function')
             ? this.button.label()
             : this.button.label;
     }
 
-    action() {
+    action(): void {
         if (this.button.id === 'addUser') {
             // Handling promise to satisfy the linter.
             this.dialogs.addUser(this.system)

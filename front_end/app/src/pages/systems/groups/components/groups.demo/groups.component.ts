@@ -17,15 +17,19 @@ export class NgrxDemoGroupsComponent {
 
     constructor(private store: Store) { }
 
-    reset() {
+    reset(): void {
         this.store.dispatch(GroupActions.reset());
     }
 
-    changeGroupName({ groupId, newName }) {
+    changeGroupName(
+        { groupId, newName }: { groupId: string, newName: string }
+    ): void {
         this.store.dispatch(GroupActions.setGroupName({ groupId, name: newName }));
     }
 
-    changeGroupParent({ groupId, newParentId }) {
+    changeGroupParent(
+        { groupId, newParentId }: { groupId: string, newParentId: string }
+    ): void {
         this.store.dispatch(GroupActions.setGroupParent({ groupId, parentId: newParentId }));
     }
 }

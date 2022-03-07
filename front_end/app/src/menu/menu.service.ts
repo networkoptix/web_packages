@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
-import { isArray } from 'rxjs/internal-compatibility';
 
 import { NxSearchService, SearchModel } from '@services/search.service';
 import { htmlToEntity } from '@utils/general';
@@ -84,7 +83,7 @@ export class NxMenuService implements OnDestroy {
         this.contentSubject.unsubscribe();
     }
 
-    getItemBy(id: string): SanitizedLevel3Item | void {
+    getItemBy(id: string): SanitizedLevel3Item | undefined {
         for (const node of this.content) {
             if (node.level3?.length) {
                 const match = node.level3.find(item => item.id === id);
@@ -95,13 +94,13 @@ export class NxMenuService implements OnDestroy {
         }
     }
 
-    getAdditionalText<T = any>(label: unknown): T {
+    getAdditionalText(label: (() => string) | string[] | string): string {
         if (typeof label === 'function') {
             return label();
-        } else if (isArray(label)) {
+        } else if (Array.isArray(label)) {
             return label[0];
         } else {
-            return label as T;
+            return label;
         }
     }
 
@@ -209,9 +208,7 @@ export class NxMenuService implements OnDestroy {
 
         (subNode || node).level3.forEach(item => {
             if (item.id) {
-                const additional = this.getAdditionalText<string>(
-                    item.additionalLabel
-                );
+                const additional = this.getAdditionalText(item.additionalLabel);
 
                 let searchAggregate = item.label || '';
                 searchAggregate += additional ? ` ${additional}` : '';
@@ -282,7 +279,7 @@ export class NxMenuService implements OnDestroy {
         /* Assuming that NxMenuService.setHighlightPattern() is only called
         after NxSearchService.getMatchPatterns(), which will always make
         one of the above type string[] */
-        // @ts-ignore
+        // @ts-expect-error: See above
         ).join('|');
 
         this.regex = new RegExp(pattern, 'gi');

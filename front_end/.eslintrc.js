@@ -106,6 +106,7 @@ module.exports = {
     },
     overrides: [
         {
+            /* This override is setup for all TS files */
             files: ['*.ts'],
             parser: '@typescript-eslint/parser',
             parserOptions: {
@@ -113,6 +114,28 @@ module.exports = {
                 createDefaultProgram: true,
             },
             plugins: ['@typescript-eslint', 'ngrx'],
+        },
+        {
+            /* This override is for folders/files that have been fully typed.
+            This should eventually be merged with the other TS overrides. */
+            files: [
+                'app/src/components/search/**/*.ts',
+                'app/src/menu/**/*.ts',
+                'app/src/pages/systems/groups/**/*.ts',
+            ],
+            extends: [
+                'plugin:@typescript-eslint/eslint-recommended',
+                'plugin:@typescript-eslint/recommended',
+            ],
+            rules: {
+                '@typescript-eslint/no-empty-function': 'off',
+                '@typescript-eslint/no-inferrable-types': 'off',
+                '@typescript-eslint/no-unused-vars': 'off',
+            },
+        },
+        {
+            /* This override is also for all TS files */
+            files: ['*.ts'],
             extends: ['plugin:ngrx/recommended'],
             rules: {
                 'no-undef': 'off', // TS incompatible
@@ -158,6 +181,7 @@ module.exports = {
             files: ['*.spec.ts'],
             rules: {
                 '@typescript-eslint/dot-notation': 'off',
+                '@typescript-eslint/no-explicit-any': 'off',
             }
         },
     ]
