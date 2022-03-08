@@ -826,7 +826,7 @@ export class NxSystem extends System {
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    if (this.isAdmin) {
+                    if (!environment.isLocal && this.isAdmin) {
                         return this.getUsersCachedInCloud().then((users) => {
                             this.userManager.processUsers(users);
                             return Promise.resolve();
@@ -835,7 +835,7 @@ export class NxSystem extends System {
                         return Promise.resolve();
                     }
                 });
-            } else if (this.isAdmin) { // or we get old cached data from the cloud
+            } else if (!environment.isLocal && this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then((users) => {
                     return this.userManager.processUsers(users);
                 });

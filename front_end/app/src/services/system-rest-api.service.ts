@@ -306,7 +306,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         url: string,
         params?: any,
         customHttpHeaders: IParams<string> = {},
-        requestTimeout = 8000
+        requestTimeout = 60000
     ) {
         params = params || {};
 
