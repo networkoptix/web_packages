@@ -46,7 +46,7 @@ export class MoveSystemToGroupModalContent implements OnInit {
         private processService: NxProcessService,
         private store: Store,
         public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) _dialogData: {},
+        @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
     ) { }
 
     ngOnInit(): void {

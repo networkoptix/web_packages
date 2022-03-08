@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxProcessService, Process } from '@services/process.service';
@@ -11,7 +12,7 @@ import { NxSystemGroupsService } from '../../pages/systems/groups/services/syste
     styleUrls: []
 })
 export class SystemGroupSettingsModalContent implements OnInit {
-    @ViewChild('systemGroupSettingsForm') form;
+    @ViewChild('systemGroupSettingsForm') form: NgForm;
 
     systemGroupSettingsProcess: Process;
     code = '';
@@ -20,15 +21,15 @@ export class SystemGroupSettingsModalContent implements OnInit {
         private processService: NxProcessService,
         private systemGroupsService: NxSystemGroupsService,
         public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) private dialogData: Record<string, never>,
     ) {
     }
 
-    private _importGroups(code) {
+    private _importGroups(code: string) {
         return this.systemGroupsService.importBase64(code);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.systemGroupsService.exportBase64().then(code => {
             this.code = code;
         });
@@ -40,7 +41,7 @@ export class SystemGroupSettingsModalContent implements OnInit {
         }, {}, successHandler);
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

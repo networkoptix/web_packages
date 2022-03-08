@@ -120,8 +120,12 @@ module.exports = {
             This should eventually be merged with the other TS overrides. */
             files: [
                 'app/src/components/search/**/*.ts',
+                'app/src/dialogs/create-system-group/**/*.ts',
+                'app/src/dialogs/move-system-to-group/**/*.ts',
+                'app/src/dialogs/system-group-settings/**/*.ts',
                 'app/src/menu/**/*.ts',
                 'app/src/pages/systems/groups/**/*.ts',
+                'app/src/store/**/*.ts',
             ],
             extends: [
                 'plugin:@typescript-eslint/eslint-recommended',

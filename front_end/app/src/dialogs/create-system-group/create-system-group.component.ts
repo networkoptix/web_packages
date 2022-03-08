@@ -40,7 +40,7 @@ export class CreateSystemGroupModalContent implements OnInit {
         private processService: NxProcessService,
         public dialogRef: DialogRef,
         private store: Store,
-        @Inject(DIALOG_DATA) _dialogData: {},
+        @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
     ) {
         this._groups$.subscribe(groups => {
             const { groupNames } = groups;
@@ -49,7 +49,7 @@ export class CreateSystemGroupModalContent implements OnInit {
                 ...Object.entries(groupNames).map(([id, name]) => ({
                     name,
                     value: id
-                }))
+                })),
             ];
             // Currently selected parent was removed in update
             const selectedRemoved = this.selectedParent &&
