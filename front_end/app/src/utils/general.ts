@@ -98,10 +98,10 @@ export function paramSortFunc<Param = unknown>(
 
 export function mapValuesToStrings(
     obj: Record<string, unknown>
-): Record<string, string | string[]> {
+): Record<string, string> {
     Object.entries(obj).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-            obj[key] = value.map(String);
+            obj[key] = value.map(String).join(',');
         // } else if (typeof value === 'object') {
         //     mapValuesToStrings(value);
         // Branch doesn't appear to do anything
@@ -109,7 +109,7 @@ export function mapValuesToStrings(
             obj[key] = String(value);
         }
     });
-    return obj as Record<string, string | string[]>;
+    return obj as Record<string, string>;
 }
 
 /**

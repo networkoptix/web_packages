@@ -11,9 +11,10 @@ import { QueryParamsHandling } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep, last } from 'lodash-es';
 import { timer, Subject, BehaviorSubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { NxKnowledgebaseService } from '@pages/developers/knowledge-base/knowledge-base.service';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -33,14 +34,15 @@ export class NxDevelopersMenuComponent implements OnInit {
     @Output() onClick = new EventEmitter<ClickEvent>();
     @Output() handlePrefetch = new EventEmitter<{
         assetId: number,
-        state?: 'pending' | 'draft'
+        state?: 'pending' | 'draft',
+        version?: number
     }>();
     // eslint-disable-next-line lines-between-class-members
     @Output() relatedLinks = new EventEmitter<RelatedLinks>();
-    @Input()  queryParamsOnInternalRoute: QueryParamsHandling = undefined;
-    @Input()  searchEnabled = true;
-    @Input()  service;
-    @Input()  offsetHeight = 0;
+    @Input() queryParamsOnInternalRoute: QueryParamsHandling = undefined;
+    @Input() searchEnabled = true;
+    @Input() service;
+    @Input() offsetHeight = 0;
 
     CONFIG: IConfig;
     displayedMenuNodes: MenuNodeWithParent[] = [];
@@ -48,15 +50,14 @@ export class NxDevelopersMenuComponent implements OnInit {
     activeRouteNodes: string[] = [];
     openNodes: string[] = [];
     mouseLeave$ = new Subject();
-    prefetchedDocuments = [];
     firstUrl = '';
     highlightedTopNode: string;
     searchQuery$ = new BehaviorSubject('');
     queryChanged = false;
 
     constructor(
-        configService   : NxConfigService,
-        public location : Location,
+        configService: NxConfigService,
+        public location: Location,
         public ribbonService: NxRibbonService,
         private uriService: NxUriService,
         @Inject(WINDOW) private window: Window
@@ -157,11 +158,10 @@ export class NxDevelopersMenuComponent implements OnInit {
         this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
     }
 
-    prefetchAsset(assetId, state) {
+    prefetchAsset(assetId, state, version) {
         if (assetId) {
-            timer(250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
-                this.prefetchedDocuments.push(state ? `${assetId}?state=${state}` : assetId);
-                this.handlePrefetch.emit({ assetId, state });
+            timer(this.CONFIG.featureFlags.kbInstantSearch ? 50 : 250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
+                this.handlePrefetch.emit({ assetId, state, version });
             });
         }
     }

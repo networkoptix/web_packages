@@ -62,8 +62,9 @@
 
 <ng-template #resultBlock let-doc="doc">
     <div class=" narrow-section my-2">
-        <a [routerLink]="'../' + doc.docId" (click)="navigateSearch($event)" [innerHTML]="doc.title"
-            class="doc-link"></a>
+        <a [routerLink]="'../' + doc.docId"
+            (mouseover)="prefetchDocument({assetId: doc.docId, version: kbService.versionLookup[doc.docId]})"
+            (click)="navigateSearch($event)" [innerHTML]="doc.title" class="doc-link"></a>
         <p *ngIf="doc.snippet as content" [innerHTML]=" content | safe:'html'"></p>
     </div>
 </ng-template>
@@ -74,7 +75,13 @@
             <ng-template #noResults>
                 <ng-container translate>No Matching Search Results</ng-container>
             </ng-template>
-            <ng-container *ngIf="results.length; else noResults" translate>Search Results:</ng-container>
+            <ng-container *ngIf="results.length; else noResults">
+                <ng-template #searchResults>
+                    <span translate>Search Results:</span>
+                </ng-template>
+                <span *ngIf="totalResults; else searchResults"
+                    [innerText]="'result' | translate: {count: totalResults}"></span>
+            </ng-container>
         </ng-template>
         <ng-container *ngIf="searchLoading && CONFIG.featureFlags.kbInstantSearch; else resultsHeading">
             <ng-template #updatingResults>
@@ -87,8 +94,8 @@
         <ng-container *ngTemplateOutlet="resultBlock;context{doc:doc}"></ng-container>
     </ng-container>
     <div *ngIf="currentSearchResultPage < totalSearchResultPages" class="more-results">
-        <div *ngIf="!loadingNext;else moreLoading" (click)="fetchNext()" (nxOnIntersect)="fetchNext()"
-            [intersectionDebounce]="CONFIG.search.debounceTime"></div>
+        <div *ngIf="!loadingNext;else moreLoading" (click)="fetchNext()" (nxOnIntersect)="fetchNext($event)"
+            [intersectionDebounce]="CONFIG.featureFlags.kbInstantSearch ? 0 : CONFIG.search.debounceTime"></div>
     </div>
 </ng-template>
 <!-- End of Search Results Templates -->
@@ -100,7 +107,8 @@
     <div [ngClass]="{'knowledge-base': kbService.basePath !== 'content'}">
         <ng-container *ngIf="!loading; else preloader">
             <nx-search *ngIf="!kbService.contentAssetId" [ngModel]="search" (ngModelChange)="updateSearchQuery($event)"
-                [placeholder]="'Knowledgebase Search' | translate" layout="compact"></nx-search>
+                [placeholder]="'Knowledgebase Search' | translate" layout="compact"
+                [instant]="CONFIG.featureFlags.kbInstantSearch"></nx-search>
             <ng-container *ngIf="pageNode.cardClass !== 'article'">
                 <ng-container *ngIf="searchMode; else displayContent">
                     <ng-container *ngIf="!searchLoading || CONFIG.featureFlags.kbInstantSearch; else preloader">

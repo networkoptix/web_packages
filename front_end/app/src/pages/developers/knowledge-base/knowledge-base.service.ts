@@ -20,6 +20,7 @@ export class NxKnowledgebaseService {
     activeAssetIdSubject = new BehaviorSubject<string>('');
     activeNode: MenuNode;
     activeAssetState = '';
+    prefetchedDocuments: { assetId: number, version?: number, state?: string }[] = [];
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -30,6 +31,7 @@ export class NxKnowledgebaseService {
     kbName = '';
     assetIds = [];
     baseRoute = '';
+    versionLookup: Record<number, number> = {};
 
     loadingMenu = false;
 

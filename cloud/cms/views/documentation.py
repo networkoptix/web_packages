@@ -1,3 +1,4 @@
+from time import sleep
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view, permission_classes
 from drf_yasg import openapi
@@ -24,6 +25,8 @@ PAGE_NOT_FOUND = 'Page not found'
 KB_NOT_FOUND = 'Kb not found'
 
 SEARCH_SNIPPET_PADDING = 250
+CACHE_HEADER = {'Cache-Control': f'max-age={60*10}'}
+LONG_CACHE_HEADER = {'Cache-Control': f'max-age={60*60*24*30}'}
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the page. Ex: draft, published, or pending",
@@ -48,6 +51,7 @@ id__query_param = openapi.Parameter(
 def get_page(request, doc_id):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') in ('pending', 'review')
+    version = request.query_params.get('version')
     language = get_language_object_from_request(request)
 
     doc = Asset.objects.filter(
@@ -55,6 +59,7 @@ def get_page(request, doc_id):
 
     # If doc is not found, then return a 404
     if doc:
+        headers = LONG_CACHE_HEADER if version and version == str(doc.version_id()) else None
         if (draft or review) and not (request.user.is_superuser or doc.created_by == request.user):
             raise APIForbiddenException(error_data={'id': doc_id},
                                         error_text='Not allowed to view this preview')
@@ -64,7 +69,7 @@ def get_page(request, doc_id):
         if docs_json:
             ser = DocumentationPageSerializer(data=docs_json[0])
             ser.is_valid()
-            return api_success(ser.data)
+            return api_success(ser.data, additional_headers=headers)
 
     raise APINotFoundException(
         error_data={'id': doc_id}, error_text=PAGE_NOT_FOUND)
@@ -256,18 +261,6 @@ def kb_search(request, name):
     client = get_meilisearch_client()
     index = client.index('documentation')
 
-    try:
-        number_of_docs = index.get_stats().get('numberOfDocuments', 0)
-    except MeiliSearchApiError:
-        client.create_index('documentation')
-        number_of_docs = 0
-
-    if not number_of_docs:
-        docs_json = sync_search_for_menu(request, name)
-        if not docs_json:
-            raise APIInternalException(
-                SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
-
     kb_menus_filter = [f"kbMenus = '{kb}'" for kb in kb_menus_filter if kb]
     labels_filter = [f"labels = '{label}'" for label in labels_filter if label]
 
@@ -281,7 +274,27 @@ def kb_search(request, name):
         'offset': page * perPage - perPage
     }
 
-    raw_results = index.search(query, {key: val for key, val in options.items() if val})
+    raw_results = index.search(
+        query, {key: val for key, val in options.items() if val})
+    num_hits = raw_results.get('nbHits', 0)
+
+    if not num_hits and not index.get_stats().get('numberOfDocuments', 0) and not index.search('', {'filter': kb_menus_filter}).get('nbHits', 0):
+        # Update docs if kb hasn't been added to meilisearch. This would only really happen on first deploy of the meilisearch service
+        docs_json = sync_search_for_menu(request, name)
+
+        if not docs_json:
+            raise APIInternalException(
+                SEARCH_INDEX_NOT_FOUND, status.HTTP_501_NOT_IMPLEMENTED)
+
+        retries = 10
+
+        while index.get_stats().get('isIndexing', True) and retries:
+            retries -= 1
+            sleep(0.5)
+
+        raw_results = index.search(
+            query, {key: val for key, val in options.items() if val})
+
     doc_keys = ['body', 'title', 'shortDescription', 'labels', 'kbMenus', 'id']
     unformatted = ['kbMenus']
     docs = [
@@ -294,7 +307,7 @@ def kb_search(request, name):
         for hit in raw_results.get('hits', [])
         if hit['kbMenus']
     ]
-    num_hits = raw_results.get('nbHits', 0)
+
     search_result = {
         'docs': docs,
         'page': 1,
@@ -304,7 +317,7 @@ def kb_search(request, name):
         **raw_results.get('facetsDistribution', {}).pop('labels', {})
     }
 
-    return api_success(search_result)
+    return api_success(search_result, additional_headers=CACHE_HEADER)
 
 
 @swagger_auto_schema(method="GET",
@@ -345,7 +358,7 @@ def get_pages(request, name):
     return api_success({
         'docs': page_obj.object_list, 'page': page_obj.number, 'pageSize': paginator.per_page,
         'totalPages': paginator.num_pages, 'totalResults': paginator.count,
-    })
+    }, additional_headers=CACHE_HEADER)
 
 
 def find_asset_knowledgebase(asset, base_url):

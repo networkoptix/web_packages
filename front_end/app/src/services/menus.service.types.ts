@@ -1,9 +1,9 @@
 import { QueryParamsHandling } from '@angular/router';
 
 export enum Auth {
-    BOTH='Both',
-    LOGGED_IN='Logged In',
-    LOGGED_OUT='Logged Out'
+    BOTH = 'Both',
+    LOGGED_IN = 'Logged In',
+    LOGGED_OUT = 'Logged Out'
 }
 
 export class MenuNode {
@@ -20,6 +20,7 @@ export class MenuNode {
     public breadcrumbs: MenuNode[];
     public queryParamsHandling: QueryParamsHandling = '';
     public htmlID?: string;
+    public version?: number;
 
     constructor(
         public name = '',

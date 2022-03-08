@@ -2401,8 +2401,8 @@ class MenuNode(models.Model):
             enabled = node.is_enabled(customization)
             condition_met = not node.condition or global_contexts_dict.get(
                 node.condition, False)
-            asset_accepted = not node.asset or node.asset.version_id(
-                customization.name) != 0
+            version = node.asset.version_id(customization.name) if node.asset else 0
+            asset_accepted = not node.asset or version != 0
             if enabled and (asset_accepted or include_not_accepted):
                 if node.asset:
                     pending = AssetCustomizationReview.objects.filter(
@@ -2424,7 +2424,8 @@ class MenuNode(models.Model):
                     'authentication': node.AUTH_CHOICES[node.authentication],
                     'order': node.order,
                     'condition': node.condition,
-                    'condition_met': condition_met
+                    'condition_met': condition_met,
+                    'version': version
                 }
 
                 title_ds = document_dss['title']

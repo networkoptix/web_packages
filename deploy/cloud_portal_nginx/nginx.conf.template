@@ -136,6 +136,7 @@ http {
             proxy_set_header Host ${DOLLAR}http_host;
             proxy_set_header Authorization  "";
             proxy_redirect off;
+            proxy_pass_request_headers on;
 
             proxy_pass   http://app_server;
         }

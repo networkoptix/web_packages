@@ -87,9 +87,9 @@ warning_level_errors = (ErrorCodes.account_blocked,
                 ErrorCodes.unsupported_media_type,
                 ErrorCodes.credentials_removed_permanently)
 
-def create_response_with_cookies(data, status_code, cookies):
+def create_response_with_cookies(data, status_code, cookies, additional_headers=None):
     from rest_framework.response import Response
-    response = Response(data, status=status_code)
+    response = Response(data, status=status_code, headers=additional_headers)
     if cookies is not None:
         for name, value in cookies.items():
             if value == '':
@@ -99,12 +99,12 @@ def create_response_with_cookies(data, status_code, cookies):
     return response
 
 
-def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None):
+def api_success(data=None, status_code=status.HTTP_200_OK, cookies=None, additional_headers=None):
     if data is None:
         data = {
             'resultCode': ErrorCodes.ok.value
         }
-    return create_response_with_cookies(data, status_code, cookies)
+    return create_response_with_cookies(data, status_code, cookies, additional_headers)
 
 
 def require_params(request, param_list_or_dict: Union[List[str], Tuple[str], Dict[str, Callable]]):

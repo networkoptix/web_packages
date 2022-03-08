@@ -788,6 +788,7 @@ class TestMenuNodeMethods:
                     'condition': '%DEVELOPERS_ENABLED%',
                     'condition_met': False,
                     'urlified': f'{docs[0].id}-my_url',
+                    'version': docs[0].version_id(cust_1),
                     'name': 'node1',
                     'display_name': 'node1'
                 }, {
@@ -809,6 +810,7 @@ class TestMenuNodeMethods:
                     'condition': '',
                     'condition_met': True,
                     'urlified': f'{docs[1].id}-my_url',
+                    'version': docs[1].version_id(cust_1),
                     'name': 'node2',
                     'display_name': 'node2'
                 }

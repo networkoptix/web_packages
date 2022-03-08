@@ -65,7 +65,7 @@ class TestExceptions:
         api_success(data=test_data, status_code=test_status_code,
                     cookies=test_cookies)
         mock_create_response_with_cookies.assert_called_once_with(
-            test_data, test_status_code, test_cookies)
+            test_data, test_status_code, test_cookies, None)
 
     def test_require_params(self, mocker):
         mock_request = mocker.MagicMock()

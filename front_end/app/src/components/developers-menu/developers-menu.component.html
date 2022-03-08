@@ -4,11 +4,11 @@
         <div *ngIf="(!node.name.includes('-seperator') && (level === 1 || openNodes.includes(node.parentNode?.display_name) || openNodes.includes(node.parentNode?.name)))"
             [class]="'menu-level-' + level">
             <div *ngIf="node.url;else noLink" class="menu-link"
-                (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state)"
+                (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state, node.version)"
                 (mouseleave)="mouseLeave$.next(node.asset_id)"
-                [ngClass]="{'arrow-padding'       : node.nodes.length, 
+                [ngClass]="{'arrow-padding'       : node.nodes.length,
                             'activated-highlight' : highlightedTopNode === (node.name || node.display_name) ||
-                                                    service.activeNode && service.activeNode.url === node.url && node.state === service.activeNode.state, 
+                                                    service.activeNode && service.activeNode.url === node.url && node.state === service.activeNode.state,
                             'has-state'           : node.indented}"
                 (click)="handleClick(node, true)"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
@@ -24,7 +24,7 @@
                     </a>
                 </ng-template>
                 <a *ngIf="node.url.startsWith('/'); externalLink"
-                    [routerLink]="node.url" 
+                    [routerLink]="node.url"
                     [queryParamsHandling]="queryParamsOnInternalRoute"
                     [queryParams]="{'state': node.state}">
                         <ng-container *ngTemplateOutlet="linkContent"></ng-container>
@@ -33,7 +33,7 @@
             <ng-template #noLink>
                 <div class="menu-link"
                     (click)="handleClick(node)"
-                    [ngClass]="{'arrow-padding': node.nodes.length, 
+                    [ngClass]="{'arrow-padding': node.nodes.length,
                                 'activated-highlight': highlightedTopNode === (node.name || node.display_name) ||
                                                        service.activeNode && service.activeNode.name === node.name &&
                                                        service.activeNode.url === node.url && node.state === service.activeNode.state}"
@@ -76,7 +76,7 @@
             </nx-search>
     </ng-container>
     <ng-container *ngIf="displayedMenuNodes.length; else noNodes">
-        <div [ngClass]="{'nodes-container': searchEnabled}" 
+        <div [ngClass]="{'nodes-container': searchEnabled}"
              [ngStyle]="{'max-height': searchEnabled ? 'calc(100vh - ' + (offsetHeight + 32) + 'px)' : 'none'}">
             <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:displayedMenuNodes, level: 1}"></ng-container>
         </div>

@@ -32,13 +32,14 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
     descriptor.value = function (...args) {
         return of('').pipe(
             switchMap(_ => {
-                if (this.currentAccountEmail !== undefined) {
-                    return of(this.currentAccountEmail);
+                if (this.currentAccount !== undefined) {
+                    return of(this.currentAccount);
                 }
                 return this.account(true);
             }),
             switchMap((account: Account) => {
-                if (account?.is_staff) {
+                this.currentAccount = account;
+                if (this.currentAccount?.is_staff) {
                     clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;
                     this.swBypassTimeout = setTimeout(_ => {
@@ -85,7 +86,7 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
-    private currentAccountEmail: string;
+    public currentAccount: Account; // Used by staffSWBypass decorator
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
@@ -405,13 +406,12 @@ export class NxCloudApiService {
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
         return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
-            tap((account: Account) => { this.currentAccountEmail = account.email; })
+            tap((account: Account) => { this.currentAccount = account; })
         ).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     loginTokens(tokensInfo) {
-        this.currentAccountEmail = tokensInfo.email;
         const options = {
             headers: {
                 Authorization: `Bearer ${tokensInfo.access_token}`
@@ -441,6 +441,7 @@ export class NxCloudApiService {
             .pipe(
                 map(account => {
                     account.isCloud = true;
+                    this.currentAccount = account;
                     return account;
                 })
             );
@@ -573,7 +574,7 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
+    getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string, assetVersion?: number) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
@@ -590,6 +591,9 @@ export class NxCloudApiService {
         if (state) {
             params = params.set('state', state.replace('pending', 'review'));
         }
+        if (assetVersion) {
+            params = params.set('version', assetVersion.toString());
+        }
         const route = `${this.CONFIG.apiBase}/cms/documentation${endpoint}?${params.toString()}`;
         this.cacheService.addToCache(route);
         return this.http.get<any>(route).pipe(catchError(error => {
@@ -604,12 +608,14 @@ export class NxCloudApiService {
 
     @staffSWBypass
     documentationInstantSearch(name, query, options?: Partial<InstantSearchOptions>) {
-        if (!this.configService.flagsEnabled(FeatureFlagStrings.kbInstantSearch)) {
+        if (!this.CONFIG.featureFlags.kbInstantSearch) {
             return throwError(new Error('Instant search feature not enabled'));
         }
         const params = mapValuesToStrings({ query, ...options });
-        const route = `${this.CONFIG.apiBase}/cms/documentation/kb/${name}/search?`;
-        return this.http.get<any>(route,  { params });
+        const urlSearchParams = new URLSearchParams(params).toString();
+        const route = `${this.CONFIG.apiBase}/cms/documentation/kb/${name}/search?${urlSearchParams}`;
+        this.cacheService.addToCache(route);
+        return this.http.get<any>(route,  { headers: { 'cache-request': 'true' } });
     }
 
     getDocAsset(assetId) {
