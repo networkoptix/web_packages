@@ -28,16 +28,17 @@ export const DOC_TYPES = {
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args) {
+    descriptor.value = function (...args) {
         return of('').pipe(
             switchMap(_ => {
-                if (this.currentAccountEmail !== undefined) {
-                    return of(this.currentAccountEmail);
+                if (this.currentAccount !== undefined) {
+                    return of(this.currentAccount);
                 }
                 return this.account(true);
             }),
             switchMap((account: Account) => {
-                if (account?.is_staff) {
+                this.currentAccount = account;
+                if (this.currentAccount?.is_staff) {
                     clearTimeout(this.swBypassTimeout);
                     this.swBypass = true;
                     this.swBypassTimeout = setTimeout(_ => {
@@ -84,7 +85,7 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
 })
 export class NxCloudApiService {
     private CONFIG: IConfig;
-    private currentAccountEmail: string;
+    public currentAccount: Account; // Used by staffSWBypass decorator
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
     public customClient: CustomClientAPI;
@@ -404,13 +405,12 @@ export class NxCloudApiService {
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
         return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
-            tap((account: Account) => { this.currentAccountEmail = account.email; })
+            tap((account: Account) => { this.currentAccount = account; })
         ).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     loginTokens(tokensInfo) {
-        this.currentAccountEmail = tokensInfo.email;
         const options = {
             headers: {
                 Authorization: `Bearer ${tokensInfo.access_token}`
@@ -440,6 +440,7 @@ export class NxCloudApiService {
             .pipe(
                 map(account => {
                     account.isCloud = true;
+                    this.currentAccount = account;
                     return account;
                 })
             );
