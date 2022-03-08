@@ -177,6 +177,13 @@ http {
             proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com;
         }
 
+        location /static/$BUILD/ {
+            root /app/app/static;
+            rewrite ^/static/$BUILD/(.*)$ /static/$1 break;
+            try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
+            error_page 404 /common/static/index.html;
+        }
+
         location /static/ {
             root /app/app/static;
             try_files /$CUSTOMIZATION/${DOLLAR}uri /common/${DOLLAR}uri =404;
