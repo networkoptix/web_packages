@@ -54,3 +54,4 @@ tools/docker/external.dat
 .vscode
 etc/rabbitmq
 cloud/.coverage
+node_modules

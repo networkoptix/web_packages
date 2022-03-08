@@ -1,3 +1,4 @@
+from uuid import uuid4
 from api.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
 from api.views import utils
@@ -110,13 +111,15 @@ class TestLanguage:
     def test_get(self, mocker, arf):
         lang_detect = mocker.patch('util.helpers.detect_language_by_request')
         lang_detect.return_value = 'en_US'
+        version = str(uuid4())
+        mocker.patch.object(utils.settings, 'VERSION', version)
 
         request = arf.get('/api/utils/language')
         request.session = {}
         response = utils.language(request)
         lang_detect.assert_called()
         assert response.status_code == status.HTTP_302_FOUND
-        assert response.url == '/static/lang_en_US/language_compiled.json'
+        assert response.url == f'/static/lang_en_US/language_compiled.json?version={version}'
 
     def check_post_assertions(self, request, response):
         assert response.status_code == status.HTTP_200_OK
