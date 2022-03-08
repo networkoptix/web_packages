@@ -1,17 +1,26 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild, ElementRef
-}                       from '@angular/core';
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    OnChanges,
+    ViewChild,
+    ElementRef,
+} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process }                   from '@services/process.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { fromEvent }                 from 'rxjs';
-import { debounceTime }              from 'rxjs/operators';
-import { AuthorizeStateType }        from '../authorize.component';
+import { Process } from '@services/process.service';
+
+import { AuthorizeStateType } from '../authorize.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -50,7 +59,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
             subHeader: string,
             subHeaderSuffix?: string
         }
-    }
+    };
 
     constructor(
         language: NxLanguageProviderService,

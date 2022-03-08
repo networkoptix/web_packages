@@ -41,6 +41,7 @@
     "lint:ci:tests": "eslint --ext .spec.ts",
     "lint:tests": "eslint app --ext .spec.ts --fix",
     "lint:all": "eslint app --ext .ts --fix",
+    "lint:auth": "eslint projects/authorization/src --ext .ts --fix",
     "esprint": "node esprintLimiter.js",
     "esprint4": "esprint check --fix --workers=4",
     "esprint8": "esprint check --fix --workers=8",

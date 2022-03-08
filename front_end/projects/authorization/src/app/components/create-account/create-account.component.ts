@@ -42,7 +42,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         password: string;
         firstName: string;
         lastName: string;
-    }
+    };
 
     @Output() accountInfoChange = new EventEmitter<{
         email: string;

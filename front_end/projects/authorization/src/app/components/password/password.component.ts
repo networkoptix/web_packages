@@ -1,6 +1,13 @@
 import {
-    Component, EventEmitter, Input, OnDestroy,
-    OnInit, Output, SimpleChanges, OnChanges, ViewChild
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    OnChanges,
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 

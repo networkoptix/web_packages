@@ -1,50 +1,50 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement, ElementRef } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
     TestBed,
     tick,
-    fakeAsync
+    fakeAsync,
 } from '@angular/core/testing';
-import { DebugElement, ElementRef } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { DirectivesModule } from '@directives/directives.module';
-import { CommonModule } from '@angular/common';
-import { of } from 'rxjs';
-import { LocalStorageService } from 'ngx-webstorage';
-import { environment } from '@environments/environment'
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { LocalStorageService } from 'ngx-webstorage';
+import { of } from 'rxjs';
 
+import { SharedComponentsModule } from '@components/shared-components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
+import { WINDOW } from '@services/window-provider';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
+import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
 import {
     AuthorizeParams,
     AuthorizeState,
     ClientType,
     NxAuthorizeComponent
 } from './authorize.component';
+import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
+import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
+import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
+import { NxAuthorizeCreateAccountComponent } from './create-account/create-account.component';
 import { NxAuthorizeEmailComponent } from './email/email.component';
 import { NxAuthorizePasswordComponent } from './password/password.component';
-import { NxAuthorizeCreateAccountComponent } from './create-account/create-account.component';
-import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
-import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
 import { NxAuthorizeResetPasswordComponent } from './reset-password/reset-password.component';
 import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.component';
-import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';
-import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
-import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
-
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { nxConfig } from '@services/nx-config/config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService } from '@services/process.service';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { NxAccountService } from '@services/account.service';
-import { WINDOW } from '@services/window-provider';
-import { SharedComponentsModule } from '@components/shared-components.module';
-import { PipesModule } from '@src/pipes/pipes.module';
 
 describe('NxAuthorizeComponent', () => {
     let component: NxAuthorizeComponent;

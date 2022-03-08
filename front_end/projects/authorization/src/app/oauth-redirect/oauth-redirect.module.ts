@@ -1,12 +1,13 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }      from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import { NxOAuthRedirectComponent }   from './oauth-redirect.component';
-import { DirectivesModule }     from '@directives/directives.module';
-import { PipesModule }          from '@src/pipes/pipes.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxOAuthRedirectComponent } from './oauth-redirect.component';
 
 const appRoutes: Routes = [
     { path: '', component: NxOAuthRedirectComponent }

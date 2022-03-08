@@ -1,6 +1,13 @@
 import {
-    Component, EventEmitter, Input, OnChanges, OnDestroy,
-    OnInit, Output, SimpleChanges, ViewChild
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -55,7 +62,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.CONFIG = configService.getConfig();
     }
 
-    private handleErrors (changes) {
+    private handleErrors(changes) {
         const { email } = this.emailForm?.controls;
         if (!email) {
             return;

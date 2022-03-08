@@ -1,4 +1,3 @@
-/* eslint-disable no-multi-spaces */
 /* eslint-disable camelcase */
 import { HttpClient } from '@angular/common/http';
 import {
@@ -56,7 +55,7 @@ export type AuthorizeStateType = 'email' |
     'error' |
     'auth' |
     'backup' |
-    'notSecure'
+    'notSecure';
 
 export enum AuthorizeState {
     email = 'email',
@@ -202,7 +201,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 catchError(() => of(false)),
                 map((servers: any) => {
                     return servers.some(({ remoteAddresses }) => remoteAddresses
-                        .some((address) => this.initialData.redirect_url.includes(address))
+                        .some(address => this.initialData.redirect_url.includes(address))
                     );
                 }));
     }
@@ -226,7 +225,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.loginCode = this.route.snapshot.params.code;
             this.loginEmail = atob(this.loginCode).split(':')[1];
         }
-        this.route.queryParams.subscribe(async(params: any) => {
+        this.route.queryParams.subscribe(async (params: any) => {
             this.initialData = cloneDeep(params);
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
@@ -281,7 +280,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         verifiedCheck = this.verifyRedirectUrl(findId.groups.systemId);
                     }
                 }
-                verifiedCheck.subscribe((verified) => {
+                verifiedCheck.subscribe(verified => {
                     if (email) {
                         this.loginEmail = email;
                         this.checkEmailProcess.run();
@@ -355,7 +354,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         } else {
             this.redirect(link);
         }
-    }
+    };
 
     handleVerificationExpiration(process) {
         if (this.loginEmail && this.loginPassword) {
@@ -374,7 +373,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     initProcesses() {
         const timeoutMs = 3000;
         this.checkEmailProcess = this.processService.createProcess(
-            async() => {
+            async () => {
                 this.emailErrorCode = '';
                 const res = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
                 if (this.currentState === AuthorizeState.activate && res.active) {
@@ -589,14 +588,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.scope,
             this.initialData.signature
         );
-    }
+    };
 
-    checkIfActivated = async() => {
+    checkIfActivated = async () => {
         const { active } = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
         if (active) {
             this.activated$.next(true);
         }
-    }
+    };
 
     reactivate = () => {
         return this.cloudService.reactivate(this.loginEmail)
@@ -606,11 +605,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     'success'
                 );
             });
-    }
+    };
 
     redirect = (route?: string) => {
         this.window.location.href = route || this.initialData.redirect_url || '/';
-    }
+    };
 
     ngOnDestroy() {}
 }

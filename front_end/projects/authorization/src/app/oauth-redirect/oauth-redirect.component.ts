@@ -1,17 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute, Router }    from '@angular/router';
-import { LocalStorageService }       from 'ngx-webstorage';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { LocalStorageService } from 'ngx-webstorage';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxPageService }             from '@services/page.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { AuthorizeParams, ClientType } from '../components/authorize.component';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
+
+import { AuthorizeParams, ClientType } from '../components/authorize.component';
 
 /* eslint-disable camelcase */
 @UntilDestroy()
@@ -28,7 +29,7 @@ export class NxOAuthRedirectComponent implements OnInit {
     initialData: AuthorizeParams;
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
-    state: 'sendingCode' | 'readyToLogin' | 'noNativeClient'
+    state: 'sendingCode' | 'readyToLogin' | 'noNativeClient';
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -52,7 +53,7 @@ export class NxOAuthRedirectComponent implements OnInit {
 
         // @ts-ignore
         if (this.window.nativeClient) {
-            this.route.queryParams.subscribe(async(params: any) => {
+            this.route.queryParams.subscribe(async (params: any) => {
                 this.initialData = cloneDeep(params);
                 this.localStorageService.store('client_type', this.initialData.client_type);
                 this.viewType = this.initialData.view_type || 'desktop';
@@ -67,7 +68,7 @@ export class NxOAuthRedirectComponent implements OnInit {
                 }
             });
         } else if (this.deviceService.isMobile()) {
-            this.route.queryParams.subscribe(async(params: any) => {
+            this.route.queryParams.subscribe(async (params: any) => {
                 this.initialData = cloneDeep(params);
                 this.viewType = this.initialData.view_type || 'desktop';
                 this.state = 'sendingCode';
