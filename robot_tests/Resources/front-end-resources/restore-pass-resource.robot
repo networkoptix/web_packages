@@ -87,7 +87,7 @@ Check Email Outline
         END
     ELSE
         IF    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"
-            Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
+            Wait Until Element Is Visible    ${RESTORE PASS EMAIL IS REQUIRED}
             Element Should Be Disabled    ${RESET PASSWORD BUTTON}
         ELSE
             Wait Until Element Is Visible    ${EMAIL INVALID}

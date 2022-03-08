@@ -837,7 +837,7 @@ Create Local Users via API
     &{liveViewer} =    Create Dictionary
     &{viewer} =    Create Dictionary
     FOR    ${user}    IN    @{locals}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    Local+${user}    Local User    ${password}    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    Local+${user}    Local User    ${password}    isCloud=${False}
         Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
         Set To Dictionary    ${local users}    ${user}=&{${user}}
     END
