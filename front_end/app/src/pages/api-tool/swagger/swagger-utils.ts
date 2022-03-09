@@ -67,7 +67,7 @@ const highlight = (line: HTMLElement) => {
         while (i < text.length && loopCounter < 100) {
             if (brackets.includes(text[i])) {
                 const { startingTag, endingTag } = createSpan('bracket');
-                text = text.slice(0, i).concat(startingTag, text[i], endingTag,  text.slice(i + 1));
+                text = text.slice(0, i).concat(startingTag, text[i], endingTag, text.slice(i + 1));
                 i = i + 2;
             } else if (text[i] === '"') {
                 let addTag = beforeColon;
@@ -87,7 +87,7 @@ const highlight = (line: HTMLElement) => {
                 }
             } else if (text[i] === ':') {
                 beforeColon = false;
-            } else if (!isNaN(parseInt(text[i]))  && !beforeColon) {
+            } else if (!isNaN(parseInt(text[i])) && !beforeColon) {
                 // Number
                 const { startingTag, endingTag } = createSpan('value-number');
                 const startInd = i;
@@ -122,7 +122,7 @@ export const findLine = element => {
  */
 export const setCodeBlockHTML = (element: HTMLElement, textareaMap: textareaMap, elementType: 'codeblock' | 'textarea') => {
     const uuid = element.closest('[uuid]')?.getAttribute('uuid');
-    const html  = textareaMap[uuid];
+    const html = textareaMap[uuid];
     if (html) {
         let innerHTML = html;
         if (elementType === 'codeblock') {

@@ -198,7 +198,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             let inQuery = false;
             const name = menuNode.display_name.toLowerCase();
             const startInd = name.indexOf(query.toLowerCase());
-            const pathMatchesQuery = menuNode.name.toLowerCase().includes(query.toLowerCase());  // For API-Tool: display_name is not always the path, need to check if the path matches the query
+            const pathMatchesQuery = menuNode.name.toLowerCase().includes(query.toLowerCase()); // For API-Tool: display_name is not always the path, need to check if the path matches the query
             const isSeperator = menuNode.name.includes('-seperator');
             const displayedNode = cloneDeep(menuNode);
             displayedNode.nodes = [];

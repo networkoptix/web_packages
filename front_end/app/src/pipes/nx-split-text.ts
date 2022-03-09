@@ -41,6 +41,6 @@ export class TextTransformPipe implements PipeTransform {
             transformedText = this.replaceAt(transformedText, breakSpace, splitWith);
         }
 
-        return  transformedText;
+        return transformedText;
     }
 }

@@ -357,7 +357,7 @@ export class NxSystem extends System {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
 
-                const capabilities = this.info?.capabilities || {};  // Make capabilities defined so that its easier to check feature flags.
+                const capabilities = this.info?.capabilities || {}; // Make capabilities defined so that its easier to check feature flags.
                 this.canMerge = this.userManager.isMine && 'cloudMerge' in capabilities;
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {

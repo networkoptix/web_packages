@@ -94,7 +94,7 @@ xdescribe('NxCookieBannerComponent', () => {
         [LocalStorageService],
         (service: LocalStorageService) => {
             service.retrieve = (key: string) => !!localStorageMockStore[key];
-            service.store =  (key: string, value: boolean) => { localStorageMockStore[key] = value; };
+            service.store = (key: string, value: boolean) => { localStorageMockStore[key] = value; };
             service.store('cookiereviewed', true);
             component.ngOnInit();
             fixture.detectChanges();
@@ -106,7 +106,7 @@ xdescribe('NxCookieBannerComponent', () => {
         [LocalStorageService],
         (service: LocalStorageService) => {
             service.retrieve = (key: string) => !!localStorageMockStore[key];
-            service.store =  (key: string, value: boolean) => { localStorageMockStore[key] = value; };
+            service.store = (key: string, value: boolean) => { localStorageMockStore[key] = value; };
             spyOn(component, 'onCookieBannerClose').and.callThrough();
             const button = fixture.debugElement.nativeElement.querySelector('svg-icon');
             button.click();

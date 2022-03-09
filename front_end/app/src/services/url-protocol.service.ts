@@ -151,7 +151,7 @@ export class NxUrlProtocolService {
         return this.getLink({
             systemId, useOauth
         }).then((data: { link: string, authKey: string}) => {
-            let link      = data.link;
+            let link = data.link;
             const authKey = data.authKey;
             link = link.replace(/&/g, '&&'); // This is a hack,
             // Google Chrome for mac has a bug - he looses one ampersand which brakes the link parameters

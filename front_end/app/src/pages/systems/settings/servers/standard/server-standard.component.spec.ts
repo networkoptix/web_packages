@@ -145,7 +145,7 @@ describe('NxSystemStandardServerComponent', () => {
         });
 
         it('should pick storage with most free space if all system storages', () => {
-            component.dropdownStorages.forEach(store =>  { store.isNotSystem = false; });
+            component.dropdownStorages.forEach(store => { store.isNotSystem = false; });
             expect(component.selectDefaultStorage()).toEqual(component.dropdownStorages[2]);
         });
 

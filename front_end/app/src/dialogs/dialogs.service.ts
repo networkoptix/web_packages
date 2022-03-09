@@ -52,7 +52,7 @@ import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
-import { SystemGroupSettingsModalContent }  from './system-group-settings/system-group-settings.component';
+import { SystemGroupSettingsModalContent } from './system-group-settings/system-group-settings.component';
 import { NxToastService } from './toast.service';
 import {
     TransferOwnershipModalContent
@@ -445,7 +445,7 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public  merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
+    public merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
         const config: Partial<DialogConfig> = {
             data: {
                 user: account,

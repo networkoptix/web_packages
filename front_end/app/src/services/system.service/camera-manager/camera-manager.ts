@@ -11,7 +11,7 @@ import {
     ITask,
     StreamQuality,
     RecordingType
-} from  './camera-manager-types';
+} from './camera-manager-types';
 
 export class CameraManager {
     servers: NxSystemServer[];

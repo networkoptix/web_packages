@@ -120,7 +120,7 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: APIDocType) => {
 
 export const mergeAPIDocs = (mainAPI: APIDoc, mergingAPI: APIDoc) => {
     mainAPI.tags = [...mainAPI.tags, ...mergingAPI.tags];
-    mainAPI.paths = Object.assign(mainAPI.paths,  mergingAPI.paths);
+    mainAPI.paths = Object.assign(mainAPI.paths, mergingAPI.paths);
 };
 
 /**

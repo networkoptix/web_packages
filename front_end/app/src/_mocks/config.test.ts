@@ -13,7 +13,7 @@ export function setupConfig(): IConfig {
         pollingTimeout: 30 * 1000,
         extendedRequestTimeout: 15 * 1000,
         sessionFreshnessSec: 600 * 1000,
-        apiRequestAttempts: 4,    // combined with extendedRequestTimeout this mean we'll give up after 1 min
+        apiRequestAttempts: 4, // combined with extendedRequestTimeout this mean we'll give up after 1 min
         maxNumberServerChecked: 6, // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
         animations: {
             carouselImage: {

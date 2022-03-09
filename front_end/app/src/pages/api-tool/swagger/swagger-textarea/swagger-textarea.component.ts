@@ -34,7 +34,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         const element = this.customTextareaRef.nativeElement;
-        const elementExistsInTextareaMap =  setCodeBlockHTML(element, this.textareaMap, 'textarea');
+        const elementExistsInTextareaMap = setCodeBlockHTML(element, this.textareaMap, 'textarea');
         if (!elementExistsInTextareaMap) {
             const text = this.textarea.innerText.split(' ').join('&nbsp;');
             element.innerText = text;
@@ -137,8 +137,8 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     };
 
     setTextareaText = () => {
-        const element =  this.customTextareaRef.nativeElement;
-        let textContent =  element.textContent;
+        const element = this.customTextareaRef.nativeElement;
+        let textContent = element.textContent;
         textContent = textContent.replace(/\s+/g, ''); // remove all spaces
 
         // store HTML with whitespace in textareaMap

@@ -1,7 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { isEqual } from 'lodash-es';
-import { BehaviorSubject, Observable }  from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { WINDOW } from '@services/window-provider';

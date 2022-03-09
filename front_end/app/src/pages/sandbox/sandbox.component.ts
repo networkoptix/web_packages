@@ -78,7 +78,7 @@ export class NxSandboxComponent {
                             id: 'formElements',
                             label: 'Form elements',
                             path: '/form-elements'
-                        },  {
+                        }, {
                             id: 'validation',
                             label: 'Validation',
                             path: '/validation'

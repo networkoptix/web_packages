@@ -117,15 +117,15 @@ export class NxAPIToolDropdownsComponent implements OnInit {
 
         this.APIToolSystemService.loading$.pipe(untilDestroyed(this)).subscribe(loading => {
             if (!loading) { // set dropdowns after changing system/first load
-                const systemToFind = this.APIToolSystemService.currentSystemId ||  this.readonlyAPIService.currentReadonlyAPI?.api?.id;
+                const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id;
                 this.system = findExistingItem(this.systems, systemToFind);
                 this.server = findExistingItem(this.servers, this.APIToolSystemService.currentServerId);
-                this.type   = findExistingItem(this.types, this.openAPIJSONService.currentType || 'main') || this.types[0];
+                this.type = findExistingItem(this.types, this.openAPIJSONService.currentType || 'main') || this.types[0];
             }
         });
 
         this.APIToolSystemService.currentSystemId$.pipe(untilDestroyed(this), filter(systemId => !!systemId)).subscribe(() => {
-            const systemToFind = this.APIToolSystemService.currentSystemId ||  this.readonlyAPIService.currentReadonlyAPI?.api?.id;
+            const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id;
             this.system = findExistingItem(this.systems, systemToFind);
             this.resetDropdowns();
         });

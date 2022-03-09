@@ -659,7 +659,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     this.viewContainer.nativeElement.clientWidth;
                 this.scrollMechanicsService.elementTableWidth =
                     this.tableContainer.nativeElement.clientWidth - 8;
-            }   /* -gutter */
+            } /* -gutter */
         }, 500);
     }
 

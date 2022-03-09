@@ -429,7 +429,7 @@ export class MergeModalContent {
                 err => {
                     if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
-                    }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                         return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                     }
                     if (err !== 'canceled') {
@@ -519,7 +519,7 @@ export class MergeModalContent {
             }, err => {
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
-                }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
                 }
                 console.error(err);
@@ -845,9 +845,9 @@ export class MergeModalContent {
 
     addStatus(system) {
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible?.()}`;
-        const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable?.()}`;
-        const statusOffline      = ` – ${this.LANG.systemStatuses.offline?.()}`;
-        const statusCloud        = ` - ${this.LANG.dialogs.merge.cloud?.()}`;
+        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable?.()}`;
+        const statusOffline = ` – ${this.LANG.systemStatuses.offline?.()}`;
+        const statusCloud = ` - ${this.LANG.dialogs.merge.cloud?.()}`;
 
         let stateOfHealth = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.status || '';
@@ -980,7 +980,7 @@ export class MergeModalContent {
 
     // handles password error messages
     passwordChange(input) {
-        let showUpdate        = '';
+        let showUpdate = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
         if (input.touched && input.errors?.required) {
             showUpdate = this.confirmPasswordError;

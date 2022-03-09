@@ -178,7 +178,7 @@ export class NxAPIToolSystemService {
             return;
         }
         if (this.currentSystemId !== this.currentSystem?.id) {
-            this.currentSystem =  await this.systemService.createSystem('', this.currentSystemId);
+            this.currentSystem = await this.systemService.createSystem('', this.currentSystemId);
         }
         this.currentSystem.infoSubject.pipe(filter(system => system?.info !== undefined), take(1)).subscribe(system => {
             if (system.info && !system.info.version) {

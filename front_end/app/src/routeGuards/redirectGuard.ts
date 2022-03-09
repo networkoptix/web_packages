@@ -32,7 +32,7 @@ export class RedirectGuard implements CanActivate {
         return this.accountService.get().then((account: Account) => {
             // eslint-disable-next-line camelcase
             if (account?.is_authenticated) {
-                this.router.navigate([this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')  ? 'dashboard' : 'systems']);
+                this.router.navigate([this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer') ? 'dashboard' : 'systems']);
             } else {
                 return true;
             }

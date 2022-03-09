@@ -63,7 +63,7 @@ export class ChangeStorageModalContent {
         try {
             const {
                 reply: { settings: { metadataStorageChangePolicy } }
-            }  = await this.system.updateOrGetSystemSettings().toPromise();
+            } = await this.system.updateOrGetSystemSettings().toPromise();
             if (metadataStorageChangePolicy !== 'remove') {
                 await this.system.updateOrGetSystemSettings({
                     metadataStorageChangePolicy: 'remove'

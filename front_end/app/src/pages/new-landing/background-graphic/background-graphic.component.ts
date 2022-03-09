@@ -14,7 +14,7 @@ import { NxLandingService } from '../landing.service';
 
 interface layer {
     scale : number
-    path  : string
+    path : string
 }
 
 @Component({

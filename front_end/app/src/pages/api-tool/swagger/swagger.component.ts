@@ -113,12 +113,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
         if (expand === 'full') {
             const info = getPathAndMethodFromNodeName(node.name);
-            const path =  this.openAPIJSONService.currentAPIDoc.paths[info.path];
+            const path = this.openAPIJSONService.currentAPIDoc.paths[info.path];
             // If the method is in the node's name, then use method. Otherwise, grab the first method and use that instead (only one should exist in this case)
             if (info.method) {
                 description = path[info.method?.toLowerCase()]?.description || path[Object.keys(path)[0]].description;
             } else {
-                description =  path[Object.keys(path)[0]].description;
+                description = path[Object.keys(path)[0]].description;
             }
         }
         this.swaggerMenuDescription = {
@@ -184,8 +184,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     private handlePotentialRTSPRoute = request => {
         const urlPath = new URL(request.url).pathname.slice(1);
-        const isRTSP = isUUID(urlPath) ||  // The only route that starts with uuid is an RTSP route.
-                      (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE');  // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
+        const isRTSP = isUUID(urlPath) || // The only route that starts with uuid is an RTSP route.
+                      (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE'); // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
 
         if (isRTSP) {
             this.RTSPRequestShowing = true;
@@ -362,7 +362,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             }
             const { componentRef, element } = this.generateComponent(NxSwaggerTextareaComponent);
             // storing the uuid on the parent element and reapplying it to textareas/code-blocks that get recreated
-            const parentEl =  textarea.closest('.parameters-col_description, .opblock-description-wrapper');
+            const parentEl = textarea.closest('.parameters-col_description, .opblock-description-wrapper');
             const uuid = parentEl?.getAttribute('uuid');
             if (!uuid) {
                 const { uuid } = this.addComponentToComponentMap(componentRef, element);
@@ -436,7 +436,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     addLineCounter = (parent: HTMLElement) => {
-        const lines =  parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
+        const lines = parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
         if (lines.length > 1) { // Don't show line counters if only one line
             parent.innerHTML = lines.join('\n');
             let contentFound = false;
@@ -503,7 +503,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             }
             this.singleAPIRouteShowing = isSingleView;
             if (this.VCR) {
-                this.VCR.clear();  // Destroys custom components
+                this.VCR.clear(); // Destroys custom components
                 this.componentMap = {};
                 this.textareaMap = {};
             }

@@ -160,7 +160,7 @@ export class NxAdvancedFilterComponent {
             data = data.sort(this.sortCallbackFactory());
         }
 
-        if (this.currentState.selections.some(({ value })  => value)) {
+        if (this.currentState.selections.some(({ value }) => value)) {
             data = data.filter(values => this.currentState.selections.find(({
                 name, value
             }) => value && this.groupCompare(name, values[this.field])));
@@ -183,7 +183,7 @@ export class NxAdvancedFilterComponent {
         ) {
             this.currentState.selections = this.data.reduce((
                 selections, values
-            ) =>  {
+            ) => {
                 const name = values[this.field];
                 const previousSelection = selections.find(
                     ({ name: existingName }) =>

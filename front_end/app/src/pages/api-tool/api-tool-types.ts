@@ -20,7 +20,7 @@ export interface APIInfo {
 
 export interface APIDoc {
     info? : APIInfo,
-    tags  : {
+    tags : {
                 name: string,
                 description?: string,
                 [key:string]: any

@@ -415,7 +415,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.selectPage(page, startIndex);
 
         this.params = { ...this.route.snapshot.queryParams };
-        const index     = (this.startIndex === 0) ? undefined : this.startIndex;
+        const index = (this.startIndex === 0) ? undefined : this.startIndex;
         const pageParam = this.params && parseInt(this.params.index, 10) || undefined;
 
         if (pageParam !== index) {

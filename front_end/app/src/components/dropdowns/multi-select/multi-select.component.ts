@@ -67,7 +67,7 @@ export class NxMultiSelectDropdown<Item extends Object> extends BaseDropdown {
     clearSelected() {
         this.items.forEach((item: any) => {
             item.selected = false;
-            const index   = this.innerValue.indexOf(item.id);
+            const index = this.innerValue.indexOf(item.id);
             if (index > -1) {
                 this.innerValue.splice(index, 1);
             }

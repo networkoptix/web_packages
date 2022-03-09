@@ -24,7 +24,7 @@ const parseStaticTranslations = staticLangNode => Object.entries(
     staticLangNode
 ).reduce((
     parsed, [key, value]
-) =>  ({
+) => ({
     ...parsed,
     [key]: typeof value === 'string'
         ? () => value

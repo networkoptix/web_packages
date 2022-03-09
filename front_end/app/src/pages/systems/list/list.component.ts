@@ -209,7 +209,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
         return [...this.groups, ...this.systems];
     }
 
-    private get currentTiles(): Tile[]  {
+    private get currentTiles(): Tile[] {
         if (!this.currentIndexes.length) {
             return this.tiles;
         } else {

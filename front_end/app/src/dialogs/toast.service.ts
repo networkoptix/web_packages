@@ -1,4 +1,4 @@
-import { Injectable, TemplateRef }  from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

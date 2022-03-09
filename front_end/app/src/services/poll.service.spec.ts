@@ -30,8 +30,8 @@ describe('Poll service', () => {
             call();
         });
 
-        expect(count).toBe(0);  // async 'subscr'
-        tick(100);              // make sure 'test' is called
+        expect(count).toBe(0); // async 'subscr'
+        tick(100); // make sure 'test' is called
         expect(count).toBe(1);
         tick(1000);
         expect(count).toBe(2);

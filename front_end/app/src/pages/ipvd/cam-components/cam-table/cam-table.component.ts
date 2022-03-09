@@ -243,9 +243,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 this.showHeaders = this.cameraHeaders;
 
                 if (this.params.sortBy) {
-                    const sortBy    = this.params.sortBy.split(',');
+                    const sortBy = this.params.sortBy.split(',');
                     const direction = (sortBy[1] === 'ASC');
-                    const column    = this.cameraHeaders.find(x => {
+                    const column = this.cameraHeaders.find(x => {
                         return x === this.LANG.ipvd[sortBy[0]]();
                     });
 
@@ -301,7 +301,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.elementTableWidthSubscription = this.scrollMechanicsService
             .elementTableWidthSubject
             .subscribe(() => {
-                const width       = this.scrollMechanicsService.elementTableWidth;
+                const width = this.scrollMechanicsService.elementTableWidth;
                 this.elementWidth = (width > 0) ? width + 'px' : '100%';
             });
 
@@ -611,7 +611,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     private sortElements(keepURI) {
         let sortByColumn;
         if (this.params.sortBy) {
-            const sortBy      = this.params.sortBy.split(',');
+            const sortBy = this.params.sortBy.split(',');
             this.sortOrderASC = (sortBy[1] === 'ASC');
             sortByColumn = sortBy[0];
         } else {

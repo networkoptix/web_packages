@@ -93,7 +93,7 @@ export class NxDevConsoleComponent {
             ({ sort: prev }, { sort: cur }) => prev - cur
         ).map(({ title, url, icon }) => ({ title, url, icon }));
         this.menu = mode === 'edit' ? [] : sections;
-        const matchedSection =  sections.find(({ url }) => url === section);
+        const matchedSection = sections.find(({ url }) => url === section);
         const sectionParam = (matchedSection || sections[0]).url as ConsoleSection;
 
         if (!matchedSection) {

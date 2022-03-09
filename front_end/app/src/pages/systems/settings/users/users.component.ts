@@ -164,7 +164,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
                     const updatedUser = this._findUser();
 
-                    const cleanUser =  { ...this.selectedUser };
+                    const cleanUser = { ...this.selectedUser };
                     delete cleanUser.role?.optionLabel;
 
                     if (

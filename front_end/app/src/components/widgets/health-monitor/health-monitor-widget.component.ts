@@ -192,7 +192,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         console.log(element);
         const queryParams = id ? { id } : {};
         const childRoute = resourceId || key;
-        const route =  [this.CONFIG.menus.systemSettings.baseUrl, this.system.id, 'health', childRoute];
+        const route = [this.CONFIG.menus.systemSettings.baseUrl, this.system.id, 'health', childRoute];
         const url = this.router.serializeUrl(this.router.createUrlTree(route, { queryParams }));
         const segments = [name, this.card.config.resources[key]?.name, this.selectedSystem.name, 'Health Monitor'];
         const label = segments.reduce((combined, segment) => !segment ? combined : combined ? `${combined} - ${segment}` : segment, '');

@@ -206,7 +206,7 @@ export class NxSystemStorageComponent implements OnInit {
                         this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode, this);
                         this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]], this);
                     } else {
-                        if (reservedOrBeingChecked  || this.previouslyReserved.has(storageId)) {
+                        if (reservedOrBeingChecked || this.previouslyReserved.has(storageId)) {
                             this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
                         }
                         const watcher = this.modeWatchers[this.normalizeId(storageId)];

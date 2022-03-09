@@ -78,7 +78,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     createEmbedUrl(params): void {
         // Cannot use A6 router at this moment - AJS is leading the parade
         const url = window.location.href.replace('systems', 'embed').split('?')[0];
-        let uri   = '';
+        let uri = '';
 
         for (const paramsKey in params) {
             // eslint-disable-next-line no-prototype-builtins

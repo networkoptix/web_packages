@@ -615,7 +615,7 @@ export class NxCloudApiService {
         const urlSearchParams = new URLSearchParams(params).toString();
         const route = `${this.CONFIG.apiBase}/cms/documentation/kb/${name}/search?${urlSearchParams}`;
         this.cacheService.addToCache(route);
-        return this.http.get<any>(route,  { headers: { 'cache-request': 'true' } });
+        return this.http.get<any>(route, { headers: { 'cache-request': 'true' } });
     }
 
     getDocAsset(assetId) {

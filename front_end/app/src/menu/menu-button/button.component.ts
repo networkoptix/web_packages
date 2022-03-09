@@ -1,6 +1,6 @@
-import { Component, Input }  from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import { NxDialogsService }  from '@dialogs/dialogs.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

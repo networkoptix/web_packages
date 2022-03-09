@@ -22,7 +22,7 @@ import { NxLandingService } from '../landing.service';
 export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     @Input() scrollPosition = 820;
     componentInitialized = false;
-    scale =  2;
+    scale = 2;
     isSafari: boolean;
 
     calculationProperties = {

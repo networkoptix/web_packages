@@ -43,7 +43,7 @@ export class NxOpenAPIJSONService {
         this.APITypeEmitter.next({ info: type, disabled, error });
     }
 
-    get currentAPIDoc()            { return this.currentAPIDoc$.value; }
+    get currentAPIDoc() { return this.currentAPIDoc$.value; }
     set currentAPIDoc(api: APIDoc) { this.currentAPIDoc$.next(api); }
 
     get currentType() { return this.currentType$.value; }
@@ -54,9 +54,9 @@ export class NxOpenAPIJSONService {
 
     // developers-menu properties
     menuSubject = new BehaviorSubject<MenuStructure>({
-        title: 'API',      // title and description not used
-        description: '',   // MenuStructure type is used for compatibility with developers-menu
-        nodes: undefined   // undefined triggers preloader
+        title: 'API', // title and description not used
+        description: '', // MenuStructure type is used for compatibility with developers-menu
+        nodes: undefined // undefined triggers preloader
     });
 
     activeAssetIdSubject = new BehaviorSubject<string>('');

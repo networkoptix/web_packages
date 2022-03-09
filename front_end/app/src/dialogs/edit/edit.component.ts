@@ -64,7 +64,7 @@ export class EditModalContent {
     dropdownLookup: {
         [key: string]: {
             selected : DropdownItem,
-            options  : DropdownItem[]
+            options : DropdownItem[]
         }
     } = {};
 

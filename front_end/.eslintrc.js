@@ -59,7 +59,6 @@ module.exports = {
         'no-case-declarations': 'off',
         'no-dupe-else-if': 'error',
         'no-mixed-operators': 'off',
-        'no-multi-spaces': 'off', // TODO: Restore
         'no-multi-assign': 'error',
         'no-negated-in-lhs': 'off', // Deprecated
         'no-path-concat': 'off', // Deprecated

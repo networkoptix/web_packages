@@ -823,7 +823,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionEnabled = false;
         this.recordingModes = this.recordingModes.map(({ name, id }) => {
             const enabled = id === RecordingType.ALWAYS;
-            const value =  enabled ? 2 : 0;
+            const value = enabled ? 2 : 0;
             return { name, id, enabled, value };
         });
         this.updateMotionWarning();

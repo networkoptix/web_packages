@@ -322,7 +322,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 // set scrollbar if needed but only after resizing finishes
                 clearTimeout(this.menuOverflowCalc);
                 this.menuOverflowCalc = this.window.setTimeout(() => {
-                    const magicNumberToAdd  = 40 + 2 * 16;
+                    const magicNumberToAdd = 40 + 2 * 16;
                     // 40 = search box
                     // 2 * 16 = bottom and top padding
                     this.menuOverflow = (windowHeightFit + magicNumberToAdd > this.windowHeight)

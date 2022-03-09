@@ -24,7 +24,7 @@ import {
     TimelineScrollbarAbsoluteServiceStatus
 } from '../../services/timeline.scrollbarAbsolute.service';
 import { TimelineScrollbarRelativeService } from '../../services/timeline.scrollbarRelative.service';
-import  {
+import {
     TimelineSelectionService,
     TimelineSelectionServiceStatus
 } from '../../services/timeline.selection.service';
@@ -178,7 +178,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         if (s.isActive) {
             const bgw = this.backgroundView.nativeElement
                 .getBoundingClientRect().width;
-            this.selectionLeftPixel =  bgw *
+            this.selectionLeftPixel = bgw *
                 (s.range.start - this.timeline.fullRange.start) /
                 this.timeline.fullRange.duration;
             this.selectionWidthPixel = bgw *

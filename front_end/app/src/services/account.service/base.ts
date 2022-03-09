@@ -293,8 +293,8 @@ export abstract class BaseAccount implements OnDestroy {
     loginWithAuthKey(authKey: string): Promise<boolean> {
         this.loginWithAuthKeyInProgress = true;
 
-        const auth         = atob(decodeURIComponent(authKey)).split(':');
-        const tempLogin    = auth[0];
+        const auth = atob(decodeURIComponent(authKey)).split(':');
+        const tempLogin = auth[0];
         const tempPassword = auth[1];
 
         return this.login(tempLogin, tempPassword, false)
@@ -322,7 +322,7 @@ export abstract class BaseAccount implements OnDestroy {
                 // logoutAuthorisedLogoutButton
                 if (account) {
                     const isRegister = this.router.url.includes('/register');
-                    const isRestore  = this.router.url.includes('/restore_password');
+                    const isRestore = this.router.url.includes('/restore_password');
                     const isActivate = this.router.url.includes('/activate');
 
                     let cancelLabel = '';
