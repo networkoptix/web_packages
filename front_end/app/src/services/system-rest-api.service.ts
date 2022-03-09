@@ -410,7 +410,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     public checkIfConnectedToServer(serverId: string): Observable<boolean> {
         return this.getCurrentServerInfo()
-            .pipe(map(data => this.cleanId(data.id) === serverId));
+            .pipe(map(data => data.id === serverId));
     }
 
     public isSessionFresh() {
