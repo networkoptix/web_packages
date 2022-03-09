@@ -99,6 +99,7 @@ export const getPathAndMethodFromNodeName = (name: string) => {
     } else {
         path = name;
     }
+    method = method === 'RTSP' ? 'GET' : method;
     return { path, method };
 };
 

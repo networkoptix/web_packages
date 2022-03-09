@@ -361,6 +361,7 @@ export class NxAPIToolService {
     private updateMediaServers() {
         this.mediaServerUpdating = true;
         let validServerFound = false;
+        let APIInfoCreated = false;
         if (this.system.currentServerNotBusy) {
             if (this.system?.serverManager.servers?.length) {
                 this.system.serverManager
@@ -410,7 +411,8 @@ export class NxAPIToolService {
                                                 }
                                                 return !server.incompatible;
                                             });
-                                            if (validServerFound) {
+                                            if (validServerFound && !APIInfoCreated) {
+                                                APIInfoCreated = true;
                                                 // Success
                                                 const APIDoc = this.selectedServer.apiDocFull;
                                                 const mainAPIContent = createMenuContent(APIDoc);
