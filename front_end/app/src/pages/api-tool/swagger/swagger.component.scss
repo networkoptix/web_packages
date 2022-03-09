@@ -512,7 +512,7 @@ nx-swagger-markdown + div#swagger-ui {
 	color           : $dark9;
 	width           : 100%;
 	margin-top	    : 10px;
-	padding	        : .8em 0.5em 2em 1em !important;
+	padding	        : .8em 0.5em .8em 1em !important;
 }
 
 .swagger-ui .model-box {
@@ -928,6 +928,10 @@ nx-swagger-markdown + div#swagger-ui {
 	text-decoration: line-through;
 }
 
+.swagger-ui .no-highlight span{
+	color: $dark9 !important
+}
+
 .swagger-ui .markdown code {
 	@extend .code-block-common;
 	padding       : 1px 6px;
@@ -953,7 +957,7 @@ nx-swagger-markdown + div#swagger-ui {
 pre, .text-area {
 	@extend .code-block-common;
 	margin: 10px 0 8px 0;
-	padding: .8em 0.5em 1.5em 1em !important;
+	padding: .8em 0.5em 1em 1em !important;
 	counter-reset: line;
 	color         : $dark9 !important;
 	& > div {

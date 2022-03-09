@@ -22,10 +22,14 @@ const createSpan = (className: string) => {
  */
 export const highlightAllCode = (element: HTMLElement) => {
     const lines = element.querySelectorAll('div');
-    if (!lines.length || !brackets.includes(lines[0].innerText[0]) || lines.length > 1000) return; // not json or code block too large
+    if (!lines.length || !brackets.includes(lines[0].innerText[0])) return; // not json
+    if (lines.length > 1000) { // Don't highlight, override swagger highlighting with css
+        element.classList.add('no-highlight');
+        return;
+    }
     for (const line of lines) {
         highlight(line);
-    };
+    }
 };
 
 /**
