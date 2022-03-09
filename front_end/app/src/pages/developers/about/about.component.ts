@@ -192,7 +192,7 @@ export class NxAboutComponent {
     loadMenu(baseName) {
         if (!this.getMenuNameFromConfig(baseName)) {
             return;
-        };
+        }
 
         this.updatePageMeta();
 
@@ -223,7 +223,7 @@ export class NxAboutComponent {
     ngOnDestroy() {
         this.ribbonService.hide();
     }
-};
+}
 
 export type AboutStructureNode = {template: AboutTemplates, node: AboutNode};
 

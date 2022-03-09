@@ -33,7 +33,7 @@ interface Permissions {
     adminPermissions: boolean,
     videowallModePermissions: boolean,
     acsModePermissions: boolean
-};
+}
 
 export interface Settings {
     additionalLocalFsTypes: string,
@@ -137,21 +137,21 @@ export interface SystemSettings {
 interface SystemTimeReply {
     isTakenFromInternet: boolean,
     utcTimeMs: string
-};
-export interface SystemTime extends NormalResponse<SystemTimeReply> {};
+}
+export interface SystemTime extends NormalResponse<SystemTimeReply> {}
 
 interface UserPermissions {
     id: string,
     name: string,
     permissions: Permissions
 }
-export interface GetUserRoles extends NormalResponse<UserPermissions> {};
+export interface GetUserRoles extends NormalResponse<UserPermissions> {}
 
 export interface Params {
     name: string,
     value: string
-};
-interface AddParams extends Array<Params> {};
+}
+interface AddParams extends Array<Params> {}
 export interface GetStorages {
     addParams: AddParams,
     id: string,
@@ -163,14 +163,14 @@ export interface GetStorages {
     typeId: string,
     url: string,
     usedForWriting: boolean
-};
+}
 
 interface ApiConfigureReply {
     restartNeeded: boolean;
 }
-export interface ApiConfigure extends NormalResponse<ApiConfigureReply> {};
+export interface ApiConfigure extends NormalResponse<ApiConfigureReply> {}
 
-export interface RestartServer extends NormalResponse<null> {};
+export interface RestartServer extends NormalResponse<null> {}
 
 export interface ModuleInformationReply {
     brand: string,
@@ -198,7 +198,7 @@ export interface ModuleInformationReply {
     systemName: string,
     type: string,
     version: string
-};
+}
 
 export interface LogLevelReply {
     EC2_TRAN: string,
@@ -206,15 +206,15 @@ export interface LogLevelReply {
     HWID: string,
     MAIN: string,
     PERMISSIONS: string
-};
-export interface LogLevel extends NormalResponse<LogLevelReply> {};
+}
+export interface LogLevel extends NormalResponse<LogLevelReply> {}
 
 interface PredefinedRoles {
     isOwner: boolean,
     name: string,
     permissions: string
-};
-interface ec2PredefinedRoles extends Array<PredefinedRoles> {};
+}
+interface ec2PredefinedRoles extends Array<PredefinedRoles> {}
 
 export interface User {
     canBeEdited: boolean;
@@ -250,19 +250,19 @@ interface Users {
     typeId: string,
     url: string,
     userRoleId: string
-};
-interface ec2GetUsers extends Array<Users> {};
+}
+interface ec2GetUsers extends Array<Users> {}
 
 interface AggregatedUsersReply {
     'ec2/getPredefinedRoles': ec2PredefinedRoles,
     'ec2/getUserRoles': Array<null>,
     'ec2/getUsers': ec2GetUsers
-};
-export interface AggregatedUsers extends NormalResponse<AggregatedUsersReply> {};
+}
+export interface AggregatedUsers extends NormalResponse<AggregatedUsersReply> {}
 
 export interface ChangedIdReturned {
     id: string
-};
+}
 
 interface Tasks {
     bitrateKbps: number,
@@ -272,8 +272,8 @@ interface Tasks {
     recordingType: string,
     startTime: number,
     streamQuality: string
-};
-interface ScheduledTasks extends Array<Tasks> {};
+}
+interface ScheduledTasks extends Array<Tasks> {}
 export interface GetCameras {
     addParams: AddParams,
     audioEnabled: boolean,
@@ -308,9 +308,9 @@ export interface GetCameras {
     url: string,
     userDefinedGroupName: string,
     vendor: string
-};
+}
 
-export interface EmptyObjectReturned {};
+export interface EmptyObjectReturned {}
 
 export interface GetMediaServers {
     addParams: AddParams,
@@ -337,12 +337,12 @@ export interface GetMediaServers {
     version: string
 }
 
-interface ec2GetMediaServers extends Array<GetMediaServers> {};
-interface ec2GetCameras extends Array<GetCameras> {};
+interface ec2GetMediaServers extends Array<GetMediaServers> {}
+interface ec2GetCameras extends Array<GetCameras> {}
 export interface AggregatedServersAndCameras {
     'ec2/getMediaServersEx': ec2GetMediaServers,
     'ec2/getCamerasEx': ec2GetCameras
-};
+}
 
 interface ResourceTypes {
     id: string,
@@ -354,9 +354,9 @@ interface ResourceTypes {
         resourceTypeId: string,
     }[],
     vendor: string,
-};
+}
 
-export interface GetResourceTypes extends Array<ResourceTypes> {};
+export interface GetResourceTypes extends Array<ResourceTypes> {}
 
 interface AlarmsReply {
     cameras: {
@@ -376,7 +376,7 @@ interface AlarmsReply {
             }
         }
     }
-};
+}
 
 interface ManifestReplyObjects {
     id: string,
@@ -546,17 +546,17 @@ interface ValuesReply {
     systems: SystemInfo
 }
 
-export interface Alarms extends NormalResponse<AlarmsReply> {};
-export interface Manifests extends NormalResponse<Array<ManifestReplyObjects>> {};
-export interface Values extends NormalResponse<ValuesReply> {};
+export interface Alarms extends NormalResponse<AlarmsReply> {}
+export interface Manifests extends NormalResponse<Array<ManifestReplyObjects>> {}
+export interface Values extends NormalResponse<ValuesReply> {}
 
 export interface AggregatedHealthReportReply {
     'ec2/metrics/alarms': Alarms,
     'ec2/metrics/manifest': Manifests,
     'ec2/metrics/values': Values
-};
+}
 
-export interface AggregatedHealthReport extends NormalResponse<AggregatedHealthReportReply> {};
+export interface AggregatedHealthReport extends NormalResponse<AggregatedHealthReportReply> {}
 
 interface DiscoveredPeersReply {
     brand: string,
@@ -584,17 +584,17 @@ interface DiscoveredPeersReply {
     systemName: string,
     type: string,
     version: string
-};
+}
 
-export interface DiscoveredPeers extends NormalResponse<DiscoveredPeersReply> {};
+export interface DiscoveredPeers extends NormalResponse<DiscoveredPeersReply> {}
 
-export interface MergeSystems extends NormalResponse<DiscoveredPeersReply> {};
+export interface MergeSystems extends NormalResponse<DiscoveredPeersReply> {}
 
 interface MergeStatusReply {
     mergeId: string,
     mergeInProgress: boolean
-};
-export interface MergeStatus extends NormalResponse<MergeStatusReply> {};
+}
+export interface MergeStatus extends NormalResponse<MergeStatusReply> {}
 
 export class SystemConfigSettings {
     cloudAccountName: string;

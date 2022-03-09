@@ -35,4 +35,4 @@ export class NxErrorStateComponent {
     hasMoreErrors(node) {
         return typeof node !== 'string';
     }
-};
+}

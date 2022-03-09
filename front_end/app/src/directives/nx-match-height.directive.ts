@@ -81,7 +81,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
       });
 
       Array.from(children).forEach((child: HTMLElement) => { child.style.height = `${maxHeight}px`; });
-  };
+  }
 
   ngOnDestroy() {
       clearInterval(this.initialLoadInterval);

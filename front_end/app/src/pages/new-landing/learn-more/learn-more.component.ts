@@ -40,7 +40,7 @@ export class NxLearnMoreComponent implements OnChanges {
             this.screenHeight < this.isVisibleBreakpoints.screenHeight
         ) {
             return false;
-        };
+        }
         return true;
     };
 

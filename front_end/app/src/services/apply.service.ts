@@ -861,7 +861,7 @@ export class NxApplyService {
 
     private extendDiscardFunction(discardFunction: () => void) {
         this.discardFunctions.push(discardFunction);
-    };
+    }
 
     private extendSubmitFunction(submitFunction: () => void) {
         this.submitFunctions.push(submitFunction);

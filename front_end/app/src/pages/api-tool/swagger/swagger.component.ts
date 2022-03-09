@@ -307,7 +307,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const requestBody: HTMLElement = this.document.querySelector('.opblock-title.parameter__name');
         if (requestBody) {
             requestBody.innerText = 'Body';
-        };
+        }
     };
 
     private modifyCodeBlocksAndTextareas = () => {
@@ -458,7 +458,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             }
         } else {
             parent.innerHTML = parent.innerText; // If no lines are added, remove code highlighting elements that comes from swagger-ui
-        };
+        }
     };
 
     private addLabelToRequest = () => {

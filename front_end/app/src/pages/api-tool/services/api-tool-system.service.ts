@@ -136,7 +136,7 @@ export class NxAPIToolSystemService {
             await this.readonlyAPIService.getReadonlyAPIs();
             if (this.readonlyAPIService.getReadonlyAPIByQueryParams()) {
                 return;
-            };
+            }
         }
 
         if (environment.isLocal) {

@@ -123,7 +123,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             const routeChanged = click.node?.url !== this.kbService.activeNode?.url;
             this.loading = routeChanged && !prefetched;
             this.clearSearch();
-        };
+        }
     };
 
     clearSearch = () => {
@@ -625,7 +625,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.searchLoading = false;
             this.searchResults$.next(this.parseResults(results));
         });
-    };
+    }
 
     ngOnDestroy() {
         setTimeout(() => {
@@ -633,7 +633,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         });
         this.ribbonService.hide();
     }
-};
+}
 
 export class KnowledgeNode {
     private constructor(

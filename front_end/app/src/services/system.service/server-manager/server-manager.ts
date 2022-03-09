@@ -156,7 +156,7 @@ export class ServerManager {
             .catch(error => {
                 return Promise.reject(new Error(error));
             });
-    };
+    }
 
     activateLicense(serverId: string, key: string) {
         if (!this.mediaserverConnections) {

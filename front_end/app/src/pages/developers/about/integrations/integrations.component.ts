@@ -131,4 +131,4 @@ export class NxIntegrationsComponent implements OnInit {
             integrationsConfig
         );
     }
-};
+}

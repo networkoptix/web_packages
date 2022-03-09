@@ -58,6 +58,7 @@ module.exports = {
         }],
         'no-case-declarations': 'off',
         'no-dupe-else-if': 'error',
+        'no-extra-semi': 'error',
         'no-mixed-operators': 'off',
         'no-multi-assign': 'error',
         'no-negated-in-lhs': 'off', // Deprecated
@@ -161,6 +162,7 @@ module.exports = {
                 ...tsExtension('no-array-constructor'),
                 ...tsExtension('no-dupe-class-members'),
                 ...tsExtension('no-extra-parens', ['error', 'functions']),
+                ...tsExtension('no-extra-semi'),
                 ...tsExtension('no-implied-eval'),
                 ...tsExtension('no-redeclare', ['error', {
                     builtinGlobals: false

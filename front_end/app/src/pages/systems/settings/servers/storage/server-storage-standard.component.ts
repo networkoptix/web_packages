@@ -331,7 +331,7 @@ export class NxSystemStorageComponent implements OnInit {
                 );
                 if (!store) {
                     return;
-                };
+                }
                 store.usedForWriting = true;
                 store.isBackup = false;
                 switch (watcher.originalValue) {

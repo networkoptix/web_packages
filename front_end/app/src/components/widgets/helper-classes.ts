@@ -48,7 +48,7 @@ export class FirstPartyWidget extends BaseFirstPartyWidget {
     get staticProperties() {
         this.#staticProperties ||= (this.constructor as typeof FirstPartyWidget);
         return this.#staticProperties;
-    };
+    }
 
     isSelected(identifier) {
         return identifier === this.staticProperties.IDENTIFIER;
@@ -86,7 +86,7 @@ export class FirstPartyWidget extends BaseFirstPartyWidget {
             size: sizes[selectedIndex],
             config: widget.BASE_CONFIG || {}
         } as WidgetCard;
-    };
+    }
 
     constructor(public cd: ChangeDetectorRef) {
         super();

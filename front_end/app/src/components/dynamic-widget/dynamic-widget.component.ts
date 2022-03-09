@@ -30,7 +30,7 @@ export class NxDynamicWidgetComponent {
     get staticProperties() {
         this.#staticProperties ||= (this.constructor as typeof NxDynamicWidgetComponent);
         return this.#staticProperties;
-    };
+    }
 
     /**
      * Shared list of registered widgets. Do add a widget call the registerWidget static method on the widget component which extends FirstPartyWidget.

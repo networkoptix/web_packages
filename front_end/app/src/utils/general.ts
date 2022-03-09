@@ -38,7 +38,7 @@ export function highlight(text: string, start?: number, end?: number): string {
         `<strong class="highlighted">${text.slice(start, end)}</strong>`;
     const tail = text.slice(end);
     return `${head}${highlighted}${tail}`;
-};
+}
 
 /* Number */
 export function mod(n: number, m: number): number {
@@ -162,7 +162,7 @@ export function pickFrom(
         }
         return { ...acc, key: source[key] };
     }, target);
-};
+}
 
 /* DOM */
 export interface PseudoAnchorTarget {

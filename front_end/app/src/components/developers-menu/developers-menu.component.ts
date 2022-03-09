@@ -275,4 +275,4 @@ export class NxDevelopersMenuComponent implements OnInit {
             }
         });
     }
-};
+}

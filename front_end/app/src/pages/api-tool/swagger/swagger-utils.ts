@@ -25,7 +25,7 @@ export const highlightAllCode = (element: HTMLElement) => {
     if (!lines.length || !brackets.includes(lines[0].innerText[0]) || lines.length > 1000) return; // not json or code block too large
     for (const line of lines) {
         highlight(line);
-    };
+    }
 };
 
 /**
@@ -127,7 +127,7 @@ export const setCodeBlockHTML = (element: HTMLElement, textareaMap: textareaMap,
         let innerHTML = html;
         if (elementType === 'codeblock') {
             innerHTML = html.split('</div>').join('</div>&nbsp;');
-        };
+        }
         element.innerHTML = innerHTML || element.innerHTML;
         return true;
     }

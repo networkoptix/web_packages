@@ -50,4 +50,4 @@ export class NxCapabilitiesComponent {
             capabilitiesConfig
         );
     }
-};
+}

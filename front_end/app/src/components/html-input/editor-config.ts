@@ -169,4 +169,4 @@ function pasteHandleImages(pasteEvent, editor) {
         };
         img.src = url.createObjectURL(blob);
     }
-};
+}

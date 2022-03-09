@@ -69,7 +69,7 @@ export class NxDropMenu extends BaseDropdown {
             node.url = node.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
             this.replaceCloudHost(node.nodes);
         });
-    };
+    }
 
     trackItem(index, item) {
         return item ? item.id : undefined;

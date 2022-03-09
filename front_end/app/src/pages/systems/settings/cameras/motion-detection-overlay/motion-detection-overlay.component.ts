@@ -47,7 +47,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         private deviceService: DeviceDetectorService,
     ) {
         this.config = config.getConfig();
-    };
+    }
 
     ngOnInit() {
         this.initMask();
