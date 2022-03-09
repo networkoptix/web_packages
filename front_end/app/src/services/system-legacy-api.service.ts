@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError, Observable } from 'rxjs';
@@ -211,8 +211,9 @@ export class NxSystemAPI {
             headers = headers.set(...entry);
         });
         const fullUrl = `${this.urlBase}${url}`;
+        const responseType = <any>(customHttpHeaders?.responseType || 'json');
         return this.http
-            .get<ResponseType>(fullUrl, { headers, params })
+            .get<ResponseType>(fullUrl, { headers, params, responseType })
             .pipe(
                 retryWhen((request) => this.retryHandler(request)),
                 timeout(requestTimeout),
@@ -464,11 +465,11 @@ export class NxSystemAPI {
             .toPromise();
     }
 
-    logUrl(params: { id?: number; lines?: number }) {
+    logUrl(params: { name?: string; lines?: number }) {
         return this.get<string>(
             '/api/showLog',
             { ...params },
-            { 'Content-Type': 'text' }
+            { 'Content-Type': 'text', responseType: 'text' }
         ).toPromise();
     }
 

@@ -19,6 +19,7 @@ import { QuicklinkModule } from 'ngx-quicklink';
 
 import { NxTextEditableComponent } from '@components/editable/editable.component';
 import { NxHTMLComponent } from '@components/html-input/html-input.component';
+import { NxLoggerComponent } from '@components/logger/logger.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { SharedComponentsModule } from '@components/shared-components.module';
@@ -179,6 +180,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
+        NxLoggerComponent,
         UpdateWebadminSessionComponent,
     ],
     providers: [
@@ -224,6 +226,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
+        NxLoggerComponent,
         UpdateWebadminSessionComponent,
     ],
     exports: [
@@ -285,6 +288,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
+        NxLoggerComponent,
         SharedComponentsModule,
         CdkStepperModule,
         TextFieldModule,

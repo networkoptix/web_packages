@@ -315,7 +315,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
             url = `/web${url}`;
         }
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
+        const responseType = <any>(customHttpHeaders?.responseType || 'json');
+        return this.http.get<ResponseType>(fullUrl, { headers, params, responseType }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(requestTimeout),
             tap(undefined, (error) => {

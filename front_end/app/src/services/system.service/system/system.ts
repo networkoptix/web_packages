@@ -250,6 +250,10 @@ export class NxSystem extends System {
             (this.systemInfo?.cloudStorageCapable && this.isMine);
     }
 
+    getInfoFromCloudDb() {
+        return this.cloudApi.systems(this.id);
+    }
+
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
         const parseSettings = ({
             cloudAccountName: ownerAccountEmail,
