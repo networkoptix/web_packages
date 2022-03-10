@@ -48,7 +48,7 @@ class AlexaSettings {
         public selectedSystem: string = null,
         public accountLinked = false,
         public eventRulesSetup = false
-    ) {}
+    ) { }
 
     static clean = selectedSystem =>
         input => new AlexaSettings(
@@ -185,7 +185,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             const { previousValue, currentValue, firstChange } = changes.settings;
             if (
                 (JSON.stringify(previousValue) !== JSON.stringify(currentValue) ||
-                !this.settingsWatchersSet) && !firstChange && !this.applyService.locked
+                    !this.settingsWatchersSet) && !firstChange && !this.applyService.locked
             ) {
                 if (currentValue && Object.keys(currentValue).length) {
                     this.setValues(currentValue);
@@ -371,13 +371,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     return delayInitial(Promise.resolve(false));
                 }),
                 tap(setup => {
-                    this.alexaSettings.eventRulesSetup = !!setup;
+                    if (settings.enabled) {
+                        this.alexaSettings = settings;
+                        this.alexaSettings.eventRulesSetup = !!setup && settings.enabled;
+                    }
                     this.eventRulesBeingSetup = false;
+                    this.cloudApi.saveCustomAccountProperty(
+                        this.alexaSettings,
+                        AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
+                    );
                 })
             ).toPromise();
     };
 
-    #updateAlexa = (settings: AlexaSettings) =>
+    #updateAlexa = (settings: Partial<AlexaSettings>) =>
         this.CONFIG.cloudCapabilities.alexaIntegrationEnabled && delayInitial(
             this.cloudApi.saveCustomAccountProperty(
                 settings,
@@ -406,11 +413,14 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             eventRulesSetup = false
         } = this.alexaSettings;
         this.alexaSettings = null;
-        this.#updateAlexa({
-            enabled: !enabled,
+        this.#updateAlexa(enabled ? {
+            enabled: false,
+            accountLinked
+        } : {
+            enabled: true,
             accountLinked,
             eventRulesSetup,
-            selectedSystem: enabled ? this.system.id : selectedSystem
+            selectedSystem: this.system.id
         });
     };
 
@@ -429,7 +439,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             accountLinked,
             eventRulesSetup,
             selectedSystem:
-            this.system.id
+                this.system.id
         });
     };
 }
