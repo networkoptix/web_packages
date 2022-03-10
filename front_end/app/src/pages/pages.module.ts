@@ -9,7 +9,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { BookmarksGuard } from '@guards/bookmarksGuard';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { PipesModule } from '@src/pipes/pipes.module';
-import { FeatureGuard } from '@src/routeGuards';
+import { FeatureGuard, RedirectAuthGuard } from '@src/routeGuards';
 
 import { Nx500Module } from './500/500.module';
 import { Nx503Module } from './503/503.module';
@@ -132,6 +132,16 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
     },
     {
+        path: 'restore_password',
+        canActivate: [RedirectAuthGuard],
+        loadChildren: () => import('./404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
+    },
+    {
+        path: 'register',
+        canActivate: [RedirectAuthGuard],
+        loadChildren: () => import('./404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
+    },
+    {
         path: '404',
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
     },
@@ -174,7 +184,8 @@ const lazyRoutes: Routes = [
     ],
     providers: [
         ApplyGuard,
-        AuthGuard
+        AuthGuard,
+        RedirectAuthGuard
     ],
     exports: [
         DownloadModule,
