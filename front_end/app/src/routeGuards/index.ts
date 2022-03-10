@@ -6,3 +6,4 @@ export * from './feature.guard';
 export * from './manualAccessGuard';
 export * from './systemGuard';
 export * from './redirectGuard';
+export * from './redirectAuthGuard';
