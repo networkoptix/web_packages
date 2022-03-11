@@ -1054,6 +1054,7 @@ ${drives}    5
     [Tags]    C83183    archive
     [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
