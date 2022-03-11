@@ -5,7 +5,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     OnChanges,
     ViewChild,
     ElementRef,
@@ -19,6 +18,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { AuthorizeStateType } from '../authorize.component';
 
@@ -79,7 +79,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeBackupCodeComponent>) {
         if (changes.errorCode?.currentValue) {
             this.backupCodeForm?.controls.backupCode.setErrors({ [changes.errorCode.currentValue]: true });
         }

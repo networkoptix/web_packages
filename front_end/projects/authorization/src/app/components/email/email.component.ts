@@ -6,7 +6,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -18,6 +17,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { AuthorizeStateType } from '../authorize.component';
 
@@ -81,7 +81,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.isMobile = this.deviceService.isMobile();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeEmailComponent>) {
         if (changes.errorCode?.currentValue) {
             // Handles when form isn't ready yet.
             if (!this.emailForm?.controls?.email) {

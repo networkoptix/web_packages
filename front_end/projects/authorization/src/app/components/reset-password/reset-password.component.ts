@@ -5,7 +5,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     OnChanges,
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -15,6 +14,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { AuthorizeStateType } from '../authorize.component';
 
@@ -55,7 +55,7 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeResetPasswordComponent>) {
         // if (changes.errorCode) {
         //     this.resetForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
         // }

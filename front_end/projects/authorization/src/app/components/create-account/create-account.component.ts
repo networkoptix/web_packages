@@ -6,7 +6,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     ViewChild,
     Inject,
 } from '@angular/core';
@@ -19,6 +18,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { AuthorizeStateType } from '../authorize.component';
 
@@ -97,7 +97,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeCreateAccountComponent>) {
         if (changes.errorCode) {
             const eC = changes.errorCode.currentValue;
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });

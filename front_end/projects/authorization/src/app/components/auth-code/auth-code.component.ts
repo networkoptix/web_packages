@@ -5,7 +5,6 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges,
     OnChanges,
     ViewChild,
     ElementRef,
@@ -19,6 +18,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
+import { NgChanges } from '@utils/ng-changes';
 
 import { AuthorizeStateType } from '../authorize.component';
 
@@ -89,7 +89,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeAuthCodeComponent>) {
         if (changes.errorCode?.currentValue) {
             this.authCodeForm?.controls.authCode.setErrors({ [changes.errorCode.currentValue]: true });
         }
