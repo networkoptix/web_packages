@@ -81,6 +81,74 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
     };
 };
 
+export class CustomClientAPI {
+    private readonly apiBase: string;
+
+    constructor(
+        private cloudAPI: NxCloudApiService,
+        private config: IConfig,
+        private http: HttpClient,
+        private consoleService: NxConsoleService
+    ) {
+        this.apiBase = this.config.apiBase + '/custom_clients/';
+    }
+
+    create = (name: string, baseVms?, values: Record<string, string> = {}) => {
+        if (!Object.keys(values).length) {
+            const id = uuid();
+            this.consoleService.unsavedAssets[id] = { name, base_vms: baseVms, id, unsaved: true, values: {} };
+            return Promise.reject(id);
+        }
+        const body: any = { name };
+        if (Object.entries(values).length) {
+            body.values = values;
+        }
+
+        if (baseVms) {
+            body.base_vms = baseVms;
+        }
+        return this.http.post<t.CustomClient>(this.apiBase, body);
+    };
+
+    retrieve = id => {
+        return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
+    };
+
+    list = () => {
+        return this.http.get<t.CustomClient[]>(this.apiBase);
+    };
+
+    update = (id, name, values) => {
+        return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
+    };
+
+    partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
+        if (name !== undefined) {
+            data.name = name;
+        }
+        data.values = { ...(data.values || {}), ...values };
+        return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
+    };
+
+    destroy = id => {
+        return this.http.delete(`${this.apiBase}${id}/`);
+    };
+
+    getManifest = () => {
+        return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
+    };
+
+    generatePackage = <Id, DownloadId = {downloadId: string}>(id: Id) => {
+        return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
+    };
+
+    checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
+        return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
+    };
+
+    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -677,72 +745,4 @@ export class NxCloudApiService {
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);
     }
-}
-
-export class CustomClientAPI {
-    private readonly apiBase: string;
-
-    constructor(
-        private cloudAPI: NxCloudApiService,
-        private config: IConfig,
-        private http: HttpClient,
-        private consoleService: NxConsoleService
-    ) {
-        this.apiBase = this.config.apiBase + '/custom_clients/';
-    }
-
-    create = (name: string, baseVms?, values: Record<string, string> = {}) => {
-        if (!Object.keys(values).length) {
-            const id = uuid();
-            this.consoleService.unsavedAssets[id] = { name, base_vms: baseVms, id, unsaved: true, values: {} };
-            return Promise.reject(id);
-        }
-        const body: any = { name };
-        if (Object.entries(values).length) {
-            body.values = values;
-        }
-
-        if (baseVms) {
-            body.base_vms = baseVms;
-        }
-        return this.http.post<t.CustomClient>(this.apiBase, body);
-    };
-
-    retrieve = id => {
-        return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
-    };
-
-    list = () => {
-        return this.http.get<t.CustomClient[]>(this.apiBase);
-    };
-
-    update = (id, name, values) => {
-        return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
-    };
-
-    partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
-        if (name !== undefined) {
-            data.name = name;
-        }
-        data.values = { ...(data.values || {}), ...values };
-        return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
-    };
-
-    destroy = id => {
-        return this.http.delete(`${this.apiBase}${id}/`);
-    };
-
-    getManifest = () => {
-        return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
-    };
-
-    generatePackage = <Id, DownloadId = {downloadId: string}>(id: Id) => {
-        return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
-    };
-
-    checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
-        return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
-    };
-
-    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
 }

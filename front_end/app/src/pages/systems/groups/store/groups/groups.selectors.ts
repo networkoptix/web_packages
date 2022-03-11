@@ -16,27 +16,6 @@ export interface IGroup {
     systems: Array<ISystem>,
 }
 
-export const selectGroupState = createFeatureSelector<GroupsState>('groups');
-
-export const selectGroup = createSelector(
-    selectGroupState,
-    (state: GroupsState, groupId: string) => _groupId2Group(state, groupId)
-);
-
-export const selectGroupList = createSelector(
-    selectGroupState,
-    state => Object.keys(state.groupNames).map(groupId =>
-        _groupId2Group(state, groupId)
-    )
-);
-
-export const selectGroupForest = createSelector(
-    selectGroupState,
-    state => Object.keys(state.groupNames)
-        .filter(groupId => !state.groupParents[groupId]) // Top-level groups
-        .map(groupId => _groupId2Group(state, groupId))
-);
-
 const _systemId2System = (state: GroupsState, systemId: string): ISystem => {
     return {
         id: systemId,
@@ -60,3 +39,24 @@ const _groupId2Group = (state: GroupsState, groupId: string): IGroup => {
         systems: systemIds.map(systemId => _systemId2System(state, systemId))
     };
 };
+
+export const selectGroupState = createFeatureSelector<GroupsState>('groups');
+
+export const selectGroup = createSelector(
+    selectGroupState,
+    (state: GroupsState, groupId: string) => _groupId2Group(state, groupId)
+);
+
+export const selectGroupList = createSelector(
+    selectGroupState,
+    state => Object.keys(state.groupNames).map(groupId =>
+        _groupId2Group(state, groupId)
+    )
+);
+
+export const selectGroupForest = createSelector(
+    selectGroupState,
+    state => Object.keys(state.groupNames)
+        .filter(groupId => !state.groupParents[groupId]) // Top-level groups
+        .map(groupId => _groupId2Group(state, groupId))
+);

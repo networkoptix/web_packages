@@ -14,50 +14,21 @@ export enum IntersectionStatus {
     Visible = 'Visible',
     Pending = 'Pending',
     NotVisible = 'NotVisible'
-  }
+}
 
-// https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
-// Use this to detect when an element is visible on the screen
-@Directive({
-    selector: '[nxOnIntersect]'
-})
-export class NxIntersectionObserver implements OnInit, OnDestroy {
-  @Input() intersectionDebounce = 0;
-  @Input() intersectionRootMargin = '0px';
-  @Input() intersectionRoot: HTMLElement;
-  @Input() intersectionThreshold: number | number[];
-  @Input() emitVisibleOnlyOnce = false;
+async function isVisible(element: HTMLElement) {
+    return new Promise(resolve => {
+        const observer = new IntersectionObserver(([entry]) => {
+            resolve(entry.isIntersecting);
+            observer.disconnect();
+        });
 
-  @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
+        observer.observe(element);
+    });
+}
 
-  private destroy$ = new Subject();
-
-  constructor(private element: ElementRef) {}
-
-  ngOnInit() {
-      const element = this.element.nativeElement;
-      const config = {
-          root: this.intersectionRoot,
-          rootMargin: this.intersectionRootMargin,
-          threshold: this.intersectionThreshold
-      };
-
-      fromIntersectionObserver(
-          element,
-          config,
-          this.intersectionDebounce,
-          this.emitVisibleOnlyOnce
-      ).pipe(
-          startWith(IntersectionStatus.NotVisible),
-          takeUntil(this.destroy$)
-      ).subscribe(status => {
-          this.nxOnIntersect.emit(status);
-      });
-  }
-
-  ngOnDestroy() {
-      this.destroy$.next();
-  }
+function isIntersecting(entry: IntersectionObserverEntry) {
+    return entry.isIntersecting || entry.intersectionRatio > 0;
 }
 
 export const fromIntersectionObserver = (
@@ -112,17 +83,46 @@ export const fromIntersectionObserver = (
         };
     });
 
-async function isVisible(element: HTMLElement) {
-    return new Promise(resolve => {
-        const observer = new IntersectionObserver(([entry]) => {
-            resolve(entry.isIntersecting);
-            observer.disconnect();
-        });
+// https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+// Use this to detect when an element is visible on the screen
+@Directive({
+    selector: '[nxOnIntersect]'
+})
+export class NxIntersectionObserver implements OnInit, OnDestroy {
+  @Input() intersectionDebounce = 0;
+  @Input() intersectionRootMargin = '0px';
+  @Input() intersectionRoot: HTMLElement;
+  @Input() intersectionThreshold: number | number[];
+  @Input() emitVisibleOnlyOnce = false;
 
-        observer.observe(element);
-    });
-}
+  @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
 
-function isIntersecting(entry: IntersectionObserverEntry) {
-    return entry.isIntersecting || entry.intersectionRatio > 0;
+  private destroy$ = new Subject();
+
+  constructor(private element: ElementRef) {}
+
+  ngOnInit() {
+      const element = this.element.nativeElement;
+      const config = {
+          root: this.intersectionRoot,
+          rootMargin: this.intersectionRootMargin,
+          threshold: this.intersectionThreshold
+      };
+
+      fromIntersectionObserver(
+          element,
+          config,
+          this.intersectionDebounce,
+          this.emitVisibleOnlyOnce
+      ).pipe(
+          startWith(IntersectionStatus.NotVisible),
+          takeUntil(this.destroy$)
+      ).subscribe(status => {
+          this.nxOnIntersect.emit(status);
+      });
+  }
+
+  ngOnDestroy() {
+      this.destroy$.next();
+  }
 }

@@ -31,6 +31,7 @@ import { NgChanges } from '@utils/ng-changes';
     styleUrls: ['tag.component.scss'],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         useExisting: forwardRef(() => NxTagComponent),
         multi: true
     }]

@@ -24,11 +24,13 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxEmailComponent),
             multi: true
         },
         {
             provide: NG_VALIDATORS,
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxEmailComponent),
             multi: true
         }

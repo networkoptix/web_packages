@@ -1,83 +1,3 @@
-export const DEFAULT_EDITOR_CONFIG = {
-    base_url: '/static/tinymce',
-    suffix: '.min',
-    branding: false,
-    toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
-    menubar: false,
-    paste_data_images: true,
-    plugins: 'code, preview, -visualblocks, -advcode,paste, link, lists, autoresize',
-    min_height: 360,
-    allow_html_in_named_anchor: true,
-    extended_valid_elements: '*[*]',
-    custom_elements: 'style,link,~link',
-    valid_children: '+a[*]',
-    closed: /^(br|hr|input|meta|img|link|param|area|path|line)$/,
-    protect: [/<svg.*\/svg>/],
-    relative_urls: false,
-    images_dataimg_filter: () => false,
-    paste_preprocess: (plugin, args) => {
-        const isImage = args.content.includes('img');
-        const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-
-        function replaceElements(matched, tagName) {
-            if (!validPasteElements.includes(tagName)) {
-                return '';
-            }
-            return matched;
-        }
-        if (isImage) {
-            console.info(`Handling pasted image: ${args.content}`);
-        } else {
-            args.content = args.content.replace(/<\/?([^\s>]*).*?>/g, replaceElements);
-            args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, '');
-        }
-    },
-    urlconverter_callback: function (url, node) {
-        if (url.startsWith('%')) {
-            return url;
-        }
-
-        const { settings, documentBaseURI } = this as any; // Callback gets attached to JE instance
-        // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
-        if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.startsWith('file:')) {
-            return url;
-        }
-
-        // Convert to relative
-        if (settings.relative_urls) {
-            return documentBaseURI.toRelative(url);
-        }
-
-        // Convert to absolute
-        url = documentBaseURI.toAbsolute(url, settings.remove_script_host);
-
-        return url;
-    },
-    setup: function (editor) {
-        editor.on('paste', function (event) {
-            pasteHandleImages(event, editor);
-        });
-
-        editor.on('postProcess', function (e) {
-            const mapObj = {
-                lineargradient: 'linearGradient',
-                filterunits: 'filterUnits',
-                feoffset: 'feOffset',
-                fegaussianblur: 'feGaussianBlur',
-                fecolormatrix: 'feColorMatrix',
-                fecomposite: 'feComposite',
-                stddeviation: 'stdDeviation'
-            };
-
-            const re = new RegExp(Object.keys(mapObj).join('|'), 'g');
-            e.content = e.content.replace(re, function (matched) {
-                return mapObj[matched];
-            });
-        });
-    }
-};
-
 function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 'image/png') {
     if (!pasteEvent.clipboardData) {
         if (typeof (callback) === 'function') {
@@ -170,3 +90,83 @@ function pasteHandleImages(pasteEvent, editor) {
         img.src = url.createObjectURL(blob);
     }
 }
+
+export const DEFAULT_EDITOR_CONFIG = {
+    base_url: '/static/tinymce',
+    suffix: '.min',
+    branding: false,
+    toolbar: 'undo redo | formatselect link bold italic underline | bullist numlist | outdent indent | code removeformat paste pastetext preview',
+    menubar: false,
+    paste_data_images: true,
+    plugins: 'code, preview, -visualblocks, -advcode,paste, link, lists, autoresize',
+    min_height: 360,
+    allow_html_in_named_anchor: true,
+    extended_valid_elements: '*[*]',
+    custom_elements: 'style,link,~link',
+    valid_children: '+a[*]',
+    closed: /^(br|hr|input|meta|img|link|param|area|path|line)$/,
+    protect: [/<svg.*\/svg>/],
+    relative_urls: false,
+    images_dataimg_filter: () => false,
+    paste_preprocess: (plugin, args) => {
+        const isImage = args.content.includes('img');
+        const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+        function replaceElements(matched, tagName) {
+            if (!validPasteElements.includes(tagName)) {
+                return '';
+            }
+            return matched;
+        }
+        if (isImage) {
+            console.info(`Handling pasted image: ${args.content}`);
+        } else {
+            args.content = args.content.replace(/<\/?([^\s>]*).*?>/g, replaceElements);
+            args.content = args.content.replace(/<[^>]*?( class=".*?").*?>/g, '');
+        }
+    },
+    urlconverter_callback: function (url, node) {
+        if (url.startsWith('%')) {
+            return url;
+        }
+
+        const { settings, documentBaseURI } = this as any; // Callback gets attached to JE instance
+        // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+        if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.startsWith('file:')) {
+            return url;
+        }
+
+        // Convert to relative
+        if (settings.relative_urls) {
+            return documentBaseURI.toRelative(url);
+        }
+
+        // Convert to absolute
+        url = documentBaseURI.toAbsolute(url, settings.remove_script_host);
+
+        return url;
+    },
+    setup: function (editor) {
+        editor.on('paste', function (event) {
+            pasteHandleImages(event, editor);
+        });
+
+        editor.on('postProcess', function (e) {
+            const mapObj = {
+                lineargradient: 'linearGradient',
+                filterunits: 'filterUnits',
+                feoffset: 'feOffset',
+                fegaussianblur: 'feGaussianBlur',
+                fecolormatrix: 'feColorMatrix',
+                fecomposite: 'feComposite',
+                stddeviation: 'stdDeviation'
+            };
+
+            const re = new RegExp(Object.keys(mapObj).join('|'), 'g');
+            e.content = e.content.replace(re, function (matched) {
+                return mapObj[matched];
+            });
+        });
+    }
+};

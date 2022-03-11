@@ -13,6 +13,12 @@ export interface SubrangeIndicies {
     lastIndex: int,
 }
 
+function simpleComparator(a, b, m) {
+    // if (typeof(a) === 'number')
+    //     return Math.sign(a - b)
+    return a === b ? 0 : a < b ? -1 : +1;
+}
+
 function binarySearch(haystack, needle, comparator = simpleComparator) {
     let l = 0;
     let r = haystack.length - 1;
@@ -42,10 +48,170 @@ function binarySearch(haystack, needle, comparator = simpleComparator) {
     // }
 }
 
-function simpleComparator(a, b, m) {
-    // if (typeof(a) === 'number')
-    //     return Math.sign(a - b)
-    return a === b ? 0 : a < b ? -1 : +1;
+export class BirdViewTreeNode {
+    protected _intervalCenterMs: ms;
+
+    public get startMs() {
+        return this._startMs;
+    }
+
+    public get endMs() {
+        return this._endMs;
+    }
+
+    public get centerMs() {
+        return this._intervalCenterMs;
+    }
+
+    public get depth() {
+        return this._depth;
+    }
+
+    constructor(
+            protected _startMs: ms,
+            protected _endMs: ms,
+            protected _minGapMs: ms = Infinity,
+            protected _records: CameraArchive = [],
+            protected _zoomingRequiredCallback: Function = null,
+            protected _isPerfect: boolean = false,
+            protected _depth: int = 0,
+            protected _parent: BirdViewTreeNode = null,
+            protected _leftChild: BirdViewTreeNode = null,
+            protected _rightChild: BirdViewTreeNode = null
+    ) {
+        this._intervalCenterMs = this._startMs + (this._endMs - this._startMs) / 2;
+        // if (this._isPerfect) {
+        //     console.log('perfection achieved at depth', this.depth)
+        // }
+    }
+
+    public setChild(
+        part: 'left' | 'right',
+        minGapMs: ms,
+        records: Array<IRecord>,
+        perfect: boolean = false
+    ) {
+        if (part === 'left' && this._leftChild) {
+            console.warn('attempt to reset left child', this);
+            return;
+        }
+        if (part === 'right' && this._rightChild) {
+            console.warn('attempt to reset right child', this);
+            return;
+        }
+
+        const startMs = part === 'left' ? this._startMs : this._intervalCenterMs;
+        const endMs = part === 'left' ? this._intervalCenterMs : this._endMs;
+        const child = new BirdViewTreeNode(
+            startMs,
+            endMs,
+            minGapMs,
+            records,
+            this._zoomingRequiredCallback,
+            perfect,
+            this._depth + 1,
+            this
+        );
+        if (part === 'left') {
+            this._leftChild = child;
+            // console.log('LEFT child SET', this, child)
+        } else {
+            this._rightChild = child;
+            // console.log('RIGHT child SET', this, child)
+        }
+    }
+
+    public get archiveEnd(): ms {
+        if (this._rightChild) {
+            return this._rightChild.archiveEnd ||
+                this._records[this._records.length - 1]?.end;
+        } else {
+            return this._records[this._records.length - 1]?.end;
+        }
+    }
+
+    public getRecords(startMs: ms, endMs: ms, minGapMs: ms): CameraArchive {
+        // console.log('GR', new Date(startMs), new Date(endMs))
+        // console.log('GR', this.depth, this.startMs, this.endMs, '|',  this._minGapMs, '||', startMs, endMs, minGapMs)
+        if (startMs > this._endMs || endMs < this._startMs) {
+            // console.warn('BirdViewTree::getRecords miss');
+            return [];
+        }
+
+        // if (startMs < this._startMs) {
+        //     startMs = this._startMs
+        //     console.log('narrowed start')
+        // }
+        // if (endMs > this._endMs) {
+        //     endMs = this._endMs
+        //     console.log('narrowed end')
+        // }
+
+        if (!this._isPerfect && (minGapMs < this._minGapMs)) {
+            const zoomingRequired = false;
+            let result = [];
+
+            const nextMinGap = this._minGapMs === Infinity
+                ? minGapMs
+                : Math.floor(this._minGapMs / 2);
+            // console.log('nextMinGap', nextMinGap)
+
+            if (startMs <= this._intervalCenterMs) {
+                // should look into the left subtree or request building such
+                if (!this._leftChild) {
+                    // console.log('BirdViewTree::getRecords zooming required (LEFT)', this.depth, nextMinGap)
+                    if (this._zoomingRequiredCallback) {
+                        this._zoomingRequiredCallback(this, 'left', nextMinGap);
+                    }
+
+                    result = result.concat(
+                        this._records.filter(r => r.start < endMs && r.end > startMs)
+                    );
+                } else {
+                    result = result.concat(
+                        this._leftChild.getRecords(
+                            Math.max(this._startMs, startMs),
+                            Math.min(endMs, this._intervalCenterMs),
+                            minGapMs
+                        )
+                    );
+                }
+            }
+
+            if (endMs > this._intervalCenterMs) {
+                // should look into the right subtree or request building such
+                if (!this._rightChild) {
+                    // console.log('BirdViewTree::getRecords zooming required (RIGHT)', this.depth, nextMinGap)
+                    if (this._zoomingRequiredCallback) {
+                        this._zoomingRequiredCallback(this, 'right', nextMinGap);
+                    }
+
+                    result = result.concat(
+                        this._records.filter(r => r.start < endMs && r.end > startMs)
+                    );
+                } else {
+                    result = result.concat(
+                        this._rightChild.getRecords(
+                            Math.max(this._intervalCenterMs, startMs),
+                            Math.min(this._endMs, endMs),
+                            minGapMs
+                        )
+                    );
+                }
+            }
+
+            return result;
+        } else {
+            const result = this._records.filter(r => r.start < endMs && r.end > startMs);
+            // if (this._isPerfect) {
+            //     console.log('depth', this.depth, this._records.length, 'perfection', result.length, result[0], result[result.length - 1], '|', startMs, endMs)
+            // }
+            // console.log(this._isPerfect ? 'PERFECT' : 'GOOD ENOUGH', new Date(startMs), new Date(endMs),
+            //     this._records.length === result.length, this._records.length, result.length)
+            // console.log(this._isPerfect ? 'PERFECT' : 'GOOD ENOUGH', result.length, new Date(startMs), new Date(endMs), result)
+            return result;
+        }
+    }
 }
 
 export class BirdViewTree {
@@ -287,171 +453,5 @@ export class BirdViewTree {
 
         // // TODO: indicate leafs in order to prevent pointless zooming attempts
         // return { records, perfect: maxDetailized.length === records.length }
-    }
-}
-
-export class BirdViewTreeNode {
-    protected _intervalCenterMs: ms;
-
-    public get startMs() {
-        return this._startMs;
-    }
-
-    public get endMs() {
-        return this._endMs;
-    }
-
-    public get centerMs() {
-        return this._intervalCenterMs;
-    }
-
-    public get depth() {
-        return this._depth;
-    }
-
-    constructor(
-            protected _startMs: ms,
-            protected _endMs: ms,
-            protected _minGapMs: ms = Infinity,
-            protected _records: CameraArchive = [],
-            protected _zoomingRequiredCallback: Function = null,
-            protected _isPerfect: boolean = false,
-            protected _depth: int = 0,
-            protected _parent: BirdViewTreeNode = null,
-            protected _leftChild: BirdViewTreeNode = null,
-            protected _rightChild: BirdViewTreeNode = null
-    ) {
-        this._intervalCenterMs = this._startMs + (this._endMs - this._startMs) / 2;
-        // if (this._isPerfect) {
-        //     console.log('perfection achieved at depth', this.depth)
-        // }
-    }
-
-    public setChild(
-        part: 'left' | 'right',
-        minGapMs: ms,
-        records: Array<IRecord>,
-        perfect: boolean = false
-    ) {
-        if (part === 'left' && this._leftChild) {
-            console.warn('attempt to reset left child', this);
-            return;
-        }
-        if (part === 'right' && this._rightChild) {
-            console.warn('attempt to reset right child', this);
-            return;
-        }
-
-        const startMs = part === 'left' ? this._startMs : this._intervalCenterMs;
-        const endMs = part === 'left' ? this._intervalCenterMs : this._endMs;
-        const child = new BirdViewTreeNode(
-            startMs,
-            endMs,
-            minGapMs,
-            records,
-            this._zoomingRequiredCallback,
-            perfect,
-            this._depth + 1,
-            this
-        );
-        if (part === 'left') {
-            this._leftChild = child;
-            // console.log('LEFT child SET', this, child)
-        } else {
-            this._rightChild = child;
-            // console.log('RIGHT child SET', this, child)
-        }
-    }
-
-    public get archiveEnd(): ms {
-        if (this._rightChild) {
-            return this._rightChild.archiveEnd ||
-                this._records[this._records.length - 1]?.end;
-        } else {
-            return this._records[this._records.length - 1]?.end;
-        }
-    }
-
-    public getRecords(startMs: ms, endMs: ms, minGapMs: ms): CameraArchive {
-        // console.log('GR', new Date(startMs), new Date(endMs))
-        // console.log('GR', this.depth, this.startMs, this.endMs, '|',  this._minGapMs, '||', startMs, endMs, minGapMs)
-        if (startMs > this._endMs || endMs < this._startMs) {
-            // console.warn('BirdViewTree::getRecords miss');
-            return [];
-        }
-
-        // if (startMs < this._startMs) {
-        //     startMs = this._startMs
-        //     console.log('narrowed start')
-        // }
-        // if (endMs > this._endMs) {
-        //     endMs = this._endMs
-        //     console.log('narrowed end')
-        // }
-
-        if (!this._isPerfect && (minGapMs < this._minGapMs)) {
-            const zoomingRequired = false;
-            let result = [];
-
-            const nextMinGap = this._minGapMs === Infinity
-                ? minGapMs
-                : Math.floor(this._minGapMs / 2);
-            // console.log('nextMinGap', nextMinGap)
-
-            if (startMs <= this._intervalCenterMs) {
-                // should look into the left subtree or request building such
-                if (!this._leftChild) {
-                    // console.log('BirdViewTree::getRecords zooming required (LEFT)', this.depth, nextMinGap)
-                    if (this._zoomingRequiredCallback) {
-                        this._zoomingRequiredCallback(this, 'left', nextMinGap);
-                    }
-
-                    result = result.concat(
-                        this._records.filter(r => r.start < endMs && r.end > startMs)
-                    );
-                } else {
-                    result = result.concat(
-                        this._leftChild.getRecords(
-                            Math.max(this._startMs, startMs),
-                            Math.min(endMs, this._intervalCenterMs),
-                            minGapMs
-                        )
-                    );
-                }
-            }
-
-            if (endMs > this._intervalCenterMs) {
-                // should look into the right subtree or request building such
-                if (!this._rightChild) {
-                    // console.log('BirdViewTree::getRecords zooming required (RIGHT)', this.depth, nextMinGap)
-                    if (this._zoomingRequiredCallback) {
-                        this._zoomingRequiredCallback(this, 'right', nextMinGap);
-                    }
-
-                    result = result.concat(
-                        this._records.filter(r => r.start < endMs && r.end > startMs)
-                    );
-                } else {
-                    result = result.concat(
-                        this._rightChild.getRecords(
-                            Math.max(this._intervalCenterMs, startMs),
-                            Math.min(this._endMs, endMs),
-                            minGapMs
-                        )
-                    );
-                }
-            }
-
-            return result;
-        } else {
-            const result = this._records.filter(r => r.start < endMs && r.end > startMs);
-            // if (this._isPerfect) {
-            //     console.log('depth', this.depth, this._records.length, 'perfection', result.length, result[0], result[result.length - 1], '|', startMs, endMs)
-            // }
-            // console.log(this._isPerfect ? 'PERFECT' : 'GOOD ENOUGH', new Date(startMs), new Date(endMs),
-            //     this._records.length === result.length, this._records.length, result.length)
-            // console.log(this._isPerfect ? 'PERFECT' : 'GOOD ENOUGH', result.length, new Date(startMs), new Date(endMs), result)
-            return result;
-        }
     }
 }

@@ -16,9 +16,75 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSessionService } from './session.service';
 
+export interface IErrorCodes {
+    [key: string]: string | Function
+}
+
+export interface ProcessSettings {
+    errorCodes: IErrorCodes;
+    errorMessage: string;
+    errorPrefix: string;
+    holdAlerts: boolean;
+    ignoreUnauthorized: boolean;
+    logoutForbidden: boolean;
+    successMessage: string;
+    ignoreError?: boolean;
+    name?: string;
+    timeoutMs: number;
+}
+
 type Handler = (...args: any[]) => any;
 
 const logError = (...args) => console.error(args);
+
+export const formatError = (
+    error,
+    errorCodes,
+    lang: LanguageI18NStaticTypes
+): string | false => {
+    if (error.error && typeof error.error === 'object') {
+        error = error.error;
+        // Unpack nested error
+    }
+    if (error.error !== '4' && errorCodes && error?.errorString &&
+        (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
+    ) {
+        delete error.errorString;
+    }
+    const errorCode =
+        error?.data?.resultCode ||
+        error?.resultCode ||
+        error?.type === 'error' && 'networkConnection' ||
+        error?.errorText ||
+        error?.errorString ||
+        error?.errorId ||
+        error;
+    if (!errorCode) {
+        return lang.errorCodes.unknownError();
+    }
+
+    if (
+        error.errorText === 'second_factor_required' &&
+        lang.dialogs?.message?.twoFactor
+    ) {
+        return lang.dialogs.message.twoFactor.required();
+    }
+
+    if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
+        if (typeof (errorCodes[errorCode]) === 'function') {
+            const result = (errorCodes[errorCode])(error) || false;
+            if (result !== true) {
+                return result;
+            }
+        } else {
+            return errorCodes[errorCode];
+        }
+    }
+    const errorText = typeof lang.errorCodes[errorCode] === 'function'
+        ? lang.errorCodes[errorCode]()
+        : lang.errorCodes[errorCode];
+    return errorText || lang.errorCodes.unknownError();
+};
 
 export class Process {
     private CONFIG: IConfig;
@@ -252,69 +318,3 @@ export class NxProcessService {
         );
     }
 }
-
-export interface IErrorCodes {
-    [key: string]: string | Function
-}
-
-export interface ProcessSettings {
-    errorCodes: IErrorCodes;
-    errorMessage: string;
-    errorPrefix: string;
-    holdAlerts: boolean;
-    ignoreUnauthorized: boolean;
-    logoutForbidden: boolean;
-    successMessage: string;
-    ignoreError?: boolean;
-    name?: string;
-    timeoutMs: number;
-}
-
-export const formatError = (
-    error,
-    errorCodes,
-    lang: LanguageI18NStaticTypes
-): string | false => {
-    if (error.error && typeof error.error === 'object') {
-        error = error.error;
-        // Unpack nested error
-    }
-    if (error.error !== '4' && errorCodes && error?.errorString &&
-        (!errorCodes[error?.errorString] || errorCodes[error?.errorId])
-    ) {
-        delete error.errorString;
-    }
-    const errorCode =
-        error?.data?.resultCode ||
-        error?.resultCode ||
-        error?.type === 'error' && 'networkConnection' ||
-        error?.errorText ||
-        error?.errorString ||
-        error?.errorId ||
-        error;
-    if (!errorCode) {
-        return lang.errorCodes.unknownError();
-    }
-
-    if (
-        error.errorText === 'second_factor_required' &&
-        lang.dialogs?.message?.twoFactor
-    ) {
-        return lang.dialogs.message.twoFactor.required();
-    }
-
-    if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
-        if (typeof (errorCodes[errorCode]) === 'function') {
-            const result = (errorCodes[errorCode])(error) || false;
-            if (result !== true) {
-                return result;
-            }
-        } else {
-            return errorCodes[errorCode];
-        }
-    }
-    const errorText = typeof lang.errorCodes[errorCode] === 'function'
-        ? lang.errorCodes[errorCode]()
-        : lang.errorCodes[errorCode];
-    return errorText || lang.errorCodes.unknownError();
-};

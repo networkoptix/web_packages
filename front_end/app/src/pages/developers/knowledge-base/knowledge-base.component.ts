@@ -58,6 +58,81 @@ export enum CardClasses {
     ARTICLE = 'article'
 }
 
+export class KnowledgeNode {
+    private constructor(
+        public title: string,
+        public url: string,
+        public content: string,
+        public nodes: KnowledgeNode[],
+        public script: string,
+        public cardClass: CardClasses,
+        public cardIcon?: string,
+        public cardLead?: string
+    ) { }
+
+    // Factory methods
+    static normalHeader(
+        title: string,
+        url: string,
+        content: string,
+        cardClass = CardClasses.NORMAL,
+        nodes: KnowledgeNode[] = [],
+        script = ''
+    ) {
+        return new KnowledgeNode(
+            title,
+            url,
+            content,
+            nodes,
+            script,
+            cardClass
+        );
+    }
+
+    // These additional card type nodes were on some original mockups
+    // Can probably be removed if we don't end up using
+    // static sideHeader(
+    //     title: string,
+    //     url: string,
+    //     content,
+    //     nodes: KnowledgeNode[],
+    //     script = '',
+    //     cardIcon: string,
+    //     cardLead: string
+    // ) {
+    //     return new KnowledgeNode(
+    //         title,
+    //         url,
+    //         content,
+    //         nodes,
+    //         script,
+    //         CardClasses.SIDE,
+    //         cardIcon,
+    //         cardLead
+    //     );
+    // }
+
+    // static article(
+    //     title: string,
+    //     url: string,
+    //     content: string,
+    //     showHeader = true,
+    //     nodes = [],
+    //     script = ''
+    // ) {
+    //     return new KnowledgeNode(
+    //         showHeader ? title : '',
+    //         url,
+    //         content,
+    //         nodes,
+    //         script,
+    //         CardClasses.ARTICLE,
+    //         '',
+    //         ''
+    //     );
+    // }
+}
+
 @UntilDestroy({ checkProperties: false })
 @Component({
     selector: 'nx-knowledge-base',
@@ -633,79 +708,4 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         });
         this.ribbonService.hide();
     }
-}
-
-export class KnowledgeNode {
-    private constructor(
-        public title: string,
-        public url: string,
-        public content: string,
-        public nodes: KnowledgeNode[],
-        public script: string,
-        public cardClass: CardClasses,
-        public cardIcon?: string,
-        public cardLead?: string
-    ) { }
-
-    // Factory methods
-    static normalHeader(
-        title: string,
-        url: string,
-        content: string,
-        cardClass = CardClasses.NORMAL,
-        nodes: KnowledgeNode[] = [],
-        script = ''
-    ) {
-        return new KnowledgeNode(
-            title,
-            url,
-            content,
-            nodes,
-            script,
-            cardClass
-        );
-    }
-
-    // These additional card type nodes were on some original mockups
-    // Can probably be removed if we don't end up using
-    // static sideHeader(
-    //     title: string,
-    //     url: string,
-    //     content,
-    //     nodes: KnowledgeNode[],
-    //     script = '',
-    //     cardIcon: string,
-    //     cardLead: string
-    // ) {
-    //     return new KnowledgeNode(
-    //         title,
-    //         url,
-    //         content,
-    //         nodes,
-    //         script,
-    //         CardClasses.SIDE,
-    //         cardIcon,
-    //         cardLead
-    //     );
-    // }
-
-    // static article(
-    //     title: string,
-    //     url: string,
-    //     content: string,
-    //     showHeader = true,
-    //     nodes = [],
-    //     script = ''
-    // ) {
-    //     return new KnowledgeNode(
-    //         showHeader ? title : '',
-    //         url,
-    //         content,
-    //         nodes,
-    //         script,
-    //         CardClasses.ARTICLE,
-    //         '',
-    //         ''
-    //     );
-    // }
 }

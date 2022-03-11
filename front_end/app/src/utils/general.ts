@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* General-purpose utility functions not strongly associated with/specialized
 for a particular part of the codebase. No in-house specific types/structures. */
 
@@ -96,6 +97,7 @@ export function paramSortFunc<Param = unknown>(
     };
 }
 
+/* Object */
 export function mapValuesToStrings(
     obj: Record<string, unknown>
 ): Record<string, string> {

@@ -79,7 +79,6 @@ describe('Nx utils', () => {
     });
 });
 
-/* Object */
 /** @deprecated
  * Replaced with lodash `cloneDeep()`.
  *

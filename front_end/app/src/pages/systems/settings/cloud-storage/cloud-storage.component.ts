@@ -28,6 +28,26 @@ import { wrapWithPercent } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
+type UsageTypes = '&mdash;' | number;
+
+export const emptyUsage: IUsageStats = {
+    currentRecordings: '&mdash;',
+    whenFullyUsed: '&mdash;',
+    amountUsed: '&mdash;',
+    archiveFrom: '&mdash;',
+    recordingBitrate: '&mdash;',
+    delayFromLive: '&mdash;'
+};
+
+export interface IUsageStats {
+    currentRecordings: UsageTypes
+    whenFullyUsed: UsageTypes
+    amountUsed: UsageTypes
+    archiveFrom: UsageTypes
+    recordingBitrate: UsageTypes
+    delayFromLive: UsageTypes
+}
+
 @Component({
     selector: 'nx-cloud-storage',
     templateUrl: './cloud-storage.component.html',
@@ -308,23 +328,3 @@ export class NxCloudStorageComponent implements OnInit {
         this.cloudStorageSystemEnabled = false;
     };
 }
-
-export const emptyUsage: IUsageStats = {
-    currentRecordings: '&mdash;',
-    whenFullyUsed: '&mdash;',
-    amountUsed: '&mdash;',
-    archiveFrom: '&mdash;',
-    recordingBitrate: '&mdash;',
-    delayFromLive: '&mdash;'
-};
-
-export interface IUsageStats {
-    currentRecordings: UsageTypes
-    whenFullyUsed: UsageTypes
-    amountUsed: UsageTypes
-    archiveFrom: UsageTypes
-    recordingBitrate: UsageTypes
-    delayFromLive: UsageTypes
-}
-
-type UsageTypes = '&mdash;' | number;

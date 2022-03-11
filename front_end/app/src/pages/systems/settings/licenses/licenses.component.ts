@@ -14,6 +14,29 @@ import { cleanId } from '@utils/general';
 
 import { NxSettingsService } from '../settings.service';
 
+export interface DynamicLicense {
+    [key: string]: {
+        title: string;
+        deactivationsAllowed
+    }
+}
+
+export const getDynamicLicense = (
+    instance: {
+        CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes
+    }
+) => instance.CONFIG.licenseTypes.reduce((
+    licenses,
+    { name, deactivationsAllowed, title }
+) => ({
+    ...licenses,
+    [name]: {
+        deactivationsAllowed,
+        title: instance.LANG.license.licenseTypeTitles[title] || title
+    }
+}), {} as DynamicLicense);
+
 @UntilDestroy()
 @Component({
     selector: 'nx-system-licenses',
@@ -274,26 +297,3 @@ export class NxSystemLicensesComponent implements OnInit {
             });
     }
 }
-
-export interface DynamicLicense {
-    [key: string]: {
-        title: string;
-        deactivationsAllowed
-    }
-}
-
-export const getDynamicLicense = (
-    instance: {
-        CONFIG: IConfig,
-        LANG: LanguageI18NStaticTypes
-    }
-) => instance.CONFIG.licenseTypes.reduce((
-    licenses,
-    { name, deactivationsAllowed, title }
-) => ({
-    ...licenses,
-    [name]: {
-        deactivationsAllowed,
-        title: instance.LANG.license.licenseTypeTitles[title] || title
-    }
-}), {} as DynamicLicense);

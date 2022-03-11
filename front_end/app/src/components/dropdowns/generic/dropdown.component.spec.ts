@@ -17,6 +17,22 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxGenericDropdown } from './dropdown.component';
 
+const ButtonClickEvents = {
+    left: { button: 0 },
+    right: { button: 2 }
+};
+
+function click(
+    el: DebugElement | HTMLElement,
+    eventObj = ButtonClickEvents.left,
+): void {
+    if (el instanceof HTMLElement) {
+        el.click();
+    } else {
+        el.triggerEventHandler('click', eventObj);
+    }
+}
+
 describe('NxGenericDropdown', () => {
     let component: NxGenericDropdown;
     let fixture: ComponentFixture<NxGenericDropdown>;
@@ -212,16 +228,3 @@ describe('NxGenericDropdown', () => {
         expect(dropdownMenu.nativeElement.style.width).toBe(component.forcePosition.width + 'px');
     });
 });
-
-const ButtonClickEvents = {
-    left: { button: 0 },
-    right: { button: 2 }
-};
-
-function click(el: DebugElement | HTMLElement, eventObj: any = ButtonClickEvents.left): void {
-    if (el instanceof HTMLElement) {
-        el.click();
-    } else {
-        el.triggerEventHandler('click', eventObj);
-    }
-}

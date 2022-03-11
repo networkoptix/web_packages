@@ -17,6 +17,27 @@ function drawWithClipRect(
     ctx.restore();
 }
 
+function drawSingleStripe(
+    ctx: CanvasRenderingContext2D,
+    x0: px,
+    y0: px,
+    stripeWidth: px,
+    slopeWidth: px,
+    h: px
+) {
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x0 + slopeWidth, y0 - h);
+    ctx.lineTo(x0 + slopeWidth + stripeWidth, y0 - h);
+    ctx.lineTo(x0 + stripeWidth, y0);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function getOffset(speed: pxPerSecond, period: px) {
+    return Math.round((Date.now() * speed / 1000) % period);
+}
+
 export function drawStripyBar(
     ctx: CanvasRenderingContext2D,
     x0: px,
@@ -39,25 +60,4 @@ export function drawStripyBar(
             drawSingleStripe(ctx, x - offset, y0 + h, stripeWidth, slopeWidth, h);
         }
     });
-}
-
-function drawSingleStripe(
-    ctx: CanvasRenderingContext2D,
-    x0: px,
-    y0: px,
-    stripeWidth: px,
-    slopeWidth: px,
-    h: px
-) {
-    ctx.beginPath();
-    ctx.moveTo(x0, y0);
-    ctx.lineTo(x0 + slopeWidth, y0 - h);
-    ctx.lineTo(x0 + slopeWidth + stripeWidth, y0 - h);
-    ctx.lineTo(x0 + stripeWidth, y0);
-    ctx.closePath();
-    ctx.fill();
-}
-
-function getOffset(speed: pxPerSecond, period: px) {
-    return Math.round((Date.now() * speed / 1000) % period);
 }

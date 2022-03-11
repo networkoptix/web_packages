@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import type { textareaMap } from './swagger-types';
 
 const brackets = ['{', '}', '[', ']'];

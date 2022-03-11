@@ -66,8 +66,11 @@ module.exports = {
         'no-return-await': 'error',
         'no-unused-vars': 'off', // TODO: Restore for non-components
         // ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
-        'no-use-before-define': 'off', // TODO: Restore
-        // ['error', { functions: false, classes: false, variables: false }],
+        'no-use-before-define': ['error', {
+            functions: true,
+            classes: true,
+            variables: true,
+        }],
         'no-useless-constructor': 'off', // TODO: Restore
         'no-useless-escape': 'off',
         'prefer-promise-reject-errors': 'off',
@@ -168,6 +171,15 @@ module.exports = {
                     builtinGlobals: false
                 }]),
                 ...tsExtension('no-throw-literal'),
+                ...tsExtension('no-use-before-define', ['error', {
+                    functions: true,
+                    classes: true,
+                    // Will false positive on useExisting: forwardRef
+                    variables: true,
+                    enums: false,
+                    typedefs: false,
+                    ignoreTypeReferences: true,
+                }]), // TODO: Restore
                 ...tsExtension('no-unused-expressions', ['error', {
                     allowShortCircuit: true,
                     allowTernary: true,

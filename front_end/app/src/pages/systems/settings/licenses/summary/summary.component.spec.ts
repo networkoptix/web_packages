@@ -35,6 +35,41 @@ describe('Licenses (Summary)', () => {
 
     let systemSpy: jasmine.SpyObj<NxSystem>;
 
+    function executeSharedTests() {
+        expect(Object.keys(component.licenses).length).toBeTruthy();
+        fixture.detectChanges();
+
+        expect(el.nativeElement.querySelectorAll('nx-block').length).toBe(1);
+
+        // Have elements
+        tile = el.nativeElement.querySelector('nx-block');
+        table = tile.querySelector('table');
+
+        // should display header
+        const header = tile.querySelector('header h4');
+        expect(header.innerHTML).toBe('Licenses Summary');
+
+        // should display table with license summary
+        expect(table).toBeTruthy();
+
+        // should display license summary
+        const rows = table.querySelector('tbody').querySelectorAll('tr');
+        expect(rows.length).toBe(4);
+
+        // should have 4 rows ... rows 1 and 4 are spacers
+        const row1 = rows[1].querySelectorAll('td');
+        expect(row1.length).toBe(5);
+        expect(row1[0].innerHTML).toBe(component.licenses[0].type);
+        expect(row1[1].innerHTML).toBe(component.licenses[0].count + '');
+        expect(row1[2].innerHTML).toBe(component.licenses[0].countAvail + '');
+
+        const row2 = rows[2].querySelectorAll('td');
+        expect(row2.length).toBe(5);
+        expect(row2[0].innerHTML).toBe(component.licenses[1].type);
+        expect(row2[1].innerHTML).toBe(component.licenses[1].count + '');
+        expect(row2[2].innerHTML).toBe(component.licenses[1].countAvail + '');
+    }
+
     beforeEach(waitForAsync(() => {
         const spySystem = jasmine.createSpyObj('NxSystem', ['getLicenseSummaries']);
 
@@ -185,39 +220,4 @@ describe('Licenses (Summary)', () => {
             });
         })));
     });
-
-    function executeSharedTests() {
-        expect(Object.keys(component.licenses).length).toBeTruthy();
-        fixture.detectChanges();
-
-        expect(el.nativeElement.querySelectorAll('nx-block').length).toBe(1);
-
-        // Have elements
-        tile = el.nativeElement.querySelector('nx-block');
-        table = tile.querySelector('table');
-
-        // should display header
-        const header = tile.querySelector('header h4');
-        expect(header.innerHTML).toBe('Licenses Summary');
-
-        // should display table with license summary
-        expect(table).toBeTruthy();
-
-        // should display license summary
-        const rows = table.querySelector('tbody').querySelectorAll('tr');
-        expect(rows.length).toBe(4);
-
-        // should have 4 rows ... rows 1 and 4 are spacers
-        const row1 = rows[1].querySelectorAll('td');
-        expect(row1.length).toBe(5);
-        expect(row1[0].innerHTML).toBe(component.licenses[0].type);
-        expect(row1[1].innerHTML).toBe(component.licenses[0].count + '');
-        expect(row1[2].innerHTML).toBe(component.licenses[0].countAvail + '');
-
-        const row2 = rows[2].querySelectorAll('td');
-        expect(row2.length).toBe(5);
-        expect(row2[0].innerHTML).toBe(component.licenses[1].type);
-        expect(row2[1].innerHTML).toBe(component.licenses[1].count + '');
-        expect(row2[2].innerHTML).toBe(component.licenses[1].countAvail + '');
-    }
 });
