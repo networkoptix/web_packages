@@ -221,6 +221,7 @@ Log Out Cloud
     Sleep    .25    #Ubuntu was clicking too soon
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element Is Visible    ${LOG OUT BUTTON}
+    Sleep    .5
     Click Link    ${LOG OUT BUTTON}
     Sleep    .5
     Validate Log Out
@@ -503,9 +504,9 @@ Disconnect from cloud
     Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
-    Wait Until Element Is Visible    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Wait Until Element Is Visible    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
     #Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Click Element    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
 #    Sleep    5
 
@@ -837,7 +838,7 @@ Create Local Users via API
     &{liveViewer} =    Create Dictionary
     &{viewer} =    Create Dictionary
     FOR    ${user}    IN    @{locals}
-        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    Local+${user}    Local User    ${password}    isCloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${password}    isCloud=${False}
         Set To Dictionary    ${${user}}    login=Local+${user}    email=noptixautoqa+local_${user}@gmail.com    #name=Local User    password=${password}
         Set To Dictionary    ${local users}    ${user}=&{${user}}
     END

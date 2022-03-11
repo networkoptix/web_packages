@@ -528,7 +528,7 @@ Force Tags        system    Threaded
     ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
-    Share To    ${random email}    Administrator
+    Share To    ${random email}    ${ADMIN TEXT}
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
@@ -598,7 +598,7 @@ Force Tags        system    Threaded
     Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
     Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    Check Email Subject    ${email}    Activate your account   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${activation link}    Get Links From Email    ${email}
     @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/authorize/activate
     FOR    ${link}  IN  @{activation link}

@@ -145,7 +145,7 @@ class NoptixImapLibrary(object):
         Examples:
         | Get Links From Email | INDEX |
         """
-        body = self.get_email_body(email_index).decode('utf-8')
+        body = self.get_email_body(email_index).decode('utf-8', 'ignore')
         res = findall(r'href=[\'"]?([^\'" >]+)', body)
         return res
 
