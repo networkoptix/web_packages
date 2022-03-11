@@ -6,7 +6,7 @@
 }
 
 .card-header {
-    @include typography.medium15dark9;
+    @include typography.medium15nocolor;
     color            : var(--card-header-text) !important;
     padding          : 12px 16px;
     background-color : var(--card-header-bg);

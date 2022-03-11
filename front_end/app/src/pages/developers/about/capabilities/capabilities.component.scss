@@ -58,7 +58,8 @@
         }
         
         & header {
-            background-repeat : repeat;
+            background-color : var(--card-capability-header-bg);
+            background-image : none !important;
             display           : flex;
             flex-direction    : column;
             justify-content   : stretch;
@@ -71,7 +72,7 @@
                 .st0 {
                     fill-rule : evenodd;
                     clip-rule : evenodd;
-                    fill      : var(--card-capability-h3);
+                    //fill      : var(--card-capability-h3);
                 }
             }
             
@@ -87,12 +88,12 @@
             
             & > h3 {
                 @include typography.medium24nocolor;
-                color : var(--card-capability-h3) !important;
                 margin : 0;
             }
         }
         
         & > .capability-detail {
+            color : var(--card-capability-intro-color);
             padding : 16px;
         }
     }

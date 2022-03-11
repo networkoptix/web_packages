@@ -24,13 +24,13 @@ html[data-theme="dark"] {
                     #000000 40%
     );
     
-    --h1 : #F5F7F8; //$light2;
-    --h2 : #F5F7F8; //$light2;
-    --h3 : #F5F7F8; //$light2;
-    --h4 : #F5F7F8; //$light2;
-    --h5 : #F5F7F8; //$light2;
-    --h6 : #F5F7F8; //$light2;
-    --h7 : #F5F7F8; //$light2;
+    --h1 : #E1E7EA; //$light4;
+    --h2 : #E1E7EA; //$light4;
+    --h3 : #E1E7EA; //$light4;
+    --h4 : #E1E7EA; //$light4;
+    --h5 : #E1E7EA; //$light4;
+    --h6 : #E1E7EA; //$light4;
+    --h7 : #E1E7EA; //$light4;
     
     --elements-disabled : #3A4D57; //$dark12;
     
@@ -243,8 +243,8 @@ html[data-theme="dark"] {
     --dropdown-menu-top-border : 1px solid #49626F; //$dark15;
     --dropdown-menu-shadow : none;
     --dropdown-menu-bg : #121517; //dark4;
-    --drop-menu-systems-bg    : #212A2F; //$dark7;
-    --drop-menu-navigation-bg : #263137; //$dark8
+    --drop-menu-systems-bg    : #171C1F; //$dark5;
+    --drop-menu-navigation-bg : #212A2F; //$dark7;
     --dropdown-item-active-bg : #B9C7CE; //$light8;
     --dropdown-item-hover-bg : #35464F; //dark11;
     --dropdown-item-hover-color : #E1E7EA; //$light4;
@@ -310,9 +310,9 @@ html[data-theme="dark"] {
     --card-simple-default-color        : #E1E7EA; //$light4;
     --card-simple-default-border-color : #AA1E1E; //$red_d1;
     
+    --card-capability-header-bg : #1C2327; //$dark6;
     --card-capability-intro-color : #A5B7C0; //$light10;
     --card-capability-icon        : #2592C3; //$brand-d1;
-    --card-capability-h3          : #E1E7EA; //$light4;
     
     --support-lang-wrapper-bg    : #121517; //$dark4
     --support-lang-wrapper-color : #A5B7C0; //$light10;
