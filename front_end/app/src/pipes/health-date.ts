@@ -11,7 +11,7 @@ export class NxHealthDatePipe implements PipeTransform {
     constructor(@Inject(LOCALE_ID) private locale: string) {
     }
 
-    transform(date: string | number, format?: string) {
+    transform(date: string | number, format?: string): string {
         if (date === 'now') {
             return date;
         }

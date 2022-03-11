@@ -36,6 +36,11 @@ describe('General purpose utils', () => {
     it('should return modulus', () => {
         expect(generalUtils.mod(10, 3)).toBe(1);
     });
+
+    it('should splice a string', () => {
+        expect(generalUtils.strSplice('To be', 2, ' be or not to'))
+            .toBe('To be or not to be');
+    });
 });
 
 describe('Nx utils', () => {

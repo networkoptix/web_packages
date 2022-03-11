@@ -21,7 +21,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
-import { cleanIp, htmlToEntity, pickFrom } from '@utils/general';
+import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';
@@ -412,7 +412,11 @@ export class MergeModalContent {
                         if (res.isNew) {
                             if (this.serverUrl) {
                                 const index = this.serverUrl.indexOf('//') + 2;
-                                this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
+                                this.serverUrl = strSplice(
+                                    this.serverUrl,
+                                    index,
+                                    'admin:admin@'
+                                );
                             }
                             this.machine.transition(this.confirmMerge);
                         } else if (!Object.keys(res).length || res.error === '0' || !res.error) {
@@ -469,7 +473,11 @@ export class MergeModalContent {
                         this.serverUrl = this.serverUrl.slice(0, startIndex) + this.serverUrl.slice(endIndex);
                     }
                     const index = this.serverUrl.indexOf('//') + 2;
-                    this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
+                    this.serverUrl = strSplice(
+                        this.serverUrl,
+                        index,
+                        `admin:${this.machine.state.template.passwordValue}@`
+                    );
                 }
                 if (!this.dryRunAvailable) {
                     this.checkMergeabilityProcess.processing = false;

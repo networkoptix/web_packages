@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
@@ -24,7 +23,7 @@ export class NxContentComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     public title: string;
-    public body: SafeHtml;
+    public body: string;
     public loaded = false;
 
     private articleParam: string;

@@ -15,7 +15,14 @@ export class NxSafePipe implements PipeTransform {
     ) {
     }
 
-    public transform(value: any, type: string): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
+    /* FIXME: Type of value should be string, but menu allowing string[]
+    for labels in level 3 is causing errors. Search component passing
+    data through url instead of data binding also complicates things. */
+    public transform(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+        value: any,
+        type: string
+    ): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
         switch (type) {
             case 'html':
                 return this.sanitizer.bypassSecurityTrustHtml(value);

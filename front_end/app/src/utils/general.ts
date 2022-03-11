@@ -41,6 +41,14 @@ export function highlight(text: string, start?: number, end?: number): string {
     return `${head}${highlighted}${tail}`;
 }
 
+export function strSplice(
+    text: string,
+    index: number,
+    replacement: string
+): string {
+    return text.slice(0, index) + replacement + text.slice(index);
+}
+
 /* Number */
 export function mod(n: number, m: number): number {
     return ((n % m) + m) % m;
