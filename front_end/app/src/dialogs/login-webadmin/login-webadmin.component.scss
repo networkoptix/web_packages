@@ -22,6 +22,23 @@ svg-icon {
     }
 }
 
+.error-block {
+    min-height: 40px;
+    padding: 10px 16px;
+
+    background-color : rgba($red_l2, .1);
+    border: 1px solid rgba($red_l2, .3);
+    border-radius: 2px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    svg-icon {
+        stroke: none;
+    }
+}
+
 .oauth-login {
     margin: 0 !important;
     width: calc(100vw - 48px) !important;

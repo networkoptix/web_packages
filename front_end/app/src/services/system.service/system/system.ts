@@ -229,7 +229,8 @@ export class NxSystem extends System {
         }
 
         return this.cloudApi.getSystemToken(this.id).toPromise().then((tokens) => {
-            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
+            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
+                .subscribe(() => {});
             return Promise.resolve(true);
         }).catch(() => {
             this.lostConnection = true;
@@ -500,7 +501,9 @@ export class NxSystem extends System {
                     this.mediaserver.setAuthKeys(auth.authGet, auth.authPost, auth.authPlay);
                     this.authPromise = null;
                 } else if (auth.access_token) {
-                    (this.mediaserver as NxSystemRestAPI).setTokens(auth, true);
+                    (this.mediaserver as NxSystemRestAPI)
+                        .setTokens(auth, true)
+                        .subscribe(() => {});
                 } else {
                     this.authPromise = null;
                     return Promise.reject(auth);

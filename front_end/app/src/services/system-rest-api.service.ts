@@ -162,20 +162,21 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     public setAccessTokenAsCookie() {
         if (this.CONFIG.newSystem || !this.accessToken) {
-            return Promise.resolve();
+            return of(true);
         }
         return this.get(
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
             {},
             { withCredentials: 'true' }
-        ).toPromise();
+        );
     }
 
     public setTokens(tokens, isSystem) {
         const storageService = this.storageService;
+        let cloudLoginObservable: Observable<any> = of(true);
         if (isSystem) {
             this.accessToken = tokens.access_token;
-            this.setAccessTokenAsCookie().catch(() => { });
+            cloudLoginObservable = this.setAccessTokenAsCookie();
         } else {
             storageService.cloudAccessToken = tokens.access_token;
         }
@@ -183,6 +184,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         if (tokens?.refresh_token) {
             storageService.refreshToken = tokens.refresh_token;
         }
+        return cloudLoginObservable;
     }
 
     private clearTokens() {
@@ -223,6 +225,9 @@ export class NxSystemRestAPI extends NxSystemAPI {
                         } else if (error.status === 503) {
                             // Repeat the request once again for 503 error
                             return of('');
+                        } else if (error.status === 422) {
+                            this.accessToken = undefined;
+                            this.clearTokens();
                         } else if (refreshToken && error.status < 500) {
                             return this.refreshTokens(refreshToken, true).pipe(
                                 catchError((error) => {
@@ -230,7 +235,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
                                     return throwError(error);
                                 }),
                                 switchMap((res) => {
-                                    this.setTokens(res, true);
+                                    this.setTokens(res, true)
+                                        .subscribe(() => {});
                                     return of('');
                                 })
                             );
@@ -442,13 +448,17 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     if (skipSetting) {
                         return of(tokens);
                     }
-                    this.setTokens(tokens, false);
-                    // @ts-ignore
-                    return this.refreshTokens(tokens.refresh_token, true);
+                    return this.setTokens(tokens, false).pipe(
+                        switchMap(() =>
+                            // @ts-ignore
+                            this.refreshTokens(tokens.refresh_token, true)
+                        )
+                    );
                 }),
                 tap((systemTokens) => {
-                    !skipSetting && this.setTokens(systemTokens, true);
-                })
+                    !skipSetting && this.setTokens(systemTokens, true)
+                        .subscribe(() => {});
+                }),
             );
     }
 

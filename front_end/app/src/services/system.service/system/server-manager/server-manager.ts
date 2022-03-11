@@ -38,7 +38,9 @@ export class ServerManager {
                 if (!environment.isLocal) {
                     unauthorizedCallback = this.system.useRest
                         ? () => this.cloudApi.getSystemToken(this.systemId).toPromise().then((tokens) => {
-                            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
+                            (<NxSystemRestAPI> this.mediaserver)
+                                .setTokens(tokens, true)
+                                .subscribe(() => {});
                             return Promise.resolve(true);
                         })
                         : () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {

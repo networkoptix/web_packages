@@ -584,7 +584,8 @@
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Access Control",

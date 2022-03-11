@@ -10,8 +10,6 @@ import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CookieService } from 'ngx-cookie-service';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -47,6 +45,8 @@ export class LoginWebadminModalContent implements OnInit {
 
     wrongCredentials: boolean;
     accountBlocked: boolean;
+    accountNotOnSystem: boolean;
+    account2faRequired: boolean;
 
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
@@ -256,8 +256,12 @@ export class LoginWebadminModalContent implements OnInit {
     oauthLogin(code: string): void {
         this.account.mediaServerApi
             .loginOauth(code)
-            .subscribe(() => {
-                this.window.location.reload();
+            .subscribe((res: Record<string, string>) => {
+                this.accountNotOnSystem = res.scope === '';
+                this.account2faRequired = res.error === 'second_factor_required';
+                if (!this.accountNotOnSystem && !this.account2faRequired) {
+                    this.window.location.reload();
+                }
             });
     }
 }
