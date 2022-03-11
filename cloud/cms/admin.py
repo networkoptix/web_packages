@@ -594,8 +594,8 @@ class AssetAdmin(CMSAdmin):
         for field_error in context['errors']:
             form.add_error(field_error[0], field_error[1])
         context['custom_form'] = form
-        branding, *_ = get_branding_shortcuts(customization='default')
-        restricted = get_restricted_keywords(customization='default')
+        branding, *_ = get_branding_shortcuts()
+        restricted = get_restricted_keywords()
         context['default_branding'] = json.dumps(list({
             shortcut[1].lower()
             for shortcut in branding + [(None, term) for term in restricted]
@@ -960,7 +960,7 @@ class ExternalFileAdmin(CMSAdmin):
 
     def asset_ds_pair_count(self, obj):
         return obj.asset_ds_pair.count()
-    
+
     def admin_uploaded(self, obj):
         return obj.admin_upload or 'No'
 
@@ -972,7 +972,7 @@ class ExternalFileAdmin(CMSAdmin):
 
     def has_add_permission(self, request):
         return request.user.is_superuser
-    
+
     def has_change_permission(self, request, obj=None):
         return obj.admin_upload == request.user if obj else  request.user.is_superuser
 
