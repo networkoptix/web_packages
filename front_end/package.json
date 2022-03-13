@@ -77,6 +77,7 @@
     "@ngneat/until-destroy": "8.0.3",
     "@ngx-translate/core": "13.0.0",
     "@ngx-translate/http-loader": "6.0.0",
+    "@swimlane/ngx-charts": "^16.0.0",
     "@tinymce/tinymce-angular": "^4.2.4",
     "@videojs/http-streaming": "^2.8.0",
     "angular-in-memory-web-api": "0.10.0",

@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
@@ -447,11 +447,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 this.systemInfoSubscription.unsubscribe();
                             }
                             this.systemInfoSubscription =
-                                this.system.infoSubject.subscribe(() => {
-                                    this.systemReady();
-                                    this.updateAlert();
-                                    this.updateMenu(this.system);
-                                });
+                                this.system.infoSubject
+                                    .pipe(distinctUntilChanged())
+                                    .subscribe(() => {
+                                        this.systemReady();
+                                        this.updateAlert();
+                                        this.updateMenu(this.system);
+                                    });
                         });
                     }
                 }

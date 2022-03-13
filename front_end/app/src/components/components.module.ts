@@ -12,12 +12,14 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { QuicklinkModule } from 'ngx-quicklink';
 
 import { NxTextEditableComponent } from '@components/editable/editable.component';
+import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxHTMLComponent } from '@components/html-input/html-input.component';
 import { NxLoggerComponent } from '@components/logger/logger.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
@@ -98,6 +100,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
 
 @NgModule({
     imports: [
+        NgxChartsModule,
         CommonModule,
         TranslateModule,
         RouterModule,
@@ -181,6 +184,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxTextEditableComponent,
         NxStepperComponent,
         NxLoggerComponent,
+        NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
     ],
     providers: [
@@ -227,6 +231,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxTextEditableComponent,
         NxStepperComponent,
         NxLoggerComponent,
+        NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
     ],
     exports: [
@@ -292,6 +297,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         SharedComponentsModule,
         CdkStepperModule,
         TextFieldModule,
+        NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
     ]
 })

@@ -188,3 +188,12 @@ landing-display-component {
         justify-content: center;
     }
 }
+
+.ngx-charts-outer {
+    display : flex;
+    
+    .ngx-charts {
+        float  : none !important;
+        height : 300px;
+    }
+}

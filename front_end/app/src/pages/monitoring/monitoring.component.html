@@ -1,0 +1,7 @@
+<nx-pre-loader type="page" *ngIf="!system; else graph"></nx-pre-loader>
+
+<ng-template #graph>
+    <div class="container">
+        <monitoring-graph [system]="system"></monitoring-graph>
+    </div>
+</ng-template>

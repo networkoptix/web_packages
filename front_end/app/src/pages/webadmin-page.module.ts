@@ -34,6 +34,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./systems/webadmin-system.module').then(m => m.NxSystemModule)
     },
     {
+        path: 'monitoring',
+        loadChildren: () => import('./monitoring/monitoring.module').then(m => m.NxMonitoringModule)
+    },
+    {
         path: 'view',
         loadChildren: () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
     },

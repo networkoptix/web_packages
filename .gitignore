@@ -22,6 +22,7 @@ front_end/app/styles/*.css
 front_end/**/*.js.map
 front_end/app/src/**/*.js
 front_end/app/language_compiled.json
+front_end/app/supported_languages.json
 front_end/coverage
 translations/**/language_compiled.json
 

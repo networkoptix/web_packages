@@ -570,7 +570,7 @@ export class NxSystemAPI {
     }
 
     getStatistics() {
-        return this.get('/api/statistics', { salt: Date.now() }).toPromise();
+        return this.get('/api/statistics', { salt: Date.now() });
     }
 
     getTimeZones() {
