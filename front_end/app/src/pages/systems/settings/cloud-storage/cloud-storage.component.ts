@@ -109,10 +109,9 @@ export class NxCloudStorageComponent implements OnInit {
 
     ngOnInit() {
         this.setupDefaults();
-        this.cloudStorageInitial = NxLanguageProviderService.translate(
-            this.LANG.dialogs.cloudStorage.initial,
-            { compCapacity: this.compCloudCapacity }
-        );
+        this.cloudStorageInitial = this.LANG.dialogs.cloudStorage.initial({
+            compCapacity: this.compCloudCapacity
+        });
         this.layoutSimple = (this.layout && this.layout === 'simple');
         this.initEnableCloudStorageProcess();
     }

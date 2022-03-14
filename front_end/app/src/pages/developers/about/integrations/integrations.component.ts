@@ -54,14 +54,11 @@ export class NxIntegrationsComponent implements OnInit {
         const { maxPlugins, perRow } = getPluginsToShow();
         const show = Math.min(allPlugins.length, maxPlugins);
         const translatedCount = this.sanitizer.bypassSecurityTrustHtml(
-            NxLanguageProviderService.translate(
-                this.LANG.common.morePlugins,
-                {
-                    count: this.pluginCount - show,
-                    startTag: '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
-                    endTag: '</strong>'
-                }
-            )
+            this.LANG.common.morePlugins({
+                count: this.pluginCount - show,
+                startTag: '<strong style="font-size: 24px; line-height: 30px; display: block; text-align: center;">',
+                endTag: '</strong>'
+            })
         );
         const plugins = allPlugins.slice(0, show);
         const getColSpan = (

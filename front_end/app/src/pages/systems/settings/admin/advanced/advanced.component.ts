@@ -165,7 +165,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
 
     getDescription(key) {
         return this.LANG.settingsConfig[key]
-            ? NxLanguageProviderService.translate(this.LANG.settingsConfig[key])
+            ? this.LANG.settingsConfig[key]()
             : key;
     }
 

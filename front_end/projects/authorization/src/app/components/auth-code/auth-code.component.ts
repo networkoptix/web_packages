@@ -77,12 +77,11 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         this.restore = this.action === 'restore_password';
         this.setupText();
         this.setText();
-        this.suffixText = NxLanguageProviderService.translate(
-            this.LANG.authorize.authCode.message,
-            {
-                suffix: this.restore ? this.LANG.authorize.authCode.newPass() : this.LANG.authorize.authCode.login()
-            }
-        );
+        this.suffixText = this.LANG.authorize.authCode.message({
+            suffix: this.restore
+                ? this.LANG.authorize.authCode.newPass()
+                : this.LANG.authorize.authCode.login()
+        });
 
         fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe(() => {
             this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;

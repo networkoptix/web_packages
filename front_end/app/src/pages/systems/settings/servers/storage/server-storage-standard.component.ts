@@ -729,10 +729,9 @@ export class NxSystemStorageComponent implements OnInit {
                                 .pipe(skip(1), take(1))
                                 .toPromise();
                             this.toastService.notify(
-                                NxLanguageProviderService.translate(
-                                    this.LANG.storage.storageDeleted,
-                                    { url: cleanSmbUrl(storage.url) }
-                                ),
+                                this.LANG.storage.storageDeleted({
+                                    url: cleanSmbUrl(storage.url)
+                                }),
                                 'success'
                             );
                         } else {
@@ -740,10 +739,9 @@ export class NxSystemStorageComponent implements OnInit {
                         }
                     }).catch(_ => {
                         this.toastService.notify(
-                            NxLanguageProviderService.translate(
-                                this.LANG.storage.failedRemove,
-                                { url: cleanSmbUrl(storage.url) }
-                            ),
+                            this.LANG.storage.failedRemove({
+                                url: cleanSmbUrl(storage.url)
+                            }),
                             'danger'
                         );
                     });

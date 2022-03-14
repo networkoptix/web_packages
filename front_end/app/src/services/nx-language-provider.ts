@@ -82,10 +82,6 @@ export class NxLanguageProviderService {
         return translationObject;
     }
 
-    static translate(toTranslate: any, translateParams = {}) {
-        return toTranslate(translateParams);
-    }
-
     loadLanguage() {
         const lang = this.translate.currentLang ?? this.translate.getDefaultLang();
 

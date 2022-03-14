@@ -214,9 +214,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     delay: this.CONFIG.alertTimeout
                 };
                 this.toastService.show(
-                    NxLanguageProviderService.translate(
-                        this.LANG.toastMessage.userChangesFail
-                    ), options);
+                    this.LANG.toastMessage.userChangesFail(),
+                    options
+                );
             } finally {
                 this.locked[user.email] = false;
                 this.setUser();

@@ -57,12 +57,14 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
                 : this.LANG.authorize.createdText();
         }));
         this.contentMessage$ = combineLatest([this.activated$, this.fromEmail$]).pipe(map(([activated, fromEmail]) => {
-            return NxLanguageProviderService.translate(
-                activated
-                    ? fromEmail && this.LANG.authorize.activatedAdditional || (() => '')
-                    : this.LANG.authorize.createdAdditional,
-                { accountEmail: this.loginEmail || '' }
-            );
+            const params = { accountEmail: this.loginEmail || '' };
+            if (activated) {
+                return fromEmail
+                    ? this.LANG.authorize.activatedAdditional(params)
+                    : '';
+            } else {
+                return this.LANG.authorize.createdAdditional(params);
+            }
         }));
 
         // automatically checks if activated every 5 seconds

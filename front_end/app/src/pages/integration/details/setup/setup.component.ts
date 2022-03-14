@@ -46,15 +46,12 @@ export class NxSetupComponent implements OnInit, OnDestroy {
         this.pluginSubscription = this.integrationService.pluginSubject
             .subscribe(plugin => {
                 this.plugin = plugin;
-                this.pageService.pageDescription =
-                    NxLanguageProviderService.translate(
-                        this.LANG.pageDescriptions.integrationSetup,
-                        {
-                            PLUGIN_NAME: this.plugin.information?.name,
-                            PLUGIN_SHORT_DESCRIPTION:
-                                this.plugin.information?.shortDescription
-                        }
-                    );
+                this.pageService.pageDescription = this.LANG.pageDescriptions
+                    .integrationSetup({
+                        PLUGIN_NAME: this.plugin.information?.name,
+                        PLUGIN_SHORT_DESCRIPTION:
+                            this.plugin.information?.shortDescription
+                    });
             });
     }
 

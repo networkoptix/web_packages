@@ -89,9 +89,11 @@ export class NxSystemsService implements OnDestroy {
             this.mergingSystems.delete(systemId);
             const primaryName = this.systemsMerging.primary.name;
             const secondaryName = this.systemsMerging.secondary.name;
-            const message = (primaryName && secondaryName) ? NxLanguageProviderService.translate(
-                this.LANG.dialogs.merge.mergeSuccess, { primaryName, secondaryName }
-            ) : this.LANG.toastMessage.system.merge.success();
+            const message = (primaryName && secondaryName)
+                ? this.LANG.dialogs.merge.mergeSuccess({
+                    primaryName, secondaryName
+                })
+                : this.LANG.toastMessage.system.merge.success();
             this.systemsMerging = {
                 primary: undefined,
                 secondary: undefined

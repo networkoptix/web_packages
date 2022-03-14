@@ -485,27 +485,23 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (!error.primarySystemName && !error.secondarySystemName) {
                     return;
                 }
-                const commonErrorMsg = NxLanguageProviderService.translate(
-                    this.LANG.dialogs.merge.commonText,
-                    {
-                        primarySystem: error.primarySystemName,
-                        secondarySystem: error.secondarySystemName
-                    }
-                );
+                const commonErrorMsg = this.LANG.dialogs.merge.commonText({
+                    primarySystem: error.primarySystemName,
+                    secondarySystem: error.secondarySystemName
+                });
 
                 let downloadHTML = `<span>${this.LANG.dialogs.merge.latestBuild?.()}</span>`;
                 if (this.CONFIG.cloudHost) {
                     downloadHTML = `<a href=\"${this.environment.isLocal ? this.CONFIG.cloudHost : ''}/download" target=\"_blank\">${this.LANG.dialogs.merge.latestBuild?.()}</a>`;
                 }
-                const responseError = NxLanguageProviderService.translate(
-                    this.LANG.errorCodes[error.errorText] ||
-                        this.LANG.errorCodes[error.resultCode] ||
-                        this.LANG.errorCodes.unknownMergeError,
-                    {
-                        failedSystem: error.failedSystemName,
-                        downloadHTML
-                    }
-                );
+
+                const errorCodeMsg = this.LANG.errorCodes[error.errorText] ||
+                    this.LANG.errorCodes[error.resultCode] ||
+                    this.LANG.errorCodes.unknownMergeError;
+                const responseError = errorCodeMsg({
+                    failedSystem: error.failedSystemName,
+                    downloadHTML
+                });
 
                 // HTML needed for section formatting
                 const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';

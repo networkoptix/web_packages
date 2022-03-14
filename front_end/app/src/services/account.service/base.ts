@@ -327,16 +327,16 @@ export abstract class BaseAccount implements OnDestroy {
 
                     let cancelLabel = '';
                     if (isRegister) {
-                        cancelLabel = NxLanguageProviderService.translate(this.LANG.dialogs.buttons.createAccount);
+                        cancelLabel = this.LANG.dialogs.buttons.createAccount();
                     } else if (isRestore) {
-                        cancelLabel = NxLanguageProviderService.translate(this.LANG.dialogs.buttons.logoutAuthorised);
+                        cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised();
                     } else {
-                        cancelLabel = NxLanguageProviderService.translate(this.LANG.dialogs.buttons.cancel);
+                        cancelLabel = this.LANG.dialogs.buttons.cancel();
                     }
                     return this.dialogs
                         .confirm('',
-                            NxLanguageProviderService.translate(this.LANG.dialogs.titles.changeAccount, account),
-                            NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayLoggedIn),
+                            this.LANG.dialogs.titles.changeAccount(account),
+                            this.LANG.dialogs.buttons.stayLoggedIn(),
                             undefined,
                             cancelLabel,
                             ''
@@ -407,7 +407,7 @@ export abstract class BaseAccount implements OnDestroy {
                 this.LANG.dialogs.titles.loggedFromOtherAccount(),
                 this.LANG.dialogs.buttons.ok(),
                 undefined,
-                NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayAs, account),
+                this.LANG.dialogs.buttons.stayAs(account),
                 'long-cancel-button');
             if (res === true) {
                 this.stopAccountPoll();
@@ -439,7 +439,7 @@ export abstract class BaseAccount implements OnDestroy {
                     this.LANG.dialogs.titles.loggedFromOtherAccount(),
                     this.LANG.dialogs.buttons.ok(),
                     undefined,
-                    NxLanguageProviderService.translate(this.LANG.dialogs.buttons.stayAs, account),
+                    this.LANG.dialogs.buttons.stayAs(account),
                     'long-cancel-button');
 
             if (response === true) {

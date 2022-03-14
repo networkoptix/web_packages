@@ -105,27 +105,19 @@ export class MessageModalContent implements OnInit {
             this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();
         }
 
-        const title = this.LANG.dialogs.message.title[this.messageType];
+        this.title = this.LANG.dialogs.message.title[this.messageType](
+            this.messageType !== this.CONFIG.dialogs.message.type.integration
+                ? { asset: this.data.asset }
+                : { companyName: this.data.to }
+        );
 
-        if (this.messageType !== this.CONFIG.dialogs.message.type.integration) {
-            this.title = NxLanguageProviderService.translate(
-                title,
-                { asset: this.data.asset }
-            );
-        } else {
-            this.title = NxLanguageProviderService.translate(
-                title,
-                { companyName: this.data.to }
-            );
-        }
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType]
             .map(subject => {
                 return {
                     value: subject,
-                    name: NxLanguageProviderService.translate(
-                        this.LANG.dialogs.message.subject[subject],
-                        { asset: this.data.asset }
-                    )
+                    name: this.LANG.dialogs.message.subject[subject]({
+                        asset: this.data.asset
+                    })
                 };
             });
 

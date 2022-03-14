@@ -150,10 +150,9 @@ export class AddStorageModalContent {
             },
             err => {
                 if (err?.message === 'alreadyExists') {
-                    this.alreadyUsed = NxLanguageProviderService.translate(
-                        this.LANG.storage.alreadyUsed,
-                        { url: this.url }
-                    );
+                    this.alreadyUsed = this.LANG.storage.alreadyUsed({
+                        url: this.url
+                    });
                     this.alreadyCheckedAndExists = true;
                 } else if (err?.message === 'WrongAuth') {
                     this.passwordChecked = true;

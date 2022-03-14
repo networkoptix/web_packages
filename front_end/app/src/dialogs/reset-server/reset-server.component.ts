@@ -158,10 +158,10 @@ export class ResetServerModalContent {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     this.close();
-                                    const successMessage = NxLanguageProviderService.translate(
-                                        this.LANG.servers.resetSuccessful?.(),
-                                        { serverName: this.serverName }
-                                    );
+                                    const successMessage = this.LANG.servers
+                                        .resetSuccessful({
+                                            serverName: this.serverName
+                                        });
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();

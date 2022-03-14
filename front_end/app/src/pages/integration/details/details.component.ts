@@ -167,8 +167,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     );
                                 }
 
-                                this.pageService.pageTitle = NxLanguageProviderService.translate(
-                                    this.LANG.pageDescriptions.integrationDetails, {
+                                this.pageService.pageTitle =
+                                    this.LANG.pageDescriptions.integrationDetails({
                                         PLUGIN_NAME: this.plugin.information.name,
                                         PLUGIN_SHORT_DESCRIPTION: this.CONFIG.vmsName
                                     });
@@ -208,11 +208,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog() {
-        const disclaimer = NxLanguageProviderService.translate(
-            this.LANG.privacyPolicy.integration, {
-                INTEGRATION_COMPANY: this.plugin.information.companyName,
-                INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
-            });
+        const disclaimer = this.LANG.privacyPolicy.integration({
+            INTEGRATION_COMPANY: this.plugin.information.companyName,
+            INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
+        });
 
         const data: MessageParams = {
             to: this.plugin.information.companyName,

@@ -267,10 +267,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     };
 
                     this.toastService.show(
-                        NxLanguageProviderService.translate(
-                            this.LANG.toastMessage.nameFail,
-                            { type: this.LANG.common.server?.() }
-                        ), options);
+                        this.LANG.toastMessage.nameFail({
+                            type: this.LANG.common.server()
+                        }),
+                        options
+                    );
                 });
             }
 
