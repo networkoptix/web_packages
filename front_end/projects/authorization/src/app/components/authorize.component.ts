@@ -509,7 +509,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.accountInfo.password,
                 this.accountInfo.firstName,
                 this.accountInfo.lastName,
-                undefined) // code, not needed right now
+                this.loginCode)
             , { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
