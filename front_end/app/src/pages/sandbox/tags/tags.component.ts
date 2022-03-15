@@ -8,7 +8,7 @@ import { NxMenuService } from '@src/menu/menu.service';
     styleUrls: ['tags.component.scss']
 })
 export class TagsComponent {
-    options: any;
+    options: { name: string; selected: boolean; type?: string }[];
 
     constructor(
         private menuService: NxMenuService,

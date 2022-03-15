@@ -1,6 +1,10 @@
 <div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">
     <div class="d-inline-flex">
-        <nx-tag class="mr-1" *ngFor="let option of options" [type]="option.type"
-                [value]="option.selected">{{ option.name }}</nx-tag>
+        <nx-tag
+            *ngFor="let option of options"
+            [type]="option.type"
+            [value]="option.selected"
+            class="mr-1"
+        >{{ option.name }}</nx-tag>
     </div>
 </div>

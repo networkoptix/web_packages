@@ -7,6 +7,7 @@ import {
     Output,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { Params } from '@angular/router';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
@@ -38,39 +39,49 @@ import { NgChanges } from '@utils/ng-changes';
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
-    @Input() element: string;
+    @Input() element: string = 'badge';
     @Input() name: string;
     @Input() size: string = 'small';
     @IBool() @Input() clickable: CoercedBoolInput = true;
     @IBool() @Input() locked: CoercedBoolInput;
-    @Input() link;
-    @Input() linkParam;
+    @Input() link: string;
+    @Input() linkParam: Params = {};
     @IBool() @Input('value') selected: CoercedBoolInput;
 
-    @Output() onClick = new EventEmitter<any>();
+    @Output() onClick = new EventEmitter<boolean>();
 
-    public badgeType: string;
     public tagHref: string;
+    public badgeType: string;
+    private badgeTypes: {
+        selected: string;
+        unselected: string;
+    };
 
-    constructor() {
-        this.linkParam = {};
-    }
+    constructor() {}
 
     ngOnInit() {
-        this.element = this.element || 'badge';
-        this.badgeType = this.type !== undefined ? `badge-${this.type}` : 'badge';
-        if (this.selected) {
-            this.badgeType = `badge-${this.badgeType}-selected`;
-        }
+        this.badgeTypes = this.type !== undefined
+            ? {
+                selected: `badge-${this.type}-selected`,
+                unselected: `badge-${this.type}`,
+            } : {
+                selected: 'badge-selected',
+                unselected: 'badge',
+            };
+        this.badgeType = this.selected
+            ? this.badgeTypes.selected
+            : this.badgeTypes.unselected;
 
-        const params = Object.keys(this.linkParam);
+        const params = Object.entries<string>(this.linkParam);
         if (this.link && params.length) {
-            const queryParams = params.map(key => key + '=' + this.linkParam[key]).join('&');
+            const queryParams = params
+                .map(([key, value]) => `${key}=${value}`)
+                .join('&');
             this.tagHref = `${this.link}?${queryParams}`;
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxTagComponent>) {
+    ngOnChanges(changes: NgChanges<NxTagComponent>): void {
         if (changes.selected?.currentValue) {
             setTimeout(() => {
                 if (!changes.selected?.currentValue) {
@@ -82,30 +93,29 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    deselectTag() {
+    deselectTag(): void {
         if (this.locked) {
             return;
         }
         this.selected = false;
-        this.badgeType = this.type ? `badge-${this.type}` : 'badge';
+        this.badgeType = this.badgeTypes.unselected;
         this.changeState(false);
     }
 
-    selectTag() {
+    selectTag(): void {
         if (this.locked) {
             return;
         }
         this.selected = true;
-        this.badgeType = this.type ? `badge-${this.type}-selected` : 'badge-selected';
+        this.badgeType = this.badgeTypes.selected;
         this.changeState(true);
     }
 
     // Form control functions
     // The method set in registerOnChange to emit changes back to the form
-    private propagateChange = (_: any) => {
-    };
+    private propagateChange = (_value: boolean): void => {};
 
-    writeValue(value: any) {
+    writeValue(value: boolean): void {
         // tag should have value!
         if (value === undefined) {
             return;
@@ -122,7 +132,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn: (value: boolean) => void): void {
         this.propagateChange = fn;
     }
 
@@ -130,10 +140,9 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: () => void): void {
-    }
+    registerOnTouched(_fn: () => void): void {}
 
-    changeState(value) {
+    changeState(value: boolean): void {
         // Propagate component's value attribute (model)
         this.propagateChange(value);
         this.onClick.emit(value);
