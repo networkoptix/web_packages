@@ -6,7 +6,7 @@ System Admin Suite Setup
     ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE}
     Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
@@ -77,7 +77,7 @@ Validate Disconnect Form
       # ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
       # ...    ${DISCONNECT PASSWORD INPUT}
         ...    ${DISCONNECT FORM CANCEL BUTTON}
-        ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+        ...    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
 
 Validate Success Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
