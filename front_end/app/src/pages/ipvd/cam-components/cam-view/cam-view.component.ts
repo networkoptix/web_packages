@@ -21,6 +21,12 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { NgChanges } from '@utils/ng-changes';
 
+interface Firmware {
+    name: string,
+    percentage: any,
+    barLength: any
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-cam-view',
@@ -34,7 +40,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    firmwares: any = [];
+    firmwares: Firmware[];
     firmwaresToShow: number;
     analyticsToShow: number;
     showAllFirmware: boolean;

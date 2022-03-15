@@ -72,12 +72,13 @@ const lazyRoutes: Routes = [
         // NxDebugModule,
         Nx500Module,
         RouterModule.forRoot(lazyRoutes, {
-            initialNavigation: true,
+            initialNavigation: 'enabledNonBlocking',
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             enableTracing: false,
             preloadingStrategy: QuicklinkStrategy,
-            onSameUrlNavigation: 'reload'
+            onSameUrlNavigation: 'reload',
+            relativeLinkResolution: 'legacy'
         })
     ],
     declarations: [

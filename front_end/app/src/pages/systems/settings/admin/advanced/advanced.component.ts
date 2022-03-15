@@ -20,6 +20,11 @@ import type { NxSystem } from '@services/system.service/system';
 
 import { NxSettingsService } from '../../settings.service';
 
+interface SystemSetting {
+    key: string,
+    value: any
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-system-advanced-admin-component',
@@ -37,7 +42,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     haveAdvSettings: boolean;
     private serverSubscription: Subscription;
 
-    systemSettings: any = {};
+    systemSettings: SystemSetting;
     changedFields = {};
 
     advancedFormWatcher: FormWatcher;

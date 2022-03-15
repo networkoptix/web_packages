@@ -17,7 +17,7 @@ module.exports = function(config) {
             require('karma-firefox-launcher'),
             require('karma-safari-launcher'),
             require('karma-jasmine-html-reporter'),
-            require('karma-coverage-istanbul-reporter'),
+            require('karma-coverage'),
             require('karma-spec-reporter'),
             require('@angular-devkit/build-angular/plugins/karma'),
             require('karma-viewport')
@@ -56,8 +56,8 @@ module.exports = function(config) {
                 // seed             : '4321',
                 // timeoutInterval  : 1000,
                 random: false,
-                oneFailurePerSpec: true,
-                failFast: true
+                stopSpecOnExpectationFailure: true,
+                stopOnSpecFailure: true
             }
         },
 
@@ -78,14 +78,15 @@ module.exports = function(config) {
         // test results reporter to use
         // possible values: 'dots', 'progress', 'coverage-istanbul', 'kjhtml', 'spec'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        // reporters: ['progress'],
         reporters: ['progress'],
-        // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
-
-        coverageIstanbulReporter: {
+    
+        coverageReporter: {
             dir: require('path').join(__dirname, './coverage/test-karma'),
-            reports: ['html', 'lcovonly', 'text-summary'],
-            fixWebpackSourcePaths: true
+            subdir: '.',
+            reporters: [
+                { type: 'html' },
+                { type: 'text-summary' }
+            ],
         },
 
         // web server port

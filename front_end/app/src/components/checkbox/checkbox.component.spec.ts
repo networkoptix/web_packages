@@ -64,7 +64,7 @@ describe('NxCheckboxComponent', () => {
             let emitValue: boolean;
 
             component.value = true;
-            component.onClick.subscribe(value => {
+            component.onClick.subscribe((value: boolean) => {
                 emitValue = value;
             });
 

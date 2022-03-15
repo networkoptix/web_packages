@@ -1,3 +1,5 @@
+@use "sass:list";
+
 @use "../../../../styles/typography";
 @use "../../../../../styles/theme_variables_common" as *;
 @use "app/src/styles/_bootstrap_utils" as bootstrap;
@@ -171,7 +173,7 @@ $large-desktop-breakpoint: 1477px;
         
         @for $start from 1 through 5 {
             &-#{$start} {
-                grid-column : -#{$start + 1} / -1;
+                grid-column : list.slash(-#{$start + 1}, -1);
             }
         }
     }

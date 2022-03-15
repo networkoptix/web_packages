@@ -43,8 +43,6 @@
             "main": "app/main.ts",
             "polyfills": "app/polyfills.ts",
             "tsConfig": "tsconfig.json",
-            "aot": true,
-            "buildOptimizer": true,
             "assets": [
               { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" },
               "app/customization",
@@ -75,7 +73,12 @@
                 "app/src/styles",
                 "app/styles"
               ]
-            }
+            },
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "cloud-test": {
@@ -121,11 +124,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -184,11 +183,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -202,7 +197,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -321,7 +317,6 @@
             "main": "projects/authorization/src/main.ts",
             "polyfills": "projects/authorization/src/polyfills.ts",
             "tsConfig": "projects/authorization/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/authorization/src/favicon.ico",
               "projects/authorization/src/assets"
@@ -330,7 +325,13 @@
               "app/styles/main.scss",
               "projects/authorization/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -344,7 +345,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -363,14 +363,9 @@
               ]
             },
             "development": {
-              "optimization": false,
               "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -384,7 +379,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

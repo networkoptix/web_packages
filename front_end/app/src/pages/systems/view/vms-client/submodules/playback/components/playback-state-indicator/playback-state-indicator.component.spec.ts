@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PlaybackStateIndicatorComponent } from './playback-state-indicator.component';
 
@@ -6,7 +6,7 @@ xdescribe('PlaybackStateIndicatorComponent', () => {
     let component: PlaybackStateIndicatorComponent;
     let fixture: ComponentFixture<PlaybackStateIndicatorComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [PlaybackStateIndicatorComponent]
         })

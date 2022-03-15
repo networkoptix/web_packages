@@ -1,9 +1,5 @@
 import { DebugElement } from '@angular/core';
-import {
-    async,
-    ComponentFixture,
-    TestBed
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NxPreLoaderComponent } from './pre-loader.component';
 
@@ -12,7 +8,7 @@ describe('NxPreLoaderComponent', () => {
     let fixture: ComponentFixture<NxPreLoaderComponent>;
     let el: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NxPreLoaderComponent]
         }).compileComponents();

@@ -15,8 +15,8 @@ import {
     HTTP_INTERCEPTORS
 } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

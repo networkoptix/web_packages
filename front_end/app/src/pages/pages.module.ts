@@ -178,11 +178,12 @@ const lazyRoutes: Routes = [
         Nx500Module,
         Nx503Module,
         RouterModule.forRoot(lazyRoutes, {
-            initialNavigation: true,
+            initialNavigation: 'enabledNonBlocking',
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             enableTracing: false,
-            preloadingStrategy: QuicklinkStrategy
+            preloadingStrategy: QuicklinkStrategy,
+            relativeLinkResolution: 'legacy'
         })
     ],
     declarations: [
@@ -202,5 +203,6 @@ const lazyRoutes: Routes = [
         RouterModule
     ]
 })
+
 export class PagesModule {
 }

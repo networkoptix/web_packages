@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SystemPageComponent } from './system-page.component';
@@ -7,7 +7,7 @@ describe('SystemPageComponent', () => {
     let component: SystemPageComponent;
     let fixture: ComponentFixture<SystemPageComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [SystemPageComponent],
             imports: [RouterTestingModule]

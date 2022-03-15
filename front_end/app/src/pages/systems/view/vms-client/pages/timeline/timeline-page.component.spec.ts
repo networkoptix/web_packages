@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TimelinePageComponent } from './timeline-page.component';
 
@@ -6,7 +6,7 @@ xdescribe('TimelineComponent', () => {
     let component: TimelinePageComponent;
     let fixture: ComponentFixture<TimelinePageComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [TimelinePageComponent]
         })

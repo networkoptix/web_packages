@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
@@ -6,7 +6,7 @@ describe('NonSupportedBrowserComponent', () => {
     let component: NonSupportedBrowserComponent;
     let fixture: ComponentFixture<NonSupportedBrowserComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
                 declarations: [NonSupportedBrowserComponent],

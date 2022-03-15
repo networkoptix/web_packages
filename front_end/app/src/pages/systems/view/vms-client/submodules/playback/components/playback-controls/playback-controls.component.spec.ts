@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PlaybackControlsComponent } from './playback-controls.component';
 
@@ -6,7 +6,7 @@ xdescribe('PlaybackControlsComponent', () => {
     let component: PlaybackControlsComponent;
     let fixture: ComponentFixture<PlaybackControlsComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [PlaybackControlsComponent]
         })

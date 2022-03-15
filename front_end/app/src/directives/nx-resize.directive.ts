@@ -5,7 +5,6 @@ import {
     Output,
     OnDestroy
 } from '@angular/core';
-import ResizeObserver from 'resize-observer-polyfill';
 
 const entriesMap = new WeakMap();
 

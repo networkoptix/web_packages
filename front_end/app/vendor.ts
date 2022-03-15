@@ -10,5 +10,4 @@ import 'rxjs';
 
 // Other vendors for example jQuery, Lodash or Bootstrap
 // You can import js, ts, css, sass, ...
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
+import * as firebase from 'firebase/compat/app';

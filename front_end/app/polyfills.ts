@@ -11,7 +11,7 @@ import '@angular/localize/init';
 
 import { environment } from '@environments/environment';
 
-import 'zone.js/dist/zone';
+import 'zone.js';
 
 if (!Element.prototype.matches) {
     Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||

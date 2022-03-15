@@ -1,21 +1,17 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import moment from 'moment';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxUtilsService {
-    public momentWithLocale;
-
     constructor(
         private deviceService: DeviceDetectorService,
         @Inject(LOCALE_ID) private locale: string,
         @Inject(DOCUMENT) private document: Document
     ) {
-        import('moment').then(moment => {
-            this.momentWithLocale = moment.locale(locale);
-        });
     }
 
     // TODO: In Angular13 branch when replacing exportCSV I modified file save too - this should go!
@@ -54,6 +50,6 @@ export class NxUtilsService {
 
     // static timestamp methods
     public msFromNowToString(input: number, suffix = false): string {
-        return this.momentWithLocale().subtract(input).fromNow(!suffix);
+        return moment().locale(this.locale).subtract(input).fromNow(!suffix);
     }
 }

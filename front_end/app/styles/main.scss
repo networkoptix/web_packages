@@ -1,4 +1,4 @@
-@use '_theme_variables_common' as *;
+@import '_theme_variables_common';
 
 @import "~sass-rem";
 @import '~bootstrap/scss/bootstrap';

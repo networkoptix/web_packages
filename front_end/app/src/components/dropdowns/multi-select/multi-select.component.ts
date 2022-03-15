@@ -13,6 +13,12 @@ import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
+interface Item {
+    id: string,
+    label: { [name: string]: never } | string,
+    selected?: any,
+}
+
 /* Usage
  <nx-multi-select
      [id]="select.id"
@@ -41,7 +47,7 @@ import { BaseDropdown } from '../injDropdown';
     ]
 })
 
-export class NxMultiSelectDropdown<Item extends Object> extends BaseDropdown {
+export class NxMultiSelectDropdown extends BaseDropdown {
     @Input() id: string;
     @Input('items') itemsOrig: Item[];
     @IBool() @Input() canSelectAll: CoercedBoolInput;
@@ -151,7 +157,7 @@ export class NxMultiSelectDropdown<Item extends Object> extends BaseDropdown {
         this.onChangeCallback(this.innerValue);
     }
 
-    ngOnChanges(changes: NgChanges<NxMultiSelectDropdown<Item>>): void {
+    ngOnChanges(changes: NgChanges<NxMultiSelectDropdown>): void {
         if (changes.itemsOrig) {
             this.items = changes.itemsOrig.currentValue.map(obj => ({ ...obj }));
             this.updateItems();

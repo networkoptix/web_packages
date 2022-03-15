@@ -42,8 +42,8 @@ h2 {
 
 h3 {
     @include font-source($font-family-medium, $h3-font-size, var(--h3));
-    margin-top    : ($line-height-computed / 2);
-    margin-bottom : ($line-height-computed / 4);
+    margin-top    : ($line-height-computed * 0.5);
+    margin-bottom : ($line-height-computed * 0.25);
 }
 
 h4 {

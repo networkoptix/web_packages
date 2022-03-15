@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TimelineSelectionActionPanelComponent } from './timeline-selection-action-panel.component';
 
@@ -6,7 +6,7 @@ xdescribe('TimelineSelectionComponent', () => {
     let component: TimelineSelectionActionPanelComponent;
     let fixture: ComponentFixture<TimelineSelectionActionPanelComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [TimelineSelectionActionPanelComponent]
         })

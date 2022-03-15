@@ -66,9 +66,9 @@ export interface SearchTag {
     value: boolean,
 }
 
-interface MultiSelectItem {
-    id: string;
-    label: string;
+interface Item {
+    id: string,
+    label: { [name: string]: never } | string
 }
 
 export interface SearchFilter extends SearchModel {
@@ -83,7 +83,7 @@ export interface SearchFilter extends SearchModel {
     multiselects?: Array<{
         id: string;
         label: string;
-        items: MultiSelectItem[];
+        items: Item[];
         selected: string[];
         singular?: string;
         searchLabel?: string;

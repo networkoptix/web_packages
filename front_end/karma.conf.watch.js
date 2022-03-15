@@ -49,7 +49,7 @@ module.exports = function (config) {
             require('karma-firefox-launcher'),
             require('karma-safari-launcher'),
             require('karma-jasmine-html-reporter'),
-            require('karma-coverage-istanbul-reporter'),
+            require('karma-coverage'),
             require('@angular-devkit/build-angular/plugins/karma'),
             require('karma-spec-reporter'),
             require('karma-viewport')
@@ -110,9 +110,7 @@ module.exports = function (config) {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        // reporters: ['progress'],
         reporters: ['spec', 'kjhtml'],
-        // reporters: ['progress', 'coverage-istanbul', 'kjhtml'],
 
         coverageIstanbulReporter: {
             dir: require('path').join(__dirname, './coverage/test-karma'),
