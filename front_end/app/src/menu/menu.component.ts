@@ -10,6 +10,7 @@ import {
     EventEmitter,
     Output,
     Inject,
+    Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -76,6 +77,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     menuModel: SearchModel = { query: '' };
     navItems: HTMLAnchorElement[] = [];
     navItemIdx: number;
+    totalWindowHeight: number;
     windowHeight: number;
     menuHeight: number;
 
@@ -87,6 +89,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
     permHeight: number;
     menuInit: boolean;
     ribbonShown: boolean = false;
+
+    elmRibbon: HTMLDivElement;
+    elmMenuL1: HTMLDivElement;
+    elmHeader: HTMLElement;
+    elmMenuSearch: HTMLElement;
+    stdPadding = 16; // baseline rem
 
     private unsub$ = new Subject<boolean>();
     private origLevel1: string;
@@ -105,10 +113,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
         languageService: NxLanguageProviderService,
         private router: Router,
         private route: ActivatedRoute,
-        public menuService: NxMenuService,
+        private renderer: Renderer2,
         private searchService: NxSearchService,
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
+        public menuService: NxMenuService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
@@ -167,9 +176,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 map((event: FocusEvent) => (event.target as Window).innerHeight),
                 startWith(window.innerHeight)
             ).subscribe(height => {
-                this.windowHeight = height - 64; // 48px header and 1rem padding
+                this.totalWindowHeight = height;
                 if (this.ribbonShown) {
-                    this.windowHeight = this.windowHeight - 33;
+                    this.windowHeight = this.windowHeight - this.elmRibbon.offsetHeight;
                 }
                 this.resizeMenu();
             });
@@ -179,11 +188,14 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 untilDestroyed(this),
                 distinctUntilChanged())
             .subscribe(state => {
+                if (state) {
+                    this.elmRibbon = this.renderer.selectRootElement('nx-ribbon div', true);
+                }
                 if (!this.ribbonShown && state) {
-                    this.windowHeight = this.windowHeight - 33;
+                    this.windowHeight = this.windowHeight - this.elmRibbon.offsetHeight;
                 }
                 if (this.ribbonShown && !state) {
-                    this.windowHeight = this.windowHeight + 33;
+                    this.windowHeight = this.windowHeight + this.elmRibbon.offsetHeight;
                 }
                 this.ribbonShown = state;
                 this.resizeMenu();
@@ -249,7 +261,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 !this.applyService.locked &&
                 currentContent.selectedSection &&
                 this.autoFit &&
-                this.scrollArea &&
                 !this.searchMode
             ) {
                 if (!this.menuInit) {
@@ -266,27 +277,35 @@ export class NxMenuComponent implements OnInit, OnChanges {
         }
     }
 
-    ngAfterViewInit(): void {
-        this.getMenuDimensions();
-    }
-
     getMenuDimensions(): void {
+        this.elmHeader = this.renderer.selectRootElement('nx-header header', true);
+        this.windowHeight = this.totalWindowHeight - this.elmHeader.offsetHeight - this.stdPadding;
+        if (this.searchable) {
+            this.elmMenuSearch = this.renderer.selectRootElement('nx-search', true);
+        }
+
         // scroll area parent is "level-3-items" and their parent is "level-1-container"
         // the idea is to calculate menu height by setting "level-3-items" height to number to which
         // when we add number of level1 nodes multiplied by level1 node height plus difference between
         // "level-1-container" height and scroll area height to reach window height
         // ... I cannot repeat this sentence 10 times in a row -- TT
 
-        if (this.autoFit && this.scrollArea && this.menuModel.query === '') {
+        if (this.autoFit && this.menuModel.query === '') {
             this.menuHeight = this.menuWrapper.nativeElement.scrollHeight; // getBoundingClientRect().height;
-            this.scrollHeight = this.scrollArea.nativeElement.getBoundingClientRect().height;
+            this.scrollHeight = this.scrollArea
+                ? this.scrollArea.nativeElement.getBoundingClientRect().height
+                : 0;
 
-            this.containerHeight = (this.scrollArea.nativeElement // .scroll-area
-                .parentNode // .level-3-items
-                .parentNode as HTMLDivElement) // .level-1-container
-                .getBoundingClientRect().height;
+            this.containerHeight = this.scrollArea
+                ? (this.scrollArea.nativeElement // .scroll-area
+                    .parentNode // .level-3-items
+                    .parentNode as HTMLDivElement) // .level-1-container
+                    .getBoundingClientRect().height
+                : 0;
+
+            this.elmMenuL1 = this.renderer.selectRootElement('.level-1-container:not(.selected)', true);
             // this.menuService.content.length - 1 -> the number of other level1 nodes
-            this.permHeight = (this.menuService.content.length - 1) * 40 +
+            this.permHeight = (this.menuService.content.length - 1) * this.elmMenuL1.offsetHeight +
                 (this.containerHeight - this.scrollHeight);
         }
     }
@@ -296,12 +315,12 @@ export class NxMenuComponent implements OnInit, OnChanges {
             setTimeout(() => {
                 let windowHeightFit: number;
                 this.menuOverflow = 'hidden';
+                this.windowHeight = this.totalWindowHeight - this.elmHeader.offsetHeight - this.stdPadding;
 
-                if (this.windowHeight < this.menuHeight + 40) { // + 40 for search box
+                const actualSearchHeight = !this.searchable ? 0 : this.elmMenuSearch.offsetHeight + this.stdPadding / 2;
+                if (this.windowHeight < this.menuHeight + actualSearchHeight) {
                     // TODO: might want to subtract more if ribbon exists
-                    windowHeightFit = this.windowHeight - 40 - 16;
-                    // 40 = search box
-                    // 16 = bottom padding
+                    windowHeightFit = this.windowHeight - actualSearchHeight - this.stdPadding;
                 } else {
                     windowHeightFit = this.menuHeight;
                 }
@@ -322,9 +341,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 // set scrollbar if needed but only after resizing finishes
                 clearTimeout(this.menuOverflowCalc);
                 this.menuOverflowCalc = this.window.setTimeout(() => {
-                    const magicNumberToAdd = 40 + 2 * 16;
-                    // 40 = search box
-                    // 2 * 16 = bottom and top padding
+                    const magicNumberToAdd = actualSearchHeight + 2 * this.stdPadding; // bottom and top padding
                     this.menuOverflow = (windowHeightFit + magicNumberToAdd > this.windowHeight)
                         ? 'auto'
                         : 'hidden';

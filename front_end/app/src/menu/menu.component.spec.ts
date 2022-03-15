@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { ElementRef, Renderer2 } from '@angular/core';
 import {
     ComponentFixture,
     inject,
@@ -288,6 +288,7 @@ describe('NxMenuComponent', () => {
                     MockComponent(NxSearchComponent),
                 ],
                 providers: [
+                    MockProvider(Renderer2),
                     MockProvider(NxApplyService),
                     MockProvider(NxConfigService),
                     MockProvider(NxLanguageProviderService),
