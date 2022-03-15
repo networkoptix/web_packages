@@ -147,7 +147,7 @@ class TestSystemAPI:
             endpoint='testEndpoint', system_id='testId') == f'{CLOUD_DB_URL}/system/testId/testEndpoint'
 
     def test_list(self, cloud_api_get_mock):
-        # One customizatoin
+        # One customization
         system_list = unwrap(System.list)(
             self.request, self.user, self.password, headers=self.headers)
         cloud_api_get_mock.assert_called_with(
@@ -456,3 +456,86 @@ class TestStorageApi:
             Storage.get_request_url(storage_id, Storage.STATISTICS_ENDPOINT),
             headers=headers)
         assert response.json() == self.mock_data
+
+
+class TestOwnershipTransfer:
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        account, headers, request, system_id, key_1, val_1 = generate_args(6)
+        self.account = account
+        self.headers = headers
+        self.request = request
+        self.system_id = system_id
+        self.sample_data = {key_1: val_1}
+
+    @pytest.fixture
+    def cloud_api_get_mock(self, mocker):
+        return mocker.patch.object(cloud_api, 'get_wrapper', return_value=MockResponse(json=self.sample_data))
+
+    @pytest.fixture
+    def cloud_api_put_mock(self, mocker):
+        return mocker.patch.object(cloud_api, 'put_wrapper', return_value=MockResponse(json=self.sample_data))
+
+    @pytest.fixture
+    def cloud_api_post_mock(self, mocker):
+        return mocker.patch.object(cloud_api, 'post_wrapper', return_value=MockResponse(json=self.sample_data))
+
+    @pytest.fixture
+    def cloud_api_delete_mock(self, mocker):
+        return mocker.patch.object(cloud_api, 'delete_wrapper', return_value=MockResponse(json=self.sample_data))
+
+    def test_act_on_empty(self, cloud_api_put_mock):
+        offered_status = ''
+        unwrap(OwnershipTransfer.act_on)(
+            self.request, self.system_id, offered_status=offered_status, headers=self.headers)
+        cloud_api_put_mock.assert_called_with(
+            f'{CLOUD_DB_URL}/offered-systems/{self.system_id}',
+            json={},
+            headers=self.headers
+        )
+
+    def test_act_on_accepted(self, cloud_api_put_mock):
+        offered_status = 'accepted'
+        unwrap(OwnershipTransfer.act_on)(
+            self.request, self.system_id, offered_status=offered_status, headers=self.headers)
+        cloud_api_put_mock.assert_called_with(
+            f'{CLOUD_DB_URL}/offered-systems/{self.system_id}',
+            json={'status': offered_status},
+            headers=self.headers
+        )
+
+    def test_act_on_rejected(self, cloud_api_put_mock):
+        offered_status = 'rejected'
+        unwrap(OwnershipTransfer.act_on)(
+            self.request, self.system_id, offered_status=offered_status, headers=self.headers)
+        cloud_api_put_mock.assert_called_with(
+            f'{CLOUD_DB_URL}/offered-systems/{self.system_id}',
+            json={'status': offered_status},
+            headers=self.headers
+        )
+
+    def test_cancel(self, cloud_api_delete_mock):
+        unwrap(OwnershipTransfer.cancel)(self.request, self.system_id, headers=self.headers)
+        cloud_api_delete_mock.assert_called_with(
+            f'{CLOUD_DB_URL}/offered-systems/{self.system_id}',
+            headers=self.headers
+        )
+
+    def test_list(self, cloud_api_get_mock):
+        unwrap(OwnershipTransfer.list)(self.request, headers=self.headers)
+        cloud_api_get_mock.assert_called_with(
+            f'{CLOUD_DB_URL}/offered-systems',
+            headers=self.headers
+        )
+
+    def test_start(self, cloud_api_post_mock):
+        unwrap(OwnershipTransfer.start)(self.request, self.system_id, self.account, headers=self.headers)
+        cloud_api_post_mock.assert_called_with(
+            f'{CLOUD_DB_URL}/offered-systems',
+            json={
+                "systemId": self.system_id,
+                "toAccount": self.account
+            },
+            headers=self.headers
+        )
+

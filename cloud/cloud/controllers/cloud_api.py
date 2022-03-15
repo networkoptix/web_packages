@@ -124,6 +124,11 @@ def auto_refresh_token(no_refresh=False):
                     if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
                         raise APINotAuthorisedException(
                             response_data["errorText"], response_data["resultCode"])
+                    elif response_data and response_data["resultCode"] == ErrorCodes.bad_request.value:
+                        raise APIRequestException(
+                            response_data["errorText"],
+                            response_data["resultCode"],
+                            error_data={"code": int(response_data["errorDetail"])})
                     else:
                         raise e
                 elif no_refresh and response_data:
@@ -988,3 +993,40 @@ class Auth(object):
     @validate_response
     def verify_backup_code(backup_code, code):
         return get_wrapper(f"{CLOUD_2FA_URL}/backup-code/{backup_code}", params={'token': code})
+
+
+class OwnershipTransfer(object):
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def act_on(request, system_id, offered_status='', comment='', headers=None):
+        data = {}
+
+        if offered_status:
+            data['status'] = offered_status
+        if comment:
+            data['comment'] = comment
+
+        return put_wrapper(f'{CLOUD_DB_URL}/offered-systems/{system_id}', json=data, headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def cancel(request, system_id, headers=None):
+        return delete_wrapper(f'{CLOUD_DB_URL}/offered-systems/{system_id}', headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def list(request, headers=None):
+        return get_wrapper(f'{CLOUD_DB_URL}/offered-systems', headers=headers)
+
+    @staticmethod
+    @validate_response
+    @auto_refresh_token
+    def start(request, system_id, new_owner, headers=None):
+        data = {
+            "toAccount": new_owner,
+            "systemId": system_id
+        }
+        return post_wrapper(f'{CLOUD_DB_URL}/offered-systems', json=data, headers=headers)

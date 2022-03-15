@@ -3,7 +3,7 @@ __author__ = 'noptix'
 from django.conf.urls import url
 from django.conf import settings
 
-from api.views import two_fa, account, common, robot, storage, systems, utils
+from api.views import two_fa, account, common, robot, storage, systems, transfer, utils
 from notifications.views import send
 
 urlpatterns = [
@@ -63,6 +63,9 @@ urlpatterns = [
     url(r'^systems/(?P<system_id>.+?)/proxy/(?P<system_url>.+?)$',         systems.proxy),
     url(r'^systems/(?P<system_id>.+?)/?$',           systems.system),
     url(r'^systems/?$',                              systems.list_systems),
+
+    url('transfer/$',                                transfer.TransferSystemInfo.as_view()),
+    url('transfer/(?P<system_id>.+?)/?$',            transfer.TransferSystemActions.as_view()),
 
     url(r'^ping$',                                   common.ping),
     url(r'^maintenance/health$',                     common.maintenance_health),

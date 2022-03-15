@@ -39,8 +39,16 @@ def mark_read(request):
     }).data
 
 
-@swagger_auto_schema(methods=["GET", "POST"],
-                     operation_description="Returns a list of portal notifications for user. If POST request with notificationId's in body, those notifications get mark read.",
+notifications_description = "Returns a list of portal notifications for user."
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description=notifications_description,
+                     responses={'200': openapi.Response('PortalNotificationList', PortalNotificationListSerializer)})
+@swagger_auto_schema(method="POST",
+                     operation_description=f"{notifications_description} "
+                                           f"If POST request with notificationId's in body, "
+                                           f"those notifications get mark read.",
                      request_body=PortalNotificationIdSerializer,
                      responses={'200': openapi.Response('PortalNotificationList', PortalNotificationListSerializer)})
 @api_view(("POST", "GET"))

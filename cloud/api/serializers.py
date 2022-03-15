@@ -59,6 +59,23 @@ class VerificationSerializer(serializers.Serializer):
     verification_code = serializers.CharField(required=True)
 
 
+class TransferSystemActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(required=True, choices=(('accepted', 'Accepted'), ('rejected', 'Rejected')))
+
+
+class TransferSystemOwnerSerializer(serializers.Serializer):
+    newOwnerEmail = serializers.EmailField(required=True)
+
+
+class TransferSystemSerializer(serializers.Serializer):
+    fromAccount = serializers.EmailField(required=True)
+    toAccount = serializers.EmailField(required=True)
+    systemId = serializers.CharField(required=True)
+    systemName = serializers.CharField(required=False)
+    comment = serializers.CharField(required=False)
+    status = serializers.CharField(required=True)
+
+
 class CustomizationCacheSerializer(serializers.Serializer):
     appTypesForPlatform = serializers.DictField(default=lambda: {})
     availableDownloadsPlatform = serializers.ListField(
