@@ -347,10 +347,17 @@ Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
     IF    '${IMAGE}' == '5.0_test'
-        IF    '${expected value}' == 'true' or '${expected value}' == 'false'
-            ${expected value}=   Convert To Title Case    ${expected value}
+        ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
+        ${expected value}=   Replace String    ${expected value}    true    True
+        ${expected value}=   Replace String    ${expected value}    false    False
+        ${expected value}=   Replace String    ${expected value}    "    '
+        ${value}=   Convert To String    ${settings}[${key}]
+        ${status}=   Run Keyword and Return Status    Should Contain    ${value}    {
+        IF    ${status}
+            ${value}=   Remove String    ${value}    ${SPACE}
         END
-        Dictionary should contain item    ${settings}    ${key}    ${expected value}
+        Should Be Equal As Strings    ${value}    ${expected value}
+        #Dictionary should contain item    ${settings}    ${key}    ${expected value}
     ELSE
         IF    '${expected value}' == 'True' or '${expected value}' == 'False'
             ${expected value}=   Convert To Lower Case    ${expected value}
