@@ -1,3 +1,6 @@
+*** Settings ***
+Library    String
+Library    SeleniumLibrary
 *** Keywords ***
 # Setups and teardowns
 System Admin Suite Setup
@@ -61,6 +64,11 @@ Wait until settings are visible
 
 Wait Until Advanced Settings Are Visible
     [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
+    IF    '${block number}'=='ONE' or '${block number}'=='THREE' or '${block number}'=='FOUR'
+        IF    '${IMAGE}'=='5.0_test' 
+            ${block number}=   Set Variable    ${block number} ${IMAGE}
+        END
+    END
     Run keyword and continue on failure    Wait Until Elements Are Visible
         ...    @{ADVANCED SETTINGS ALERT BAR}
         ...    @{ADVANCED SETTING ELEMENT BLOCK ${block number}}
@@ -117,6 +125,7 @@ Change Setting
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected     ${locator}    ${True}
     ${selected}=   Set Variable If    ${status}==True    False
     ...    ${status}==False    True
+    Wait Until Page Contains Element    ${locator}
     Set Checkbox Value    ${locator}    ${selected}
     Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     [Return]    ${selected}
