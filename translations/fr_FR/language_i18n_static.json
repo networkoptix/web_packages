@@ -430,7 +430,7 @@
             "removeUser": "Supprimer l'utilisateur",
             "serversDetach": "Détacher le serveur { title } du système actuel ?",
             "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
-            "serversRestart": "Restart server { title }?"
+            "serversRestart": "Redémarrer le serveur { title }?"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -677,7 +677,7 @@
         "view": "Voir les caméras",
         "apiTool": "Outil de test d'API",
         "security": "Sécurité",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Authentification à deux facteurs requise"
     },
     "pageDescriptions": {
         "integrations": "Le Marché des Intégrations est un écosystème centralisé de produits qui s'intègrent parfaitement aux produits VMS comme %VMS_NAME%, tous disponibles en %CLOUD_NAME% afin que vous puissiez trouver des solutions pour construire et personnaliser votre système vidéo IP.",
