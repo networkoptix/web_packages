@@ -23,9 +23,9 @@ export class RedirectAuthGuard implements CanActivate {
         let newUrl = '';
         // exists to handle register & restore password for systems < 5.0 on desktop login
         if (url.includes('register')) {
-            newUrl = '/authorize?client_type=create&view_type=desktop';
+            newUrl = '/authorize?client_type=create';
         } else if (url.includes('restore_password')) {
-            newUrl = '/authorize/restore_password?view_type=desktop';
+            newUrl = '/authorize/restore_password';
         }
         if (newUrl) {
             this.window.location.href = newUrl;
