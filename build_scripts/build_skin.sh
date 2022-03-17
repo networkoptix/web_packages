@@ -104,9 +104,10 @@ do
 
 done
 
-    pushd $TARGET_DIR/$SKIN
-    python ../../../../build_scripts/generate_languages_json.py
-    popd
+# TODO: scheduled for removing (if no issues) as language.json is not used anymore (except inline-wizard)
+#    pushd $TARGET_DIR/$SKIN
+#    python ../../../../build_scripts/generate_languages_json.py
+#    popd
 
 rm -rf $TARGET_DIR/$SKIN/static/views
 echo "Localization success"
