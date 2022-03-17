@@ -57,7 +57,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             }
             this.isDialogActive = true;
             return this.dialogService.expiredSession()
-                .then((res) => this.window.location.reload(res));
+                .then(() => this.window.location.reload());
         } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false && this.appState.lastErrorStatus$.value !== undefined) {
             this.appState.systemAvailable$.next(true);
 

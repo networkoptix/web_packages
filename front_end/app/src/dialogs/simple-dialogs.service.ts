@@ -96,7 +96,7 @@ export class NxSimpleDialogsService {
             footerClass: footerClass || '',
             hasFooter: true,
             cancellable: false,
-            closable: true
+            closable: false
         };
 
         return this.createModal(GenericModalContent, options, params);
