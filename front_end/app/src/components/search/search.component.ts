@@ -68,7 +68,7 @@ export interface SearchTag {
 
 interface Item {
     id: string,
-    label: { [name: string]: never } | string
+    label: string,
 }
 
 export interface SearchFilter extends SearchModel {

@@ -15,7 +15,7 @@ import { BaseDropdown } from '../injDropdown';
 
 interface Item {
     id: string,
-    label: { [name: string]: never } | string,
+    label: string,
     selected?: any,
 }
 

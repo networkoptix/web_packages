@@ -49,7 +49,7 @@
                             (click)="change($event, item)">
                     </nx-checkbox>
 
-                    <label class="ellipsis" [htmlFor]="item.id">{{$any(item.label)?.name || item.label}}</label>
+                    <label class="ellipsis" [htmlFor]="item.id">{{item.label}}</label>
                 </div>
             </li>
         </ul>
