@@ -1,7 +1,6 @@
 import {
     Injectable,
     OnChanges,
-    SimpleChanges,
     OnDestroy,
     OnInit
 } from '@angular/core';
@@ -12,6 +11,7 @@ import { Watcher } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 const noop = () => {};
 
@@ -47,8 +47,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     ngOnDestroy(): void {
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-    }
+    ngOnChanges(changes: NgChanges<BaseDropdown>) {}
 
     trackItem(index, item) {
         return item ? item.value : undefined;

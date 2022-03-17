@@ -94,7 +94,7 @@ export class TimelineSelectionService {
         return this._selectedRange.clone();
     }
 
-    public get rangeText(): String {
+    public get rangeText(): string {
         const r = this.range;
         const s = new Date(r.start);
         const e = new Date(r.end);

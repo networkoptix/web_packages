@@ -3,8 +3,9 @@ import {
     Input,
     ElementRef,
     OnChanges,
-    SimpleChanges
 } from '@angular/core';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @Directive({
     selector: '[nx-add-svg-src]'
@@ -14,7 +15,7 @@ export class NxAddSvgSrc implements OnChanges {
 
     constructor(private elementRef: ElementRef) {}
 
-    ngOnChanges({ src: { currentValue, previousValue } }: SimpleChanges) {
+    ngOnChanges({ src: { currentValue, previousValue } }: NgChanges<NxAddSvgSrc>) {
         if (currentValue !== previousValue) {
             this.elementRef.nativeElement.dataset.src = this.src;
         }

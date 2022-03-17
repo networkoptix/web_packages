@@ -7,8 +7,9 @@ import {
     OnInit,
     EventEmitter,
     Output,
-    SimpleChanges
 } from '@angular/core';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @Directive({
     selector: '[NxEditable]'
@@ -86,7 +87,7 @@ export class NxEditableDirective implements OnInit {
         this.editOff();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxEditableDirective>) {
         this.checkError();
     }
 

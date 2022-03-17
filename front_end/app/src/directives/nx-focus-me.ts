@@ -5,8 +5,9 @@ import {
     Input,
     OnChanges,
     OnInit,
-    SimpleChanges
 } from '@angular/core';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @Directive({ selector: '[nxFocusMe]' })
 // directives do support AfterViewInit
@@ -31,7 +32,7 @@ export class NxFocusMeDirective implements OnInit, AfterViewInit, OnChanges {
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: NgChanges<NxFocusMeDirective>) {
         if (changes.setFocus?.currentValue) {
             setTimeout(() => {
                 this._elementRef.nativeElement.focus();

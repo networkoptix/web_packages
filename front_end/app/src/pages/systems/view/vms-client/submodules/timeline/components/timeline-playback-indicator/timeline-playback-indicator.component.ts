@@ -36,8 +36,8 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     protected timelineSubscription: Subscription;
     public visible: boolean = false;
     public timeMs: ms;
-    public date: String;
-    public time: String;
+    public date: string;
+    public time: string;
     public honestOffset: px;
     public visibleOffset: px;
 

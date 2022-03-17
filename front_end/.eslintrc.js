@@ -136,6 +136,17 @@ module.exports = {
                 'plugin:@typescript-eslint/recommended',
             ],
             rules: {
+                '@typescript-eslint/ban-types': ['error', {
+                    extendDefaults: true,
+                    types: {
+                        SimpleChanges: {
+                            message: [
+                                'Angular\'s `SimpleChanges` is not type-safe.',
+                                'Use the `NgChanges` utility type instead.',
+                            ].join('\n')
+                        }
+                    },
+                }],
                 '@typescript-eslint/explicit-module-boundary-types': 'error',
                 '@typescript-eslint/no-empty-function': 'off',
                 '@typescript-eslint/no-explicit-any': 'error',
@@ -151,6 +162,17 @@ module.exports = {
             rules: {
                 'no-undef': 'off', // TS incompatible
 
+                '@typescript-eslint/ban-types': ['error', {
+                    extendDefaults: false, // TODO: Restore
+                    types: {
+                        SimpleChanges: {
+                            message: [
+                                'Angular\'s `SimpleChanges` is not type-safe.',
+                                'Use the `NgChanges` utility type instead.',
+                            ].join('\n')
+                        }
+                    },
+                }],
                 ...tsExtension('brace-style', [
                     'error',
                     '1tbs',

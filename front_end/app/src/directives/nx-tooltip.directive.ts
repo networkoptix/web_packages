@@ -15,7 +15,6 @@ import {
     Input,
     OnChanges, OnDestroy,
     OnInit,
-    SimpleChanges,
     TemplateRef,
     ViewContainerRef
 } from '@angular/core';
@@ -24,6 +23,7 @@ import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
+import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
 @Directive({ selector: '[nxTooltip]' })
@@ -70,11 +70,12 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
             .withPositions(positions);
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.text) {
-            this.close();
-            changes.text.currentValue && this.show();
-        }
+    ngOnChanges(changes: NgChanges<NxTooltipDirective>) {
+        // TODO: Restore or remove
+        // if (changes.text) {
+        //     this.close();
+        //     changes.text.currentValue && this.show();
+        // }
     }
 
     ngOnDestroy() {

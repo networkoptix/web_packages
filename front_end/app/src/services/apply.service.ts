@@ -62,7 +62,7 @@ export type extNgForm = {
 export class Watcher<T extends any, Owner = any> {
     originalValue: T;
     valueSubject = new BehaviorSubject<T>(undefined);
-    identity: Symbol;
+    identity: symbol;
 
     constructor(value?: T, public owner: Owner = null, identifier = 'Watcher') {
         this.value = value;
@@ -106,7 +106,7 @@ export class Watcher<T extends any, Owner = any> {
 export class SectionWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(undefined);
-    identity: Symbol;
+    identity: symbol;
 
     constructor(
         public watchers: Watcher<any>[],
@@ -154,7 +154,7 @@ export class FormWatcher {
     originalValue;
     valueSubject = new BehaviorSubject(false);
     changed: boolean;
-    identity: Symbol;
+    identity: symbol;
 
     get value() {
         return this.valueSubject.value;
@@ -801,7 +801,7 @@ export class NxApplyService {
                 ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner)
                 : this.watchers
         ) || [];
-        const symbols = new Set<Symbol>();
+        const symbols = new Set<symbol>();
         const existingUniqueWatchers =
             [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
                 if (symbols.has(identity)) {

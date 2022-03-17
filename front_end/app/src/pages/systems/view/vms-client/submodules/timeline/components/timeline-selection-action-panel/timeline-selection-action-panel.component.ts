@@ -68,7 +68,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         return this.self.nativeElement;
     }
 
-    public duration$: Observable<String>;
+    public duration$: Observable<string>;
 
     public ngOnInit(): void {
         this.subscription = this.selection.subject.subscribe(this.onSubjectChange);
