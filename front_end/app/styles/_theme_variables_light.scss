@@ -45,9 +45,13 @@
     --scrollbar-thumb-border-color      : var(--additional_light1);
     --menu-scrollbar-thumb-border-color : var(--light6);
     
-    --popover-shadow-color : #{$dark15};
+    --tooltip-shadow-color : #{$dark15};
     --tooltip-bg : #{$dark1};
     --tooltip-color : #{$light1};
+    
+    --popover-shadow-color : 0 1rem 2rem 0 #{$light15};
+    --popover-bg           : #{$light1};
+    --popover-color        : #{$dark9};
     
     --radio-color              : #{$dark11};
     --radio-check-color        : #{$brand_core};
@@ -235,7 +239,7 @@
     
     --dropdown-menu-border : none;
     --dropdown-menu-top-border : none;
-    --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light4};
+    --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light15};
     --dropdown-menu-bg : #{$additional_light1};
     --drop-menu-systems-bg : #{$additional_light1};
     --drop-menu-navigation-bg : #{$light1};
@@ -279,7 +283,7 @@
     --footer-color : #{$light16};
     
     --table-alt-row-bg : #{$additional_light1};
-    --table-row-hover-bg : rgba(var(--brand_core--rgb), .9);
+    --table-row-hover-bg : rgba(var(--brand_core--rgb), .1);
     
     --card-shadow: 0 2px 5px 0 #{$light4};
     --card-active-shadow: 0 2px 5px 0 #{$light10};
@@ -352,4 +356,9 @@
     
     --grey-section-bg: var(--light4);
     --grey-section-sep-color: var(--light6);
+    
+    --dashboard-add-widget-color : #{$brand_core};
+    --dashboard-widget-hover-color : #{$brand_l4};
+    --dashboard-settings-menu-bg : #{$light4};
+    --dashboard-settings-menu-shadow : 6px 0 6px -6px #{$light7};
 }

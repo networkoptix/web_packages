@@ -61,13 +61,13 @@
                 <div class="float-right">
                     <div class="d-inline-block"
                          [nxTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount() : ''">
-                        <button class="btn btn-default"
+                        <button class="btn btn-default has-icon"
                                 id="accountSettingsDeleteButton"
                                 [disabled]="isSystemOwner"
                                 (click)="deleteUser()">
                             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'delete.svg'"
                                 [svgStyle]="{'width.px': '24', 'height.px': '24'}"
-                                class="ml-n2 mr-1"></svg-icon>
+                            ></svg-icon>
                             <ng-container>{{ LANG.dialogs.buttons.deleteAccount() }}</ng-container>
                         </button>
                     </div>

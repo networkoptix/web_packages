@@ -3,7 +3,7 @@
 .cdk-overlay-pane {
     border        : none;
     border-radius : 2px;
-    box-shadow    : 0 1rem 2rem 0 rgba(var(--popover-shadow-color), 0.4);
+    box-shadow    : var(--popover-shadow-color);
     
     &.system-popover {
         width   : 250px;

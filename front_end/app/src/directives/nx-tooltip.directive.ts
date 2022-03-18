@@ -34,12 +34,6 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     @Input('nxTooltip') content: string | TemplateRef<any>;
 
-    private close() {
-        this.destroy$.next();
-        this.overlayRef?.detach();
-        this.overlayRef = undefined;
-    }
-
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
         private elementRef: ElementRef,
@@ -68,6 +62,11 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         this.positionStrategy = this.overlayPositionBuilder
             .flexibleConnectedTo(this.elementRef)
             .withPositions(positions);
+
+        this.overlayRef = this.overlay.create({
+            positionStrategy: this.positionStrategy,
+            scrollStrategy: this.overlay.scrollStrategies.reposition(),
+        });
     }
 
     ngOnChanges(changes: NgChanges<NxTooltipDirective>) {
@@ -80,6 +79,12 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
 
     ngOnDestroy() {
         this.close();
+        this.overlayRef = undefined;
+    }
+
+    private close() {
+        this.destroy$.next();
+        this.overlayRef?.detach();
     }
 
     @HostListener('mouseenter')
@@ -90,11 +95,6 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
             if (!this.content) {
                 return;
             }
-
-            this.overlayRef = this.overlay.create({
-                positionStrategy: this.positionStrategy,
-                scrollStrategy: this.overlay.scrollStrategies.reposition(),
-            });
 
             const tooltipPortal = new ComponentPortal(NxTooltipComponent);
             const tooltipRef = this.overlayRef.attach(tooltipPortal).instance;

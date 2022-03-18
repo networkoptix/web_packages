@@ -45,9 +45,13 @@ html[data-theme="dark"] {
     --scrollbar-thumb-border-color      : #2B383F; //$dark9;
     --menu-scrollbar-thumb-border-color : #2B383F; //$dark9;
     
-    --popover-shadow-color : #000000;  //$dark1;
-    --popover-bg : #3F545F; //$dark13;
-    --popover-color : #E1E7EA; //$light4;
+    --tooltip-shadow-color : #000000;  //$dark1;
+    --tooltip-bg : #3F545F; //$dark13;
+    --tooltip-color : #E1E7EA; //$light4;
+    
+    --popover-shadow-color : none;
+    --popover-bg           : #3F545F; //$dark13;
+    --popover-color        : #E1E7EA; //$light4;
     
     --radio-color              : #A5B7C0; //$light10;
     --radio-check-color        : #2592C3; //$brand_d1;
@@ -358,4 +362,9 @@ html[data-theme="dark"] {
     
     --grey-section-bg : #1C2327; //$dark6;
     --grey-section-sep-color : #35464F; //$dark11;
+    
+    --dashboard-add-widget-color : #{$brand_d2};
+    --dashboard-widget-hover-color : #{$brand_core};
+    --dashboard-settings-menu-bg : #1C2327; //$dark6;
+    --dashboard-settings-menu-shadow : none;
 }
