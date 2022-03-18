@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
@@ -17,6 +18,10 @@ import { NgChanges } from '@utils/ng-changes';
 import { BaseDropdown } from '../injDropdown';
 
 import { DropdownItem } from './dropdown.component.types';
+
+function additionalHelpSpan(help: string): string {
+    return `<span class="additional-help">${help}</span>`;
+}
 
 /* Usage
  <nx-select [id]="select.id"
@@ -44,19 +49,18 @@ import { DropdownItem } from './dropdown.component.types';
         }
     ]
 })
-
 export class NxGenericDropdown extends BaseDropdown {
     // items should have at least "name"
     // ... ex:[{name: 'a', id: 1}, {name: 'a', help: '(say "Aaaa...")', id: 1}, {name: 'b', id:3}]
-    @Input() id;
+    @Input() id: string = 'genericSelect';
     @Input() items: DropdownItem[];
-    @Input() selected;
-    @Input() merge: boolean;
-    @Input() ellipsisMargin: boolean;
-    @Input() hrMargin: boolean;
+    @Input() selected: DropdownItem | false;
+    @IBool() @Input() merge: CoercedBoolInput;
+    @IBool() @Input() ellipsisMargin: CoercedBoolInput;
+    @IBool() @Input() hrMargin: CoercedBoolInput;
     @Input() stillLoading: boolean;
     @Input() type: string;
-    @Input() hideSelectedItem = false;
+    @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
     @Input() forcePosition: {
         left?: number,
         top?: number,
@@ -64,36 +68,35 @@ export class NxGenericDropdown extends BaseDropdown {
         offsetTop?: number
     };
 
-    @Input() allowHTML = false;
+    @IBool() @Input() allowHTML: CoercedBoolInput = false;
 
     @Output() onSelected = new EventEmitter<DropdownItem>();
 
     dropdownType: string;
-    nativeElementTop = 0;
+    nativeElementTop: number = 0;
 
+    // Used in merge.component.ts
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        public ref: ElementRef
+        public ref: ElementRef<HTMLElement>
     ) {
         super(languageService, configService);
     }
 
     ngOnInit(): void {
-        this.id = this.id || 'genericSelect';
-
         this.items?.forEach(item => {
             if (item.help && !item.name.includes(item.help)) {
-                item.name += `<span class="additional-help">${item.help}</span>`;
+                item.name += additionalHelpSpan(item.help);
             }
         });
 
-        this.dropdownType = this.type ? `dropdown-${this.type}` : 'dropdown-default';
+        this.dropdownType = `dropdown-${this.type || 'default'}`;
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         Promise.resolve().then(() => {
             this.nativeElementTop = this.forcePosition
                 ? this.ref.nativeElement.parentElement.parentElement.offsetTop
@@ -101,37 +104,34 @@ export class NxGenericDropdown extends BaseDropdown {
         });
     }
 
-    change(item: DropdownItem) {
+    change(item: DropdownItem): void {
         this._selectedItem = item;
         this.onSelected.emit(item);
         this.onChangeCallback(this._selectedItem);
     }
 
-    ngOnChanges(changes: NgChanges<NxGenericDropdown>) {
-        if (changes.items && changes.items.currentValue) {
+    ngOnChanges(changes: NgChanges<NxGenericDropdown>): void {
+        if (changes.items?.currentValue) {
             this.items.forEach(item => {
                 if (item.help && !item.name.includes(item.help)) {
-                    item.name += `<span class="additional-help">${item.help}</span>`;
+                    item.name += additionalHelpSpan(item.help);
                 }
             });
         }
         // detect changes in list of items and changes in selected to support clear option
-        if (changes.selected && changes.selected.currentValue) {
-            if (
-                changes.selected.currentValue.help &&
-                !changes.selected.currentValue.name.includes('additional-help')
-            ) {
-                changes.selected.currentValue.name +=
-                    `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
+        if (changes.selected?.currentValue) {
+            const selected = changes.selected.currentValue;
+            if (selected.help && !selected.name.includes('additional-help')) {
+                selected.name += additionalHelpSpan(selected.help);
             }
-            this._selectedItem = changes.selected.currentValue;
+            this._selectedItem = selected;
         } else if (!this.selected && !changes.selected?.firstChange) {
             this._selectedItem = { name: this.message, value: '0' };
         }
     }
 
-    handleKeyup(ev, item) {
-        if (ev.which === 13) {
+    handleKeyup(ev: KeyboardEvent, item: DropdownItem): void {
+        if (ev.key === 'Enter') {
             this.show = false;
             this.change(item);
         }

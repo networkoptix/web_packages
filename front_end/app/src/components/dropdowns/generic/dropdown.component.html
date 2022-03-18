@@ -1,55 +1,143 @@
-<div class="dropdown {{dropdownType}}"
-    [ngClass]="{'dropdown-show': show, 'display-only': items.length == 1 || stillLoading  }"
-    (nxClickElsewhere)="show = false">
-
-    <button class="btn btn-dropdown-toggle dropdown-toggle"
-            #dropdownButtonFocus
-            (click)="show = !show"
-            type="button" id="{{id}}" data-toggle="dropdown">
+<div
+    class="dropdown {{ dropdownType }}"
+    [ngClass]="{
+        'dropdown-show': show,
+        'display-only': items.length == 1 || stillLoading
+    }"
+    (nxClickElsewhere)="show = false"
+>
+    <button
+        class="btn btn-dropdown-toggle dropdown-toggle"
+        #dropdownButtonFocus
+        (click)="show = !show"
+        type="button"
+        [id]="id"
+        data-toggle="dropdown"
+    >
         <div class="btn loading" *ngIf="stillLoading">
-            <div><span class="dot1"></span><span class="dot2"></span><span class="dot3"></span></div>
+            <div>
+                <span class="dot1"></span>
+                <span class="dot2"></span>
+                <span class="dot3"></span>
+            </div>
         </div>
         <ng-container *ngIf="_selectedItem?.icon && !stillLoading">
-            <ng-container *ngTemplateOutlet="dropdownItemSVG;context{item:_selectedItem, marginLeft: '4' }"></ng-container>
+            <ng-container
+                *ngTemplateOutlet="
+                    dropdownItemSVG;
+                    context: { item: _selectedItem, marginLeft: '4' }
+                "
+            ></ng-container>
         </ng-container>
-        <span *ngIf="!stillLoading" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHTML]="allowHTML ? (_selectedItem && _selectedItem.name) : (_selectedItem && _selectedItem.name | unsafe)"></span>
+        <span
+            *ngIf="!stillLoading"
+            [ngClass]="{
+                'ellipsis-mr': merge || ellipsisMargin,
+                ellipsis: !merge
+            }"
+            [innerHTML]="
+                allowHTML
+                    ? _selectedItem && _selectedItem.name
+                    : (_selectedItem && _selectedItem.name | unsafe)
+            "
+        ></span>
         <div class="arrow-flip">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+            ></svg-icon>
         </div>
     </button>
 
-    <div class="dropdown-menu" [nxArrowNav]="show"
+    <div
+        class="dropdown-menu"
+        [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
-        [style.width]="forcePosition?.width ? forcePosition.width + 'px' : '100%'"
+        [style.width]="
+            forcePosition?.width ? forcePosition.width + 'px' : '100%'
+        "
         [style.left.px]="forcePosition?.left || 0"
-        [style.top.px]="forcePosition?.top || (nativeElementTop - (forcePosition?.offsetTop || 0))"
-        [attr.aria-labelledby]="id">
-
+        [style.top.px]="
+            forcePosition?.top ||
+            nativeElementTop - (forcePosition?.offsetTop || 0)
+        "
+        [attr.aria-labelledby]="id"
+    >
         <ul class="dropdown-menu--list">
-            <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
-                <ng-container *ngIf="!hideSelectedItem || !(_selectedItem && _selectedItem.value === item.value)">
-                <hr *ngIf="item.name === 'horizontal'; else systemSelect" [ngClass]="{'narrow-hr': hrMargin}">
+            <li
+                class="dropdown-item-container"
+                *ngFor="let item of items; trackBy: trackItem"
+            >
+                <ng-container
+                    *ngIf="
+                        !hideSelectedItem ||
+                        !(_selectedItem && _selectedItem.value === item.value)
+                    "
+                >
+                    <hr
+                        *ngIf="item.name === 'horizontal'; else systemSelect"
+                        [ngClass]="{ 'narrow-hr': hrMargin }"
+                    />
                 </ng-container>
                 <ng-template #systemSelect>
-                    <ng-container *ngIf="item.name !== 'seperator'; else seperator">
-                        <a *ngIf="!item.disabled; else disabledItem" class="dropdown-item inset" (keyup)="handleKeyup($event, item)"
-                            tabindex="0" [ngClass]="{ 'selected': _selectedItem && _selectedItem.value === item.value }"
-                            (click)="show = false; change(item)">
+                    <ng-container
+                        *ngIf="item.name !== 'seperator'; else seperator"
+                    >
+                        <a
+                            *ngIf="!item.disabled; else disabledItem"
+                            class="dropdown-item inset"
+                            (keyup)="handleKeyup($event, item)"
+                            tabindex="0"
+                            [ngClass]="{
+                                selected:
+                                    _selectedItem &&
+                                    _selectedItem.value === item.value
+                            }"
+                            (click)="show = false; change(item)"
+                        >
                             <ng-container *ngIf="item.icon">
-                                <ng-container *ngTemplateOutlet="dropdownItemSVG;context{item: item, marginLeft: '15' }"></ng-container>
+                                <ng-container
+                                    *ngTemplateOutlet="
+                                        dropdownItemSVG;
+                                        context: {
+                                            item: item,
+                                            marginLeft: '15'
+                                        }
+                                    "
+                                ></ng-container>
                             </ng-container>
-                            <span [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
+                            <span
+                                [innerHTML]="
+                                    allowHTML ? item.name : (item.name | unsafe)
+                                "
+                            ></span>
                         </a>
                     </ng-container>
                     <ng-template #seperator>
                         <div class="seperator"></div>
                     </ng-template>
                     <ng-template #disabledItem>
-                        <a class="dropdown-item inset disabled" (click)="show = false">
+                        <a
+                            class="dropdown-item inset disabled"
+                            (click)="show = false"
+                        >
                             <ng-container *ngIf="item.icon">
-                                <ng-container *ngTemplateOutlet="dropdownItemSVG;context{item: item, marginLeft: '15' }"></ng-container>
+                                <ng-container
+                                    *ngTemplateOutlet="
+                                        dropdownItemSVG;
+                                        context: {
+                                            item: item,
+                                            marginLeft: '15'
+                                        }
+                                    "
+                                ></ng-container>
                             </ng-container>
-                            <span class="disabled" [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
+                            <span
+                                class="disabled"
+                                [innerHTML]="
+                                    allowHTML ? item.name : (item.name | unsafe)
+                                "
+                            ></span>
                         </a>
                     </ng-template>
                 </ng-template>
@@ -58,12 +146,18 @@
     </div>
 
     <ng-template #dropdownItemSVG let-item="item" let-marginLeft="marginLeft">
-        <svg-icon *ngIf="item.icon"
-        [applyClass]="true"
-        class="item-icon"
-        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8', 'margin-left.px': marginLeft }"
-        nx-add-svg-src
-        [src]="item.icon"></svg-icon>
+        <svg-icon
+            *ngIf="item.icon"
+            [applyClass]="true"
+            class="item-icon"
+            [svgStyle]="{
+                'width.px': '24',
+                'height.px': '24',
+                'margin-right.px': '8',
+                'margin-left.px': marginLeft
+            }"
+            nx-add-svg-src
+            [src]="item.icon"
+        ></svg-icon>
     </ng-template>
-
 </div>
