@@ -209,7 +209,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return request.pipe(
             mergeMap(
                 (
-                    error: { status: number; resultCode: string },
+                    error: { status: number; resultCode: string, error: { error: string, errorId: string } },
                     attempt: number
                 ) => {
                     if (attempt === 0) {
@@ -228,7 +228,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                         } else if (error.status === 422) {
                             this.accessToken = undefined;
                             this.clearTokens();
-                        } else if (refreshToken && error.status < 500) {
+                        } else if (error?.error?.errorId !== 'sessionExpired' && refreshToken && error.status < 500) {
                             return this.refreshTokens(refreshToken, true).pipe(
                                 catchError((error) => {
                                     this.clearTokens();
