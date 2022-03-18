@@ -116,6 +116,48 @@ export class NxCloudStorageComponent implements OnInit {
         this.initEnableCloudStorageProcess();
     }
 
+    private msFromNowToString(ms: number): string {
+        const diff = Date.now() - ms;
+
+        let minutes = Math.floor(diff / 1000 / 60);
+        let hours = Math.floor(minutes / 60);
+        let days = Math.floor(hours / 24);
+        let weeks = Math.floor(days / 7);
+        let months = Math.floor(days / 30);
+        let years = Math.floor(days / 365);
+
+        minutes %= 60;
+        hours %= 24;
+        days %= 30;
+        weeks %= 7;
+        months %= 12;
+        years %= 365;
+
+        const {
+            yearS,
+            monthS,
+            weekS,
+            dayS,
+            hourS,
+            minuteS,
+        } = this.LANG.common.intervals;
+        if (years) {
+            return yearS({ count: years });
+        } else if (months) {
+            return monthS({ count: months });
+        } else if (weeks) {
+            return weekS({ count: weeks });
+        } else if (days) {
+            return dayS({ count: days });
+        } else if (hours) {
+            return hourS({ count: hours });
+        } else if (minutes) {
+            return minuteS({ count: minutes });
+        } else {
+            return '&mdash;';
+        }
+    }
+
     // Getters for view
 
     get user() {
@@ -200,7 +242,7 @@ export class NxCloudStorageComponent implements OnInit {
         return (
             ms === '&mdash;'
                 ? ms
-                : this.utilsService.msFromNowToString(ms, suffix));
+                : this.msFromNowToString(ms));
     }
 
     // Other getters
@@ -284,7 +326,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     private updateEnabledAndUsageStats() {
         if (!this.systemId || !this.system$.value.cloudStorageCapable) {
-            this.cloudStorageSystemEnabled = false;
+            this.cloudStorageSystemEnabled = true;
             return;
         }
         this.cloudApiService.getCloudStorageUsage(this.systemId)

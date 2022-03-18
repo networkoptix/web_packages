@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import moment from 'moment';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
@@ -46,10 +45,5 @@ export class NxUtilsService {
 
         // revokeObjectURL breaks download on MSEdge and Firefox
         // URL.revokeObjectURL(objectUrl);
-    }
-
-    // static timestamp methods
-    public msFromNowToString(input: number, suffix = false): string {
-        return moment().locale(this.locale).subtract(input).fromNow(!suffix);
     }
 }

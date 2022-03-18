@@ -164,6 +164,7 @@ export interface Common {
     disableMotionWarning:       any;
     recordingModes:             RecordingModes;
     resolution:                 Resolution;
+    intervals:                  Intervals;
     general:                    any;
     generalError:               any;
     inaccessibleFeatureMessage: any;
@@ -231,6 +232,15 @@ export interface CameraStates {
     offline:             any;
     ubuntuNX:            any;
     unauthorized:        any;
+}
+
+export interface Intervals {
+    yearS:   any;
+    monthS:  any;
+    weekS:   any;
+    dayS:    any;
+    hourS:   any;
+    minuteS: any;
 }
 
 export interface RecordingModes {
@@ -1381,6 +1391,7 @@ const typeMap: any = {
         { json: "disableMotionWarning", js: "disableMotionWarning", typ: "any" },
         { json: "recordingModes", js: "recordingModes", typ: r("RecordingModes") },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
+        { json: "intervals", js: "intervals", typ: r("Intervals") },
         { json: "general", js: "general", typ: "any" },
         { json: "generalError", js: "generalError", typ: "any" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "any" },
@@ -1443,6 +1454,14 @@ const typeMap: any = {
         { json: "offline", js: "offline", typ: "any" },
         { json: "ubuntuNX", js: "ubuntuNX", typ: "any" },
         { json: "unauthorized", js: "unauthorized", typ: "any" },
+    ], false),
+    "Intervals": o([
+        { json: "yearS", js: "yearS", typ: "any" },
+        { json: "monthS", js: "monthS", typ: "any" },
+        { json: "weekS", js: "weekS", typ: "any" },
+        { json: "dayS", js: "dayS", typ: "any" },
+        { json: "hourS", js: "hourS", typ: "any" },
+        { json: "minuteS", js: "minuteS", typ: "any" },
     ], false),
     "RecordingModes": o([
         { json: "always", js: "always", typ: "any" },

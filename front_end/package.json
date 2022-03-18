@@ -63,7 +63,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "12.2.16",
-    "@angular/cdk": "~11.2.13",
+    "@angular/cdk": "12.2.13",
     "@angular/common": "12.2.16",
     "@angular/compiler": "12.2.16",
     "@angular/core": "12.2.16",
@@ -93,7 +93,6 @@
     "lodash-es": "^4.17.21",
     "md5": "2.2.1",
     "messageformat": "2.3.0",
-    "moment": "2.29.1",
     "ng-qrcode": "^4.2.0",
     "ng2-trim-directive": "2.3.4",
     "ngx-clipboard": "14.0.2",

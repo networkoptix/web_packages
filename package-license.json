@@ -420,7 +420,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/ink-gradient",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/ink-gradient/LICENSE"
         },
-        "@types/json-schema@7.0.9": {
+        "@types/json-schema@7.0.10": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/json-schema",
@@ -1032,7 +1032,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/date-time",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/date-time/license"
         },
-        "debug@4.3.3": {
+        "debug@4.3.4": {
             "licenses": "MIT",
             "repository": "https://github.com/debug-js/debug",
             "publisher": "Josh Junon",
@@ -1129,7 +1129,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.85": {
+        "electron-to-chromium@1.4.87": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -3026,7 +3026,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/prettier-linter-helpers",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/prettier-linter-helpers/LICENSE.md"
         },
-        "prettier@2.5.1": {
+        "prettier@2.6.0": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/prettier",
             "publisher": "James Long",
@@ -4113,7 +4113,7 @@
         }
     },
     "/front_end/inline-wizard/": {
-        "@types/json-schema@7.0.9": {
+        "@types/json-schema@7.0.10": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/inline-wizard/node_modules/@types/json-schema",
@@ -5729,7 +5729,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.85": {
+        "electron-to-chromium@1.4.87": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -5811,7 +5811,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/es-to-primitive",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/es-to-primitive/LICENSE"
         },
-        "es5-ext@0.10.58": {
+        "es5-ext@0.10.59": {
             "licenses": "ISC",
             "repository": "https://github.com/medikoo/es5-ext",
             "publisher": "Mariusz Nowak",
@@ -9712,7 +9712,7 @@
             "path": "cloud_portal/front_end/node_modules/@angular/animations",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/animations/README.md"
         },
-        "@angular/cdk@11.2.13": {
+        "@angular/cdk@12.2.13": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/components",
             "path": "cloud_portal/front_end/node_modules/@angular/cdk",
