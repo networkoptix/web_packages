@@ -68,9 +68,11 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.text) {
-            this.hide();
-            changes.text.currentValue && this.show();
+        if (changes.content) {
+            if (this.overlayRef?.hasAttached()) {
+                this.hide();
+                changes.content.currentValue && this.show();
+            }
         }
     }
 
