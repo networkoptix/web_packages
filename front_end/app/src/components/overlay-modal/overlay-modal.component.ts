@@ -39,6 +39,7 @@ export class NxOverlayModalComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     servers: Partial<Server>[] = [];
 
+    currentRoute: string = '';
     serverId: string;
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
@@ -99,15 +100,14 @@ export class NxOverlayModalComponent implements OnInit {
             );
             system.update().then(() => {
                 this.system = system;
+                this.currentRoute = `/#${this.router.url}`;
                 this.getServers();
                 this.serverId = (environment.isLocal)
                     ? this.CONFIG.localServerId
                     : this.system.moduleInfo.id;
                 this.routeSubscription = this.router.events.subscribe(route => {
                     if (route instanceof NavigationEnd) {
-                        this.servers.forEach(server => {
-                            server.url = `${server.url}/#/${route.url}`;
-                        });
+                        this.currentRoute = `/#${route.url}`;
                     }
                 });
             });
@@ -179,15 +179,8 @@ export class NxOverlayModalComponent implements OnInit {
     getServers() {
         this.system.getServers().toPromise()
             .then(res => {
-                this.servers = res
-                    ? Object.entries(res)
-                        .map(server => {
-                            const updatedServer: Partial<Server> = server[1];
-                            updatedServer.url = `${updatedServer.url}/#/${this.router.url}`;
-                            return updatedServer;
-                        })
-                        .filter(server => server.id !== this.serverId)
-                    : [];
+                this.servers = (<Server[]>(res as unknown) || [])
+                    .filter(({ id }) => id !== this.serverId);
             })
             .catch(err => console.error(err));
     }
