@@ -14,8 +14,7 @@ import { environment } from '@environments/environment';
 import 'zone.js';
 
 if (!Element.prototype.matches) {
-    Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
-          Element.prototype.webkitMatchesSelector;
+    Element.prototype.matches = Element.prototype.webkitMatchesSelector;
 }
 
 if (environment.production) {
