@@ -198,6 +198,14 @@
             "medium": "中",
             "low": "低"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "一般",
         "generalError": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
         "inaccessibleFeatureMessage": "系统处于离线状态，无法读取资讯",

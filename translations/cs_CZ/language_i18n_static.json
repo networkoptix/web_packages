@@ -198,6 +198,14 @@
             "medium": "Střední",
             "low": "Nízká"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "Obecné",
         "generalError": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
         "inaccessibleFeatureMessage": "Systém je offline a informace proto nejsou dostupné.",

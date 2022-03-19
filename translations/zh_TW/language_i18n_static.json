@@ -198,6 +198,14 @@
             "medium": "中",
             "low": "低 (L)"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "一般",
         "generalError": "發生錯誤，請稍後重試。如果問題仍然發生，請聯繫您的支援團隊。",
         "inaccessibleFeatureMessage": "系統處於離線狀態，無法讀取資訊。",

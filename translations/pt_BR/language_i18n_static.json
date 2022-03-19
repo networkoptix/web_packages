@@ -198,6 +198,14 @@
             "medium": "Média",
             "low": "Baixa"
         },
+        "intervals": {
+            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
+            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
+            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
+            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
+            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
+            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+        },
         "general": "Geral",
         "generalError": "Ocorreu um erro, por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com sua equipe de suporte.",
         "inaccessibleFeatureMessage": "O sistema está offline e, portanto, as informações não estão acessíveis.",
