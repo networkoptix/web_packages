@@ -229,7 +229,7 @@ Camera Suite Setup
     Open Browser and go to URL    ${url}
     #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     #...    ELSE    Web Admin Suite Setup
-    #Take Camera Offline    ${system}[name]    192.168.0.201
+    Take Camera Offline    ${system}[name]    192.168.0.201
     Log To Console    ${system}[port]
 
 Camera Test Setup    

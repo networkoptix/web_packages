@@ -1,6 +1,12 @@
 FROM python:3.8-alpine3.12
 
-COPY pip.conf /root/.config/pip/pip.conf
+ARG PIP_INDEX_URL
+ARG PIP_TRUSTED_HOST
+ARG PIP_EXTRA_INDEX_URL
+ENV PIP_INDEX_URL $PIP_INDEX_URL
+ENV PIP_TRUSTED_HOST $PIP_TRUSTED_HOST
+ENV PIP_EXTRA_INDEX_URL $PIP_EXTRA_INDEX_URL
+
 COPY requirements.txt /app/requirements.txt
 
 RUN set -ex \

@@ -184,7 +184,7 @@
 	}
 	&:disabled{
 		background-color: var(--elements-disabled);
-		
+
 		&::placeholder {
 			color: $light2;
 		}
@@ -247,7 +247,7 @@
 	line-height: 1.23;
 	border: solid 1px var(--alt-body-bg);
 	background: var(--alt-body-bg);
-	
+
 	.media-type {
 		background: none;
 		font-size: rem(13px);
@@ -260,7 +260,7 @@
 .swagger-ui .opblock-body .opblock-section-header {
 	box-shadow: none;
 	padding: 8px 16px;
-	
+
 	&:first-of-type {
 		padding: 0 16px;
 	}
@@ -269,14 +269,14 @@
 .swagger-ui .opblock .opblock-section-header {
 	color            : var(--body-text-color);
 	background-color : var(--card-header-bg);
-	
+
 	h4 {
 		@include typography.medium20nocolor;
 		color : var(--body-text-color);
 		flex   : initial;
 		margin : initial;
 		background-color: var(--card-header-bg);
-		
+
 		&.parameter__name {
 			margin-top: -7px;
 		}
@@ -324,7 +324,7 @@
 	@include typography.medium14nocolor;
 	color : var(--body-text-color);
 	padding-right: 20px;
-	
+
 	@media screen and (max-width: 670px) {
 		max-width: calc(100% - 18rem);
 	}
@@ -467,7 +467,7 @@
 		@include typography.regular13nocolor;
 		color : var(--body-text-color);
 		margin-top: 16px;
-		
+
 		&.example-response {
 			@include typography.medium20nocolor;
 			color : var(--body-text-color);
@@ -493,7 +493,7 @@
 .swagger-ui .response-col_description {
 	width: auto;
 	border-left: 1px solid var(--border-color) !important;
-	
+
 	h5 {
 		padding-bottom: 8px !important;
 		margin-top: 5px;
@@ -539,7 +539,7 @@
 	font-size: 12px;
 	border: 1px solid var(--border-color);
 	color: var(--body-text-color) !important;
-	
+
 	.model {
 		table-layout: fixed !important;
 		font-family: robotomonoregular, monospace;
@@ -784,7 +784,7 @@
 	padding        : 8px 16px !important;
 	vertical-align : top;
 	border         : 1px solid var(--border-color);
-	
+
 	&.response-col_status{
 		text-transform: uppercase;
 		@include typography.medium13nocolor;
@@ -936,6 +936,10 @@
 	font-family: robotomonoregular, monospace !important;
 }
 
+.swagger-ui .no-highlight span{
+	color: var(--card-header-text) !important
+}
+
 .swagger-ui .markdown code {
 	@extend .code-block-common;
 	padding       : 1px 6px;
@@ -964,12 +968,12 @@ pre, .text-area {
 	padding: .8em 0.5em 1em 1em !important;
 	counter-reset: line;
 	color         : var(--body-text-color) !important;
-	
+
 	& > div {
 		position: relative;
 		padding-left: 22px;
 		margin-bottom: -14px;
-		
+
 		&:before {
 			line-height: 18px;
 			text-align: right;

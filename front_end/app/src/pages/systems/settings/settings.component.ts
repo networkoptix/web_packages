@@ -460,11 +460,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 this.systemInfoSubscription.unsubscribe();
                             }
                             this.systemInfoSubscription =
-                                this.system.infoSubject.subscribe(() => {
-                                    this.systemReady();
-                                    this.updateAlert();
-                                    this.updateMenu();
-                                });
+                                this.system.infoSubject
+                                    .pipe(distinctUntilChanged())
+                                    .subscribe(() => {
+                                        this.systemReady();
+                                        this.updateAlert();
+                                        this.updateMenu(this.system);
+                                    });
                         });
                     }
                 }
@@ -759,7 +761,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getCameraStatusIcon({ status, scheduleEnabled }) {
-        if (scheduleEnabled && !['Online', 'Recording'].includes(status)) {
+        if (scheduleEnabled && !(status === 'Recording')) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
         }
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[

@@ -70,11 +70,12 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: NgChanges<NxTooltipDirective>) {
-        // TODO: Restore or remove
-        // if (changes.text) {
-        //     this.close();
-        //     changes.text.currentValue && this.show();
-        // }
+        if (changes.content) {
+            if (this.overlayRef?.hasAttached()) {
+                this.hide();
+                changes.content.currentValue && this.show();
+            }
+        }
     }
 
     ngOnDestroy() {

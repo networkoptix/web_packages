@@ -17,7 +17,6 @@ Resource     front-end-variables/view-page-variables.robot
 Resource     front-end-variables/account-variables.robot
 Resource     front-end-variables/footer-variables.robot
 Resource     front-end-variables/login-variables.robot
-Resource     front-end-variables/storage-mode-variables.robot
 Resource     front-end-variables/system-users-variables.robot
 Resource     front-end-variables/activate-variables.robot
 Resource     front-end-variables/downloads-variables.robot

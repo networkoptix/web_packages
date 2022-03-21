@@ -115,7 +115,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     checkEmailProcess: Process;
     loginCode: string;
     emailLocked = false;
-    action: 'restore_password'| 'activate' | 'register';
+    action: 'restore_password'| 'activate' | 'register' | 'reset_request';
 
     // email
     loginEmail: string;
@@ -129,6 +129,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     // create account
     createProcess: Process;
+    fromInvite = false;
     accountInfo: {
         email: string;
         password: string;
@@ -223,7 +224,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.action = this.route.snapshot?.data?.action;
         if (this.action) {
             this.loginCode = this.route.snapshot.params.code;
-            this.loginEmail = atob(this.loginCode).split(':')[1];
+            if (this.loginCode) {
+                this.loginEmail = atob(this.loginCode).split(':')[1];
+                this.fromInvite = this.action === 'register';
+            }
         }
         this.route.queryParams.subscribe(async (params: any) => {
             this.initialData = cloneDeep(params);
@@ -267,6 +271,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.currentState = AuthorizeState.activate;
             } else if (this.action === 'register' || this.clientType === ClientType.create) {
                 this.currentState = AuthorizeState.create;
+            } else if (this.action === 'reset_request') {
+                this.currentState = AuthorizeState.request;
             } else if (this.clientType.includes('Password')) { // confirmPassword clientTypes
                 this.loginEmail = email;
                 this.emailLocked = true;

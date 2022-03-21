@@ -198,7 +198,7 @@
                             }
                         }
 
-                        &.recording {
+                        &.isScheduleEnabled {
                             > .preview:after {
                                 content: "";
                                 position: absolute;
@@ -206,9 +206,14 @@
                                 top: 4px;
                                 width: 10px;
                                 height: 10px;
-                                background: theme_vars.$red_main;
+                                background: transparent;
                                 border-radius: 5px;
                                 border: 2px solid theme_vars.$red_main !important;
+                            }
+                            &.recording {
+                                > .preview:after {
+                                    background: theme_vars.$red_main;
+                                }
                             }
                         }
 

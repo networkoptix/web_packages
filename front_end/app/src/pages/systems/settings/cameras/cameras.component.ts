@@ -482,17 +482,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system && (!this.system || !environment.isLocal)) {
                     this.system = system;
-                    if (!this.system.isOnline || !this.system.isAvailable) {
-                        this.showPreloader = false;
-                    }
-
                     (
                         environment.isLocal
                             ? this.system.update()
                             : Promise.resolve()
                     ).then(
                         () => system.isAvailable
-                            ? this.system.getInfoAndPermissions(false).catch(() => {})
+                            ? this.system.getInfoAndPermissions(false).catch(() => Promise.resolve())
                             : Promise.resolve()
                     ).then(() => {
                         if (!this.system.isOnline || !this.system.isAvailable) {
@@ -528,6 +524,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             this.noCameras = res.cameraManager.cameras?.length === 0;
                             if (this.noCameras) {
                                 this.showPreloader = false;
+                                if (!this.system.userManager.permissions.editCameras) {
+                                    this.system.show404 = true;
+                                }
                             } else {
                                 this.cameraViewPath =
                                     this.CONFIG.menus.systemSettings.baseUrl +

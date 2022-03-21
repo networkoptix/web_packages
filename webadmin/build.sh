@@ -30,7 +30,7 @@ rsync -a --progress $SOURCE_DIR/../front_end . --exclude static --exclude node_m
 if [ $IS_LOCAL ]
 then
     echo "pip install requirements"
-    [ ! -d "env" ] && virtualenv env -p python3
+    [ ! -d "env" ] && python3 -m venv env
     . ./env/bin/activate
     pip install -r build_scripts/requirements.txt
 
@@ -70,7 +70,7 @@ do
     pushd inline-wizard
         npm run build
         # Removed these files because it overrode webadmins version of them
-        rm -rf dist/{fonts,robots.txt,language.json,languages.json}
+        rm -rf dist/{fonts,robots.txt}
         mkdir -p ../static/setup_$SKIN
         cp -r dist/* ../static/setup_$SKIN
 

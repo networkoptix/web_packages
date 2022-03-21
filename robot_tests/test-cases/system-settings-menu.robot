@@ -126,9 +126,10 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
     ${matches}=   Get WebElements     ${LEFT MENU SEARCH MATCHES}
     FOR    ${match}    IN    @{matches}
-        ${text}=   Get Text    ${match}
-        Run Keyword Unless    '${text}' == '${EMPTY}'
-        ...    Should Be Equal As Strings    ${text}    ${simple criteria}    ignore_case=True
+        ${text}=    Run Keyword And Continue On Failure    Get Text    ${match}
+            IF    '${text}' != 'None' and '${text}' != '${EMPTY}'
+                Should Contain    ${text}    ${simple criteria}
+            END
     END
 
 16. Should perform search with 'AND' criteria

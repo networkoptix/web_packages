@@ -26,7 +26,9 @@ import { NxAuthorizeResetRequestComponent } from './reset-request/reset-request.
 export const authorizedRoutes: Routes = [
     { path: 'activate/:code', component: NxAuthorizeComponent, data: { action: 'activate' } },
     { path: 'restore_password/:code', component: NxAuthorizeComponent, data: { action: 'restore_password' } },
+    { path: 'restore_password', component: NxAuthorizeComponent, data: { action: 'reset_request' } }, // for systems < 5.0, desktop password reset request
     { path: 'register/:code', component: NxAuthorizeComponent, data: { action: 'register' } },
+    { path: 'register', component: NxAuthorizeComponent, data: { action: 'register' } },
     { path: '**', component: NxAuthorizeComponent }
 ];
 

@@ -91,7 +91,7 @@ export class DetachServerModalContent {
                                 }
                             });
                     } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                        return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
+                        return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     }
                     this.system.currentServerNotBusy = true;
                     this.toastService.show(

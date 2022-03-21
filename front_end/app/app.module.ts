@@ -23,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { InputTrimModule } from 'ng2-trim-directive';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorModule } from 'ngx-device-detector';
@@ -86,6 +87,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             cookieName: 'csrftoken',
             headerName: 'X-CSRFToken'
         }),
+        NgxChartsModule,
         OrderModule,
         InputTrimModule,
         ComponentsModule,

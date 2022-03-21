@@ -12,6 +12,7 @@ import { ModalContent } from '@components/console-table/console-table.component.
 import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { SystemTransferInfo } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -25,6 +26,7 @@ import { AddUserModalContent } from './add-user/add-user.component';
 import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
+import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
@@ -621,11 +623,13 @@ export class NxDialogsService {
             .afterClosed();
     }
 
-    public transferOwnership(system: NxSystem) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system
-            }
+    public transferOwnership(
+        system: NxSystem,
+        transfers: SystemTransferInfo[],
+    ): Promise<void> {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(TransferOwnershipModalContent, dialogConfig)
@@ -648,5 +652,16 @@ export class NxDialogsService {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(MoveSystemToGroupModalContent, dialogConfig).afterClosed();
+    }
+
+    public client2faWarning(): Promise<void> {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {};
+
+        return this.createModal(Client2faWarningModalContent, options, params);
     }
 }

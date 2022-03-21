@@ -55,13 +55,19 @@ export class NxOAuthRedirectComponent implements OnInit {
         if (this.window.nativeClient) {
             this.route.queryParams.subscribe(async (params: any) => {
                 this.initialData = cloneDeep(params);
-                this.localStorageService.store('client_type', this.initialData.client_type);
-                this.viewType = this.initialData.view_type || 'desktop';
-                if (this.initialData.code) {
+                const { client_type, code, view_type } = this.initialData;
+                this.localStorageService.store('client_type', client_type);
+                this.viewType = view_type || 'desktop';
+                if (code) {
                     this.state = 'sendingCode';
                     this.localStorageService.clear('client_type');
-                    // @ts-ignore
-                    nativeClient.setCode(this.initialData.code);
+                    if (client_type === 'system2faAuth') {
+                        // @ts-ignore
+                        nativeClient.twoFaVerified(code);
+                    } else {
+                        // @ts-ignore
+                        nativeClient.setCode(code);
+                    }
                     setTimeout(() => { this.state = undefined; }, 3000);
                 } else {
                     this.state = 'readyToLogin';

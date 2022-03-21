@@ -1,4 +1,4 @@
-image: nx/ci:1.12
+image: nx/ci:1.17
 
 include:
   - project: "dev/ci"
@@ -10,13 +10,8 @@ default:
     - service
 
 variables:
-  DOCKER_REGISTRY: docker.artifactory.lan.hdw.mx:80
-  JENKINS_URL: http://jenkins.lan.hdw.mx
   JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
-  PIP_TRUSTED_HOST: "artifactory.lan.hdw.mx"
-  PIP_INDEX_URL: "http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-python3.8-alpine3.12/simple"
-  PIP_EXTRA_INDEX_URL: "http://artifactory.lan.hdw.mx/artifactory/api/pypi/pypi-remote/simple"
 
 workflow:
   rules:
@@ -229,7 +224,6 @@ authorization-unit-test:
 webadmin:
   extends: .frontend-changes
   stage: build
-  image: nx/ci
   script:
     - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
@@ -243,7 +237,6 @@ webadmin:
 frontend:
   extends: .frontend-changes
   stage: build
-  image: nx/ci
   script:
     - !reference [.get_target_branch_script, script]
     - runJenkinsJob.sh gitlab.cloud.frontend

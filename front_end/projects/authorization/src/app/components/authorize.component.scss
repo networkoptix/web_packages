@@ -25,7 +25,6 @@
                     margin: 0 16px !important;
                 }
                 form {
-                    padding: 20px !important;
                     .create-row {
                         flex-direction: column;
                     }
@@ -103,12 +102,19 @@
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     max-width: 480px;
     width: 100%;
     height: 100vh;
     margin: 0 auto;
+
+    &.main-m {
+        justify-content: start;
+    }
+
+    :not(&.main-m) {
+        justify-content: center;
+    }
 
 
     .auth-window {
@@ -237,6 +243,10 @@
                 height: 100%;
                 max-width: 360px;
                 width: 100%;
+
+                @media (max-width: 402px) {
+                    padding: 0 20px;
+                }
             }
 
             input {

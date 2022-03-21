@@ -6,6 +6,24 @@ Test Teardown     storage-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
+*** Variables ***
+${QA BURBANK IP}     10.1.5.239
+${password}    ${BASE PASSWORD}
+${url}         ${ENV}
+${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
+${storage string 2}    ${EMPTY}
+${camera}      D8-D4-3C-60-F0-D3
+${camera url}    http://192.168.0.27/
+${camera manufacturer}    Sony
+${camera user}    admin
+${camera password}    QAbur777$
+${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+${disk location}    /media/nxwitness-storages/disk1
+${backup initialized}    ${FALSE}
+${change focus}    //h4[contains(text(),"Storage")]
+@{disk size}    80000    30000    30000    12000    12000
+${networkdisk}    //${QA BURBANK IP}/networkdisk
+${drives}    5
 
 *** Test Cases ***
 1. Loading State of Storage Locations Block
@@ -1036,6 +1054,7 @@ Force Tags        storage
     [Tags]    C83183    archive
     [Setup]     Log    Override and do nothing
     Skip If Image Is    4.3_test    5.0_test
+    Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers

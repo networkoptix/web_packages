@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
@@ -608,6 +609,37 @@ export class NxCloudApiService {
             this.cacheService.clearData();
             return response;
         });
+    }
+
+    /* Ownership transfer */
+    getTransfers(): Observable<t.SystemTransferInfo[]> {
+        return this.http.get<t.SystemTransferInfo[]>(
+            `${this.CONFIG.apiBase}/transfer/`
+        );
+    }
+
+    startTransfer(
+        systemId: string,
+        newOwnerEmail: string,
+    ): Observable<t.SystemTransferInfo> {
+        return this.http.post<t.SystemTransferInfo>(
+            `${this.CONFIG.apiBase}/transfer/${systemId}/`,
+            { newOwnerEmail },
+        );
+    }
+
+    cancelTransfer(systemId: string): Observable<unknown> {
+        return this.http.delete<unknown>(`${this.CONFIG.apiBase}/transfer/${systemId}/`);
+    }
+
+    respondToTransfer(
+        systemId: string,
+        action: 'accepted' | 'rejected'
+    ): Observable<t.CloudResponse> {
+        return this.http.put<t.CloudResponse>(
+            `${this.CONFIG.apiBase}/transfer/${systemId}/`,
+            { action },
+        );
     }
 
     // Cloud Storage

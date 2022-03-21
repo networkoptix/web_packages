@@ -264,12 +264,12 @@ Force Tags        system
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${false}
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
     Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
 
     Log    Step 8
     Reset Settings To Default    ${system['local auth']}    ${server url}
+    Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
     Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${true}
@@ -319,49 +319,49 @@ Force Tags        system
     Reset Settings To Default    ${system['local auth']}    ${server url}
 
     Log    Step 1
-    ${settings}=   Create Dictionary    autoDiscoveryEnabled=false
+    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
 
     Log    Step 2
-    ${settings}=   Create Dictionary    auditTrailEnabled=true
+    ${settings}=   Create Dictionary    auditTrailEnabled=${true}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
     Log    Step 3
-    ${settings}=   Create Dictionary    trafficEncryptionForced=true
+    ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
 
     Log    Step 4
-    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=true
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${true}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
 
     Log    Step 5
-    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=false
+    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${False}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
 
     Log    Step 6
-    ${settings}=   Create Dictionary    trafficEncryptionForced=false
+    ${settings}=   Create Dictionary    trafficEncryptionForced=${False}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
 
     Log    Step 7
-    ${settings}=   Create Dictionary    sessionLimitMinutes=30
+    ${settings}=   Create Dictionary    sessionLimitMinutes=${30}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
@@ -370,7 +370,7 @@ Force Tags        system
     Run Keyword If    ${value} != 30    Fail
     
     Log    Step 8
-    ${settings}=   Create Dictionary    sessionLimitMinutes=0
+    ${settings}=   Create Dictionary    sessionLimitMinutes=${0}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     Reload Page
     Wait Until Settings Are Visible
@@ -459,7 +459,10 @@ Force Tags        system
     Log    Step 3
     Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
     Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
-    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
+    Sleep    1
+    ${element_xpath}=       Replace String      ${LIMIT SESSION DURATION CHECKBOX}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}         ${True}
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     ${True}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
@@ -527,11 +530,15 @@ Force Tags        system
     Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
     ${value}=   Get Value    ${TIME NUMBER INPUT}
     Run Keyword If    ${value} != 30    Fail    Interval not 30 minutes as expected
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    # This is here because the save/cancel buttons get in the way in 5.0
+    ${element_xpath}=       Replace String      ${TIME DURATION INTERVAL BUTTON}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     
     Log    Step 2
     Clear Element Text    ${TIME NUMBER INPUT}
@@ -542,7 +549,8 @@ Force Tags        system
     
     
     # Sleep    1
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -588,7 +596,8 @@ Force Tags        system
     Log    Step 5
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    87840
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -607,7 +616,8 @@ Force Tags        system
     Log    Step 6
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    1
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -619,7 +629,8 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    1
     
     Log    Step 7
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -634,7 +645,8 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    sessionLimitMinutes    ${minutes}
     
     Log    Step added by auto qa (CLOUD-5221 found)
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -650,7 +662,8 @@ Force Tags        system
     Log    Step 8
     Clear Element Text    ${TIME NUMBER INPUT}
     Input Text    ${TIME NUMBER INPUT}    5
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Elements Are Visible
     ...    ${TIME DURATION SELECTION HOURS} 
     ...    ${TIME DURATION SELECTION MINUTES}
@@ -666,7 +679,7 @@ Force Tags        system
 19. Check HTTPS traffic encryption
     [Tags]    C65701    cloud    webadmin    system settings    threaded
     Log    Preconditions
-    ${settings}=   Create Dictionary    trafficEncryptionForced=true
+    ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
     Set System Settings    ${system['local auth']}    ${server url}    ${settings}
     
     Log    Step 1
@@ -688,16 +701,16 @@ Force Tags        system
     Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    false
 
     Log    Step 4
-    ${resp}=   Check Connection    http://${QABURBANK IP}:${system}[port]
-    Should Be Equal As Strings    ${resp}    200
-
+    ${resp}=   Check Connection    ${server url}    verify=False
+    Should Be Equal As Strings    ${resp}    200    
+    
     Log    Step 5
     Go To    ${env}/systems/${system}[cloud id]
     Wait Until Settings Are Visible
     Change Setting And Save    ${ALLOW ONLY SECURE CHECKBOX}
 
     Log    Step 6
-    Go To    http://${QABURBANK IP}:${system}[port]
+    Go To    ${server url}
     Run keyword and continue on failure    Wait until location contains    ${server url}
 
     Log    Step 7

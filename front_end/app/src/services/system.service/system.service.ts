@@ -91,7 +91,7 @@ export class NxSystemService {
         if (cloudSystemInfo?.useRest) {
             (system.mediaserver as NxSystemRestAPI)
                 .setAccessTokenAsCookie()
-                .catch(() => {});
+                .subscribe(() => {});
         }
 
         this.system = system;

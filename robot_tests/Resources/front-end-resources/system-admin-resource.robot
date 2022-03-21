@@ -1,3 +1,6 @@
+*** Settings ***
+Library    String
+Library    SeleniumLibrary
 *** Keywords ***
 # Setups and teardowns
 System Admin Suite Setup
@@ -6,7 +9,7 @@ System Admin Suite Setup
     ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE 4.3}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE}
     Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
@@ -61,6 +64,11 @@ Wait until settings are visible
 
 Wait Until Advanced Settings Are Visible
     [Arguments]    ${block number}=ONE    ${timeout}=${selenium timeout}
+    IF    '${block number}'=='ONE' or '${block number}'=='THREE' or '${block number}'=='FOUR'
+        IF    '${IMAGE}'=='5.0_test' 
+            ${block number}=   Set Variable    ${block number} ${IMAGE}
+        END
+    END
     Run keyword and continue on failure    Wait Until Elements Are Visible
         ...    @{ADVANCED SETTINGS ALERT BAR}
         ...    @{ADVANCED SETTING ELEMENT BLOCK ${block number}}
@@ -77,7 +85,7 @@ Validate Disconnect Form
       # ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
       # ...    ${DISCONNECT PASSWORD INPUT}
         ...    ${DISCONNECT FORM CANCEL BUTTON}
-        ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+        ...    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
 
 Validate Success Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -117,6 +125,7 @@ Change Setting
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected     ${locator}    ${True}
     ${selected}=   Set Variable If    ${status}==True    False
     ...    ${status}==False    True
+    Wait Until Page Contains Element    ${locator}
     Set Checkbox Value    ${locator}    ${selected}
     Run Keyword If    ${buttons}    Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     [Return]    ${selected}
@@ -205,8 +214,10 @@ Change Duration Time Interval
            ...    Click Link    ${TIME DURATION NEW SELECTION}
            ...    ELSE    Exit For Loop
     END
-
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    
+    ${element_xpath}=       Replace String      ${TIME DURATION INTERVAL BUTTON}        \"  \\\"
+    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
+    #Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
     Click Link    ${TIME DURATION NEW SELECTION}
     Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
@@ -336,10 +347,17 @@ Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
     IF    '${IMAGE}' == '5.0_test'
-        IF    '${expected value}' == 'true' or '${expected value}' == 'false'
-            ${expected value}=   Convert To Title Case    ${expected value}
+        ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
+        ${expected value}=   Replace String    ${expected value}    true    True
+        ${expected value}=   Replace String    ${expected value}    false    False
+        ${expected value}=   Replace String    ${expected value}    "    '
+        ${value}=   Convert To String    ${settings}[${key}]
+        ${status}=   Run Keyword and Return Status    Should Contain    ${value}    {
+        IF    ${status}
+            ${value}=   Remove String    ${value}    ${SPACE}
         END
-        Dictionary should contain item    ${settings}    ${key}    ${expected value}
+        Should Be Equal As Strings    ${value}    ${expected value}
+        #Dictionary should contain item    ${settings}    ${key}    ${expected value}
     ELSE
         IF    '${expected value}' == 'True' or '${expected value}' == 'False'
             ${expected value}=   Convert To Lower Case    ${expected value}

@@ -141,7 +141,7 @@ def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
         lang = detect_language_by_request(request)
-        language_file = f'/static/lang_{lang}/language_compiled.json'
+        language_file = f'/static/lang_{lang}/language_compiled.json?version={settings.VERSION}'
         # Return: redirect to language.json file for selected language
         response = redirect(language_file)
 

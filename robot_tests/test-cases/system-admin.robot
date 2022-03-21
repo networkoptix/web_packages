@@ -521,11 +521,11 @@ Force Tags        system    threaded
     Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Element Is Not Visible    ${DISCONNECT FORM}
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-
-    Log    Step 4
-    Click Button    ${DISCONNECT FROM NX}
-    Validate Disconnect Form
-    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    # removing the below step since no password is needed anymore in order to disconnect system from cloud
+    #Log    Step 4
+    #Click Button    ${DISCONNECT FROM NX}
+    #Validate Disconnect Form
+    #Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
     #The below steps commented out since password field was removed from "Discconect System from Nx Cloud"
     #Wait Until Element Is Visible    ${PASSWORD IS REQUIRED}
     #Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
@@ -540,7 +540,7 @@ Force Tags        system    threaded
     #Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
     #Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     #Click Button    ${DISCONNECT FORM CANCEL BUTTON}
-    Wait Until Element Is Not Visible    ${DISCONNECT FORM}
+    #Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
 26. Cloud Owner can disconnect System from Cloud
     [Tags]    C41883   C47020    webadmin    cloud
@@ -555,7 +555,7 @@ Force Tags        system    threaded
 
     Log    Step 2
     #Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}    timeout=0.1
-    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Click Element    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
 
     # Finish the test in webadmin mode
     Run keyword if   '''${mode}''' == '''webadmin'''    Run Keywords

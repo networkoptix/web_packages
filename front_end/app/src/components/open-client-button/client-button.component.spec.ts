@@ -13,6 +13,7 @@ import {
     NxProcessButtonComponent
 } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAccountService } from '@services/account.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
@@ -39,7 +40,8 @@ describe('NxClientButtonComponent', () => {
                 MockProvider(NxUrlProtocolService),
                 MockProvider(NxDialogsService),
                 MockProvider(NxProcessService),
-                MockProvider(Router)
+                MockProvider(Router),
+                MockProvider(NxAccountService),
             ]
         }).compileComponents()
             .then(() => {

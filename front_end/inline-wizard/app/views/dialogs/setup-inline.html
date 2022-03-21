@@ -52,7 +52,7 @@
     <p class="master-description">
         It will help to identify or find System.
     </p>
-    <form class="master-controls" name="forms.systemNameForm" novalidate>
+    <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
                    placeholder="System name" required auto-focus>
@@ -63,7 +63,7 @@
                 System name is required
             </div>
         </div>
-
+        <input type="submit" hidden/>
     </form>
     <p class="vertical-bottom">
         <a href="" ng-click="next('advanced', true)">Advanced System settings</a>
@@ -73,7 +73,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
     <h2>Advanced System settings</h2>
-    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate>
+    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
                 <label class="nx-checkbox">
@@ -111,6 +111,7 @@
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
         </div>
+        <input type="submit" hidden/>
     </form>
 </div>
 
@@ -185,7 +186,8 @@
 
     <h2>Login to <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
-    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}">
+    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
                    type="email" placeholder="Email" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
@@ -247,7 +249,8 @@
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
     <h2>Set up an administrator password</h2>
-    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete>
+    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
             <!-- <input ng-model="settings.localLogin" name="localLogin" class="form-control"
                    type="text" placeholder="Login" required readonly> -->
@@ -327,9 +330,9 @@
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
     <h2>Connect the server to the existing System</h2>
-    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete>
+    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field >
-
             <input type="text" ng-model="settings.remoteSystem" name="remoteSystemName"
                    uib-typeahead="system as system.visibleName for system in discoveredUrls | filter: {isNew:false, visibleName: $viewValue} | limitTo:8"
                    uib-typeahead-input-formatter="getSystemName($model)"

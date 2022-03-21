@@ -433,8 +433,8 @@ export class MergeModalContent {
                 err => {
                     if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
-                    } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                        return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
+                    }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                        return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     }
                     if (err !== 'canceled') {
                         this.checking = false;
@@ -527,8 +527,8 @@ export class MergeModalContent {
             }, err => {
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
-                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
+                }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 }
                 console.error(err);
                 if (this.machine.currentState !== this.serverUrlErrors) {
@@ -625,7 +625,7 @@ export class MergeModalContent {
                 if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
                     return this.handleOldSession(this.mergingProcess);
                 } else if (error.status === 403 || error.errorId === this.CONFIG.servers.errors.unauthorized) {
-                    return this.simpleDialogService.expiredSession().then(res => this.window.location.reload(res));
+                    return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 }
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data?.resultCode);
@@ -743,7 +743,15 @@ export class MergeModalContent {
         }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             if (!this.targetSystem.id) {
-                const secondarySystem = await this.system.getServerInfo(this.serverUrl).toPromise();
+                let secondarySystem: any;
+                if (this.system.useRest) {
+                    secondarySystem = await this.system.getServerInfo(this.serverUrl).toPromise();
+                } else {
+                    secondarySystem = (await this.system.getModuleInfoUsingUrl(this.serverUrl).toPromise()).reply;
+                    if (secondarySystem) {
+                        secondarySystem.isNew = secondarySystem.serverFlags.includes('SF_NewSystem');
+                    }
+                }
                 if (secondarySystem?.id) {
                     this.targetSystem = secondarySystem;
                     this.setSystems();

@@ -20,6 +20,7 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { FormWatcher, NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { SystemTransferInfo, CloudResponse } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -82,6 +83,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
+
+    transfers: SystemTransferInfo[] = [];
+    systemTransferInProcess: boolean = false;
+    // newSystemOwner: string = '';
+    // TODO: Get these from system
 
     private setupDefaults() {
         this.advanced = (this.router.url.includes('/advanced') ||
@@ -261,6 +267,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 });
                         }
                     });
+
+                this.cloudApiService.getTransfers()
+                    .subscribe((res: SystemTransferInfo[]) => {
+                        this.transfers = res;
+                        this.systemTransferInProcess = res.some(info =>
+                            info.toAccount === system.userManager.currentUserEmail
+                        );
+                    });
             });
 
         this.initProcesses();
@@ -327,7 +341,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     transferOwnership() {
-        this.dialogs.transferOwnership(this.system);
+        this.dialogs.transferOwnership(this.system, this.transfers);
     }
 
     connectLocalToCloud() {
@@ -534,5 +548,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.environment.isLocal && this.router.navigate(['settings']) ||
                 this.router.navigate([`systems/${this.system.id}`]);
         }
+    }
+
+    acceptOwnershipTransfer(): void {
+        this.cloudApiService.respondToTransfer(this.system.id, 'accepted')
+            .subscribe((_res: CloudResponse) => {
+                this.systemTransferInProcess = false;
+                this.window.location.reload();
+            });
+    }
+
+    rejectOwnershipTransfer(): void {
+        this.cloudApiService.respondToTransfer(this.system.id, 'rejected')
+            .subscribe((_res: CloudResponse) => {
+                this.systemTransferInProcess = false;
+            });
     }
 }

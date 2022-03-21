@@ -7,6 +7,27 @@
             [srcset]="CONFIG.images.dir + 'welcome_page_logo.png, ' + CONFIG.images.dir + 'welcome_page_logo@2x.png 2x'">
         </div>
     <div class="modal-body">
+        <div
+            *ngIf="accountNotOnSystem || account2faRequired"
+            class="error-block"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
+            ></svg-icon>
+            <div class="ml-2">
+                <span
+                    *ngIf="accountNotOnSystem"
+                    translate
+                >Cloud account doesn't exist on this system.</span>
+                <span
+                    *ngIf="account2faRequired"
+                    [innerHTML]="'errorCodes.webadmin2faRequired' |
+                        translate: { cloudHost: CONFIG.cloudHost }"
+                ></span>
+            </div>
+        </div>
         <div class="form-group">
             <label for="login_email" translate>Login</label>
             <input type="email" class="form-control"

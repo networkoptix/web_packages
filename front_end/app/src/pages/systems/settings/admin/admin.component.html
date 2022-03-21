@@ -37,7 +37,7 @@
                 </span>
             </header>
 
-            <nx-section *ngIf="system.isMine; else notOwner">
+            <nx-section *ngIf="system.isMine">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
@@ -59,8 +59,31 @@
                     </div>
                 </div>
             </nx-section>
+            <nx-section
+                *ngIf="!environment.isLocal && systemTransferInProcess
+                    else notOwner"
+            >
+                <div
+                    class="system-owner mb-2"
+                    [innerHTML]="'system.transferNotification' | translate: {
+                        ownerName: system.userManager.currentOwner.fullName
+                    }"
+                ></div>
+                <div class="d-flex">
+                    <button
+                        class="btn btn-primary mr-2"
+                        (click)="acceptOwnershipTransfer()"
+                        translate
+                    >Accept</button>
+                    <button
+                        class="btn btn-default"
+                        (click)="rejectOwnershipTransfer()"
+                        translate
+                    >Reject</button>
+                </div>
+            </nx-section>
             <ng-template #notOwner>
-                <nx-section>
+                <nx-section *ngIf="!system.isMine">
                     <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
                         <span class="name" [innerText]="updateUserRole()"></span>
                     </span>
