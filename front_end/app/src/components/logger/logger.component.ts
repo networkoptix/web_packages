@@ -2,8 +2,8 @@ import { HttpParams } from '@angular/common/http';
 import { AfterViewInit, Component, Inject, Input } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import { NxConfigService } from '@services/nx-config';
-import { NxSystem } from '@services/system.service';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 
 import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
@@ -57,9 +57,16 @@ export class NxLoggerComponent implements AfterViewInit {
         if (!environment.isLocal) {
             this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
         }
+        const buildDropDownOption = optionName => ({
+            name: optionName,
+            value: optionName,
+            disabled: false,
+            help: undefined,
+            state: undefined
+        });
         this.system.mediaserver.logLevel().subscribe(res => {
-            this.logLevels = Object.keys(res.reply).map(level => new DropdownItem<string>(level, undefined, level));
-            this.selectedLogLevel = new DropdownItem<string>('MAIN', undefined, 'MAIN');
+            this.logLevels = Object.keys(res.reply).map(level => buildDropDownOption(level));
+            this.selectedLogLevel = buildDropDownOption('MAIN');
             this.getLogs(this.selectedLogLevel);
         });
     }

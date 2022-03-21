@@ -627,9 +627,11 @@ export class NxDialogsService {
         system: NxSystem,
         transfers: SystemTransferInfo[],
     ): Promise<void> {
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
+        const config: Partial<DialogConfig> = {
+            data: {
+                system,
+                transfers,
+            }
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(TransferOwnershipModalContent, dialogConfig)
@@ -655,13 +657,8 @@ export class NxDialogsService {
     }
 
     public client2faWarning(): Promise<void> {
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
-        };
-
-        const params: IParams = {};
-
-        return this.createModal(Client2faWarningModalContent, options, params);
+        const config: Partial<DialogConfig> = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(Client2faWarningModalContent, dialogConfig).afterClosed();
     }
 }

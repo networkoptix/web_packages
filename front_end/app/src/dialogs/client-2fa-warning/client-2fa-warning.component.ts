@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject } from '@angular/core';
 
 import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 @Component({
@@ -14,8 +14,9 @@ export class Client2faWarningModalContent {
     targets = [];
 
     constructor(
-        public activeModal: NgbActiveModal,
         language: NxLanguageProviderService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.LANG = language.translations;
     }

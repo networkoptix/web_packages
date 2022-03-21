@@ -433,7 +433,7 @@ export class MergeModalContent {
                 err => {
                     if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                         return this.handleOldSession(this.checkMergeabilityProcess);
-                    }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                    } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                         return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                     }
                     if (err !== 'canceled') {
@@ -527,7 +527,7 @@ export class MergeModalContent {
             }, err => {
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
-                }  else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
+                } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 }
                 console.error(err);

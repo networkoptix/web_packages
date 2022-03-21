@@ -53,7 +53,14 @@ export class CameraManager {
                     [serverTimes, cameras] = response;
                 });
         }
-        const camerasHealth = (await this.serverManager.mediaserver.getHealthValues().toPromise())?.reply?.cameras || {};
+
+        let camerasHealth;
+        try {
+            camerasHealth = (await this.serverManager.mediaserver.getHealthValues().toPromise())?.reply?.cameras || {};
+        } catch (e) {
+            camerasHealth = {};
+        }
+
         const mappedCameras = <ICamera[]>cameras.map(({ addParams: addParamsRaw, parentId, id, vendor, backupType: deprecatedBackupType, ...camera }: ICamera) => {
             const backupType = deprecatedBackupType || (<any>camera).backupQuality;
             const server = serverTimes.find(({ serverId }) => serverId === parentId);

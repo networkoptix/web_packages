@@ -27,7 +27,6 @@ export class TransferOwnershipModalContent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    system: NxSystem;
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;

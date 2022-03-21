@@ -263,7 +263,8 @@ export class NxSystem extends System {
         }
 
         return this.cloudApi.getSystemToken(this.id).toPromise().then(tokens => {
-            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true);
+            (<NxSystemRestAPI> this.mediaserver).setTokens(tokens, true)
+                .subscribe(() => {});
             return Promise.resolve(true);
         }).catch(() => {
             this.lostConnection = true;
@@ -284,6 +285,10 @@ export class NxSystem extends System {
             (this.systemInfo?.cloudStorageCapable && this.isMine);
     }
 
+    getInfoFromCloudDb() {
+        return this.cloudApi.systems(this.id);
+    }
+
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
         const parseSettings = ({
             cloudAccountName: ownerAccountEmail,
@@ -301,6 +306,7 @@ export class NxSystem extends System {
         };
 
         if (environment.isLocal) {
+            const systemPromise = Promise.resolve(this as Partial<NxSystemWithUserInfo>);
             return this.mediaserver.getSystemSettings()
                 .then((res: any) => {
                     let parsedSettings: any = {};
@@ -331,11 +337,15 @@ export class NxSystem extends System {
                             this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
-                }, err => console.error('getSystemSettings: ', err)) // catch api error
-                .catch(err => console.error('getInfoAndPermissions: ', err)) // catch result processing error
-                .finally(() => {
-                    return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
-                });
+                    return systemPromise;
+                }, err => {
+                    console.error('getSystemSettings: ', err);
+                    return systemPromise;
+                }) // catch api error
+                .catch(err => {
+                    console.error('getInfoAndPermissions: ', err);
+                    return systemPromise;
+                }); // catch result processing error
         }
 
         return this.systemsService
@@ -1096,5 +1106,9 @@ export class NxSystem extends System {
      */
     get moduleInfo() {
         return this.serverManager.moduleInfo;
+    }
+
+    getModuleInfoUsingUrl(url: string) {
+        return this.serverManager.getModuleInfoUsingUrl(url);
     }
 }
