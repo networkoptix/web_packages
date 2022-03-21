@@ -346,3 +346,12 @@ export interface EmailNotification {
     messageText?: string,
     attachments?: NotificationAttachment[]
 }
+
+export interface SystemTransferInfo {
+    comment: string;
+    fromAccount: string;
+    status: string;
+    systemId: string;
+    systemName: string;
+    toAccount: string;
+}

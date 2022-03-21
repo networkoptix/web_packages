@@ -59,9 +59,8 @@
                     </div>
                 </div>
             </nx-section>
-            <nx-section *ngIf="!environment.isLocal &&
-                systemTransferInProcess &&
-                newSystemOwner === system.userManager.currentUser.email;
+            <nx-section
+                *ngIf="!environment.isLocal && systemTransferInProcess
                     else notOwner"
             >
                 <div

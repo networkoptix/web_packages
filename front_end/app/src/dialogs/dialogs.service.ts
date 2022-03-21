@@ -15,6 +15,7 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
 import { NxAccountService } from '@services/account.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { SystemTransferInfo } from '@services/nx-cloud-api.types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
@@ -640,7 +641,10 @@ export class NxDialogsService {
         return this.createModal(SelectTimeRangeModalContent, options, params);
     }
 
-    public transferOwnership(system: NxSystem) {
+    public transferOwnership(
+        system: NxSystem,
+        transfers: SystemTransferInfo[],
+    ): Promise<void> {
         const options: IParams = {
             windowClass: 'modal-holder',
             backdrop: 'static'
@@ -648,6 +652,7 @@ export class NxDialogsService {
 
         const params: IParams = {
             system,
+            transfers,
             closable: true
         };
 

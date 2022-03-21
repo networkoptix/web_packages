@@ -3,7 +3,8 @@ import type { NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-// import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { SystemTransferInfo } from '@services/nx-cloud-api.types';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -19,6 +20,7 @@ import type {
 })
 export class TransferOwnershipModalContent implements OnInit {
     @Input() system: NxSystem;
+    @Input() transfers: SystemTransferInfo[];
     @Input() closable: boolean;
 
     @ViewChild('transferOwnershipForm') form: NgForm;
@@ -29,7 +31,7 @@ export class TransferOwnershipModalContent implements OnInit {
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;
-    newOwner: string;
+    newOwnerEmail: string;
     newRole: string = 'Administrator'; // Probably not actually hardcoded
     // newRole: NxSystemRole;
     // accessDescription: string;
@@ -39,7 +41,7 @@ export class TransferOwnershipModalContent implements OnInit {
         language: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         private processService: NxProcessService,
-        // private cloudService: NxCloudApiService,
+        private cloudService: NxCloudApiService,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -51,25 +53,47 @@ export class TransferOwnershipModalContent implements OnInit {
         // );
 
         const errorCodes = {
-            // accountDoesNotExist: () => {
-            //     this.form.controls.newOwnerEmail.setErrors({
-            //         accountDoesNotExist: true
-            //     });
-            // },
+            accountDoesNotExist: () => {
+                this.form.controls.newSystemOwner.setErrors({
+                    accountDoesNotExist: true
+                });
+            },
+            selfTransfer: () => {
+                this.form.controls.newSystemOwner.setErrors({
+                    selfTransfer: true
+                });
+            },
+            duplicateTransfer: () => {
+                this.form.controls.newSystemOwner.setErrors({
+                    duplicateTransfer: true
+                });
+            },
         };
 
         this.transferOwnership = this.processService.createProcess(
             async () => {
-                // const res = await this.cloudService
-                //     .checkIfEmailExistsInCloud(this.newOwner);
-                // if (!res.emailExists) {
-                //     return Promise.reject({ error: 'accountDoesNotExist' });
-                // }
-                // // TODO: Check for if user has verified account
-                return Promise.resolve();
+                if (this.system.userManager.currentOwner.email === this.newOwnerEmail) {
+                    return Promise.reject({ error: 'selfTransfer' });
+                }
+                if (this.transfers.some(t => t.toAccount === this.newOwnerEmail)) {
+                    return Promise.reject({ error: 'duplicateTransfer' });
+                }
+                const res = await this.cloudService
+                    .checkIfEmailExistsInCloud(this.newOwnerEmail);
+                if (!res.emailExists) {
+                    return Promise.reject({ error: 'accountDoesNotExist' });
+                } else {
+                    return this.cloudService
+                        .startTransfer(this.system.id, this.newOwnerEmail)
+                        .toPromise();
+                }
+                // TODO: Check for if user has verified account
             },
             { errorCodes },
-            () => { this.transferComplete = true; },
+            (res: SystemTransferInfo) => {
+                this.transferComplete = true;
+                this.transfers.push(res);
+            },
             () => {},
         );
     }

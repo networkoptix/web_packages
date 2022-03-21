@@ -20,18 +20,50 @@
     <ng-container *ngIf="!transferComplete else transferSuccessTemplate">
         <div class="modal-body mb-4">
             <div class="form-group">
-                <label for="newOwnerInput" translate>New system owner</label>
+                <label for="newSystemOwner" translate>New system owner email</label>
                 <input
-                    #newOwnerInput="ngModel"
+                    #newSystemOwner="ngModel"
                     class="form-control"
-                    id="newOwnerInput"
-                    name="newOwnerInput"
-                    [(ngModel)]="newOwner"
-                    [placeholder]="'User' | translate"
+                    id="newSystemOwner"
+                    name="newSystemOwner"
+                    [(ngModel)]="newOwnerEmail"
+                    [placeholder]="'Email' | translate"
+                    [pattern]="CONFIG.credentialsValidation.emailRegex"
                     autofocus
                     required
                 >
-                <p class="subtext mt-2" translate>Enter the name of the future system owner</p>
+                <!-- <p class="subtext mt-2" translate>Enter the email of the future system owner</p> -->
+                <div class="col-12 ml-n2 d-flex">
+                    <ng-container *ngIf="newSystemOwner.errors">
+                        <ng-container *ngIf="newSystemOwner.touched">
+                            <span
+                                *ngIf="newSystemOwner.errors.required"
+                                class="input-error"
+                                translate
+                            >Email is required</span>
+                            <span
+                                *ngIf="newSystemOwner.errors.pattern"
+                                class="input-error"
+                                translate
+                            >Please enter a valid Email</span>
+                            <span
+                                *ngIf="newSystemOwner.errors.accountDoesNotExist"
+                                class="input-error"
+                                translate
+                            >User not found</span>
+                            <span
+                                *ngIf="newSystemOwner.errors.selfTransfer"
+                                class="input-error"
+                                translate
+                            >You already own this system</span>
+                            <span
+                                *ngIf="newSystemOwner.errors.duplicateTransfer"
+                                class="input-error"
+                                translate
+                            >Transfer to this user is already in process</span>
+                        </ng-container>
+                    </ng-container>
+                </div>
             </div>
             <div class="form-group">
                 <!-- <label for="permissionsSelect" translate>Your new role in the current system</label> -->
