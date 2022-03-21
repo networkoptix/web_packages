@@ -272,6 +272,7 @@ export class NxSystem extends System {
         };
 
         if (environment.isLocal) {
+            const systemPromise = Promise.resolve(this as Partial<NxSystemWithUserInfo>);
             return this.mediaserver.getSystemSettings()
                 .then((res: any) => {
                     let parsedSettings: any = {};
@@ -302,11 +303,15 @@ export class NxSystem extends System {
                             this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
-                }, (err) => console.error('getSystemSettings: ', err)) // catch api error
-                .catch(err => console.error('getInfoAndPermissions: ', err)) // catch result processing error
-                .finally(() => {
-                    return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
-                });
+                    return systemPromise;
+                }, (err) => {
+                    console.error('getSystemSettings: ', err);
+                    return systemPromise;
+                }) // catch api error
+                .catch(err => {
+                    console.error('getInfoAndPermissions: ', err);
+                    return systemPromise;
+                }); // catch result processing error
         }
 
         return this.systemsService
