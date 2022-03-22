@@ -199,12 +199,12 @@
             "low": "Niedrig"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{count, plural, =0{# Jahre} one{# Jahr} other{# Jahre}}",
+            "monthS": "{count, plural, =0{# Monate} one{# Monat} other{# Monate}}",
+            "weekS": "{count, plural, =0{# Wochen} one{# Woche} other{# Wochen}}",
+            "dayS": "{count, plural, =0{# Tage} one{# Tag} other{# Tage}}",
+            "hourS": "{count, plural, =0{# Stunden} one{# Stunde} other{# Stunden}}",
+            "minuteS": "{count, plural, =0{# Minuten} one{# Minute} other{# Minuten}}"
         },
         "general": "Allgemein",
         "generalError": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
@@ -447,7 +447,8 @@
             "action": "Login",
             "message": "Die Zwei-Faktor-Authentifizierung ist für dieses Konto aktiviert. Bitte anmelden.",
             "title": "Zwei-Faktor-Authentifizierung ist erforderlich!",
-            "wizardWarning": "Nachdem Sie die Zwei-Faktor-Authentifizierung aktiviert haben, können Sie sich von %VMS_NAME%-Client und Web Admin aus nicht mehr bei {count, plural, =0{# Systemen} one{# System} other{# Systemen}} anmelden:"
+            "wizardWarning": "Nachdem Sie die Zwei-Faktor-Authentifizierung aktiviert haben, können Sie sich von %VMS_NAME%-Client und Web Admin aus nicht mehr bei {count, plural, =0{# Systemen} one{# System} other{# Systemen}} anmelden:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
         "networkConnection": "Verbindung zu %CLOUD_NAME% kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung.",
         "archiveEncrypted": "ARCHIV\nVERSCHLÜSSELT",
-        "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort\neinzugeben, um dieses Archiv zu entschlüsseln."
+        "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort\neinzugeben, um dieses Archiv zu entschlüsseln.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",
@@ -864,7 +866,8 @@
             "network": "Netzwerk, hinzugefügt über das Betriebssystem",
             "smb": "Netzwerk (smb), über VMS hinzugefügt",
             "cloud": "Cloud"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "aktiviert",

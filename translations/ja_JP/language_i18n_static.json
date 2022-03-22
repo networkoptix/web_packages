@@ -447,7 +447,8 @@
             "action": "ログイン",
             "message": "このアカウントでは二要素認証が有効になっています。ログインしてください。",
             "title": "二要素が必要です。",
-            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}にログインできなくなります。"
+            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}にログインできなくなります。",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
         "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
         "archiveEncrypted": "アーカイブは\n暗号化されています",
-        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。"
+        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -864,7 +866,8 @@
             "network": "ネットワーク (OS 経由で追加)",
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "有効化済み",

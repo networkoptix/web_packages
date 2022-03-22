@@ -447,7 +447,8 @@
             "action": "Login",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:"
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "Не удалось активировать лицензию. Сервер лицензий не ответил. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
-        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive."
+        "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Контроль доступа",
@@ -864,7 +866,8 @@
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "активирован",

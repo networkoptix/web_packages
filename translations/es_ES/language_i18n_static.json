@@ -447,7 +447,8 @@
             "action": "Login",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:"
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
         "networkConnection": "No se puede conectar a %CLOUD_NAME%. Por favor, compruebe su conexión de red.",
         "archiveEncrypted": "ARCHIVO ENCRIPTADO",
-        "archiveEncryptedMessage": "Solicite al administrador del sistema que introduzca la contraseña de cifrado para descifrar este archivo."
+        "archiveEncryptedMessage": "Solicite al administrador del sistema que introduzca la contraseña de cifrado para descifrar este archivo.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -864,7 +866,8 @@
             "network": "Red añadida a través del sistema operativo",
             "smb": "Red (smb), añadida a través de VMS",
             "cloud": "Nube"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "activado",

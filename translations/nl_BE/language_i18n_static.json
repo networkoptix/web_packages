@@ -447,7 +447,8 @@
             "action": "Login",
             "message": "Twee-factorenauthenticatie is ingeschakeld voor dit account. Log in.",
             "title": "Twee factoren zijn vereist!",
-            "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:"
+            "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
         "networkConnection": "Kan geen verbinding maken met %CLOUD_NAME%, controleer je netwerkverbinding.",
         "archiveEncrypted": "ARCHIEF\nVERSLEUTELD",
-        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen."
+        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -864,7 +866,8 @@
             "network": "Netwerk, toegevoegd via OS",
             "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "geactiveerd",

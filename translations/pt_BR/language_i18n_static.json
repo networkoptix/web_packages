@@ -447,7 +447,8 @@
             "action": "Entrar",
             "message": "A autenticação de dois fatores está habilitada para esta conta. Por favor entre.",
             "title": "Dois fatores são necessários!",
-            "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:"
+            "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "Falha ao ativar a licença. O servidor de licença não respondeu. Tente novamente ou entre em contato com o suporte.",
         "networkConnection": "Não foi possível conectar a %CLOUD_NAME%, verifique sua conexão de rede.",
         "archiveEncrypted": "ARQUIVO\nCRIPTOGRAFADO",
-        "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo."
+        "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Controle de Acesso",
@@ -864,7 +866,8 @@
             "network": "Rede, adicionada por meio do sistema operacional",
             "smb": "Rede (smb), adicionada por meio de VMS",
             "cloud": "Nuvem"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "ativado",

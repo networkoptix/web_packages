@@ -119,7 +119,7 @@
         "confirmHeader": "System connected to %CLOUD_NAME%!",
         "loginError": "Cannot connect to %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "Spróbuj ponownie później.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
         "connectedText": "System podłączono do %CLOUD_NAME%",
         "setupConnectedText": "System podłączony",
@@ -131,7 +131,7 @@
             "newPass": "ustaw nowe hasło",
             "login": "zaloguj się"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "E-mail wysłany!"
     },
     "cameraFilters": {
         "H265": "Kamery H.265",
@@ -447,7 +447,8 @@
             "action": "Login",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:"
+            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -590,7 +591,8 @@
         "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
         "archiveEncrypted": "ARCHIWUM\nZASZYFROWANE",
-        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum."
+        "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -864,7 +866,8 @@
             "network": "Sieć, dodana przez system operacyjny",
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "aktywny",
