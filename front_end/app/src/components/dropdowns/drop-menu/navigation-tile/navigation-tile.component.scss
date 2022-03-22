@@ -116,10 +116,8 @@
             }
         }
     
-        .st0 {
-            fill         : none;
-            stroke-width : 1px;
-            stroke       : var(--system-tile-nav-link-color) !important;
+        .icon-with-fill {
+            fill : var(--system-tile-nav-link-icon-color) !important;
         }
     }
 }
