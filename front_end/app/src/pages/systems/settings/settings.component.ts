@@ -465,7 +465,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     .subscribe(() => {
                                         this.systemReady();
                                         this.updateAlert();
-                                        this.updateMenu(this.system);
+                                        this.updateMenu();
                                     });
                         });
                     }

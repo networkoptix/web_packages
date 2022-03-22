@@ -7,10 +7,11 @@ import {
 } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { IConfig, NxConfigService } from '@services/nx-config';
+import type { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import { NxSystem } from '../../services/system.service';
+import { NxSystem } from '../../services/system.service/system';
 import { NxSettingsService } from '../systems/settings/settings.service';
 
 @UntilDestroy()
@@ -23,7 +24,7 @@ export class NxMonitoringComponent implements AfterViewInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    system: NxSystem | any;
+    system: NxSystem;
 
     constructor(
         configService: NxConfigService,

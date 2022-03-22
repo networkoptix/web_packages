@@ -57,16 +57,12 @@ export class NxLoggerComponent implements AfterViewInit {
         if (!environment.isLocal) {
             this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
         }
-        const buildDropDownOption = optionName => ({
-            name: optionName,
-            value: optionName,
-            disabled: false,
-            help: undefined,
-            state: undefined
-        });
         this.system.mediaserver.logLevel().subscribe(res => {
-            this.logLevels = Object.keys(res.reply).map(level => buildDropDownOption(level));
-            this.selectedLogLevel = buildDropDownOption('MAIN');
+            this.logLevels = Object.keys(res.reply).map(level => ({
+                name: level,
+                value: level,
+            }));
+            this.selectedLogLevel = { name: 'MAIN', value: 'MAIN' };
             this.getLogs(this.selectedLogLevel);
         });
     }

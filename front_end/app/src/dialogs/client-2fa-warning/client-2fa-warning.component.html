@@ -5,7 +5,7 @@
         class="close"
         data-dismiss="modal"
         aria-label="Close"
-        (click)="activeModal.close()"
+        (click)="close()"
     >
         <span class="close-content"><span class="close-icon"></span></span>
     </button>
@@ -16,5 +16,5 @@
     <p [innerHTML]="'dialogs.twoFactor.unsupportedSystem' | translate"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" (click)="activeModal.close()" translate>OK</button>
+    <button class="btn btn-primary" (click)="close()" translate>OK</button>
 </div>
