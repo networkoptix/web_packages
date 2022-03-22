@@ -13,7 +13,7 @@ pushd $REPO_DIR
         mkdir -p $BUILD_DIR/static/lang_$LANG/views
 
         echo "Copy default views - with default language"
-        cp -rf $BUILD_DIR/static/views $BUILD_DIR/static/lang_$LANG
+        [ -e $BUILD_DIR/static/views ] && cp -rf $BUILD_DIR/static/views $BUILD_DIR/static/lang_$LANG
 
         echo "Overwrite them with localized sources"
         echo $BUILD_DIR/$REPO_DIR/$lang_dir/views
@@ -21,7 +21,7 @@ pushd $REPO_DIR
         pwd
         cp -rf $BUILD_DIR/$REPO_DIR/$lang_dir/views $BUILD_DIR/static/lang_$LANG || true
 
-        echo "Generate language.json"
+        echo "********* Generate webadmin language file *********"
         pushd $BUILD_DIR
             python $REPO_DIR/build_scripts/generate_language_compiled_json.py $LANG
         popd
