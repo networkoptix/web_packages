@@ -8,7 +8,12 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider, MockDirective, MockModule } from 'ng-mocks';
+import {
+    MockProvider,
+    MockDirective,
+    MockModule,
+    MockComponent,
+} from 'ng-mocks';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -16,6 +21,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxGenericDropdown } from './dropdown.component';
+import { NxGenericDropdownItemSVG } from './item-icon/item-icon.component';
 
 const ButtonClickEvents = {
     left: { button: 0 },
@@ -83,6 +89,7 @@ describe('NxGenericDropdown', () => {
             ],
             declarations: [
                 NxGenericDropdown,
+                MockComponent(NxGenericDropdownItemSVG),
                 MockDirective(NxArrowNavDirective),
             ],
             providers: [

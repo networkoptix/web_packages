@@ -54,7 +54,7 @@ import {
 import {
     NxSystemTileComponent
 } from './dropdowns/drop-menu/system-tile/system-tile.component';
-import { NxGenericDropdown } from './dropdowns/generic/dropdown.component';
+import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
 import {
     NxLanguageDropdown,
     NxHeaderLanguageDropdown
@@ -118,10 +118,11 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         EditorModule,
         SharedComponentsModule,
         PortalModule,
+
+        NxGenericDropdownModule,
     ],
     declarations: [
         NxThreeDotDropdown,
-        NxGenericDropdown,
         NxLanguageDropdown,
         NxHeaderLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -226,7 +227,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
     exports: [
         QuicklinkModule,
         NxThreeDotDropdown,
-        NxGenericDropdown,
+        NxGenericDropdownModule,
         NxLanguageDropdown,
         NxHeaderLanguageDropdown,
         NxAccountSettingsDropdown,

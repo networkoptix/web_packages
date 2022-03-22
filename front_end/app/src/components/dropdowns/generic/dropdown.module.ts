@@ -1,0 +1,25 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { DirectivesModule } from '@directives/directives.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { NxGenericDropdown } from './dropdown.component';
+import { NxGenericDropdownItemSVG } from './item-icon/item-icon.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        AngularSvgIconModule.forRoot(),
+
+        DirectivesModule,
+        PipesModule,
+    ],
+    declarations: [
+        NxGenericDropdown,
+        NxGenericDropdownItemSVG,
+    ],
+    exports: [NxGenericDropdown]
+})
+export class NxGenericDropdownModule {}
