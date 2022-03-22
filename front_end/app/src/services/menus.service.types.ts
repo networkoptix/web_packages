@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { QueryParamsHandling } from '@angular/router';
 
 export enum Auth {
@@ -13,7 +14,6 @@ export class MenuNode {
     public draft?: boolean;
     public pending?: boolean;
     public indented?: boolean;
-    // eslint-disable-next-line camelcase
     public asset_type?: any;
     public order?: number;
     public state?: 'pending' | 'draft';

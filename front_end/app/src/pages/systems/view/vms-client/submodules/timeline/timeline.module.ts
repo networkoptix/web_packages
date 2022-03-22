@@ -2,13 +2,41 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { declarations } from './components';
-// eslint-disable-next-line camelcase
-import { export_components } from './components/exports';
+import {
+    TimeUnderMouseComponent
+} from './components/time-under-mouse/time-under-mouse.component';
+import {
+    TimelinePlaybackIndicatorComponent
+} from './components/timeline-playback-indicator/timeline-playback-indicator.component';
+import {
+    TimelineScrollbarComponent
+} from './components/timeline-scrollbar/timeline-scrollbar.component';
+import {
+    TimelineSelectionActionPanelComponent
+} from './components/timeline-selection-action-panel/timeline-selection-action-panel.component';
+import {
+    TimelineSelectionComponent
+} from './components/timeline-selection/timeline-selection.component';
+import { TimelineComponent } from './components/timeline/timeline.component';
+import {
+    ZoomControlsComponent
+} from './components/zoom-controls/zoom-controls.component';
 
 @NgModule({
-    declarations,
-    exports: export_components,
+    declarations: [
+        TimelineComponent,
+        TimeUnderMouseComponent,
+        TimelinePlaybackIndicatorComponent,
+        TimelineScrollbarComponent,
+        TimelineSelectionComponent,
+        TimelineSelectionActionPanelComponent,
+        ZoomControlsComponent,
+    ],
+    exports: [
+        TimelineComponent,
+        ZoomControlsComponent,
+        TimelineSelectionActionPanelComponent,
+    ],
     imports: [
         CommonModule,
         AngularSvgIconModule.forRoot()

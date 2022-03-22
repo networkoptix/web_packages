@@ -10,25 +10,25 @@ import { GoogleBooksService } from '../../store/books/books.service';
     templateUrl: './books.component.html',
 })
 export class NgrxDemoBooksComponent {
-  books$ = this.store.select(selectBooks);
-  bookCollection$ = this.store.select(selectBookCollection);
+    books$ = this.store.select(selectBooks);
+    bookCollection$ = this.store.select(selectBookCollection);
 
-  onAdd(bookId: string) {
-      this.store.dispatch(addBook({ bookId }));
-  }
+    onAdd(bookId: string) {
+        this.store.dispatch(addBook({ bookId }));
+    }
 
-  onRemove(bookId: string) {
-      this.store.dispatch(removeBook({ bookId }));
-  }
+    onRemove(bookId: string) {
+        this.store.dispatch(removeBook({ bookId }));
+    }
 
-  constructor(
-    private booksService: GoogleBooksService,
-    private store: Store
-  ) {}
+    constructor(
+        private booksService: GoogleBooksService,
+        private store: Store
+    ) {}
 
-  ngOnInit() {
-      this.booksService
-          .getBooks()
-          .subscribe(books => this.store.dispatch(retrievedBookList({ books })));
-  }
+    ngOnInit() {
+        this.booksService
+            .getBooks()
+            .subscribe(books => this.store.dispatch(retrievedBookList({ books })));
+    }
 }

@@ -5,7 +5,7 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
         }
     }
 
-    var items = pasteEvent.clipboardData.items;
+    const items = pasteEvent.clipboardData.items;
 
     if (!items) {
         if (typeof (callback) === 'function') {

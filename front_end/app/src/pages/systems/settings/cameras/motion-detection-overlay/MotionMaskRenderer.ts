@@ -506,9 +506,9 @@ export class MotionMaskRenderer {
             const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
             this.maskRenderInstructions.push(() => {
                 this.ctx.fillText(
-                `${sensitivity || '0'}`,
-                (x + 0.5) * this.cellWidth + addOffsetX,
-                (y + 1) * this.cellHeight - 2 + addOffsetY
+                    `${sensitivity || '0'}`,
+                    (x + 0.5) * this.cellWidth + addOffsetX,
+                    (y + 1) * this.cellHeight - 2 + addOffsetY
                 );
             });
         });

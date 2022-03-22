@@ -383,20 +383,20 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         return label;
     };
 
-     /** Moves the example response and schema outside of the response table, also adds a label.  */
-     private moveExampleResponse = () => {
-         const responses = this.document.querySelector('.responses-inner:not(.with-label)');
-         if (responses) {
-             const exampleResponse = responses.querySelector('.model-example');
-             // Should skip this response on next iteration so with-label class is added even if a label is not actually added.
-             responses.classList.add('with-label');
-             if (exampleResponse) {
-                 const label = this.generateRequestTypeLabel();
-                 exampleResponse.insertBefore(label, exampleResponse.firstChild);
-                 responses.appendChild(exampleResponse);
-             }
-         }
-     };
+    /** Moves the example response and schema outside of the response table, also adds a label.  */
+    private moveExampleResponse = () => {
+        const responses = this.document.querySelector('.responses-inner:not(.with-label)');
+        if (responses) {
+            const exampleResponse = responses.querySelector('.model-example');
+            // Should skip this response on next iteration so with-label class is added even if a label is not actually added.
+            responses.classList.add('with-label');
+            if (exampleResponse) {
+                const label = this.generateRequestTypeLabel();
+                exampleResponse.insertBefore(label, exampleResponse.firstChild);
+                responses.appendChild(exampleResponse);
+            }
+        }
+    };
 
     private addTabItemEventListener = () => {
         const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');

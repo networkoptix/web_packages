@@ -68,8 +68,8 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
 
     checkVisible(elm: HTMLElement) {
         const headerHeight = 48;
-        var rect = elm.getBoundingClientRect();
-        var viewHeight = Math.max(
+        const rect = elm.getBoundingClientRect();
+        const viewHeight = Math.max(
             this.document.documentElement.clientHeight,
             this.window.innerHeight
         );

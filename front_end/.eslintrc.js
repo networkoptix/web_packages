@@ -32,37 +32,35 @@ module.exports = {
     },
     plugins: [
         'import',
-        'node',
+        // 'node',
         // 'promise',
     ],
     rules: {
         'accessor-pairs': 'off',
+        'array-callback-return': 'off', // TODO: Restore
         'arrow-parens': ['error', 'as-needed'],
+        camelcase: ['error', {
+            properties: 'never',
+            ignoreDestructuring: true,
+        }],
         'comma-dangle': ['error', 'only-multiline'],
         eqeqeq: ['error', 'always'],
-        'handle-callback-err': 'off', // Deprecated
         indent: ['error', 4, {
             SwitchCase: 1,
-            VariableDeclarator: 1,
-            outerIIFEBody: 1,
-            MemberExpression: 1,
-            FunctionDeclaration: { parameters: 1, body: 1 },
-            FunctionExpression: { parameters: 1, body: 1 },
-            CallExpression: { arguments: 1 },
-            ArrayExpression: 1,
-            ObjectExpression: 1,
-            ImportDeclaration: 1,
-            flatTernaryExpressions: false,
-            ignoreComments: false,
-            ignoredNodes: ['TemplateLiteral *']
+            ignoredNodes: [
+                'TemplateLiteral *',
+                /* Don't enforce indent inside template literals */
+                'PropertyDefinition[decorators] Identifier',
+                /* Incorrectly indents class property with decorator on
+                preceding line */
+            ],
         }],
+        'multiline-ternary': 'off',
         'no-case-declarations': 'off',
         'no-dupe-else-if': 'error',
         'no-extra-semi': 'error',
         'no-mixed-operators': 'off',
         'no-multi-assign': 'error',
-        'no-negated-in-lhs': 'off', // Deprecated
-        'no-path-concat': 'off', // Deprecated
         'no-return-await': 'error',
         'no-unused-vars': 'off', // TODO: Restore for non-components
         // ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
@@ -74,6 +72,7 @@ module.exports = {
         'no-useless-constructor': 'off', // TODO: Restore
         'no-useless-escape': 'off',
         'prefer-promise-reject-errors': 'off',
+        'prefer-regex-literals': 'off',
         semi: ['error', 'always'],
         'space-before-function-paren': ['error', {
             anonymous: 'always',
@@ -103,9 +102,6 @@ module.exports = {
             'newlines-between': 'always',
             alphabetize: { order: 'asc' }
         }],
-
-        'node/handle-callback-err': ['error', '^(err|error)$'],
-        'node/no-path-concat': 'error',
     },
     overrides: [
         {
