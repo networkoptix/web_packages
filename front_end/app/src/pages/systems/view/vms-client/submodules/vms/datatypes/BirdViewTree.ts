@@ -279,7 +279,7 @@ export class BirdViewTree {
         ) || [];
         if (endMs > this._originalArchiveRange.end) {
             // console.log('GNRR', this.newlyRecorded, this.newlyRecorded.filter(r => r.start < endMs))
-            this.newlyRecorded.filter(r => r.start < endMs).map(r => {
+            this.newlyRecorded.filter(r => r.start < endMs).forEach(r => {
                 treeRecords.push(r);
             });
         }

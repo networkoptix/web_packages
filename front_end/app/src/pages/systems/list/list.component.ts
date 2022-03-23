@@ -232,6 +232,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
                         return true;
                     } else if (tile.type === 'group') {
                         // TODO: Other possible search conditions
+                        return false;
                     } else if (tile.type === 'system') {
                         return (
                             this.hasMatch(this.LANG.system.mySystemSearch?.(), search) &&
@@ -239,6 +240,8 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
                         ) ||
                             this.hasMatch(tile.ownerFullName, search) ||
                             this.hasMatch(tile.ownerAccountEmail, search);
+                    } else {
+                        return false;
                     }
                 });
         } else {

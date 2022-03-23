@@ -158,9 +158,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 this.elements = this.elements.filter(item => {
                     return item.information.type.find(type => {
                         return this.filterModel.tags.some(tag => {
-                            if (tag.id === type.id && tag.value) {
-                                return item;
-                            }
+                            return tag.id === type.id && tag.value;
                         });
                     });
                 });

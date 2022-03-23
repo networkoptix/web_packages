@@ -35,9 +35,15 @@ export class GenericModalContent implements OnInit {
         pickFrom(
             this.dialogData,
             [
-                'message', 'title', 'actionLabel',
-                'buttonType', 'cancelLabel', 'buttonClass',
-                'footerClass', 'hasFooter', 'cancellable',
+                'message',
+                'title',
+                'actionLabel',
+                'buttonType',
+                'cancelLabel',
+                'buttonClass',
+                'footerClass',
+                'hasFooter',
+                'cancellable',
             ],
             this
         );

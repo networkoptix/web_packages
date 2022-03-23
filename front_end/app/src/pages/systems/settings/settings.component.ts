@@ -538,6 +538,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content.level1.find(node => {
             if (node.id === event.nodeId) {
                 node.toggle = event.state;
+                return true;
+            } else {
+                return false;
             }
         });
     }

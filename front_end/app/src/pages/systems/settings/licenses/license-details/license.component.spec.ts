@@ -32,8 +32,10 @@ describe('Licenses (Details)', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                NxLicenseDetailComponent, NxContentBlockComponent,
-                NxContentBlockSectionComponent, NxInfoBlockComponent
+                NxLicenseDetailComponent,
+                NxContentBlockComponent,
+                NxContentBlockSectionComponent,
+                NxInfoBlockComponent
             ],
             imports: [
                 CommonModule,

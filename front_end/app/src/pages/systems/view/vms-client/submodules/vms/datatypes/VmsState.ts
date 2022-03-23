@@ -45,7 +45,7 @@ export function createCameraNotSelectedState(
         systemId,
         mediaServers: mediaServers,
         cameras: (mediaServers || []).reduce((acc, ms) => {
-            ms.cameras.map(c => {
+            ms.cameras.forEach(c => {
                 acc[c.id] = c;
             });
             return acc;

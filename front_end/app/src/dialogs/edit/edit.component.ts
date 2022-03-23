@@ -89,8 +89,12 @@ export class EditModalContent {
         pickFrom(
             this.dialogData,
             [
-                'heading', 'modal', 'values',
-                'manifest', 'settings', 'contextList',
+                'heading',
+                'modal',
+                'values',
+                'manifest',
+                'settings',
+                'contextList',
             ],
             this
         );

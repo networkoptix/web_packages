@@ -94,8 +94,7 @@ describe('NxMenuService', () => {
                 indent: true,
                 path: 'cameras/1b8be533-0015-766a-9587-06af266b5881',
                 additionalLabel: '10.1.5.150'
-            }
-            ],
+            }],
             toggle: false
         },
         {

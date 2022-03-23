@@ -12,11 +12,23 @@ xdescribe('alignTimeStamp', () => {
         expect(alignTimeStamp(1234, 1000, 'right')).toEqual(2000);
 
         const regularIntervals = [
-            500, 1000, 5000, 10000, 30000, 60000, 300000, 600000, 1800000,
-            3600000, 3 * 3600000, 6 * 3600000, 12 * 3600000, 24 * 3600000,
+            500,
+            1000,
+            5000,
+            10000,
+            30000,
+            60000,
+            300000,
+            600000,
+            1800000,
+            3600000,
+            3 * 3600000,
+            6 * 3600000,
+            12 * 3600000,
+            24 * 3600000,
             7 * 24 * 3600000
         ];
-        regularIntervals.map(i => {
+        regularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
             const r = alignTimeStamp(t, i, 'right');
             expect(l % i).toEqual(0);
@@ -81,14 +93,17 @@ xdescribe('alignTimeStamp', () => {
         }
 
         const irregularIntervals = [
-            'month', 'quarter-year', 'half-year', 'year', 'decade', 'century', 'millenia'
-        ];
-        const directions = [
-            'left', 'right'
-        ];
-        // @ts-ignore
-        irregularIntervals.map((i: IrregularLengthInterval) => {
-            directions.map((d: 'left' | 'right') => {
+            'month',
+            'quarter-year',
+            'half-year',
+            'year',
+            'decade',
+            'century',
+            'millenia',
+        ] as const;
+        const directions = ['left', 'right'] as const;
+        irregularIntervals.forEach((i: IrregularLengthInterval) => {
+            directions.forEach((d: 'left' | 'right') => {
                 check(i, d);
             });
         });

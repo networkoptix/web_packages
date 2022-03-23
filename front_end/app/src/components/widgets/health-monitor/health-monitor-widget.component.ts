@@ -135,6 +135,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
                 id, items
             ]) => Object.entries(items).map(([
                 state, types
+            // eslint-disable-next-line array-bracket-newline
             ]: any) => Object.values<any[]>(
                 types
             ).reduce((

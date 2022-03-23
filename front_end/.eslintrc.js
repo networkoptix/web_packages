@@ -37,7 +37,8 @@ module.exports = {
     ],
     rules: {
         'accessor-pairs': 'off',
-        'array-callback-return': 'off', // TODO: Restore
+        'array-bracket-newline': ['error', 'consistent'],
+        'array-element-newline': ['error', 'consistent'],
         'arrow-parens': ['error', 'as-needed'],
         camelcase: ['error', {
             properties: 'never',

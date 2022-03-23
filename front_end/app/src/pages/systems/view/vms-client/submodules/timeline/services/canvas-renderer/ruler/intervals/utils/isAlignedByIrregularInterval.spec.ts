@@ -13,11 +13,23 @@ xdescribe('isAlignedByIrregularInterval', () => {
         expect(isAlignedByIrregularInterval(1234, 5)).toBeFalse();
 
         const regularIntervals = [
-            500, 1000, 5000, 10000, 30000, 60000, 300000, 600000, 1800000,
-            3600000, 3 * 3600000, 6 * 3600000, 12 * 3600000, 24 * 3600000,
+            500,
+            1000,
+            5000,
+            10000,
+            30000,
+            60000,
+            300000,
+            600000,
+            1800000,
+            3600000,
+            3 * 3600000,
+            6 * 3600000,
+            12 * 3600000,
+            24 * 3600000,
             7 * 24 * 3600000
         ];
-        regularIntervals.map(i => {
+        regularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
             const r = alignTimeStamp(t, i, 'right');
             expect(isAlignedByIrregularInterval(t, i)).toBeFalse();
@@ -30,7 +42,7 @@ xdescribe('isAlignedByIrregularInterval', () => {
         const irregularIntervals:Array<IrregularLengthInterval> = [
             'month', 'quarter-year', 'half-year', 'year', 'decade', 'century', 'millenia'
         ];
-        irregularIntervals.map(i => {
+        irregularIntervals.forEach(i => {
             const l = alignTimeStamp(t, i);
             const r = alignTimeStamp(t, i, 'right');
             expect(isAlignedByIrregularInterval(t, i)).toBeFalse();

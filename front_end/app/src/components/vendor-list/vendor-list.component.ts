@@ -146,11 +146,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                 filter(event => event instanceof ActivationEnd)
             )
             .subscribe((event: ActivationEnd) => {
-                this.filter.multiselects.find(select => {
-                    if (select.id === 'vendors') {
-                        select.selected.push(event.snapshot.queryParams.vendors);
-                    }
-                });
+                this.filter.multiselects
+                    .find(s => s.id === 'vendors')
+                    ?.selected.push(event.snapshot.queryParams.vendors);
 
                 // Propagate component's value attribute (model)
                 this.propagateChange({ ...this.filter });
@@ -232,6 +230,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                         return item.value === filter.select.value;
                     });
                     queryParams.resolution = select.selected.value;
+                    return true;
+                } else {
+                    return false;
                 }
             });
         }
@@ -241,6 +242,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             this.filter.tags.find(tag => {
                 if (tag.id === filter.tagId) {
                     tag.value = true;
+                    return true;
+                } else {
+                    return false;
                 }
             });
         }
@@ -254,6 +258,9 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                         ).id
                     );
                     queryParams.hardwareTypes = select.selected;
+                    return true;
+                } else {
+                    return false;
                 }
             });
         }

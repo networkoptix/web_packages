@@ -204,8 +204,11 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         pickFrom(
             this.dialogData,
             [
-                'type', 'oldPassword', 'newPassword',
-                'num2FaSystems', 'cancellable',
+                'type',
+                'oldPassword',
+                'newPassword',
+                'num2FaSystems',
+                'cancellable',
             ],
             this
         );

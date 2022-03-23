@@ -110,8 +110,26 @@ export const DEFAULT_EDITOR_CONFIG = {
     images_dataimg_filter: () => false,
     paste_preprocess: (plugin, args) => {
         const isImage = args.content.includes('img');
-        const validPasteElements = ['span', 'a', 'b', 'strong', 'i', 'u', 'em', 'br', 'ol', 'ul', 'li', 'p',
-            'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        const validPasteElements = [
+            'span',
+            'a',
+            'b',
+            'strong',
+            'i',
+            'u',
+            'em',
+            'br',
+            'ol',
+            'ul',
+            'li',
+            'p',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+        ];
 
         function replaceElements(matched, tagName) {
             if (!validPasteElements.includes(tagName)) {

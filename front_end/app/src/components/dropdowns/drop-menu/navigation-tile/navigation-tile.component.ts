@@ -56,7 +56,7 @@ export class NxNavigationTileComponent {
 
     protected _setupIds() {
         this.node.htmlID = this._generateNodeId(this.node);
-        this.node.nodes.map(link => {
+        this.node.nodes.forEach(link => {
             link.htmlID = this._generateLinkId(this.node, link);
         });
     }

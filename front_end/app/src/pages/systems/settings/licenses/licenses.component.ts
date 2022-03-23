@@ -144,7 +144,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
         item.licenseBlock
             .split('\n')
-            .map(property => {
+            .forEach(property => {
                 const prop = property.split('=');
                 item.info[prop[0].toLowerCase()] = prop[1];
             });

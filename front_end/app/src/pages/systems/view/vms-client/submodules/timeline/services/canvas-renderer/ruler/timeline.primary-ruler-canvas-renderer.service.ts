@@ -115,7 +115,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
                 this._prevIntervals,
                 intervals
             );
-            Object.keys(intervalDiffDict).map(k => {
+            Object.keys(intervalDiffDict).forEach(k => {
                 const v = intervalDiffDict[k];
                 if (v.length) {
                     this._lastIntervalChanges[k] = Date.now();

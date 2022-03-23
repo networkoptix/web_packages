@@ -105,8 +105,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         label: this.LANG['How to setup?']() || 'How to setup?',
                                         path: 'how-to-setup',
                                         query
-                                    }]
-                            }]
+                                    }
+                                ]
+                            }
+                        ]
                     };
 
                     this.integrationSubscription = this.integrationService.getIntegrationBy(assetid, results.query.state)

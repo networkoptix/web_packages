@@ -83,23 +83,27 @@ export const currentStorageStateFactory = (
     };
 
     const mungedData = getMungedData(storageInfo, vmsSpace, storageStats);
-    const locations = Object.entries(mungedData).map(([
-        storageId,
-        {
-            serverId,
-            reservedSpace,
-            freeSpace,
-            totalSpace,
+    const locations = Object.entries(mungedData).map(
+        ([
+            storageId,
+            {
+                serverId,
+                reservedSpace,
+                freeSpace,
+                totalSpace,
+                ...input
+            }
+        ]: [
+            string,
+            Partial<StorageDataStructure>
+        ]) => new Storage({
+            storageId,
+            reservedSpace: +(reservedSpace || 0),
+            freeSpace: +(freeSpace || 0),
+            totalSpace: +(totalSpace || 0),
+            serverId: serverId || storageServerId,
             ...input
-        }
-    ]: [string, Partial<StorageDataStructure>]) => new Storage({
-        storageId,
-        reservedSpace: +(reservedSpace || 0),
-        freeSpace: +(freeSpace || 0),
-        totalSpace: +(totalSpace || 0),
-        serverId: serverId || storageServerId,
-        ...input
-    }));
+        }));
 
     const storages = {
         locations,

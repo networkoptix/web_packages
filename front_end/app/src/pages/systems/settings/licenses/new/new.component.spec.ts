@@ -53,8 +53,10 @@ describe('Licenses (New)', () => {
         const spyCreateProcess = jasmine.createSpyObj('NxProcessService', ['createProcess']);
         TestBed.configureTestingModule({
             declarations: [
-                NxLicenseNewComponent, NxContentBlockComponent,
-                NxContentBlockSectionComponent, NxProcessButtonComponent,
+                NxLicenseNewComponent,
+                NxContentBlockComponent,
+                NxContentBlockSectionComponent,
+                NxProcessButtonComponent,
                 NxLicenseTrialComponent
             ],
             imports: [

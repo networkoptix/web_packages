@@ -55,7 +55,7 @@ export class TimelineRecordsCanvasRendererService {
             const minGapMs: ms = Math.floor(this.timeline.msPerCanvasPx);
             const records = this.vms.selectedCamera.getRecords(startMs, endMs, minGapMs);
 
-            records.map(r => {
+            records.forEach(r => {
                 this._drawRecord(ctx, r, startMs, pxPerMs);
             });
 

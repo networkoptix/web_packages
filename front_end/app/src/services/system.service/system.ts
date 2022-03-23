@@ -59,7 +59,7 @@ function trimIds(o) {
         'typeId'
     ];
 
-    idFields.map(idField => {
+    idFields.forEach(idField => {
         if (idField in o) {
             result[idField] = trimId(o[idField]);
         }

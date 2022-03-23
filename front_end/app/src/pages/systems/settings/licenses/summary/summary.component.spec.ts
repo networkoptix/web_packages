@@ -75,7 +75,8 @@ describe('Licenses (Summary)', () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                NxLicenseSummaryComponent, NxContentBlockComponent,
+                NxLicenseSummaryComponent,
+                NxContentBlockComponent,
                 NxContentBlockSectionComponent
             ],
             imports: [

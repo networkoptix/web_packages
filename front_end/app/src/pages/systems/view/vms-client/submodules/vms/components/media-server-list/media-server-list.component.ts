@@ -68,9 +68,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
             case VMS_MODE.CAMERA_NOT_SELECTED:
             case VMS_MODE.CAMERA_SELECTED:
                 this._mediaservers = s.mediaServers;
-                this._mediaservers.map(server => {
+                this._mediaservers.forEach(server => {
                     server.name = htmlToEntity(server.name);
-                    server.cameras.map(camera => {
+                    server.cameras.forEach(camera => {
                         camera.name = htmlToEntity(camera.name);
                     });
                 });
@@ -89,7 +89,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
                     const n2 = ms2.name.toLocaleLowerCase();
                     return n1 > n2 ? +1 : n1 < n2 ? -1 : 0;
                 });
-                this._mediaservers.map(ms => {
+                this._mediaservers.forEach(ms => {
                     ms.cameras.sort(cameraComparator);
                     ms.cameras.sort(cameraComparator);
                 });

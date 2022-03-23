@@ -61,7 +61,7 @@ export class NxInfoBlockComponent implements OnInit {
     private getRowsHeight(columnIndex, blockIndex, section) {
         const keys = [...section.querySelectorAll('div.block-section-keys p')];
         const values = [...section.querySelectorAll('div.block-section-values p')];
-        keys.map((key, idx) => {
+        keys.forEach((key, idx) => {
             const lookup = `${columnIndex}-${blockIndex}-${idx}`;
             this.heightCache[lookup] = Math.max(
                 this.heightCache[lookup] || 0,

@@ -57,28 +57,36 @@ const appRoutes: Routes = [
                 path: 'apply-service-section',
                 component: SectionApplyExampleComponent,
                 canDeactivate: [ApplyGuard]
-            }, {
+            },
+            {
                 path: 'multi-select',
                 component: MultiSelectComponent,
-            }, {
+            },
+            {
                 path: 'demo-layout',
                 component: NxGridLayoutComponent,
-            }, {
+            },
+            {
                 path: 'toaster',
                 component: ToasterComponent,
-            }, {
+            },
+            {
                 path: 'search',
                 component: SearchComponent,
-            }, {
+            },
+            {
                 path: 'masonry-grid',
                 component: MasonryGridComponent,
-            }, {
+            },
+            {
                 path: 'form-elements',
                 component: FormElementsComponent,
-            }, {
+            },
+            {
                 path: 'validation',
                 component: ValidationComponent,
-            }, {
+            },
+            {
                 path: 'tags',
                 component: TagsComponent,
             },

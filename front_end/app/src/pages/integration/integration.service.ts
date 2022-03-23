@@ -164,6 +164,9 @@ export class IntegrationService implements OnDestroy {
                 processed.find(i => {
                     if (i.id === matchCaption[0].replace('caption', '')) {
                         i.caption = item[1];
+                        return true;
+                    } else {
+                        return false;
                     }
                 });
             }

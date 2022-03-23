@@ -99,8 +99,11 @@ export class AddWidgetModalContent {
         pickFrom(
             this.dialogData,
             [
-                'widgets', 'gridSize', 'gridGap',
-                'dashboardMenu', 'activeDashboard',
+                'widgets',
+                'gridSize',
+                'gridGap',
+                'dashboardMenu',
+                'activeDashboard',
                 'updateSelectedDashboard',
             ],
             this

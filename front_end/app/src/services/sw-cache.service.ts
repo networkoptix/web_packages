@@ -24,8 +24,10 @@ export class NxSwCacheService {
         return caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.filter(cacheName => {
-                    if (allKeys && cacheName.startsWith('ngsw:/:1:data:dynamic')) return true;
-                    if (nameCacheParam === cacheName) return true;
+                    return (
+                        allKeys &&
+                        cacheName.startsWith('ngsw:/:1:data:dynamic')
+                    ) || nameCacheParam === cacheName;
                 }).map(cacheName => {
                     return caches.open(cacheName).then(c => {
                         return c.keys().then(keys => {
