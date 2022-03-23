@@ -199,12 +199,12 @@
             "low": "低"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{count, plural, =0{# 年} one{# 年} other{# 年}}",
+            "monthS": "{count, plural, =0{# ヶ月} one{# ヶ月} other{# ヶ月}}",
+            "weekS": "{count, plural, =0{# 週} one{# 週} other{# 週}}",
+            "dayS": "{count, plural, =0{# 日} one{# 日} other{# 日}}",
+            "hourS": "{count, plural, =0{# 時間} one{# 時間} other{# 時間}}",
+            "minuteS": "{count, plural, =0{# 分} one{# 分} other{# 分}}"
         },
         "general": "一般",
         "generalError": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
@@ -448,7 +448,7 @@
             "message": "このアカウントでは二要素認証が有効になっています。ログインしてください。",
             "title": "二要素が必要です。",
             "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}にログインできなくなります。",
-            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+            "unsupportedSystem": "このシステムにログインするには、 <a href=\"/account/security\">アカウント設定</a>で「%CLOUD_NAME% アカウントでログインするたびに認証コードを要求する」を無効にします。"
         }
     },
     "downloads": {
@@ -592,7 +592,7 @@
         "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
         "archiveEncrypted": "アーカイブは\n暗号化されています",
         "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。",
-        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+        "webadmin2faRequired": "このシステムにアクセスするには二段階認証が必要です。 <a href=\"{ cloudHost }/account/security\">アカウント設定</a>で二段階認証を有効にできます。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -867,7 +867,7 @@
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "transferNotification": "<strong>{ ownerName }</strong> がこのシステムの所有権をあなたに譲渡しようとしています"
     },
     "systemStatuses": {
         "activated": "有効化済み",

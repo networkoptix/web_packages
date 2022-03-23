@@ -344,7 +344,7 @@
     "ENABLE AUDIT TRAIL DESCRIPTION TEXT": "Suivre et enregistrer toutes les actions de l'utilisateur.",
     "ALLOW ONLY SECURE TEXT": "Forcer les serveurs à accepter uniquement les connexions chiffrées",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Chiffrer le trafic vidéo vers les clients bureaux et mobiles",
-    "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Enables RTSP traffic encryption.",
+    "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Activer le chiffrement RTSP du trafic.",
     "LIMIT SESSION DURATION TEXT": "Limiter la durée de session à",
     "RELEASES TAB TEXT": "Versions",
     "PATCHES TAB TEXT": "Patchs",

@@ -448,7 +448,7 @@
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+            "unsupportedSystem": "Để đăng nhập vào hệ thống này, hãy tắt \"Yêu cầu mã xác minh cho mọi lần đăng nhập bằng tài khoản %CLOUD_NAME%\" trong cài đặt tài khoản <a href=\"/account/security\"> của bạn</a>."
         }
     },
     "downloads": {
@@ -592,7 +592,7 @@
         "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection.",
         "archiveEncrypted": "ARCHIVE\nENCRYPTED",
         "archiveEncryptedMessage": "Ask your system administrator to enter the encryption\npassword to decrypt this archive.",
-        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+        "webadmin2faRequired": "Xác thực hai yếu tố là bắt buộc để truy cập hệ thống này. Bạn có thể bật xác thực hai yếu tố trong cài đặt tài khoản<a href=\"{ cloudHost }/account/security\"></a>."
     },
     "integration": {
         "Access Control": "Kiểm soát truy cập",
@@ -867,7 +867,7 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "transferNotification": "<strong>{ ownerName }</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn"
     },
     "systemStatuses": {
         "activated": "đã kích hoạt",
