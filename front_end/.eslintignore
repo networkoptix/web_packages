@@ -16,3 +16,10 @@ tsconfig.json
 # Don't lint deprecated files/folders
 *.bak.*
 **/*.bak/**/*
+*.spec-jest.ts
+
+# Don't lint example file
+vendor.ts
+
+# Don't lint environment files
+environments
