@@ -28,7 +28,7 @@ export interface APIDoc {
     paths : {
         [key:string]: MethodInfo,
     },
-    servers?: { url: string}[],
+    servers?: { url: string }[],
     tagsModified?: boolean
 }
 

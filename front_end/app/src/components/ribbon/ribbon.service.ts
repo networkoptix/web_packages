@@ -9,7 +9,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { RibbonAction } from './ribbon.component';
 
-export interface RibbonActionInput extends Omit<RibbonAction, 'text'>{
+export interface RibbonActionInput extends Omit<RibbonAction, 'text'> {
     text: string | Function;
 }
 

@@ -25,7 +25,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    gridColumnLookup: {[key: string]: string} = {};
+    gridColumnLookup: { [key: string]: string } = {};
     ready = new BehaviorSubject(false);
 
     constructor(

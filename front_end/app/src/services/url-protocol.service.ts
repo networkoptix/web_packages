@@ -150,7 +150,7 @@ export class NxUrlProtocolService {
     open(systemId: string, useOauth: boolean) {
         return this.getLink({
             systemId, useOauth
-        }).then((data: { link: string, authKey: string}) => {
+        }).then((data: { link: string, authKey: string }) => {
             let link = data.link;
             const authKey = data.authKey;
             link = link.replace(/&/g, '&&'); // This is a hack,
@@ -245,8 +245,8 @@ export interface linkSettings {
     systemId?: string,
     action?: {},
     actionParameters?: {},
-    auth?: boolean|string|undefined,
+    auth?: boolean | string | undefined,
     // eslint-disable-next-line camelcase
-    code?: string|undefined,
+    code?: string | undefined,
     useOauth?: boolean
 }

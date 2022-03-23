@@ -11,15 +11,15 @@ import {
 } from '../dropdowns/generic/dropdown.component.types';
 
 export enum ConfigType {
-    TEXT='text',
-    HTML='html',
-    DATE='date',
-    COMMENTS='comments',
-    STATUS='status',
-    ICON_LINK='icon_link',
-    ICON_MODAL='icon_modal',
-    ASYNC_HANDLER='async_handler',
-    DROPDOWN='dropdown'
+    TEXT = 'text',
+    HTML = 'html',
+    DATE = 'date',
+    COMMENTS = 'comments',
+    STATUS = 'status',
+    ICON_LINK = 'icon_link',
+    ICON_MODAL = 'icon_modal',
+    ASYNC_HANDLER = 'async_handler',
+    DROPDOWN = 'dropdown'
 }
 
 export interface ColumnConfig {
@@ -33,12 +33,12 @@ export interface ColumnConfig {
 }
 
 export enum ActionType {
-    PRIMARY='primary',
-    SECONDARY='secondary',
-    SUCCESS='success',
-    DANGER='danger',
-    WARNING='warning',
-    INFO='info'
+    PRIMARY = 'primary',
+    SECONDARY = 'secondary',
+    SUCCESS = 'success',
+    DANGER = 'danger',
+    WARNING = 'warning',
+    INFO = 'info'
 }
 
 interface ActionConfig {
@@ -55,9 +55,9 @@ export interface ModalManifest {
 }
 
 export enum OptionalFeatures {
-    FILTER='filter',
-    SEARCH='search',
-    PER_PAGE='perPage'
+    FILTER = 'filter',
+    SEARCH = 'search',
+    PER_PAGE = 'perPage'
 }
 
 export interface ConsoleManifest {
@@ -84,9 +84,9 @@ export interface ConsoleManifest {
 }
 
 export enum ModalType {
-    CLIENT_EDIT='client-edit',
-    CLIENT_CREATE='client-create',
-    CLIENT_DOWNLOAD='client-download'
+    CLIENT_EDIT = 'client-edit',
+    CLIENT_CREATE = 'client-create',
+    CLIENT_DOWNLOAD = 'client-download'
 }
 
 export interface ModalContent {
@@ -100,7 +100,7 @@ export interface ModalContent {
 }
 
 export enum ConsoleSection {
-    CUSTOM_CLIENTS='custom-clients'
+    CUSTOM_CLIENTS = 'custom-clients'
 }
 
 export class ListSerializer<Initial, Serialized> {

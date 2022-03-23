@@ -190,11 +190,11 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public barDblClickHandler(e: MouseEvent|TouchEvent) {
+    public barDblClickHandler(e: MouseEvent | TouchEvent) {
         this.scrollbarRelative.handleBarDblClick(e);
     }
 
-    public barMouseDownHandler(e: MouseEvent|TouchEvent) {
+    public barMouseDownHandler(e: MouseEvent | TouchEvent) {
         this.scrollbarAbsolute.handleBarMouseDown(e);
     }
 
@@ -308,7 +308,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public barHandleMouseUp(e: MouseEvent|TouchEvent) { // this UX is a bit doubtful
+    public barHandleMouseUp(e: MouseEvent | TouchEvent) { // this UX is a bit doubtful
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.barDblClickHandler(e);

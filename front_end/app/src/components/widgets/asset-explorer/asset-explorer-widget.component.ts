@@ -47,7 +47,7 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
     CONFIG: IConfig;
     loading = true;
     treeControl = new NestedTreeControl<ExplorerNode>(node => node.children);
-    dataSource$: Observable<{last: string, data: ExplorerNode[]}>;
+    dataSource$: Observable<{ last: string, data: ExplorerNode[] }>;
     hasChild = (_: number, node: ExplorerNode) => !!node.children && node.children.length > 0;
 
     updater$ = new BehaviorSubject(null);

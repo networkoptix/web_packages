@@ -5,13 +5,13 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 export type InfoBlockSizeType = 'compact' | 'full';
 
 export enum InfoBlockSize {
-    COMPACT='compact',
-    FULL='full'
+    COMPACT = 'compact',
+    FULL = 'full'
 }
 
 export enum InfoBlockStyle {
-    LIGHT='light',
-    DARK='dark'
+    LIGHT = 'light',
+    DARK = 'dark'
 }
 
 export enum InfoLineStyle {
@@ -20,8 +20,8 @@ export enum InfoLineStyle {
 }
 
 export enum InfoDetailClass {
-    ERROR='error',
-    WARNING='warning'
+    ERROR = 'error',
+    WARNING = 'warning'
 }
 
 @Component({

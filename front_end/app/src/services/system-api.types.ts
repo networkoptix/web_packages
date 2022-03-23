@@ -616,8 +616,8 @@ export class SystemConfigSettings {
 }
 
 enum EventState {
-    ACTIVE='Active',
-    INACTIVE='Inactive'
+    ACTIVE = 'Active',
+    INACTIVE = 'Inactive'
 }
 
 export interface EventParams {
@@ -637,30 +637,30 @@ export interface ConfigureParams {
 }
 
 export enum CameraDiagnosticSteps {
-    MEDIASERVER_AVAILABILITY='mediaServerAvailability',
-    CAMERA_AVAILABILITY='cameraAvailability',
-    STREAM_AVAILABILITY='mediaStreamAvailability',
-    STREAM_INTEGRITY='mediaStreamIntegrity'
+    MEDIASERVER_AVAILABILITY = 'mediaServerAvailability',
+    CAMERA_AVAILABILITY = 'cameraAvailability',
+    STREAM_AVAILABILITY = 'mediaStreamAvailability',
+    STREAM_INTEGRITY = 'mediaStreamIntegrity'
 }
 
 export enum EventTypes {
-   UNDEFINED='UndefinedEvent',
-   CAMERA_MOTION='CameraMotionEvent',
-   CAMERA_INPUT='CameraInputEvent',
-   CAMERA_DISCONNECT='CameraDisconnectEvent',
-   STORAGE_FAILURE='StorageFailureEvent',
-   NETWORK_ISSUE='NetworkIssueEvent',
-   IP_CONFLICT='CameraIpConflictEvent',
-   SERVER_FAILURE='ServerFailureEvent',
-   SERVER_CONFLICT='ServerConflictEvent',
-   SERVER_START='ServerStartEvent',
-   LICENSE_ISSUE='LicenseIssueEvent',
-   BACKUP_FINISHED='BackupFinishedEvent',
-   SYSTEM_HEALTH='SystemHealthEvent',
-   MAX_SYSTEM_HEALTH='MaxSystemHealthEvent',
-   ANY_CAMERA='AnyCameraEvent',
-   ANY_SERVER='AnyServerEvent',
-   ANY_BUSINESS='AnyBusinessEvent',
+   UNDEFINED = 'UndefinedEvent',
+   CAMERA_MOTION = 'CameraMotionEvent',
+   CAMERA_INPUT = 'CameraInputEvent',
+   CAMERA_DISCONNECT = 'CameraDisconnectEvent',
+   STORAGE_FAILURE = 'StorageFailureEvent',
+   NETWORK_ISSUE = 'NetworkIssueEvent',
+   IP_CONFLICT = 'CameraIpConflictEvent',
+   SERVER_FAILURE = 'ServerFailureEvent',
+   SERVER_CONFLICT = 'ServerConflictEvent',
+   SERVER_START = 'ServerStartEvent',
+   LICENSE_ISSUE = 'LicenseIssueEvent',
+   BACKUP_FINISHED = 'BackupFinishedEvent',
+   SYSTEM_HEALTH = 'SystemHealthEvent',
+   MAX_SYSTEM_HEALTH = 'MaxSystemHealthEvent',
+   ANY_CAMERA = 'AnyCameraEvent',
+   ANY_SERVER = 'AnyServerEvent',
+   ANY_BUSINESS = 'AnyBusinessEvent',
    SOFT_TRIGGER = 'softwareTriggerEvent',
    ANALYTICS = 'analyticsSdkEvent',
    PLUGIN_DIAGNOSTIC = 'pluginDiagnosticEvent',
@@ -671,22 +671,22 @@ export enum EventTypes {
 }
 
 export enum ActionTypes {
-    UNDEFINED='UndefinedAction',
-    CAMERA_OUTPUT='CameraOutputAction',
-    BOOKMARK='BookmarkAction',
-    RECORDING='CameraRecordingAction',
-    PANIC_RECORDING='PanicRecordingAction',
-    SEND_MAIL='SendMailAction',
-    DIAGNOSTICS='DiagnosticsAction',
-    SHOW_POPUP='ShowPopupAction',
-    PLAY_SOUND='PlaySoundAction',
-    PLAY_SOUND_ONCE='PlaySoundOnceAction',
-    SAY_TEXT='SayTextAction',
-    EXECUTE_PTZ_PRESET='ExecutePtzPresetAction',
-    SHOW_TEXT_OVERLAY='ShowTextOverlayAction',
-    SHOW_ON_ALARM_LAYOUT='ShowOnAlarmLayoutAction',
-    EXEC_HTTP_REQUEST='ExecHttpRequestAction',
-    BUZZER='BuzzerAction'
+    UNDEFINED = 'UndefinedAction',
+    CAMERA_OUTPUT = 'CameraOutputAction',
+    BOOKMARK = 'BookmarkAction',
+    RECORDING = 'CameraRecordingAction',
+    PANIC_RECORDING = 'PanicRecordingAction',
+    SEND_MAIL = 'SendMailAction',
+    DIAGNOSTICS = 'DiagnosticsAction',
+    SHOW_POPUP = 'ShowPopupAction',
+    PLAY_SOUND = 'PlaySoundAction',
+    PLAY_SOUND_ONCE = 'PlaySoundOnceAction',
+    SAY_TEXT = 'SayTextAction',
+    EXECUTE_PTZ_PRESET = 'ExecutePtzPresetAction',
+    SHOW_TEXT_OVERLAY = 'ShowTextOverlayAction',
+    SHOW_ON_ALARM_LAYOUT = 'ShowOnAlarmLayoutAction',
+    EXEC_HTTP_REQUEST = 'ExecHttpRequestAction',
+    BUZZER = 'BuzzerAction'
 }
 
 export interface ServerNetworkSettings {

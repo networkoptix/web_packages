@@ -24,10 +24,10 @@ import { CurrentStorageState } from './storage';
 const fallback = <T>(value: T) => catchError(() => Promise.resolve(value));
 
 export enum UpdateTriggers {
-    INFO='info',
-    METRICS='metrics',
-    STATS='stats',
-    ANALYTICS='analytics'
+    INFO = 'info',
+    METRICS = 'metrics',
+    STATS = 'stats',
+    ANALYTICS = 'analytics'
 }
 
 export type TriggerUpdateCallback = () => void;

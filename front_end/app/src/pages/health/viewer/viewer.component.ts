@@ -43,7 +43,7 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: Account;
-    system: NxSystem|any;
+    system: NxSystem | any;
     server: NxSystemAPI;
 
     menu: Content;

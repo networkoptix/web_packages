@@ -54,7 +54,7 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
     system: NxSystem;
     selectedSystem: DropdownItem;
     selectedCamera: DropdownItem;
-    size: {width: number, height: number} = { width: 640, height: 640 };
+    size: { width: number, height: number } = { width: 640, height: 640 };
 
     systemsDropdownItems$ = this.cloudApi.systems().pipe(
         map(systems => systems.map(({ id, name, stateOfHealth }) => ({

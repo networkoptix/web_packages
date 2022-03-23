@@ -6,9 +6,9 @@ export enum PackageProgress {
 }
 
 export enum PackageState {
-    PENDING='pending',
-    READY='ready',
-    FAILED='failed'
+    PENDING = 'pending',
+    READY = 'ready',
+    FAILED = 'failed'
 }
 
 export interface PackageStatus {

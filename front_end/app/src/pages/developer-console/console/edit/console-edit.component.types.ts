@@ -1,18 +1,18 @@
 export enum DataStructureType {
-    TEXT='text',
-    DROPDOWN='dropdown'
+    TEXT = 'text',
+    DROPDOWN = 'dropdown'
 }
 
 export enum SortOptions {
-    TEXT='text',
-    DATE='date'
+    TEXT = 'text',
+    DATE = 'date'
 }
 
 export enum GroupingOptions {
-    TEXT='textAlpha',
-    DATE_DAY='dateDay',
-    DATE_MONTH='dateMonth',
-    DATE_AUTO='dateAuto'
+    TEXT = 'textAlpha',
+    DATE_DAY = 'dateDay',
+    DATE_MONTH = 'dateMonth',
+    DATE_AUTO = 'dateAuto'
 }
 
 export interface DataStructureFilter {

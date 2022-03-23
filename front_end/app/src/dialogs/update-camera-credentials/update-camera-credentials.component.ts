@@ -32,7 +32,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     camera: ICamera;
     system: NxSystem;
     updateCallback: () => Promise<any>;
-    currentCredentials: {loginName: string, password: string};
+    currentCredentials: { loginName: string, password: string };
     cameraLoginCredentials = '';
     cameraPasswordCredentials = '';
 

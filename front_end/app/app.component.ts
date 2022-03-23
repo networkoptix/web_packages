@@ -292,7 +292,7 @@ export class AppComponent {
         updates.checkForUpdate().catch(() => {});
     }
 
-    headerResize(size: { width: number, height: number}) {
+    headerResize(size: { width: number, height: number }) {
         if (this.headerHeight !== size.height) {
             this.appStateService.headerContainerHeight$.next(size.height);
             this.headerHeight = size.height;

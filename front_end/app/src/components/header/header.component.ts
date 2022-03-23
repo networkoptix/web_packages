@@ -54,17 +54,17 @@ class CombinedWidths {
 }
 
 enum sizes {
-    SM=24,
-    MD=48,
-    LG=72,
-    XL=96
+    SM = 24,
+    MD = 48,
+    LG = 72,
+    XL = 96
 }
 
 enum breakpoints {
-    SM=576,
-    MD=768,
-    LG=992,
-    XL=1200
+    SM = 576,
+    MD = 768,
+    LG = 992,
+    XL = 1200
 }
 
 @UntilDestroy({ checkProperties: true })

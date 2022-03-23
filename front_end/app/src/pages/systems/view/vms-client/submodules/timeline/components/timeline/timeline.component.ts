@@ -137,7 +137,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.wheelHandler.handleWheel(e);
     }
 
-    public canvasMouseMoveHandler(e: MouseEvent|TouchEvent): void {
+    public canvasMouseMoveHandler(e: MouseEvent | TouchEvent): void {
         this.timeUnderMouse.handleMouseMove(e);
         if (this.selection.handleMouseMove(e as MouseEvent)) {
             return;
@@ -174,7 +174,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public hideTimeUnderMouse: boolean = false;
     public isDragging: boolean = false;
 
-    public canvasMouseDownHandler(e: MouseEvent|TouchEvent): void {
+    public canvasMouseDownHandler(e: MouseEvent | TouchEvent): void {
         if (e instanceof MouseEvent && e.button !== 0) {
             return;
         }
@@ -199,7 +199,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseUpHandler(e: MouseEvent|TouchEvent): void {
+    public canvasMouseUpHandler(e: MouseEvent | TouchEvent): void {
         if (this.archiveSelectionEnabled) {
             this.selection.handleMouseUp(e as MouseEvent);
         }

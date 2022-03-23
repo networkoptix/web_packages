@@ -16,18 +16,18 @@ export enum STORAGE_TYPES {
 }
 
 export enum MODE {
-    MAIN='main',
-    BACKUP='backup',
-    NOT_IN_USE='notUsed'
+    MAIN = 'main',
+    BACKUP = 'backup',
+    NOT_IN_USE = 'notUsed'
 }
 
 export enum STORAGE_STATUS {
-    IN_USE='inUse',
-    INACCESSIBLE='inaccessible',
-    RESERVED='reserved',
-    DISABLED='disabled',
-    REINDEXING='reindexing',
-    BEING_CHECKED='beingChecked'
+    IN_USE = 'inUse',
+    INACCESSIBLE = 'inaccessible',
+    RESERVED = 'reserved',
+    DISABLED = 'disabled',
+    REINDEXING = 'reindexing',
+    BEING_CHECKED = 'beingChecked'
 }
 
 export interface SaveStoragePayload {
@@ -196,7 +196,7 @@ export class StorageDataStructure {
     vmsSpace : number;
     storageId: string;
     canUpdate: boolean;
-    constructor(inputs?: Partial<StorageDataStructure & {status: string}>) {
+    constructor(inputs?: Partial<StorageDataStructure & { status: string }>) {
         // The status field was added to 4.3 systems but isn't really needed here
         delete inputs.status;
         const defaults: StorageDataStructure = {

@@ -15,10 +15,10 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 export enum mainButtonState {
-    ALL='all',
-    NODE='node',
-    SYSTEM='system',
-    SYSTEMS='systems'
+    ALL = 'all',
+    NODE = 'node',
+    SYSTEM = 'system',
+    SYSTEMS = 'systems'
 }
 
 @Component({

@@ -119,7 +119,7 @@ export class TimelineScrollbarAbsoluteService {
     protected _dragAnchorAbsolute: px = -1;
     protected _isBarGrabbed: boolean = false;
 
-    public handleBarMouseDown(e: MouseEvent|TouchEvent) {
+    public handleBarMouseDown(e: MouseEvent | TouchEvent) {
         this._dragAnchorAbsolute = calcClientX(e);
         this._isBarGrabbed = true;
         if (e instanceof MouseEvent) {
@@ -128,7 +128,7 @@ export class TimelineScrollbarAbsoluteService {
         }
     }
 
-    public handleBarMouseUp(e: MouseEvent|TouchEvent) {
+    public handleBarMouseUp(e: MouseEvent | TouchEvent) {
         this._isBarGrabbed = false;
     }
 

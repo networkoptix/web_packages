@@ -16,9 +16,9 @@ import {
 import { NgChanges } from '@utils/ng-changes';
 
 export enum FilterSort {
-    ASC='asc',
-    DESC='desc',
-    NONE=''
+    ASC = 'asc',
+    DESC = 'desc',
+    NONE = ''
 }
 
 export interface Selection {

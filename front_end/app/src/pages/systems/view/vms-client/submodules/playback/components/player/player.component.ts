@@ -126,7 +126,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
             setTimeout(() => this.playback.playArchive(
-                (<ArchivePlaybackState|LivePlaybackState> this.playback.state).currentTime - s
+                (<ArchivePlaybackState | LivePlaybackState> this.playback.state).currentTime - s
             ));
         } else if (s === 1) {
             switch (this.playback.state.mode) {

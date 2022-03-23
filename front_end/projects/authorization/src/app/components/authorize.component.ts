@@ -115,7 +115,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     checkEmailProcess: Process;
     loginCode: string;
     emailLocked = false;
-    action: 'restore_password'| 'activate' | 'register' | 'reset_request';
+    action: 'restore_password' | 'activate' | 'register' | 'reset_request';
 
     // email
     loginEmail: string;

@@ -89,7 +89,7 @@ export class TimelineScrollbarRelativeService {
         // return this.timeline.fullRange.end - this.timeline.visibleRange.end > SCROLL_TRESHOLD_MS;
     }
 
-    public handleBarDblClick(e: MouseEvent|TouchEvent) {
+    public handleBarDblClick(e: MouseEvent | TouchEvent) {
         e.preventDefault();
         this.timeline.fullZoomOut();
     }
@@ -109,7 +109,7 @@ export class TimelineScrollbarRelativeService {
                 : +1;
     }
 
-    public handleBackgroundMouseUp(e: MouseEvent|TouchEvent) {
+    public handleBackgroundMouseUp(e: MouseEvent | TouchEvent) {
         this.isBackgroundMouseDown = false;
         this.holdScrollTargetTime = -1;
         const sinceMouseDown: ms = Date.now() - this._timestampMouseDown;
@@ -165,7 +165,7 @@ export class TimelineScrollbarRelativeService {
         this._emit();
     }
 
-    protected _targetTimeFromMouseEvent(e: MouseEvent|TouchEvent): ms {
+    protected _targetTimeFromMouseEvent(e: MouseEvent | TouchEvent): ms {
         return Math.round(
             this.timeline.fullRange.start +
         this.timeline.fullRange.duration * (

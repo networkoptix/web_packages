@@ -139,7 +139,7 @@ export class CustomClientAPI {
         return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
     };
 
-    generatePackage = <Id, DownloadId = {downloadId: string}>(id: Id) => {
+    generatePackage = <Id, DownloadId = { downloadId: string }>(id: Id) => {
         return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
     };
 
@@ -284,7 +284,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     getIntegrations() {
-        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/cms/integrations');
+        return this.http.get<{ data: t.Integration[] }>(this.CONFIG.apiBase + '/cms/integrations');
     }
 
     getIntegrationsCount() {
@@ -337,7 +337,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     getOpenAPIJSONs() {
-        return this.http.get<{data: t.OpenAPIJSON[]}>(this.CONFIG.apiBase + '/cms/openapi_jsons');
+        return this.http.get<{ data: t.OpenAPIJSON[] }>(this.CONFIG.apiBase + '/cms/openapi_jsons');
     }
 
     // not used, except in debug
@@ -674,7 +674,7 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string, assetVersion?: number) {
+    getDocumentation(name, type, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string, assetVersion?: number) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
@@ -772,7 +772,7 @@ export class NxCloudApiService {
         return this.oauthService.logoutTokens(accessToken, refreshToken);
     }
 
-    getAssets = (maxAge = 0, params) => this.http.get<{last: string, data: t.ExplorerNode[]}>(`${this.CONFIG.apiBase}/assets`, { params: { maxAge, ...params } });
+    getAssets = (maxAge = 0, params) => this.http.get<{ last: string, data: t.ExplorerNode[] }>(`${this.CONFIG.apiBase}/assets`, { params: { maxAge, ...params } });
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);

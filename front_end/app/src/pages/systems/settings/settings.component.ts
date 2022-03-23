@@ -62,7 +62,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     menuSearchable: boolean;
 
     account: Account;
-    system: NxSystem|any;
+    system: NxSystem | any;
     gettingSystem: Process;
     systems;
     deletingSystem;

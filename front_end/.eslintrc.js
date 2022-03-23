@@ -175,6 +175,7 @@ module.exports = {
                     '1tbs',
                     { allowSingleLine: true }
                 ]),
+                ...tsExtension('comma-dangle', ['error', 'only-multiline']),
                 ...tsExtension('comma-spacing'),
                 ...tsExtension('dot-notation', [
                     'error',
@@ -208,13 +209,16 @@ module.exports = {
                     allowTernary: true,
                     allowTaggedTemplates: true
                 }]),
+                ...tsExtension('object-curly-spacing', ['error', 'always']),
                 '@typescript-eslint/prefer-includes': 'error',
                 ...tsExtension('semi'),
+                ...tsExtension('space-before-blocks', ['error', 'always']),
                 ...tsExtension('space-before-function-paren', ['error', {
                     anonymous: 'always',
                     named: 'never',
                     asyncArrow: 'always'
                 }]),
+                ...tsExtension('space-infix-ops'),
             },
         },
         {

@@ -11,7 +11,7 @@ import {
 })
 export class NxProjectedLinkHandler implements AfterViewInit {
     @Output('NxProjectedLinkHandler')
-    handler = new EventEmitter<{url: string, target: string}>();
+    handler = new EventEmitter<{ url: string, target: string }>();
 
     constructor(private el: ElementRef) {}
 

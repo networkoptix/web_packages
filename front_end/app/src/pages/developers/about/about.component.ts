@@ -16,14 +16,14 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
 export enum AboutTemplates {
-    INTRO='intro',
-    CAPABILITIES='capabilities',
-    DEV_CAPABILITIES='devCapabilities',
-    SUPPORTED_TECH='supportedTech',
-    GET_STARTED='getStarted',
-    DEV_TOOLS='devTools',
-    INTEGRATIONS='integrations',
-    SUPPORT='support'
+    INTRO = 'intro',
+    CAPABILITIES = 'capabilities',
+    DEV_CAPABILITIES = 'devCapabilities',
+    SUPPORTED_TECH = 'supportedTech',
+    GET_STARTED = 'getStarted',
+    DEV_TOOLS = 'devTools',
+    INTEGRATIONS = 'integrations',
+    SUPPORT = 'support'
 }
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
@@ -57,7 +57,7 @@ export class NxAboutComponent {
 
     getInvalidTemplateError({
         template, node: { title }
-    }: {template: string, node: AboutNode}) {
+    }: { template: string, node: AboutNode }) {
         const helper = template
             ? `Template name "${template}" is not a valid template`
             : 'Template name is required';
@@ -225,7 +225,7 @@ export class NxAboutComponent {
     }
 }
 
-export type AboutStructureNode = {template: AboutTemplates, node: AboutNode};
+export type AboutStructureNode = { template: AboutTemplates, node: AboutNode };
 
 export type AboutStructure = AboutStructureNode[];
 

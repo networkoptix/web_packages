@@ -20,7 +20,7 @@ export class NxBookmarksListComponent implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    gridColumnLookup: {[key: string]: string} = {};
+    gridColumnLookup: { [key: string]: string } = {};
 
     constructor(
         configService: NxConfigService,
@@ -33,7 +33,7 @@ export class NxBookmarksListComponent implements OnDestroy {
 
     ngOnDestroy() {}
 
-    updateTagSize(tagName: string, { width }: { width: number, height: number}) {
+    updateTagSize(tagName: string, { width }: { width: number, height: number }) {
         if (this.gridColumnLookup[tagName]) return;
         const gridGap = 5;
         const columns = Math.round(width / gridGap);

@@ -458,7 +458,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return buttons;
     }
 
-    trackItem<T extends { id: string}>(
+    trackItem<T extends { id: string }>(
         index: number,
         item: T
     ): string | undefined {

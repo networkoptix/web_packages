@@ -28,7 +28,7 @@ import { pickFrom } from '@utils/general';
 
 type DownloadId = string;
 
-type GenerateHandler = <Id>(id: Id) => Observable<{downloadId: DownloadId}>;
+type GenerateHandler = <Id>(id: Id) => Observable<{ downloadId: DownloadId }>;
 
 type CheckPackageHandler = (id, downloadId: DownloadId) => Observable<PackageStatus>;
 

@@ -72,7 +72,7 @@ export class TimelineTimeUnderMouseService {
         }
     }
 
-    public handleMouseMove(e: MouseEvent|TouchEvent) {
+    public handleMouseMove(e: MouseEvent | TouchEvent) {
         this._offsetX = calcOffsetX(e);
         this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
         this._emit();

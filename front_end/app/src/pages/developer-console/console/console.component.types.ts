@@ -1,5 +1,5 @@
 export enum ConsoleMode {
-    DEFAULT='default',
-    EDIT='edit',
-    QUICK_EDIT='quick-edit'
+    DEFAULT = 'default',
+    EDIT = 'edit',
+    QUICK_EDIT = 'quick-edit'
 }
