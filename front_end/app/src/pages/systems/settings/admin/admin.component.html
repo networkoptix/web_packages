@@ -28,7 +28,7 @@
                         </ng-container>
                     </span>
                     <span
-                        *ngIf="ownershipTransferEnabled && !environment.isLocal && system.userManager.isMine"
+                        *ngIf="ownershipTransferEnabled && system.userManager.isMine"
                         id="change-ownership"
                         class="ml-1"
                         (click)="transferOwnership()"
@@ -60,7 +60,7 @@
                 </div>
             </nx-section>
             <nx-section
-                *ngIf="!environment.isLocal && systemTransferInProcess
+                *ngIf="!environment.isLocal && ownershipTransferEnabled && systemTransferInProcess
                     else notOwner"
             >
                 <div
