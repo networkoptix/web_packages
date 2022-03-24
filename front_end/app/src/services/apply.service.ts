@@ -322,6 +322,10 @@ export class NxApplyService {
         nonSystem = false,
         onlyShowSectionWatchers = false
     ) {
+        // restore discardFunction in case previous page used form watcher
+        // this should go away once we convert all components to use form watcher
+        this.discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
+
         this.nonSystem$.next(nonSystem);
         this.component = component;
 
@@ -762,8 +766,9 @@ export class NxApplyService {
                 ? this.watchers.filter(watcher => !watcher.owner || watcher.owner !== owner)
                 : this.watchers
         ) || [];
+
         const symbols = new Set<Symbol>();
-        const existingUniqueWatchers =
+        this.watchers =
             [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
                 if (symbols.has(identity)) {
                     return false;
@@ -771,7 +776,7 @@ export class NxApplyService {
                 symbols.add(identity);
                 return true;
             });
-        this.watchers = existingUniqueWatchers;
+
         const changedWatchers$ = Object.values(
             this.watchers
         ).map((watcher) => watcher.valueSubject.pipe(
