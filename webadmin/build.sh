@@ -72,7 +72,7 @@ do
     pushd inline-wizard
         npm run build
         # Removed these files because it overrode webadmins version of them
-        rm -rf dist/{fonts,robots.txt}
+        rm -rf dist/{fonts,robots.txt,languages.json}
         mv dist static
 
         ./translation/localize.sh

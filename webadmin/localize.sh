@@ -28,8 +28,8 @@ pushd $REPO_DIR
         echo
     done
 
-# TODO: scheduled for removing (if no issues) as language.json is not used anymore (except inline-wizard)
-#    pushd $BUILD_DIR
-#        python $REPO_DIR/build_scripts/generate_languages_json.py
-#    popd
+    echo -e "\n********* Generate languages json *********"
+    pushd $BUILD_DIR
+        python $REPO_DIR/build_scripts/generate_languages_json.py
+    popd
 popd
