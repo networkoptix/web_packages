@@ -265,7 +265,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         }
                     });
 
-                if (!environment.isLocal) {
+                if (this.ownershipTransferEnabled && !environment.isLocal) {
                     this.cloudApiService.getTransfers()
                         .subscribe((res: SystemTransferInfo[]) => {
                             this.transfers = res;
