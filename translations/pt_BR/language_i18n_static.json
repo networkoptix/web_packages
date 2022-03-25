@@ -45,11 +45,11 @@
             "label": "Personalizado"
         },
         "customRole": {
-            "description": "Perfil de utilizador personalizado especificado no Sistema",
+            "description": "Função de usuário personalizada especificada no sistema",
             "label": "Perfil Personalizado"
         },
         "disabled": {
-            "description": "O utilizador está desativado e não pode efetuar login no sistema",
+            "description": "O usuário está desabilitado e não pode fazer ‘login’ no sistema",
             "label": "Desabilitado"
         },
         "liveViewer": {
