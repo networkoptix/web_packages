@@ -175,9 +175,11 @@
     --btn-dropdown-toggle-bg             : #{$light4};
     --btn-dropdown-toggle-color          : #{$dark9};
     --btn-dropdown-toggle-selected-color : #{$light1};
-    --btn-dropdown-toggle-shadow-color   : #{$light7};
+    --btn-dropdown-toggle-shadow-color   : inset 0px -1px 0px #{$light7};
     --btn-dropdown-toggle-hover-bg       : #{$light5};
+    --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #{$light8};
     --btn-dropdown-toggle-active-bg      : #{$light6};
+    --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #{$light8};
     
     --btn-tag-bg                         : #{$light4};
     --btn-tag-color                      : #{$light16};
@@ -195,23 +197,23 @@
     
     --btn-default-bg           : #{$light4};
     --btn-default-color        : #{$dark9};
-    --btn-default-shadow       : #{$light7};
+    --btn-default-shadow       : inset 0 -1px 0 0 #{$light7};
     --btn-default-hover-bg     : #{$light5};
     --btn-default-hover-color  : #{$dark9};
-    --btn-default-hover-shadow  : #{$light8};
+    --btn-default-hover-shadow  : inset 0 -1px 0 0 #{$light8};
     --btn-default-active-bg    : #{$light6};
     --btn-default-active-color : #{$dark9};
-    --btn-default-active-shadow : #{$light9};
+    --btn-default-active-shadow : inset 0 1px 0 0 #{$light9};
     
-    --btn-primary-bg           : #{$brand-core};
+    --btn-primary-bg           : #{$brand_core};
     --btn-primary-color        : #{$light1};
-    --btn-primary-shadow       : #{$brand-d2};
+    --btn-primary-shadow       : inset 0 -1px 0 0 #{$brand-d2};
     --btn-primary-hover-bg     : #{$brand-d1};
     --btn-primary-hover-color  : #{$light1};
-    --btn-primary-hover-shadow  : #{$brand-d3};
+    --btn-primary-hover-shadow  : inset 0 -1px 0 0 #{$brand-d3};
     --btn-primary-active-bg    : #{$brand-d2};
     --btn-primary-active-color : #{$light1};
-    --btn-primary-active-shadow : #{$brand-d4};
+    --btn-primary-active-shadow : inset 0 1px 0 0 #{$brand-d4};
     
     --btn-danger-bg            : #{$red_main};
     --btn-danger-color         : #{$light1};
@@ -244,6 +246,7 @@
     --drop-menu-systems-bg : #{$additional_light1};
     --drop-menu-navigation-bg : #{$light1};
     --dropdown-item-active-bg : #{$light4};
+    --dropdown-item-active-color : #{$dark9};
     --dropdown-item-hover-bg    : #{$light3};
     --dropdown-item-hover-color : #{$dark9};
     --dropdown-item-selected-bg : #{$light16};

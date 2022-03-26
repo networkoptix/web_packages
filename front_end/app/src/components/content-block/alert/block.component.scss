@@ -111,24 +111,24 @@
             border-top : none;
         }
     }
-
+    
     &.gray {
         background-color : var(--grey-section-bg);
         border           : 1px solid var(--grey-section-bg);
         border-bottom    : none;
-
+        
         .card--header {
-            background-color    : $light4;
-            border-bottom-color : $light6;
+            background-color    : var(--grey-section-bg);
+            border-bottom-color : var(--grey-section-sep-color);
         }
-
+        
         .card--body {
-            background-color : $light4;
-            border-top       : 1px solid $light6;
+            background-color : var(--grey-section-bg);
+            border-top       : 1px solid var(--grey-section-sep-color);
         }
-
+        
         .card--footer {
-            background-color : $light4;
+            background-color : var(--grey-section-bg);
         }
     }
 

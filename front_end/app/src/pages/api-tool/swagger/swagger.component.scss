@@ -683,7 +683,7 @@
 	@include typography.medium14nocolor;
 	color : var(--btn-default-color);
 	background-color : var(--btn-default-bg) !important;
-	box-shadow       : inset 0 -1px 0 0 var(--btn-default-shadow) !important;
+	box-shadow       : var(--btn-default-shadow) !important;
 	min-width: 89px;
 
 	&.btn-dropdown-toggle {
@@ -692,13 +692,13 @@
 
 	&:hover:not([disabled]):not(.disabled) {
 		background-color : var(--btn-default-hover-bg) !important;
-		box-shadow       : inset 0 -1px 0 0 var(--btn-default-hover-shadow);
+		box-shadow       : var(--btn-default-hover-shadow);
 	}
 
 	&:active,
 	&.active {
 		background-color : var(--btn-default-active-bg) !important;
-		box-shadow       : inset 0 1px 0 0 var(--btn-default-active-shadow) !important;
+		box-shadow       : var(--btn-default-active-shadow) !important;
 	}
 
 	&.execute {

@@ -349,7 +349,7 @@ nx-block .card {
     // do not use typography as we can't overwrite color with input-error
     font-family: $font-family-regular;
     font-size: $font-size-base;
-    color: var(--dark9);
+    color: var(--label-color);
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;

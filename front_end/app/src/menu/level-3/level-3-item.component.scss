@@ -66,6 +66,14 @@
             background-color: var(--left-menu-l3-hover-bg) !important;
             color : var(--left-menu-l3-hover-color);
         }
+    
+        .menu-level-3-svg-icon {
+            svg {
+                .st0 {
+                    stroke : var(--left-menu-l3-hover-color);
+                }
+            }
+        }
     }
 
     &:active {
@@ -133,7 +141,6 @@
             pointer-events: none;
             
             .st0 {
-                fill   : var(--left-menu-l3-color);
                 stroke : var(--left-menu-l3-color);
             }
         }

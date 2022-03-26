@@ -78,7 +78,7 @@ html[data-theme="dark"] {
     --border-color         : #35464F; //$dark11;
     --border-hover-color   : #263137; //$dark8;
     --border-active-color  : #1C2327; //$dark6;
-    --horizontal-sep-color : #49626F; //$dark15;
+    --horizontal-sep-color : #2B383F; //$dark9;
     --label-color          : #A5B7C0; //light10;
     
     --placehoder-cloud-color   : #171C1F; //$dark5
@@ -171,12 +171,14 @@ html[data-theme="dark"] {
     --btn-clear-active-bg : transparent;
     --btn-clear-active-color : #5F7F8F; //$light17;
     
-    --btn-dropdown-toggle-bg : #263137; //$dark8
-    --btn-dropdown-toggle-selected-color : #D7DFE3 ; //$light5;
-    --btn-dropdown-toggle-color : #A5B7C0; //$light10
-    --btn-dropdown-toggle-shadow-color : #080707; //$dark2
-    --btn-dropdown-toggle-hover-bg : #2B383F; //$dark9;
-    --btn-dropdown-toggle-active-bg : #35464F; //$dark11;
+    --btn-dropdown-toggle-bg             : #263137; //$dark8
+    --btn-dropdown-toggle-selected-color : #D7DFE3; //$light5;
+    --btn-dropdown-toggle-color          : #A5B7C0; //$light10
+    --btn-dropdown-toggle-shadow-color   : none;
+    --btn-dropdown-toggle-hover-bg       : #2B383F; //$dark9;
+    --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #1C2327; //$dark6;
+    --btn-dropdown-toggle-active-bg      : #35464F; //$dark11;
+    --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #1C2327; //$dark6;
     
     --btn-tag-bg                 : #3A4D57; //$dark12;
     --btn-tag-color              : #F5F7F8; //$light2;
@@ -194,23 +196,23 @@ html[data-theme="dark"] {
     
     --btn-default-bg           : #3A4D57; //$dark12;
     --btn-default-color        : #F5F7F8; //$light2;
-    --btn-default-shadow       : #263137; //$dark8
+    --btn-default-shadow       : none;
     --btn-default-hover-bg     : #303F47; //$dark10;
     --btn-default-hover-color  : #F5F7F8; //$light2;
-    --btn-default-hover-shadow  : #1C2327; //$dark6;
+    --btn-default-hover-shadow  : inset 0 -1px 0 0 #1C2327; //$dark6;
     --btn-default-active-bg    : #2B383F; //$dark9;
     --btn-default-active-color : #D7DFE3; //$light5;
-    --btn-default-active-shadow : #1C2327; //$dark6;
+    --btn-default-active-shadow : inset 0 1px 0 0 #1C2327; //$dark6;
     
-    --btn-primary-bg           : #2FA2DB; //$brand-core;
+    --btn-primary-bg           : #2FA2DB; //$brand_core;
     --btn-primary-color        : #F5F7F8; //$light2;
-    --btn-primary-shadow       : #1B82AD; //$brand-d2;
-    --btn-primary-hover-bg     : #1B82AD; //$brand-d2;
+    --btn-primary-shadow       : none;
+    --btn-primary-hover-bg     : #1B82AD; //$brand_d2;
     --btn-primary-hover-color  : #F5F7F8; //$light2;
-    --btn-primary-hover-shadow  : #117297; //$brand_d3;
+    --btn-primary-hover-shadow  : inset 0 -1px 0 0 #117297; //$brand_d3;
     --btn-primary-active-bg    : #076281; //$brand-d4;
     --btn-primary-active-color : #F5F7F8; //$light2;
-    --btn-primary-active-shadow : #076281; //$brand-d4;
+    --btn-primary-active-shadow : inset 0 1px 0 0 #076281; //$brand-d4;
     
     --btn-danger-bg            : #741414; //$red_d3;
     --btn-danger-color         : #F5F7F8; //$light2;
@@ -242,7 +244,7 @@ html[data-theme="dark"] {
     --dropdown-menu-bg : #121517; //dark4;
     --drop-menu-systems-bg    : #171C1F; //$dark5;
     --drop-menu-navigation-bg : #212A2F; //$dark7;
-    --dropdown-item-active-bg : #B9C7CE; //$light8;
+    --dropdown-item-active-bg : #2B383F; //$dark9;
     --dropdown-item-hover-bg : #35464F; //dark11;
     --dropdown-item-hover-color : #E1E7EA; //$light4;
     --dropdown-item-selected-bg    : #35464F; //dark11;
