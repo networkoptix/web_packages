@@ -14,7 +14,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxSystemGroupTreeComponent } from './components/system-group-tree/system-group-tree.component';
 import { NxSystemGroupPageComponent } from './pages/system-group/system-group-page.component';
-import { NxSystemGroupsIndexPageComponent } from './pages/system-groups-index/system-groups-index-page.component';
+import { NxSystemGroupsPageComponent } from './pages/system-groups/system-groups-page.component';
 import { routes } from './routes';
 import { NxSystemGroupsService } from './services/system-groups.service';
 import { groupsReducer } from './store/groups/groups.reducer';
@@ -40,12 +40,12 @@ import { groupsReducer } from './store/groups/groups.reducer';
     declarations: [
         NxSystemGroupTreeComponent,
 
-        NxSystemGroupsIndexPageComponent,
+        NxSystemGroupsPageComponent,
         NxSystemGroupPageComponent
     ],
     bootstrap: [],
     exports: [
-        NxSystemGroupsIndexPageComponent,
+        NxSystemGroupsPageComponent,
     ]
 })
 export class NxSystemGroupsModule {

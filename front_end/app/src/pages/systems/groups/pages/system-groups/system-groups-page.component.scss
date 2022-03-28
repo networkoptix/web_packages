@@ -5,6 +5,8 @@
     aside {
         width: 300px;
         border-right: 1px solid black;
+        height: calc(100vh - 48px);
+        overflow-y: auto;
     }
 
     .content {

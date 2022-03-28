@@ -7,9 +7,7 @@ import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-// import { NxConfigService } from '@services/nx-config/nx-config.service';
-// import { NxLanguageProviderService } from '@services/nx-language-provider';
-import * as GroupActions from '@pages/systems/groups/store/groups/groups.actions';
+import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
 import { selectGroupState } from '@pages/systems/groups/store/groups/groups.selectors';
 import type { GroupsState } from '@pages/systems/groups/store/groups/groups.state';
 import { NxProcessService, Process } from '@services/process.service';
@@ -41,12 +39,11 @@ export class MoveSystemToGroupModalContent implements OnInit {
     moveSystemProcess: Process;
 
     constructor(
-        // configService: NxConfigService,
-        // language: NxLanguageProviderService,
         private processService: NxProcessService,
         private store: Store,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
+        private groupsService: NxSystemGroupsService,
     ) { }
 
     ngOnInit(): void {
@@ -67,15 +64,10 @@ export class MoveSystemToGroupModalContent implements OnInit {
             });
 
         this.moveSystemProcess = this.processService.createProcess(
-            () => {
-                this.store.dispatch(
-                    GroupActions.setSystemGroup({
-                        systemId: this.selectedSystem.value,
-                        groupId: this.selectedGroup.value,
-                    })
-                );
-                return Promise.resolve();
-            },
+            () => this.groupsService.setSystemGroup(
+                this.selectedSystem.value,
+                this.selectedGroup.value
+            ),
             {},
             () => this.dialogRef.close()
         );

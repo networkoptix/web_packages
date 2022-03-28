@@ -1,12 +1,25 @@
 <div *ngFor="let group of groups" class="system-group">
+
     <div class="system-group-card">
-        <h3 class="system-group-name"><a [routerLink]="'/systems/groups/' + group.id">{{ group.name }}</a></h3>
+        <h3 class="system-group-name"
+            (dragstart)="onDragStart($event, group.id)"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event, group.id)"
+        ><a [routerLink]="'/systems/groups/' + group.id">{{ group.name }}</a></h3>
         <div class="subgroups" *ngIf="group.children.length">Subgroups: {{ group.children.length }}</div>
         <div class="systems" *ngIf="group.systems.length">Systems: {{ group.systems.length }}</div>
     </div>
+
     <nav *ngIf="group.systems.length">
-        <a *ngFor="let system of group.systems" [routerLink]="'/systems/' + system.id">{{ system.id }}</a>
+        <a *ngFor="let system of group.systems" [routerLink]="'/systems/' + system.id">{{ systemNames[system.id] || system.id }}</a>
         <!-- TODO: Replace displayed ID with displayed name -->
     </nav>
-    <nx-system-group-tree *ngIf="group.children.length" [groups]="group.children"></nx-system-group-tree>
+
+    <nx-system-group-tree
+        *ngIf="group.children.length"
+        [groups]="group.children"
+        [systemNames]="systemNames"
+        (parentIdChangeRequested)="reemitParentIdChangeRequested($event)"
+    >
+    </nx-system-group-tree>
 </div>

@@ -8,9 +8,7 @@ import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-// import { NxConfigService } from '@services/nx-config/nx-config.service';
-// import { NxLanguageProviderService } from '@services/nx-language-provider';
-import * as GroupActions from '@pages/systems/groups/store/groups/groups.actions';
+import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
 import { selectGroupState } from '@pages/systems/groups/store/groups/groups.selectors';
 import { GroupsState } from '@pages/systems/groups/store/groups/groups.state';
 import { NxProcessService, Process } from '@services/process.service';
@@ -35,12 +33,11 @@ export class CreateSystemGroupModalContent implements OnInit {
     createSystemGroupProcess: Process;
 
     constructor(
-        // configService: NxConfigService,
-        // language: NxLanguageProviderService,
         private processService: NxProcessService,
         public dialogRef: DialogRef,
         private store: Store,
         @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
+        private groupsService: NxSystemGroupsService,
     ) {
         this._groups$.subscribe(groups => {
             const { groupNames } = groups;
@@ -62,16 +59,10 @@ export class CreateSystemGroupModalContent implements OnInit {
 
     ngOnInit(): void {
         this.createSystemGroupProcess = this.processService.createProcess(
-            () => {
-                this.store.dispatch(
-                    GroupActions.createGroup({
-                        name: this.newGroupName,
-                        parentId: this.selectedParent.value,
-                        groupId: uuid(),
-                    })
-                );
-                return Promise.resolve();
-            },
+            () => this.groupsService.addGroup(
+                this.newGroupName,
+                this.selectedParent.value
+            ),
             {},
             () => this.dialogRef.close()
         );

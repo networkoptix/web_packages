@@ -29,35 +29,39 @@ export const groupsReducer = createReducer(
 
     on(GroupActions.load, (_state, { newState }) => cloneDeep(newState)),
 
-    on(GroupActions.createGroup, (state, { groupId, name, parentId }) => {
-        const newState = cloneDeep(state);
-        newState.groupNames[groupId] = name;
-        if (parentId) {
-            newState.groupParents[groupId] = parentId;
-        }
-        return newState;
-    }),
+    // actions below are not used; async service methods are called instead
+    // these actions, however, may be useful for optimistic updates in UI
+    // so the code is left to be here for the time being
 
-    on(GroupActions.setGroupName, (state, { groupId, name }) => {
-        const newState = cloneDeep(state);
-        newState.groupNames[groupId] = name;
-        return newState;
-    }),
+    // on(GroupActions.createGroup, (state, { groupId, name, parentId }) => {
+    //     const newState = cloneDeep(state);
+    //     newState.groupNames[groupId] = name;
+    //     if (parentId) {
+    //         newState.groupParents[groupId] = parentId;
+    //     }
+    //     return newState;
+    // }),
 
-    on(GroupActions.setGroupParent, (state, { groupId, parentId }) => {
-        const newState = cloneDeep(state);
-        newState.groupParents[groupId] = parentId;
-        return newState;
-    }),
+    // on(GroupActions.setGroupName, (state, { groupId, name }) => {
+    //     const newState = cloneDeep(state);
+    //     newState.groupNames[groupId] = name;
+    //     return newState;
+    // }),
 
-    on(GroupActions.setSystemGroup, (state, { systemId, groupId }) => {
-        const newState = cloneDeep(state);
-        if (groupId) {
-            newState.systemGroups[systemId] = groupId;
-        } else {
-            delete newState.systemGroups[systemId];
-        }
-        return newState;
-    }),
+    // on(GroupActions.setGroupParent, (state, { groupId, parentId }) => {
+    //     const newState = cloneDeep(state);
+    //     newState.groupParents[groupId] = parentId;
+    //     return newState;
+    // }),
+
+    // on(GroupActions.setSystemGroup, (state, { systemId, groupId }) => {
+    //     const newState = cloneDeep(state);
+    //     if (groupId) {
+    //         newState.systemGroups[systemId] = groupId;
+    //     } else {
+    //         delete newState.systemGroups[systemId];
+    //     }
+    //     return newState;
+    // }),
 
 );

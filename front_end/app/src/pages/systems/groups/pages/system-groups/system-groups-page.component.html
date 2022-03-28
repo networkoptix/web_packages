@@ -3,18 +3,28 @@
         <div class="d-flex">
             <button
                 class="btn btn-default mr-2"
-                (click)="newGroup()"
+                (click)="initNewGroupDialog()"
                 translate
             >New group</button>
             <button
                 class="btn btn-default"
-                (click)="moveSystem()"
+                (click)="initMoveSystemDialog()"
                 [disabled]="!(_groupForest$ | async).length"
                 translate
             >Move system</button>
+            <button
+                class="btn btn-default"
+                (click)="initSettingsDialog()"
+                [disabled]="!(_groupForest$ | async).length"
+                translate
+            >Settings</button>
         </div>
         <h2>Groups</h2>
-        <nx-system-group-tree [groups]="_groupForest$ | async"></nx-system-group-tree>
+        <nx-system-group-tree
+            [groups]="_groupForest$ | async"
+            [systemNames]="systemNames"
+            (parentIdChangeRequested)="changeGroupParent($event)"
+        ></nx-system-group-tree>
 
         <h2>Ungrouped systems</h2>
         <ul *ngIf="ungroupedSystems.length; else noUngrouped">

@@ -2,27 +2,38 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { IGroup } from '../../store/groups/groups.selectors';
 
+interface ParentIdChangeRequestedEvent {
+    groupId: string,
+    newParentId: string
+}
+
 @Component({
     selector: 'nx-system-group-tree',
     templateUrl: './system-group-tree.component.html',
     styleUrls: ['./system-group-tree.component.scss']
 })
 export class NxSystemGroupTreeComponent {
+    @Input() systemNames: Record<string, string> = {};
     @Input() groups: ReadonlyArray<IGroup> = [];
-    @Output() nameChangeRequested = new EventEmitter<{ groupId: string, newName: string }>();
-    @Output() parentIdChangeRequested = new EventEmitter<{ groupId: string, newParentId: string }>();
+    @Output() parentIdChangeRequested = new EventEmitter<ParentIdChangeRequestedEvent>();
 
-    public requestNameChange(groupId: string, event: Event): void {
-        this.nameChangeRequested.emit({
-            groupId,
-            newName: (event.target as HTMLInputElement).value
+    public onDragStart(e: DragEvent, groupId: string): void {
+        e.dataTransfer.setData('system-group-id', groupId);
+    }
+
+    public onDragOver(e: DragEvent): void {
+        e.preventDefault();
+    }
+
+    public onDrop(e: DragEvent, newParentId: string): void {
+        e.preventDefault();
+        this.parentIdChangeRequested.emit({
+            groupId: e.dataTransfer.getData('system-group-id'),
+            newParentId
         });
     }
 
-    public requestParentIdChange(groupId: string, event: Event): void {
-        this.parentIdChangeRequested.emit({
-            groupId,
-            newParentId: (event.target as HTMLInputElement).value
-        });
+    public reemitParentIdChangeRequested(e: ParentIdChangeRequestedEvent): void {
+        this.parentIdChangeRequested.emit(e);
     }
 }
