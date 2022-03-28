@@ -186,6 +186,27 @@ class TempLogin:
         }
 
 
+class MakeTokenForSystem:
+    def __init__(self, system_id, access_token, refresh_token):
+        self.access_token = access_token
+        self.refresh_token = refresh_token
+        self.system_token = Auth.get_refresh_token(refresh_token, system_id=system_id).get('access_token')
+
+    def __enter__(self):
+        return self.system_token
+
+    def __exit__(self, *args, **kwargs):
+        Auth.delete_token(self.tokens, self.system_token)
+
+    @property
+    def tokens(self):
+        """Returns the access and refresh tokens"""
+        return {
+            'access_token': self.access_token,
+            'refresh_token': self.refresh_token
+        }
+
+
 class Grant:
     authorization_code = "authorization_code"
     password = "password"

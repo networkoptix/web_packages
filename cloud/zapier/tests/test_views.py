@@ -74,27 +74,28 @@ class TestZapierViews:
 
         request = arf.get('/')
         # Need base64 encoded string
-        auth_string =  f'{mock_email}:{mock_password}'.encode('ascii')
+        auth_string = f'{mock_email}:{mock_password}'.encode('ascii')
         base64_string = base64.b64encode(auth_string).decode('ascii')
         request.META['HTTP_AUTHORIZATION'] = f'basic {base64_string}'
-        returned_user, returned_email, returned_password = authenticate(request)
+        returned_user, returned_email, returned_password, returned_tokens = authenticate(request)
 
         # Test valid
         assert returned_email == mock_email
         assert returned_password == mock_password
         assert returned_user == mock_user
+        assert returned_tokens is None
         mock_auth_authenticate.assert_called_once_with(request=request, username=mock_email, password=mock_password)
 
         # Test raises exception
         mock_auth_authenticate.return_value = None
-        with pytest.raises(APINotAuthorisedException, match='Username or password are invalid'):
+        with pytest.raises(APINotAuthorisedException, match='Credentials are invalid'):
             authenticate(request)
 
     @pytest.fixture()
     def generate_mock_authenticate(self, db, mocker, account_factory):
         self.email, self.password = generate_uuids(2)
         self.user = account_factory()
-        self.mock_authenticate = mocker.patch('zapier.views.authenticate', return_value=[self.user, self.email,self.password])
+        self.mock_authenticate = mocker.patch('zapier.views.authenticate', return_value=[self.user, self.email,self.password, None])
 
     def test_increment_rule(self):
         class MockRule:
@@ -109,7 +110,7 @@ class TestZapierViews:
 
     def test_make_rule(self, mocker):
         mock_post = mocker.patch('api.controllers.cloud_gateway.post', return_value=True)
-        mock_random_uuid = mocker.patch('zapier.views.random_uuid', return_value = str(uuid4()))
+        mock_random_uuid = mocker.patch('zapier.views.random_uuid', return_value=str(uuid4()))
         email, password, system_id, caption, description, source, zapier_trigger = generate_uuids(7)
         # Test generic event
         make_rule('Generic Event', email, password, system_id, caption=caption, description=description, source=source, zapier_trigger=zapier_trigger)
@@ -151,7 +152,7 @@ class TestZapierViews:
             "system": False
         }
 
-        mock_post.assert_called_once_with(system_id, 'ec2/saveEventRule', data, email, password)
+        mock_post.assert_called_once_with(system_id, 'ec2/saveEventRule', data, email=email, password=password, tokens=None)
 
         make_rule('Http Action', email, password, system_id, caption=caption, description=description, source=source, zapier_trigger=zapier_trigger)
         action_params = json.dumps({"allUsers": False,
@@ -195,7 +196,7 @@ class TestZapierViews:
             "system": False
         }
 
-        mock_post.assert_called_with(system_id, 'ec2/saveEventRule', data, email, password)
+        mock_post.assert_called_with(system_id, 'ec2/saveEventRule', data, email=email, password=password, tokens=None)
 
     # make_or_increment_rule fixtures and tests
     @pytest.fixture()
@@ -206,6 +207,7 @@ class TestZapierViews:
 
     def make_generated_rule(self, direction='Nx to Zapier', make_model=True):
         self.email, self.system_id, self.caption, self.source, self.password, self.description, self.target_url = generate_uuids(7)
+        self.tokens = None
         if make_model:
             self.generated_rule = baker.make(GeneratedRule,
                                              email=self.email,
@@ -225,7 +227,7 @@ class TestZapierViews:
                                 self.target_url)
 
     def test_generic_event_make(self, db, mock_make_and_increment):
-        action='Generic Event'
+        action = 'Generic Event'
         self.make_generated_rule(make_model=False)
         self.call_make_or_increment_rule(action)
 
@@ -235,7 +237,8 @@ class TestZapierViews:
                                                     self.system_id,
                                                     caption=self.caption,
                                                     source=self.source,
-                                                    description=self.description)
+                                                    description=self.description,
+                                                    tokens=None)
         assert GeneratedRule.objects.filter(email=self.email,
                                             system_id=self.system_id,
                                             caption=self.caption,
@@ -258,7 +261,8 @@ class TestZapierViews:
                                                     self.password,
                                                     self.system_id,
                                                     caption=self.caption,
-                                                    zapier_trigger=self.target_url)
+                                                    zapier_trigger=self.target_url,
+                                                    tokens=None)
         assert GeneratedRule.objects.filter(email=self.email,
                                             system_id=self.system_id,
                                             caption=self.caption,
@@ -326,9 +330,10 @@ class TestZapierViews:
                                                             caption,
                                                             password=self.password,
                                                             description=description,
-                                                            source=source)
+                                                            source=source,
+                                                            tokens=None)
 
-        mock_cloud_gateway_get.assert_called_once_with(systemId, encode_url(query_params), self.email, self.password)
+        mock_cloud_gateway_get.assert_called_once_with(systemId, encode_url(query_params), email=self.email, password=self.password, tokens=None)
 
     def test_nx_http_actions(self, db, arf):
         caption, system_id = generate_uuids(2)
