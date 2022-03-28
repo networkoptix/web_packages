@@ -142,9 +142,49 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/system/settings?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+            # s.delete(f"{serverUrl}/res/v1/login/sessions")
+            return r.json()
+
+    @keyword
+    def get_user_roles(self, serverUrl, auth):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r = s.get(f'{serverUrl}/rest/v1/userRoles?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
             s.delete(f"{serverUrl}/res/v1/login/sessions")
             return r.json()
-    #@keyword
+
+    @keyword
+    def restart_server(self, serverUrl, auth):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            f = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            logger.trace(f.json())
+            r = s.post(f'{serverUrl}/rest/v1/servers/this/restart', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+            assert r.status_code == 200
+
+    @keyword
+    def set_system_name(self, serverUrl, auth, newName):
+        settings = {"systemName": newName}
+        response = ServerAPI5.set_system_settings(self, auth, serverUrl, settings)
+        return response
+
+    @keyword
+    def save_user_existing(self, auth, serverUrl, name, permissions, email, userRoleId, userId):
+        body = {
+            "email": email,
+            "name": name,
+            "permissions": permissions,
+            "userRoleId": userRoleId
+        }
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r = s.patch(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
+                          verify=False)
+        return r.json()
+
+        #@keyword
     #def save_user(self, auth, server_url, name, permissions, email, full_name, password, is_cloud=True):
 #
     #    if is_cloud and (name != email):
@@ -170,3 +210,19 @@ class ServerAPI5(ServerAPI):
     #        if r.status_code != 200:
     #            raise APIError(f'Cannot save user: {r.content}')
     #        return r.json()
+
+    @keyword
+    def get_cloud_system_id(self, server_url, local_auth):
+        system_settings = ServerAPI5.get_system_settings_from_server(self, local_auth, server_url)
+        logger.trace(system_settings)
+        return system_settings["cloudSystemID"]
+
+    @keyword
+    def get_local_system_name(self, server_url, local_auth):
+        system_settings = ServerAPI5.get_system_settings_from_server(self, local_auth, server_url)
+        return system_settings["systemName"]
+
+    @keyword
+    def get_local_system_owner(self, server_url, local_auth):
+        system_settings = ServerAPI5.get_system_settings_from_server(self, local_auth, server_url)
+        return system_settings["cloudAccountName"]

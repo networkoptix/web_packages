@@ -363,7 +363,7 @@ Evaluate System Settings via API
         IF    '${expected value}' == 'True' or '${expected value}' == 'False'
             ${expected value}=   Convert To Lower Case    ${expected value}
         END
-        Dictionary should contain item    ${settings}[reply][settings]    ${key}    ${expected value}
+        Dictionary should contain item    ${settings}    ${key}    ${expected value}
     END
 
 Evaluate Log Level via API

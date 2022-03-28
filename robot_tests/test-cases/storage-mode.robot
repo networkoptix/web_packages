@@ -282,7 +282,7 @@ ${drives}    5
 6. Enable storage: Not in use -> Backup
     [Tags]    C81544    mode    archive
     [Setup]     Test Setup      disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test
+    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with ${IMAGE}
 #    @{disabled} =    Create List    disk1    disk2    disk3
 #    @{backups} =    Create List
 #    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -420,7 +420,7 @@ ${drives}    5
 8. Disable storage: Backup -> Not in use
     [Tags]    C81546    mode    archive
     [Setup]     Test Setup      config storage=${False}
-    Skip If Image Is    4.3_test    5.0_test
+    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with ${IMAGE}
 #    Log    Step 1
 #    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
     Go to Servers
@@ -557,7 +557,7 @@ ${drives}    5
 11. Disabling storage warnings - Backup storages
     [Tags]    C81564    mode    archive
     [Setup]     Test Setup      config storage=${False}
-    Skip If Image Is    4.3_test    5.0_test
+    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with ${IMAGE}
     Log    Step 1
 #    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
 #    Go to Servers

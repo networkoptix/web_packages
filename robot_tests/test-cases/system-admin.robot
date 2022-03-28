@@ -213,14 +213,10 @@ Force Tags        system    threaded
     Validate Header Button Text    ${new system name}    systems=False
 
     Log    Check that system name is changed - server
-    Restart Server   http://${QABURBANK IP}:${system}[port]    ${system}[cloud auth]
+    Restart Server   https://${QABURBANK IP}:${system}[port]    ${system}[local auth]
     Sleep    10
-    ${settings}=   ServerAPI.Get System Settings    ${system}[local auth]    https://${QABURBANK IP}:${system}[port]
-    FOR    ${s}    IN    @{settings}
-        Run Keyword If    '''${s}[name]''' == '''systemName'''    Run Keywords
-           ...   Should be equal as strings    ${new system name}    ${s}[value]   AND
-           ...   Exit For Loop
-    END
+    ${settings}=   Get System Settings From Server   ${system}[local auth]    https://${QABURBANK IP}:${system}[port]
+    Should be equal as strings    ${new system name}    ${settings}[systemName]
 
     Log    Get initial system name back
     Rename System    ${system}[cloud auth]    ${system}[cloud id]    ${system}[name]
@@ -332,6 +328,7 @@ Force Tags        system    threaded
 # Left search
 18. Left menu search: Position and style
     [Tags]    C81759    webadmin    cloud    search
+    Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
 
     Log    Step 1
     Log in to system    ${system}    ${system}[owner]
@@ -436,7 +433,11 @@ Force Tags        system    threaded
     ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
     ${num users found}=   Get Length    ${all users found}
     Capture Page Screenshot
-    Should Be Equal As Numbers    ${num users found}    6
+    IF   '${IMAGE}' == '5.0_test'
+        Should Be Equal As Numbers    ${num users found}    7
+    ELSE
+        Should Be Equal As Numbers    ${num users found}    6
+    END
     
     Log    Step 4
     ${name} =    Get Text    ${all users found}[0]
@@ -466,6 +467,7 @@ Force Tags        system    threaded
 
 24. Left menu search: Searchable fields
     [Tags]    C81796    webadmin    cloud    search
+    Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
     Log in to system    ${system}    ${system}[owner]
     
     IF    '${LANGUAGE}'=='en_US'
@@ -578,7 +580,7 @@ Force Tags        system    threaded
     Should Not Contain    ${viewer systems}    ${system}[cloud id]
 
     Log     C47020: checking that system is disconnected from cloud on the server side
-    Restart Server    http://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
+    Restart Server    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Sleep    10
     ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}

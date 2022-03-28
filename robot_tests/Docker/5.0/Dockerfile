@@ -20,6 +20,7 @@ RUN apt-get update \
     && apt-get install -y \
         apt-utils \
         iptables \
+        curl \
         /debs/${mediaserver_deb} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

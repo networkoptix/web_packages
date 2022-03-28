@@ -375,9 +375,9 @@ Cleanup External Drive
     Log To Console   networkdisk deleted ....... | PASS |
     
 Skip If Image Is
-    [Arguments]    @{unsupported images}
+    [Arguments]    @{unsupported images}    ${msg}
     FOR    ${item}    IN    @{unsupported images}
-        Skip If    '${IMAGE}' == '${item}'    Backup Archive not supported with ${IMAGE}
+        Skip If    '${IMAGE}' == '${item}'    ${msg}
     END
     
 Wait Until Storages Are Outdated and Refresh
