@@ -1483,3 +1483,9 @@ Check User Permissions
     ...    ${ADD USER PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
+
+Skip If Image Is
+    [Arguments]    @{unsupported images}    ${msg}
+    FOR    ${item}    IN    @{unsupported images}
+        Skip If    '${IMAGE}' == '${item}'    ${msg}
+    END

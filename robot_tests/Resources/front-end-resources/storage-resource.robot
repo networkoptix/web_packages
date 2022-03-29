@@ -382,12 +382,6 @@ Cleanup External Drive
     Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot  
     Log To Console   networkdisk deleted ....... | PASS |
     
-Skip If Image Is
-    [Arguments]    @{unsupported images}    ${msg}
-    FOR    ${item}    IN    @{unsupported images}
-        Skip If    '${IMAGE}' == '${item}'    ${msg}
-    END
-    
 Wait Until Storages Are Outdated and Refresh
     Wait Until Elements Are Visible    ${OUTDATED BANNER}    ${RELOAD ICON}     timeout=65
     Click Element    ${RELOAD ICON} 

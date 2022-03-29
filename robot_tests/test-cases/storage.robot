@@ -944,7 +944,7 @@ ${drives}    5
 34. Backup settings block availability for owner, administrator and other users
     [Tags]    C81804    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}        
     FOR    ${account}    IN    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]        
         Log in to user and system    ${account}     ${server 1['cloud id']}
@@ -965,14 +965,14 @@ ${drives}    5
 35. Backup settings block is not shown if no one storage is assigned “Backup” mode
     [Tags]    C81810    archive
     [Setup]     Test Setup    disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Verify on Servers Page
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX} 
 
 36. Backup off
     [Tags]    C81807    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -985,7 +985,7 @@ ${drives}    5
 37. Backup on – default settings
     [Tags]    C81808    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -998,7 +998,7 @@ ${drives}    5
 38. Backup on – custom settings
     [Tags]    C81809    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1016,7 +1016,7 @@ ${drives}    5
 39. It is not necessary to apply changes to make the backup settings block appear
     [Tags]    C81811    archive
     [Setup]     Test Setup    disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible With Retry    
@@ -1053,7 +1053,7 @@ ${drives}    5
 40. Cancel Backup enabling
     [Tags]    C83183    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupManual    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1074,7 +1074,7 @@ ${drives}    5
 41. Cancel Backup disabling - default settings
     [Tags]    C83184    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupRealTime    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1096,7 +1096,7 @@ ${drives}    5
 42. Cancel Backup disabling - custom settings
     [Tags]    C83185    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1132,7 +1132,7 @@ ${drives}    5
 43. Cancel resetting backup settings for system of 1 server
     [Tags]    C83328    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1177,7 +1177,7 @@ ${drives}    5
 44. Reset backup settings for system of 1 server
     [Tags]    C83330    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Run Keyword Unless     ${backup initialized}     Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     Set Backup Setting To    BackupSchedule    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}
     Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -1225,7 +1225,7 @@ ${drives}    5
     
 46. Reindex archive block owerview: Main and Backup storages
     [Tags]    C81606    archive
-    Skip If Image Is    4.3_test    5.0_test      Backup Archive not supported with 5.0_test
+    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with 5.0_test
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible    
