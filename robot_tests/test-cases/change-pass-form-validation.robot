@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/change-pass-form-validation-resource.robot
 Suite Setup       Open Change Password Dialog
 Test Template     Test Passwords Invalid
 Test Teardown     Run Keyword If Test Failed    change-pass-form-validation-resource.Restart

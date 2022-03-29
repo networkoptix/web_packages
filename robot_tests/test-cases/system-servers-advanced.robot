@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-server-resource.robot
 Suite Setup       Server Advanced Settings Suite Setup
 Test Setup        Advanced Server Settings Test Setup
 Test Teardown     Advanced Server Test Teardown
@@ -26,8 +26,11 @@ Force Tags        advanced server
     Log    Step 3
     Log Out
     
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log in to system    ${server}    ${server}[cloud users][cloudAdmin]    
-    ...    ELSE    Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
+    IF    '''${mode}'''=='''cloud'''
+        Log in to system    ${server}    ${server}[cloud users][cloudAdmin] 
+    ELSE
+        Log in to system    ${server}    ${server}[local users][cloudAdmin][login]    validate=${True}
+    END
     Wait Until Element is Visible    ${SERVERS LINK}
     Sleep    1
     Click Element    ${SERVERS LINK}
@@ -46,8 +49,11 @@ Force Tags        advanced server
     ...    @{LOG SETTINGS BLOCK}
     Log    Step 4
     Log Out
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log in to system    ${server}    ${server}[cloud users][advancedViewer]    validate=${True}
-    ...    ELSE    Log in to system    ${server}    ${server}[local users][advancedViewer][login]    validate=${True}
+    IF    '''${mode}'''=='''cloud'''
+        Log in to system    ${server}    ${server}[cloud users][advancedViewer]    validate=${True}
+    ELSE
+        Log in to system    ${server}    ${server}[local users][advancedViewer][login]    validate=${True}
+    END
     sleep    5
     Go To    ${location}${ADVANCED SETTINGS}
     Reload Page
@@ -167,8 +173,11 @@ Force Tags        advanced server
 
     Log    Step 5 & 6
     Click Element    ${RESERVED SPACE DROPDOWN}
-    Run Keyword If    '${bytes}' == 'GB'    Click Element    ${RESERVED DROPDOWN OPTION TB}
-    ...    ELSE IF    '${bytes}' == 'TB'    Click Element    ${RESERVED DROPDOWN OPTION GB}
+    IF    '${bytes}' == 'GB'
+        Click Element    ${RESERVED DROPDOWN OPTION TB}
+    ELSE IF    '${bytes}' == 'TB'
+        Click Element    ${RESERVED DROPDOWN OPTION GB}
+    END
     Wait Until Elements Are Visible    ${STORAGE SAVE BUTTON}    ${STORAGE CANCEL BUTTON}
     Sleep    1
     Click Element    ${STORAGE SAVE BUTTON}

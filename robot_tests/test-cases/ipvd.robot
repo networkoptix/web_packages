@@ -1,7 +1,5 @@
 *** Settings ***
-Library           OperatingSystem
-Library           DateTime
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/ipvd-resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
 Test Setup        ipvd-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers

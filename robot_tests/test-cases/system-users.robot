@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-user-resource.robot
 #Resource    ../special-cases/qa-user-creation.robot
 Suite Setup       Users Suite Setup
 Test Setup        Skip If Irrelevant
@@ -452,8 +452,11 @@ Force Tags        system    Threaded
         Log Out
         Sleep    20
         Log In    ${random email}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}    65
-        ...    ELSE    Wait Until Element is Visible    //input[@id="login_email"]
+        IF    '''${mode}'''=='''cloud'''
+            Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}    65
+        ELSE
+            Wait Until Element is Visible    //input[@id="login_email"]
+        END
         Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
         Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
     END
@@ -608,7 +611,7 @@ Force Tags        system    Threaded
     Delete Email    ${email}
     Close Mailbox
     Go To    ${url}/authorize/activate/${activation code}
-    Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
+    Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
     Go To    ${ENV}/systems/${server 1['cloud id']}
     Go To Users List
     Wait Until Element Is Visible     //nx-menu//span[contains(text(),"${random email}")]

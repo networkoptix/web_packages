@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/register-form-validation-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/authorize?client_type=create
 Test Template     Test Register Invalid
 Test Teardown     Run Keyword If Test Failed    Restart

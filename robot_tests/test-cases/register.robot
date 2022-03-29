@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/register-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        register-resource.Restart
 Test Teardown     Open New Browser and Reset DB On Failure

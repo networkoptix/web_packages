@@ -1,9 +1,7 @@
 *** Settings ***
 Resource     variables.robot
 Resource     variables-env.robot
-Resource     Resources/front-end-resources.robot
 Resource     Resources/cms-resources.robot
-Resource     Resources/cloud-merge-resource.robot
 
 Library      String
 Library      DateTime
@@ -14,7 +12,7 @@ Library      SSHLibrary
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL}
-Library      NoptixLibrary/ServerAPI.py
+Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
@@ -37,8 +35,11 @@ Open Browser and go to URL
         # ...    Acquire Lock    MyLock    AND
         # ...    Import Variables    getIds.py    ${ENV}    ${TEST EMAIL}    AND
         # ...    Release Lock    MyLock
-    Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
-    ...          ELSE    Open Browser With Options
+    IF    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"
+        Regular Open Browser
+    ELSE
+        Open Browser With Options
+    END
     Set Selenium Speed    ${speed}
     Set Selenium Timeout    ${selenium_timeout}
     Run Keyword If    ${check language}    Run Keywords
@@ -107,8 +108,11 @@ Set Language Anonymous
 
 Log In
     [arguments]    ${user}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}    ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
-    ...    ELSE    Log In Web Admin    ${user}    ${password}    ${validate}
+    IF    '''${mode}'''=='''cloud'''
+        Log In Cloud    ${user}    ${password}    ${validate}    ${button}     ${exists}    ${reset}    ${2fa}    ${2fa backup code}
+    ELSE
+        Log In Web Admin    ${user}    ${password}    ${validate}
+    END
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
@@ -368,7 +372,7 @@ Disconnect all systems from account
     [Arguments]    ${email}     ${password}
     ${systems}=   Get Account Systems    ${email}    ${password}
     FOR    ${sys}    IN    @{systems}
-        Disconnect    ${ENV}    ${email}    ${password}    ${sys}
+        Disconnect    ${email}    ${password}    ${sys}
     END
     
 Get Account Id By Email
@@ -404,7 +408,7 @@ Restore Password using API
     [Arguments]    ${email}    ${new password}
     ${resp}=   API Restore Password    ${email}    None    None
     Should Be Equal As Strings    ${resp}    200
-    ${code}=   Get Code From Email    ${auth}    ${email}    restore_password
+    ${code}=   Get Code From Email    ${email}    restore_password
     ${code}=   Convert Code    ${code}
     ${resp}=   API Restore Password    ${email}    ${code}   ${new password}
     Should Be Equal As Strings    ${resp}    200
@@ -1334,12 +1338,6 @@ Log Out via API
     Run Keyword If    ${validate}    Validate Log Out
     [Return]    ${status}
 
-Remove Server From System
-    [Arguments]    ${system url}    ${system auth}    ${server url}    ${server auth}    ${server name}
-    Detach Server From System    ${server url}    ${server auth}
-    ${id}=    Get Server Id    ${system url}    ${system auth}    ${server name}
-    Remove Resource From System    ${system url}    ${system auth}    ${id}
-
 Get container IP by name
     [Arguments]    ${name}
     Acquire Lock    get_id_lock
@@ -1349,3 +1347,139 @@ Get container IP by name
     Close Connection
     Release Lock    get_id_lock
     [Return]    ${ip}
+
+
+# header-resource
+Validate Header Button Text
+    [Arguments]    ${expected text}    ${systems}=${True}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Sleep    5
+    ${actual text}=   Get Text    ${SYSTEMS DROPDOWN}/span
+    Run Keyword If    ${systems}    Should be equal as strings    ${expected text}${SPACE}${SYSTEMS TITLE TEXT}    ${actual text}
+        ...    ELSE    Should be equal as strings    ${expected text}    ${actual text}
+
+# system-server-resource
+Verify on Servers Page
+    [Arguments]    ${timeout}=${selenium_timeout}
+    Wait Until Elements Are Visible with Retry
+    #...    ${PORT INPUT}
+    ...    ${RESTART SERVER BUTTON}
+    ...    ${SERVER DETAILED INFO BUTTON}
+    ...    ${IP}       
+    ...    ${OS}       
+    ...    ${VERSION}  
+    ...    timeout=${timeout}
+
+Log in to user and system
+    [Arguments]    ${user}    ${system id}    ${verify}=True    ${password}=${BASE PASSWORD}
+    Log in    ${user}    ${password}
+    Sleep    1
+    Go To    ${ENV}/systems/${system id}
+    Sleep    1
+    #Run Keyword If    '${user}'=='${EMAIL OWNER}' and ${verify}==True    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    #Run Keyword If    '${user}'=='${EMAIL ADMIN}' and ${verify}==True   Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    #Run Keyword Unless    '${user}'=='${EMAIL OWNER}' or '${user}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+
+
+# 2fa-resource
+Generate totp and login
+    [arguments]    ${email}
+    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
+    2fa log in verification code form validations    ${email}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}
+    Click Element    ${2FA AUTH CODE LOG IN BTN}
+
+2fa log in verification code form validations
+    [arguments]    ${email}
+    Element Should Be Visible    ${2FA CLOUD ILLUSTRATION}
+    Element Should Be Visible    ${2FA LOG IN CLOUD}
+    Element Should Be Visible    //nx-authorize-component//nx-authorize-auth-code-component//span[text()="${email}"]
+    Element Should Be Visible    ${2FA AUTH CODE FIELD}
+    Element Should Be Visible    ${2FA CODE INSTRUCTIONS}
+    Element Should Be Visible    ${2FA BACK BTN}
+    Element Should Be Visible    ${2FA BACKUP CODE BTN}
+    Element Should Be Visible    ${2FA LOG IN BTN}
+
+Type in backup code and login
+    [Arguments]    ${2fa backup code}    ${email}
+    Wait Until Element Is Visible    ${2FA BACKUP CODE BTN}
+    2fa log in verification code form validations    ${email}
+    Click Element    ${2FA BACKUP CODE BTN}
+    Wait Until Element Is Visible    ${2FA BACKUP CODE FIELD}
+    2fa log in backup code form validations    ${email}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA BACKUP CODE FIELD}   ${2fa backup code}
+    Click Element    ${2FA BACKUP CODE LOG IN BTN}
+
+2fa log in backup code form validations
+    [arguments]    ${email}
+    Element Should Be Visible    ${2FA BK CLOUD ILLUSTRATION}
+    Element Should Be Visible    ${2FA BK LOG IN CLOUD}
+    Element Should Be Visible    //nx-authorize-component//nx-authorize-backup-code-component//span[text()="${email}"]
+    Element Should Be Visible    ${2FA BK CODE FIELD}
+    Element Should Be Visible    ${2FA BK CODE HELP}
+    Element Should Be Visible    ${2FA BK CODE CONTACT}
+    Element Should Be Visible    ${2FA BK BACK BTN}
+    Element Should Be Visible    ${2FA AUTH CODE BTN}
+    Element Should Be Visible    ${2FA BK LOG IN BTN}
+
+
+# system admin resource
+Close Modal If There
+    ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
+    Run Keyword If     ${modal is visible}    Run Keywords
+        ...    Click Element    ${COMMON CLOSE BUTTON}   AND
+        ...    Wait until element is not visible    ${COMMON CLOSE BUTTON}
+
+
+# system-user-resource
+Remove User Permissions
+    [Arguments]    ${user email address}
+    ${User In List}=   Select user in Users List    ${user email address}
+    Wait Until Element Is Visible    ${REMOVE USER BUTTON}
+    Click Button    ${REMOVE USER BUTTON}
+    Wait Until Element Is Visible    ${REMOVE BUTTON}
+    Click Button    ${REMOVE BUTTON}
+#    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
+    Wait Until Element Is Not Visible    ${User In List}
+
+Select user in Users List
+    [Arguments]    ${user email address}
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
+    Run Keyword Unless    ${status}   Go To Users List
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
+    Click Link    ${User In List}
+    Wait Until Element Is Visible    ${USER EMAIL}
+    Wait Until Element Contains    ${USER EMAIL}    ${user email address}
+    [Return]    ${user email address}
+
+Check User Permissions
+    [arguments]    ${user email address}    ${permissions}    ${timeout}=${selenium_timeout}
+    ${original timeout}=   Set Selenium Timeout    ${timeout}
+
+    Select user in Users List    ${user email address}
+
+    ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
+    Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
+
+    Run Keyword If    '${permissions}'=='${OWNER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
+    Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
+    Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
+    Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT VIEWER}
+    Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
+    Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
+
+    Set Selenium Timeout    ${original timeout}

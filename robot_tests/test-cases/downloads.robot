@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/downloads-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        downloads-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers

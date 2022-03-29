@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Offline Suite Setup
 Test Setup        System Offline Restart
 Suite Teardown    Run Keyword and Ignore Error    System Offline Suite Teardown

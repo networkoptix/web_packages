@@ -27,24 +27,17 @@ Force Tags        Threaded
     ...    //button//a[@href\='/']/..
     ...    timeout=120 
 
-3. The logo takes you to the home page when not logged in
-    [Tags]    C41539
-    Open Browser and go to URL    ${url}/register
-    Wait Until Element Is Visible    ${HEADER ICON LINK}
-    Click Link    ${HEADER ICON LINK}
-    Location Should Be    ${url}/
-
-4. The logo takes you to the systems page when logged in
+3. The logo takes you to the systems page when logged in
     [Tags]    C41540
-    Open Browser and go to URL    ${url}/register
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
+    Open Browser and go to URL    ${url}/authorize/register
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=${LOG IN BTN CREATE ACCOUNT PAGE}
     Go To    ${url}/${NOPTIXAUTOQA SYSTEM ID}
     Wait Until Element Is Visible    ${HEADER ICON LINK}
     Click Link    ${HEADER ICON LINK}
     Wait Until Element Is Visible    ${NOPTIXAUTOQA SYSTEM NAME}
     Location Should Be    ${url}/systems
 
-5. Language can be changed on landing page
+4. Language can be changed on landing page
     [Tags]    C41549
     Open Browser and go to URL    ${url}
     Set Language Anonymous    de_DE

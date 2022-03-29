@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/cloud-merge-resource.robot
 Suite Setup       Merge Suite Setup
 Test Setup        Merge Test Setup
 Test Teardown     Merge Test Teardown
@@ -1401,7 +1401,7 @@ Force Tags        merge
 
     Log    C76464
     Log    Step 2
-    Disconnect    ${ENV}    ${owner 2 email}    ${base password}    ${system 2}[cloud id]
+    Disconnect    ${owner 2 email}    ${base password}    ${system 2}[cloud id]
     Slow    Restart Server    https://${QA BURBANK IP}:${system 2}[port]    ${auth}    timeout=5
     Connect System to Cloud   ${auth}   https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[name]    ${owner 1 email}    ${base password}
     Slow    Click Button    ${MERGE TRY AGAIN BUTTON}    timeout=0.5

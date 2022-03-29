@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-server-resource.robot
 Suite Setup       Server Settings Suite Setup
 Test Setup        Server Settings Test Setup
 Test Teardown     Server Settings Test Teardown
@@ -80,12 +80,14 @@ Force Tags        system
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
     Wait Until Elements are Visible     ${RESTARTING BANNER}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
-       ...    ELSE   Run Keywords
-           ...    Sleep    60    AND
-           ...    Close Browser    AND
-           ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]    AND
-           ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    IF    '''${mode}'''=='''cloud'''
+        Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
+    ELSE
+        Sleep    60
+        Close Browser
+        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1}[port]
+        Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    END
 
 6. Restart server as administrator
     [Documentation]     Skipping cloud due to https://networkoptix.atlassian.net/browse/CLOUD-8158
@@ -100,12 +102,14 @@ Force Tags        system
     Wait Until Element Has Class    ${RESTART DIALOG RESTART BUTTON}    processing
     Wait Until Element Is Not Visible    ${RESTART SERVER FORM}
     Wait Until Element Is Visible    ${RESTARTING BANNER}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
-        ...    ELSE    Run Keywords
-            ...    Sleep    60    AND
-            ...    Close Browser    AND
-            ...    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}    AND
-            ...    Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    IF    '''${mode}'''=='''cloud'''
+        Check For Alert    ${SERVER RESTARTED TEXT}    timeout=120
+    ELSE
+        Sleep    60
+        Close Browser
+        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+        Wait Until Elements Are Visible    //input[@id="login_email"]    //input[@id="login_password"]    //button[@type="submit"]    timeout=95
+    END
 
 7. Change port is only available for owner
     [Tags]    C70927    cloud    webadmin
@@ -225,8 +229,11 @@ Force Tags        system
     Click Button    ${SERVER DETAILED INFO BUTTON}
     ${loc}=    Get Location
     log    ${loc}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 3}[sysId]/health/servers
-    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 3}[port]/#/health/servers
+    IF    '''${mode}'''=='''cloud'''
+        Wait Until Location Contains    ${ENV}/systems/${server 3}[sysId]/health/servers
+    ELSE
+        Wait Until Location Contains    https://${QA BURBANK IP}:${server 3}[port]/#/health/servers
+    END
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
 
@@ -235,8 +242,11 @@ Force Tags        system
     Execute Command Remotely   docker container start ${server 2}[id]
     Select Server By Name    server 1
     Click Button    ${SERVER DETAILED INFO BUTTON}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Location Contains    ${ENV}/systems/${server 1}[sysId]/health/servers
-    ...    ELSE    Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
+    IF    '''${mode}'''=='''cloud'''
+        Wait Until Location Contains    ${ENV}/systems/${server 1}[sysId]/health/servers
+    ELSE
+        Wait Until Location Contains    https://${QA BURBANK IP}:${server 1}[port]/#/health/servers
+    END
     
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}

@@ -24,7 +24,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 @library
 class CloudPortalAPI(object):
 
-    def __init__(self, env, customization, password, email):
+    def __init__(self, env='https://cloud-test.hdw.mx', customization='default', password='qweasd 123', email='noptixautoqa+sendemail@gmail.com'):
         self.env = env
         self.customization = customization
         self.password = password

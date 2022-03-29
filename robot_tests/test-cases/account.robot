@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/account-resource.robot
 Suite Setup       Account Suite Setup
 Test Setup        account-resource.Restart
 Test Teardown     Run Keyword If Test Failed    account-resource.Reset DB and Open New Browser On Failure

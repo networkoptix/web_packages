@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/login-form-validation-resource.robot
 Suite Setup       login-form-validation-resource.Restart
 Test Teardown     Run Keyword If Test Failed    login-form-validation-resource.Restart
 Test Template     Test Login Invalid

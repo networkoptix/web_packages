@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/change-pass-resource.robot
 Suite Setup       change-pass-resource.Setup
 Test Setup        change-pass-resource.Restart
 Test Teardown     Run Keyword If Test Failed    change-pass-resource.Reset DB and Open New Browser On Failure

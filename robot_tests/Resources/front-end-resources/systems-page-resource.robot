@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Systems Page Suite Setup
     ${rand str}=   Generate Random String
@@ -42,14 +45,20 @@ Validate on Systems Page
        ...    ${SYSTEMS HEADER}
        ...    ${SYSTEMS LIST}
     Title Should Be    ${SYSTEMS TITLE TEXT} - ${PRODUCT NAME}
-    Run Keyword If    ${search}    Wait Until Element is Visible    ${SYSTEMS SEARCH INPUT}
-       ...    ELSE    Wait Until Element Is Not Visible    ${SYSTEMS SEARCH INPUT}
+    IF    ${search}
+        Wait Until Element is Visible    ${SYSTEMS SEARCH INPUT}
+    ELSE
+        Wait Until Element Is Not Visible    ${SYSTEMS SEARCH INPUT}
+    END
 
 Validate Tile
     [Arguments]    ${system name}    ${owner name}    ${offline}=${False}
     Wait Until Element is Visible    //h2[text()="${system name}"]/following-sibling::span[contains(text(), "${owner name}")]    timeout=10
-    Run Keyword If   ${offline}    Wait Until Element is Visible    ${OFFLINE BADGE}
-        ...    ELSE    Wait Until Element is Visible    ${OPEN IN NX BUTTON}
+    IF    ${offline}
+        Wait Until Element is Visible    ${OFFLINE BADGE}
+    ELSE
+        Wait Until Element is Visible    ${OPEN IN NX BUTTON}
+    END
 
 Verify Number Of Tiles Is Correct
     [Arguments]    ${expected num tiles}

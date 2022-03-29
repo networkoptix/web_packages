@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          ipvd-resource.robot
+
 *** Keywords ***
 Open New Browser On Failure
     Close Browser

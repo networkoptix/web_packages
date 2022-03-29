@@ -34,8 +34,8 @@ class BearerAuth(AuthBase):
 
 @library
 class ServerAPI:
-    def __init__(self):
-        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
+    def __init__(self, image=None):
+        self.image = image
 
     def _login(self, server_url, username, password):
         data = {
@@ -226,7 +226,7 @@ class ServerAPI:
                           json=body, verify=False)
 
     @keyword
-    def remove_resouce_from_system(self, serverUrl, auth, resourceId):
+    def remove_resource_from_system(self, serverUrl, auth, resourceId):
         body = {
             "id": resourceId
         }

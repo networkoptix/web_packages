@@ -1,6 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
-
+Resource          ../Resources/front-end-resources/restore-pass-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart Restore Pass
 Test Teardown     Run Keyword If Test Failed    restore-pass-resource.Open New Browser On Failure
@@ -102,14 +101,7 @@ Force Tags
     Activate Account    ${email}    ${password}
     Log In    ${email}    ${password}    button=${ACTIVATION SUCCESS LOG IN BUTTON}    reset=${True}
     Go To    ${url}/authorize/restore_password
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Sleep    1
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
-    Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Elements Are Visible    ${FORGOT PASSWORD BUTTON}
-    Click Element    ${FORGOT PASSWORD BUTTON}
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
 
 10. Should prompt log user out if he visits restore password link from email
     [Tags]    email    C63394
@@ -154,14 +146,7 @@ Force Tags
     [Tags]
     ${email}=   Register Random User
     Go To    ${url}/authorize/restore_password
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Sleep    1
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
-    Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Elements Are Visible    ${FORGOT PASSWORD BUTTON}
-    Click Element    ${FORGOT PASSWORD BUTTON}
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
     Go To    ${url}/authorize
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${EMAIL INPUT}    ${LOG IN NEXT BUTTON}
     Sleep    1
@@ -170,7 +155,7 @@ Force Tags
     Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Elements Are Visible    ${FORGOT PASSWORD BUTTON}
     Click Element    ${FORGOT PASSWORD BUTTON}
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
 
 12. Check restore password email links, colors, cloud name, and open link in new tab
     [Tags]    C26260     deb

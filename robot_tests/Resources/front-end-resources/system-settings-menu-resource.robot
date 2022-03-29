@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          system-admin-resource.robot
+
 *** Keywords ***
 System Settings Menu Test Setup
     Log Out

@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Setup
     ${email} =    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}

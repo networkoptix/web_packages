@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/storage-resource.robot
 Suite Setup       Storage Suite Setup
 Test Setup        Test Setup    config storage=${False}
 Test Teardown     storage-resource.Restart

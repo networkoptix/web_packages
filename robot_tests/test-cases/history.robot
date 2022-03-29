@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/history-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        history-resource.Restart
 #Test Teardown     Run Keyword If Test Failed    history-resource.Reset DB and Open New Browser On Failure

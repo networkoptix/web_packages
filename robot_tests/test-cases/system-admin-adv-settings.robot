@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Admin Suite Setup
 Test Setup        System Admin Test Setup
 Test Teardown     System Admin Test Restart

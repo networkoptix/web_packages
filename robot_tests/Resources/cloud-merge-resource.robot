@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-server-resource.robot
+
 *** Keywords ***
 Merge Suite Setup
     Open Browser and go to url    ${ENV}
@@ -6,11 +10,6 @@ Merge Suite Setup
     Set Suite Variable    ${custom net id 1}    ${id}
     ${id}=   Create Custom Network    custom2   2
     Set Suite Variable    ${custom net id 2}    ${id}
-
-Merge Test Restart
-    Remove Test Containers
-    Close All Browsers
-    Open Browser and go to url    ${ENV}
 
 Merge Test Setup
     Go To    ${ENV}

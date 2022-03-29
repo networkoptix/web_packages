@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/2fa-resource.robot
 Suite Setup       2fa-resource.Setup
 Test Setup        2fa-resource.Restart
 Test Teardown     2fa Test Teardown

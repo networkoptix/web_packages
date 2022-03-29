@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/activate-resource.robot
 # Suite Setup       Clear Emails
 Test Setup        activate-resource.Restart
 Test Teardown     Run Keyword If Test Failed    activate-resource.Open New Browser On Failure

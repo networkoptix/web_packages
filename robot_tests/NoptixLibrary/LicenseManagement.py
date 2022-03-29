@@ -24,7 +24,7 @@ class ActivationError(Exception):
 
 @library
 class LicenseManagement(object):
-    def __init__(self, base_url, auth, login=True):
+    def __init__(self, base_url='https://nxlicensed.hdw.mx/nxlicensed', auth=['licautotests+owner@gmail.com','qweasd123'], login=True):
         self.base_url = base_url
         self.auth = auth
         self.session = requests.Session()

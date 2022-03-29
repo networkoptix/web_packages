@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/footer-resource.robot
 Suite Setup       Footer Suite Setup
 Test Setup        Footer Test Setup
 Test Teardown     Footer Test Teardown

@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/share-form-validation-resource.robot
 Suite Setup       Open Share Dialog
 Test Template     share-form-validation-resource.Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    share-form-validation-resource.Restart

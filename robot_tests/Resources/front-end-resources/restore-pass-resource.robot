@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Register Random User
     ${email}=   Get Random Email    ${BASE EMAIL}

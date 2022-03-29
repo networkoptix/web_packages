@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/storage-resource.robot
 Suite Setup       Storage Suite Setup
 #Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
 Test Teardown     storage-resource.Restart

@@ -1,3 +1,8 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          system-camera-resource.robot
+Resource          system-server-resource.robot
+
 *** Keywords ***
 Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
@@ -21,8 +26,11 @@ Storage Suite Setup
         ${new disk} =     Create Virtual Disk    ${disk location}    disk${n}-${random}    ${disk size[${n}]}    disk${n}
         Set List Value    ${disk}    ${n}    ${new disk}
         Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}
-        Run Keyword If    ${n} < 4     Catenate Storages One    ${disk[${n}]}[string]
-        ...    ELSE     Catenate Storages Two    ${disk[${n}]}[string]
+        IF    ${n} < 4
+            Catenate Storages One    ${disk[${n}]}[string]
+        ELSE
+            Catenate Storages Two    ${disk[${n}]}[string]
+        END
     END
     #${storage string 1} =    Get Substring    ${storage string 1}    1
     ${storage string 2} =    Get Substring    ${storage string 2}    1    

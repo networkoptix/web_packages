@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Variables ***
 ${email}             ${EMAIL OWNER}
 ${password}          ${BASE PASSWORD}
