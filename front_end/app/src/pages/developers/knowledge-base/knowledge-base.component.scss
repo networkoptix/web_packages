@@ -114,19 +114,20 @@ $custom-xl: 1440px;
     }
     
     .doc-link {
-        @include typography.medium15dark9;
+        @include typography.medium15nocolor;
+        color : var(--search-link-color);
         cursor          : pointer;
         text-decoration : underline;
         
         &:hover {
-            color : $dark15 !important;
+            color : var(--search-link-hover-color) !important;
         }
         
         &:visited {
-            color : $dark19 !important;
+            color : var(--search-link-visited-color) !important;
             
             &:hover {
-                color : $light14 !important;
+                color : var(--search-link-visited-hover-color) !important;
             }
         }
     }

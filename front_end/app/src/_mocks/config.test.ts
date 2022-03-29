@@ -190,10 +190,8 @@ export function setupConfig(): IConfig {
                 { name: 'linux', src: '/static/images/icons/platforms/linux.svg' },
                 { name: 'windows', src: '/static/images/icons/platforms/windows.svg' }
             ],
-            devTools: '/static/images/icons/dev_tools/',
             backgrounds: '/static/images/developers/backgrounds/',
             dir: '/static/images/icons/standard/',
-            dirDevtools: '/static/images/icons/dev_tools/',
             dirButtons: '/static/images/icons/buttons/',
             dirTextButtons: '/static/images/icons/text_buttons/',
             dirHeader: '/static/images/icons/header/',

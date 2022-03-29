@@ -267,7 +267,7 @@ button, .btn {
     
     &:hover {
         svg-icon svg .st0 {
-            fill : var(--btn-default-hover-color) !important;
+            stroke : var(--btn-default-hover-color) !important;
         }
     }
     

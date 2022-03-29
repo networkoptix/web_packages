@@ -1,3 +1,4 @@
+@use "utils" as *;
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
@@ -9,6 +10,14 @@
     --body-text-color : #{$dark9};
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
+    
+    --search-link-color               : #{$dark9};
+    --search-link-hover-color         : #{$dark15};
+    --search-link-visited-color       : #{$dark19};
+    --search-link-visited-hover-color : #{$light14};
+    --search-highlight-color          : rgba(var(--yellow_main--rgb), 0.5);
+    
+    --user-selected-highlight-color : rgba(var(--yellow_main--rgb), 0.3);
     
     --spot-gradient : radial-gradient(
             ellipse farthest-corner at center center,
@@ -102,23 +111,25 @@
     --developer-menu-base-color : #{$dark10};
     
     
-    --left-menu-border-color         : transparent;
-    --left-menu-l1-bg                : transparent;
-    --left-menu-l1-bg-hover          : #{$additional_light3};
-    --left-menu-l1-bg-active         : #{$light5};
-    --left-menu-l1-color             : #{$dark9};
-    --left-menu-l1-selected-bg       : #{$light5};
-    --left-menu-l1-selected-hover-bg : #{$light6};
-    --left-menu-l3-scroll            : #{$light5};
-    --left-menu-l3-shadow            : transparent;
-    --left-menu-l3-bg                : #{$light5};
-    --left-menu-l3-color             : #{$dark9};
-    --left-menu-l3-additional-color  : #{$light16};
-    --left-menu-l3-hover-bg          : #{$light6};
-    --left-menu-l3-hover-color       : #{$dark9};
-    --left-menu-l3-opacity           : 1;
-    --left-menu-l3-selected-bg       : #{$light16};
-    --left-menu-l3-selected-color    : #{$light1};
+    --left-menu-border-color                    : transparent;
+    --left-menu-l1-bg                           : transparent;
+    --left-menu-l1-bg-hover                     : #{$additional_light3};
+    --left-menu-l1-bg-active                    : #{$light5};
+    --left-menu-l1-color                        : #{$dark9};
+    --left-menu-l1-selected-bg                  : #{$light5};
+    --left-menu-l1-selected-hover-bg            : #{$light6};
+    --left-menu-l3-scroll                       : #{$light5};
+    --left-menu-l3-shadow                       : transparent;
+    --left-menu-l3-bg                           : #{$light5};
+    --left-menu-l3-color                        : #{$dark9};
+    --left-menu-l3-additional-color             : #{$light16};
+    --left-menu-l3-hover-bg                     : #{$light6};
+    --left-menu-l3-hover-color                  : #{$dark9};
+    --left-menu-l3-opacity                      : 1;
+    --left-menu-l3-selected-bg                  : #{$light16};
+    --left-menu-l3-selected-color               : #{$light1};
+    --left-menu-disabled-item-color             : #{$light13};
+    --left-menu-disabled-item-addtitional-color : #{$light10};
     
     // View tab ********************************
     --view-bg                    : #{$additional_light2};

@@ -17,6 +17,18 @@
     overflow         : hidden;
     line-height      : 26px;
     cursor           : pointer;
+    
+    .menu-level-3-content .menu-level-3-svg-icon {
+        svg {
+            .icon-with-fill {
+                fill : var(--left-menu-l3-color);
+            }
+            
+            .st0 {
+                stroke : var(--left-menu-l3-color);
+            }
+        }
+    }
 
     &.alternative {
         &.focus {
@@ -49,11 +61,20 @@
     &.selected {
         &, * {
             color            : var(--left-menu-l3-selected-color) !important;
-            fill             : var(--left-menu-l3-selected-color) !important;
-            stroke           : var(--left-menu-l3-selected-color) !important;
             background-color : var(--left-menu-l3-selected-bg) !important;
             min-height       : auto;
             opacity          : 1;
+        }
+    
+        .menu-level-3-content .menu-level-3-svg-icon {
+            svg {
+                .icon-with-fill {
+                    fill : var(--left-menu-l3-selected-color) !important;
+                }
+                .st0 {
+                    stroke : var(--left-menu-l3-selected-color) !important;
+                }
+            }
         }
 
         .menu-level-3-additional {
@@ -69,6 +90,9 @@
     
         .menu-level-3-svg-icon {
             svg {
+                .icon-with-fill {
+                    fill : var(--left-menu-l3-hover-color) !important;
+                }
                 .st0 {
                     stroke : var(--left-menu-l3-hover-color);
                 }
@@ -115,17 +139,24 @@
     }
 
     &.item-disabled {
-        @include typography.medium13light13;
+        @include typography.medium13nocolor;
+        color : var(--left-menu-disabled-item-color);
         
-        svg .st0 {
-            fill: $light13 !important;
-            stroke: none !important;
+        svg {
+            .icon-with-fill {
+                fill : var(--left-menu-disabled-item-color) !important;
+            }
+        
+            .st0 {
+                stroke : var(--left-menu-disabled-item-color) !important;
+            }
         }
+        
         .menu-level-3-icon {
             background-position: -99px -135px;
         }
         .menu-level-3-additional {
-            color: $light10;
+            color: var(--left-menu-disabled-item-addtitional-color);
         }
     }
 

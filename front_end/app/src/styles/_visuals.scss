@@ -1,8 +1,18 @@
 @use "../../styles/theme_variables_common";
 
+::-moz-selection { /* Code for Firefox */
+    color      : var(--body-text-color);
+    background : var(--user-selected-highlight-color);
+}
+
+::selection {
+    color      : var(--body-text-color);
+    background : var(--user-selected-highlight-color);
+}
+
 .highlighted {
     display          : inline;
-    background-color : rgba(theme_variables_common.$yellow_main, 0.5);
+    background-color : var(--search-highlight-color);
 }
 
 .brand-text {

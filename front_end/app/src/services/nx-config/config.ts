@@ -200,9 +200,7 @@ export const nxConfig: IConfig = {
             { name: 'windows', src: '/static/images/icons/platforms/windows.svg' }
         ],
         backgrounds: '/static/images/icons/backgrounds/',
-        devTools: '/static/images/icons/dev_tools/',
         dir: '/static/images/icons/standard/',
-        dirDevtools: '/static/images/icons/dev_tools/',
         dirButtons: '/static/images/icons/buttons/',
         dirTextButtons: '/static/images/icons/text_buttons/',
         dirHeader: '/static/images/icons/header/',

@@ -385,6 +385,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 if (this.systemInfoSubscription) {
                                     this.systemInfoSubscription.unsubscribe();
                                 }
+
                                 this.systemInfoSubscription = this.system.infoSubject
                                     .pipe(
                                         filter((system: any) => system !== undefined),
@@ -401,7 +402,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                                     true
                                                 );
                                             }
-                                        })
+                                        }),
                                     )
                                     .subscribe(() => {
                                         // if system is removed while on page, redirects to systems page

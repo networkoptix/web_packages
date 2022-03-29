@@ -435,9 +435,7 @@ export interface Icons {
     default: string;
     platforms: Platform[];
     backgrounds: string;
-    devTools: string;
     dir: string;
-    dirDevtools: string;
     dirButtons: string;
     dirTextButtons: string;
     dirHeader: string;

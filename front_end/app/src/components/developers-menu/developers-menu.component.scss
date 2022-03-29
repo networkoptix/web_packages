@@ -19,7 +19,8 @@
 
 .activated-highlight {
     background-color: var(--left-menu-l3-selected-bg) !important;
-    color: var(--left-menu-l3-selected-color) !important;
+    color : var(--left-menu-l3-selected-color) !important;
+    
     &:hover {
         cursor: unset;
     }
@@ -27,6 +28,10 @@
     & + div.left-menu-arrow > svg-icon > svg > g > polyline {
         stroke: var(--left-menu-l3-selected-color) !important;
         fill: none;
+    }
+    
+    > a {
+        color : var(--left-menu-l3-selected-color) !important;
     }
 }
 
@@ -79,12 +84,24 @@
         padding: 5px 5px 5px 0 ;
         height: 100% !important;
         width: 100% !important;
-        display: flex;
-        align-items: center;
+        //display: flex;
+        //align-items: center;
     }
     &:hover {
         background-color: var(--left-menu-l3-hover-bg);
-        color: var(--left-menu-l3-hover-color);
+        color : var(--left-menu-l3-hover-color);
+        
+        & > .menu-link a {
+            color : var(--left-menu-l3-hover-color);
+        }
+    
+        & > .left-menu-arrow {
+            svg-icon {
+                svg .st0 {
+                    stroke : var(--left-menu-l3-hover-color);
+                }
+            }
+        }
     }
 
     & >.left-menu-arrow {
@@ -197,7 +214,7 @@
     margin-left: -432px;
     padding-left: 432px;
     display: block;
-    color: inherit;
+    color: var(--left-menu-l3-color);
     text-decoration: inherit;
     font-size: inherit;
 }

@@ -1,5 +1,5 @@
 @use "../utils" as *;
-@use "../_theme_palette.scss" as *;
+@use "../theme_palette.scss" as *;
 
 :root {
 	@include generateVarAndRgb(--dark1, $dark1);
