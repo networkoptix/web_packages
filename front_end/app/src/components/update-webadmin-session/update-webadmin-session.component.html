@@ -18,16 +18,21 @@
                        required nxFocusMe>
             </div>
             <div class="form-group">
-            <label for="login_password" translate>Password</label>
-            <input type="password" class="form-control"
-                   name="login_password" id="login_password" #login_password="ngModel"
-                   [(ngModel)]="auth.password"
-                   (ngModelChange)="resetForm()"
-                   maxlength="255"
-                   required>
-            <div class="input-error" *ngIf="flags.wrongCredentials" translate>Wrong login or password</div>
-            <div class="input-error" *ngIf="flags.accountBlocked" translate>Too many attempts. Try again in a minute.</div>
-        </div>
+                <label for="login_password" translate>Password</label>
+                <input type="password" class="form-control"
+                    name="login_password"
+                    id="login_password"
+                    #login_password="ngModel"
+                    [(ngModel)]="auth.password"
+                    (ngModelChange)="resetForm()"
+                    maxlength="255"
+                    required>
+                <div class="input-error"
+                    *ngIf="login_password?.invalid && (login_password.dirty || login_password.touched) && login_password.errors.required"
+                    translate>Password is required</div>
+                <div class="input-error" *ngIf="flags.wrongCredentials" translate>Wrong login or password</div>
+                <div class="input-error" *ngIf="flags.accountBlocked" translate>Too many attempts. Try again in a minute.</div>
+            </div>
         </ng-template>
     </div>
     <div class="modal-footer">
