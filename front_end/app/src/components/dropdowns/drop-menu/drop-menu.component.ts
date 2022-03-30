@@ -3,8 +3,10 @@ import {
     Input,
     SimpleChanges
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { ActivationEnd, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -17,7 +19,7 @@ import { NxUriService } from '@services/uri.service';
 
 import { BaseDropdown } from '../injDropdown';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-drop-menu',
     templateUrl: 'drop-menu.component.html',
@@ -46,22 +48,40 @@ export class NxDropMenu extends BaseDropdown {
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
+        private router: Router,
         private uriService: NxUriService,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
     ) {
         super(languageService, configService);
-        this.menusService.currentSystemNode$.subscribe(_ => {
-            this.menusService.getMenu('header', this.systems$.value.length >= 1)
-                .subscribe(header => {
-                    const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-                    if (environment.isLocal) {
-                        this.replaceCloudHost(nodes);
-                    }
-                    this.menuNodes$.next(nodes);
-                });
-        });
+        this.menusService.currentSystemNode$
+            .pipe(
+                untilDestroyed(this)
+            )
+            .subscribe(_ => {
+                this.menusService.getMenu('header', this.systems$.value.length >= 1)
+                    .pipe(
+                        untilDestroyed(this)
+                    )
+                    .subscribe(header => {
+                        const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                        if (environment.isLocal) {
+                            this.replaceCloudHost(nodes);
+                        }
+                        this.menuNodes$.next(nodes);
+                    });
+            });
+
+        this.router
+            .events
+            .pipe(
+                untilDestroyed(this),
+                filter(event => event instanceof ActivationEnd)
+            )
+            .subscribe(() => {
+                this.headerService.show$ = false;
+            });
     }
 
     replaceCloudHost(nodes) {

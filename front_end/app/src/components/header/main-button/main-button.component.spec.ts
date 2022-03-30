@@ -6,6 +6,7 @@ import {
     ComponentFixture,
     TestBed
 } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -70,7 +71,8 @@ describe('NxHeaderMainButtonComponent', () => {
             imports: [
                 CommonModule,
                 AngularSvgIconModule.forRoot(),
-                HttpClientTestingModule
+                HttpClientTestingModule,
+                RouterTestingModule,
             ],
             providers: [
                 MockProvider(NxLanguageProviderService),

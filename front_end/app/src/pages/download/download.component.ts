@@ -68,8 +68,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
             installers: [{ platform: '', appType: '' }],
             releaseUrl: ''
         };
-
-        this.sortedPlatforms = [];
     }
 
     constructor(
@@ -107,7 +105,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                         }
                         this.pageService.pageTitle = title;
 
-                        if (this.sortedPlatforms.length) {
+                        if (this.sortedPlatforms?.length) {
                             this.calcDisplayedPackages(this.paramPlatform);
                             this.activePlatform = this.sortedPlatforms.find(
                                 platform => platform.name === this.paramPlatform
@@ -167,7 +165,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
             .then((response: any) => {
                 // Response is null if no releases
                 this.downloadsData = response;
-
+                this.sortedPlatforms = [];
                 // Sorts platforms based on order defined in nx-config service
                 Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform) => {
                     const platform = this.downloadsData?.platforms.find(
@@ -212,19 +210,16 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.accountService
-            .get()
-            .then(account => {
-                this.canSeeHistory = (
-                    !!this.CONFIG.cloudCapabilities.publicReleases ||
-                    account && (
-                        account.is_superuser ||
-                        account.permissions.includes(
-                            this.CONFIG.permissions.canViewRelease
-                        )
-                    )
-                );
-            });
+        const account = this.accountService.accountSubject.getValue();
+        this.canSeeHistory = (
+            !!this.CONFIG.cloudCapabilities.publicReleases ||
+            account && (
+                account.is_superuser ||
+                account.permissions.includes(
+                    this.CONFIG.permissions.canViewRelease
+                )
+            )
+        );
 
         if (!this.CONFIG.cloudCapabilities.publicDownloads) {
             this.accountService
