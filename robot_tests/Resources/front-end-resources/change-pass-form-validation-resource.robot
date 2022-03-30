@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Change Password Form Validation
     [arguments]    ${old password}    ${new password}
@@ -6,8 +9,11 @@ Change Password Form Validation
     Input Text    ${NEW PASSWORD INPUT}    ${new password}
     Run Keyword Unless    '${new password}' == '${EMPTY}'    Check Password Badge    ${new password}    ${CHANGE PASSWORD BUTTON}
     Run Keyword Unless  '${old password}' == '${EMPTY}' and '${new password}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
-    Run Keyword If    '${new password}' == '${BASE PASSWORD}'    Click Button    ${CHANGE PASSWORD BUTTON}
-    ...    ELSE    Click Element    ${PASSWORD HEADLINE}
+    IF    '${new password}' == '${BASE PASSWORD}'
+        Click Button    ${CHANGE PASSWORD BUTTON}
+    ELSE
+        Click Element    ${PASSWORD HEADLINE}
+    END
 
 Check Old Password Outline
 #    Wait Until Element Is Visible
@@ -42,8 +48,11 @@ Test Passwords Invalid
     Input Text    ${NEW PASSWORD INPUT}    ${new pw}
     Run Keyword Unless    '${new pw}' == '${EMPTY}'    Check Password Badge    ${new pw}    ${CHANGE PASSWORD BUTTON}
     Run Keyword Unless  '${old pw}' == '${EMPTY}' and '${new pw}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
-    Run Keyword If    '${new pw}' == '${BASE PASSWORD}'    Click Button    ${CHANGE PASSWORD BUTTON}
-    ...    ELSE    Click Element    ${PASSWORD HEADLINE}
+    IF    '${new pw}' == '${BASE PASSWORD}'
+        Click Button    ${CHANGE PASSWORD BUTTON}
+    ELSE
+        Click Element    ${PASSWORD HEADLINE}
+    END
     Run Keyword Unless    "${old pw}" == "${BASE PASSWORD}" or "${old pw}" == "${7char password}"
     ...    Check Old Password Outline
     Run Keyword Unless    '''${new pw}''' == "${BASE PASSWORD}"    

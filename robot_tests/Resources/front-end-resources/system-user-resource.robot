@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -23,8 +26,11 @@ Users Suite Setup
     # ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
     # Set Suite Variable    ${system 2}    &{system 2}
 
-    Run Keyword If    '''${mode}'''=='''cloud'''    system-user-resource.Cloud Suite Setup
-    ...    ELSE    Web Admin Suite Setup
+    IF    '''${mode}'''=='''cloud'''
+        system-user-resource.Cloud Suite Setup
+    ELSE
+        system-user-resource.Web Admin Suite Setup
+    END
 
 Web Admin Suite Setup
     Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
@@ -88,35 +94,6 @@ Edit User Permissions In Systems
     Sleep    3
     Wait Until Element Is Not Visible    ${ACCOUNT SAVE}
 
-Check User Permissions
-    [arguments]    ${user email address}    ${permissions}    ${timeout}=${selenium_timeout}
-    ${original timeout}=   Set Selenium Timeout    ${timeout}
-
-    Select user in Users List    ${user email address}
-
-    ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
-    Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
-
-    Run Keyword If    '${permissions}'=='${OWNER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
-    Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
-    Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
-    Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT VIEWER}
-    Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
-    Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
-    ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
-
-    Set Selenium Timeout    ${original timeout}
 
 
 Change User Permissions
@@ -130,26 +107,7 @@ Change User Permissions
     Click Link    ${p}
     Sleep    1
 
-Remove User Permissions
-    [Arguments]    ${user email address}
-    ${User In List}=   Select user in Users List    ${user email address}
-    Wait Until Element Is Visible    ${REMOVE USER BUTTON}
-    Click Button    ${REMOVE USER BUTTON}
-    Wait Until Element Is Visible    ${REMOVE BUTTON}
-    Click Button    ${REMOVE BUTTON}
-#    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
-    Wait Until Element Is Not Visible    ${User In List}
 
-Select user in Users List
-    [Arguments]    ${user email address}
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
-    Run Keyword Unless    ${status}   Go To Users List
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
-    Wait Until Element Is Visible    ${User In List}
-    Click Link    ${User In List}
-    Wait Until Element Is Visible    ${USER EMAIL}
-    Wait Until Element Contains    ${USER EMAIL}    ${user email address}
-    [Return]    ${user email address}
 
 Check Special Hint
     [Arguments]    ${type}
@@ -162,19 +120,21 @@ Check Special Hint
     Click Link    ${dropdown type}/..
     # Commented this out because it caused a proble but can't remember why it was here
     # ${type}    Convert To Uppercase    ${type}
-    Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
-    ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
-    ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
-    ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
-    ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
-    ...    ELSE IF    "${type}"=="Client Custom"          Wait Until Element Contains
-    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
-    ...    ELSE    Fail    msg=User type did not match any expected types
+    IF    "${type}"=="${ADMIN TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
+    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
+    ELSE IF    "${type}"=="${VIEWER TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
+    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
+    ELSE IF    "${type}"=="${CUSTOM TEXT}"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
+    ELSE IF    "${type}"=="Client Custom"
+        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
+    ELSE    
+        Fail    msg=User type did not match any expected types
+    END
 
 Verify Changed Info Via API
     [Arguments]    ${new locals}    ${ip}    ${local user}=ocal+
@@ -222,22 +182,27 @@ Verify In Local Users UI
 	    ...    ${DISABLE USER SWITCH}/..
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
-	    Run Keyword If    '${status}' == '${TRUE}'    Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
-	    ...    ELSE    Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
+        IF    '${status}' == '${TRUE}'
+            Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
+        ELSE
+            Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
+        END
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
         log    ${email}
         log    ${user}
         # log    ${users['cloudAdmin']}
-	    Run Keyword If    '${email}' == '${server 1['owner']}'
-	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
-	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
-        ...    ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
-	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
-        ...    ELSE IF    '${email}' == 'admin'
-	    ...    Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
-		...    ELSE    Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..
+        IF    '${email}' == '${server 1['owner']}'
+            Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+        ELSE IF    '${email}' == '${server 1['cloud users']}[cloudAdmin]' and '${user}' != 'cloudAdmin'
+            Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+        ELSE IF    '${email}' == '${server 1}[local users][cloudAdmin][login]' and '${user}' != 'cloudAdmin'
+	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+        ELSE IF    '${email}' == 'admin'
+	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
+		ELSE
+            Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..    
+        END
     END
 
 Modify Local Users via Cloud UI
@@ -352,16 +317,21 @@ Reset Local Users
     END
     ${count} =    Get Length    ${locals}
     ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    5
-    Run Keyword If    ${status}==${true}    Reset Local Users API    ${locals}    ${auth}    ${server}
-    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
+    IF    ${status}==${true}
+        Reset Local Users API    ${locals}    ${auth}    ${server}
+    ELSE
+        Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals}     ${password}
+    END
     [Return]    ${local users}
 
 Create New Local Users
     [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}    ${password}
-    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
-    ...    ELSE    Run Keywords
-    ...    Delete All Local Users via API    ${auth}    ${server}    ${locals}    AND
-    ...    Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+    IF    ${count}==0
+        Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+    ELSE
+        Delete All Local Users via API    ${auth}    ${server}    ${locals}
+        Create Local Users via API    ${auth}    ${server}    ${local users}    ${password}
+    END
 
 Delete All Local Users via API
     [Arguments]    ${auth}    ${server}    ${locals}
@@ -556,5 +526,8 @@ Check If User Is Enabled/Disabled
 
 Reset
     Close All Browsers
-    Run Keyword If    '''${mode}'''=='''cloud'''    Open Browser and go to URL    ${url}
-    ...     ELSE    Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+    IF    '''${mode}'''=='''cloud'''
+        Open Browser and go to URL    ${url}
+    ELSE
+        Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
+    END

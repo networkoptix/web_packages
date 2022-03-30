@@ -1,11 +1,15 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Restart
     Close Browser
     Form Validation
 
 Form Validation
-    Open Browser and go to URL    ${url}/integrations
-    Log In    ${existing email}    ${BASE PASSWORD}
+    Open Browser and go to URL    ${url}
+    Log In    ${existing email}    ${VIEWER USER PASSWORD}
+    Go To    ${url}/integrations
     Wait Until Element is Visible    ${INTEGRATION TEST INTEGRATION LINK}/..
     Click Element    ${INTEGRATION TEST INTEGRATION LINK}/..
     Wait Until Elements are Visible    ${INTEGRATION GET IN TOUCH BUTTON}    ${INTEGRATION TITLE}
@@ -43,11 +47,14 @@ Test Get In Touch Invalid
     Get In Touch Form Validation    ${name}    ${email}    ${subject}    ${button}     ${message}
     # Run Keyword Unless    '''${pass}'''=='''${BASE PASSWORD}''' or '''${pass}'''=='''${symbol password}'''
     # ...    Check Password Outline    ${pass}
-    Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
+    Run Keyword Unless    "${email}"=="${valid email}"    integrations-getintouch-form-validation-resource.Check Email Outline    ${email}
     Run Keyword If        "${name}"=="${EMPTY}"    Check Name Outline    ${name}
     Run Keyword If        "${message}"=="${EMPTY}"    Check Message Outline    ${message}
-    Run Keyword If        "${expected}"=="success"    Validate Integration Message Sent
-    ...    ELSE    Validate Integration Message Not Sent
+    IF    "${expected}"=="success"
+        Validate Integration Message Sent
+    ELSE
+        Validate Integration Message Not Sent
+    END
     Run Keyword if    '${expected}' == 'success' or '${button}' == '${INTEGRATION GET IN TOUCH CLOSE BUTTON}'    Run Keywords
     ...    Wait Until Element is Visible    ${INTEGRATION GET IN TOUCH BUTTON}    AND
     ...    Click Button    ${INTEGRATION GET IN TOUCH BUTTON}
@@ -64,13 +71,13 @@ Get In Touch Form Validation
 
     Wait Until Element Is Visible    //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[1]/a
     Sleep   .5
-    Run Keyword If     "${subject}"=="${sales inquiry}"
-    ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[1]/a
-    ...    ELSE IF     "${subject}"=="${technical inquiry}"
-    ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[2]/a
-    ...    ELSE IF     "${subject}"=="${feedback}"
-    ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[3]/a
-    # Sleep     .5
+    IF    "${subject}"=="${sales inquiry}"
+        Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[1]/a
+    ELSE IF     "${subject}"=="${technical inquiry}"
+        Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[2]/a
+    ELSE IF     "${subject}"=="${feedback}"
+        Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[3]/a
+    END
     Wait Until Element is Visible    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span
     ${name}=   Get Text    ${INTEGRATION TITLE}
     ${subbed subject}=    Replace String    ${subject}    {{integration}}    ${name}

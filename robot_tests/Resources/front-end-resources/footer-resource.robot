@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Footer Suite Setup
     ${url}=   Set Variable If

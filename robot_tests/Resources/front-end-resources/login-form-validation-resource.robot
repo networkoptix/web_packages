@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Restart
     Close Browser

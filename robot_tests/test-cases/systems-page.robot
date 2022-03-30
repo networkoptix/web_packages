@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/systems-page-resource.robot
 Suite Setup       Systems Page Suite Setup
 Test Setup        Common Restart Logout    ${ENV}
 Suite Teardown    Run Keyword and Ignore Error    Systems Page Suite Teardown

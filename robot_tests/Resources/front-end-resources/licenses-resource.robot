@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4

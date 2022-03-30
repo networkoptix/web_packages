@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-camera-resource.robot
 Suite Setup       Camera Suite Setup
 Test Setup        Camera Test Setup
 Test Teardown     reset cameras and log out

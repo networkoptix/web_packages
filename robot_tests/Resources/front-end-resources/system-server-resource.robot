@@ -1,29 +1,15 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          system-user-resource.robot
+Resource          system-admin-resource.robot
+
 *** Keywords ***
-Verify on Servers Page
-    [Arguments]    ${timeout}=${selenium_timeout}
-    Wait Until Elements Are Visible with Retry
-    #...    ${PORT INPUT}
-    ...    ${RESTART SERVER BUTTON}
-    ...    ${SERVER DETAILED INFO BUTTON}
-    ...    ${IP}       
-    ...    ${OS}       
-    ...    ${VERSION}  
-    ...    timeout=${timeout}
 
 Verify Server Buttons Are Enabled
     Wait Until Elements are Enabled
     ...    ${PORT INPUT}
     ...    ${RESTART SERVER BUTTON}
 
-Log in to user and system
-    [Arguments]    ${user}    ${system id}    ${verify}=True    ${password}=${BASE PASSWORD}
-    Log in    ${user}    ${password}
-    Sleep    1
-    Go To    ${ENV}/systems/${system id}
-    Sleep    1
-    #Run Keyword If    '${user}'=='${EMAIL OWNER}' and ${verify}==True    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    #Run Keyword If    '${user}'=='${EMAIL ADMIN}' and ${verify}==True   Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    #Run Keyword Unless    '${user}'=='${EMAIL OWNER}' or '${user}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Verify Rename Dialog
     Wait Until Elements are Visible
@@ -104,8 +90,11 @@ Server Advanced Settings Suite Setup
 Advanced Server Settings Test Setup
     [Arguments]    ${server}=&{server}    ${user}=${user in charge}    ${verify}=${True}
     Skip If Irrelevant
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup System Servers Advanced    ${server}    ${user}    ${verify}
-    ...    ELSE    Web Admin Test Setup System Servers Advanced    ${server}    ${user}    ${verify}
+    IF    '''${mode}'''=='''cloud'''
+        Cloud Test Setup System Servers Advanced    ${server}    ${user}    ${verify}
+    ELSE
+        Web Admin Test Setup System Servers Advanced    ${server}    ${user}    ${verify}
+    END
 
 Cloud Test Setup System Servers Advanced
     [Arguments]    ${server}    ${user}    ${verify}
@@ -157,11 +146,18 @@ Server Settings Suite Setup
     ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
     ${server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server 1 id}
 
-    ${server 2}=    Run Keyword If    '''${mode}'''=='''cloud'''    Create Base System    servers2-${random}    owner=${user in charge}
-    ...    ELSE    Create Base System    servers2-${random}
+    IF    '''${mode}'''=='''cloud'''
+        ${server 2}=    Create Base System    servers2-${random}    owner=${user in charge}
+    ELSE
+        ${server 2}=    Create Base System    servers2-${random}
+    END
     ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}    Server ${server 2}[id]
-    ${server 3}=    Run Keyword If    '''${mode}'''=='''cloud'''    Create Base System    servers3-${random}    owner=${user in charge}
-    ...    ELSE    Create Base System    servers3-${random}
+
+    IF    '''${mode}'''=='''cloud'''
+        ${server 3}=    Create Base System    servers3-${random}    owner=${user in charge}
+    ELSE
+        ${server 3}=    Create Base System    servers3-${random}
+    END
 
     Change server name via API    ${server auth}    server 1    ${server 1 id}    https://${QA BURBANK IP}:${port 1}
     Change server name via API    ${server 2}[local auth]    server 2    ${server 2 id}    https://${QA BURBANK IP}:${server 2}[port]
@@ -169,8 +165,11 @@ Server Settings Suite Setup
         Set Suite Variable    ${server ${i}}
     END
 
-    Run Keyword If    '''${mode}'''=='''cloud'''    system-server-resource.Cloud Suite Setup
-    ...    ELSE    system-server-resource.Web Admin Suite Setup
+    IF    '''${mode}'''=='''cloud'''
+        system-server-resource.Cloud Suite Setup
+    ELSE
+        system-server-resource.Web Admin Suite Setup
+    END
 
 Web Admin Suite Setup
     Set Suite Variable    ${user in charge}    admin
@@ -268,8 +267,11 @@ Server Settings Suite Tear Down
 Server Settings Test Setup
     [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
     Skip If Irrelevant
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup System Servers    ${server}    ${user}    ${verify}
-    ...    ELSE    Web Admin Test Setup System Servers    ${server}    ${user}    ${verify}
+    IF    '''${mode}'''=='''cloud'''
+        Cloud Test Setup System Servers    ${server}    ${user}    ${verify}
+    ELSE
+        Web Admin Test Setup System Servers    ${server}    ${user}    ${verify}
+    END
 
 Cloud Test Setup System Servers
     [Arguments]    ${server}    ${user}    ${verify}
@@ -288,8 +290,11 @@ Web Admin Test Setup System Servers
     Run Keyword If    ${verify}    Click Link    ${SERVERS LINK}
 
 Server Settings Test Teardown
-    Run Keyword If    '''${mode}'''=='''cloud'''    Common Restart Logout    ${ENV}
-    ...    ELSE    Close Browser
+    IF    '''${mode}'''=='''cloud'''
+        Common Restart Logout    ${ENV}
+    ELSE
+        Close Browser
+    END
     Run Keyword If Test Failed    Run Keywords
         ...    Change server name via API    ${server auth}    server 1    ${server 1}[serverId]    https://${QA BURBANK IP}:${server 1}[port]    AND
         ...    Execute Command Remotely    docker container stop ${server 2}[id]

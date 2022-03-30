@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/health-monitor-resource.robot
 Suite Setup       Health Monitor Suite Setup
 Test Setup        Health Monitor Test Setup
 Test Teardown     Health Monitor Test Teardown

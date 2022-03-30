@@ -529,15 +529,19 @@ on a part of your site, e.g. an API at /api/.
 Regex allows cors for the following api calls:
 1) /api/ping
 2) /api/account/login
-3) /api/systems/connect
-4) /api/systems/disconnect
-5) /api/systems/revokeToken
-6) /api/systems/{cloud_system_id}/users
-7) /oauth/*
+3) /api/account/authKey
+4) /api/systems/connect
+5) /api/systems/disconnect
+6) /api/systems/revokeToken
+7) /api/systems/{cloud_system_id}/users
+8) /api/systems/{cloud_system_id}/auth
+9) /api/systems/{cloud_system_id}/code
+10) /api/systems/{cloud_system_id}/token
+11) /oauth/*
 These urls need to be whitelisted because mediaserver use them.
 """
 # Comment out for swagger-ui local.
-CORS_URLS_REGEX = r'^(?:/oauth.*|/api/(?:account/login|ping|systems/(?:(?:dis)?connect|revokeToken|(?:[\w\d-]+/users))?))'
+CORS_URLS_REGEX = r'^(?:/oauth.*|/api/(?:account/(?:login|authKey)|ping|systems/(?:(?:dis)?connect|revokeToken|(?:[\w\d-]+/(?:users|auth|code|token)?))?))'
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'

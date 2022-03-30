@@ -1,8 +1,8 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/ipvd-resource.robot
 Suite Setup       Open IPVD Page
 Test Template     Test Submit Request Message
-Test Teardown     NONE
+Test Teardown     
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        form    Threaded
 

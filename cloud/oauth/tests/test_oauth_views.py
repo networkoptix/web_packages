@@ -331,13 +331,6 @@ class TestOauthViews:
         response = self.token(data)
         assert_invalid()
 
-        data = {
-            'grant_type': Auth.GRANT_TYPE.refresh_token,
-            'response_type': Auth.RESPONSE_TYPE.code
-        }
-        response = self.token(data)
-        assert_invalid()
-
     # revoke_token View Tests
     def revoke_token(self, data):
         request = self.arf.post('/oauth/revoke/', data=data)

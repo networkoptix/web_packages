@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          system-camera-resource.robot
+
 *** Keywords ***
 View Page Suite Setup
     ${random}=   Generate Random String

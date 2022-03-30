@@ -24,7 +24,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 @library
 class CloudPortalAPI(object):
 
-    def __init__(self, env, customization, password, email):
+    def __init__(self, env='https://cloud-test.hdw.mx', customization='default', password='qweasd 123', email='noptixautoqa+sendemail@gmail.com'):
         self.env = env
         self.customization = customization
         self.password = password
@@ -143,39 +143,6 @@ class CloudPortalAPI(object):
         with CloudSession(self.env, email, password) as s:
             r = s.post(f'{self.env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
-
-    @keyword
-    def get_system_settings(self, server_url, local_auth):
-        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0], local_auth[1]), verify=False)
-        assert r.status_code == 200, 'Failed to get system settings'
-        return r.json()
-
-    @keyword
-    def get_cloud_system_id(self, server_url, local_auth):
-        system_settings = CloudPortalAPI.get_system_settings(self, server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudSystemID':
-                return obj['value']
-        else:
-            return 'Cannot find cloudSystemID key'
-
-    @keyword
-    def get_local_system_name(self, server_url, local_auth):
-        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'systemName':
-                return obj['value']
-        else:
-            return 'Cannot find systemName key'
-
-    @keyword
-    def get_local_system_owner(self, server_url, local_auth):
-        system_settings = CloudPortalAPI.get_system_settings(server_url, local_auth)
-        for obj in system_settings:
-            if obj['name'] == 'cloudAccountName':
-                return obj['value']
-        else:
-            return 'Cannot find cloudAccountName key'
 
     @keyword
     def subscribe_push_notification(self, env, email, password, token, name):

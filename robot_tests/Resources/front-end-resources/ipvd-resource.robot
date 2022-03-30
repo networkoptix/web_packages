@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Go To IPVD Page
     Go To    ${ENV}/ipvd
@@ -348,8 +351,11 @@ Test Submit Feedback Message
     ${IPVD FEEDBACK ABOUT}    Replace String    ${IPVD FEEDBACK ABOUT}     {{model}}    ${model}
     Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT}
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
-    Run Keyword If    ${Expect Success}==True    On Success    ${Email}
-    ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent
+    IF    ${Expect Success}==True
+        On Success    ${Email}
+    ELSE IF    ${Expect Success}==False
+        Validate Message Not Sent
+    END
 
 On Success
     [arguments]    ${email}
@@ -367,5 +373,8 @@ Test Submit Request Message
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Element Text Should Be    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK FOR CAMERAS PAGE}
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
-    Run Keyword If    ${Expect Success}==True    On Success    ${Email}
-    ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent
+    IF    ${Expect Success}==True
+        On Success    ${Email}
+    ELSE IF    ${Expect Success}==False
+        Validate Message Not Sent
+    END

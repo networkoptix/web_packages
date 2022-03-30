@@ -14,7 +14,7 @@ function build_frontend () {
         rm -rf dist/src
         rm -rf dist/customization
         # Save the repository info.
-        echo "Create version.txt"
+        echo -e "\nCreate version.txt"
         if [ -e "$PORTAL_REPOSITORY/.git" ]; then
             git -C "$PORTAL_REPOSITORY" log -n 1 > dist/version.txt
             git -C "$PORTAL_REPOSITORY" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
@@ -26,7 +26,7 @@ function build_frontend () {
 }
 
 function move_fonts_and_help() {
-    echo "Move fonts and help - $SOURCE_DIR"
+    echo -e "\nMove fonts and help - $SOURCE_DIR"
     rm -rf $SOURCE_DIR/../common || true
     mkdir -p $SOURCE_DIR/../common/static
     mv ../front_end/dist/fonts $SOURCE_DIR/../common/static/fonts
@@ -44,20 +44,20 @@ PORTAL_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/.."
 
 #If we are not using the repository we should update necessary files
 if [[ ! $PWD =~ $REPO ]]; then
-    echo "Updating Cloud Portal sources"
+    echo -e "\nUpdating Cloud Portal sources"
     rsync -pr --exclude="robot_tests" --exclude="env" --exclude="node_modules" $PORTAL_REPOSITORY .
 else
-    echo "In repository skip copying sources"
+    echo -e "\nIn repository skip copying sources *************"
 fi
 
-echo "pip install requirements"
+echo -e "\npip install requirements"
 [ ! -d "env" ] && python3 -m venv env
 . ./env/bin/activate
 pip install setuptools==56.0.0
 pip install wheel==0.37.0
 pip install -r $PORTAL_REPOSITORY/build_scripts/requirements.txt
 
-echo "running nodeenv..."
+echo -e "\nrunning nodeenv..."
 [ -e nenv ] && rm -rf nenv
 nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
 . ./nenv/bin/activate
@@ -67,7 +67,7 @@ echo "Active npm: " && npm -v
 cd $PORTAL_REPOSITORY
 
 pushd front_end
-    echo "npm install cloud portal"
+    echo -e "\nnpm install cloud portal"
     npm install
 
 #     echo "Auditing npm packages"
@@ -80,7 +80,7 @@ pushd front_end
 popd
 
 pushd cloud
-    echo "npm install cloud portal backend"
+    echo -e "\nnpm install cloud portal backend"
     npm install
 popd
 
@@ -92,16 +92,16 @@ FRONT_END_DIST="../front_end/dist"
 
 echo "Clear $TARGET_DIR"
 rm -rf $TARGET_DIR
-echo "Create $TARGET_DIR"
+echo -e "\nCreate $TARGET_DIR"
 mkdir -p $SOURCE_DIR
 
 
 echo "------------------------------------------------------------"
 build_frontend
 move_fonts_and_help
-echo "Building front_end finished"
+echo -e "\nBuilding front_end finished"
 
-echo "Iterate all skins"
+echo -e "\nIterate all skins"
 for dir in ../skins/*/
 do
     dir=${dir%*/}
@@ -122,7 +122,7 @@ done
 cp ../cloud/cloud/cloud_portal.yaml $SOURCE_DIR
 
 BAN_LIST="^nx\ |nxvms"
-echo "Checking files for mentions of nx with the following patterns: ${BAN_LIST}"
+echo -e "\nChecking files for mentions of nx with the following patterns: ${BAN_LIST}"
 branding=$(grep -Ei "$BAN_LIST" -rl --exclude-dir=fonts --exclude={\*.{swf,png,gif},{commonPasswordsList,downloads}.json} ${SOURCE_DIR}) || true
 if [[ -z ${branding} ]]
 then
@@ -145,4 +145,6 @@ else
     echo "No template errors"
 fi
 
-echo "Cloud portal build is finished"
+echo -e "\n*******************************************"
+echo -e "***   Cloud portal build is finished"   ***
+echo -e "*******************************************"

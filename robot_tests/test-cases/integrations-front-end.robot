@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/integrations-resource.robot
 Resource          ../variables-env.robot
 
 Suite Setup       Open Browser and go to URL    ${ENV}
@@ -27,7 +27,6 @@ Force Tags        integrations    Threaded
         ${tile number}=   Evaluate    ${index}+1
         Validate Integration Tile    ${tile number}
     END
-#    Validate Random Tile N times    ${integration tiles}    3
 
 3. Changing page should change the layout to a max of four colunmns
     [Tags]    C54622
@@ -41,8 +40,11 @@ Force Tags        integrations    Threaded
         Element Style Should be    ${tile}    width     400px
     END
 
-    Run Keyword if    "${headless}"=="false"    Set Window Size    1456    1080
-    ...    ELSE    Set Window Size    1440    1080
+    IF    "${headless}"=="false"
+        Set Window Size    1456    1080
+    ELSE
+        Set Window Size    1440    1080
+    END
     FOR    ${tile}    IN    @{integration tiles}
         Element Style Should be    ${tile}    flex-basis    25%
         Element Style Should be    ${tile}    width     350px
@@ -175,7 +177,6 @@ Force Tags        integrations    Threaded
     ${dw}=   Replace String    ${loc}    https://    https://dw.
     Go To    ${dw}/integrations
     Log In If Needed    ${EMAIL OWNER}    ${BASE PASSWORD}
-    # Check Language Anonymous
     Wait Until Element Is Visible    ${NOTHING FOUND PLACEHOLDER}
 
 9. Anonymous and basic user does not see disabled integration store

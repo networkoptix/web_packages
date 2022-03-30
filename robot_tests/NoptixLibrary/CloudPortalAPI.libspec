@@ -387,10 +387,7 @@
 <shortdoc/>
 </kw>
 <kw name="Get Code From Email" lineno="131">
-<arguments repr="auth, email, message_type">
-<arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
-<name>auth</name>
-</arg>
+<arguments repr="email, message_type">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="email">
 <name>email</name>
 </arg>
@@ -616,7 +613,7 @@
 <shortdoc/>
 </kw>
 <kw name="Share" lineno="445">
-<arguments repr="auth, systemId, accessRole, accountEmail">
+<arguments repr="auth, systemId, accessRole, accountEmail, customPermissions">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="auth">
 <name>auth</name>
 </arg>
@@ -628,6 +625,10 @@
 </arg>
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="accountEmail">
 <name>accountEmail</name>
+</arg>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="customPermissions">
+<name>customPermissions</name>
 </arg>
 </arguments>
 <doc/>

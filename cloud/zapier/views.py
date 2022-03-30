@@ -56,19 +56,27 @@ def zapier_exceptions(func):
 
 
 def authenticate(request):
-    user = email = password = None
+    user = email = password = tokens = None
     if "HTTP_AUTHORIZATION" in request.META:
-        credentials = request.META['HTTP_AUTHORIZATION'].split()
-        if credentials[0].lower() == "basic":
+        auth_type, credentials = request.META['HTTP_AUTHORIZATION'].split()
+        auth_type = auth_type.lower()
+        if auth_type == "basic":
             email, password = base64.b64decode(
-                credentials[1]).decode('utf-8').split(':', 1)
+                credentials).decode('utf-8').split(':', 1)
             user = django.contrib.auth.authenticate(
                 request=request, username=email, password=password)
+        elif auth_type == "bearer":
+            tokens = {
+                'access_token': credentials,
+                'refresh_token': request.data.get('refresh_token')
+            }
+            user = django.contrib.auth.authenticate(request=request)
+            email = user.email
 
     if user is None:
-        raise APINotAuthorisedException('Username or password are invalid')
+        raise APINotAuthorisedException('Credentials are invalid')
 
-    return user, email, password
+    return user, email, password, tokens
 
 
 def increment_rule(rule):
@@ -85,7 +93,7 @@ def sanitize(text):
 
 
 @zapier_exceptions
-def make_rule(rule_type, email, password, system_id, caption="", description="", source="", zapier_trigger=""):
+def make_rule(rule_type, email, password, system_id, caption="", description="", source="", zapier_trigger="", tokens=None):
     if rule_type == "Generic Event":
         action_params = json.dumps({"additionalResources": ["{00000000-0000-0000-0000-100000000000}",
                                                             "{00000000-0000-0000-0000-100000000001}"],
@@ -174,11 +182,12 @@ def make_rule(rule_type, email, password, system_id, caption="", description="",
     else:
         return
 
-    cloud_gateway.post(system_id, "ec2/saveEventRule", data, email, password)
+    cloud_gateway.post(system_id, "ec2/saveEventRule", data, email=email, password=password, tokens=tokens)
 
 
 def make_or_increment_rule(action, email, system_id, caption, password=None,
-                           description=None, source=None, target_url=None):
+                           description=None, source=None, target_url=None,
+                           tokens=None):
     rules_query = GeneratedRule.objects.filter(
         email=email, system_id=system_id, caption=caption)
     if action == 'Generic Event':
@@ -187,7 +196,7 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
 
         if not rules_query:
             make_rule(action, email, password, system_id,
-                      caption=caption, source=source, description=description)
+                      caption=caption, source=source, description=description, tokens=tokens)
             GeneratedRule(email=email, system_id=system_id, caption=caption,
                           source=source, direction="Zapier to Nx").save()
 
@@ -198,7 +207,7 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
         rules_query = rules_query.filter(direction="Nx to Zapier")
         if not rules_query.exists():
             make_rule(action, email, password, system_id,
-                      caption=caption, zapier_trigger=target_url)
+                      caption=caption, zapier_trigger=target_url, tokens=tokens)
             GeneratedRule(email=email, system_id=system_id, caption=caption, direction="Nx to Zapier",
                           times_used=0).save()
 
@@ -214,7 +223,7 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
 @permission_classes((AllowAny, ))
 @zapier_exceptions
 def get_systems(request):
-    user, email, password = authenticate(request)
+    user, email, password, tokens = authenticate(request)
     data = cloud_api.System.list(
         request, email=email, password=password, one_customization=False)
     zap_list = {'systems': []}
@@ -236,7 +245,7 @@ def encode_url(query_params):
 @permission_classes((AllowAny, ))
 @zapier_exceptions
 def zapier_send_generic_event(request):
-    user, email, password = authenticate(request)
+    user, email, password, tokens = authenticate(request)
     system_id = request.data['systemId']
     source = sanitize(request.data['source'])
     caption = sanitize(request.data['caption'])
@@ -250,10 +259,10 @@ def zapier_send_generic_event(request):
         query_params['description'] = description
 
     make_or_increment_rule('Generic Event', email, system_id, caption,
-                           password=password, description=description, source=source)
+                           password=password, description=description, source=source, tokens=tokens)
 
     url = encode_url(query_params)
-    return cloud_gateway.get(system_id, url, email, password)
+    return cloud_gateway.get(system_id, url, email=email, password=password, tokens=tokens)
 
 
 @swagger_auto_schema(method="GET", auto_schema=None)
@@ -298,7 +307,7 @@ def generate_subscribe_url_link(query_params):
 @permission_classes((AllowAny, ))
 @zapier_exceptions
 def subscribe_webhook(request):
-    user, email, password = authenticate(request)
+    user, email, password, tokens = authenticate(request)
 
     system_id = request.query_params['system_id']
     caption = sanitize(request.query_params['caption'])
@@ -324,7 +333,7 @@ def subscribe_webhook(request):
 @permission_classes((AllowAny, ))
 @zapier_exceptions
 def unsubscribe_webhook(request):
-    user, email, password = authenticate(request)
+    user, email, password, tokens = authenticate(request)
     target = request.data['target_url']
 
     user_hook = ZapHook.objects.filter(user=user, target=target).first()

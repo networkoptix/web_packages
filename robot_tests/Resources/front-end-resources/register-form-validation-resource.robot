@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Register Form Validation
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}

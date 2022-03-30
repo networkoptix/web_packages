@@ -34,8 +34,8 @@ class BearerAuth(AuthBase):
 
 @library
 class ServerAPI:
-    def __init__(self):
-        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
+    def __init__(self, image=None):
+        self.image = image
 
     def _login(self, server_url, username, password):
         data = {
@@ -226,7 +226,7 @@ class ServerAPI:
                           json=body, verify=False)
 
     @keyword
-    def remove_resouce_from_system(self, serverUrl, auth, resourceId):
+    def remove_resource_from_system(self, serverUrl, auth, resourceId):
         body = {
             "id": resourceId
         }
@@ -285,7 +285,8 @@ class ServerAPI:
     @keyword
     def get_system_settings_from_server(self, auth, serverUrl):
         r = requests.get(f'{serverUrl}/api/systemSettings', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-        return r.json()
+        system_settings = r.json()
+        return system_settings['reply']['settings']
 
     @keyword
     def get_log_level(self, auth, serverUrl):
@@ -484,3 +485,36 @@ class ServerAPI:
         image = image or self.image
         r = requests.post(f'{serverUrl}/api/wearableCamera/add?name={cameraName}', auth=HTTPBasicAuth(auth[0], auth[1]),
                           verify=False)
+
+    @keyword
+    def get_system_settings(self, server_url, local_auth):
+        r = requests.get(f'{server_url}/ec2/getSettings', auth=(local_auth[0], local_auth[1]), verify=False)
+        assert r.status_code == 200, 'Failed to get system settings'
+        return r.json()
+
+    @keyword
+    def get_cloud_system_id(self, server_url, local_auth):
+        system_settings = ServerAPI.get_system_settings(self, server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudSystemID':
+                return obj['value']
+        else:
+            return 'Cannot find cloudSystemID key'
+
+    @keyword
+    def get_local_system_name(self, server_url, local_auth):
+        system_settings = ServerAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'systemName':
+                return obj['value']
+        else:
+            return 'Cannot find systemName key'
+
+    @keyword
+    def get_local_system_owner(self, server_url, local_auth):
+        system_settings = ServerAPI.get_system_settings(server_url, local_auth)
+        for obj in system_settings:
+            if obj['name'] == 'cloudAccountName':
+                return obj['value']
+        else:
+            return 'Cannot find cloudAccountName key'

@@ -25,3 +25,5 @@ ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
 ${RESET PASSWORD EMAIL SENT}          ${RESET PASSWORD FORM}/div[contains(@class, "email-sent")]
 ${RESET LOGIN BUTTON}                 ${RESET PASSWORD FORM}/following-sibling::footer//button[contains(text(), "${LOG IN BUTTON TEXT}")]
+${RESET BACK BUTTON}                  //nx-authorize-component//nx-authorize-reset-request-component//footer//span[text()="${BACK TEXT}"]/..
+${RESET PASSWORD COMP HEADER}         //nx-authorize-component//nx-authorize-reset-request-component//header//h3[text()="${RESET PASSWORD BUTTON TEXT}"]

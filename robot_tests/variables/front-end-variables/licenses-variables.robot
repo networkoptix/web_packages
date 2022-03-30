@@ -13,6 +13,11 @@ ${LM PASSWORD}    qweasd123
 ...    custom=licautotests+custom@gmail.com
 ...    liveViewer=licautotests+liveviewer@gmail.com
 
+&{LM HOSTS}
+   ...    prod=https://licensing.vmsproxy.com
+   ...    stage=https://nxlicensed.hdw.mx
+   ...    test=https://nxlicensed.test.hdw.mx
+
 &{LIC TYPES}
 ...    digital=Professional
 ...    analogencoder=Analog Encoder

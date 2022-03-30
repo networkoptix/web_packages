@@ -1,6 +1,7 @@
 *** Settings ***
-Library    String
-Library    SeleniumLibrary
+Resource          ../../resource.robot
+Resource          system-camera-resource.robot
+
 *** Keywords ***
 # Setups and teardowns
 System Admin Suite Setup
@@ -159,12 +160,21 @@ Change Setting Encrypt video traffic
     ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
     ...    ${status}==True and ${status2}==True     false
 
-    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
-    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
-    ...    ELSE    Run Keywords
-       ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
-       ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
-       ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    #Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    #...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
+    #...    ELSE    Run Keywords
+    #   ...    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
+    #   ...    AND    Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+    #   ...    AND    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    IF    ${status}==True and ${status2}==False
+        Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    ELSE IF    ${status}==True and ${status2}==True
+        Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    false
+    ELSE
+        Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX}    true
+        Wait until element is visible    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}
+        Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    true
+    END
 
     Wait Until Elements Are Visible     ${SAVE BUTTON}    ${CANCEL BUTTON}
     Click Button    ${SAVE BUTTON}
@@ -203,8 +213,11 @@ Change Duration Time Interval
     Input Text    ${TIME NUMBER INPUT}    ${random}
     FOR    ${i}    IN RANGE    2
            ${status}=   Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
-           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
-           ...    ELSE    Exit For Loop
+           IF    ${status}==False
+               Input Text    ${TIME NUMBER INPUT}    ${random}
+           ELSE
+               Exit For Loop
+           END
     END
     FOR    ${i}    IN RANGE    9
            ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
@@ -238,8 +251,11 @@ Settings on page should match settings on server
     END
     Log    Limit session duration to
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Run Keyword If    ${status}==False    Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit
+    IF    ${status}==False
+        Evaluate System Settings via API    ${local auth}    ${server url}    sessionLimitMinutes    0
+    ELSE
+        Evaluate Session Limit
+    END
 
 Setting on page matches server
     [Arguments]    ${locator}    ${key}    ${server url}=${server url}
@@ -347,6 +363,7 @@ Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
     IF    '${IMAGE}' == '5.0_test'
+        ${expected value}=   Convert To String    ${expected value}
         ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
         ${expected value}=   Replace String    ${expected value}    true    True
         ${expected value}=   Replace String    ${expected value}    false    False
@@ -362,7 +379,7 @@ Evaluate System Settings via API
         IF    '${expected value}' == 'True' or '${expected value}' == 'False'
             ${expected value}=   Convert To Lower Case    ${expected value}
         END
-        Dictionary should contain item    ${settings}[reply][settings]    ${key}    ${expected value}
+        Dictionary should contain item    ${settings}    ${key}    ${expected value}
     END
 
 Evaluate Log Level via API
@@ -378,11 +395,6 @@ Checkbox Is Selected
     ${selected}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${locator}${visible}//span    class    tick checked
     Should Be True    ${selected} == ${state}
 
-Close Modal If There
-    ${modal is visible}=   Run keyword and return status    Element Should Be Visible    ${COMMON CLOSE BUTTON}
-    Run Keyword If     ${modal is visible}    Run Keywords
-        ...    Click Element    ${COMMON CLOSE BUTTON}   AND
-        ...    Wait until element is not visible    ${COMMON CLOSE BUTTON}
 
 Show Advanced Settings
     ${location}=   Get Location

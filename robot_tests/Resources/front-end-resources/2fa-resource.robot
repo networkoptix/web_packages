@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Open New Browser On Failure
     Close Browser
@@ -106,13 +109,6 @@ Scan QR and decode to key
     Click Element    ${2FA KEY MODAL NEXT BTN}
     [return]    ${key}
 
-Generate totp and login
-    [arguments]    ${email}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
-    Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
-    2fa log in verification code form validations    ${email}
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}
-    Click Element    ${2FA AUTH CODE LOG IN BTN}
 
 Generate totp wait for a minute and try to login
     [arguments]    ${email}
@@ -125,15 +121,6 @@ Generate totp wait for a minute and try to login
     Wait Until Element Is Visible    ${2FA ERROR LOGIN CODE}
     Element Should Not Be Visible    ${ACCOUNT DROPDOWN}
 
-Type in backup code and login
-    [Arguments]    ${2fa backup code}    ${email}
-    Wait Until Element Is Visible    ${2FA BACKUP CODE BTN}
-    2fa log in verification code form validations    ${email}
-    Click Element    ${2FA BACKUP CODE BTN}
-    Wait Until Element Is Visible    ${2FA BACKUP CODE FIELD}
-    2fa log in backup code form validations    ${email}
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA BACKUP CODE FIELD}   ${2fa backup code}
-    Click Element    ${2FA BACKUP CODE LOG IN BTN}
 
 Disable two factor authentication form validations
     Element Should Be Visible    ${2FA DISABLE MODAL HEADER}
@@ -167,26 +154,3 @@ Check or uncheck 2fa ask for verification checkbox
     ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
     Input Text    ${2FA TOTP FIELD}    ${totp}
     Click Element    ${2FA SETTINGS MODAL APPLY BTN}
-
-2fa log in verification code form validations
-    [arguments]    ${email}
-    Element Should Be Visible    ${2FA CLOUD ILLUSTRATION}
-    Element Should Be Visible    ${2FA LOG IN CLOUD}
-    Element Should Be Visible    //nx-authorize-component//nx-authorize-auth-code-component//span[text()="${email}"]
-    Element Should Be Visible    ${2FA AUTH CODE FIELD}
-    Element Should Be Visible    ${2FA CODE INSTRUCTIONS}
-    Element Should Be Visible    ${2FA BACK BTN}
-    Element Should Be Visible    ${2FA BACKUP CODE BTN}
-    Element Should Be Visible    ${2FA LOG IN BTN}
-
-2fa log in backup code form validations
-    [arguments]    ${email}
-    Element Should Be Visible    ${2FA BK CLOUD ILLUSTRATION}
-    Element Should Be Visible    ${2FA BK LOG IN CLOUD}
-    Element Should Be Visible    //nx-authorize-component//nx-authorize-backup-code-component//span[text()="${email}"]
-    Element Should Be Visible    ${2FA BK CODE FIELD}
-    Element Should Be Visible    ${2FA BK CODE HELP}
-    Element Should Be Visible    ${2FA BK CODE CONTACT}
-    Element Should Be Visible    ${2FA BK BACK BTN}
-    Element Should Be Visible    ${2FA AUTH CODE BTN}
-    Element Should Be Visible    ${2FA BK LOG IN BTN}

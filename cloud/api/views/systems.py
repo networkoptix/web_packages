@@ -39,8 +39,7 @@ user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_refresh_from_request(request):
-    refresh_token = request.session.get(
-        'refresh_token', request.data.get('refresh_token'))
+    refresh_token = request.session.get('refresh_token') or request.data.get('refresh_token')
     if not refresh_token:
         raise APINotAuthorisedException('No refresh token was found')
     return refresh_token

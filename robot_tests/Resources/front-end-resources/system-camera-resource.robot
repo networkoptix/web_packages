@@ -1,9 +1,8 @@
-*** Keywords ***
-Start up
-    [Arguments]    ${url}
-    Reset All Cameras
-    Open Browser and go to URL    ${url}
+*** Settings ***
+Resource          ../../resource.robot
+Resource          system-user-resource.robot
 
+*** Keywords ***
 Reset cameras and log out
     Common Restart Logout    ${url}
 

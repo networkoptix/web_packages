@@ -87,7 +87,7 @@ do
 #        cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
     if [ "$SKIN" = "blue" ] ; then
-        echo "Generate language.json"
+        echo "********* Generate (skin) language file *********"
         pushd $TARGET_DIR/$SKIN
         python ../../../../build_scripts/generate_language_compiled_json.py $LANG
         popd

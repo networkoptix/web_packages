@@ -1,3 +1,7 @@
+*** Settings ***
+Resource          ../../resource.robot
+Resource          restore-pass-resource.robot
+
 *** Keywords ***
 Restart
     Common Restart Logout    ${url}

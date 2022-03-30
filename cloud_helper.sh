@@ -409,6 +409,9 @@ do
         stop_docker)
             stop_docker_containers
             ;;
+        build_local_webadmin)
+            build_webadmin_locally
+            ;;
         build_local_vms)
             VERSION=$2
             PORT=$3
@@ -507,6 +510,7 @@ do
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'run_local_servers -Stops all running mediaservers, builds a new docker image, and runs the images. Usage "./cloud_helper.sh {version} {ports}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
+            echo 'build_local_webadmin - Builds webadmin locally to test the build'
             echo 'build_local_vms - Builds webadmin locally, stops any running mediaservers, builds a new medisserver, runs a mediaserver, and places external.dat the new docker image. Usage "./cloud_helper.sh build_local_vms {version} {port} {copy}"'
             echo 'update_remote_vms - Copy locally built webadmin (external.dat) to a target machine. Usage "./cloud_helper.sh update_remote_vms {target-ip}"'
             echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'

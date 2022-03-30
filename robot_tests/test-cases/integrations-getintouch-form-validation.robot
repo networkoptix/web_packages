@@ -1,8 +1,8 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/integrations-getintouch-form-validation-resource.robot
 Suite Setup       Form Validation
 Test Template     Test Get In Touch Invalid
-Test Teardown     Run Keyword if Test Failed    Restart
+Test Teardown     Run Keyword if Test Failed    integrations-getintouch-form-validation-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error    Close Browser
 Force Tags        form    Threaded    integrations
 

@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/system-settings-menu-resource.robot
 Suite Setup       System Settings Menu Suite Setup
 Test Setup        System Settings Menu Test Setup
 Test Teardown     Run Keyword If Test Failed    System Settings Menu Test Restart

@@ -14,6 +14,7 @@ then
     exit 1
 fi
 
+echo -e "\nRemoving folders..."
 [ -e build_scripts ] && rm -rf build_scripts
 [ -e front_end ] && rm -rf front_end
 [ -e skins ] && rm -rf skins
@@ -22,33 +23,34 @@ fi
 [ -e "$EXTERNAL_PACKAGE" ] && rm "$EXTERNAL_PACKAGE"
 
 # Add v flag to see what's being copied.
-rsync -a --progress $SOURCE_DIR/../build_scripts .
-rsync -a --progress $SOURCE_DIR/../skins .
-rsync -a --progress $SOURCE_DIR/../translations .
-rsync -a --progress $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --exclude dist --exclude .idea
+echo -e "Copying folders..."
+rsync -a $SOURCE_DIR/../build_scripts .
+rsync -a $SOURCE_DIR/../skins .
+rsync -a $SOURCE_DIR/../translations .
+rsync -a $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --exclude dist --exclude .idea
 
-if [ $IS_LOCAL ]
-then
-    echo "pip install requirements"
+#if [ $IS_LOCAL ]
+#then
+    echo -e "\npip install requirements"
     [ ! -d "env" ] && python3 -m venv env
     . ./env/bin/activate
     pip install -r build_scripts/requirements.txt
 
-    echo "running nodeenv..."
+    echo -e "\nRunning nodeenv..."
     [ -e nenv ] && rm -rf nenv
     nodeenv --node=$NODE_VERSION --npm=$NPM_VERSION nenv
     . ./nenv/bin/activate
     echo "Active Node.js: " && node -v
     echo "Active npm: " && npm -v
-fi
+#fi
 
 pushd front_end
 # Install dependencies.
-echo "Install node dependencies" >&2
+echo -e "\nInstall node dependencies" >&2
 npm install
 
 # Build webadmin.
-echo "Build webadmin" >&2
+echo -e "\nBuild webadmin" >&2
 npm run build-webadmin
 mv dist static
 cp -R static/scripts/. static/
@@ -60,7 +62,7 @@ npm run buildSkins
 pushd inline-wizard
     npm install
 popd
-echo "Iterate all skins"
+echo -e "\nIterate all skins"
 echo $PWD
 for dir in ../skins/*/
 do
@@ -70,13 +72,14 @@ do
     pushd inline-wizard
         npm run build
         # Removed these files because it overrode webadmins version of them
-        rm -rf dist/{fonts,robots.txt}
-        mkdir -p ../static/setup_$SKIN
-        cp -r dist/* ../static/setup_$SKIN
+        rm -rf dist/{fonts,robots.txt,languages.json}
+        mv dist static
 
-        if [ "$SKIN" == "blue"]; then
-            cp -r dist/* ../static
-        fi
+        ./translation/localize.sh
+
+        mkdir -p ../static/setup_$SKIN
+        mv static/* ../static/setup_$SKIN
+        rm -rf static
     popd
     if [ -n "$LOCAL_ENV" ]; then
       break
@@ -84,12 +87,12 @@ do
 done
 
 # Make translations
-echo "Create translations" >&2
+echo -e "\nCreate front end translations **************" >&2
 $SOURCE_DIR/localize.sh ..
 
 
 # Save the repository info.
-echo "Create version.txt" >&2
+echo -e "\nCreate version.txt" >&2
 REP_ROOT_DIR="$SOURCE_DIR/.."
 if [ -e "$REP_ROOT_DIR/.git" ]; then
     format="changeset: %H%nrefs: %D%nparents: %P%nauthor: %aN <%aE>%ndate: %ad%nsummary: %s"
@@ -101,8 +104,8 @@ fi
 cat static/version.txt >&2
 
 #Pack
-echo "Pack $WEBADMIN_PACKAGE" >&2
+echo -e "\nPack $WEBADMIN_PACKAGE" >&2
 zip -qq -r "../$WEBADMIN_PACKAGE" ./static/
 popd
 
-echo "Webadmin build done" >&2
+echo -e "\nWebadmin build done" >&2

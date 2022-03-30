@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/health-monitor-resource.robot
 Suite Setup       Start
 Test Template     Check Details Panel Alerts
 #Test Teardown     Run Keyword If Test Failed    Start

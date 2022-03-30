@@ -8,27 +8,18 @@ do
     lang_dir=${lang_dir%*/}
     LANG=${lang_dir/..\/translations\//}
 
-    echo "../static/lang_$LANG/views/"
-
-    mkdir ../static/lang_$LANG
-    mkdir ../static/lang_$LANG/views/
+    echo -e "\nGenerate $LANG in ../static/lang_$LANG/views/"
+    echo $PWD
+    mkdir -p ../static/lang_$LANG/views/
 
     echo "Copy default views - with default language"
-    cp -rf ../static/views/* ../static/lang_$LANG/views/
+    [ -e ../static/views ] && cp -rf ../static/views/* ../static/lang_$LANG/views/
 
     echo "Overwrite them with localized sources"
     [ -e $lang_dir/views ] && cp -rf $lang_dir/views/* ../static/lang_$LANG/views/
 
-
-    mkdir ../static/lang_$LANG/web_common/
-    mkdir ../static/lang_$LANG/web_common/views/
-    echo "Copy web_common default views - with default language"
-    cp -rf ../static/web_common/views/* ../static/lang_$LANG/web_common/views/
-
-    echo "Overwrite them with localized sources"
-    [ -e $lang_dir/web_common/views ] && cp -rf $lang_dir/web_common/views/* ../static/lang_$LANG/web_common/views/
-
 done
 
-echo "Generate language.json"
+echo "********* Generate inline wizard language.json *********"
+echo $PWD
 python generate_languages_json.py

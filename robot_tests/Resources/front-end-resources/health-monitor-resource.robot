@@ -1,3 +1,6 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Validate Alerts Page
     Wait Until Elements Are Visible
@@ -36,8 +39,11 @@ Health Monitor Suite Setup
 
 Health Monitor Test Setup
     [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Test Setup    ${server}    ${user}    ${verify}
-    ...    ELSE    Web Admin Test Setup    ${server}    ${user}    ${verify}
+    IF    '''${mode}'''=='''cloud'''
+        Cloud Test Setup    ${server}    ${user}    ${verify}
+    ELSE
+        Web Admin Test Setup    ${server}    ${user}    ${verify}
+    END
 
 Cloud Test Setup
     [Arguments]    ${server}    ${user}    ${verify}

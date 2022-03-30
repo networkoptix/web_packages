@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/login-dialog-resource.robot
 Suite Setup       login-dialog-resource.Setup
 Test Setup        login-dialog-resource.Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure

@@ -54,7 +54,7 @@ def merge_json(target_filename, source_filename, key=None):
 
 
 def generate_languages_files(languages, template_filename):
-    languages_json = []
+    # languages_json = []
     # Localize this language
     with codecs.open(template_filename, 'r', 'utf-8') as file_descriptor:
         template = json.load(file_descriptor)
@@ -66,13 +66,15 @@ def generate_languages_files(languages, template_filename):
         with codecs.open(language_json_filename, 'r', 'utf-8') as file_descriptor:
             data = json.load(file_descriptor)
             data["language"] = lang
-            languages_json.append({
-                "language": lang,
-                "name": data["language_name"] if "language_name" in data else data["name"]
-            })
+            # languages_json.append({
+            #     "language": lang,
+            #     "name": data["language_name"] if "language_name" in data else data["name"]
+            # })
             merge(data, all_strings)
         save_content("../static/lang_" + lang + "/language.json", json.dumps(all_strings, ensure_ascii=False))
-    save_content('../static/languages.json', json.dumps(languages_json, ensure_ascii=False))
+
+    # inline wizard doesn't need "languages.json" ... also it over writes the file for webadmin
+    # save_content('../static/languages.json', json.dumps(languages_json, ensure_ascii=False))
 
 
 languages = [o for o in os.listdir('../translations') if os.path.isdir(os.path.join('../translations',o))]

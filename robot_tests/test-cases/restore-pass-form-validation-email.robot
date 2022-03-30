@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../resource.robot
+Resource          ../Resources/front-end-resources/restore-pass-resource.robot
 Suite Setup       Restore Pass Validation Setup
 Test Template     restore-pass-resource.Test Email Invalid
 Test Teardown     Run Keyword If Test Failed    restore-pass-resource.Restart

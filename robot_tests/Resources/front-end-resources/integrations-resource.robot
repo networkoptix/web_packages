@@ -1,8 +1,14 @@
+*** Settings ***
+Resource          ../../resource.robot
+
 *** Keywords ***
 Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
-    Run keyword If    ${is enabled}==${True}    Open Browser and go to URL    ${url integrations}
-    ...    ELSE    Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
+    IF    ${is enabled}==${True}
+        Open Browser and go to URL    ${url integrations}
+    ELSE
+        Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
+    END
 
 Go To Integrations Page
     Go To    ${url integrations}
