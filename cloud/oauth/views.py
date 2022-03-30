@@ -342,6 +342,15 @@ def token(request):
             require_params(request, ("refresh_token",))
             return api_success(Auth.get_refresh_token(refresh_token, ip=ip, scope=scope))
 
+    elif grant_type == Auth.GRANT_TYPE.refresh_token and response_type == Auth.RESPONSE_TYPE.code:
+        require_params(request, ("refresh_token",))
+        return api_success(Auth.get_code(email="",
+                                         password="",
+                                         grant_type=Auth.GRANT_TYPE.refresh_token,
+                                         ip=get_ip(request),
+                                         refresh_token=refresh_token,
+                                         scope=scope))
+
     raise APIRequestException("Invalid grant_type and response_type combination", ErrorCodes.bad_request)
 
 

@@ -282,7 +282,7 @@ class TestOauthViews:
 
         self.assert_wrong_parameters(response)
         assert 'This field is required.' in response.data['errorData']['email']
-        assert  response.data['errorData']['password']
+        assert response.data['errorData']['password']
         assert 'This field is required.' in response.data['errorData']['client_id']
         assert 'This field is required.' in response.data['errorData']['redirect_uri']
 
@@ -305,13 +305,6 @@ class TestOauthViews:
 
         data = {
             'grant_type': Auth.GRANT_TYPE.authorization_code,
-            'response_type': Auth.RESPONSE_TYPE.code
-        }
-        response = self.token(data)
-        assert_invalid()
-
-        data = {
-            'grant_type': Auth.GRANT_TYPE.refresh_token,
             'response_type': Auth.RESPONSE_TYPE.code
         }
         response = self.token(data)
