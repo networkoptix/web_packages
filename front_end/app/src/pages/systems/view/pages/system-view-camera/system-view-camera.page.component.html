@@ -45,6 +45,11 @@
     </div>
   </header>
 
+  <nx-camera-details
+    *ngIf="CONFIG.featureFlags.viewCameraDetails && cameraDetailsShown"
+    [camera]="camera" (close)="toggleCameraDetails(false)">
+  </nx-camera-details>
+
   <div class="settings" [ngClass]="{ shown: settingsShown }" (click)="stopSettingsClickPropagation($event)">
     <div class="section transportSelection">
       <div class="caption" translate>Transport</div>
@@ -71,6 +76,11 @@
         </div>
       </ng-template>
     </div>
+    <div
+      *ngIf="CONFIG.featureFlags.viewCameraDetails"
+      class="section camera-details-toggler"
+      (click)="toggleCameraDetails()"
+    >Camera Details</div>
   </div>
 
   <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">

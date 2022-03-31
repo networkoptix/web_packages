@@ -11,6 +11,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { ComponentsModule } from '../../../components/components.module';
 import { DirectivesModule } from '../../../directives/directives.module';
 
+import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
 import NxSystemViewCameraPageComponent from './pages/system-view-camera/system-view-camera.page.component';
 import NxSystemViewIndexPageComponent from './pages/system-view-index/system-view-index.page.component';
 import routes from './routes';
@@ -45,7 +46,8 @@ import VmsClientModule from './vms-client/vms-client.module';
     ],
     declarations: [
         NxSystemViewIndexPageComponent,
-        NxSystemViewCameraPageComponent
+        NxSystemViewCameraPageComponent,
+        NxCameraDetailsComponent,
     ],
     bootstrap: [],
     exports: [

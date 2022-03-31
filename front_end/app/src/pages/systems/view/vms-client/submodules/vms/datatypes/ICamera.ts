@@ -64,6 +64,7 @@ export interface ICamera {
     id: string,
     name: string,
     url: string,
+    ip: string,
     status: CAMERA_STATUS,
     isVirtual: boolean,
     isOnline: boolean,

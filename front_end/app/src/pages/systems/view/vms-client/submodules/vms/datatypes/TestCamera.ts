@@ -38,6 +38,10 @@ export class TestCamera implements ICamera {
         this._initBirdView();
     }
 
+    public get ip () {
+        return this.url;
+    }
+
     public get isScheduleEnabled () {
         return false;
     }

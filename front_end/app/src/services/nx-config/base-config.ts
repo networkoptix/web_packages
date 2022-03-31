@@ -175,6 +175,7 @@ const FeatureFlagKeys = [
     'readonlyAPIs',
     'dashboardRedirect',
     'cloudOwnershipTransfer',
+    'viewCameraDetails',
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

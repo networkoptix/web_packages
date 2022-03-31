@@ -135,6 +135,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         );
     }
 
+    public cameraDetailsShown: boolean = false
+
+    public toggleCameraDetails (newValue:boolean = !this.cameraDetailsShown) {
+        this.cameraDetailsShown = newValue;
+    }
+
     public readonly archiveSelectionEnabled: boolean
 
     protected onPlaybackChange (s: PlaybackState) {
