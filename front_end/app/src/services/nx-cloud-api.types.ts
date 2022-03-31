@@ -88,7 +88,7 @@ interface Firmwares {
     barLength: number
 }
 
-interface Cameras {
+export interface Cameras {
     vendor: string,
     model: string,
     count: number,

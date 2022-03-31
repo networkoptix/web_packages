@@ -22,6 +22,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { MessageParams } from '@dialogs/message/message.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import type { Cameras } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -36,10 +37,7 @@ import {
 } from '@utils/general';
 
 import { IpvdSearchService } from './ipvd-search.service';
-
-interface Params {
-    [key: string]: any;
-}
+import type { Disclaimer, IpvdParams } from './ipvd.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -62,26 +60,26 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     resolution: string;
     itemsPerPage: number;
     query: string;
-    cameras;
+    cameras: Cameras[];
     analytics;
-    activeCamera;
+    activeCamera: Cameras | undefined;
     showAll: boolean;
     hardwareTypes: any[];
     resolutions;
-    camerasTable;
+    camerasTable: Cameras[];
     allowedParameters: string[];
     filterModel;
     toggleCamview: boolean;
-    params;
+    params: IpvdParams;
     mobileDetailMode: boolean;
     noResult: boolean;
     hasNoSearch: boolean;
-    debug;
-    beta;
+    debug: boolean;
+    beta: boolean;
     uriPath: string;
     breakpoint: string;
     showAnalytics: boolean;
-    disclaimerParams: any = {};
+    disclaimerParams: Disclaimer;
 
     breakpointSubscription: SubscriptionLike;
     routerSubscription: SubscriptionLike;
@@ -216,7 +214,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.debug = (this.params.debug !== undefined);
             this.beta = (this.params.beta !== undefined);
             this.hasNoSearch = numParams === 1 &&
-                (this.params.debug || this.params.beta);
+                !!(this.params.debug || this.params.beta);
         } else {
             this.hasNoSearch = true;
             this.resetFilterModel();
@@ -243,7 +241,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
-                this.mobileDetailMode = (state.matches && this.activeCamera);
+                this.mobileDetailMode = !!(state.matches && this.activeCamera);
             });
 
         this.offsetSubscription = this.scrollMechanicsService
@@ -279,13 +277,13 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.targets = clearPseudoAnchors(this.targets);
     }
 
-    findVendorForCamera(name) {
+    findVendorForCamera(name: string): string {
         const camera = this.cameras.find(camera => {
             return camera.model === name;
         });
 
         if (camera) {
-            const queryParams: Params = {};
+            const queryParams: IpvdParams = {};
             queryParams.vendors = camera.vendor;
             this.uri
                 .updateURI(this.uri.getURL(), queryParams, true)
@@ -586,10 +584,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.camerasTable = [];
                 this.resetActiveCamera();
 
-                const queryParams: Params = {};
+                const queryParams: IpvdParams = {};
                 // we need these to be only defined or undefined
-                queryParams.debug = (this.debug) ? true : undefined;
-                queryParams.beta = (this.beta) ? true : undefined;
+                queryParams.debug = this.debug ? 'true' : undefined;
+                queryParams.beta = this.beta ? 'true' : undefined;
                 this.uri.resetURI(this.uriPath, queryParams);
 
                 this.params = queryParams;
@@ -607,22 +605,18 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         return false;
     }
 
-    activateCamera(elementSelected: any): void {
+    activateCamera(elementSelected: Cameras): void {
         if (!elementSelected) {
             return;
         }
-        if (
-            Object.keys(elementSelected).length === 0 ||
-            elementSelected.key === -1
-        ) {
+        if (Object.keys(elementSelected).length === 0) {
             // call was not initiated by linking the element in HTML
             // this.resetActiveCamera();
             return;
         }
 
         const selectedCamera = this.cameras.find(camera => {
-            return camera.sortKey ===
-                (elementSelected.sortKey || elementSelected.value.sortKey);
+            return camera.sortKey === elementSelected.sortKey;
         });
 
         if (
@@ -633,8 +627,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
         this.showAll = false;
 
-        const queryParams: Params = {};
-        queryParams.camera = selectedCamera.model || selectedCamera.value.model;
+        const queryParams: IpvdParams = {};
+        queryParams.camera = selectedCamera.model;
 
         this.uri
             .updateURI(this.uriPath, queryParams)
@@ -663,11 +657,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }, 500);
     }
 
-    openFeedback(param) {
+    openFeedback(param: string): false {
         const type = (param === 'device')
             ? this.CONFIG.dialogs.message.type.ipvd_device
             : this.CONFIG.dialogs.message.type.ipvd_page;
-        const device: string = (param === 'device' && this.activeCamera)
+        const device = (param === 'device' && this.activeCamera)
             ? this.activeCamera.model
             : '';
         const data: MessageParams = {
@@ -682,13 +676,13 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         return false;
     }
 
-    resetActiveCamera(skipUpdateURI?) {
+    resetActiveCamera(skipUpdateURI?: boolean): void {
         if (!this.activeCamera) {
             return;
         }
 
         if (!skipUpdateURI) {
-            const queryParams: Params = {};
+            const queryParams: IpvdParams = {};
             queryParams.camera = undefined;
 
             this.uri

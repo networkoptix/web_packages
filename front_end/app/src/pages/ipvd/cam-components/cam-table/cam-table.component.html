@@ -1,28 +1,38 @@
-<div class="scroll-wrapper" #nxScrollWrapper
+<div
+    class="scroll-wrapper"
+    #nxScrollWrapper
     [ngClass]="{'table-scroll-fixed':tableScrollFixed}"
-    [style.width]="elementWidth">
-
-<nx-pre-loader type="page" *ngIf="!pagedItems.length"></nx-pre-loader>
-<div *ngIf="pagedItems.length">
-    <div class="nx-table-wrapper"
-        id="nx-table" #nxTable
-        [ngClass]="{'extended': showAnalytics}">
-
+    [style.width]="elementWidth"
+>
+    <nx-pre-loader type="page" *ngIf="!pagedItems.length"></nx-pre-loader>
+    <div *ngIf="pagedItems.length">
+        <div
+            class="nx-table-wrapper"
+            id="nx-table"
+            #nxTable
+            [ngClass]="{'extended': showAnalytics}"
+        >
             <div class="table-wrapper">
                 <table class="table table-hover nx-table">
                     <thead>
                         <tr>
-                            <th *ngFor="let header of showHeaders"
+                            <th
+                                *ngFor="let header of showHeaders"
                                 class="align-bottom"
                                 [title]="getCleanTitle(header)"
-                                (click)="toggleHeaderSort(header)">
-
+                                (click)="toggleHeaderSort(header)"
+                            >
                                 <div class="caption d-flex">
                                     <div class="ellipsis" [innerText]="header"></div>
-                                    <div [ngClass]="{'cam-table-show': !sortOrderASC}"
-                                        [style.visibility]="header == selectedHeader ? 'visible' : 'hidden'">
+                                    <div
+                                        [ngClass]="{'cam-table-show': !sortOrderASC}"
+                                        [style.visibility]="header == selectedHeader ? 'visible' : 'hidden'"
+                                    >
                                         <div class="sort-dir arrow-flip">
-                                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+                                            <svg-icon
+                                                nx-add-svg-src
+                                                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                                            ></svg-icon>
                                         </div>
                                     </div>
                                 </div>
@@ -31,15 +41,34 @@
                     </thead>
                     <tbody>
                         <tr class="table-row-spacer"></tr>
-                        <tr *ngFor="let item of pagedItems; trackBy: trackPagedItem"
+                        <tr
+                            *ngFor="let item of pagedItems; trackBy: trackPagedItem"
                             [ngClass]="{'selected': item.sortKey == selectedCamera}"
-                            (mousedown)="setClickedRow(item);">
-
-                            <td *ngFor="let p of showParametersFor(item); let first=first" class="text-left">
-                                <a *ngIf="first" [routerLink]="'/ipvd'" [queryParams]="{vendors: item.vendor, camera: item.model || item.value.model}"></a>
-                                <div *ngIf="!isBoolean(item[p]) && item[p] !== 0 && item[p] !== '0x0'; else icon">{{item[p]}}</div>
+                            (mousedown)="setClickedRow(item);"
+                        >
+                            <td
+                                *ngFor="let p of showParametersFor(item); let first=first"
+                                class="text-left"
+                            >
+                                <a
+                                    *ngIf="first"
+                                    [routerLink]="'/ipvd'"
+                                    [queryParams]="{
+                                        vendors: item.vendor,
+                                        camera: item.model
+                                    }"
+                                ></a>
+                                <div
+                                    *ngIf="!isBoolean(item[p]) && item[p] !== 0 && item[p] !== '0x0';
+                                        else icon"
+                                >
+                                    {{item[p]}}
+                                </div>
                                 <ng-template #icon>
-                                    <nx-bool-icon [param]="p" [value]="item[p]"></nx-bool-icon>
+                                    <nx-bool-icon
+                                        [param]="p"
+                                        [value]="item[p]"
+                                    ></nx-bool-icon>
                                 </ng-template>
                             </td>
                         </tr>
@@ -58,17 +87,25 @@
                 </nav>
 
                 <div class="csv">
-                    <nx-csv-button [data]="csvCameraData"
-                                filename="camera_list_{{ csvFilename | date:'yyyy-MM-dd' }}"
-                                [options]="$any(csvOptions)">
-                    </nx-csv-button>
+                    <nx-csv-button
+                        [data]="csvCameraData"
+                        filename="camera_list_{{ csvFilename | date:'yyyy-MM-dd' }}"
+                        [options]="csvOptions"
+                    ></nx-csv-button>
                 </div>
             </div>
 
             <div *ngIf="pagedItems.length">
-                <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
+                <p
+                    class="m-0"
+                    *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd"
+                    dir="auto"
+                >
                     <span>{{'ipvdDisclaimer' | translate:disclaimerParams}} </span>
-                    <span #ipvdRequest [innerHTML]="LANG.ipvdFeedback.request() | safe : 'html'"></span>
+                    <span
+                        #ipvdRequest
+                        [innerHTML]="LANG.ipvdFeedback.request() | safe : 'html'"
+                    ></span>
                 </p>
                 <button *ngIf="debug">reset</button>
             </div>
