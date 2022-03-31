@@ -195,33 +195,38 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseUpHandler (e: MouseEvent|TouchEvent): void {
-        if (this.archiveSelectionEnabled) {
-            this.selection.handleMouseUp(e as MouseEvent);
+    protected _play (offsetX) {
+        const time = this.timeline.domOffsetXtoTime(offsetX);
+        this.playback.playArchive(time);
+        this.hideTimeUnderMouse = true;
+        this._mouseDownScreenX = screenX;
+
+        const edgeWidth: px = 80;
+        const edgeFixWidth: px = 160;
+        const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth);
+        if (offsetX < edgeWidth) {
+            // console.log('left edge fix')
+            this.timeline.jumpScrollTo(time - offset, true);
+        } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
+            // console.log('right edge fix')
+            this.timeline.jumpScrollTo(
+                time - this.timeline.visibleRange.duration + offset,
+                true
+            );
+        }
+    }
+
+    public canvasMouseUpHandler (e: MouseEvent|TouchEvent, mustPlay: boolean = false): void {
+        if (!mustPlay && this.archiveSelectionEnabled) {
+            mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
         }
         const screenX = NxUtilsService.calcScreenX(e);
         const offsetX = NxUtilsService.calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         // console.log('mouse up', e.screenX, delta)
-        if (!this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX) {
-            const time = this.timeline.domOffsetXtoTime(offsetX);
-            this.playback.playArchive(time);
-            this.hideTimeUnderMouse = true;
-            this._mouseDownScreenX = screenX;
-
-            const edgeWidth: px = 80;
-            const edgeFixWidth: px = 160;
-            const offset: ms = this.timeline.domWidthToDuration(edgeFixWidth);
-            if (offsetX < edgeWidth) {
-                // console.log('left edge fix')
-                this.timeline.jumpScrollTo(time - offset, true);
-            } else if (offsetX > this.timeline.canvasGeometry.width / this.timeline.canvasGeometry.dpr - edgeWidth) {
-                // console.log('right edge fix')
-                this.timeline.jumpScrollTo(
-                    time - this.timeline.visibleRange.duration + offset,
-                    true
-                );
-            }
+        mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
+        if (mustPlay) {
+            this._play(offsetX);
 
             // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
         }
@@ -230,12 +235,14 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timeUnderMouse.handleMouseUp();
     }
 
-    @HostListener('document:mouseup')
+    @HostListener('document:mouseup', ['$event'])
     public documentMouseUpHandler (e: MouseEvent): void {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
-            this.selection.handleMouseUp(e);
+            if (!this.selection.handleMouseUp(e)) {
+                this._play(e.screenX - (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left);
+            }
         }
     }
 }
