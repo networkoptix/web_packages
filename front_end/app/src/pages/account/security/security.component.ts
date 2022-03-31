@@ -99,7 +99,10 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 const twoFaSystems: NxSystemWithUserInfo[] = [];
                 const subV5Systems: NxSystemWithUserInfo[] = [];
                 systems.forEach(system => {
-                    system.name = htmlToEntity(system.name);
+                    system = {
+                        ...system,
+                        name: htmlToEntity(system.name),
+                    } as NxSystemWithUserInfo;
 
                     if (system.system2faEnabled) {
                         twoFaSystems.push(system);

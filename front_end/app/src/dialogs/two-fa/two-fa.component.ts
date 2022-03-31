@@ -158,7 +158,10 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .subscribe((systems: NxSystemWithUserInfo[]) => {
                 systems.forEach(system => {
                     if (!system.useRest) {
-                        system.name = htmlToEntity(system.name);
+                        system = {
+                            ...system,
+                            name: htmlToEntity(system.name),
+                        } as NxSystemWithUserInfo;
                         this.incompatibleSystems.push(system);
                     }
                 });
