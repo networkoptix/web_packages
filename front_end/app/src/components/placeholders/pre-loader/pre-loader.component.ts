@@ -18,7 +18,7 @@ export class NxPreLoaderComponent implements OnInit {
     constructor() {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.type = this.type || '';
     }
 }

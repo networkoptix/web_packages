@@ -102,13 +102,13 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         if (this.headerService.createAccountButtonType === 'default') {
             this.headerService.createAccountButtonType = 'primary';
         }
     }
 
-    ngAfterViewChecked() {
+    ngAfterViewChecked(): void {
         // There are two hidden components in the html which determine if
         // the intro-text component is using position:absolute or position:fixed
         if (!this.elementObserver$ && this.rootFixedRef && this.rootAbsoluteRef) {

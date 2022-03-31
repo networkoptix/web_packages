@@ -35,7 +35,7 @@ export class WebsocketComponent implements OnInit {
     constructor(private systemGroupsData: SystemGroupsDataService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.websocketSubscription = this.systemGroupsData.connect()
             .subscribe(this.handleWebsocketData);
     }

@@ -17,7 +17,7 @@ export class NxLandingDisplayComponent implements OnInit {
         private apiService: NxCloudApiService
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.apiService
             .getStaticLanding()
             .toPromise()

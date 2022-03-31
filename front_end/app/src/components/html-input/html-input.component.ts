@@ -34,7 +34,7 @@ export class NxHTMLComponent implements ControlValueAccessor {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.editorSettings = {
             ...DEFAULT_EDITOR_CONFIG,
             ...(this.editorOverrides || {}),

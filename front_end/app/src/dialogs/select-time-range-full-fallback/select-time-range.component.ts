@@ -92,7 +92,7 @@ export class SelectTimeRangeModalContent {
         }
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.start = this._dateDictFromTimeStamp(this.selection.range.start);
         this.end = this._dateDictFromTimeStamp(this.selection.range.end);
     }

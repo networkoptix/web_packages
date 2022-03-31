@@ -10,6 +10,6 @@ export class WizardModalContent {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 }

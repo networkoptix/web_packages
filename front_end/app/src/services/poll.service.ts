@@ -26,7 +26,7 @@ export class NxPollService {
     constructor() {
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.unsub$.next('done');
     }
 

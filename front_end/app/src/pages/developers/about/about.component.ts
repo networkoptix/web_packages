@@ -220,7 +220,7 @@ export class NxAboutComponent {
         );
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.ribbonService.hide();
     }
 }

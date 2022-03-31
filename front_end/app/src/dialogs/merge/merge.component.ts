@@ -126,7 +126,7 @@ export class MergeModalContent {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'systems', 'user'], this);
 
         this.machine = new StateMachine(this.checkMerge, State);

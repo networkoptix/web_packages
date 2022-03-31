@@ -82,7 +82,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.elementWidth = '100%';
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.camera = [
             { title: this.LANG.ipvd.maxResolution?.(), param: 'maxResolution' },
             { title: this.LANG.ipvd.maxFps?.(), param: 'maxFps' },
@@ -119,7 +119,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showAllEvents = false;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     ngAfterViewInit(): void {
         setTimeout(() => {
@@ -153,7 +153,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
-    ngOnChanges(changes: NgChanges<CamViewComponent>) {
+    ngOnChanges(changes: NgChanges<CamViewComponent>): void {
         if (changes.activeCamera.currentValue) {
             this.showCameraAnalytics = this.showAnalytics &&
                 changes.activeCamera.currentValue.isAnalyticsSupported;

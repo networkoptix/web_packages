@@ -35,7 +35,7 @@ export class ResetBackupModalContent {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'setDefaultBackupSettings'], this);
 
         this.resetBackupProcess = this.processService.createProcess(() => {

@@ -101,7 +101,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
 
   constructor(private element: ElementRef) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
       const element = this.element.nativeElement;
       const config = {
           root: this.intersectionRoot,
@@ -122,7 +122,7 @@ export class NxIntersectionObserver implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
       this.destroy$.next();
   }
 }

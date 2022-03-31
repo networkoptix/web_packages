@@ -61,7 +61,7 @@ export class ChangePasswordModalContent {
         return this.user.isLocalOwner && this.user.isMe;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'user'], this);
 
         this.changePassword = this.processService

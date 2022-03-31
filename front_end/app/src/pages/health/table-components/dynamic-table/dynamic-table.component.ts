@@ -173,7 +173,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.params = { ...this.route.snapshot.queryParams };
         if (this.params.sortBy) {
             this.sortBy(this.params.sortBy);
@@ -276,7 +276,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         return item ? item.id : undefined;
     }
 
-    ngOnChanges(changes: NgChanges<NxDynamicTableComponent>) {
+    ngOnChanges(changes: NgChanges<NxDynamicTableComponent>): void {
         let resetURI;
 
         if (changes.headers) {
@@ -337,7 +337,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
     showTooltip(event) {

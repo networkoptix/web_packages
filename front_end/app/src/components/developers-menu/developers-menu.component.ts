@@ -238,7 +238,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         this.displayedMenuNodes = newDisplayedNodes;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.service.menuSubject?.pipe(
             untilDestroyed(this)
         ).subscribe(menu => {

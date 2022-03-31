@@ -95,7 +95,7 @@ export class AddWidgetModalContent {
         this.downloadingThirdParty = false;
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(
             this.dialogData,
             [

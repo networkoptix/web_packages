@@ -99,7 +99,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         }
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {

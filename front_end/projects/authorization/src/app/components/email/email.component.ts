@@ -81,7 +81,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.isMobile = this.deviceService.isMobile();
     }
 
-    ngOnChanges(changes: NgChanges<NxAuthorizeEmailComponent>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeEmailComponent>): void {
         if (changes.errorCode?.currentValue) {
             // Handles when form isn't ready yet.
             if (!this.emailForm?.controls?.email) {

@@ -45,7 +45,7 @@ export class NxInfoBlockComponent implements OnInit {
         this.CONFIG = configService.config;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.singleColumn = this.sectionsOrColumns[0] && !this.sectionsOrColumns[0][0];
     }
 

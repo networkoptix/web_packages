@@ -97,7 +97,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         };
     }
 
-    ngOnChanges(changes: NgChanges<NxAuthorizeCreateAccountComponent>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeCreateAccountComponent>): void {
         if (changes.errorCode) {
             const eC = changes.errorCode.currentValue;
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });

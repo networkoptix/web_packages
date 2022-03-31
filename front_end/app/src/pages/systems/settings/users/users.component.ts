@@ -182,7 +182,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.initProcesses();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.applyService.resetFormWatchers();
     }
 

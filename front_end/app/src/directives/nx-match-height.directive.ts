@@ -30,7 +30,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
         });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         const initialHeight = this.el.nativeElement.getElementsByClassName(this.classToMatch)[0].getBoundingClientRect().height;
         let iterations = 0;
         this.initialLoadInterval = setInterval(() => {
@@ -83,7 +83,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
         Array.from(children).forEach((child: HTMLElement) => { child.style.height = `${maxHeight}px`; });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         clearInterval(this.initialLoadInterval);
     }
 }

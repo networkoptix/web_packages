@@ -59,7 +59,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         Promise.all([
             this.system.mediaserver.getCurrentUser(),
             this.system.mediaserver.getModuleInfo().toPromise()

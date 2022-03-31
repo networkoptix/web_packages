@@ -283,9 +283,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             )) + element.offsetWidth)
     );
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.queryParamSubscription = this.route.queryParams.subscribe(params => {
             this.inline = params.inline !== 'undefined';
         });

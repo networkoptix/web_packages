@@ -101,7 +101,7 @@ export class NxIntegrationsComponent implements OnInit {
         this.errorManager = new ErrorStateManager(this.window);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.cloudApi.getIntegrationsCount()
             .pipe(untilDestroyed(this))
             .subscribe(data => {

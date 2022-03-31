@@ -85,7 +85,7 @@ export class EditModalContent {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(
             this.dialogData,
             [

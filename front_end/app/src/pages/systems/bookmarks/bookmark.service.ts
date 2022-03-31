@@ -98,5 +98,5 @@ export class BookmarkService implements OnDestroy {
             );
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 }

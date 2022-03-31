@@ -55,7 +55,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
         this.canceled = true;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.accountService.get().then((account: Account) => {
             if (account) {
                 this.account = account;

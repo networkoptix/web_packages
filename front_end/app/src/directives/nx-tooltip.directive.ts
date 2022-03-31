@@ -42,7 +42,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const positions: ConnectedPosition[] = [{
             originX: 'center',
             originY: 'top',
@@ -69,7 +69,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    ngOnChanges(changes: NgChanges<NxTooltipDirective>) {
+    ngOnChanges(changes: NgChanges<NxTooltipDirective>): void {
         if (changes.content) {
             if (this.overlayRef?.hasAttached()) {
                 this.hide();
@@ -78,7 +78,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.close();
         this.overlayRef = undefined;
     }

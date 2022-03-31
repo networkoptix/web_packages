@@ -61,7 +61,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.settingsService.footerSubject.next(true);
 
         this.serverSubscription = this.system.infoSubject
@@ -124,7 +124,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.applyService.removeWatchers();
     }
 

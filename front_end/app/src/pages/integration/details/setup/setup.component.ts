@@ -55,7 +55,7 @@ export class NxSetupComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
     onSubmit() {

@@ -313,7 +313,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             : this.CONFIG.headerHeight;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         if (this.system) {
             this.system.stopPoll();
             this.system.ribbonService.hide();

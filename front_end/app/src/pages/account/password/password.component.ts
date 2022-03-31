@@ -114,7 +114,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.applyService.removeWatchers();
     }
 }

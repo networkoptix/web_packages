@@ -90,7 +90,7 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
         }
     };
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         setTimeout(() => {
             // Component initialized is used to prevent svg from flickering into existence on initial render
             this.componentInitialized = true;
@@ -98,7 +98,7 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
         }, 0);
     }
 
-    ngOnChanges(changes: NgChanges<NxBackgroundGraphicComponent>) {
+    ngOnChanges(changes: NgChanges<NxBackgroundGraphicComponent>): void {
         const { currentValue, previousValue } = changes.scrollPosition;
         if (currentValue !== previousValue) {
             this.recalculateScale();

@@ -62,7 +62,7 @@ export class ResetServerModalContent {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
         const options = {

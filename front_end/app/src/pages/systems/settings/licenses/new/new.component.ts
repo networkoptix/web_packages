@@ -169,7 +169,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.setupDefaults();
     }
 

@@ -49,11 +49,11 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         this.config = config.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.initMask();
     }
 
-    ngOnChanges({ initialMask, height, width }: NgChanges<NxMotionDetectionOverlay>) {
+    ngOnChanges({ initialMask, height, width }: NgChanges<NxMotionDetectionOverlay>): void {
         const initialMaskChanged = initialMask &&
             !initialMask.isFirstChange() &&
             this.motionMask;
@@ -76,7 +76,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         }
     }
 
-    ngAfterContentChecked() {
+    ngAfterContentChecked(): void {
         const firstRender = !this.motionMaskRenderer &&
             this.motionCanvas &&
             this.motionCanvas.nativeElement;
@@ -85,7 +85,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.unsub$.next(true);
     }
 

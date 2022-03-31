@@ -70,7 +70,7 @@ export class NxOverlayModalComponent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         if (this.localStorage.retrieve('resetServer') === true) {
             setTimeout(() => window.location.reload(), 2000);
         }

@@ -50,7 +50,7 @@ export class NxLayoutRightComponent {
     constructor() {
     }
 
-    ngOnChanges(changes: NgChanges<NxLayoutRightComponent>) {
+    ngOnChanges(changes: NgChanges<NxLayoutRightComponent>): void {
         if (changes.toggle) {
             this._toggle = changes.toggle.currentValue;
         }

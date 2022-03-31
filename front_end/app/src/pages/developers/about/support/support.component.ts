@@ -38,7 +38,7 @@ export class NxSupportComponent implements OnChanges {
         this.errorManager = new ErrorStateManager(this.window);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const supportConfig = this.errorManager.buildConfig(
             ['displayName', 'icon', 'title'],
             null,

@@ -488,13 +488,13 @@ export class NxDashboardComponent implements DashboardGroup {
 
     drops: CdkDropList[];
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.dropsQuery.changes.pipe(startWith('')).subscribe(() => {
             this.drops = this.dropsQuery.toArray();
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.route.queryParams.subscribe(({ dashboardId }) => {
             if (this.menu?.length && dashboardId && dashboardId !== this.activeId) {
                 this.updateSelectedDashboard(dashboardId);

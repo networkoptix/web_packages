@@ -61,14 +61,14 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         this.LANG = language.translations;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.createEmbedUrl(this.params);
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.formChangesSubscription = this.embedForm.form.valueChanges
             .subscribe(changes => {
                 this.createEmbedUrl(changes);

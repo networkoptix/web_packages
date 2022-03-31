@@ -59,7 +59,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
 
     constructor() {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.badgeTypes = this.type !== undefined
             ? {
                 selected: `badge-${this.type}-selected`,

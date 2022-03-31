@@ -439,7 +439,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.menuService.section = 'cameras';
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.isMobile = this.deviceService.isMobile() ||
             this.deviceService.isTablet();
 
@@ -597,7 +597,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionGridChangeWatcher.originalValue = false;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.unsub$.next(true);
     }
 

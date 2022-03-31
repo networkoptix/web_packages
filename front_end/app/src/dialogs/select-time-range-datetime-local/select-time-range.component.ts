@@ -35,7 +35,7 @@ export class SelectTimeRangeModalContent {
         this.LANG = this.language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.start = new Date(this.selection.range.start);
         this.end = new Date(this.selection.range.end);
     }

@@ -31,7 +31,7 @@ export class NxBookmarksListComponent implements OnDestroy {
         this.LANG = language.translations;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     updateTagSize(tagName: string, { width }: { width: number, height: number }) {
         if (this.gridColumnLookup[tagName]) return;

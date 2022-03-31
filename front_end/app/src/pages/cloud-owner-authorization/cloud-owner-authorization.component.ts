@@ -33,7 +33,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         this.window.close();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const params = this.activatedRoute.snapshot.queryParams;
         const code = params?.code || '';
         if (code) {

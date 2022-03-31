@@ -88,7 +88,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         });
     }
 
-    ngOnChanges(changes: NgChanges<NxAuthorizeAuthCodeComponent>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeAuthCodeComponent>): void {
         if (changes.errorCode?.currentValue) {
             this.authCodeForm?.controls.authCode.setErrors({ [changes.errorCode.currentValue]: true });
         }

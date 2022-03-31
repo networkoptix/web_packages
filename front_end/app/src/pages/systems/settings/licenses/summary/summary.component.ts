@@ -36,7 +36,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.settingsService.systemSubject
             .pipe(
                 untilDestroyed(this),
@@ -47,7 +47,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
             });
     }
 
-    ngOnChanges(changes: NgChanges<NxLicenseSummaryComponent>) {
+    ngOnChanges(changes: NgChanges<NxLicenseSummaryComponent>): void {
         if (
             changes.licensesLegacyInfo?.currentValue &&
             !isEqual(

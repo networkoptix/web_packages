@@ -18,7 +18,7 @@ export class ValidationComponent {
         private menuService: NxMenuService,
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'validation';
 

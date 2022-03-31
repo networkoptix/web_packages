@@ -31,7 +31,7 @@ export class NxMediaServerListHeaderComponent implements OnInit {
         this.cookieService.set(COOKIE_NAME, newValue ? '1' : '0', 365, '/');
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.ipVisibilityState = !!parseInt(this.cookieService.get(COOKIE_NAME));
         this.ipVisibilityStateChange.emit(this.ipVisibilityState);
     }

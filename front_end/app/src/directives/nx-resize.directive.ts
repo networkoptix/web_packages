@@ -34,7 +34,7 @@ export class NxResizeObserver implements OnDestroy {
         this.resize.emit({ width, height });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         const target = this.el.nativeElement;
         observer.unobserve(target);
         entriesMap.delete(target);

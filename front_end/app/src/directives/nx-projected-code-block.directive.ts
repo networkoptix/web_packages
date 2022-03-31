@@ -6,7 +6,7 @@ import { AfterViewInit, Directive, ElementRef } from '@angular/core';
 export class NxProjectedCodeBlock implements AfterViewInit {
     constructor(private el: ElementRef) {}
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         Array.from(this.el.nativeElement.querySelectorAll('pre')).forEach(
             (el: HTMLPreElement) => {
                 const nodes = el.innerHTML.split('<br>');

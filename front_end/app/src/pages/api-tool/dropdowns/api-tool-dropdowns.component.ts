@@ -45,7 +45,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         this.CONFIG = this.configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.APIToolSystemService.systemEmitter$.pipe(untilDestroyed(this), filter(systemInfo => !!systemInfo)).subscribe(({ info: system, disabled, error }) => {
             const existingItem = this.systems.find(systemItem => systemItem.value === system.id);
             const sysName = makeSystemName(system);

@@ -44,7 +44,7 @@ export class RemoveUserModalContent {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'user'], this);
 
         const msg = this.user.isCloud ? 'remove' : 'delete';

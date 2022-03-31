@@ -95,7 +95,7 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
         private el: ElementRef
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.required = Boolean(this.required); // handle "undefined" and string values
         // disabled state is controller by "setDisabledState"
     }

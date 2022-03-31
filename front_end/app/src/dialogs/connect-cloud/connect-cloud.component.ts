@@ -61,7 +61,7 @@ export class ConnectCloudModalContent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['account', 'system'], this);
 
         this.setupProcess();

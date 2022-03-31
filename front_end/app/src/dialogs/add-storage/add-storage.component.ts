@@ -94,7 +94,7 @@ export class AddStorageModalContent {
         return forbidden ? { forbiddenUrl: true } : null;
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
 
         this.storageForm = new FormGroup({

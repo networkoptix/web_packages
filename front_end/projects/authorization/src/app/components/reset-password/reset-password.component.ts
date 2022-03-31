@@ -55,7 +55,7 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
         };
     }
 
-    ngOnChanges(changes: NgChanges<NxAuthorizeResetPasswordComponent>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeResetPasswordComponent>): void {
         // if (changes.errorCode) {
         //     this.resetForm?.controls.password.setErrors({ [changes.errorCode.currentValue]: true });
         // }

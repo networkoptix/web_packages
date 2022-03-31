@@ -130,10 +130,10 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         ];
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.uriSubscription = this.uri.getParams()
             .subscribe(params => {
                 if (params.debug !== undefined) {
@@ -166,7 +166,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxVendorListComponent>) {
+    ngOnChanges(changes: NgChanges<NxVendorListComponent>): void {
         if (changes.vendors) {
             this.allVendors = changes.vendors.currentValue;
             this.setVendorsShown(changes.vendors.currentValue);

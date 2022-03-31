@@ -76,7 +76,7 @@ export class NxDynamicWidgetComponent {
 
     showAction = action => this.openAction.emit(action);
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.initializeWidget();
     }
 

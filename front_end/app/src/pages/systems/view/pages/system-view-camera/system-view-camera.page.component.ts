@@ -575,7 +575,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return records.sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         this.$self.classList.add('controls-shown');
 
         // this.fpsMeter.install()

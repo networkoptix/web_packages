@@ -61,7 +61,7 @@ export class NxAPIToolComponent {
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.APIToolService.serversLoading$.pipe(untilDestroyed(this), filter(loading => !loading)).subscribe(() => {
             this.setMenuOffset();
         });

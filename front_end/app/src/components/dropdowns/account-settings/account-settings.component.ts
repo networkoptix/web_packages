@@ -57,7 +57,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         super(languageService, configService);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.accountSubscription = this.accountService.accountSubject
             .subscribe(account => {
                 if (account) {
@@ -92,7 +92,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
             });
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     logout(): void {
         this.accountService.logout(false);

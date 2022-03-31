@@ -28,7 +28,7 @@ export class NxToast implements OnChanges {
     constructor() {
     }
 
-    ngOnChanges(changes: NgChanges<NxToast>) {
+    ngOnChanges(changes: NgChanges<NxToast>): void {
         if (changes.toast.currentValue) {
             this.isTemplate = this.toast.textOrTpl instanceof TemplateRef;
 

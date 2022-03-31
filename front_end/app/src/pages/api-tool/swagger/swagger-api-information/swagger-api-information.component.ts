@@ -42,7 +42,7 @@ export class NxSwaggerAPIInformationComponent {
         }
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.modifyElements();
     }
 }

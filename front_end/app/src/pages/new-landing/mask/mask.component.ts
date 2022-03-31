@@ -51,7 +51,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         );
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         // 1200 ms is an arbitrary number, it just matters that the scale is changed before the intro animation is finished
         // otherwise angular will re-check the scale and apply the initial max size to it again when it should be small
         if (!this.landingService.introAnimationFinished$.value) {
@@ -59,7 +59,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxMaskComponent>) {
+    ngOnChanges(changes: NgChanges<NxMaskComponent>): void {
         if (
             this.landingService.introAnimationFinished$.value &&
             changes.scrollPosition.previousValue !== changes.scrollPosition.currentValue
@@ -74,13 +74,13 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         }
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         setTimeout(() => {
             this.landingService.maskFinishedLoading$.next(true);
         }, 0);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.landingService.maskFinishedLoading$.next(false);
     }
 }

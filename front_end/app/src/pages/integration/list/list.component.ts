@@ -37,11 +37,11 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.LANG = language.translations;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.ribbonService.hide();
     }
 
-    ngOnChanges(changes: NgChanges<NxIntegrationsListComponent>) {
+    ngOnChanges(changes: NgChanges<NxIntegrationsListComponent>): void {
         if (changes.list.currentValue) {
             const haveInReviewOrDraft = changes.list.currentValue
                 .some(plugin => plugin.pending || plugin.draft);

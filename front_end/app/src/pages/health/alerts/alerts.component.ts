@@ -206,7 +206,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.healthLayoutService.dimensions = [];
         this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
             this.healthLayoutService.tilesElement = this.tilesElement;
@@ -237,7 +237,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         return item ? item.entity : undefined;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.healthLayoutService.resetActiveEntity();
     }
 

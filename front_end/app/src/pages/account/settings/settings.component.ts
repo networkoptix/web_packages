@@ -72,7 +72,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.account();
         this.applyService.initPageFormsWatcher(this.pageApply);
 
@@ -129,7 +129,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.applyService.removeWatchers();
     }
 

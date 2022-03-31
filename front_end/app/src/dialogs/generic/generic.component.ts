@@ -31,7 +31,7 @@ export class GenericModalContent implements OnInit {
         @Inject(DIALOG_DATA) private dialogData: any,
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(
             this.dialogData,
             [

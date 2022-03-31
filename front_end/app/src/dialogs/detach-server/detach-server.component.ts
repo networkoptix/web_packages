@@ -47,7 +47,7 @@ export class DetachServerModalContent {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
         const options = {

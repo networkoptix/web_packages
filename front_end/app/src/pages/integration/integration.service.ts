@@ -277,7 +277,7 @@ export class IntegrationService implements OnDestroy {
         return this.pluginSubject.value;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.integrationSubject.unsubscribe();
         this.pluginsSubject.unsubscribe();
     }

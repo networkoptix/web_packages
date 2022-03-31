@@ -74,7 +74,7 @@ export class MessageModalContent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['account', 'messageType', 'data'], this);
 
         this.initForm();

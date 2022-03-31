@@ -38,7 +38,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         const options: NodeListOf<HTMLOptionElement> = this.swaggerSelect.querySelectorAll('option');
         for (const option of options) {
             if (this.isMultiSelect) {
@@ -83,7 +83,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.disabledMutationObserver.disconnect();
         this.swaggerSelect = null;
     }

@@ -60,7 +60,7 @@ export class NxContentBlockComponent implements OnInit {
         this.haveFooter = true;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.haveHeader = (this.headerWrapper.nativeElement.childNodes[0]?.childNodes.length > 0);
         this.haveFooter = (this.footerWrapper.nativeElement.childNodes?.length > 0);
 

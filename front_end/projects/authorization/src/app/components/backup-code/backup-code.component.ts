@@ -79,7 +79,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
         });
     }
 
-    ngOnChanges(changes: NgChanges<NxAuthorizeBackupCodeComponent>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeBackupCodeComponent>): void {
         if (changes.errorCode?.currentValue) {
             this.backupCodeForm?.controls.backupCode.setErrors({ [changes.errorCode.currentValue]: true });
         }

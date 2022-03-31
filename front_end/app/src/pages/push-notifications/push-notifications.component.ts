@@ -73,7 +73,7 @@ export class PushComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {

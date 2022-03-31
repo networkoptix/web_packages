@@ -86,7 +86,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
         });
     }
 
-    ngOnChanges(changes: NgChanges<NxPermissionsDropdown>) {
+    ngOnChanges(changes: NgChanges<NxPermissionsDropdown>): void {
         if (changes.roles?.currentValue) {
             this.processAccessRoles();
             const role = this.accessRoles.filter(x =>

@@ -651,7 +651,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         );
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.relatedLinksFiltered$ = combineLatest([
             this.kbService.activeAssetIdSubject,
             this.relatedLinks$
@@ -702,7 +702,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         setTimeout(() => {
             this.appStateService.altBackground = false;
         });

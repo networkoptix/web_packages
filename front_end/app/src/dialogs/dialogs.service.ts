@@ -100,7 +100,7 @@ export class NxDialogsService {
             });
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
     }
 
     public dismiss() {

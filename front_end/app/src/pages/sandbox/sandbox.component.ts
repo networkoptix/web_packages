@@ -22,7 +22,7 @@ export class NxSandboxComponent {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.content = {
             base: '/sandbox',
             selectedSection: 'components',

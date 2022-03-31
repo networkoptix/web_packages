@@ -38,7 +38,7 @@ export class DeleteCloudUserModalContent {
         this.LANG = this.language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['cloudApi'], this);
 
         this.deleteCloudUser = this.processService

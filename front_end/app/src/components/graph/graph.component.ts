@@ -91,7 +91,7 @@ export class NxMonitoringGraphComponent implements OnInit {
         this.multi = [];
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         timer(0, 1000).pipe(
             untilDestroyed(this)
         ).subscribe(() => {

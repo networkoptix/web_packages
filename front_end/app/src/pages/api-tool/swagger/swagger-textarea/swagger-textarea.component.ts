@@ -27,12 +27,12 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
                 private APIToolService: NxAPIToolSystemService,
                 private elementRef: ElementRef) { }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.isDisabled = this.textarea.getAttribute('disabled') === '';
         this.isInvalid = !!this.textarea.getAttribute('title'); // Swagger uses title for errors
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         const element = this.customTextareaRef.nativeElement;
         const elementExistsInTextareaMap = setCodeBlockHTML(element, this.textareaMap, 'textarea');
         if (!elementExistsInTextareaMap) {
@@ -151,7 +151,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.attributeMutationObserver.disconnect();
         this.textareaMap = null;
         this.textarea = null;

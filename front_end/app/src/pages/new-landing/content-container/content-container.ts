@@ -153,7 +153,7 @@ export class NxContentContainerComponent implements AfterViewInit {
         return 'adaptive';
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.landingService.contentStartRef = this.contentStartRef;
     }
 }

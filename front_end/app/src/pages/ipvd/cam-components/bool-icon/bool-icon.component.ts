@@ -23,10 +23,10 @@ export class BoolIconComponent implements OnInit {
     constructor() {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
-    ngOnChanges(changes: NgChanges<BoolIconComponent>) {
+    ngOnChanges(changes: NgChanges<BoolIconComponent>): void {
         if (changes.value) {
             this.value = changes.value.currentValue;
             this.additional = '';

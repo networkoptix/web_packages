@@ -51,7 +51,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         }
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'camera', 'updateCallback'], this);
 
         const [loginName, password] = (

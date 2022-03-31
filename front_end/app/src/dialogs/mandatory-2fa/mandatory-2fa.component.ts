@@ -53,7 +53,7 @@ export class Mandatory2faModalContent {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system2faEnabled', 'system'], this);
 
         this.showError = !this.accountService.account.totpExistsForAccount;

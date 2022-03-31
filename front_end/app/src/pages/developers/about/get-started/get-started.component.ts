@@ -29,7 +29,7 @@ export class NxGetStartedComponent implements OnChanges {
         this.errorManager = new ErrorStateManager(this.window);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const getStartedConfig = this.errorManager.buildConfig(
             ['title'],
             this.errorManager.buildConfig(

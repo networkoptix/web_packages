@@ -35,7 +35,7 @@ export class NxMonitoringComponent implements AfterViewInit {
         this.CONFIG = configService.getConfig();
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.system = this.settingsService.system;
     }
 }

@@ -26,7 +26,7 @@ export class NgrxDemoBooksComponent {
         private store: Store
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.booksService
             .getBooks()
             .subscribe(books => this.store.dispatch(retrievedBookList({ books })));

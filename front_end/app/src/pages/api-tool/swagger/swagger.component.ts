@@ -87,7 +87,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         this.CONFIG = this.configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.openAPIJSONService.currentAPIDoc$.pipe(untilDestroyed(this)).subscribe(doc => {
             this.currentAPIDoc = doc;
         });
@@ -483,7 +483,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    ngOnChanges(changes: NgChanges<NxSwaggerComponent>) {
+    ngOnChanges(changes: NgChanges<NxSwaggerComponent>): void {
         if (changes.activeNode.currentValue) {
             const node: MenuNode = changes.activeNode.currentValue;
             const isSingleView = this.isAPIRouteNode(node);

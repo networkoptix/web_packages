@@ -61,7 +61,7 @@ export class RestartServerModalContent {
         }, 0);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
         const options = {

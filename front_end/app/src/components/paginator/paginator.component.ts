@@ -96,7 +96,7 @@ export class NxPaginatorComponent {
             });
     }
 
-    ngOnChanges(changes: NgChanges<NxPaginatorComponent>) {
+    ngOnChanges(changes: NgChanges<NxPaginatorComponent>): void {
         if (changes.numPages && (changes.numPages.previousValue !== changes.numPages.currentValue)) {
             // TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
             if (this.CONFIG?.featureFlags.paginatorExperimental) {

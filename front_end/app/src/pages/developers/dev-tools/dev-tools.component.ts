@@ -39,7 +39,7 @@ export class NxDevToolsComponent implements OnInit {
         this.errorManager = new ErrorStateManager(this.window);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         let snapshot = this.route.snapshot;
         while (!snapshot.paramMap.get('name')) {
             snapshot = snapshot.parent;

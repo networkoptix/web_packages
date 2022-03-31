@@ -16,7 +16,7 @@ export class NxScrollMechanicsDirective implements OnInit {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         setTimeout(() => {
             this.renderer.setStyle(this.element.nativeElement, 'width', '100%');
 

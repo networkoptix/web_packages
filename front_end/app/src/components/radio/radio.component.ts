@@ -69,7 +69,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
         return null; // valid
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.state = this._rbxStates.rbFalse; // 'unchecked'
     }
 

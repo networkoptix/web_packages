@@ -41,9 +41,9 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
         this.ready = false;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         if (typeof this.imageSize === 'undefined') {
             return;
         }

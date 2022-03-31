@@ -37,13 +37,13 @@ export class NxDevConsoleMenuComponent {
         this.CONFIG = configService.config;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.showAdditionalLinks = ![
             ConsoleSection.CUSTOM_CLIENTS
         ].includes(this.sectionParam);
     }
 
-    ngOnChanges(changes: NgChanges<NxDevConsoleMenuComponent>) {
+    ngOnChanges(changes: NgChanges<NxDevConsoleMenuComponent>): void {
         const {
             menu: { currentValue: menu }
         } = changes;

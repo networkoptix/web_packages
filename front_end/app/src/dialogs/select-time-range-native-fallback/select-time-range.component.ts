@@ -66,7 +66,7 @@ export class SelectTimeRangeModalContent {
         }
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.start = new Date(this.selection.range.start - this._timezoneOffset);
         this.end = new Date(this.selection.range.end - this._timezoneOffset);
 

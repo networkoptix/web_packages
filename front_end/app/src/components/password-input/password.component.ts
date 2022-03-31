@@ -181,10 +181,10 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         this.form.form.get(this.componentId).markAsUntouched();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.tagWidth = 0;
         this.fairPassword = true;
         this.passwordToggle = true;

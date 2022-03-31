@@ -118,7 +118,7 @@ export class NxDropMenu extends BaseDropdown {
         });
     }
 
-    async ngOnChanges(changes: NgChanges<NxDropMenu>) {
+    async ngOnChanges(changes: NgChanges<NxDropMenu>): Promise<void> {
         if (changes.systems.currentValue !== changes.systems.previousValue) {
             // Todo: Fix so that it checks for admin correctly.
             let user: any;

@@ -29,7 +29,7 @@ export class NxExternalVideoComponent implements OnInit {
         return undefined;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.src = this.sanitizeLink(this.FormatSrc(this.videoSrc));
     }
 

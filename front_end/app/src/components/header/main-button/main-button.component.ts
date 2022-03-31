@@ -52,7 +52,7 @@ export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
         this.systemCounter = this.systems?.length ?? 0;
     }
 
-    ngOnChanges(changes: NgChanges<NxHeaderMainButtonComponent>) {
+    ngOnChanges(changes: NgChanges<NxHeaderMainButtonComponent>): void {
         this.systemCounter = this.systems?.length ?? 0;
     }
 

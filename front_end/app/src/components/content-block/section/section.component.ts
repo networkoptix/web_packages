@@ -40,7 +40,7 @@ export class NxContentBlockSectionComponent implements OnInit {
         // this.haveSubheader = true;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.type = this.type || '';
         this.haveSubheader =
             (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);

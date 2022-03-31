@@ -59,11 +59,11 @@ export class NxEditableHeading implements OnInit, OnChanges {
         this.CONFIG = configService.config;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.componentId = (this.id || this.name) + '-editable';
     }
 
-    ngOnChanges(changes: NgChanges<NxEditableHeading>) {
+    ngOnChanges(changes: NgChanges<NxEditableHeading>): void {
         if (changes.nameWatcherValue?.currentValue) {
             this.value = changes.nameWatcherValue.currentValue;
         }

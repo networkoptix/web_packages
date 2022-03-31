@@ -111,7 +111,7 @@ export class FormApplyExampleComponent {
         ];
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'applyServiceForm';
 
@@ -136,7 +136,7 @@ export class FormApplyExampleComponent {
         });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.formWatcher = this.applyService.createFormWatcher(
             'form1',
             this.form1,

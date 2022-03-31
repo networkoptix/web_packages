@@ -18,11 +18,11 @@ export class NxFocusMeDirective implements OnInit, AfterViewInit, OnChanges {
 
     constructor(private _elementRef: ElementRef) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.setFocus = (this.setFocus !== undefined) ? this.setFocus : true;
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         // Timeout is needed for directly navigated pages
         // ... i.e. desktop client opens /register?....
         if (this.setFocus) {
@@ -32,7 +32,7 @@ export class NxFocusMeDirective implements OnInit, AfterViewInit, OnChanges {
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxFocusMeDirective>) {
+    ngOnChanges(changes: NgChanges<NxFocusMeDirective>): void {
         if (changes.setFocus?.currentValue) {
             setTimeout(() => {
                 this._elementRef.nativeElement.focus();

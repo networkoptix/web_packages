@@ -242,5 +242,5 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 }

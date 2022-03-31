@@ -50,7 +50,7 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
         this.name = '';
     }
 
-    ngAfterContentInit() { // AfterViewInit causes detection change error
+    ngAfterContentInit(): void { // AfterViewInit causes detection change error
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
             this.scrollMechanicsService.panelVisible = true;
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';

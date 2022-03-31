@@ -57,7 +57,7 @@ export class NxDevConsoleEditComponent {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const getMethod = (action: string) => {
             const [subAPI, method] = ({
                 [ConsoleSection.CUSTOM_CLIENTS]: {

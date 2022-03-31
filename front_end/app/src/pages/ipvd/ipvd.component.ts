@@ -207,7 +207,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         // Example URI
         // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
         this.params = this.route.snapshot.queryParams;
@@ -268,14 +268,14 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         if (this.searchContainer?.nativeElement) {
             this.scrollMechanicsService.searchViewHeight =
                 this.searchContainer.nativeElement.clientHeight;
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.targets = clearPseudoAnchors(this.targets);
     }
 

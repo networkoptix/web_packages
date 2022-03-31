@@ -52,7 +52,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         });
     }
 
-    ngOnChanges(changes: NgChanges<NxImageComponent>) {
+    ngOnChanges(changes: NgChanges<NxImageComponent>): void {
         if (!(Object.keys(changes).length === 1 && changes.state)) {
             const firstChange = Object.values(changes)
                 .reduce(
@@ -76,5 +76,5 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 }

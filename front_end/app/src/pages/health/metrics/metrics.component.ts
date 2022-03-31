@@ -185,7 +185,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.healthLayoutService.dimensions = [];
 
         this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
@@ -215,7 +215,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.healthLayoutService.resetActiveEntity();
     }
 

@@ -83,11 +83,11 @@ export class NxEditableDirective implements OnInit {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.editOff();
     }
 
-    ngOnChanges(changes: NgChanges<NxEditableDirective>) {
+    ngOnChanges(changes: NgChanges<NxEditableDirective>): void {
         this.checkError();
     }
 

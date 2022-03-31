@@ -62,7 +62,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
         ).toPromise();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system$', 'updateCallback'], this);
 
         this.auth.password = '';

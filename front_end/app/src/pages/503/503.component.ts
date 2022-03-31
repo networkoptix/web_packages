@@ -34,7 +34,7 @@ export class Nx503Component implements OnInit {
         this.appState.headerVisibility = false;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.apiService
             .getStatic('/static/503.html')
             .toPromise()
@@ -44,7 +44,7 @@ export class Nx503Component implements OnInit {
             }).catch(ex => { console.error(ex); });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         setTimeout(() => {
             this.bootstrapProvider
                 .load()

@@ -83,7 +83,7 @@ export class AddUserModalContent {
             });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system'], this);
 
         this.alreadyExists = this.LANG.dialogs.addUser.alreadyExists()

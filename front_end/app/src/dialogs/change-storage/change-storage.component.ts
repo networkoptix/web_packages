@@ -35,7 +35,7 @@ export class ChangeStorageModalContent {
         this.LANG = language.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.deleteAnalyticsData = this.processService
             .createProcess(
                 () => this.deleteAnalyticsDataProcess(),

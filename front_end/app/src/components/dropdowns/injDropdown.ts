@@ -40,7 +40,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
         this.show = false;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 
     // needed for @UntilDestroy

@@ -74,7 +74,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         ).toPromise();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system$', 'updateCallback'], this);
 
         this.system$.subscribe(system => {

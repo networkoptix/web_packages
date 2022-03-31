@@ -107,7 +107,7 @@ export class NxCloudStorageComponent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.setupDefaults();
         this.cloudStorageInitial = this.LANG.dialogs.cloudStorage.initial({
             compCapacity: this.compCloudCapacity

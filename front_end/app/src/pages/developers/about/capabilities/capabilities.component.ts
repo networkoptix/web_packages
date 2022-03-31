@@ -26,7 +26,7 @@ export class NxCapabilitiesComponent {
         this.errorManager = new ErrorStateManager(this.window);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.capabilitiesNode = {
             ...this.capabilitiesNode,
             nodes: this.capabilitiesNode.nodes

@@ -61,7 +61,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
         };
     }
 
-    ngOnChanges(changes: NgChanges<NxAuthorizeResetRequestComponent>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeResetRequestComponent>): void {
         if (changes.errorCode?.currentValue) {
             setTimeout(() => {
                 this.resetPasswordForm?.controls.resetPasswordEmail.setErrors({

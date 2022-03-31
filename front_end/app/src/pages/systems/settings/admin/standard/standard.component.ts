@@ -180,7 +180,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             .find(system => system.id === this.system.id)?.system2faEnabled;
     }
 
-    ngOnChanges(changes: NgChanges<NxSystemStandardAdminComponent>) {
+    ngOnChanges(changes: NgChanges<NxSystemStandardAdminComponent>): void {
         if (changes.settings && this.system.isOnline) {
             const { previousValue, currentValue, firstChange } = changes.settings;
             if (
@@ -194,7 +194,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.applyService.removeWatchers();
     }
 

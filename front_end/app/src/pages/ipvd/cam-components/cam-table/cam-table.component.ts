@@ -211,7 +211,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         };
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.params = this.route.snapshot.queryParams;
         this.setDebugAndBetaMode();
 
@@ -314,11 +314,11 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.targets = clearPseudoAnchors(this.targets);
     }
 
-    ngOnChanges(changes: NgChanges<CamTableComponent>) {
+    ngOnChanges(changes: NgChanges<CamTableComponent>): void {
         if (changes.elements) {
             if (changes.elements.firstChange ||
                     (!changes.elements.firstChange &&

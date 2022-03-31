@@ -203,7 +203,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.ribbonService.hide();
         this.plugin = undefined;
         this.pageService.setDefaultLayout();

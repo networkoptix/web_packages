@@ -53,7 +53,7 @@ export class NxLoggerComponent implements AfterViewInit {
             .then(handleLogResponse, ({ error }) => handleLogResponse(error));
     }
 
-    async ngAfterViewInit() {
+    async ngAfterViewInit(): Promise<void> {
         if (!environment.isLocal) {
             this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
         }

@@ -67,7 +67,7 @@ export class RemoveSystemModalContent {
         return true;
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['system'], this);
 
         this.auth.username = this.system.userManager.currentUserEmail;

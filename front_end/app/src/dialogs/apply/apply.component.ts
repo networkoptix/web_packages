@@ -25,7 +25,7 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);
     }
 

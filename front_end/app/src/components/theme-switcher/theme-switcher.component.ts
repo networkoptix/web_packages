@@ -24,7 +24,7 @@ export class NxThemeSwitcherComponent implements OnInit {
         @Inject(WINDOW) protected window: Window,
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.theme = this.localStorageService.retrieve('theme');
         NxConfigService.isDarkTheme = this.theme === 'dark';
     }

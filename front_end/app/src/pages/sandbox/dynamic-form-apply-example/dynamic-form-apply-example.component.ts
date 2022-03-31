@@ -42,7 +42,7 @@ export class DynamicFormApplyExampleComponent {
         };
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.form2Group = this.formBuilder.group({
             fields: this.formBuilder.array([])
         });
@@ -55,7 +55,7 @@ export class DynamicFormApplyExampleComponent {
         });
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.formWatcher = this.applyService.createFormWatcher(
             'form3',
             this.form3,

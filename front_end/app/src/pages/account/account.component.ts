@@ -39,7 +39,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.loginStateSubscription = this.sessionService.loginStateSubject

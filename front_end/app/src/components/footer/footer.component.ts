@@ -41,9 +41,9 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;

@@ -30,7 +30,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.height = this.height || '96';
         this.isUrl = !this.description.includes(' ');
     }

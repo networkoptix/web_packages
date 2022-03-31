@@ -25,7 +25,7 @@ export class NxCookieBannerComponent implements OnInit {
         this.CONFIG = config.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.cookieBannerReviewed =
             this.localStorage.retrieve('cookiereviewed') === true;
 

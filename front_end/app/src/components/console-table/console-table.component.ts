@@ -238,7 +238,7 @@ export class NxConsoleTableComponent {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
     }
 
-    async ngOnChanges({ sectionParam }: NgChanges<NxConsoleTableComponent>) {
+    async ngOnChanges({ sectionParam }: NgChanges<NxConsoleTableComponent>): Promise<void> {
         if (sectionParam && (sectionParam.firstChange || sectionParam.currentValue !== sectionParam.previousValue)) {
             this.selectedManifest = null;
             this.displayedColumns = null;

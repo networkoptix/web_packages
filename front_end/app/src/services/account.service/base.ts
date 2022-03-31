@@ -154,7 +154,7 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.loginSubscription.unsubscribe();
         this.queryParamSubscription.unsubscribe();
     }

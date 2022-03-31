@@ -58,10 +58,10 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.ribbonSubscription = this.ribbonService.contextSubject.subscribe(context => {
             this.visibility = context.visibility || false;
             this.message = context.message || '';

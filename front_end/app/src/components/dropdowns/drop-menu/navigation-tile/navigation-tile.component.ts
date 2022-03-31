@@ -32,7 +32,7 @@ export class NxNavigationTileComponent {
         this.iconsDir = this.CONFIG.icons.dir;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.loginStateSubscription =
             this.sessionService.loginStateSubject.subscribe(_ => {
                 this.authState = this.sessionService.email
@@ -43,7 +43,7 @@ export class NxNavigationTileComponent {
         this._setupIds();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     checkActive(node) {
         const { childNode } = this.headerService.currentLocation;

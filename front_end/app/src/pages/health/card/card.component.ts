@@ -17,6 +17,6 @@ export class NxSystemAlertCardComponent implements OnInit {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
     }
 }

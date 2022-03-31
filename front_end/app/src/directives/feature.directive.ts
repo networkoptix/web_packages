@@ -21,7 +21,7 @@ export class FeatureFlagDirective {
     ) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         if (this.configService.flagsEnabled(this.featureFlag)) {
             this.vcr.createEmbeddedView(this.tpl);
         }

@@ -200,7 +200,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .catch(() => { console.error('something went wrong'); });
     };
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(
             this.dialogData,
             [
@@ -470,7 +470,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         if (this.type === '2fa-off') {
             this.setTemplate(T_FA_STEPS.Disable2FaCode);
         } else if (this.type === 'changePassword') {

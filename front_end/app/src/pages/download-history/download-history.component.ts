@@ -192,5 +192,5 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 }

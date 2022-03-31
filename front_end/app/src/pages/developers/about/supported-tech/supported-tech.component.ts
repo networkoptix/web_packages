@@ -30,7 +30,7 @@ export class NxSupportedTechComponent {
         this.errorManager = new ErrorStateManager(this.window);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const { nodes, ...supportedTech } = this.supportedTechNode;
         this.supportedTechNode = {
             ...supportedTech,

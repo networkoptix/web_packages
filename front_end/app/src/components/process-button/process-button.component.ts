@@ -44,7 +44,7 @@ export class NxProcessButtonComponent implements OnInit {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         if (!this.clickFn) {
             this.clickFn = () => {
             };

@@ -104,7 +104,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
         }
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.componentId = (this.id || this.name || 'generic') + '-numeric';
     }
 

@@ -15,7 +15,7 @@ export class NxProjectedLinkHandler implements AfterViewInit {
 
     constructor(private el: ElementRef) {}
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         Array.from(this.el.nativeElement.querySelectorAll('a')).forEach(
             (el: HTMLAnchorElement) => {
                 const linkEmitter = e => {

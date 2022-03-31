@@ -169,7 +169,7 @@ export class NxAdvancedFilterComponent {
         return data;
     };
 
-    ngOnChanges(changes: NgChanges<NxAdvancedFilterComponent>) {
+    ngOnChanges(changes: NgChanges<NxAdvancedFilterComponent>): void {
         if (
             changes.initialState &&
             changes.initialState.previousValue === undefined &&

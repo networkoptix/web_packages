@@ -15,7 +15,7 @@ export class NxAddSvgSrc implements OnChanges {
 
     constructor(private elementRef: ElementRef) {}
 
-    ngOnChanges({ src: { currentValue, previousValue } }: NgChanges<NxAddSvgSrc>) {
+    ngOnChanges({ src: { currentValue, previousValue } }: NgChanges<NxAddSvgSrc>): void {
         if (currentValue !== previousValue) {
             this.elementRef.nativeElement.dataset.src = this.src;
         }

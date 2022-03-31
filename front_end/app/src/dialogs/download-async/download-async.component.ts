@@ -156,7 +156,7 @@ export class DownloadAsyncModalContent implements ModalContent {
         this.CONFIG = configService.config;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(
             this.dialogData,
             ['heading', 'modal', 'manifest', 'values'],

@@ -617,5 +617,5 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.window.location.href = route || this.initialData.redirect_url || '/';
     };
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 }

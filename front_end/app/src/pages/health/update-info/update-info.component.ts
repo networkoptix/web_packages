@@ -42,9 +42,9 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.initUpdateTime();
         this.updateHealth.subscribe(() => {
             this.initUpdateTime();

@@ -78,7 +78,7 @@ export class NxPagePlaceholderComponent implements OnInit {
         this.setupPlaceholder();
     }
 
-    ngOnChanges(changes: NgChanges<NxPagePlaceholderComponent>) {
+    ngOnChanges(changes: NgChanges<NxPagePlaceholderComponent>): void {
         if (!changes.data?.firstChange) {
             this.setupPlaceholder();
         }

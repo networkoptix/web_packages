@@ -59,7 +59,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.setupDefaults(configService);
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.LANG = this.language.translations;

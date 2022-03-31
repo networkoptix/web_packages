@@ -65,7 +65,7 @@ export class DisconnectModalContent {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         pickFrom(this.dialogData, ['account', 'system'], this);
 
         // const passwordError = () => {

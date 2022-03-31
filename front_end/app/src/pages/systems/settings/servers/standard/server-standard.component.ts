@@ -150,7 +150,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnChanges(changes: NgChanges<NxSystemStandardServerComponent>) {
+    ngOnChanges(changes: NgChanges<NxSystemStandardServerComponent>): void {
         if (changes.system?.currentValue?.info && this.system.canViewInfo()) {
             this.fullInfoPath = this.uriService.getSystemSettingsRoute({
                 systemId: this.system.id,
@@ -178,7 +178,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.destroyRestartTake$.complete();
     }
 
