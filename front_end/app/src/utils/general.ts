@@ -90,7 +90,7 @@ export function moveArrayElem<T>(
  * @param fn - A function which will be passed the array items being compared
  * @param ascendingOrder - Sort by ascending order (default)
 */
-export function paramSortFunc<Param = unknown>(
+export function paramSortFunc<Param>(
     fn: (param: Param) => unknown,
     ascendingOrder: boolean = true
 ): (a: Param, b: Param) => number {
