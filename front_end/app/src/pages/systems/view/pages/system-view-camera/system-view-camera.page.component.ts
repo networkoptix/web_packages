@@ -133,7 +133,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.archiveSelectionEnabled = this.configService.flagsEnabled(
             'archiveSelection'
         );
+
+        this.isLocal = environment.isLocal;
     }
+
+    public isLocal: boolean = false
 
     public cameraDetailsShown: boolean = false
 

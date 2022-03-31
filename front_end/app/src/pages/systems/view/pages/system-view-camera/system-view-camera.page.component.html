@@ -46,7 +46,7 @@
   </header>
 
   <nx-camera-details
-    *ngIf="CONFIG.featureFlags.viewCameraDetails && cameraDetailsShown"
+    *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails) && cameraDetailsShown"
     [camera]="camera" (close)="toggleCameraDetails(false)">
   </nx-camera-details>
 
@@ -77,7 +77,7 @@
       </ng-template>
     </div>
     <div
-      *ngIf="CONFIG.featureFlags.viewCameraDetails"
+      *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails)"
       class="section camera-details-toggler"
       (click)="toggleCameraDetails()"
     >Camera Details</div>
