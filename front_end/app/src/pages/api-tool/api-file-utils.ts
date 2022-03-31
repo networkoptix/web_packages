@@ -185,8 +185,14 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
     });
 };
 
-const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[]) => {
-    if (API.info && API.info.description) {
-        menuNodes.push(new MenuNode('API Information', appendBaseAPIToolRoute('main'), 'API Information'));
+export const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[], restAPIInfo: boolean = false) => {
+    if (restAPIInfo) {
+        menuNodes.unshift(new MenuNode('APIChangelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'));
+        menuNodes.unshift(new MenuNode('APIPreamble', appendBaseAPIToolRoute('main'), 'API Information'));
+        return;
+    }
+
+    if (API?.info?.description) {
+        menuNodes.unshift(new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'));
     }
 };

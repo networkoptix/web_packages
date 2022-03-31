@@ -21,7 +21,7 @@ import { NxUriService } from '@services/uri.service';
 
 import type { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, ServerInfo } from './api-tool-service-types';
+import type { APIToolCacheObject, EmitInfo, Markdown, ServerInfo } from './api-tool-service-types';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
 @UntilDestroy()
@@ -51,8 +51,8 @@ export class NxAPIToolSystemService {
         this.systemEmitter$.next({ info: system, disabled, error });
     }
 
-    emitServer(server: NxSystemServer, json: APIDoc, disabled = false, error = '') {
-        this.serverEmitter$.next({ info: { server, json }, disabled, error });
+    emitServer(server: NxSystemServer, json: APIDoc, disabled = false, error = '', markdown = null) {
+        this.serverEmitter$.next({ info: { server, json, markdown }, disabled, error });
     }
 
     queryParams: Params;
@@ -234,7 +234,7 @@ export class NxAPIToolSystemService {
     private getServersAndJSONs() {
         let validServerFound = false;
         this.mediaServer.updating = true;
-        const cachedJSON = this.retrieveJSONFromLocalStorage('main');
+        const cachedItem = this.retrieveJSONFromLocalStorage('main');
         if (this.currentSystem.currentServerNotBusy) {
             if (this.currentSystem?.serverManager.servers?.length) {
                 this.currentSystem.serverManager
@@ -243,20 +243,17 @@ export class NxAPIToolSystemService {
                         this.currentSystem.serverManager.servers.forEach(server => {
                             if (!validServerFound) { // Loop skips all other servers after a single valid server is found
                                 if (server.status !== 'Offline') {
-                                    if (cachedJSON) {
-                                        this.setRequestURL(cachedJSON, server.id);
+                                    if (cachedItem) {
+                                        const { json, markdown } = cachedItem;
+                                        this.setRequestURL(json, server.id);
                                         this.currentServerId = server.id;
-                                        this.emitServer(server, cachedJSON);
+                                        markdown ? this.emitServer(server, json, false, '', markdown) : this.emitServer(server, json);
                                         validServerFound = true;
                                         this.serversFinishedLoading();
                                     } else {
                                         this.getAPIDoc(server.id, 'main')
-                                            .then((response: APIDoc) => {
-                                                const json = response;
-                                                this.storeJSONInLocalStorage(json, 'main');
-                                                this.setRequestURL(json, server.id);
-                                                this.currentServerId = this.currentServerId || server.id;
-                                                this.emitServer(server, json);
+                                            .then(async (response: APIDoc) => {
+                                                await this.handleSuccessfulAPIDocGet(server, response);
                                                 validServerFound = true;
                                             }).catch(err => {
                                                 const typeOfError = err.status === 404 ? 'Incompatible' : 'Error';
@@ -284,6 +281,15 @@ export class NxAPIToolSystemService {
                 this.mediaServer.updating = false;
             }
         }
+    }
+
+    async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc) {
+        let markdown = await this.getAPIInfoMarkdown(server.id);
+        markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
+        this.storeJSONInLocalStorage(json, 'main', markdown);
+        this.setRequestURL(json, server.id);
+        this.currentServerId = this.currentServerId || server.id;
+        this.emitServer(server, json, false, '', markdown);
     }
 
     getLocalSystem() {
@@ -322,10 +328,10 @@ export class NxAPIToolSystemService {
         let legacyAPI: APIDoc;
         let deprecatedAPI: APIDoc;
 
-        legacyAPI = this.retrieveJSONFromLocalStorage('legacy');
-        deprecatedAPI = this.retrieveJSONFromLocalStorage('deprecated');
+        legacyAPI = this.retrieveJSONFromLocalStorage('legacy')?.json;
+        deprecatedAPI = this.retrieveJSONFromLocalStorage('deprecated')?.json;
 
-        // Optional chaining here because getApiDoc returns undefined if system version is below 5.0
+        // Optional chaining here because getAPIDoc returns undefined if system version is below 5.0
         const legacyAPICall = legacyAPI || this.getAPIDoc(serverID, 'legacy')?.then(response => {
             this.storeJSONInLocalStorage(response, 'legacy');
             legacyAPI = response;
@@ -337,7 +343,7 @@ export class NxAPIToolSystemService {
         await legacyAPICall;
         await deprecatedAPICall;
 
-        return [legacyAPI, deprecatedAPI];
+        return { legacyAPI, deprecatedAPI };
     }
 
     emitAllSystems(systems: NxSystemWithUserInfo[]) {
@@ -420,24 +426,42 @@ export class NxAPIToolSystemService {
             .getApiDoc(serverId, type);
     }
 
+    async getAPIInfoMarkdown(serverID: string) {
+        let APIPreamble;
+        let APIChangelog;
+        if (this.isRestAPI(serverID)) {
+            const changeLog = this.currentSystem.serverManager.getApiChangelog(serverID)?.then((api: any) => {
+                APIChangelog = api;
+            }).catch(() => {});
+
+            const preamble = this.currentSystem.serverManager.getApiPreamble(serverID)?.then((api: any) => {
+                APIPreamble = api;
+            }).catch(() => {});
+
+            await changeLog;
+            await preamble;
+        }
+
+        return { APIPreamble, APIChangelog };
+    }
+
     private makeLSKey = (systemId: string, type: APIDocType) => {
         return systemId + ' api-tool JSON ' + type;
     };
 
-    private retrieveJSONFromLocalStorage = (type: APIDocType): APIDoc => {
+    private retrieveJSONFromLocalStorage = (type: APIDocType): APIToolCacheObject => {
         if (this.queryParams.disableCache) return null;
 
         const version = this.systemVersion;
-        const cachedItem = this.localStorage.retrieve(this.makeLSKey(this.currentSystemId, type));
+        const cachedItem: APIToolCacheObject = this.localStorage.retrieve(this.makeLSKey(this.currentSystemId, type));
         if (version !== cachedItem?.version) return null; // invalidate cache if system version changes
-        return cachedItem?.json;
+        return cachedItem;
     };
 
-    private storeJSONInLocalStorage = (json: APIDoc, type: APIDocType) => {
+    private storeJSONInLocalStorage = (json: APIDoc, type: APIDocType, cachedMarkdown: Markdown = null) => {
         if (this.queryParams.disableCache) return null;
-
         const version = this.systemVersion;
-        const cacheObject = { version, json };
+        const cacheObject: APIToolCacheObject = cachedMarkdown ? { version, json, markdown: cachedMarkdown } : { version, json };
         this.localStorage.store(this.makeLSKey(this.currentSystemId, type), cacheObject);
     };
 

@@ -80,10 +80,10 @@ export class NxReadonlyAPIService {
             this.currentReadonlyAPI = this.readonlyAPIStore[id];
             return true;
         }
-        const key = Object.keys(this.readonlyAPIStore)[0];
-        if (key) {
+        const firstReadonlyAPIKey = Object.keys(this.readonlyAPIStore)[0];
+        if (firstReadonlyAPIKey) {
             // Set to any readonlyAPI
-            this.currentReadonlyAPI = this.readonlyAPIStore[parseInt(key)];
+            this.currentReadonlyAPI = this.readonlyAPIStore[parseInt(firstReadonlyAPIKey)];
             return true;
         }
 

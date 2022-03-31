@@ -313,9 +313,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private modifyCodeBlocksAndTextareas = () => {
         const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
         for (const element of elements) {
-            if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.nodeName === 'DIV' && element.classList.contains('highlight-code'))) {
-                const container = element.closest('div');
-                container?.classList.add('highlight-code');
+            if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.classList.contains('with-line-counter'))) {
+                if (element.parentElement.tagName !== 'DIV' || !element.parentElement.classList.contains('highlight-code')) {
+                    const wrapper = this.document.createElement('div');
+                    element.parentElement.replaceChild(wrapper, element);
+                    wrapper.appendChild(element);
+                }
+                element.parentElement.classList.add('highlight-code');
+                element?.classList.add('with-line-counter');
                 this.addLineCounter(element);
                 if (element.tagName === 'PRE') {
                     setCodeBlockHTML(element, this.textareaMap, 'codeblock');
@@ -436,7 +441,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     addLineCounter = (parent: HTMLElement) => {
-        const lines = parent.innerText.split('\n').map(div => `<div class='line'>${div}</div>`);
+        const el = parent.firstElementChild?.tagName === 'CODE' ? parent.firstElementChild : parent;
+        const lines = el.innerHTML.split('\n').map(div => `<div class='line'>${div}</div>`);
         if (lines.length > 1) { // Don't show line counters if only one line
             parent.innerHTML = lines.join('\n');
             let contentFound = false;
@@ -488,7 +494,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             const node: MenuNode = changes.activeNode.currentValue;
             const isSingleView = this.isAPIRouteNode(node);
             const expand = isSingleView ? 'full' : 'list';
-
+            // this.markdownComponentShowing = node.name in this.openAPIJSONService.APIInfoNodes;
             if (!this.openAPIJSONService.determineIsInfoNode(node)) {
                 this.setSwaggerDescription(node, expand);
             }

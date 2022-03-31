@@ -217,6 +217,16 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].getApiDoc(type);
     }
 
+    getApiChangelog(serverId: string) {
+        const connection = this.mediaserverConnections[serverId] as NxSystemRestAPI;
+        return connection.getApiChangelog();
+    }
+
+    getApiPreamble(serverId: string) {
+        const connection = this.mediaserverConnections[serverId] as NxSystemRestAPI;
+        return connection.getApiPreamble();
+    }
+
     getStorages(serverId, useCache = false, customTimeout = 8000) {
         return this.mediaserverConnections[serverId].getStorages(useCache, customTimeout);
     }

@@ -4,6 +4,8 @@ import type { MenuNodeWithParent } from '../../../components/developers-menu/dev
 import type { NxSystemServer } from '../../../services/system.service/system-types';
 import type { APIDoc, APIInfo } from '../api-tool-types';
 
+export type markdownFile = string;
+
 export interface Store<Type> {
     [key: string]: Type
 }
@@ -21,7 +23,8 @@ export interface APIType {
 
 export interface ServerInfo {
     server: NxSystemServer,
-    json: APIDoc
+    json: APIDoc,
+    markdown: Markdown
 }
 
 export interface ReadonlyAPI {
@@ -36,5 +39,17 @@ export interface APIData {
     },
     infos: {
         [type: string]: APIInfo
-    }
+    },
+    markdown?: Markdown
+}
+
+export interface Markdown {
+    APIPreamble: markdownFile,
+    APIChangelog: markdownFile
+}
+
+export interface APIToolCacheObject {
+    version: string,
+    json: APIDoc,
+    markdown?: Markdown
 }

@@ -57,7 +57,7 @@ export const highlightLine = (line: HTMLElement) => {
 };
 
 /**
-  * Highlight all JSON in a code-block/swagger-textarea
+  * Highlight a line in a code-block/swagger-textarea
  */
 const highlight = (line: HTMLElement) => {
     if (!line.textContent.length) { // empty line;
