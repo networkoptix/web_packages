@@ -698,8 +698,8 @@ if LOCAL_ENVIRONMENT:
     _HOST = 'https://cloud-test.hdw.mx'
     CLOUD_PORTAL_URL = _HOST
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
-    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
-    conf["cloud_storages"]["url"] = f"{_HOST}/storages"
+    conf["cloud_storage"]["url"] = f"{_HOST}/cdb/storage"
+    conf["cloud_storages"]["url"] = f"{_HOST}/cdb/storages"
 
     # CELERY_BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
