@@ -378,7 +378,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     initProcesses() {
-        const timeoutMs = 3000;
+        // 3 seconds was creating too many false positives
+        // 60 seconds should cover most cases unless we discover different edge cases we need to address
+        const timeoutMs = 60000;
         this.checkEmailProcess = this.processService.createProcess(
             async() => {
                 this.emailErrorCode = '';
