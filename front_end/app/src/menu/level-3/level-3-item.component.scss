@@ -94,7 +94,7 @@
                     fill : var(--left-menu-l3-hover-color) !important;
                 }
                 .st0 {
-                    stroke : var(--left-menu-l3-hover-color);
+                    stroke : var(--left-menu-l3-hover-color) !important;
                 }
             }
         }
@@ -102,7 +102,7 @@
 
     &:active {
         &, * {
-            background-color: $light7 !important;
+            background-color: var(--left-menu-l3-hover-bg) !important;
         }
     }
 
@@ -140,23 +140,14 @@
 
     &.item-disabled {
         @include typography.medium13nocolor;
-        color : var(--left-menu-disabled-item-color);
+        opacity: .35;
         
-        svg {
-            .icon-with-fill {
-                fill : var(--left-menu-disabled-item-color) !important;
-            }
-        
-            .st0 {
-                stroke : var(--left-menu-disabled-item-color) !important;
-            }
+        &:hover, &.selected {
+            opacity : 1;
         }
         
         .menu-level-3-icon {
             background-position: -99px -135px;
-        }
-        .menu-level-3-additional {
-            color: var(--left-menu-disabled-item-addtitional-color);
         }
     }
 
