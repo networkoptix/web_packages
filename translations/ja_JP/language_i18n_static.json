@@ -9,7 +9,7 @@
     "Terms": "利用規約",
     "accessRoles": {
         "Administrator": {
-            "description": "共有する機能を含む無制限のアクセス",
+            "description": "共有する権利を含む無制限のアクセス",
             "label": "アドミニストレーター"
         },
         "Advanced Viewer": {
