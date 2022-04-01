@@ -127,7 +127,7 @@
         "termsAndConditionsHelpText": "La case à cocher accepte les conditions générales et la politique de confidentialité",
         "copiedToClipboard": "Copié dans le presse-papiers",
         "authCode": {
-            "message": "Entrez un code de votre application d'authentification pour confirmer que c'est vraiment vous essayez de {suffix}",
+            "message": "Entrez un code de votre application d'authentification pour confirmer que vous essayez vraiment de {suffix}",
             "newPass": "définir un nouveau mot de passe",
             "login": "se connecter"
         }
@@ -322,8 +322,8 @@
         "merge": {
             "adminPasswordTitle": "Entrez le mot de passe du compte du propriétaire dans <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Le mot de passe de l'utilisateur admin est incorrect",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "knownBothSystemsConnectedToCloud": "Le système {targetSystem} est connecté à %CLOUD_NAME%. Les systèmes CLOUDS ne peuvent être fusionnés qu'à partir de %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Impossible de fusionner deux systèmes connectés au cloud. Veuillez accéder à %CLOUD_NAME% pour fusionner ces systèmes.",
             "checking": "Vérification...",
             "cloud": "Cloud",
             "commonText": "Échec de la fusion des systèmes <strong>{primarySystem}</strong> et <strong>{secondarySystem}</strong>.",
@@ -349,6 +349,11 @@
                 "a_recommend": "Nous vous recommandons de consulter avec",
                 "b_support": "support",
                 "c_proceeding": "avant de procéder."
+            },
+            "restError": {
+                "duplicateServer": "Erreur de fusion. Les deux systèmes ont le même serveur",
+                "useCloudMerge": "Impossible de fusionner des systèmes liés au cloud",
+                "differentCloudOwners": "Impossible de fusionner deux systèmes cloud avec des propriétaires différents"
             },
             "secondaryCannotMerge": "Le système {targetSystem} a une ancienne version du logiciel incompatible avec le système actuel. Mettre à jour {targetSystem} vers le {downloadHTML} pour le fusionner avec celui en cours.",
             "secondarySystemUnavailable": "Le système {targetSystem} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -422,9 +427,9 @@
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
             "removeUser": "Supprimer l'utilisateur",
-            "serversDetach": "Détacher le serveur { title } du système actuel",
-            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut",
-            "serversRestart": "Redémarrer le serveur { title }"
+            "serversDetach": "Détacher le serveur { title } du système actuel ?",
+            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -863,6 +868,7 @@
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "nameFail": "Impossible de changer le nom de {type}",
+        "noConnection": "Restaurez la connexion à %CLOUD_NAME% et réessayez.",
         "noInternet": "%CLOUD_NAME% est actuellement indisponible. Veuillez réessayer plus tard.",
         "userChangesFail": "Impossible d'appliquer les modifications",
         "reviewAccepted": "La révision a été acceptée",
@@ -1037,8 +1043,8 @@
         "twoFa": {
             "twoFADescription": "Actuellement vous avez <span id=\"target2FaSystems\">{count, plural, =0{# de tels systèmes} one{# tel système} other{# tels systèmes}}</span>.",
             "systemsRemainder": "et {count} de plus...",
-            "v5Warning": "Vous avez <span id=\"targetV5\">{count, plural, =0{# systèmes} one{# système} other{# systèmes}}</span> avec version de logiciel inférieure à 5.0. {count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} sera inaccessible via <strong>%VMS_NAME% Client</strong> car les versions précédentes de %VMS_NAME% Client ne prennent pas en charge l'authentification à deux facteurs, vous ne serez donc pas en mesure d'entrer un code de vérification pour votre compte %CLOUD_NAME%.",
-            "v5WarningExplanation": "{count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} sera entièrement accessible dès que {count, plural, =0{ils sont} one{il est} other{ils sont}} mis à niveau vers la version 5.0.",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
+            "v5WarningExplanation": "{count, plural, =0{These systems} one{This system} other{These systems}} will be fully accessible as soon as {count, plural, =0{they are} one{it is} other{they are}} upgraded to the 5.0 version.",
             "disableWarning": "Vous avez {count, plural, one{# système} other{# systèmes}} qui {count, plural, one{requiert} other{requiert}} l'authentification à deux facteurs. Vous ne pourrez pas vous connecter à {count, plural, one{ce système} other{ces systèmes}}."
         }
     },

@@ -127,7 +127,7 @@
         "termsAndConditionsHelpText": "Casella di controllo che accetta termini e condizioni e l'informativa sulla privacy",
         "copiedToClipboard": "Copiato negli appunti",
         "authCode": {
-            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
             "login": "log in"
         }
@@ -350,6 +350,11 @@
                 "b_support": "supporto",
                 "c_proceeding": "prima di procedere."
             },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+            },
             "secondaryCannotMerge": "Il sistema {targetSystem} ha una versione software precedente che non è compatibile con il sistema corrente. Aggiorna da {targetSystem} a {downloadHTML} per unirlo a quello attuale.",
             "secondarySystemUnavailable": "Il sistema {targetSystem} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
             "serverAtUrl": "server a {url}",
@@ -422,8 +427,8 @@
             "loggedFromOtherAccount": "Verrà effettuato l'accesso con un altro account",
             "noClientDetected": "Installa %VMS_NAME% per visualizzare il tuo sistema",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {
@@ -863,6 +868,7 @@
     "toastMessage": {
         "cloudUnavailable": "Qualcosa è andato storto. Aggiorna la pagina tra circa 30 secondi.",
         "nameFail": "Impossibile modificare il nome {type}",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "La revisione è stata accettata",

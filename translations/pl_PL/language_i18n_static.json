@@ -119,7 +119,7 @@
         "confirmHeader": "System connected to %CLOUD_NAME%!",
         "loginError": "Cannot connect to %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "Spróbuj ponownie później.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
         "connectedText": "System podłączono do %CLOUD_NAME%",
         "setupConnectedText": "System podłączony",
@@ -127,7 +127,7 @@
         "termsAndConditionsHelpText": "Wyrażenie zgody na warunki i politykę prywatności",
         "copiedToClipboard": "Skopiowane do schowka",
         "authCode": {
-            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "ustaw nowe hasło",
             "login": "zaloguj się"
         }
@@ -350,6 +350,11 @@
                 "b_support": "wsparcie",
                 "c_proceeding": "przed kontynuowaniem."
             },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+            },
             "secondaryCannotMerge": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym. Zaktualizuj {targetSystem} do {downloadHTML} aby połączyć systemy.",
             "secondarySystemUnavailable": "System {targetSystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
             "serverAtUrl": "serwer {url}",
@@ -373,7 +378,7 @@
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
             "system2faDisabled": "Two-factor authentication is not required for this system.",
             "storageSettingsSaved": "Zapisano ustawienia magazynu.",
-            "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
+            "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
             "settingsSaved": "Ustawienia zostały zapisane.",
             "settingsNotSaved": "Nie można zapisać ustawień.",
             "logLevelsSaved": "Zapisano poziom(y) logowania.",
@@ -422,8 +427,8 @@
             "loggedFromOtherAccount": "Zostaniesz zalogowany przy użyciu innego konta",
             "noClientDetected": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {
@@ -824,7 +829,7 @@
             },
             "error": {
                 "text": "Błąd",
-                "help": "(rejestruj tylko błędy)"
+                "help": "(rejestruj tylko błędy)"
             },
             "warning": {
                 "text": "Ostrzeżenie",
@@ -863,6 +868,7 @@
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
         "nameFail": "Nie udało się zmienić {type}",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "Opinia została przyjęta",

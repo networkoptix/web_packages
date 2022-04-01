@@ -127,7 +127,7 @@
         "termsAndConditionsHelpText": "Kontrollkästchen zur Zustimmung zu den Allgemeinen Geschäftsbedingungen und der Datenschutzrichtlinie",
         "copiedToClipboard": "In die Zwischenablage kopiert",
         "authCode": {
-            "message": "Geben Sie einen Code aus Ihrer Authentifizierungs-App ein, um zu bestätigen, dass Sie es wirklich sind und versuchen {suffix}",
+            "message": "Geben Sie einen Code aus Ihrer Authentifizierungs-App ein, um zu bestätigen, dass Sie es wirklich sind, der versucht {suffix}",
             "newPass": "ein neues Passwort festlegen",
             "login": "anmelden"
         }
@@ -350,6 +350,11 @@
                 "b_support": "support",
                 "c_proceeding": "bevor Sie fortfahren."
             },
+            "restError": {
+                "duplicateServer": "Fehler beim Zusammenführen. Beide Systeme haben denselben Server",
+                "useCloudMerge": "An die Cloud gebundene Systeme können nicht zusammengeführt werden",
+                "differentCloudOwners": "Zwei Cloud-Systeme mit unterschiedlichen Eigentümern können nicht zusammengeführt werden"
+            },
             "secondaryCannotMerge": "System {targetSystem} verfügt über eine ältere Softwareversion, die nicht mit dem aktuellen System kompatibel ist. Aktualisieren Sie {targetSystem} auf {downloadHTML}, um es mit dem aktuellen zusammenzuführen.",
             "secondarySystemUnavailable": "System {targetSystem} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
             "serverAtUrl": "server bei {url}",
@@ -422,9 +427,9 @@
             "loggedFromOtherAccount": "Sie werden mit einem anderen Konto angemeldet",
             "noClientDetected": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
             "removeUser": "Nutzer entfernen",
-            "serversDetach": "Server { title } vom aktuellen System trennen",
-            "serversReset": "Server { title } auf Standardwerte zurücksetzen",
-            "serversRestart": "Server { title } neu starten"
+            "serversDetach": "Server { title } vom aktuellen System abkoppeln?",
+            "serversReset": "Server { title } auf Standardwerte zurücksetzen?",
+            "serversRestart": "Restart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -863,6 +868,7 @@
     "toastMessage": {
         "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",
         "nameFail": "Fehler beim Ändern des {type} Namens",
+        "noConnection": "Stellen Sie die Verbindung zu %CLOUD_NAME% wieder her und versuchen Sie es erneut.",
         "noInternet": "%CLOUD_NAME% ist derzeit nicht verfügbar. Bitte versuchen Sie es später noch einmal.",
         "userChangesFail": "Änderungen konnten nicht gespeichert werden",
         "reviewAccepted": "Die Bewertung wurde akzeptiert",
@@ -1037,8 +1043,8 @@
         "twoFa": {
             "twoFADescription": "Derzeit haben Sie <span id=\"target2FaSystems\">{count, plural, =0{# solcher Systeme} one{# solches System} other{# solcher Systeme}}</span>.",
             "systemsRemainder": "und {count} mehr...",
-            "v5Warning": "Sie haben <span id=\"targetV5\">{count, plural,=0{# Systeme} one{# System} other{# Systeme}}</span> mit einer Softwareversion kleiner als 5.0. {count, plural,=0{Diese Systeme werden} one{Dieses System wird} other{Diese Systeme werden}} nicht zugänglich sein via <strong>%VMS_NAME%-Client</strong>, da frühere Versionen des %VMS_NAME%-Client keine Zwei-Faktor-Authentifizierung unterstützen und Sie deshalb keinen Bestätigungscode für Ihr %CLOUD_NAME%-Konto eingeben können.",
-            "v5WarningExplanation": "{count, plural,=0{Diese Systeme werden} one{Dieses System wird} other{Diese Systeme werden}} vollständig zugänglich sein, sobald {count, plural,=0{sie} one{es} other{sie}} auf die Version 5.0 aktualisiert {count, plural,=0{wurden} one{wurde} other{wurden}}.",
+            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
+            "v5WarningExplanation": "{count, plural, =0{These systems} one{This system} other{These systems}} will be fully accessible as soon as {count, plural, =0{they are} one{it is} other{they are}} upgraded to the 5.0 version.",
             "disableWarning": "Sie haben {count, plural, one{# System, das} other{# Systeme, die}} eine Zwei-Faktor-Authentifizierung {count, plural, one{erfordert} other{erfordern}}. Sie können sich nicht bei {count, plural, one{diesem System} other{diesen Systemen}} anmelden."
         }
     },

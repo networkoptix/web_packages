@@ -127,7 +127,7 @@
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
         "copiedToClipboard": "Copied to clipboard",
         "authCode": {
-            "message": "Enter a code from your authenticator app to confirm it's really you trying to {suffix}",
+            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
             "login": "log in"
         }
@@ -350,6 +350,11 @@
                 "b_support": "підтримка",
                 "c_proceeding": "перед тим, як продовжити."
             },
+            "restError": {
+                "duplicateServer": "Merge error. Both systems have same server",
+                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+            },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server at {url}",
@@ -422,8 +427,8 @@
             "loggedFromOtherAccount": "Ви ввійдете в інший обліковий запис",
             "noClientDetected": "Встановіть %VMS_NAME% для роботи з системою",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system",
-            "serversReset": "Reset server { title } to defaults",
+            "serversDetach": "Detach server { title } from current system?",
+            "serversReset": "Reset server { title } to defaults?",
             "serversRestart": "Restart server { title }"
         },
         "tooltips": {
@@ -863,6 +868,7 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
+        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
         "reviewAccepted": "The review has been accepted",
