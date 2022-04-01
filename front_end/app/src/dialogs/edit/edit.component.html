@@ -19,12 +19,13 @@
                     >*</span>
                 </label>
                 <ng-container [ngSwitch]="structure.type">
-                    <nx-select *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
+                    <nx-select
+                        *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
                         [selected]="dropdownLookup[structure.name]?.selected"
                         (onSelected)="updateDropdown(structure.name, $event)"
                         [items]="dropdownLookup[structure.name]?.options"
                         [stillLoading]="!dropdownLookup[structure.name]?.options"
-                        ></nx-select>
+                    ></nx-select>
                     <nx-html *ngSwitchCase="STRUCTURE_TYPE.HTML"
                         [name]="structure.name"
                         [(ngModel)]="values[structure.name]"></nx-html>

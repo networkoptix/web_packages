@@ -75,7 +75,7 @@ export interface ConsoleManifest {
     noResultsMessage: string,
     minItemsAdvanced: number,
     disabled: Record<OptionalFeatures, boolean>,
-    perPageOptions: DropdownItem[],
+    perPageOptions: DropdownItem<string>[],
     excludeFromSearch: string[],
     contexts: ColumnConfig[],
     editManifest: ModalManifest,

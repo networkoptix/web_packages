@@ -9,14 +9,22 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+
+interface ServerOption extends DropdownItem<string> {
+    status: string;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -24,20 +32,19 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'new.component.html',
     styleUrls: ['new.component.scss']
 })
-
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    serverOptions: any = [];
+    serverOptions: ServerOption[] = [];
     activateKey: any;
 
     formattedKey: string;
     license: string;
-    selectedServer: any = {};
+    selectedServer: ServerOption;
     keyUsedIn: string;
 
-    @Input() servers: any = [];
+    @Input() servers: NxSystemServer[] = [];
     @Input() system: NxSystem;
     @Input() licenses: any = [];
 
@@ -178,8 +185,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             this.serverOptions = [];
 
             if (changes.servers.currentValue.length) {
-                changes.servers.currentValue.forEach(server => {
-                    const option: any = {
+                this.serverOptions = changes.servers.currentValue.map(server => {
+                    const option: ServerOption = {
                         name: htmlToEntity(server.name),
                         value: server.id,
                         status: server.status
@@ -189,18 +196,18 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         option.help = `&mdash;&nbsp;${server.status}`;
                     }
 
-                    this.serverOptions.push(option);
+                    return option;
                 });
 
                 // prevent server change
-                const serverMatch = this.serverOptions.filter(server => {
-                    return server.value === this.selectedServer.value;
-                });
+                const serverMatch = this.serverOptions.find(server =>
+                    server.value === this.selectedServer?.value
+                );
 
-                if (!serverMatch.length) {
-                    this.selectedServer = this.serverOptions.filter(server => {
-                        return server.status === 'Online';
-                    })[0] || {};
+                if (!serverMatch) {
+                    this.selectedServer = this.serverOptions.find(server =>
+                        server.status === 'Online'
+                    ) ?? this.serverOptions[0];
                 }
             }
         }
@@ -219,7 +226,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         });
     }
 
-    changeServer(server) {
+    changeServer(server: ServerOption): void {
         this.selectedServer = server;
     }
 

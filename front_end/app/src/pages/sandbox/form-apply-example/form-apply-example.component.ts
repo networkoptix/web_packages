@@ -1,6 +1,9 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -44,9 +47,9 @@ export class FormApplyExampleComponent {
     items: any[];
     itemsSelected: any;
 
-    itemsDDSingle: any[];
+    itemsDDSingle: DropdownItem<string>[];
     langCode: string = 'en_US';
-    selectedDDItem: any;
+    selectedDDItem: DropdownItem<string>;
 
     tags: any[];
     form2Group: FormGroup;
@@ -158,7 +161,7 @@ export class FormApplyExampleComponent {
         this.itemsSelected = [...result];
     }
 
-    ddSingleModelChanged(result: {}) {
+    ddSingleModelChanged(result: DropdownItem<string>) {
         // ensure 'change' will be triggered
         this.selectedDDItem = { ...result };
     }

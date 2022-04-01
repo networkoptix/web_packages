@@ -89,20 +89,22 @@
                                 </div>
                                 <div class="grid-item mb-2 mb-md-0">
                                     <nx-select
-                                            [selected]="false"
-                                            [(ngModel)]="selectedAspect"
-                                            [items]="aspectRatios"
-                                            id="aspect-ratios"></nx-select>
+                                        [selected]="false"
+                                        [(ngModel)]="selectedAspect"
+                                        [items]="aspectRatios"
+                                        id="aspect-ratios"
+                                    ></nx-select>
                                 </div>
                                 <div class="grid-item">
                                     <span class="text-right" translate>Rotation</span>
                                 </div>
                                 <div class="grid-item">
                                     <nx-select
-                                            [selected]="false"
-                                            [(ngModel)]="selectedRotation"
-                                            [items]="rotations"
-                                            id="rotations"></nx-select>
+                                        [selected]="false"
+                                        [(ngModel)]="selectedRotation"
+                                        [items]="rotations"
+                                        id="rotations"
+                                    ></nx-select>
                                 </div>
                             </div>
                         </nx-section>
@@ -207,10 +209,12 @@
                                         <span class="text-right" translate>Quality</span>
                                     </div>
                                     <div class="grid-item">
-                                        <nx-select [selected]="selectedQuality"
+                                        <nx-select
+                                            [selected]="selectedQuality"
                                             [(ngModel)]="selectedQuality"
                                             [items]="streamQualities"
-                                            id="recording-quality"></nx-select>
+                                            id="recording-quality"
+                                        ></nx-select>
                                     </div>
                                     <div class="grid-item">
                                         <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error error-span col-8" translate>Please select recording quality</span>

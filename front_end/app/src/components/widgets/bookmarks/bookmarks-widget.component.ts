@@ -19,6 +19,10 @@ interface BookmarkWithOpener extends Bookmark {
     isOpen?: boolean;
 }
 
+interface SystemDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+}
+
 const getMockBookmarks = (val?): any => Array.isArray(val) && val.length ? val : new Array(50).fill(Math.round(Math.random() * 10000)).map((_, i) => ({
     id: `id-${i}`,
     deviceId: `bookmark${i}`,
@@ -59,7 +63,7 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
     );
 
     updater$ = new Subject();
-    selectedSystem: DropdownItem;
+    selectedSystem: SystemDropdownItem;
     system: NxSystem;
     loading = false;
 
@@ -83,7 +87,7 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
         tap(this.toggleLoading)
     ) as Observable<BookmarkWithOpener[]>;
 
-    systemsDropdownItems$ = this.cloudApi.systems().pipe(
+    systemsDropdownItems$: Observable<SystemDropdownItem[]> = this.cloudApi.systems().pipe(
         map(systems => systems.map(({ id: value, name, stateOfHealth }) => ({
             name: stateOfHealth !== 'online' ? `${name} (${stateOfHealth})` : name,
             disabled: stateOfHealth !== 'online',
@@ -93,7 +97,7 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
             if (!systems.length) {
                 return;
             }
-            const selectedSystem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
+            const selectedSystem: SystemDropdownItem = systems.find(({ value }) => value === this.card.config.selectedSystem) || systems.find(({ disabled }) => !disabled) || systems[0];
             this.system ||= this.systemService.createSystem(this.accountService.email, selectedSystem.value);
             this.updateSystem(selectedSystem);
         }),
@@ -104,7 +108,7 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
         this.loading = !this.loading;
     }
 
-    updateSystem(system: DropdownItem) {
+    updateSystem(system: SystemDropdownItem) {
         this.selectedSystem = system;
         this.card.config.selectedSystem = system.value;
         this.refreshData();

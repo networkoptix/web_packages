@@ -251,11 +251,13 @@
                                 [ngModelOptions]="{standalone: true}"
                                 (onChange)="updateLimitSessionValue($event)"></nx-numeric>
                         </div>
-                        <nx-select #selectorTracker
+                        <nx-select
+                            #selectorTracker
                             class="time-unit-select"
                             [items]="limitSessionTimeItems"
                             [selected]="selectedTimeUnit"
-                            (onSelected)="updateTimeUnitInput($event)"></nx-select>
+                            (onSelected)="updateTimeUnitInput($event)"
+                        ></nx-select>
                     </div>
                     <div *ngIf="!sessionLimitToggle" class="session-alert no-session-alert">
                         <svg-icon

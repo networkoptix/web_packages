@@ -6,8 +6,12 @@
         <cdk-step>
             <div class="h-100">
                 <h4>Select system to show bookmarks</h4>
-                <nx-select [items]="systemsDropdownItems$ | async" [selected]="selectedSystem"
-                    [stillLoading]="!selectedSystem" (onSelected)="updateSystem($event)"></nx-select>
+                <nx-select
+                    [items]="systemsDropdownItems$ | async"
+                    [selected]="selectedSystem"
+                    [stillLoading]="!selectedSystem"
+                    (onSelected)="updateSystem($event)"
+                ></nx-select>
             </div>
         </cdk-step>
     </nx-stepper>

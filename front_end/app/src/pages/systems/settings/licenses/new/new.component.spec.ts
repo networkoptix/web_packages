@@ -94,8 +94,9 @@ describe('Licenses (New)', () => {
     });
 
     it('should call changeServer', () => {
-        component.changeServer('{blablabla}');
-        expect(component.selectedServer).toBe('{blablabla}');
+        component.changeServer({ name: 'foo', value: 'bar', status: 'baz' });
+        expect(component.selectedServer)
+            .toEqual({ name: 'foo', value: 'bar', status: 'baz' });
     });
 
     it('should call displayErrors', () => {

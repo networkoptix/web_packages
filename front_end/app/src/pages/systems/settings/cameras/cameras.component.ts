@@ -30,6 +30,9 @@ import {
 } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import {
     InfoBlockColumns,
     InfoBlockSection,
@@ -60,10 +63,9 @@ import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
 
-export interface ISelect {
-    name: string;
-    value: number | '' | StreamQuality;
-}
+export type AspectRatioDropdownItem = DropdownItem<number | ''>;
+export type RotationDropdownItem = DropdownItem<number>;
+type QualityDropdownItem = DropdownItem<StreamQuality>;
 
 export class Alert {
     errors: string[] = [];
@@ -111,11 +113,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraViewPath: string;
     alerts: Alert[];
     saveSettings: Process;
-    various: ISelect;
-    auto: ISelect;
-    aspectRatios: ISelect[];
-    rotations: ISelect[];
-    streamQualities: ISelect[];
+    various: QualityDropdownItem;
+    auto: AspectRatioDropdownItem;
+    aspectRatios: AspectRatioDropdownItem[];
+    rotations: RotationDropdownItem[];
+    streamQualities: QualityDropdownItem[];
     maxFps: number = 15;
     fps: number = this.maxFps;
     warnings: string[] = [];
@@ -139,8 +141,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     motionGridChangeWatcher = new Watcher<boolean>();
     cameraNameWatcher: Watcher<string> = new Watcher();
-    selectedAspectWatcher = new Watcher();
-    selectedRotationWatcher: Watcher<any> = new Watcher();
+    selectedAspectWatcher = new Watcher<number | ''>();
+    selectedRotationWatcher = new Watcher<number>();
     audioEnabledWatcher: Watcher<boolean> = new Watcher();
     recordingWatcher: Watcher<boolean> = new Watcher();
     recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher();
@@ -160,26 +162,26 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     get previewWidth() {
         const height = 120;
         const defaultAspectRatio = 1.77778;
-        const aspect = <number> this.selectedAspect?.value || defaultAspectRatio;
-        const rotated = <number> this.selectedRotation?.value % 180 || 0;
+        const aspect = this.selectedAspect?.value || defaultAspectRatio;
+        const rotated = this.selectedRotation?.value % 180 || 0;
         return rotated ? height / aspect : aspect * height;
     }
 
-    get selectedAspect() {
+    get selectedAspect(): AspectRatioDropdownItem {
         return this.aspectRatios
             .find(({ value: id }) => this.selectedAspectWatcher.value === id);
     }
 
-    set selectedAspect(value) {
+    set selectedAspect(item: AspectRatioDropdownItem) {
         this.showOverlay = false;
-        this.selectedAspectWatcher.value = value.value;
+        this.selectedAspectWatcher.value = item.value;
         setTimeout(() => {
             this.showOverlay = true;
         });
     }
 
     get aspectClass() {
-        let aspect: ISelect;
+        let aspect: AspectRatioDropdownItem;
         if (this.selectedAspectWatcher.value) {
             aspect = this.aspectRatios
                 .find(({ value: id }) => this.selectedAspectWatcher.value === id);
@@ -237,7 +239,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.aspectRatios[1].value as number
             ) * this.maxHeight * 2,
             this.maxHeight * 2,
-            <number> this.selectedRotation.value || 0
+            this.selectedRotation.value || 0
         );
     }
 
@@ -249,14 +251,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.sensitivityButtons$.next(value);
     }
 
-    get selectedRotation() {
+    get selectedRotation(): RotationDropdownItem {
         return this.rotations.find(({ value: id }) =>
             this.selectedRotationWatcher.value === id
         );
     }
 
-    set selectedRotation(value) {
-        this.selectedRotationWatcher.value = value.value;
+    set selectedRotation(item: RotationDropdownItem) {
+        this.selectedRotationWatcher.value = item.value;
     }
 
     get audioEnabled() {
@@ -363,14 +365,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.selectedFps === null || !this.selectedFps;
     }
 
-    get selectedQuality() {
+    get selectedQuality(): QualityDropdownItem {
         return [...this.streamQualities, this.various].find(({ value: id }) =>
             this.selectedQualityWatcher.value === id
         );
     }
 
-    set selectedQuality(value) {
-        this.selectedQualityWatcher.value = value.value;
+    set selectedQuality(item: QualityDropdownItem) {
+        this.selectedQualityWatcher.value = item.value;
     }
 
     get variousQualities() {

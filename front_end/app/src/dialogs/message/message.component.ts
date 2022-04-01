@@ -8,6 +8,9 @@ import {
 import { NgForm } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -25,10 +28,7 @@ export interface MessageParams {
     to?: string;
 }
 
-interface Subject {
-    id: string;
-    name: string;
-}
+type Subject = DropdownItem<string>;
 
 @Component({
     selector: 'nx-modal-message-content',
@@ -133,7 +133,7 @@ export class MessageModalContent implements OnInit {
             });
     }
 
-    setSubject(subject: any) {
+    setSubject(subject: Subject): void {
         this.subject = subject.value;
         this.subjectMessage = subject.name;
     }

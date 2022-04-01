@@ -20,7 +20,9 @@ import type { LogLevel, LogLevelReply } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
-type LoggerOption = DropdownItem<string>;
+interface LoggerOption extends DropdownItem<string> {
+    help: string;
+}
 
 interface Logger {
     key: string;

@@ -17,7 +17,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
-import { DropdownItem } from './dropdown.component.types';
+import type { DropdownItem } from './dropdown.component.types';
 
 function additionalHelpSpan(help: string): string {
     return `<span class="additional-help">${help}</span>`;
@@ -49,12 +49,12 @@ function additionalHelpSpan(help: string): string {
         }
     ]
 })
-export class NxGenericDropdown extends BaseDropdown {
-    // items should have at least "name"
-    // ... ex:[{name: 'a', id: 1}, {name: 'a', help: '(say "Aaaa...")', id: 1}, {name: 'b', id:3}]
+export class NxGenericDropdown<
+    Item extends DropdownItem<unknown> = DropdownItem<unknown>
+> extends BaseDropdown {
     @Input() id: string = 'genericSelect';
-    @Input() items: DropdownItem[];
-    @Input() selected: DropdownItem | false;
+    @Input() items: Item[];
+    @Input() selected: Item | false;
     @IBool() @Input() merge: CoercedBoolInput;
     @IBool() @Input() ellipsisMargin: CoercedBoolInput;
     @IBool() @Input() hrMargin: CoercedBoolInput;
@@ -70,7 +70,7 @@ export class NxGenericDropdown extends BaseDropdown {
 
     @IBool() @Input() allowHTML: CoercedBoolInput = false;
 
-    @Output() onSelected = new EventEmitter<DropdownItem>();
+    @Output() onSelected = new EventEmitter<Item>();
 
     dropdownType: string;
     nativeElementTop: number = 0;
@@ -104,7 +104,7 @@ export class NxGenericDropdown extends BaseDropdown {
         });
     }
 
-    change(item: DropdownItem): void {
+    change(item: Item): void {
         this._selectedItem = item;
         this.onSelected.emit(item);
         this.onChangeCallback(this._selectedItem);
@@ -130,7 +130,7 @@ export class NxGenericDropdown extends BaseDropdown {
         }
     }
 
-    handleKeyup(ev: KeyboardEvent, item: DropdownItem): void {
+    handleKeyup(ev: KeyboardEvent, item: Item): void {
         if (ev.key === 'Enter') {
             this.show = false;
             this.change(item);

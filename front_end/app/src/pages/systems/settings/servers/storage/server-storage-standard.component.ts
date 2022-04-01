@@ -34,6 +34,9 @@ import {
 } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { Watcher, NxApplyService } from '@services/apply.service';
@@ -68,11 +71,7 @@ enum TARGET_STORAGE {
     MAIN
 }
 
-interface Mode {
-    name: string;
-    value: string;
-    disabled?: boolean;
-}
+type Mode = DropdownItem<string>;
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -542,11 +541,10 @@ export class NxSystemStorageComponent implements OnInit {
     };
 
     getModes(store: Storage): Mode[] {
-        const checkDisabled = mode => ({
+        return this.modes.map(mode => ({
             ...mode,
             disabled: mode.value !== 'modeMain' && store.mainOnly
-        });
-        return this.modes.map(checkDisabled);
+        }));
     }
 
     checkArchiveWarning({ storageId, vmsSpace }: Storage): boolean {
@@ -593,9 +591,7 @@ export class NxSystemStorageComponent implements OnInit {
             usedForWriting,
             storageType
         }: Storage,
-        selected: Omit<Mode, 'value'> & { value ?: string }
-        /* Property 'value' is optional in DropdownItem<any>
-        but required in Mode (error in <nx-select (onSelected)>) */
+        selected: Mode
     ): void {
         const id = this.normalizeId(storageId);
         const updateParams = {
@@ -608,8 +604,7 @@ export class NxSystemStorageComponent implements OnInit {
             storageType
         };
         const checkChanged = (
-            /* See above comment */
-            { value }: { value?: string },
+            { value }: Mode,
             currentlyBackup: boolean = isBackup,
             currentlyUsed: boolean = usedForWriting
         ): boolean => {

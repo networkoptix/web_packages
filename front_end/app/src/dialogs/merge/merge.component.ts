@@ -6,6 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem,
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -25,6 +28,10 @@ import { cleanIp, htmlToEntity, strSplice, pickFrom } from '@utils/general';
 
 import { State } from './stateForMergeDialog';
 import { StateMachine } from './stateMachine';
+
+interface SystemDropdownItem extends DropdownItem<string> {
+    peer?: boolean;
+}
 
 @Component({
     selector: 'nx-modal-merge-content',
@@ -49,14 +56,14 @@ export class MergeModalContent {
     mergingProcess: Process;
     primarySystem;
     peerSystems = [];
-    processedSystems = [];
+    processedSystems: SystemDropdownItem[] = [];
     secondarySystem;
     serverUrl: string;
     cleanUrl: string;
     serverUrlInputExists: boolean;
     systemMergeable: string;
     targetSystem;
-    targetSystemDropdown;
+    targetSystemDropdown: SystemDropdownItem;
     targetSystemService;
     tooManyServers: boolean;
     nonCloudMerge = false;
@@ -175,13 +182,13 @@ export class MergeModalContent {
                 if (this.systems.length) {
                     this.processedSystems.push(
                         ...this.makeSelectorList(this.systems),
-                        { name: 'horizontal' }
+                        { name: 'horizontal' } as SystemDropdownItem
                     );
                 }
                 if (this.peerSystems.length) {
                     this.processedSystems.push(
                         ...this.makeSelectorList(this.peerSystems),
-                        { name: 'horizontal' }
+                        { name: 'horizontal' } as SystemDropdownItem
                     );
                 }
                 this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() });
@@ -944,7 +951,7 @@ export class MergeModalContent {
         return '';
     }
 
-    makeSelectorList(systems) {
+    makeSelectorList(systems): SystemDropdownItem[] {
         return systems.map(system => {
             return {
                 value: system.id,

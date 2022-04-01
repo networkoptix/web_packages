@@ -113,9 +113,12 @@
               <h3>{{card.title}}</h3>
             </ng-template>
             <ng-container *ngIf="dragEnabled && [activeCellIndex, hoverCellIndex].includes(i); else cardTitle">
-              <nx-select [items]="card.sizes" (onSelected)="updateSelectedSize($event, card)" [selected]="card.size"
-                type="transparent-button">
-              </nx-select>
+              <nx-select
+                [items]="card.sizes"
+                (onSelected)="updateSelectedSize($event, card)"
+                [selected]="card.size"
+                type="transparent-button"
+              ></nx-select>
               <div class="d-flex window-actions">
                 <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
                   (click)="toggleEditMode(card)" [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}"

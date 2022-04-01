@@ -22,6 +22,10 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { pickFrom } from '@utils/general';
 
+interface SystemDropdownItem extends DropdownItem<string> {
+    state: string;
+}
+
 @Component({
     selector: 'nx-cloud-storage-move-content',
     templateUrl: 'cloud-storage-move.component.html',
@@ -35,7 +39,7 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     system$: BehaviorSubject<NxSystem>;
     updateCallback: () => void;
-    targetSystems: DropdownItem[];
+    targetSystems: SystemDropdownItem[];
     errorText: string;
     move: Process;
 
@@ -144,15 +148,15 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.dialogRef.close(msg);
     };
 
-    setTargetSystem({ value, state }: DropdownItem) {
-        this.target$.next(value as string);
+    setTargetSystem({ value, state }: SystemDropdownItem) {
+        this.target$.next(value);
         this.targetOnline$.next(state !== 'offline');
         if (value === 'otherSystem') {
             // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
-        this.systemsService.getSystem(value as string).toPromise().then(({ state }) => {
+        this.systemsService.getSystem(value).toPromise().then(({ state }) => {
             if (state === 'offline') {
                 this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline?.();
             } else {

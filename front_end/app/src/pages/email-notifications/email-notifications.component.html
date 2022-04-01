@@ -22,8 +22,11 @@
                 <cdk-step [completed]="!!(selectedSystem$ | async)">
                     <div *ngIf="account$ | async; else preloader" class="h-100">
                         <h4>Select system to test email notification</h4>
-                        <nx-select [items]="systems$ | async" [selected]="selectedSystem$ | async"
-                            [stillLoading]="!(selectedSystem$ | async)" (onSelected)="updateSystem($event)"></nx-select>
+                        <nx-select
+                            [items]="systems$ | async"
+                            [selected]="selectedSystem$ | async"
+                            [stillLoading]="!(selectedSystem$ | async)" (onSelected)="updateSystem($event)"
+                        ></nx-select>
                     </div>
                 </cdk-step>
                 <cdk-step [completed]="!!(usersSelected$ | async).length">
@@ -56,7 +59,11 @@
                         <div *ngIf="!response && !sending; else eventSummary" class="send-wrapper">
                             <div class="send-section h-100">
                                 <h4>Select test notification type</h4>
-                                <nx-select [items]="notificationTypes" [selected]="selectedNotificationType" (onSelected)="updateType($event)"></nx-select>
+                                <nx-select
+                                    [items]="notificationTypes"
+                                    [selected]="selectedNotificationType"
+                                    (onSelected)="updateType($event)"
+                                ></nx-select>
                                 <h4>Test email notification content</h4>
                                 <div class="email-content-wrapper">
                                     <label for="systemId">systemId</label>

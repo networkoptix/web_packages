@@ -39,10 +39,12 @@
             </div>
             <div class="form-group" *ngIf="subjects && subjects.length > 1">
                 <label for="subject" translate>Subject</label>
-                <nx-select id="subject"
-                           [selected]="subjects[0]"
-                           [items]="subjects"
-                           (onSelected)="setSubject($event)"></nx-select>
+                <nx-select
+                    id="subject"
+                    [selected]="subjects[0]"
+                    [items]="subjects"
+                    (onSelected)="setSubject($event)"
+                ></nx-select>
             </div>
             <div class="form-group" >
                 <label for="message" translate>Message</label>

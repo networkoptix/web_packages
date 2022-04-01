@@ -21,6 +21,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxGenericDropdown } from './dropdown.component';
+import type { DropdownItem } from './dropdown.component.types';
 import { NxGenericDropdownItemSVG } from './item-icon/item-icon.component';
 
 const ButtonClickEvents = {
@@ -43,41 +44,36 @@ describe('NxGenericDropdown', () => {
     let component: NxGenericDropdown;
     let fixture: ComponentFixture<NxGenericDropdown>;
     let el: DebugElement;
-    const dropdownItems = [
+    const dropdownItems: DropdownItem<string>[] = [
         {
             name: 'item1',
             value: '1',
             disabled: false,
             help: undefined,
-            state: undefined
         },
         {
             name: 'item2',
             value: '2',
             disabled: true,
             help: undefined,
-            state: undefined
         },
         {
             name: 'horizontal',
             value: '3',
             disabled: false,
             help: undefined,
-            state: undefined
         },
         {
             name: 'item4',
             value: '4',
             disabled: false,
             help: 'helpText4',
-            state: undefined
         },
         {
             name: 'item5',
             value: '5',
             disabled: false,
             help: undefined,
-            state: 'state5'
         }
     ];
 

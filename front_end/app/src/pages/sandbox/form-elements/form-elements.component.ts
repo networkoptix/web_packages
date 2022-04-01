@@ -3,7 +3,10 @@ import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@src/menu/menu.service';
 
-import { ISelect } from '../../systems/settings/cameras/cameras.component';
+import {
+    AspectRatioDropdownItem,
+    RotationDropdownItem,
+} from '../../systems/settings/cameras/cameras.component';
 
 @Component({
     selector: 'form-elements',
@@ -21,10 +24,10 @@ export class FormElementsComponent {
     edit;
     wholeText;
     data;
-    selectedAspect: ISelect;
-    aspectRatios: ISelect[];
-    selectedRotation: ISelect;
-    rotations: ISelect[];
+    selectedAspect: AspectRatioDropdownItem;
+    aspectRatios: AspectRatioDropdownItem[];
+    selectedRotation: RotationDropdownItem;
+    rotations: RotationDropdownItem[];
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 

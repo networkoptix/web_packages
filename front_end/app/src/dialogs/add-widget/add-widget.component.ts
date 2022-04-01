@@ -18,6 +18,9 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { pickFrom, delayInitial } from '@utils/general';
 
+type WidgetDropdownItem = DropdownItem<WidgetCard>;
+type DashboardDropdownItem = DropdownItem<string>;
+
 @Component({
     selector: 'nx-modal-add-widget-content',
     templateUrl: 'add-widget.component.html',
@@ -34,11 +37,11 @@ export class AddWidgetModalContent {
     updateSelectedDashboard: (id: string, dashboard: DashboardConfiguration) => void;
 
     addWidget: Process;
-    selectedWidget: DropdownItem<WidgetCard>;
-    dashboardOptions: DropdownItem<string>[];
-    selectedDashboard: DropdownItem<string>;
+    selectedWidget: WidgetDropdownItem;
+    dashboardOptions: DashboardDropdownItem[];
+    selectedDashboard: DashboardDropdownItem;
 
-    widgetDropdownOptions: DropdownItem<WidgetCard>[];
+    widgetDropdownOptions: WidgetDropdownItem[];
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -52,13 +55,13 @@ export class AddWidgetModalContent {
 
     isFirstPartyWidget = NxDynamicWidgetComponent.findWidget;
 
-    updateSelected(selected) {
+    updateSelected(selected: WidgetDropdownItem): void {
         this.selectedWidget = null;
         this.cd.detectChanges();
         this.selectedWidget = cloneDeep(selected);
     }
 
-    findDashboard(dashboardId) {
+    findDashboard(dashboardId: string): DashboardConfiguration {
         return this.dashboardMenu.find(({ id }) => id === dashboardId);
     }
 

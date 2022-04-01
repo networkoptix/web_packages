@@ -15,6 +15,10 @@ import { NxSystemWithUserInfo } from '@services/systems.service';
 
 import { FirstPartyWidget } from '../helper-classes';
 
+interface SystemDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+}
+
 const getLeafNodes = (node, result = []) => {
     const isArray = Array.isArray(node);
     const isObject = node instanceof Object;
@@ -77,7 +81,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
     healthMonitorAge = 0;
     updatingIn = 0;
     manifest;
-    selectedSystem: DropdownItem;
+    selectedSystem: SystemDropdownItem;
     devices = [];
     loading = Date.now();
     updater$ = new Subject();
@@ -200,7 +204,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         this.showAction({ url, label });
     };
 
-    updateSystem = async (system: DropdownItem, systemsToTry = []) => {
+    updateSystem = async (system: SystemDropdownItem, systemsToTry = []) => {
         const nextSystem = this.systemService.createSystem(this.accountService.email, system.value);
         this.manifest = NxHealthMonitorWidgetComponent.manifestLookup[system.value];
 

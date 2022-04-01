@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
@@ -10,8 +13,8 @@ import { NxMenuService } from '@src/menu/menu.service';
 export class MultiSelectComponent {
     items: any[];
     itemsSelected: any;
-    mode: any[];
-    modeSelected: any;
+    mode: DropdownItem<string>[];
+    modeSelected: DropdownItem<string>;
     ddWidth: number;
 
     constructor(

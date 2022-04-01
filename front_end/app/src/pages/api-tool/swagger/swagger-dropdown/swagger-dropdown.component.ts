@@ -1,6 +1,17 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system.service';
+
+type SingleDropdownOption = DropdownItem<string>;
+interface MultiDropdownOption extends DropdownItem<string> {
+    name: string,
+    value: string,
+    label: string,
+    id: string
+}
 
 @Component({
     selector: 'nx-swagger-dropdown',
@@ -9,7 +20,8 @@ import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system
 })
 export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
     @Input() swaggerSelect;
-    dropdownOptions = [];
+    singleDropdownOptions: SingleDropdownOption[] = [];
+    multiDropdownOptions: MultiDropdownOption[] = [];
     isDisabled = true;
     disabledMutationObserver: MutationObserver;
 
@@ -18,9 +30,9 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
 
     constructor(private APIToolService: NxAPIToolSystemService) { }
 
-    onSelect = (e: any) => {
+    onSelect = (option: SingleDropdownOption) => {
         this.APIToolService.preventNextChangeDetection = true;
-        this.swaggerSelect.value = e.value;
+        this.swaggerSelect.value = option.value;
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
@@ -43,7 +55,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         for (const option of options) {
             if (this.isMultiSelect) {
                 if (option.innerText !== '--') {
-                    this.dropdownOptions.push({
+                    this.multiDropdownOptions.push({
                         name: option.innerText,
                         value: option.value,
                         label: option.innerText,
@@ -51,7 +63,7 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
                     });
                 }
             } else {
-                this.dropdownOptions.push({
+                this.singleDropdownOptions.push({
                     name: option.innerText,
                     value: option.value
                 });

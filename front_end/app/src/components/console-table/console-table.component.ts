@@ -218,7 +218,7 @@ export class NxConsoleTableComponent {
     manifest: any;
     contentManifest: ContentManifest;
     docAsset: DocAsset;
-    perPageSelectedOption: DropdownItem;
+    perPageSelectedOption: DropdownItem<string>;
 
     constructor(
         configService: NxConfigService,

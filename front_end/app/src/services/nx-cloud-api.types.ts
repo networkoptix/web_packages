@@ -288,7 +288,7 @@ export interface ContentSettings {
     [key: string]: {
         hidden?: boolean,
         label?: string,
-        options?: DropdownItem[]
+        options?: DropdownItem<string>[]
     }
 }
 

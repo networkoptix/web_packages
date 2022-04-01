@@ -13,7 +13,14 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 
-const getTestEvents = (systemId?: string) => [
+interface SystemDropdownItem extends DropdownItem<string> {
+    state: string;
+}
+
+type TestEvent = Required<Omit<EmailNotification, 'targets' | 'systemId'>>;
+type NotificationDropdownItem = DropdownItem<TestEvent>;
+
+const getTestEvents = (systemId?: string): NotificationDropdownItem[] => [
     {
         name: 'Custom',
         value: { subject: '', messageHtml: '', messageText: '', attachments: [] }
@@ -79,10 +86,10 @@ const getTestEvents = (systemId?: string) => [
 export class EmailNotificationsComponent {
     CONFIG: IConfig;
     account$: Observable<Account>;
-    systems$: Observable<DropdownItem[]>;
+    systems$: Observable<SystemDropdownItem[]>;
     users$ = new BehaviorSubject<any[]>([]);
     usersSelected$: Observable<string>;
-    selectedSystem$ = new BehaviorSubject<DropdownItem>(null);
+    selectedSystem$ = new BehaviorSubject<SystemDropdownItem>(null);
     system: NxSystem;
     subject = '';
     messageHtml = '';
@@ -94,13 +101,13 @@ export class EmailNotificationsComponent {
     attachments = [];
     sending = false;
     cachedCustom;
-    notificationTypes: DropdownItem<Partial<EmailNotification>>[] = getTestEvents();
+    notificationTypes: NotificationDropdownItem[] = getTestEvents();
 
-    selectedNotificationType = this.notificationTypes[0];
+    selectedNotificationType: NotificationDropdownItem = this.notificationTypes[0];
 
     @ViewChild('targets') targets: CdkTextareaAutosize;
 
-    updateType(notificationType) {
+    updateType(notificationType: NotificationDropdownItem): void {
         if (this.selectedNotificationType.name === this.notificationTypes[0].name) {
             this.cachedCustom = ['subject', 'messageHtml', 'messageText', 'attachments'].reduce((
                 values, key
@@ -114,7 +121,7 @@ export class EmailNotificationsComponent {
         this.updatePreview();
     }
 
-    updateSystem(systemDropdown) {
+    updateSystem(systemDropdown: SystemDropdownItem): void {
         this.selectedSystem$.next(systemDropdown);
         this.notificationTypes = getTestEvents(systemDropdown.value);
     }
@@ -147,7 +154,7 @@ export class EmailNotificationsComponent {
     preparePayload(): EmailNotification {
         const { subject, messageHtml, messageText, attachments } = this;
         const targets = this.users$.value.filter(({ value }) => value).map(({ id }) => id);
-        const systemId = this.selectedSystem$.value.value as string;
+        const systemId = this.selectedSystem$.value.value;
         return { systemId, subject, messageHtml, messageText, targets, attachments };
     }
 
@@ -216,7 +223,7 @@ export class EmailNotificationsComponent {
         this.endpoint = `POST ${this.CONFIG.cloudHost}${this.CONFIG.apiBase}/notifications/email_notification`;
         this.account$ = from(this.accountService.requireLogin() as Promise<Account>);
         this.systems$ = this.systemsService.forceUpdateSystems().pipe(
-            map(systems => systems.map(({ name, id: value, stateOfHealth: state }) => ({ name, value, state }) as DropdownItem)),
+            map(systems => systems.map(({ name, id: value, stateOfHealth: state }) => ({ name, value, state }))),
             tap(systems => {
                 if (!this.selectedSystem$.value) {
                     this.updateSystem(systems.find(({ state }) => state === 'online') || systems[0]);

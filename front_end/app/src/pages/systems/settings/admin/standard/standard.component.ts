@@ -13,6 +13,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { FormWatcher, NxApplyService } from '@services/apply.service';
@@ -32,13 +35,11 @@ const DAY_HRS = 24;
 const DAY_MINS = HR_MINS * DAY_HRS;
 
 type LimitSessionTimeUnit = 'days' | 'hours' | 'minutes';
-type LimitSessionTimeItem = {
-    value: LimitSessionTimeUnit;
-    name: string;
+interface LimitSessionTimeItem extends DropdownItem<LimitSessionTimeUnit> {
     id: number;
     max: number;
     default?: number;
-};
+}
 
 class AlexaSettings {
     static CUSTOM_PROPERTY_ENDPOINT = 'alexa';
@@ -293,7 +294,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     }
 
     // sets input max value and updates hour/minutes
-    updateTimeUnitInput(timeUnit): void {
+    updateTimeUnitInput(timeUnit: LimitSessionTimeItem): void {
         this.currentMaxTimeUnit = timeUnit.max;
 
         if (this.selectedTimeUnit.value !== timeUnit.value) {

@@ -7,15 +7,23 @@
             <cdk-step>
                 <div class="h-100">
                     <h4>Select to system find camera</h4>
-                    <nx-select [items]="systemsDropdownItems$ | async" [selected]="selectedSystem"
-                        [stillLoading]="!selectedSystem" (onSelected)="updateSystem($event)"></nx-select>
+                    <nx-select
+                        [items]="systemsDropdownItems$ | async"
+                        [selected]="selectedSystem"
+                        [stillLoading]="!selectedSystem"
+                        (onSelected)="updateSystem($event)"
+                    ></nx-select>
                 </div>
             </cdk-step>
             <cdk-step>
                 <div class="h-100">
                     <h4>Select a camera</h4>
-                    <nx-select [items]="camerasDropdownItems$ | async" [selected]="selectedCamera"
-                        [stillLoading]="!selectedCamera" (onSelected)="updateCamera($event)"></nx-select>
+                    <nx-select
+                        [items]="camerasDropdownItems$ | async"
+                        [selected]="selectedCamera"
+                        [stillLoading]="!selectedCamera"
+                        (onSelected)="updateCamera($event)"
+                    ></nx-select>
                 </div>
             </cdk-step>
             <cdk-step>

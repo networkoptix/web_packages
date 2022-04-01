@@ -9,10 +9,13 @@
 <form #moveForm="ngForm" name="moveForm">
     <div class="modal-body">
         <p translate>Move to...</p>
-        <nx-select class="mb-2" id="system"
-           [items]="targetSystems"
-           [selected]="targetSystems[0]"
-           (onSelected)="setTargetSystem($event)" required
+        <nx-select
+            class="mb-2"
+            id="system"
+            [items]="targetSystems"
+            [selected]="targetSystems[0]"
+            (onSelected)="setTargetSystem($event)"
+            required
         ></nx-select>
         <p *ngIf="targetOnline$ | async" class="light-text" translate>
             If selected system already has cloud storage, it will be merged with this one.

@@ -8,6 +8,8 @@ import { WINDOW } from '@services/window-provider';
 
 import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
 
+type LoggerDropdownItem = DropdownItem<string>;
+
 @Component({
     selector: 'logger',
     templateUrl: './logger.component.html',
@@ -18,8 +20,8 @@ export class NxLoggerComponent implements AfterViewInit {
 
     @Input() system: NxSystem;
 
-    selectedLogLevel: DropdownItem<string>;
-    logLevels: DropdownItem<string>[] = [];
+    selectedLogLevel: LoggerDropdownItem;
+    logLevels: LoggerDropdownItem[] = [];
     logUrl: string;
     logData: string;
 
@@ -31,7 +33,7 @@ export class NxLoggerComponent implements AfterViewInit {
         this.relayUrl = config.getConfig().trafficRelayHost;
     }
 
-    async getLogs(logger: DropdownItem<string>) {
+    async getLogs(logger: LoggerDropdownItem) {
         let params = new HttpParams({ fromObject: { name: logger.value, lines: '1000' } });
         const { host, protocol } = this.window.location;
         let loggerHost = host;

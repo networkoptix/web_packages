@@ -120,6 +120,7 @@ module.exports = {
             This should eventually be merged with the other TS overrides. */
             files: [
                 'app/src/components/search/**/*.ts',
+                'app/src/components/dropdowns/generic/**/*.ts',
                 'app/src/dialogs/create-system-group/**/*.ts',
                 'app/src/dialogs/move-system-to-group/**/*.ts',
                 'app/src/dialogs/system-group-settings/**/*.ts',

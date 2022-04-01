@@ -8,8 +8,12 @@
             <!-- <ng-template cdkStepLabel>Label for use in nx-stepper component heading</ng-template> -->
             <div class="h-100">
                 <h4>Select System to Monitor</h4>
-                <nx-select [items]="systemsDropdownItems$ | async" [selected]="selectedSystem" [stillLoading]="!selectedSystem"
-                    (onSelected)="updateSystem($event)"></nx-select>
+                <nx-select
+                    [items]="systemsDropdownItems$ | async"
+                    [selected]="selectedSystem"
+                    [stillLoading]="!selectedSystem"
+                    (onSelected)="updateSystem($event)"
+                ></nx-select>
             </div>
         </cdk-step>
         <cdk-step>

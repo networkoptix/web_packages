@@ -66,14 +66,15 @@
                        translate>Bind to server</label>
 
                 <div class="col-12 col-md-9 col-xl-6">
-                    <nx-select id="bindToServer"
-                               name="bindToServer"
-                               [items]="serverOptions"
-                               [ngModel]="selectedServer"
-                               (ngModelChange)="changeServer($event)"
-                               [allowHTML]="true"
-                               [selected]="selectedServer">
-                    </nx-select>
+                    <nx-select
+                        id="bindToServer"
+                        name="bindToServer"
+                        [items]="serverOptions"
+                        [ngModel]="selectedServer"
+                        (ngModelChange)="changeServer($event)"
+                        [allowHTML]="true"
+                        [selected]="selectedServer"
+                    ></nx-select>
                     <div class="hint mt-1" translate>This server must be available in the system to make the license key work</div>
                 </div>
             </div>

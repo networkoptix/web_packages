@@ -30,7 +30,8 @@
                 [items]="processedSystems"
                 [selected]="targetSystemDropdown"
                 (onSelected)="setTargetSystem($event)"
-                required></nx-select>
+                required
+            ></nx-select>
             <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
             <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
                 [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">

@@ -205,7 +205,14 @@
         ></nx-paginator>
         <div class="rows-selector" *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.PER_PAGE]">
             <span>Rows per page:</span>
-            <nx-select type="transparent-button" [selected]="perPageSelectedOption" [items]="selectedManifest.perPageOptions" (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"></nx-select>
+            <nx-select
+                type="transparent-button"
+                [selected]="perPageSelectedOption"
+                [items]="selectedManifest.perPageOptions"
+                (onSelected)="
+                    perPageSelectedOption = $event;
+                    updatePerPageParam($event.value)"
+            ></nx-select>
         </div>
     </nx-section>
     <div *ngIf="!noItems">

@@ -8,14 +8,22 @@
 <div class="modal-body">
     <div *ngIf="dashboardOptions.length" class="mb-3">
         <label translate>Select Dashboard</label>
-        <nx-select [items]="dashboardOptions" (onSelected)="updateSelectedDashboard($event.value, findDashboard($event.value))"
-            [selected]="selectedDashboard">
-        </nx-select>
+        <nx-select
+            [items]="dashboardOptions"
+            (onSelected)="updateSelectedDashboard(
+                $event.value,
+                findDashboard($event.value)
+            )"
+            [selected]="selectedDashboard"
+        ></nx-select>
     </div>
     <div>
         <label translate>Select Widget</label>
-        <nx-select [items]="widgetDropdownOptions" (onSelected)="updateSelected($event)" [selected]="selectedWidget">
-        </nx-select>
+        <nx-select
+            [items]="widgetDropdownOptions"
+            (onSelected)="updateSelected($event)"
+            [selected]="selectedWidget"
+        ></nx-select>
     </div>
     <div class="drag-wrapper">
         <div
@@ -29,9 +37,12 @@
         >
             <div class="dashboard-card">
                 <div class="heading">
-                    <nx-select [items]="selectedWidget.value.sizes" (onSelected)="updateSize($event)"
-                        [selected]="selectedWidget.value.size" type="transparent-button">
-                    </nx-select>
+                    <nx-select
+                        [items]="selectedWidget.value.sizes"
+                        (onSelected)="updateSize($event)"
+                        [selected]="selectedWidget.value.size"
+                        type="transparent-button"
+                    ></nx-select>
                     <div class="d-flex">
                         <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
                             (click)="toggleEditMode(selectedWidget.value)"

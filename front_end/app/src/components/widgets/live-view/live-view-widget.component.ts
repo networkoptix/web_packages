@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject, BehaviorSubject, combineLatest, interval } from 'rxjs';
+import { Subject, BehaviorSubject, combineLatest, interval, Observable } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, tap, startWith } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -14,6 +14,15 @@ import { NxSystemWithUserInfo } from '@services/systems.service';
 import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';
+
+interface SystemDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+}
+
+interface CameraDropdownItem extends DropdownItem<string> {
+    state: string;
+    disabled: boolean;
+}
 
 @UntilDestroy()
 @Component({
@@ -52,8 +61,8 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
     static systems$ = new BehaviorSubject<NxSystemWithUserInfo[]>([]);
     updater$ = new Subject();
     system: NxSystem;
-    selectedSystem: DropdownItem;
-    selectedCamera: DropdownItem;
+    selectedSystem: SystemDropdownItem;
+    selectedCamera: CameraDropdownItem;
     size: { width: number, height: number } = { width: 640, height: 640 };
 
     systemsDropdownItems$ = this.cloudApi.systems().pipe(
@@ -93,14 +102,14 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
 
     refreshThumbnail = () => this.thumbnailsUpdater$.next(Date.now());
 
-    camerasDropdownItems$ = this.updater$.pipe(
+    camerasDropdownItems$: Observable<CameraDropdownItem[]> = this.updater$.pipe(
         switchMap(async _ => {
             if (!this.system) {
                 return [];
             }
             await this.initCameras();
             const cameras = this.system.cameraManager.cameras || [];
-            return cameras.map(({ name, id, status: state }) => ({ name, state, disabled: state !== 'online' && false, value: cleanId(id) }));
+            return cameras.map<CameraDropdownItem>(({ name, id, status: state }) => ({ name, state, disabled: state !== 'online' && false, value: cleanId(id) }));
         }),
         tap(cameras => {
             this.selectedCamera = cameras.find(({ value }) => value === this.card.config.selectedCamera) || cameras.find(({ disabled }) => !disabled) || cameras[0];
@@ -115,14 +124,14 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         return this.system.getMediaServersAndCameras(true);
     };
 
-    updateSystem(system: DropdownItem) {
+    updateSystem(system: SystemDropdownItem) {
         this.selectedSystem = system;
         this.card.config.selectedSystem = system.value;
         this.system = this.systemService.createSystem(this.accountService.email, system.value);
         this.refreshCameras();
     }
 
-    updateCamera(camera: DropdownItem) {
+    updateCamera(camera: CameraDropdownItem) {
         this.selectedCamera = camera;
         this.card.config.selectedCamera = camera.value;
     }

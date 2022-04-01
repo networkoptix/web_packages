@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
-import { FirstPartyWidget, WidgetCard } from '@components/widgets/helper-classes';
+import { FirstPartyWidget, WidgetCard, WidgetSize } from '@components/widgets/helper-classes';
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
@@ -442,7 +442,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.updateSelectedDashboard((existingNewDashboard || newDashboard).id);
     }
 
-    updateSelectedSize(size, card: WidgetCard) {
+    updateSelectedSize(size: WidgetSize, card: WidgetCard) {
         card.size = size;
         this.updatePersistedConfig();
     }

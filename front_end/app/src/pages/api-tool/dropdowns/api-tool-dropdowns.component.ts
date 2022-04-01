@@ -14,6 +14,19 @@ import { NxReadonlyAPIService } from '../services/readonly-api.service';
 
 import { findExistingItem, makeDropdownDisplayName, makeReadonlyAPIName, makeSystemName } from './api-tool-dropdown-utils';
 
+interface SystemDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+    icon: string;
+}
+
+interface ServerDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+}
+
+interface TypeDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+}
+
 @UntilDestroy()
 @Component({
     selector: 'nx-api-tool-dropdowns',
@@ -24,17 +37,17 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     CONFIG: IConfig;
     readonly environment = environment;
 
-    system : DropdownItem;
-    systems: DropdownItem[] = [];
+    system : SystemDropdownItem;
+    systems: SystemDropdownItem[] = [];
     hasSeparator = false;
     hasSystems = false;
 
-    server : DropdownItem;
-    servers: DropdownItem[] = [];
+    server : ServerDropdownItem;
+    servers: ServerDropdownItem[] = [];
     serverDropdownEnabled = false; // current design has server dropdown permanently disabled
 
-    type : DropdownItem;
-    types: DropdownItem[] = [];
+    type : TypeDropdownItem;
+    types: TypeDropdownItem[] = [];
 
     constructor(
         private configService: NxConfigService,
@@ -97,17 +110,22 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         });
 
         this.readonlyAPIService.readonlyAPIEmitter$.pipe(untilDestroyed(this)).subscribe(({ info: api, disabled }) => {
-            const existingItem = findExistingItem(this.systems, api.id);
+            const existingItem = findExistingItem(
+                this.systems,
+                api.id.toString()
+            );
             const displayName = makeReadonlyAPIName(api);
             if (existingItem) {
                 existingItem.disabled = disabled;
             } else {
                 if (!this.hasSeparator && this.hasSystems) {
-                    this.systems.push({ value: 'seperator', name: 'seperator' });
+                    this.systems.push(
+                        { name: 'seperator' } as SystemDropdownItem
+                    );
                     this.hasSeparator = true;
                 }
                 this.systems.push({ // Readonly APIs are displayed in the system dropdown
-                    value: api.id,
+                    value: api.id.toString(),
                     name: displayName,
                     disabled,
                     icon: this.CONFIG.icons.dirNonStandard + 'api.svg'
@@ -117,7 +135,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
 
         this.APIToolSystemService.loading$.pipe(untilDestroyed(this)).subscribe(loading => {
             if (!loading) { // set dropdowns after changing system/first load
-                const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id;
+                const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
                 this.system = findExistingItem(this.systems, systemToFind);
                 this.server = findExistingItem(this.servers, this.APIToolSystemService.currentServerId);
                 this.type = findExistingItem(this.types, this.openAPIJSONService.currentType || 'main') || this.types[0];
@@ -125,7 +143,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         });
 
         this.APIToolSystemService.currentSystemId$.pipe(untilDestroyed(this), filter(systemId => !!systemId)).subscribe(() => {
-            const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id;
+            const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
             this.system = findExistingItem(this.systems, systemToFind);
             this.resetDropdowns();
         });
@@ -142,7 +160,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         });
     }
 
-    onSystemChange(system: DropdownItem) {
+    onSystemChange(system: SystemDropdownItem) {
         if (isUUID(system.value)) {
             this.APIToolSystemService.manualSystemChange = true;
             this.APIToolSystemService.currentSystemId = system.value;
@@ -151,11 +169,11 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         }
     }
 
-    onServerChange(server: DropdownItem) {
+    onServerChange(server: ServerDropdownItem) {
         this.APIToolSystemService.currentServerId = server.value;
     }
 
-    onTypeChange(type: DropdownItem) {
+    onTypeChange(type: TypeDropdownItem) {
         this.openAPIJSONService.setAPIType(this.server.value, type.value);
     }
 

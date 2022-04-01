@@ -1,8 +1,7 @@
-export interface DropdownItem<Value = any> {
+export interface DropdownItem<Value> {
     name: string,
+    value: Value,
     help?: string,
-    value?: Value,
-    state?: string,
     disabled?: boolean,
     icon?: string
 }

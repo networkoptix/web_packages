@@ -47,7 +47,7 @@ export const manifestLookupByType = (config: IConfig, type: ModalType) => {
 export class EditModalContent {
     heading: string;
     modal: ModalType;
-    values: Record<string, any>;
+    values: Record<string, string>;
     manifest: ModalManifest;
     settings: ContentSettings;
     contextList: ContextManifest[] = [];
@@ -63,8 +63,8 @@ export class EditModalContent {
     deleteContext: Process;
     dropdownLookup: {
         [key: string]: {
-            selected : DropdownItem,
-            options : DropdownItem[]
+            selected : DropdownItem<string>,
+            options : DropdownItem<string>[]
         }
     } = {};
 
@@ -235,7 +235,7 @@ export class EditModalContent {
         this.processDisabled = !!Object.keys(this.errors).length;
     };
 
-    updateDropdown = (fieldName: string, item: DropdownItem) => {
+    updateDropdown = (fieldName: string, item: DropdownItem<string>) => {
         this.values[fieldName] = item.value;
     };
 }

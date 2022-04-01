@@ -13,6 +13,9 @@ import { of, SubscriptionLike, Subject } from 'rxjs';
 import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import {
     InfoBlockSection,
     InfoBlockLine
@@ -33,15 +36,13 @@ import { NxMenuService } from '@src/menu/menu.service';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-export interface DropdownStorage {
-    name: string,
+export interface DropdownStorage extends DropdownItem<string> {
     id: string,
     isOnline: boolean,
     isUsedForWriting?: boolean,
     isWritable: boolean,
     isNotSystem: boolean,
     selected: boolean,
-    value: string,
     freeSpace: number
 }
 
@@ -506,9 +507,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             !storage.isNotSystem;
     }
 
-    // Should be type DropdownStorage, but can't resolve with
-    // <nx-select (onSelected)="changeAnalyticsStorage($event)> right now
-    async changeAnalyticsStorage(newStorage): Promise<void> {
+    async changeAnalyticsStorage(newStorage: DropdownStorage): Promise<void> {
         this.setSystemStorageChosen(newStorage);
 
         if (newStorage.id === this.currentAnalyticsDbId) {

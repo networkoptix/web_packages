@@ -22,6 +22,6 @@ import type { DropdownItem } from '../dropdown.component.types';
     encapsulation: ViewEncapsulation.None,
 })
 export class NxGenericDropdownItemSVG {
-    @Input() item: DropdownItem;
+    @Input() item: DropdownItem<unknown>;
     @Input() marginLeft: string;
 }
