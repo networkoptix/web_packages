@@ -301,7 +301,7 @@ export class NxSystemLicensesComponent implements OnInit {
                                                 this.addLicenseSummary(item);
                                             });
 
-                                            result.find((item) => {
+                                            result.forEach(item => {
                                                 if (
                                                     item.info.type === this.LANG.license.licenseTypeTitles.NVR &&
                                                     +item.info.count === maxNvrChannels ||

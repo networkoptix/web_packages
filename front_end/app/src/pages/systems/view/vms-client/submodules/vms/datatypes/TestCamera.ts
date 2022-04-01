@@ -38,7 +38,7 @@ export class TestCamera implements ICamera {
         this._initBirdView();
     }
 
-    public get ip () {
+    public get ip() {
         return this.url;
     }
 

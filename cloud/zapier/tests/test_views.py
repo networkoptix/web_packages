@@ -342,9 +342,9 @@ class TestZapierViews:
         source, caption, systemId, description, access_token, refresh_token = generate_uuids(6)
 
         tokens = {"access_token": access_token, "refresh_token": refresh_token}
-        mocker.patch('api.controllers.cloud_api.Auth.get_token', return_value=tokens)
-        mocker.patch('api.controllers.cloud_api.Auth.delete_token')
-        mocker.patch('api.controllers.cloud_api.System.get')
+        mocker.patch('cloud.controllers.cloud_api.Auth.get_token', return_value=tokens)
+        mocker.patch('cloud.controllers.cloud_api.Auth.delete_token')
+        mocker.patch('cloud.controllers.cloud_api.System.get')
 
         mock_make_or_increment_rule = mocker.patch(
             'zapier.views.make_or_increment_rule')
@@ -416,9 +416,9 @@ class TestZapierViews:
         systemId, caption, target, access_token, refresh_token = generate_uuids(5)
 
         tokens = {"access_token": access_token, "refresh_token": refresh_token}
-        mocker.patch('api.controllers.cloud_api.Auth.get_token', return_value=tokens)
-        mocker.patch('api.controllers.cloud_api.Auth.delete_token')
-        mocker.patch('api.controllers.cloud_api.System.get')
+        mocker.patch('cloud.controllers.cloud_api.Auth.get_token', return_value=tokens)
+        mocker.patch('cloud.controllers.cloud_api.Auth.delete_token')
+        mocker.patch('cloud.controllers.cloud_api.System.get')
 
         mock_make_or_increment_rule = mocker.patch(
             'zapier.views.make_or_increment_rule')

@@ -39,7 +39,7 @@
       <span class="value">
         <a
           *ngFor="let r of t.value | keyvalue"
-          [href]="camera.getVideoUrl(t.key, r.value)"
+          [href]="camera.getVideoUrl(t.key, $any(r.value))"
           target="_blank"
         >{{ r.key }}</a>
       </span>

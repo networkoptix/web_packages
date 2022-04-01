@@ -199,7 +199,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    protected _play (offsetX): void {
+    protected _play(offsetX): void {
         const time = this.timeline.domOffsetXtoTime(offsetX);
         this.playback.playArchive(time);
         this.hideTimeUnderMouse = true;
@@ -220,12 +220,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseUpHandler (e: MouseEvent|TouchEvent, mustPlay: boolean = false): void {
+    public canvasMouseUpHandler(e: MouseEvent | TouchEvent, mustPlay: boolean = false): void {
         if (!mustPlay && this.archiveSelectionEnabled) {
             mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
         }
-        const screenX = NxUtilsService.calcScreenX(e);
-        const offsetX = NxUtilsService.calcOffsetX(e);
+        const screenX = calcScreenX(e);
+        const offsetX = calcOffsetX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         // console.log('mouse up', e.screenX, delta)
         mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;

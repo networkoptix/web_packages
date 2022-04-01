@@ -15,6 +15,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, Subscription, timer, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 
+import { environment } from '@environments/environment';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -140,11 +141,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.isLocal = environment.isLocal;
     }
 
-    public isLocal: boolean = false
+    public isLocal: boolean = false;
 
-    public cameraDetailsShown: boolean = false
+    public cameraDetailsShown: boolean = false;
 
-    public toggleCameraDetails (newValue:boolean = !this.cameraDetailsShown) {
+    public toggleCameraDetails(newValue:boolean = !this.cameraDetailsShown) {
         this.cameraDetailsShown = newValue;
     }
 

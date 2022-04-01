@@ -14,8 +14,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
-                                    APINotAuthorisedException, APINotFoundException, get_client_ip,
-                                    kill_session, kill_tokens)
+                                      APINotAuthorisedException, APINotFoundException, get_client_ip,
+                                      kill_session, kill_tokens)
 
 logger = logging.getLogger(__name__)
 
@@ -205,7 +205,8 @@ class MakeTokenForSystem:
     def __init__(self, system_id, access_token, refresh_token):
         self.access_token = access_token
         self.refresh_token = refresh_token
-        self.system_token = Auth.get_refresh_token(refresh_token, system_id=system_id).get('access_token')
+        self.system_token = Auth.get_refresh_token(
+            refresh_token, scope=f"cloudSystemId={system_id}").get('access_token')
 
     def __enter__(self):
         return self.system_token
@@ -486,10 +487,10 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token(no_refresh=True)
-    def update(request, system_id, totp, require2fa, headers=None):
+    def update(request, system_id, mfa_code, require2fa, headers=None):
         data = {
             'system2faEnabled': require2fa,
-            'totp': totp
+            'mfaCode': mfa_code
         }
         return put_wrapper(f"{CLOUD_DB_URL}/system/{system_id}", json=data, headers=headers)
 
@@ -585,15 +586,15 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token(no_refresh=True)
-    def change_password(request, email, old_password, new_password, totp=None, headers=None):
+    def change_password(request, email, old_password, new_password, mfa_code=None, headers=None):
         email = email.lower()
         params = {
             'password': new_password,
             'currentPassword': old_password
         }
 
-        if totp:
-            params['totp'] = totp
+        if mfa_code:
+            params['mfaCode'] = mfa_code
 
         auth = None
         if not headers:
@@ -685,10 +686,10 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token(no_refresh=True)
-    def update_2fa_settings(request, totp, tfa_enabled, password=None, headers=None):
+    def update_2fa_settings(request, mfa_code, tfa_enabled, password=None, headers=None):
         data = {
             "account2faEnabled": tfa_enabled,
-            "totp": totp
+            "mfaCode": mfa_code
         }
         if password:
             data["password"] = password

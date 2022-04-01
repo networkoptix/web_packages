@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import ICamera from '../../vms-client/submodules/vms/datatypes/ICamera';
+import { ICamera } from '../../vms-client/submodules/vms/datatypes/ICamera';
 
 @Component({
     selector: 'nx-camera-details',
@@ -15,7 +15,7 @@ export class NxCameraDetailsComponent {
     ) {
     }
 
-    public emitClose () {
+    public emitClose() {
         this.close.emit();
     }
 }
