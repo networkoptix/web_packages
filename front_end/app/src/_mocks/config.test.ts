@@ -10,6 +10,7 @@ import { FeatureFlagStrings } from '@services/nx-config/base-config';
 export function setupConfig(): IConfig {
     return {
         alertTimeout: 3 * 1000, // Alerts are shown for 3 seconds,
+        longAlertTimeout: 6 * 1000, // Alerts are shown for 6 seconds,
         pollingTimeout: 30 * 1000,
         extendedRequestTimeout: 15 * 1000,
         sessionFreshnessSec: 600 * 1000,
