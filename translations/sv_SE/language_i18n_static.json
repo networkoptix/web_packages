@@ -130,7 +130,8 @@
             "message": "Ange en kod från din autentiseringsapp för att bekräfta att det verkligen är du som försöker {suffix}",
             "newPass": "ange nytt lösenord",
             "login": "logga in"
-        }
+        },
+        "emailSent": "Epost skickad!"
     },
     "cameraFilters": {
         "H265": "H.265 kameror",
@@ -350,6 +351,11 @@
                 "b_support": "support",
                 "c_proceeding": "innan fortsättning."
             },
+            "restError": {
+                "duplicateServer": "Sammanfogningsfel. Båda systemen har samma server",
+                "useCloudMerge": "Kan inte slå samman system som är bundna till molnet",
+                "differentCloudOwners": "Det går inte att slå samman två molnsystem med olika ägare"
+            },
             "secondaryCannotMerge": "System {targetSystem} har en äldre programversion som är oförenlig med det nuvarande systemet. Uppdatera {targetSystem} till {downloadHTML} att slå samman den med den aktuella.",
             "secondarySystemUnavailable": "System {targetSystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server vid {url}",
@@ -422,9 +428,9 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare",
-            "serversDetach": "Koppla bort server { title } från nuvarande system",
-            "serversReset": "Återställ servern \"{ title }\" till standard",
-            "serversRestart": "Starta om servern \"{ title }"
+            "serversDetach": "Koppla bort server { title } från nuvarande system?",
+            "serversReset": "Återställ servern { title } till standard?",
+            "serversRestart": "Starta om server { title }?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -433,7 +439,8 @@
             "action": "Logga in",
             "message": "Tvåfaktorsautentisering är aktiverat för det här kontot. Vänligen logga in.",
             "title": "Två faktorer krävs!",
-            "wizardWarning": "När du har aktiverat tvåfaktorsautentisering kommer du inte att kunna logga in på {count, plural, =0{# system} one{# systemet} other{# system}} från %VMS_NAME% klienter och webbadmin:"
+            "wizardWarning": "När du har aktiverat tvåfaktorsautentisering kommer du inte att kunna logga in på {count, plural, =0{# system} one{# systemet} other{# system}} från %VMS_NAME% klienter och webbadmin:",
+            "unsupportedSystem": "För att logga in på detta system inaktivera \"Be om verifieringskod vid varje inloggning med %CLOUD_NAME% konto\" i dina <a href=\"/account/security\">kontoinställningar</a>."
         }
     },
     "downloads": {
@@ -576,7 +583,8 @@
         "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
         "networkConnection": "Det gick inte att ansluta till %CLOUD_NAME%, kontrollera din nätverksanslutning.",
         "archiveEncrypted": "ARKIV\nKRYPTERAD",
-        "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet för att dekryptera detta arkiv."
+        "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet för att dekryptera detta arkiv.",
+        "webadmin2faRequired": "Tvåfaktorsautentisering krävs för att komma åt detta system. Du kan aktivera tvåfaktorsautentisering i dina <a href=\"{ cloudHost }/account/security\">-kontoinställningar</a>."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -670,7 +678,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "view": "Visa kameror",
         "apiTool": "API-testverktyg",
-        "security": "Säkerhet"
+        "security": "Säkerhet",
+        "twofaRequired": "Tvåfaktorsautentisering krävs"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace är ett centraliserat ekosystem av produkter som integreras sömlöst med VMS-produkter som %VMS_NAME%, alla tillgängliga i %CLOUD_NAME% så att du kan hitta lösningar för att bygga och anpassa ditt IP-videosystem.",
@@ -849,7 +858,8 @@
             "network": "Nätverk, tillagt via OS",
             "smb": "Nätverk (smb), läggs till via VMS",
             "cloud": "Moln"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> vill överföra ägandet av detta system till dig"
     },
     "systemStatuses": {
         "activated": "aktiverad",
@@ -863,6 +873,7 @@
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",
         "nameFail": "Det gick inte att ändra {type} namn",
+        "noConnection": "Återställ anslutningen till %CLOUD_NAME% och försök igen.",
         "noInternet": "%CLOUD_NAME% är tillfälligt otillgänglig. Vänligen försök igen senare.",
         "userChangesFail": "Det gick inte att tillämpa ändringar",
         "reviewAccepted": "Avtal har accepterats",
@@ -1037,8 +1048,8 @@
         "twoFa": {
             "twoFADescription": "För närvarande har du <span id=\"target2FaSystems\">{count, plural, =0{# sådana system} one{# sådant system} other{# sådana system}}</span>.",
             "systemsRemainder": "och {count} mer...",
-            "v5Warning": "Du har <span id=\"targetV5\">{count, plural, =0{# system} one{# systemet} other{# system}}</span> med mjukvaruversion lägre än 5.0. {count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer att vara otillgänglig via <strong>%VMS_NAME% Client</strong> eftersom tidigare versioner av %VMS_NAME% Client inte stöder tvåfaktorsautentisering, så du kommer inte att kunna ange en verifieringskod för ditt %CLOUD_NAME% konto.",
-            "v5WarningExplanation": "{count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer att vara fullt tillgänglig så snart som möjligt {count, plural, =0{de är} one{det är} other{den är}} uppgraderad till 5.0 -versionen.",
+            "v5Warning": "Du har <span id=\"targetV5\">{count, plural, =0{# system} one{# systemet} other{# system}}</span> med mjukvaruversion lägre än 5.0. {count, plural, =0{Dessa system} one{Detta system} other{Dessa system}} kommer att vara otillgänglig via <strong>%VMS_NAME% Client</strong> eftersom tidigare versioner av %VMS_NAME% Client inte stöder tvåfaktorsautentisering.",
+            "v5WarningExplanation": "För att göra {count, plural, =0{dessa system} one{detta system} other{dessa system}} fullt tillgänglig uppgradering {count, plural, =0{them} one{it} other{them}} to software version 5. eller avmarkera kryssrutan.",
             "disableWarning": "Du har {count, plural, one{# ett system} other{# flera system}} som {count, plural, one{kräver} other{kräver}} tvåfaktorsautentisering. Du kommer inte att kunna logga in på {count, plural, one{detta system} other{dessa system}}."
         }
     },

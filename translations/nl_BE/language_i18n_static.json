@@ -127,10 +127,11 @@
         "termsAndConditionsHelpText": "Vink aan om akkoord te gaan met de algemene voorwaarden en het privacybeleid",
         "copiedToClipboard": "Gekopieerd naar het klembord",
         "authCode": {
-            "message": "Voer een code van uw authenticator-app in om te bevestigen dat u het echt bent die probeert {suffix}",
+            "message": "Voer een code van uw authenticatie-app in om te bevestigen dat u het echt bent die probeert {suffix}",
             "newPass": "stel een nieuw wachtwoord in",
             "login": "inloggen"
-        }
+        },
+        "emailSent": "Email verzonden!"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",
@@ -350,6 +351,11 @@
                 "b_support": "ondersteuning",
                 "c_proceeding": "voordat u verder gaat."
             },
+            "restError": {
+                "duplicateServer": "Fout bij samenvoegen. Beide systemen hebben dezelfde server",
+                "useCloudMerge": "Kan systemen gekoppeld aan de cloud niet samenvoegen",
+                "differentCloudOwners": "Kan twee Cloud-systemen met verschillende eigenaren niet samenvoegen"
+            },
             "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
             "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "serverAtUrl": "server op {url}",
@@ -422,9 +428,9 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen",
-            "serversDetach": "Ontkoppel server { title } van het huidige systeem",
-            "serversReset": "Server { title } resetten naar standaardwaarden",
-            "serversRestart": "Server { title } herstarten"
+            "serversDetach": "Ontkoppel server { title } van het huidige systeem?",
+            "serversReset": "Server { title } resetten naar standaardwaarden?",
+            "serversRestart": "Server { title } opnieuw starten?"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -433,7 +439,8 @@
             "action": "Login",
             "message": "Twee-factorenauthenticatie is ingeschakeld voor dit account. Log in.",
             "title": "Twee factoren zijn vereist!",
-            "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:"
+            "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
+            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
     "downloads": {
@@ -576,7 +583,8 @@
         "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
         "networkConnection": "Kan geen verbinding maken met %CLOUD_NAME%, controleer je netwerkverbinding.",
         "archiveEncrypted": "ARCHIEF\nVERSLEUTELD",
-        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen."
+        "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen.",
+        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -670,7 +678,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "view": "Bekijk camera's",
         "apiTool": "API testing tool",
-        "security": "Beveiliging"
+        "security": "Beveiliging",
+        "twofaRequired": "Tweestapsverificatie vereist"
     },
     "pageDescriptions": {
         "integrations": "De Integrations Marketplace is een gecentraliseerd ecosysteem van producten die naadloos integreren met VMS-producten zoals %VMS_NAME%, allemaal beschikbaar in %CLOUD_NAME% zodat u oplossingen kunt vinden om uw IP-videosysteem te bouwen en aan te passen.",
@@ -849,7 +858,8 @@
             "network": "Netwerk, toegevoegd via OS",
             "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "geactiveerd",
@@ -863,6 +873,7 @@
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Vernieuw de pagina over ongeveer 30 seconden.",
         "nameFail": "{type} naam wijzigen mislukt",
+        "noConnection": "Herstel de verbinding met %CLOUD_NAME% en probeer het opnieuw.",
         "noInternet": "%CLOUD_NAME% is momenteel niet beschikbaar. Probeer het later opnieuw.",
         "userChangesFail": "Wijzigingen toepassen is mislukt",
         "reviewAccepted": "De review is verwijderd",
@@ -1037,8 +1048,8 @@
         "twoFa": {
             "twoFADescription": "Momenteel heb je er <span id=\"target2FaSystems\">{count, plural, =0{# zulke systemen} one{# zo'n systeem} other{# zulke systemen}}</span>.",
             "systemsRemainder": "en {count} meer...",
-            "v5Warning": "Je hebt er <span id=\"targetV5\">{count, plural, =0{# systemen} one{# systeem} other{# systemen}}</span> met softwareversie lager dan 5.0. {count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} is niet toegankelijk via <strong>%VMS_NAME% Client</strong> omdat eerdere versies van %VMS_NAME% Client geen tweefactorauthenticatie ondersteunen, dus u kunt geen verificatiecode voor uw %CLOUD_NAME% account invoeren.",
-            "v5WarningExplanation": "{count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} zal volledig toegankelijk zijn zodra {count, plural, =0{zij zijn} one{het is} other{zij zijn}} geüpgraded naar de 5.0-versie.",
+            "v5Warning": "Je hebt er <span id=\"targetV5\">{count, plural, =0{# systemen} one{# systeem} other{# systemen}}</span> met softwareversie lager dan 5.0. {count, plural, =0{Deze systemen} one{Dit systeem} other{Deze systemen}} is niet toegankelijk via <strong>%VMS_NAME% Client</strong> omdat eerdere versies van %VMS_NAME% Client geen tweefactorauthenticatie ondersteunen, dus u kunt geen verificatiecode voor uw account invoeren.",
+            "v5WarningExplanation": "Maken {count, plural, =0{deze systemen} one{dit systeem} other{deze systemen}} volledig toegankelijke upgrade {count, plural, =0{hen} one{het} other{hen}} naar softwareversie 5.0 of schakel het selectievakje uit.",
             "disableWarning": "Je hebt {count, plural, one{# systeem} other{# systemen}} die {count, plural, one{vereist} other{vereist}} authenticatie in twee stappen. Je kunt niet inloggen op {count, plural, one{dit systeem} other{deze systemen}}."
         }
     },

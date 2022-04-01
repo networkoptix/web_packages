@@ -45,11 +45,11 @@
             "label": "Personalizado"
         },
         "customRole": {
-            "description": "Perfil de utilizador personalizado especificado no Sistema",
+            "description": "Função de usuário personalizada especificada no sistema",
             "label": "Perfil Personalizado"
         },
         "disabled": {
-            "description": "O utilizador está desativado e não pode efetuar login no sistema",
+            "description": "O usuário está desabilitado e não pode fazer ‘login’ no sistema",
             "label": "Desabilitado"
         },
         "liveViewer": {
@@ -115,7 +115,7 @@
         "newPassHeader": "Definir nova senha",
         "newPassConfirmText": "A senha está definida!",
         "newPassInvalidCode": "Não é possível salvar a senha: o código de confirmação já está em uso ou está incorreto",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "notSecureText": "Se você continuar, permitirá que<br><span class='error-label'>{ redirectUrl }</span><br>acesse sua conta %CLOUD_NAME%.",
         "confirmHeader": "Sistema conectado a %CLOUD_NAME%!",
         "loginError": "Não é possível conectar a %CLOUD_NAME%",
         "loginErrorAdditional": "Tente novamente ou faça login no sistema diretamente com sua conta local.",
@@ -127,10 +127,11 @@
         "termsAndConditionsHelpText": "Caixa de seleção concordando com os termos e condições e a política de privacidade",
         "copiedToClipboard": "Copiado para a área de transferência",
         "authCode": {
-            "message": "Insira um código de seu aplicativo autenticador para confirmar se é realmente você que está tentando {suffix}",
+            "message": "Digite um código do seu aplicativo de autenticação para confirmar que é realmente você tentando {suffix}",
             "newPass": "definir uma nova senha",
             "login": "entrar"
-        }
+        },
+        "emailSent": "E-mail enviado!"
     },
     "cameraFilters": {
         "H265": "Câmeras H.265",
@@ -251,8 +252,8 @@
         "twoFa": {
             "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:",
             "wizardWarningDescr": "As versões mais antigas de %VMS_NAME% client e Web Admin não oferecem suporte à autenticação de dois fatores.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "installAuthApp": "Instale um aplicativo de autenticação em seu dispositivo móvel, caso ainda não tenha um. %CLOUD_NAME% suporta <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> ou <strong>Duo Mobile</strong>.",
+            "nowEnabled": "A autenticação de dois fatores agora é <strong>habilitada</strong> para sua conta %CLOUD_NAME%!"
         },
         "addUser": {
             "alreadyExists": "Este email já foi cadastrado no sistema %systemName%"
@@ -322,8 +323,8 @@
         "merge": {
             "adminPasswordTitle": "Digite a senha da conta do proprietário em <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "A senha do usuário administrador está errada",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "knownBothSystemsConnectedToCloud": "O sistema {targetSystem} está conectado a %CLOUD_NAME%. Os sistemas em nuvem podem ser mesclados apenas a partir de %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Não é possível mesclar dois sistemas conectados à nuvem. Vá para %CLOUD_NAME% para mesclar esses sistemas.",
             "checking": "Verificando...",
             "cloud": "Nuvem",
             "commonText": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
@@ -349,6 +350,11 @@
                 "a_recommend": "Recomendamos que você consulte",
                 "b_support": "suporte",
                 "c_proceeding": "antes de prosseguir."
+            },
+            "restError": {
+                "duplicateServer": "Erro de mesclagem. Ambos os sistemas têm o mesmo servidor",
+                "useCloudMerge": "Não é possível mesclar sistemas vinculados à nuvem",
+                "differentCloudOwners": "Não é possível mesclar dois sistemas em nuvem com proprietários diferentes"
             },
             "secondaryCannotMerge": "O sistema {targetSystem} possui uma versão de software mais antiga que é incompatível com o sistema atual. Atualize {targetSystem} para {downloadHTML} para mesclá-lo com o atual.",
             "secondarySystemUnavailable": "O sistema {targetSystem} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
@@ -409,8 +415,8 @@
         },
         "renewAuth": {
             "action": "Entrar",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Por favor faça login novamente.",
+            "title": "Sua sessão expirou"
         },
         "titles": {
             "error": "Erro",
@@ -422,9 +428,9 @@
             "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
             "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
             "removeUser": "Remover usuário",
-            "serversDetach": "Desanexar o servidor { title } do sistema atual",
-            "serversReset": "Redefinir o servidor { title } para os padrões",
-            "serversRestart": "Reinicie o servidor { title }"
+            "serversDetach": "Desanexar o servidor { title } do sistema atual?",
+            "serversReset": "Redefinir o servidor { title } para os padrões?",
+            "serversRestart": "Reinicie o servidor { title }?"
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do %CLOUD_NAME% para excluir sua conta."
@@ -433,7 +439,8 @@
             "action": "Entrar",
             "message": "A autenticação de dois fatores está habilitada para esta conta. Por favor entre.",
             "title": "Dois fatores são necessários!",
-            "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:"
+            "wizardWarning": "Depois de habilitar a autenticação de dois fatores, você não poderá fazer login no {count, plural, =0{# sistemas} one{# sistema} other{# sistemas}} de %VMS_NAME% cliente e Web Admin:",
+            "unsupportedSystem": "Para fazer login neste sistema, desative \"Pedir código de verificação em cada login com %CLOUD_NAME% conta\" nas configurações da sua conta <a href=\"/account/security\"></a>."
         }
     },
     "downloads": {
@@ -576,7 +583,8 @@
         "licenseServerError": "Falha ao ativar a licença. O servidor de licença não respondeu. Tente novamente ou entre em contato com o suporte.",
         "networkConnection": "Não foi possível conectar a %CLOUD_NAME%, verifique sua conexão de rede.",
         "archiveEncrypted": "ARQUIVO\nCRIPTOGRAFADO",
-        "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo."
+        "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo.",
+        "webadmin2faRequired": "A autenticação de dois fatores é necessária para acessar este sistema. Você pode habilitar a autenticação de dois fatores nas configurações da sua conta <a href=\"{ cloudHost }/account/security\"></a>."
     },
     "integration": {
         "Access Control": "Controle de Acesso",
@@ -670,7 +678,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "view": "Visualizar câmaras",
         "apiTool": "Ferramenta de teste de API",
-        "security": "Segurança"
+        "security": "Segurança",
+        "twofaRequired": "Autenticação de dois fatores necessária"
     },
     "pageDescriptions": {
         "integrations": "As integrações de Marketplace é um ecossistema centralizado de produtos que se integram perfeitamente com produtos VMS como %VMS_NAME%, todos disponíveis em %CLOUD_NAME% para que você possa encontrar soluções para construir e personalizar seu sistema de Vídeo IP.",
@@ -849,7 +858,8 @@
             "network": "Rede, adicionada por meio do sistema operacional",
             "smb": "Rede (smb), adicionada por meio de VMS",
             "cloud": "Nuvem"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> deseja transferir a propriedade deste sistema para você"
     },
     "systemStatuses": {
         "activated": "ativado",
@@ -863,6 +873,7 @@
     "toastMessage": {
         "cloudUnavailable": "Algo deu errado. Atualize a página em cerca de 30 segundos.",
         "nameFail": "Falha ao alterar {type} nome",
+        "noConnection": "Restaure a conexão para %CLOUD_NAME% e tente novamente.",
         "noInternet": "%CLOUD_NAME% está atualmente indisponível. Por favor, tente novamente mais tarde.",
         "userChangesFail": "Falha ao aplicar as alterações",
         "reviewAccepted": "A revisão foi aceita",
@@ -1037,8 +1048,8 @@
         "twoFa": {
             "twoFADescription": "Atualmente você tem <span id=\"target2FaSystems\">{count, plural, =0{# tais sistemas} one{# tal sistema} other{# tais sistemas}}</span>.",
             "systemsRemainder": "e mais {count}...",
-            "v5Warning": "Você tem <span id=\"targetV5\">{count, plural, =0{#sistemas} one{# sistema} other{#sistemas}}</span> com versão de software inferior a 5.0. {count, plural, =0{Esses sistemas} one{Este sistema} other{Esses sistemas}} será inacessível via <strong>%VMS_NAME% Client</strong> pois as versões anteriores do %VMS_NAME% Client não suportam autenticação de dois fatores, portanto, você não poderá inserir um código de verificação para sua conta %CLOUD_NAME%",
-            "v5WarningExplanation": "{count, plural, =0{Esses sistemas} one{Este sistema} other{Esses sistemas}} estará totalmente acessível assim que {count, plural, =0{eles são} one{isto é} other{eles são}} atualizado para a versão 5.0.",
+            "v5Warning": "Você tem <span id=\"targetV5\">{count, plural, =0{#sistemas} one{# sistema} other{#sistemas}}</span> com versão de software inferior a 5.0. {count, plural, =0{Esses sistemas} one{Este sistema} other{Esses sistemas}} ficará inacessível por meio do <strong>%VMS_NAME% Client</strong> , pois as versões anteriores do %VMS_NAME% Client não suportam autenticação de dois fatores.",
+            "v5WarningExplanation": "Fazer {count, plural, =0{esses sistemas} one{este sistema} other{esses sistemas}} atualização totalmente acessível {count, plural, =0{eles} one{isto} other{eles}} para a versão de software 5.0 ou desmarque a caixa de seleção.",
             "disableWarning": "Você tem {count, plural, one{# sistema} other{# sistemas}} naquela {count, plural, one{requer} other{exigir}} autenticação de dois fatores. Você não poderá fazer login no {count, plural, one{este sistema} other{esses sistemas}}."
         }
     },
@@ -1092,50 +1103,50 @@
         }
     },
     "maintenance": {
-        "description": "We are working on some improvements and brand new features."
+        "description": "Estamos trabalhando em algumas melhorias e novos recursos."
     },
     "view": {
         "timeline": {
             "dayNames": {
-                "Sun": "Sun",
-                "Mon": "Mon",
-                "Tue": "Tue",
-                "Wed": "Wed",
-                "Thu": "Thu",
-                "Fri": "Fri",
-                "Sat": "Sat",
-                "Sunday": "Sunday",
-                "Monday": "Monday",
-                "Tuesday": "Tuesday",
-                "Wednesday": "Wednesday",
-                "Thursday": "Thursday",
-                "Friday": "Friday",
-                "Saturday": "Saturday"
+                "Sun": "Dom",
+                "Mon": "Seg",
+                "Tue": "Ter",
+                "Wed": "Qua",
+                "Thu": "Qui",
+                "Fri": "Sex",
+                "Sat": "Sab",
+                "Sunday": "Domingo",
+                "Monday": "Segunda-feira",
+                "Tuesday": "Terça-feira",
+                "Wednesday": "Quarta-feira",
+                "Thursday": "Quinta-feira",
+                "Friday": "Sexta-feira",
+                "Saturday": "Sábado"
             },
             "monthNames": {
                 "Jan": "Jan",
-                "Feb": "Feb",
+                "Feb": "Fev",
                 "Mar": "Mar",
-                "Apr": "Apr",
-                "May": "May",
+                "Apr": "Abr",
+                "May": "Mai",
                 "Jun": "Jun",
                 "Jul": "Jul",
-                "Aug": "Aug",
-                "Sep": "Sep",
-                "Oct": "Oct",
+                "Aug": "Ago",
+                "Sep": "Set",
+                "Oct": "Out",
                 "Nov": "Nov",
-                "Dec": "Dec",
-                "January": "January",
-                "February": "February",
-                "March": "March",
-                "April": "April",
-                "June": "June",
-                "July": "July",
-                "August": "August",
-                "September": "September",
-                "October": "October",
-                "November": "November",
-                "December": "December"
+                "Dec": "Dez",
+                "January": "Janeiro",
+                "February": "Fevereiro",
+                "March": "Março",
+                "April": "Abril",
+                "June": "Junho",
+                "July": "Julho",
+                "August": "Agosto",
+                "September": "Setembro",
+                "October": "Outubro",
+                "November": "Novembro",
+                "December": "Dezembro"
             },
             "timeNames": {
                 "a": "a",

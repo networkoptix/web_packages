@@ -127,10 +127,11 @@
         "termsAndConditionsHelpText": "La case à cocher accepte les conditions générales et la politique de confidentialité",
         "copiedToClipboard": "Copié dans le presse-papiers",
         "authCode": {
-            "message": "Entrez un code de votre application d'authentification pour confirmer que c'est vraiment vous essayez de {suffix}",
+            "message": "Entrez un code de votre application d'authentification pour confirmer que vous essayez vraiment de {suffix}",
             "newPass": "définir un nouveau mot de passe",
             "login": "se connecter"
-        }
+        },
+        "emailSent": "E-mail envoyé !"
     },
     "cameraFilters": {
         "H265": "Caméras H.265",
@@ -322,8 +323,8 @@
         "merge": {
             "adminPasswordTitle": "Entrez le mot de passe du compte du propriétaire dans <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Le mot de passe de l'utilisateur admin est incorrect",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "knownBothSystemsConnectedToCloud": "Le système {targetSystem} est connecté à %CLOUD_NAME%. Les systèmes CLOUDS ne peuvent être fusionnés qu'à partir de %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Impossible de fusionner deux systèmes connectés au cloud. Veuillez accéder à %CLOUD_NAME% pour fusionner ces systèmes.",
             "checking": "Vérification...",
             "cloud": "Cloud",
             "commonText": "Échec de la fusion des systèmes <strong>{primarySystem}</strong> et <strong>{secondarySystem}</strong>.",
@@ -349,6 +350,11 @@
                 "a_recommend": "Nous vous recommandons de consulter avec",
                 "b_support": "support",
                 "c_proceeding": "avant de procéder."
+            },
+            "restError": {
+                "duplicateServer": "Erreur de fusion. Les deux systèmes ont le même serveur",
+                "useCloudMerge": "Impossible de fusionner des systèmes liés au cloud",
+                "differentCloudOwners": "Impossible de fusionner deux systèmes cloud avec des propriétaires différents"
             },
             "secondaryCannotMerge": "Le système {targetSystem} a une ancienne version du logiciel incompatible avec le système actuel. Mettre à jour {targetSystem} vers le {downloadHTML} pour le fusionner avec celui en cours.",
             "secondarySystemUnavailable": "Le système {targetSystem} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -422,9 +428,9 @@
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
             "removeUser": "Supprimer l'utilisateur",
-            "serversDetach": "Détacher le serveur { title } du système actuel",
-            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut",
-            "serversRestart": "Redémarrer le serveur { title }"
+            "serversDetach": "Détacher le serveur { title } du système actuel ?",
+            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
+            "serversRestart": "Redémarrer le serveur { title }?"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -433,7 +439,8 @@
             "action": "Se connecter",
             "message": "L'authentification à deux facteurs est activée pour ce compte. Veuillez vous connecter.",
             "title": "Deux facteurs sont requis !",
-            "wizardWarning": "Après avoir activé l'authentification à deux facteurs, vous ne pourrez plus vous connecter à {count, plural, =0{# systèmes} one{# système} other{# systèmes}} à partir de %VMS_NAME% clients et Web Admin :"
+            "wizardWarning": "Après avoir activé l'authentification à deux facteurs, vous ne pourrez plus vous connecter à {count, plural, =0{# systèmes} one{# système} other{# systèmes}} à partir de %VMS_NAME% clients et Web Admin :",
+            "unsupportedSystem": "Pour vous connecter à ce système, désactivez \"Demander le code de vérification à chaque connexion avec un compte %CLOUD_NAME% \" dans les <a href=\"/account/security\">paramètres de votre compte</a>."
         }
     },
     "downloads": {
@@ -576,7 +583,8 @@
         "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance.",
         "networkConnection": "Impossible de se connecter à %CLOUD_NAME%, veuillez vérifier votre connexion réseau.",
         "archiveEncrypted": "ARCHIVE\nCHIFFREE",
-        "archiveEncryptedMessage": "Demandez à votre administrateur système d'entrer le mot de passe de cryptage\npour déchiffrer cette archive."
+        "archiveEncryptedMessage": "Demandez à votre administrateur système d'entrer le mot de passe de cryptage\npour déchiffrer cette archive.",
+        "webadmin2faRequired": "L'authentification à deux facteurs est nécessaire pour accéder à ce système. Vous pouvez activer l'authentification à deux facteurs dans vos <a href=\"{ cloudHost }/account/security\">paramètres de compte</a>."
     },
     "integration": {
         "Access Control": "Contrôle d'accès",
@@ -670,7 +678,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "view": "Voir les caméras",
         "apiTool": "Outil de test d'API",
-        "security": "Sécurité"
+        "security": "Sécurité",
+        "twofaRequired": "Authentification à deux facteurs requise"
     },
     "pageDescriptions": {
         "integrations": "Le Marché des Intégrations est un écosystème centralisé de produits qui s'intègrent parfaitement aux produits VMS comme %VMS_NAME%, tous disponibles en %CLOUD_NAME% afin que vous puissiez trouver des solutions pour construire et personnaliser votre système vidéo IP.",
@@ -849,7 +858,8 @@
             "network": "Réseau, ajouté via le système d'exploitation",
             "smb": "Réseau (smb), ajouté via VMS",
             "cloud": "Cloud"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> souhaite vous transférer la propriété de ce système"
     },
     "systemStatuses": {
         "activated": "activé",
@@ -863,6 +873,7 @@
     "toastMessage": {
         "cloudUnavailable": "Une erreur s'est produite. Veuillez actualiser la page dans environ 30 secondes.",
         "nameFail": "Impossible de changer le nom de {type}",
+        "noConnection": "Restaurez la connexion à %CLOUD_NAME% et réessayez.",
         "noInternet": "%CLOUD_NAME% est actuellement indisponible. Veuillez réessayer plus tard.",
         "userChangesFail": "Impossible d'appliquer les modifications",
         "reviewAccepted": "La révision a été acceptée",
@@ -1037,8 +1048,8 @@
         "twoFa": {
             "twoFADescription": "Actuellement vous avez <span id=\"target2FaSystems\">{count, plural, =0{# de tels systèmes} one{# tel système} other{# tels systèmes}}</span>.",
             "systemsRemainder": "et {count} de plus...",
-            "v5Warning": "Vous avez <span id=\"targetV5\">{count, plural, =0{# systèmes} one{# système} other{# systèmes}}</span> avec version de logiciel inférieure à 5.0. {count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} sera inaccessible via <strong>%VMS_NAME% Client</strong> car les versions précédentes de %VMS_NAME% Client ne prennent pas en charge l'authentification à deux facteurs, vous ne serez donc pas en mesure d'entrer un code de vérification pour votre compte %CLOUD_NAME%.",
-            "v5WarningExplanation": "{count, plural, =0{Ces systèmes} one{Ce système} other{Ces systèmes}} sera entièrement accessible dès que {count, plural, =0{ils sont} one{il est} other{ils sont}} mis à niveau vers la version 5.0.",
+            "v5Warning": "Vous avez <span id=\"targetV5\">{count, plural, =0{# système} one{# système} other{# systèmes}}</span> avec une version de logiciel inférieure à 5.0. {count, plural, =0{Ce système} one{Ce système} other{Ces systèmes}} {count, plural, =0{sera} one{sera} other{seront}} inaccessible via le client <strong>%VMS_NAME%</strong> puisque les versions précédentes de %VMS_NAME% Client ne prennent pas en charge l'authentification à deux facteurs.",
+            "v5WarningExplanation": "Pour rendre {count, plural, =0{ce système} one{ce système} other{ces systèmes}} entièrement accessible, mettez à jour {count, plural, =0{ce serveur} one{ce serveur} other{ces serveurs}} vers la version 5 du logiciel. ou décochez la case à cocher.",
             "disableWarning": "Vous avez {count, plural, one{# système} other{# systèmes}} qui {count, plural, one{requiert} other{requiert}} l'authentification à deux facteurs. Vous ne pourrez pas vous connecter à {count, plural, one{ce système} other{ces systèmes}}."
         }
     },

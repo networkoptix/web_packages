@@ -9,7 +9,7 @@
     "Terms": "利用規約",
     "accessRoles": {
         "Administrator": {
-            "description": "共有する機能を含む無制限のアクセス",
+            "description": "共有する権利を含む無制限のアクセス",
             "label": "アドミニストレーター"
         },
         "Advanced Viewer": {
@@ -94,7 +94,7 @@
         "connectAdditional": "このアカウントはオーナー権限を取得します。",
         "createText": "アカウント作成",
         "setupText": "非クラウドシステムのセットアップ",
-        "asAccountSubheader": "として",
+        "asAccountSubheader": "ユーザー名",
         "toAccountSubheader": "宛先",
         "forAccountSubheader": "{accountEmail} 用",
         "passwordDisconnect": "%CLOUD_NAME% からシステムを切断するために",
@@ -130,7 +130,8 @@
             "message": "認証アプリのコードを入力して、本当に {suffix} しようとしていることを確認してください",
             "newPass": "新しいパスワードを設定",
             "login": "ログイン"
-        }
+        },
+        "emailSent": "メールを送信しました！"
     },
     "cameraFilters": {
         "H265": "H.265カメラ",
@@ -350,6 +351,11 @@
                 "b_support": "サポート",
                 "c_proceeding": "続行する前に"
             },
+            "restError": {
+                "duplicateServer": "統合エラー。両方のシステムに同じサーバーが存在します",
+                "useCloudMerge": "クラウド に紐付けされているシステムは統合できません",
+                "differentCloudOwners": "異なるオーナーを持つ2つのクラウドシステムを統合することはできません"
+            },
             "secondaryCannotMerge": "システム {targetSystem} は、現在のシステムと互換性のない古いソフトウェアバージョンです。 {targetSystem} を {downloadHTML} に更新してから統合してください。",
             "secondarySystemUnavailable": "システム {targetSystem} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "serverAtUrl": "{url} のサーバー",
@@ -422,9 +428,9 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除",
-            "serversDetach": "現在のシステムからサーバー { title } を切り離す",
-            "serversReset": "サーバー { title } をデフォルトにリセット",
-            "serversRestart": "サーバー { title } を再起動"
+            "serversDetach": "現在のシステムからサーバー { title } を切り離しますか？",
+            "serversReset": "サーバー { title } をデフォルトにリセットしますか？",
+            "serversRestart": "サーバー { title } を再起動しますか？"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -433,7 +439,8 @@
             "action": "ログイン",
             "message": "このアカウントでは二要素認証が有効になっています。ログインしてください。",
             "title": "二要素が必要です。",
-            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}にログインできなくなります。"
+            "wizardWarning": "二要素認証を有効にすると、%VMS_NAME% クライアントおよび Web Admin から {count, plural, =0{# システム} one{# システム} other{# システム}}にログインできなくなります。",
+            "unsupportedSystem": "このシステムにログインするには、 <a href=\"/account/security\">アカウント設定</a>で「%CLOUD_NAME% アカウントでログインするたびに認証コードを要求する」を無効にします。"
         }
     },
     "downloads": {
@@ -576,7 +583,8 @@
         "licenseServerError": "ライセンスの有効化に失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
         "networkConnection": "%CLOUD_NAME% に接続できません。ネットワーク接続を確認してください。",
         "archiveEncrypted": "アーカイブは\n暗号化されています",
-        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。"
+        "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。",
+        "webadmin2faRequired": "このシステムにアクセスするには二段階認証が必要です。 <a href=\"{ cloudHost }/account/security\">アカウント設定</a>で二段階認証を有効にできます。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -670,7 +678,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "view": "カメラを表示",
         "apiTool": "API テスト ツール",
-        "security": "セキュリティ"
+        "security": "セキュリティ",
+        "twofaRequired": "二要素認証が必要です"
     },
     "pageDescriptions": {
         "integrations": "インテグレーションマーケットプレイスは、%VMS_NAME% などのVMS製品とシームレスに統合する製品の集中型エコシステムであり、すべて %CLOUD_NAME% で利用できるため、IPビデオシステムを構築およびカスタマイズするためのソリューションを見つけることができます。",
@@ -849,7 +858,8 @@
             "network": "ネットワーク (OS 経由で追加)",
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
-        }
+        },
+        "transferNotification": "<strong>{ ownerName }</strong> がこのシステムの所有権をあなたに譲渡しようとしています"
     },
     "systemStatuses": {
         "activated": "有効化済み",
@@ -863,6 +873,7 @@
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
         "nameFail": "{type} 名の変更に失敗しました。",
+        "noConnection": "%CLOUD_NAME% への接続を復旧した後、再度お試しください。",
         "noInternet": "%CLOUD_NAME% は現在利用できません。後ほど再度お試しください。",
         "userChangesFail": "変更の適用に失敗しました",
         "reviewAccepted": "レビューが承認されました。",
@@ -1037,8 +1048,8 @@
         "twoFa": {
             "twoFADescription": "現在、<span id=\"target2FaSystems\">{count, plural, =0{# システム} one{# システム} other{# システム}}</span>が該当します。",
             "systemsRemainder": "さらに {count} 件...",
-            "v5Warning": "<span id=\"targetV5\">{count, plural, =0{# システム} one{# システム} other{# システム}}</span>のソフトウェアバージョンが5.0未満です。以前のバージョンの%VMS_NAME%クライアントは二要素認証をサポートしておらず、%CLOUD_NAME%アカウントへの認証コードを入力できないため、{count, plural, =0{該当システム} one{該当システム} other{該当システム}}には<strong>%VMS_NAME%クライアント</strong>でアクセスできなくなります。",
-            "v5WarningExplanation": "{count, plural, =0{該当システム} one{該当システム} other{該当システム}}をバージョン5.0にアップグレードすると、完全にアクセスできるようになります。{count, plural, =0{} one{} other{}}",
+            "v5Warning": "<span id=\"targetV5\">{count, plural, =0{# システム} one{# システム} other{# システム}}</span>のソフトウェアバージョンが5.0未満です。以前のバージョンの%VMS_NAME%クライアントは二要素認証をサポートしていないため、{count, plural, =0{該当システム} one{該当システム} other{該当システム}}には<strong>%VMS_NAME%クライアント</strong>でアクセスできなくなります。",
+            "v5WarningExplanation": "{count, plural, =0{これらのシステム} one{このシステム} other{これらのシステム}} へのアクセスを可能にするには、{count, plural, =0{システム} one{システム} other{システム}}をバージョン5.0に更新するか、チェックボックスを外してください。",
             "disableWarning": "二要素認証を必要とするシステムが {count, plural,other{# 個}} あります。\n{count, plural, other{当該システム}}にログインできなくなります。"
         }
     },
