@@ -436,10 +436,10 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token(no_refresh=True)
-    def update(request, system_id, totp, require2fa, headers=None):
+    def update(request, system_id, mfa_code, require2fa, headers=None):
         data = {
             'system2faEnabled': require2fa,
-            'totp': totp
+            'mfaCode': mfa_code
         }
         return put_wrapper(f"{CLOUD_DB_URL}/system/{system_id}", json=data, headers=headers)
 
@@ -527,15 +527,15 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token(no_refresh=True)
-    def change_password(request, email, old_password, new_password, totp=None, headers=None):
+    def change_password(request, email, old_password, new_password, mfa_code=None, headers=None):
         email = email.lower()
         params = {
             'password': new_password,
             'currentPassword': old_password
         }
 
-        if totp:
-            params['totp'] = totp
+        if mfa_code:
+            params['mfaCode'] = mfa_code
 
         auth = None
         if not headers:
@@ -626,10 +626,10 @@ class Account(object):
     @staticmethod
     @validate_response
     @auto_refresh_token(no_refresh=True)
-    def update_2fa_settings(request, totp, tfa_enabled, password=None, headers=None):
+    def update_2fa_settings(request, mfa_code, tfa_enabled, password=None, headers=None):
         data = {
             "account2faEnabled": tfa_enabled,
-            "totp": totp
+            "mfaCode": mfa_code
         }
         if password:
             data["password"] = password

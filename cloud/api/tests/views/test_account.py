@@ -202,7 +202,7 @@ class TestAccountViews:
     def request_security(self, active_user, action=None):
         data = {
             'password': 'pass',
-            'totp': '456723'
+            'mfaCode': '456723'
         }
 
         if action:
@@ -303,7 +303,7 @@ class TestAccountViews:
 
     @pytest.fixture()
     def mock_change_password(self):
-        def change_pass(request, email, old_password, new_password, totp=None, headers=None):
+        def change_pass(request, email, old_password, new_password, mfa_code=None, headers=None):
             if old_password == 'old_pass':
                 return True
             else:
@@ -342,7 +342,7 @@ class TestAccountViews:
         resp = change_password(req)
         mock_change_password.assert_called()
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
-        assert resp.data == {'errorData': {'old_password': '***'}, 'errorText': 'Wrong old password', 'resultCode': 'wrongOldPassword'}
+        assert resp.data == {'errorData': None, 'errorText': 'Wrong old password or invalid mfaCode', 'resultCode': 'badRequest'}
 
     def test_verify_password(self):
         account_mock = self.mocker.patch.object(Account, 'get')
@@ -406,7 +406,7 @@ class TestAccountViews:
 
     def restore_password_with_code(self, password):
         self.code = str(base64.b64encode(('restore_code' + ':' + self.user.email).encode('utf-8')), 'utf-8')
-        req = self.arf.post('/api/account/restorePassword', data={'code': self.code, 'new_password': password, 'totp': 'totp'})
+        req = self.arf.post('/api/account/restorePassword', data={'code': self.code, 'new_password': password, 'mfaCode': 'mfaCode'})
         req.session = {}
         self.timezone_now = timezone.now()
         self.timezone_mock = self.mocker.patch.object(timezone, 'now', return_value=self.timezone_now)
@@ -423,7 +423,7 @@ class TestAccountViews:
         self.user.refresh_from_db()
         assert self.user.activated_date == self.timezone_now
         assert not PushDevice.objects.filter(user=self.user).exists()
-        self.restore_mock.assert_called_with(self.code, 'new_pass', 'totp', None)
+        self.restore_mock.assert_called_with(self.code, 'new_pass', 'mfaCode', None)
 
         # Check that date is only updated if none exists
         old_time = self.timezone_now
