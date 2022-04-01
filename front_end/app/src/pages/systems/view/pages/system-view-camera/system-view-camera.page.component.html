@@ -53,7 +53,10 @@
             </div>
         </div>
     </header>
-
+    <nx-camera-details
+            *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails) && cameraDetailsShown"
+            [camera]="camera" (close)="toggleCameraDetails(false)">
+    </nx-camera-details>
     <div
         class="settings"
         [ngClass]="{ shown: settingsShown }"
@@ -112,6 +115,10 @@
                 </div>
             </ng-template>
         </div>
+        <div *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails)"
+             class="section camera-details-toggler"
+             (click)="toggleCameraDetails()" translate
+        >Camera Details</div>
     </div>
 
     <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">

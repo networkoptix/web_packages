@@ -1,90 +1,95 @@
 <div class="container" *ngIf="canViewDownloads && LANG">
     <h1 class="old-h12" translate>Download</h1>
-    <div class="p-0">
-        <div class="nx-tab-set" *ngIf="sortedPlatforms.length">
-            <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
-                <li class="nav-item" *ngFor="let platform of sortedPlatforms">
-                    <a href="" class="nav-link"
-                       [id]="platform.name"
-                       [routerLink]="'/download/' + platform.name"
-                       [routerLinkActive]="'active'"
-                       [attr.aria-selected]="platform.name == activePlatform.name" aria-disabled="false"
-                       [attr.aria-controls]="platform.name == activePlatform.name ? platform.name + '-panel' : undefined">
-                        <span class="tab-heading">{{ LANG.downloads.groups[platform.name].label() }}</span>
-                    </a></li>
-            </ul>
-            <div class="nx-tab-set-content" *ngIf="activePlatform">
-                    <div class="card card-default">
-                        <div class="card-body flex-md">
-                            <div class="col-md-4 pl-md-4 order-2 order-md-2 version-panel">
-                                <b translate>Latest version</b>
-                                <h2 class="version-number d-flex"><b>{{downloadsData.version}}</b></h2>
-                                <p>
-                                    <a [href]="downloadsData.releaseNotes" target="_blank" translate>What's New?</a>
-                                    <br>&nbsp;
-                                </p>
-                            </div>
 
-                            <div class="col-md-8 order-1 order-md-1 p-0">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <a class="media btn btn-default download-button"
-                                           *ngIf="downloadButton" [href]="downloadButton.url">
-                                            <div class="media-left">
-                                                <svg-icon
+    <nx-pre-loader *ngIf="!sortedPlatforms; else downloadsContainer"></nx-pre-loader>
+
+    <ng-template #downloadsContainer>
+        <div class="p-0">
+            <div class="nx-tab-set" *ngIf="sortedPlatforms.length">
+                <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
+                    <li class="nav-item" *ngFor="let platform of sortedPlatforms">
+                        <a href="" class="nav-link"
+                           [id]="platform.name"
+                           [routerLink]="'/download/' + platform.name"
+                           [routerLinkActive]="'active'"
+                           [attr.aria-selected]="platform.name == activePlatform.name" aria-disabled="false"
+                           [attr.aria-controls]="platform.name == activePlatform.name ? platform.name + '-panel' : undefined">
+                            <span class="tab-heading">{{ LANG.downloads.groups[platform.name].label() }}</span>
+                        </a></li>
+                </ul>
+                <div class="nx-tab-set-content" *ngIf="activePlatform">
+                        <div class="card card-default">
+                            <div class="card-body flex-md">
+                                <div class="col-md-4 pl-md-4 order-2 order-md-2 version-panel">
+                                    <b translate>Latest version</b>
+                                    <h2 class="version-number d-flex"><b>{{downloadsData.version}}</b></h2>
+                                    <p>
+                                        <a [href]="downloadsData.releaseNotes" target="_blank" translate>What's New?</a>
+                                        <br>&nbsp;
+                                    </p>
+                                </div>
+
+                                <div class="col-md-8 order-1 order-md-1 p-0">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="media btn btn-default download-button"
+                                               *ngIf="downloadButton" [href]="downloadButton.url">
+                                                <div class="media-left">
+                                                    <svg-icon
                                                     nx-add-svg-src
                                                     [svgStyle]="{'width.px': '32', 'height.px': '32'}"
                                                     [src]="CONFIG.images.dir + 'download.svg'"
                                                 ></svg-icon>
-                                            </div>
-                                            <div class="media-body text-left">
-                                                <h3 translate>Download %VMS_NAME%</h3>
-                                                <div class="h7 installer-name">
-                                                    <span *ngIf="!downloadButton.niceName">{{LANG.downloads.groups[activePlatform.name].shortLabel() || LANG.downloads.groups[activePlatform.name].label()}}</span>
-                                                    <ng-container>{{downloadButton.niceName}}</ng-container>
                                                 </div>
-                                            </div>
-                                        </a>
-                                        <p *ngIf="CONFIG.testedOperatingSystems[activePlatform.name]"
-                                           [innerHTML]="CONFIG.testedOperatingSystems[activePlatform.name]">
-                                        </p>
+                                                <div class="media-body text-left">
+                                                    <h3 translate>Download %VMS_NAME%</h3>
+                                                    <div class="h7 installer-name">
+                                                        <span *ngIf="!downloadButton.niceName">{{LANG.downloads.groups[activePlatform.name].shortLabel() || LANG.downloads.groups[activePlatform.name].label()}}</span>
+                                                        <ng-container>{{downloadButton.niceName}}</ng-container>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <p *ngIf="CONFIG.testedOperatingSystems[activePlatform.name]"
+                                               [innerHTML]="CONFIG.testedOperatingSystems[activePlatform.name]">
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="installers" *ngIf="otherPackages.length > 0">
-                                    <h5 *ngIf="activePlatform?.name != 'sdk'"><b translate>Other packages:</b></h5>
-                                    <div class="links mb-1"
-                                         *ngFor="let otherPackage of otherPackages; let i = index"
-                                         [ngClass]="{'a-link': (i % 3) != 2}">
-                                        <a [href]="otherPackage.url">{{otherPackage.niceName}}</a>
+                                    <div class="installers" *ngIf="otherPackages.length > 0">
+                                        <h5 *ngIf="activePlatform?.name != 'sdk'"><b translate>Other packages:</b></h5>
+                                        <div class="links mb-1"
+                                             *ngFor="let otherPackage of otherPackages; let i = index"
+                                             [ngClass]="{'a-link': (i % 3) != 2}">
+                                            <a [href]="otherPackage.url">{{otherPackage.niceName}}</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                </div>
+            </div>
+
+            <nx-section-placeholder
+                *ngIf="checkedDownloads && !sortedPlatforms.length"
+                svgFileName='error_placeholder'
+                height='150'
+                width='150'
+                [translatedMessage]="'No official releases yet' | translate"
+            ></nx-section-placeholder>
+
+            <div class="clearfix">
+                <div class="mobile-badge" *ngFor="let platform of downloads.mobile">
+                    <a *ngIf="LANG.downloads.mobile[platform.name].link() != 'disabled'"
+                       class="mobile-link"
+                       [ngClass]="platform.os"
+                       [href]="LANG.downloads.mobile[platform.name].link()">
+                    </a>
+                </div>
+                <div class="mobile-badge float-right" *ngIf="canSeeHistory">
+                    <a [routerLink]="['/downloads/history']" translate>Other releases, patches and beta versions</a>
+                </div>
             </div>
         </div>
-
-        <nx-section-placeholder
-            *ngIf="checkedDownloads && !sortedPlatforms.length"
-            svgFileName='error_placeholder'
-            height='150'
-            width='150'
-            [translatedMessage]="'No official releases yet' | translate"
-        ></nx-section-placeholder>
-
-        <div class="clearfix">
-            <div class="mobile-badge" *ngFor="let platform of downloads.mobile">
-                <a *ngIf="LANG.downloads.mobile[platform.name].link() != 'disabled'"
-                   class="mobile-link"
-                   [ngClass]="platform.os"
-                   [href]="LANG.downloads.mobile[platform.name].link()">
-                </a>
-            </div>
-            <div class="mobile-badge float-right" *ngIf="canSeeHistory">
-                <a routerLink="/downloads/history" translate>Other releases, patches and beta versions</a>
-            </div>
-        </div>
-    </div>
+    </ng-template>
     <nx-footer></nx-footer>
 </div>

@@ -41,5 +41,17 @@
   "44715": {
     "name": "numpy",
     "note": "All versions of Numpy are affected by CVE-2021-41495: A null Pointer Dereference vulnerability exists in numpy.sort, in the PyArray_DescrNew function due to missing return-value validation, which allows attackers to conduct DoS attacks by repetitively creating sort arrays. https://github.com/numpy/numpy/issues/19038"
+  },
+  "46406": {
+    "name": "meilisearch",
+    "note": "Meilisearch 0.26.0 sets a limit to filters to avoid a stack overflow crash when using a huge list of filters. https://github.com/meilisearch/meilisearch/issues/1967"
+  },
+  "47012": {
+    "name": "django-oauth-toolkit",
+    "note": "Django-oauth-toolkit 2.0.0 defaults to hash application client secrets using Django password hashing. https://github.com/jazzband/django-oauth-toolkit/pull/1093"
+  },
+  "47853": {
+    "name": "django-oauth-toolkit",
+    "note": "Django-oauth-toolkit 2.0.0 removes support for insecure 'urn:ietf:wg:oauth:2.0:oob' and 'urn:ietf:wg:oauth:2.0:oob:auto' which are replaced by RFC 8252 \"OAuth 2.0 for Native Apps\" BCP. https://github.com/jazzband/django-oauth-toolkit/pull/1124"
   }
 }

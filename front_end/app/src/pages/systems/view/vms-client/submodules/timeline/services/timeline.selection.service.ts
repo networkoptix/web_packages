@@ -364,11 +364,13 @@ export class TimelineSelectionService {
         // console.log('hmu', this.rangeText, this.range)
         this._sanitizeRange();
         // console.log('hmuSan', this.rangeText, this.range)
+        let result = true;
         if (
             this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND &&
             this.timeline.durationToDomWidth(this._selectedRange.duration) <= MIN_SELECTION_WIDTH_PX
         ) {
             this.reset();
+            result = false;
             // console.log('hmuRes', this.rangeText, this.range)
         } else {
             this._snapRangeEdgesToPlayback();
@@ -376,6 +378,7 @@ export class TimelineSelectionService {
         }
         // console.log('hmuAfter', this.range)
         this._dragMode = SELECTION_DRAG_MODE.NO_DRAGGING;
+        return result;
     }
 
     public handleMouseLeave(e: MouseEvent) {

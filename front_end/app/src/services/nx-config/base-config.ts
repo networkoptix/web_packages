@@ -26,6 +26,7 @@ export interface BaseConfig {
     viewsDir?: string;
     previewPath?: string;
     alertTimeout: number;
+    longAlertTimeout: number;
     maxNumberServerChecked: number;
     extendedRequestTimeout: number;
     apiRequestAttempts: number;
@@ -178,6 +179,7 @@ const FeatureFlagKeys = [
     'readonlyAPIs',
     'dashboardRedirect',
     'cloudOwnershipTransfer',
+    'viewCameraDetails',
     'themesEnabled',
     'paginatorExperimental',
 ] as const;

@@ -99,7 +99,7 @@
                     <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
             </header>
-            <nx-section *ngIf="system.userManager.isMine">
+            <nx-section *ngIf="system.userManager.isMine || system.userManager.permissions.isAdmin">
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
                         <button

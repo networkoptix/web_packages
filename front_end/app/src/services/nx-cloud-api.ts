@@ -228,10 +228,10 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    update2fa(password, totp, action) {
+    update2fa(password, mfaCode, action) {
         return this.http.post<t.CloudResponse>(
             this.CONFIG.apiBase + '/account/security',
-            { password, totp, action }
+            { password, mfaCode, action }
         ).toPromise();
     }
 
@@ -258,8 +258,8 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    toggle2faForSystem(systemId, totp) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/toggle2fa', { systemId, totp }).toPromise();
+    toggle2faForSystem(systemId, mfaCode) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/toggle2fa', { systemId, mfaCode }).toPromise();
     }
 
     getStaticLanding() {
@@ -561,11 +561,11 @@ export class NxCloudApiService {
         return this.http.post<t.AccountEdit>(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
-    changePassword(newPassword: string, oldPassword: string, totp?: string) {
+    changePassword(newPassword: string, oldPassword: string, mfaCode?: string) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/changePassword', {
             new_password: newPassword,
             old_password: oldPassword,
-            totp
+            mfaCode
         }).toPromise();
     }
 
@@ -587,11 +587,11 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    restorePassword(code: string, newPassword: string, totp?: string, isBackup = false) {
+    restorePassword(code: string, newPassword: string, mfaCode?: string, isBackup = false) {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
             new_password: newPassword,
-            totp,
+            mfaCode,
             isBackup
         }).toPromise();
     }

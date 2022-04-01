@@ -32,7 +32,7 @@ slave_system_id__body = openapi.Schema(type=openapi.TYPE_STRING,
 system_id__body = openapi.Schema(type=openapi.TYPE_STRING)
 system_name__body = openapi.Schema(
     type=openapi.TYPE_STRING, description="Name of the system.")
-totp__body = openapi.Schema(
+mfa_code__body = openapi.Schema(
     type=openapi.TYPE_STRING, description="Verification code from 2fa app.")
 user_email__body = openapi.Schema(type=openapi.TYPE_STRING)
 user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
@@ -340,19 +340,19 @@ def connect(request):
                          type=openapi.TYPE_OBJECT,
                          properties={
                              "system_id": system_id__body,
-                             "totp": totp__body
+                             "mfaCode": mfa_code__body
                          },
-                         required=["system_id", "totp"]
+                         required=["system_id", "mfaCode"]
                      ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticatedOrTokenHasScope, ))
 def toggle2fa(request):
-    require_params(request, ('systemId', 'totp'))
+    require_params(request, ('systemId', 'mfaCode'))
     system_id = request.data.get('systemId')
     systems = cloud_api.System.get(request, system_id).get('systems')
     target_system = next(filter(lambda s: s['id'] == system_id, systems), None)
     twofa_enabled = target_system.get('system2faEnabled', False)
-    return api_success(cloud_api.System.update(request, system_id, request.data.get('totp'), not twofa_enabled))
+    return api_success(cloud_api.System.update(request, system_id, request.data.get('mfaCode'), not twofa_enabled))
 
 
 @swagger_auto_schema(method="GET", auto_schema=None,

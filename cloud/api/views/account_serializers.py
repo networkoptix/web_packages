@@ -63,7 +63,7 @@ class AccountSerializer(serializers.ModelSerializer):  # ModelSerializer
 
 class AccountSecuritySerializer(serializers.Serializer):
     action = serializers.CharField(required=True)
-    totp = serializers.CharField(required=True)
+    mfaCode = serializers.CharField(required=True)
 
 
 class AccountUpdateSerializer(serializers.ModelSerializer):  # ModelSerializer

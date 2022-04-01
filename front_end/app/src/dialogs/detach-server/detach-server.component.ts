@@ -53,7 +53,7 @@ export class DetachServerModalContent {
         const options = {
             classname: this.CONFIG.toast.warning,
             autohide: true,
-            delay: this.CONFIG.alertTimeout
+            delay: this.CONFIG.longAlertTimeout
         };
         this.detachServer = this.processService
             .createProcess(
@@ -92,12 +92,14 @@ export class DetachServerModalContent {
                             });
                     } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                         return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                    } else {
+                        this.close();
+                        this.system.currentServerNotBusy = true;
+                        this.toastService.show(
+                            this.LANG.servers.detachSystemFailed(),
+                            options
+                        );
                     }
-                    this.system.currentServerNotBusy = true;
-                    this.toastService.show(
-                        this.LANG.servers.detachSystemFailed(),
-                        options
-                    );
                 }
             );
     }

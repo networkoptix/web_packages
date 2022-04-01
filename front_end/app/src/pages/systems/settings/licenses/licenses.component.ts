@@ -247,6 +247,9 @@ export class NxSystemLicensesComponent implements OnInit {
                                         this.licenseSummaries = [];
 
                                         if (hardwareIds.length) {
+                                            let maxNvrChannels = 0;
+                                            let maxStarterChannels = 0;
+
                                             result.forEach(item => {
                                                 this.createLicenseInfo(item);
 
@@ -274,6 +277,21 @@ export class NxSystemLicensesComponent implements OnInit {
                                                         : (item.info.serverStatus === this.LANG.license.info.online())
                                                             ? item.info.status
                                                             : this.LANG.license.info.error();
+
+                                                    // monkey patch -> turn off all NVR licenses and then flip only the one with higher channels
+                                                    if (item.info.type() === this.LANG.license.licenseTypeTitles.NVR()) {
+                                                        if (maxNvrChannels < +item.info.count) {
+                                                            maxNvrChannels = +item.info.count;
+                                                        }
+                                                        item.info.status = this.LANG.license.info.error();
+                                                    }
+                                                    // monkey patch -> turn off all STARTER licenses and then flip only the one with higher channels
+                                                    if (item.info.type() === this.LANG.license.licenseTypeTitles.Starter()) {
+                                                        if (maxStarterChannels < +item.info.count) {
+                                                            maxStarterChannels = +item.info.count;
+                                                        }
+                                                        item.info.status = this.LANG.license.info.error();
+                                                    }
                                                 } else {
                                                     item.info.serverName = this.LANG.license.info.serverNotFound();
                                                     item.info.serverStatus = server.status;
@@ -281,6 +299,17 @@ export class NxSystemLicensesComponent implements OnInit {
                                                 }
 
                                                 this.addLicenseSummary(item);
+                                            });
+
+                                            result.find((item) => {
+                                                if (
+                                                    item.info.type === this.LANG.license.licenseTypeTitles.NVR &&
+                                                    +item.info.count === maxNvrChannels ||
+                                                    item.info.type === this.LANG.license.licenseTypeTitles.Starter &&
+                                                    +item.info.count === maxStarterChannels
+                                                ) {
+                                                    item.info.status = this.LANG.license.info.ok();
+                                                }
                                             });
                                             this.licenses = result;
                                         }

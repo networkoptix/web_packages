@@ -3,6 +3,7 @@ import enum
 import time
 import logging
 import json
+import requests
 
 import django
 from django.conf import settings
@@ -44,7 +45,7 @@ email__body = openapi.Schema(type=openapi.TYPE_STRING)
 first_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 last_name__body = openapi.Schema(type=openapi.TYPE_STRING)
 password__body = openapi.Schema(type=openapi.TYPE_STRING)
-totp__body = openapi.Schema(
+mfa_code_body = openapi.Schema(
     description="Timed one time password for auth app.", type=openapi.TYPE_STRING)
 
 login__body = openapi.Schema(type=openapi.TYPE_STRING)
@@ -398,7 +399,7 @@ class AccountSecurity(APIView):
             data=request.data)
         account_security_serializer.is_valid(raise_exception=True)
 
-        totp = account_security_serializer.validated_data.get("totp")
+        mfa_code = account_security_serializer.validated_data.get("mfaCode")
         action = account_security_serializer.validated_data.get("action")
         if action not in SecurityAction.actions():
             raise APIRequestException(
@@ -409,18 +410,18 @@ class AccountSecurity(APIView):
             account = Account.get(request)
             account_2fa_enabled = not account.get("account2faEnabled")
             res = Account.update_2fa_settings(
-                request, totp, account_2fa_enabled)
+                request, mfa_code, account_2fa_enabled)
             if account_2fa_enabled:
-                Auth.verify_2fa_code(totp, request.session.get("access_token"))
+                Auth.verify_2fa_code(mfa_code, request.session.get("access_token"))
                 request.session["has2fa"] = True
             return api_success(res)
 
         if action == SecurityAction.activate.name:
             require_params(request, ("password",))
             password = request.data.get("password")
-            return api_success(Account.update_2fa_settings(request, totp, True, password=password))
+            return api_success(Account.update_2fa_settings(request, mfa_code, True, password=password))
         else:
-            res = Account.update_2fa_settings(request, totp, False)
+            res = Account.update_2fa_settings(request, mfa_code, False)
             Auth.delete_2fa_key(request)
             request.session["has2fa"] = False
             return api_success(res)
@@ -448,7 +449,8 @@ def review_cookie(request):
                          type=openapi.TYPE_OBJECT,
                          properties={
                              "new_password": password__body,
-                             "old_password": password__body
+                             "old_password": password__body,
+                             "mfaCode": mfa_code_body
                          },
                          required=["new_password", "old_password"]
                      ),
@@ -467,13 +469,14 @@ def change_password(request):
                                   error_data={'new_password': error.detail})
 
     try:
-        totp = request.data.get('totp')
+        mfa_code = request.data.get('mfaCode')
         Account.change_password(
-            request, request.user.email, old_password, new_password, totp)
+            request, request.user.email, old_password, new_password, mfa_code)
         models.Account.objects.get(email=request.user.email).password_changed()
-    except APINotAuthorisedException as error:
-        raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
-                                  error_data={'old_password': error.error_data})
+    except APINotAuthorisedException:
+        raise APIRequestException('Wrong old password or invalid mfaCode', ErrorCodes.bad_request)
+    except requests.exceptions.HTTPError:
+        raise APIRequestException('Missing mfaCode', ErrorCodes.wrong_parameters)
     return api_success()
 
 
@@ -569,10 +572,10 @@ def restore_password(request):
             raise APIRequestException('Wrong new password', ErrorCodes.wrong_parameters,
                                       error_data={'new_password': error.detail})
 
-        totp = request.data.get('totp')
+        mfa_code = request.data.get('mfaCode')
         is_backup = request.data.get('isBackup')
         email = Account.extract_temp_credentials(code)[1]
-        Account.restore_password(code, new_password, totp, is_backup)
+        Account.restore_password(code, new_password, mfa_code, is_backup)
         models.Account.objects.get(email=email).password_changed()
 
         account = models.Account.objects.get(email=email)

@@ -54,6 +54,14 @@ export class Camera implements ICamera {
         this._initBirdView();
     }
 
+    public get ip() {
+        try {
+            return this.url.split('/')[2].split(':')[0];
+        } catch {
+            return this.url;
+        }
+    }
+
     public parseAdditionalParams(ps: Array<NameValue>) {
         const ms = ps.find(p => p.name === 'mediaStreams');
         if (ms) {

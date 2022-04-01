@@ -56,6 +56,7 @@ class FLAGS(metaclass=_FlagType):
     dashboard = ('Dashboard', 'dashboard', '%DASHBOARD_ENABLED%')
     dashboard_redirect = ('Dashboard Redirect', 'dashboardRedirect', '%DASHBOARD_REDIRECT_ENABLED%')
     archive_selection = ('Archive Selection', 'archiveSelection', '%ARCHIVE_SELECTION_ENABLED%')
+    view_camera_details = ('View Camera Details', 'viewCameraDetails', '%VIEW_CAMERA_DETAILS_ENABLED%')
     themes_enabled = ('Enable themes', 'themesEnabled', '%THEMES_ENABLED%')
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')

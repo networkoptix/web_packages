@@ -129,6 +129,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                     this.LANG.license.info.status(),
                     info.status,
                     info.expired ||
+                        info.status === this.LANG.license.info.error() ||
                         !info.serverStatus ? InfoDetailClass.ERROR : undefined
                 ),
                 new InfoBlockLine(
