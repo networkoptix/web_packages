@@ -190,7 +190,8 @@ class MakeTokenForSystem:
     def __init__(self, system_id, access_token, refresh_token):
         self.access_token = access_token
         self.refresh_token = refresh_token
-        self.system_token = Auth.get_refresh_token(refresh_token, system_id=system_id).get('access_token')
+        self.system_token = Auth.get_refresh_token(
+            refresh_token, scope=f"cloudSystemId={system_id}").get('access_token')
 
     def __enter__(self):
         return self.system_token

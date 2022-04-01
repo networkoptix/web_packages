@@ -309,7 +309,13 @@ class TestZapierViews:
         if settings.CI:
             pytest.skip('Bug with html_sanitizer on 3.8 alpine causes test to fail')
 
-        source, caption, systemId, description = generate_uuids(4)
+        source, caption, systemId, description, access_token, refresh_token = generate_uuids(6)
+
+        tokens = {"access_token": access_token, "refresh_token": refresh_token}
+        mocker.patch('api.controllers.cloud_api.Auth.get_token', return_value=tokens)
+        mocker.patch('api.controllers.cloud_api.Auth.delete_token')
+        mocker.patch('api.controllers.cloud_api.System.get')
+
         mock_make_or_increment_rule = mocker.patch('zapier.views.make_or_increment_rule')
         mock_cloud_gateway_get = mocker.patch('api.controllers.cloud_gateway.get')
         request = arf.post('/', data={'description': description,
@@ -333,7 +339,8 @@ class TestZapierViews:
                                                             source=source,
                                                             tokens=None)
 
-        mock_cloud_gateway_get.assert_called_once_with(systemId, encode_url(query_params), email=self.email, password=self.password, tokens=None)
+        mock_cloud_gateway_get.assert_called_once_with(
+            systemId, 'api/createEvent', params=query_params, email=self.email, password=self.password, tokens=None)
 
     def test_nx_http_actions(self, db, arf):
         caption, system_id = generate_uuids(2)
@@ -370,11 +377,17 @@ class TestZapierViews:
         if settings.CI:
             pytest.skip('Bug with html_sanitizer on 3.8 alpine causes test to fail')
 
-        systemId, caption, target = generate_uuids(3)
+        systemId, caption, target, access_token, refresh_token = generate_uuids(5)
+
+        tokens = {"access_token": access_token, "refresh_token": refresh_token}
+        mocker.patch('api.controllers.cloud_api.Auth.get_token', return_value=tokens)
+        mocker.patch('api.controllers.cloud_api.Auth.delete_token')
+        mocker.patch('api.controllers.cloud_api.System.get')
+
         mock_make_or_increment_rule = mocker.patch('zapier.views.make_or_increment_rule')
         query_params = {"system_id": systemId, "caption": caption}
         url_link = generate_subscribe_url_link(query_params)
-        request = arf.post(f'/?system_id={systemId}&caption={caption}', {'target_url': target })
+        request = arf.post(f'/?system_id={systemId}&caption={caption}', {'target_url': target})
         request.session = {}
 
         # Test does not exist
@@ -387,7 +400,8 @@ class TestZapierViews:
                                                             systemId,
                                                             caption,
                                                             password=self.password,
-                                                            target_url=url_link)
+                                                            target_url=url_link,
+                                                            tokens=None)
         self.mock_authenticate.assert_called_once()
 
         # Test exists

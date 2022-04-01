@@ -55,6 +55,40 @@ def zapier_exceptions(func):
     return handler
 
 
+def cleanup_generated_tokens(tokens):
+    access_token = tokens.get('access_token')
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+    cloud_api.Auth.delete_token_no_refresh(tokens, tokens.get('refresh_token'), headers=headers)
+    cloud_api.Auth.delete_token_no_refresh(tokens, access_token, headers=headers)
+
+
+# Remove password or tokens
+def get_system_credentials(system_id, email, password, tokens):
+    created_temp_tokens = False
+    if email and password:
+        with cloud_api.TempLogin(email, password) as credentials:
+            data = cloud_api.System.get(credentials.tokens, system_id)
+    else:
+        data = cloud_api.System.get(tokens, system_id)
+
+    system_info = data.get('systems')[0]
+
+    # System uses rest. Password is removed so that we use the bearer token
+    if int(system_info.get("version", "0")[0]) > 4:
+        if not tokens:
+            tokens = cloud_api.Auth.get_token(email, password)
+            created_temp_tokens = True
+        password = None
+    # System does not use rest. Must use basic auth. If password is missing generate one with tokens.
+    elif not password:
+        data = cloud_api.Account.create_temporary_credentials(tokens, credential_type='short')
+        email = data.get('login')
+        password = data.get('password')
+    return email, password, tokens, created_temp_tokens
+
+
 def authenticate(request):
     user = email = password = tokens = None
     if "HTTP_AUTHORIZATION" in request.META:
@@ -81,14 +115,15 @@ def increment_rule(rule):
     rule.times_used += 1
     rule.save()
 
+
 def random_uuid():
     return str(uuid.uuid4())
+
 
 def sanitize(text):
     return BeautifulSoup(text, "lxml").text
 
 
-@zapier_exceptions
 def make_rule(rule_type, email, password, system_id, caption="", description="", source="", zapier_trigger="", tokens=None):
     if rule_type == "Generic Event":
         action_params = json.dumps({"additionalResources": ["{00000000-0000-0000-0000-100000000000}",
@@ -219,12 +254,14 @@ def get_systems(request):
     user, email, password, tokens = authenticate(request)
     data = cloud_api.System.list(request, email=email, password=password, one_customization=False)
     zap_list = {'systems': []}
+    systems = []
 
     for system in data['systems']:
         if system['stateOfHealth'] == 'online':
-            zap_list['systems'].append({'name': system['name'], 'system_id': system['id']})
+            systems.append({'name': system['name'], 'system_id': system['id']})
 
-    return api_success(zap_list)
+    zap_list['systems'] = systems
+    return api_success(systems if tokens else zap_list)
 
 
 def encode_url(query_params):
@@ -241,6 +278,8 @@ def zapier_send_generic_event(request):
     source = sanitize(request.data['source'])
     caption = sanitize(request.data['caption'])
 
+    email, password, tokens, created_temp_tokens = get_system_credentials(system_id, email, password, tokens)
+
     query_params = {"source": source, "caption": caption}
 
     description = sanitize(request.data['description']) if 'description' in request.data else ""
@@ -251,8 +290,13 @@ def zapier_send_generic_event(request):
     make_or_increment_rule('Generic Event', email, system_id, caption,
                            password=password, description=description, source=source, tokens=tokens)
 
-    url = encode_url(query_params)
-    return cloud_gateway.get(system_id, url, email=email, password=password, tokens=tokens)
+    res = cloud_gateway.get(
+        system_id, 'api/createEvent', params=query_params, email=email, password=password, tokens=tokens)
+
+    if created_temp_tokens:
+        cleanup_generated_tokens(tokens)
+
+    return res
 
 
 @swagger_auto_schema(method="GET", auto_schema=None)
@@ -302,6 +346,8 @@ def subscribe_webhook(request):
     caption = sanitize(request.query_params['caption'])
     target = request.data['target_url']
 
+    email, password, tokens, created_temp_tokens = get_system_credentials(system_id, email, password, tokens)
+
     event = system_id + " " + caption
     query_params = {"system_id": system_id, "caption": caption}
     user_hooks = ZapHook.objects.filter(user=user, target=target)
@@ -310,9 +356,13 @@ def subscribe_webhook(request):
 
     url_link = generate_subscribe_url_link(query_params)
 
-    make_or_increment_rule('Http Action', email, system_id, caption, password=password, target_url=url_link)
+    make_or_increment_rule(
+        'Http Action', email, system_id, caption, password=password, target_url=url_link, tokens=tokens)
     zap_hook = ZapHook(user=user, event=event, target=target)
     zap_hook.save()
+
+    if created_temp_tokens:
+        cleanup_generated_tokens(tokens)
     return Response({'message': 'Webhook created for ' + caption, 'link': url_link}, status=200)
 
 

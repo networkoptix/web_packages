@@ -1,8 +1,10 @@
-image: nx/ci:1.17
+image: nx/ci:1.18
 
 include:
   - project: "dev/ci"
     file: "pipelines/infra-templates.yml"
+  - project: "dev/ci"
+    file: "pipelines/secrets.yml"
   - local: "ci/Docker/**/.gitlab-ci.yml"
 
 default:
@@ -45,7 +47,7 @@ stages:
   - else
   -   TARGET_BRANCH_NAME=$(get_target_protected_branch.py
         --gitlab-server-url=${CI_SERVER_URL}
-        --gitlab-token=$(cat /vault/secrets/gitlab.jenkins.token)
+        --gitlab-token=$(cat "${GITLAB_API_TOKEN}")
         --project-id=${CI_PROJECT_ID}
         --merge-request-iid=${CI_MERGE_REQUEST_IID})
   - fi
@@ -212,6 +214,9 @@ authorization-unit-test:
 webadmin:
   extends: .frontend-changes
   stage: build
+  image: nx/ci
+  secrets:
+    JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
   script:
     - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
@@ -225,6 +230,8 @@ webadmin:
 frontend:
   extends: .frontend-changes
   stage: build
+  image: nx/ci
+  secrets: !reference [.tokens, secrets]
   script:
     - !reference [.get_target_branch_script, script]
     - runJenkinsJob.sh gitlab.cloud.frontend
