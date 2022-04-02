@@ -806,7 +806,7 @@ export class NxApplyService {
                 : this.watchers
         ) || [];
         const symbols = new Set<symbol>();
-        const existingUniqueWatchers =
+        this.watchers =
             [...watchers, ...watchersFilterOutCurrentOwner].filter(({ identity }) => {
                 if (symbols.has(identity)) {
                     return false;
