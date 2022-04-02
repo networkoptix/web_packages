@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(wijzig)",
-    "<span translate>Does not affect the connections established by server.</span>": "<span translate>Does not affect the connections established by server.</span>",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Een eenvoudige manier om te verbinden, beheren en uit te breiden van een %VMS_NAME% systeem.",
     "API Documentation": "API documentatie",
     "API is not supported for this version of the system": "API wordt niet ondersteund voor deze versie van het systeem",
@@ -141,6 +140,7 @@
     "Disconnect System from %CLOUD_NAME%": "Verbinding verbreken met systeem %CLOUD_NAME%",
     "Disconnect from %CLOUD_NAME%": "Verbinding verbreken met %CLOUD_NAME%",
     "Disconnect from My Account": "Ontkoppel van mijn account",
+    "Does not affect the connections established by server.": "Heeft geen invloed op de connecties van de server.",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "Download Chrome": "Download Chrome",
     "Download Firefox": "Download Firefox",

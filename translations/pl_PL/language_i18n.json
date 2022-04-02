@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(change)",
-    "<span translate>Does not affect the connections established by server.</span>": "<span translate>Does not affect the connections established by server.</span>",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Prosty sposób na łączenie się, zarządzanie i rozbudowę dowolnego systemu %VMS_NAME%.",
     "API Documentation": "Dokumentacja API",
     "API is not supported for this version of the system": "API nie jest obsługiwane dla tej wersji systemu",
@@ -141,6 +140,7 @@
     "Disconnect System from %CLOUD_NAME%": "Odłącz system od %CLOUD_NAME%",
     "Disconnect from %CLOUD_NAME%": "Odłącz od %CLOUD_NAME%",
     "Disconnect from My Account": "Odłącz od mojego konta",
+    "Does not affect the connections established by server.": "Does not affect the connections established by server.",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "Download Chrome": "Pobierz Chrome",
     "Download Firefox": "Pobierz Firefoxa",

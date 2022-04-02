@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(ändra)",
-    "<span translate>Does not affect the connections established by server.</span>": "<span translate>Does not affect the connections established by server.</span>",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Ett enkelt sätt att ansluta till, hantera och utöka alla %VMS_NAME% -system.",
     "API Documentation": "API Dokumentation",
     "API is not supported for this version of the system": "API stöds inte för den här versionen av systemet",
@@ -141,6 +140,7 @@
     "Disconnect System from %CLOUD_NAME%": "Koppla bort systemet från %CLOUD_NAME%",
     "Disconnect from %CLOUD_NAME%": "Koppla från %CLOUD_NAME%",
     "Disconnect from My Account": "Koppla bort från mitt konto",
+    "Does not affect the connections established by server.": "Påverkar inte de anslutningar som etablerats av servern.",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "Download Chrome": "Hämta Chrome",
     "Download Firefox": "Hämta Firefox",

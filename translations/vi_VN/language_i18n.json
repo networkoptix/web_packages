@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(change)",
-    "<span translate>Does not affect the connections established by server.</span>": "<span translate>Does not affect the connections established by server.</span>",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
     "API Documentation": "API Documentation",
     "API is not supported for this version of the system": "API is not supported for this version of the system",
@@ -141,6 +140,7 @@
     "Disconnect System from %CLOUD_NAME%": "Disconnect System from %CLOUD_NAME%",
     "Disconnect from %CLOUD_NAME%": "Ngắt kết nối từ %CLOUD_NAME%",
     "Disconnect from My Account": "Ngắt kết nối với tài khoản của tôi",
+    "Does not affect the connections established by server.": "Không ảnh hưởng đến các kết nối được thiết lập bởi máy chủ.",
     "Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
     "Download Chrome": "Tải xuống chrome",
     "Download Firefox": "Tải xuống Firefox",
