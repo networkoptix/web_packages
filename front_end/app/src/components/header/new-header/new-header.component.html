@@ -1,0 +1,4 @@
+<nx-header-level-one [menuNodes]="nodes" [selectedNode]="selectedNode" (nodeSelect)="handleNodeSelect($any($event))">
+</nx-header-level-one>
+<nx-header-level-two [subNodes]="selectedNode?.nodes">
+</nx-header-level-two>

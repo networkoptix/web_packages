@@ -1,0 +1,16 @@
+<div class="menu-level-two">
+    <div class="logo-area">
+        <div class="logo"><svg-icon class="logo-svg" [src]="CONFIG.images.dirHeader + 'logo.svg'"></svg-icon></div>
+    </div>
+    <div class="menu-items">
+        <div *ngFor="let node of subNodes" class="outer-menu-item">
+            <div class="inner-menu-item"
+                 (click)="node.url ? headerService.handleNav(node, $event) : null"
+                 [ngClass]="{ 'active': headerService.currentLocation?.path === node.url }">
+                 {{ node.display_name }}
+                 <svg-icon *ngIf="node.new_window" [src]="CONFIG.images.dirHeader + 'external_link.svg'"></svg-icon>
+            </div>
+        </div>
+    </div>
+    <button translate class="create-account btn btn-primary">Create Account</button>
+</div>

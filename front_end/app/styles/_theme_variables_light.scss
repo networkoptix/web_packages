@@ -32,7 +32,7 @@
             #F5F7F8 30%,
             #FFFFFF 40%
     );
-    
+
     --h1 : #{$dark9};
     --h2 : #{$dark9};
     --h3 : #{$dark9};
@@ -40,15 +40,15 @@
     --h5 : #{$dark9};
     --h6 : #{$dark9};
     --h7 : #{$dark9};
-    
+
     --elements-disabled : #{$light10};
-    
+
     --svg-std-icon-fill : #{$light16};
     --svg-path-light-color: #{$light4};
     --svg-path-dark-color: #{$dark9};
-    
+
     --text-placeholder-color : #{$light16};
-    
+
     --scrollbar-color                   : var(--light16);
     --scrollbar-thumb-bg                : var(--light10);
     --scrollbar-thumb-border-color      : var(--additional_light1);
@@ -69,7 +69,7 @@
     --radio-active-color       : #{$dark11};
     --radio-active-check-color : #{$brand_core};
     --radio-active-hover-color : #{$dark3};
-    
+
     --checkbox-color              : #{$dark9};
     --checkbox-check-color        : #{$brand_core};
     --checkbox-hover-color        : #{$dark1};
@@ -77,24 +77,24 @@
     --checkbox-active-color       : #{$dark9};
     --checkbox-active-check-color : #{$brand_core};
     --checkbox-active-hover-color : #{$dark1};
-    
+
     --auth-header-bg       : #{$additional_light1};
     --auth-header-color    : #{$dark9};
     --auth-subheader-color : #{$dark9};
     --auth-body-bg         : #{$light1};
     --auth-pill-bg         : #{$light3};
-    
+
     --border-color         : #{$light4};
     --border-hover-color   : #{$light8};
     --border-active-color  : #{$light10};
     --horizontal-sep-color : #{$light6};
     --label-color          : #{$dark9};
-    
+
     --placehoder-cloud-color   : #{$brand_core};
     --placehoder-cloud-opacity : .1;
     --placehoder-title-color : #{$dark9};
     --placehoder-body-color : #{$dark9};
-    
+
     --switch-disabled-color       : #{$light8};
     --switch-selected-color       : #{$green_main};
     --switch-selected-hover-color : #{$green_l1};
@@ -106,7 +106,7 @@
     --switch-warning-hover-color  : #{$red_l2};
     --switch-circle-color         : #{$red_d1};
     --switch-circle-disable-color : #{$light12};
-    
+
     --developer-menu-bg : #{$additional_light2};
     --developer-menu-base-color : #{$dark10};
     
@@ -131,6 +131,9 @@
     --left-menu-disabled-item-color             : #{$light13};
     --left-menu-disabled-item-addtitional-color : #{$light10};
     
+    --header-level-one-active-bg     : #{$additional_light2};
+    --header-level-one-active-color  : #{$dark9};
+    --header-level-two-bg            : #{$light5};
     // View tab ********************************
     --view-bg                    : #{$additional_light2};
     --view-search-bg             : #{$additional_light2};
@@ -139,16 +142,16 @@
     --view-search-hover-color    : #{$dark9};
     --view-search-active-bg      : #{$light1};
     --view-search-active-color   : #{$dark9};
-    
+
     --control-color              : #{$light4};
     --control-enabled-color      : #{$light16};
     --control-hoved-bg           : #{$additional_light3};
     --control-active-bg          : #{$light5};
-    
+
     --left-menu-view-hover-bg    : #{$additional_light3};
     --left-menu-view-selected-bg : #{$light5};
     // end View tab ****************************
-    
+
     --time-under-mouse-bg            : rgba(var(--light6--rgb), 0.9);
     --time-under-mouse-color         : #{$dark9};
     --timeline-bg                    : #{$light1};
@@ -157,32 +160,32 @@
     --timeline-scrollbar-stripe-bg   : #{$dark12};
     --timeline-scrollbutton-bg       : rgba(var(--dark9--rgb), 0.15);
     --timeline-scrollbutton-hover-bg : rgba(var(--dark9--rgb), 0.25);
-    
+
     --paginator-bg    : #{$light4};
     --paginator-color : #{$light16};
     --paginator-hover-bg : #{$light5};
     --paginator-hover-color : #{$light16};
     --paginator-active-bg : #{$light16};
     --paginator-active-color : #{$light1};
-    
+
     --btn-download-hover-bg : #{$light5};
-    
+
     --btn-close-hover-bg  : #{$additional_light2};
     --btn-close-hover-color : #{$light10};
     --btn-close-active-bg : #{$additional_light3};
     --btn-close-active-color : #{$light17};
-    
+
     --btn-text-color        : #{$light16};
     --btn-text-hover-color  : #{$dark15};
     --btn-text-active-color : #{$light16};
-    
+
     --btn-clear-bg    : transparent;
     --btn-clear-color : #{$dark9};
     --btn-clear-hover-bg  : rgba(var(--light16--rgb), .1);
     --btn-clear-hover-color  : #{$dark9};
     --btn-clear-active-bg : rgba(var(--light16--rgb), .15);
     --btn-clear-active-color : #{$dark9};
-    
+
     --btn-dropdown-toggle-bg             : #{$light4};
     --btn-dropdown-toggle-color          : #{$dark9};
     --btn-dropdown-toggle-selected-color : #{$light1};
@@ -198,14 +201,14 @@
     --btn-tag-selected-hover-bg          : #{$light17};
     --btn-tag-selected-active-bg         : #{$light18};
     --btn-tag-selected-color             : #{$light1};
-    
+
     --btn-arrow-bg             : #{$light4};
     --btn-arrow-color          : #{$light16};
     --btn-arrow-hover-bg       : #{$light5};
     --btn-arrow-hover-color    : #{$light16};
     --btn-arrow-selected-bg    : #{$light6};
     --btn-arrow-selected-color : #{$light16};
-    
+
     --btn-default-bg           : #{$light4};
     --btn-default-color        : #{$dark9};
     --btn-default-shadow       : inset 0 -1px 0 0 #{$light7};
@@ -235,21 +238,21 @@
     --btn-danger-active-bg     : #{$red_d2};
     --btn-danger-active-color  : #{$light1};
     --btn-danger-active-shadow : #{$red_d4};
-    
+
     --btn-header-saparator-color : #{$light4};
     --btn-header-main-bg         : #{$light4};
     --btn-header-main-color      : #{$dark9};
     --btn-header-main-hover-bg   : #{$light2};
-    
+
     --tab-link-hover-bg            : #{$light3};
     --tab-link-hover-bottom-color  : #{$light6};
     --tab-link-active-bg           : #{$light3};
     --tab-link-active-bottom-color : #{$light6};
     --tab-link-selected-color      : #{$brand-core};
-    
+
     --dropdown-menu-arrow-color : #{$light4};
     --dropdown-menu-arrow-fill-color : #{$additional_light1};
-    
+
     --dropdown-menu-border : none;
     --dropdown-menu-top-border : none;
     --dropdown-menu-shadow : 0 1rem 2rem 0 #{$light15};
@@ -262,7 +265,7 @@
     --dropdown-item-hover-color : #{$dark9};
     --dropdown-item-selected-bg : #{$light16};
     --dropdown-item-selected-color : #{$light1};
-    
+
     // part of drop-menu
     --system-tile-icon-offline-color : #{$red_l2};
     --system-tile-name-color : #{$dark9};
@@ -277,7 +280,7 @@
     --system-tile-nav-link-active-bg : #{$light5};
     --system-tile-nav-link-active-border-color : #{$light6};
     // *****************
-    
+
     --swagger-get-bg    : #{$blue9};
     --swagger-put-bg    : #{$orange_l1};
     --swagger-delete-bg : #{$red_l1};
@@ -290,13 +293,13 @@
     --swagger-btn-value-number-color : #{$green_main};
     --swagger-textarea-color : #{$light12};
     --swagger-required-color : rgba(var(--red_main--rgb), .6);
-    
+
     --tabset-bg : #{$light1};
     --tabset-hover-bg : #{$light3};
     --tabset-color : #{$dark12};
-    
+
     --footer-color : #{$light16};
-    
+
     --table-alt-row-bg : #{$additional_light1};
     --table-row-hover-bg : rgba(var(--brand_core--rgb), .1);
     
@@ -306,31 +309,31 @@
     --card-header-text : #{$dark9};
     --card-body-bg : #{$light1};
     --card-hover-bg : #{$light1};
-    
+
     --card-simple-info-bg           : rgba(var(--brand_core--rgb), .1);
     --card-simple-info-border-color : rgba(var(--brand_core--rgb), .3);
     --card-simple-info-color        : #{$dark9};
-    
+
     --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
     --card-simple-warning-color        : #{$dark9};
-    
+
     --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
     --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
     --card-simple-error-color : #{$dark9};
-    
+
     --card-simple-default-bg : #{$red2};
     --card-simple-default-color : #{$dark9};
     --card-simple-default-border-color : #{$red1};
-    
+
     --card-capability-header-bg : #{$dark11};
     --card-capability-intro-color : #{$light10};
     --card-capability-icon : #{$brand-core};
-    
+
     --support-lang-wrapper-bg : #{$light4};
     --support-lang-wrapper-color : #{$light16};
     --support-tech-apple-color : #{$dark1};
-    
+
     --input-bg                 : #{$light1};
     --input-color              : #{$dark9};
     --input-border-color       : #{$light6};
@@ -343,10 +346,10 @@
     --input-active-bg           : #{$light1};
     --input-active-color        : #{$dark9};
     --input-active-border-color : #{$light6};
-    
+
     --input-numeric-arrow-bg : #{$light1};
     --input-numeric-arrow-color : #{$dark9};
-    
+
     --badge-opacity : 1;
     --badge-base-bg : #{$light4};
     --badge-base-hover-bg : #{$light5};
@@ -354,7 +357,7 @@
     --badge-base-selected-bg : #{$light16};
     --badge-base-selected-hover-bg : #{$light17};
     --badge-base-selected-active-bg : #{$light18};
-    
+
     --badge-default-bg : #{$light8};
     --badge-color : #{$light1};
     --badge-selected-color : #{$light1};
@@ -368,7 +371,7 @@
     --badge-info-bg  : #{$brand_core};
     --badge-integration-bg : #{$light4};
     --badge-integration-color : #{$light16};
-    
+
     --grey-section-bg: var(--light4);
     --grey-section-sep-color: var(--light6);
     

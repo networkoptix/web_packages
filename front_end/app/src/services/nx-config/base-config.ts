@@ -182,6 +182,7 @@ const FeatureFlagKeys = [
     'viewCameraDetails',
     'themesEnabled',
     'paginatorExperimental',
+    'newHeader'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -455,6 +456,7 @@ export interface Images {
     dirDevelopersDevtools: string;
     dirLanding: string;
     dirLandingGraphic: string;
+    dirHeader: string;
 }
 
 export interface Platform {

@@ -1,0 +1,57 @@
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables_common" as *;
+
+.menu-level-two {
+    display: flex;
+    height: 58px;
+    background-color: var(--header-level-two-bg);
+    @include typography.regular14nocolor;
+    color: var(--light4);
+
+    .logo-area {
+        overflow: auto;
+        width: 256px;
+        .logo {
+            border-right: 1px solid var(--dark11);
+            height: 26px;
+            margin: 15px 0px;
+            svg-icon {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+
+
+    .create-account {
+        margin : 14px 16px 13px auto;
+        width  : 123px !important;
+        border-radius: 4px !important;
+    }
+
+    .menu-items {
+        margin-left: 25px;
+        overflow-y: visible;
+        display: flex;
+        .outer-menu-item {
+            white-space: nowrap;
+            display: inline;
+            width: auto;
+            margin: 19px 32px 23px 0px;
+            .inner-menu-item {
+                color: var(--light6);
+                &:hover {
+                    cursor: pointer;
+                }
+                padding-bottom: 16px;
+                &.active {
+                    color: var(--light4);
+                    border-bottom: 2px solid var(--brand_core);
+                }
+                svg-icon svg{
+                    margin-bottom: 2px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<div class="menu-level-one">
+    <ng-container *ngFor="let node of menuNodes">
+        <button (click)="node.url ? headerService.handleNav(node, $event) : null; onNodeSelect(node)"
+                [ngClass]="{ 'active': node === selectedNode}"
+                class="menu-item btn btn-menu">
+                {{ node.display_name }}
+        </button>
+    </ng-container>
+    <button class="btn auth-section" translate>
+        LOG IN / SIGN IN
+    </button>
+</div>

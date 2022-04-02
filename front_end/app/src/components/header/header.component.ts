@@ -94,6 +94,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     systemCounter: number;
     loginState;
     hideWebAdmin = false;
+    newHeader = false;
 
     // Observables used to manage component view states for adaptive views
     showIcon$ = new BehaviorSubject(true);
@@ -144,6 +145,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private cookieService: CookieService
     ) {
         this.CONFIG = configService.getConfig();
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.LANG = languageService.translations;
         this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
             this.headerService.nodes = this.menusService.cleanEmptyNodes(header.nodes);
