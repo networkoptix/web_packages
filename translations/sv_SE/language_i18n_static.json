@@ -199,12 +199,12 @@
             "low": "Låg"
         },
         "intervals": {
-            "yearS": "{count, plural, =0{# years} one{# year} other{# years}}",
-            "monthS": "{count, plural, =0{# months} one{# month} other{# months}}",
-            "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
-            "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
-            "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "yearS": "{count, plural, =0{# år} one{# år} other{# år}}",
+            "monthS": "{count, plural, =0{# månader} one{# månad} other{# månader}}",
+            "weekS": "{count, plural, =0{# veckor} one{# vecka} other{# veckor}}",
+            "dayS": "{count, plural, =0{# dagar} one{# dag} other{# dagar}}",
+            "hourS": "{count, plural, =0{# timmar} one{# timme} other{# timmar}}",
+            "minuteS": "{count, plural, =0{# minuter} one{# minut} other{# minuter}}"
         },
         "general": "Allmänt",
         "generalError": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
