@@ -2,6 +2,7 @@ from uuid import uuid4
 from cloud.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
 from api.views import utils
+from uuid import uuid4
 
 from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core.cache import caches, cache
@@ -424,18 +425,20 @@ class TestGetSettings:
 
 class TestIPVD:
     def test_post(self, arf, mocker):
-        cache_mock = mocker.patch.object(
+        version = str(uuid4())
+        delete_cache_mock = mocker.patch.object(
             utils.cache, 'delete', return_value=True)
+        mocker.patch.object(utils.cache, 'get', return_value=version)
         request = arf.post('/api/ipvd')
 
         # Test cache cleared
         response = utils.get_ipvd(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {utils.IPVD_CACHE_CLEARED}
-        cache_mock.assert_called_with('ipvd')
+        delete_cache_mock.assert_called_with(version)
 
         # Test no cached IPVD
-        cache_mock.return_value = False
+        delete_cache_mock.return_value = False
         response = utils.get_ipvd(request)
         assert response.status_code == status.HTTP_202_ACCEPTED
         assert response.data == {utils.IPVD_CACHE_NOT_CLEARED}
@@ -444,13 +447,22 @@ class TestIPVD:
         ipvd_mock = mocker.patch.object(utils.requests, 'get')
         ipvd_mock.return_value = MockResponse(json=ipvd_data)
 
+        # Should redirect if not versioned request
         request = arf.get('/api/ipvd')
+        response = utils.get_ipvd(request)
+
+        versioned_url = response.url
+
+        assert response.status_code == status.HTTP_302_FOUND
+
+        # Versioned request should return data
+        request = arf.get(versioned_url)
         response = utils.get_ipvd(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ipvd_data_processed
 
         # Test cached
-        request = arf.get('/api/ipvd')
+        request = arf.get(versioned_url)
         response = utils.get_ipvd(request)
         ipvd_data_processed['cached'] = True
         assert response.status_code == status.HTTP_200_OK

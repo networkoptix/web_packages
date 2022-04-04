@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^utils/downloads/?$',                 utils.downloads),
     url(r'^utils/settings/?$',                  utils.get_settings),
     url(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),
-    url(r'^ipvd$',                              utils.get_ipvd),
+    url(r'^ipvd$',                              utils.get_ipvd, name='get-ipvd'),
 
 
     url(r'^account/activate$',           account.activate),

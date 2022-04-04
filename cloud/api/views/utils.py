@@ -3,7 +3,9 @@ import datetime
 import json
 import logging
 import re
+from django.urls import reverse
 from py import process
+from uuid import uuid4
 
 import requests
 from django.core.cache import cache, caches
@@ -374,20 +376,21 @@ def get_settings(request):
     serializer.is_valid()
     return Response(serializer.data)
 
+IPVD_CACHE_CLEARED = 'IPVD cache cleared'
+IPVD_CACHE_NOT_CLEARED = 'No cached IPVD to clear'
+IPVD_EXPIRES = 60**2 * 24
+IPVD_CACHE_HEADER = {'Cache-Control': f'max-age={IPVD_EXPIRES}'}
 
-def check_ipvd_cache_response():
+
+def check_ipvd_cache_response(version):
     if all(
-            k in (ipvd := cache.get('ipvd', {}))
+            k in (ipvd := cache.get(version, {}))
             for k in ("cameras", "vendors", "analytics", "num_cameras")
     ):
         return Response({
             **ipvd,
             "cached": True
-        })
-
-
-IPVD_CACHE_CLEARED = 'IPVD cache cleared'
-IPVD_CACHE_NOT_CLEARED = 'No cached IPVD to clear'
+        }, headers=IPVD_CACHE_HEADER)
 
 
 @swagger_auto_schema(method="GET",
@@ -402,21 +405,39 @@ IPVD_CACHE_NOT_CLEARED = 'No cached IPVD to clear'
 @permission_classes((AllowAny,))
 def get_ipvd(request):
     url = settings.IPVD_CONNECT
+    current_version = cache.get('ipvd', None)
 
     if request.method == 'GET':
-        if response := check_ipvd_cache_response():
+        version = request.GET.get('version')
+
+        if not current_version:
+            # Update current version and redirect to cacheable url
+            current_version = str(uuid4())
+            cache.set('ipvd', current_version)
+            return redirect(f'{reverse("get-ipvd")}?version={current_version}')
+
+        elif version != current_version:
+            # Redirect to new version if changed. Only really happens if IPVD cache was cleared
+            return redirect(f'{reverse("get-ipvd")}?version={current_version}')
+
+        if response := check_ipvd_cache_response(version):
             return response
 
         cameras = requests.get(url, "[]").json()
         serializer = IpvdSerializer(data=cameras)
         serializer.is_valid()
         ipvd = serializer.data
-        cache.set("ipvd", ipvd, 60**2 * 24)
 
-        return Response(ipvd)
+        # Save the IPVD data as the current version
+        cache.set(current_version, ipvd, IPVD_EXPIRES)
+
+        # The IPVD cache header max-age could outlive the data ttl in the cache but that's ok since we already checked the version
+        return Response(ipvd, headers=IPVD_CACHE_HEADER)
 
     elif request.method == 'POST':
-        cleared = cache.delete("ipvd")
+        # Really only care about deleting the ipvd cache so might not even have to check if current_version cache was deleted
+        cleared = cache.delete("ipvd") and cache.delete(current_version)
+
         return Response({IPVD_CACHE_CLEARED}) if cleared else Response({IPVD_CACHE_NOT_CLEARED}, status.HTTP_202_ACCEPTED)
 
 
