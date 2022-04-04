@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api.account_backend import get_ip
+from api.models import AccountCustomProperty
 from cloud.controllers.cloud_api import Auth, System
 from cloud.helpers.exceptions import (
     require_params, api_success, APILogicException, APINotAuthorisedException, APIRequestException, ErrorCodes
@@ -186,11 +187,19 @@ def authenticate(request):
     redirect_uri = get_param(request, "redirect_uri") or "/"
     state = get_param(request, "state")
     scope = get_param(request, "scope")
+    email = get_param(request, "email")
+
+    if link_alexa := state == 'alexa':
+        # NOTE: Keeping it simple here since Alexa is our only current use case where we want to persist custom-properties for a user
+        # If we have had a use case where we to set custom-properties data for a user when they authenticate from a third party we
+        # could have state be something like this {"customProperty": "some-key-for-app", "value": {"some": "custom value"}}
+        # and the AccountCustomProperty.alexa_account_linked could be replaces with a more generic method to handle any property.
+        state = None
 
     if signature := get_param(request, "signature"):
         check_signature(signature, scope, redirect_uri)
 
-    res = Auth.get_code(email=get_param(request, "email"),
+    res = Auth.get_code(email=email,
                         password=get_param(request, "password"),
                         client_id=get_param(request, "client_id"),
                         ip=ip,
@@ -202,9 +211,12 @@ def authenticate(request):
         "link": build_redirect_url(redirect_uri, res.get('code'), state)
     }
 
-    error = res.get("error")
-    if error:
+
+    if error := res.get("error"):
         data["error"] = error
+
+    elif link_alexa:
+        AccountCustomProperty.alexa_account_linked(email)
 
     return api_success(data)
 

@@ -373,3 +373,11 @@ class AccountCustomProperty(models.Model):
 
     def __str__(self):
         return f'{self.account} - {self.endpoint}'
+
+    @staticmethod
+    def alexa_account_linked(email):
+        if account := Account.objects.filter(email=email).first():
+            alexa_settings, _ = AccountCustomProperty.objects.get_or_create(account=account, endpoint='alexa')
+            if not alexa_settings.json_data or not isinstance(alexa_settings.json_data, dict) or not alexa_settings.json_data.get('accountLinked', False):
+                alexa_settings.json_data = {"accountLinked": True}
+                alexa_settings.save()
