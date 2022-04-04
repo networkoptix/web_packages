@@ -1,11 +1,14 @@
 from bs4 import BeautifulSoup
+from uuid import uuid4
 from dal_select2.widgets import ModelSelect2, ModelSelect2Multiple
 from django.db.models.query import QuerySet
 from django.forms.fields import *
 from django.forms.models import ModelChoiceField, ModelMultipleChoiceField
 from django.forms.widgets import CheckboxInput, HiddenInput, PasswordInput, RadioSelect, Select, TextInput, Textarea
+from django.contrib.admin import site
 from cms.forms import *
 from cms.models import *
+from conftest import generate_uuids
 from mock import patch
 from cms.controllers.modify_db import GUID_REGEXP
 from model_bakery import baker
@@ -71,6 +74,144 @@ class TestHelperFunctions:
         assert list(filter(lambda html_snippet: not isinstance(html_snippet, str), BeautifulSoup(branding_variables, "html.parser").contents))
 
 
+    @pytest.fixture()
+    def setup_custom_context_form_helper(self, db):
+        self.asset = baker.make(Asset)
+        self.context = baker.make(Context)
+        self.language = baker.make(Language)
+
+    def test_datastructure_is_disabled_if_cannot_edit_advanced(self, mocker, db, setup_custom_context_form_helper):
+        mocker.patch('cms.models.Asset.version_id', return_value=2)
+        ds = baker.make('datastructure', protected=True)
+        assert datastructure_is_disabled(ds, self.asset, self.context, self.language, False)
+
+        mocker.patch('cms.models.Asset.version_id', return_value=0)
+        ds.advanced = True
+        ds.save()
+        assert datastructure_is_disabled(ds, self.asset, self.context, self.language, False)
+
+    @pytest.fixture()
+    def setup_generate_description(self, db):
+        self.ds_desc = str(uuid4())
+        self.ds = baker.make(DataStructure, description=self.ds_desc)
+
+    def test_generate_description(self, setup_generate_description):
+        assert generate_description(self.ds, None, None) == self.ds_desc
+
+    def test_generate_description_guid(self, setup_generate_description):
+        self.ds.type = DataStructure.DATA_TYPES.guid
+        self.ds.save()
+
+        assert GUID_DESCRIPTION in generate_description(self.ds, None, None)
+
+    def test_generate_description_with_meta_settings(self, setup_generate_description, mocker):
+        mock_strs = generate_uuids(2)
+        branding_shortcuts, hidden_branding_shortcuts = generate_uuids(2)
+        mocker.patch('cms.forms.convert_meta_to_description', return_value=mock_strs[0])
+        mock_generate_branding_variables = mocker.patch('cms.forms.generate_branding_variables', return_value=mock_strs[1])
+        self.ds.meta_settings = { 'brand_vars': True }
+        self.ds.save()
+
+        desc = generate_description(self.ds, branding_shortcuts, hidden_branding_shortcuts)
+        for str in mock_strs:
+            assert str in desc
+
+        mock_generate_branding_variables.assert_called_once_with(self.ds, branding_shortcuts, hidden_branding_shortcuts)
+
+    def test_get_widget(self, db, mocker):
+        placeholder = str(uuid4())
+        ds = baker.make(DataStructure, placeholder=placeholder)
+
+        widget = get_widget(ds)
+        assert isinstance(widget, forms.TextInput)
+        assert widget.attrs['size'] == 80
+        assert widget.attrs['placeholder'] == placeholder
+
+        ds.type = DataStructure.DATA_TYPES.object
+        ds.save()
+        assert isinstance(get_widget(ds), forms.Textarea)
+
+        ds.type = DataStructure.DATA_TYPES.array
+        ds.save()
+        assert isinstance(get_widget(ds), forms.Textarea)
+
+        ds.type = DataStructure.DATA_TYPES.html
+        ds.save()
+        widget = get_widget(ds)
+        assert isinstance(widget, forms.Textarea)
+        assert widget.attrs == {'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': placeholder}
+
+        ds.type = DataStructure.DATA_TYPES.long_text
+        ds.save()
+        widget = get_widget(ds)
+        assert isinstance(widget, forms.Textarea)
+        assert widget.attrs['placeholder'] == placeholder
+
+        ds.type = DataStructure.DATA_TYPES.multiselect
+        ds.save()
+        widget = get_widget(ds)
+        assert isinstance(widget, forms.CheckboxSelectMultiple)
+        assert widget.attrs['class'] == 'nodots'
+
+        mocker.patch('cms.models.DataStructure.get_foreign_key_config', return_value=(DataStructure, {}))
+        ds.type = DataStructure.DATA_TYPES.foreign_key
+        ds.save()
+        widget = get_widget(ds)
+        assert isinstance(widget, ForeignKeyRawIdWidget)
+        assert widget.admin_site == site
+
+    def test_get_record_value(self, db, mocker):
+        mock_value = { 'val1': str(uuid4()), 'val2': str(uuid4()) }
+        mocker.patch('cms.models.DataStructure.find_actual_value', return_value = mock_value)
+
+        ds = baker.make(DataStructure)
+        record_value = get_record_value(ds, None, None)
+        assert record_value == mock_value
+
+    def test_get_record_value_images_and_files_uses_placeholders(self, db, mocker):
+        mocker.patch('cms.models.DataStructure.find_actual_value', return_value = {})
+        placeholder, default = generate_uuids(2)
+        ds = baker.make(DataStructure, type=DataStructure.DATA_TYPES.image, default=default)
+        assert get_record_value(ds, None, None) == default
+        ds.placeholder = placeholder
+        ds.save()
+        # Placeholder takes precendence over default
+        assert get_record_value(ds, None, None) == placeholder
+
+        ds.type = DataStructure.DATA_TYPES.file
+        ds.save()
+        assert get_record_value(ds, None, None) == placeholder
+
+    def test_get_record_value_select_and_multiselect(self, db, mocker):
+        label1, label2 = generate_uuids(2)
+        mock_value = [
+            { 'label': label1 },
+            { 'label': label2 }
+        ]
+        mocker.patch('cms.models.DataStructure.find_actual_value', return_value = list(mock_value))
+
+        # Test Select
+        ds = baker.make(DataStructure, type=DataStructure.DATA_TYPES.select)
+        record_value = get_record_value(ds, None, None)
+        assert record_value[0] == label1
+        assert record_value[1] == label2
+
+        # Test Multiselect
+        ds.type = DataStructure.DATA_TYPES.multiselect
+        ds.save()
+        record_value = get_record_value(ds, None, None)
+        assert record_value[0] == label1
+        assert record_value[1] == label2
+
+    def test_get_record_value_check_box(self, db, mocker):
+        ds = baker.make(DataStructure, type=DataStructure.DATA_TYPES.check_box)
+
+        # check_box with no found actual_value
+        assert get_record_value(ds, None, None) == ''
+
+        mocker.patch('cms.models.DataStructure.find_actual_value', return_value = str(uuid4()))
+        assert get_record_value(ds, None, None) == 'on'
+
 class TestCustomContextForm:
     @pytest.fixture(autouse=True)
     def setup(self, django_user_model):
@@ -93,58 +234,43 @@ class TestCustomContextForm:
         self.form = CustomContextForm(initial={'language': self.language, 'context': self.context.id},  order = None)
 
     @pytest.fixture()
-    def create_datastructures(self):
+    def create_datastructures(self, mocker):
         baker.make("DataStructure",
-                    name="datastructure1",
+                    name="textType",
                     context=self.context,
                     label='label1',
                     optional=False,
-                    description='datastructure1 description',
+                    description='textType description',
                     meta_settings={'char_limit': 200, 'regex': '^[a-zA-Z0-9_.+-]' },
-                    placeholder='ds1 placeholder')
+                    placeholder='ds1 placeholder', type=0)
 
         baker.make("DataStructure",
-                    name="datastructure2",
-                    context=self.context,
-                    description='guid description',
-                    translatable=False,
-                    # GUID type
-                    type=5
-                    )
+                name="imageType",
+                context=self.context,
+                label='image field',
+                description='i am an image field',
+                meta_settings={'size': 4000000 },
+                # Image
+                type=1)
 
         baker.make("DataStructure",
-                    name="datastructure3",
-                    context=self.context,
-                    label='label3',
-                    protected=True,
-                    advanced=True,
-                    # Array
-                    type=11,)
-
-        baker.make("DataStructure",
-                    name="datastructure4",
-                    context=self.context,
-                    # Object
-                    type=10)
-
-        baker.make("DataStructure",
-                    name="datastructure5",
+                    name="HTMLType",
                     context=self.context,
                     placeholder='ds5 placeholder',
                     # HTML
                     type=2)
 
         baker.make("DataStructure",
-                    name="datastructure6",
+                    name="longTextType",
                     context=self.context,
-                    label='image field',
-                    description='i am an image field',
-                    meta_settings={'size': 4000000 },
-                    # Image
-                    type=1)
+                    label='long_text field',
+                    description='i am a long_text field',
+                    placeholder='long_text placeholder',
+                    # Long Text
+                    type=3)
 
         baker.make("DataStructure",
-                    name="datastructure7",
+                    name="fileType",
                     context=self.context,
                     label='file field',
                     description='i am a file field',
@@ -153,7 +279,16 @@ class TestCustomContextForm:
                     type=4)
 
         baker.make("DataStructure",
-                    name="datastructure8",
+                    name="GUIDType",
+                    context=self.context,
+                    description='guid description',
+                    translatable=False,
+                    # GUID type
+                    type=5
+                    )
+
+        baker.make("DataStructure",
+                    name="selectType",
                     context=self.context,
                     label='select field',
                     description='i am a select field',
@@ -162,16 +297,7 @@ class TestCustomContextForm:
                     type=6)
 
         baker.make("DataStructure",
-                    name="datastructure9",
-                    context=self.context,
-                    label='multiselect field',
-                    description='i am a multiselect field',
-                    meta_settings={'options': ['option1', 'option2'] },
-                    # MultiSelect
-                    type=12)
-
-        baker.make("DataStructure",
-                    name="datastructure10",
+                    name="checkboxType",
                     context=self.context,
                     label='checkbox field',
                     description='i am a checkbox field',
@@ -179,14 +305,37 @@ class TestCustomContextForm:
                     type=9)
 
         baker.make("DataStructure",
-                    name="datastructure11",
+                    name="objectType",
                     context=self.context,
-                    label='long_text field',
-                    description='i am a long_text field',
-                    placeholder='long_text placeholder',
-                    # Long Text
-                    type=3)
+                    # Object
+                    type=10)
 
+        baker.make("DataStructure",
+                    name="arrayType",
+                    context=self.context,
+                    label='label3',
+                    protected=True,
+                    advanced=True,
+                    # Array
+                    type=11,)
+
+        baker.make("DataStructure",
+                    name="multiselectType",
+                    context=self.context,
+                    label='multiselect field',
+                    description='i am a multiselect field',
+                    meta_settings={'options': ['option1', 'option2'] },
+                    # MultiSelect
+                    type=12)
+
+        mocker.patch('cms.models.DataStructure.get_foreign_key_config', return_value=(DataStructure, {}))
+        baker.make("DataStructure",
+                    name="foreignKeyType",
+                    context=self.context,
+                    label='foreignKey field',
+                    description='i am a foreignKey field',
+                    # ForeignKey
+                    type=14)
 
     def test_form_init(self, mock_init_helpers, init_form):
         assert self.form.fieldsets == {}
@@ -206,125 +355,92 @@ class TestCustomContextForm:
         assert self.form.fieldsets == {}
 
     def test_add_fields(self, create_datastructures, init_form):
-        # This test follows the same flow as the function it is testing
         self.form.add_fields(self.asset, self.context, self.language, self.user)
 
-        #fieldsets exist
-        assert self.form.fieldsets != {}
-        field_one = self.form.fields['datastructure1']
-        guid_field = self.form.fields['datastructure2']
-        array_field = self.form.fields['datastructure3']
-        object_field = self.form.fields['datastructure4']
-        html_field = self.form.fields['datastructure5']
-        image_field = self.form.fields['datastructure6']
-        file_field = self.form.fields['datastructure7']
-        select_field = self.form.fields['datastructure8']
-        multiselect_field = self.form.fields['datastructure9']
-        checkbox_field = self.form.fields['datastructure10']
-        long_text_field = self.form.fields['datastructure11']
+        # Text Field
+        text_field = self.form.fields['textType']
+        assert text_field.label == 'label1'
+        assert '<br>Character limit: 200' in text_field.help_text
+        # default widget
+        assert isinstance(text_field.widget, TextInput)
+        assert text_field.widget.attrs['placeholder'] == 'ds1 placeholder'
+        assert text_field.validators[0].regex == re.compile('^[a-zA-Z0-9_.+-]$')
+        assert text_field.required == True
+        # Char limit in meta_settings properly assigns to maxlength
+        assert text_field.widget.attrs['maxlength'] == 200
 
-        # label uses label, otherwise uses name
-        assert field_one.label == 'label1'
-        assert guid_field.label == 'datastructure2'
-
-        # meta_settings get added to help_text
-        assert '<br>Character limit: 200' in field_one.help_text
-
-        # GUID Format added to description if required
-        assert ("<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal characters (0-9, a-f, A-F)<br>This record is the same for every language.<br>Regex pattern: \{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$"
-                in guid_field.help_text)
-
-        # If data structure is not translatable but context is, something is added to the description.
-        assert '<br>This record is the same for every language.' in guid_field.help_text
-
-        # Default widget settings
-        assert isinstance(field_one.widget, TextInput)
-        assert field_one.widget.attrs['size'] == 80
-        assert field_one.widget.attrs['placeholder'] == 'ds1 placeholder'
-
-
-        # Test Disabled Conditionals
-        # The GUID field is disabled because datastructure is not translatable and language is not set to the default language
-        assert guid_field.disabled
-        # Array field is disabled because user can not 'edit advanced' while the datastructure is set to protected and advanced.
-        assert array_field.disabled
-
-        # Array and object fields
-        assert isinstance(array_field.widget, Textarea)
-        assert isinstance(object_field.widget, Textarea)
-                                            # Default widget attrs
-        assert array_field.widget.attrs == {'cols': '40', 'rows': '10'}
-        assert object_field.widget.attrs == {'cols': '40', 'rows': '10'}
-
-        # HTML type field
-        assert isinstance(html_field.widget, Textarea)
-        assert html_field.widget.attrs == {'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': 'ds5 placeholder'}
-
-        # Image type field
+        # Image field
+        image_field = self.form.fields['imageType']
         assert isinstance(image_field, ImageField)
         assert image_field.label == 'image field'
         assert 'i am an image field' in image_field.help_text
-        assert image_field.required == False
         # Meta settings on image field
         assert int(image_field.widget.attrs['size']) == 3995074
 
         # File type field
+        file_field = self.form.fields['fileType']
         assert isinstance(file_field, FileField)
         assert file_field.label == 'file field'
         assert 'i am a file field' in file_field.help_text
         # Meta settings on file field
         assert int(file_field.widget.attrs['size']) == 3995074
 
+        # GUID field
+        guid_field = self.form.fields['GUIDType']
+        assert guid_field.label == 'GUIDType'    # No label, default to name
+        assert ("<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal characters (0-9, a-f, A-F)<br>This record is the same for every language.<br>Regex pattern: \{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$"
+                in guid_field.help_text)
+        # If data structure is not translatable but context is, something is added to the description.
+        assert '<br>This record is the same for every language.' in guid_field.help_text
+        # The GUID field is disabled because datastructure is not translatable and language is not set to the default language
+        assert guid_field.disabled
+        assert guid_field.widget.attrs['pattern'] == GUID_REGEXP
+        pattern_description = f'Regex pattern: {GUID_REGEXP}'
+        assert guid_field.widget.attrs['title'] == pattern_description
+        assert pattern_description in guid_field.help_text
+
         # Select field
+        select_field = self.form.fields['selectType']
         assert isinstance(select_field, ChoiceField)
         assert select_field.label == 'select field'
         assert 'i am a select field' in select_field.help_text
         assert tuple(select_field.choices) == (('option1', 'option1'),)
         assert select_field.required == False
         assert select_field.disabled == False
-        # MultiSelect field
-        assert isinstance(multiselect_field, MultipleChoiceField)
-        assert multiselect_field.label == 'multiselect field'
-        assert 'i am a multiselect field' in multiselect_field.help_text
-        assert tuple(multiselect_field.choices) == (('option1', 'option1'), ('option2', 'option2'))
-        assert multiselect_field.required == False
-        assert multiselect_field.disabled == False
 
         # Checkbox field
+        checkbox_field = self.form.fields['checkboxType']
         assert isinstance(checkbox_field, BooleanField)
         assert checkbox_field.disabled == False
         assert checkbox_field.help_text == 'i am a checkbox field'
         assert checkbox_field.label == 'checkbox field'
         assert checkbox_field.disabled == False
 
-        # Longtext field
-        assert isinstance(long_text_field.widget, Textarea)
-        assert long_text_field.widget.attrs['placeholder'] == 'long_text placeholder'
+        # Array and object field
+        array_field = self.form.fields['arrayType']
+        object_field = self.form.fields['objectType']
+        # Array field is disabled because user can not 'edit advanced' while the datastructure is set to protected and advanced.
+        assert array_field.disabled
+        assert isinstance(array_field.widget, Textarea)
+        assert isinstance(object_field.widget, Textarea)
 
-        # Regex validation tests
-        # $ is added to the end of the regex pattern
-        assert field_one.validators[0].regex == re.compile('^[a-zA-Z0-9_.+-]$')
+        # MultiSelect field
+        multiselect_field = self.form.fields['multiselectType']
+        assert isinstance(multiselect_field, MultipleChoiceField)
+        assert multiselect_field.label == 'multiselect field'
+        assert 'i am a multiselect field' in multiselect_field.help_text
+        assert tuple(multiselect_field.choices) == (('option1', 'option1'), ('option2', 'option2'))
+        assert multiselect_field.required == False
+        assert multiselect_field.disabled == False
+        assert multiselect_field.widget.attrs == {'class': 'nodots'}
 
-        # Guid field pattern == GUID regex
-        assert guid_field.widget.attrs['pattern'] == GUID_REGEXP
-        pattern_description = f'Regex pattern: {GUID_REGEXP}'
-        assert guid_field.widget.attrs['title'] == pattern_description
-        assert pattern_description in guid_field.help_text
-
-        # Default form text item tests
-        # Field_one's datastructure is not optional
-        assert field_one.required == True
-        # Char limit in meta_settings properly assigns to maxlength
-        assert field_one.widget.attrs['maxlength'] == 200
-
-    def test_add_fields_remove_language_gets_called(self, create_datastructures, init_form):
-        self.context.translatable = False
-        self.context.save()
-        # remove_language is triggered if translatable is false on the context
-        self.form.add_fields(self.asset, self.context, self.language, self.user)
-        assert 'language' not in self.form.fieldsets[None]
-
-
+        # Foreign Key Field
+        foreign_key_field = self.form.fields['foreignKeyType']
+        assert foreign_key_field.label == 'foreignKey field'
+        assert foreign_key_field.help_text == 'i am a foreignKey field'
+        assert foreign_key_field.required == False
+        assert foreign_key_field.disabled == False
+        assert isinstance(foreign_key_field.widget, ForeignKeyRawIdWidget)
 
 class TestAssetSettingsForm:
     @pytest.fixture(autouse=True)

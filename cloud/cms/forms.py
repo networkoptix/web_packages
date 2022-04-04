@@ -19,6 +19,8 @@ from cms.controllers.special_structures import SpecialStructures
 from cms.widgets import BootstrapMultiSelect
 
 BYTES_TO_MEGABYTES = 1048576.0
+GUID_DESCRIPTION = "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
+                                "characters (0-9, a-f, A-F)"
 
 
 def convert_meta_to_description(meta):
@@ -131,6 +133,76 @@ def generate_branding_variables(datastructure, branding_shortcuts=None, hidden_b
     )
 
 
+# CustomContextForm helpers
+def datastructure_is_disabled(datastructure, asset, context, language, can_edit_advanced):
+    is_published = asset.version_id() > 0
+    # If the data_structure is protected and published require users to have the edit advanced permission
+    disabled = not can_edit_advanced and (datastructure.protected and is_published or datastructure.advanced)
+    # Disable if datastructure is translatable and language is not default
+    return disabled or (not datastructure.translatable and language != asset.default_language
+                            and context.translatable)
+
+def generate_description(datastructure, branding_shortcuts, hidden_branding_shortcuts):
+    ds_description = datastructure.description
+
+    if datastructure.meta_settings:
+            ds_description += convert_meta_to_description(datastructure.meta_settings)
+            if 'brand_vars' in datastructure.meta_settings and datastructure.meta_settings['brand_vars']:
+                ds_description += generate_branding_variables(datastructure, branding_shortcuts, hidden_branding_shortcuts)
+
+    if datastructure.type == DataStructure.DATA_TYPES.guid:
+            ds_description += GUID_DESCRIPTION
+
+    return ds_description
+
+def get_widget(datastructure: DataStructure):
+    type = datastructure.type
+    if type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
+        return forms.Textarea()
+    if type == DataStructure.DATA_TYPES.html:
+        return forms.Textarea(
+                attrs={'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': datastructure.placeholder})
+    if type == DataStructure.DATA_TYPES.long_text:
+        return forms.Textarea(attrs={'placeholder': datastructure.placeholder})
+    if type == DataStructure.DATA_TYPES.multiselect:
+        return forms.CheckboxSelectMultiple(attrs={'class': 'nodots'})
+    if type == DataStructure.DATA_TYPES.foreign_key:
+        foreign_model, filters = datastructure.get_foreign_key_config()
+        temp_field = ForeignKey(foreign_model, on_delete=SET_NULL)
+        temp_field.model = Context
+        temp_field.remote_field.limit_choices_to = filters
+        return ForeignKeyRawIdWidget(rel=temp_field.remote_field, admin_site=site)
+
+    return forms.TextInput(attrs={'size': 80, 'placeholder': datastructure.placeholder})
+
+def get_record_value(datastructure, asset, language):
+    record_value = datastructure.find_actual_value(asset, language, draft=True)
+    if datastructure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
+        record_value = json.dumps(record_value, indent=4, separators=(',', ': '))
+
+    if datastructure.has_image_field or datastructure.has_file_field:
+        record_value = record_value or datastructure.placeholder or datastructure.default
+
+    if datastructure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
+        for i in range(len(record_value)):
+                if type(record_value[i]) == dict:
+                    record_value[i] = record_value[i]['label']
+
+    if datastructure.type == DataStructure.DATA_TYPES.check_box:
+        record_value = 'on' if record_value else ''
+
+    return record_value
+
+def get_choices(datastructure):
+    options = datastructure.meta_settings.get('options', [])
+    choices = []
+    for choice in options:
+        if type(choice) == dict:
+            choices.append((choice['label'], choice['label']))
+        else:
+            choices.append((choice, choice))
+    return choices
+
 class CustomContextForm(forms.Form):
     language = forms.ChoiceField(
         widget=forms.Select, label="Language")
@@ -147,6 +219,7 @@ class CustomContextForm(forms.Form):
         self.fields.pop('language')
 
     def add_fields(self, asset, context, language, user):
+        can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
         data_structures: QuerySet[DataStructure] = context.datastructure_set.all()
         fieldsets = {None: []}
         if self.order:
@@ -161,162 +234,20 @@ class CustomContextForm(forms.Form):
         if not context.translatable:
             self.remove_language()
 
-        is_published = asset.version_id() > 0
-        can_edit_advanced = UserGroupsToAssetPermissions.check_edit_advanced(user, asset)
-
-        for data_structure in data_structures:
-            ds_label = data_structure.label if data_structure.label else data_structure.name
-
-            ds_description = data_structure.description
-
-            if data_structure.meta_settings:
-                ds_description += convert_meta_to_description(data_structure.meta_settings)
-                if 'brand_vars' in data_structure.meta_settings and data_structure.meta_settings['brand_vars']:
-                    ds_description += generate_branding_variables(data_structure, self.branding_shortcuts, self.hidden_branding_shortcuts)
-
-            if data_structure.type == DataStructure.DATA_TYPES.guid:
-                ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
-                                  "characters (0-9, a-f, A-F)"
-
+        for ds in data_structures:
+            label = ds.label if ds.label else ds.name
+            description = generate_description(ds, self.branding_shortcuts, self.hidden_branding_shortcuts)
             ds_language = language
-            if not data_structure.translatable:
+            if not ds.translatable:
                 if context.translatable:
-                    ds_description += "<br>This record is the same for every language."
+                    description += "<br>This record is the same for every language."
                 ds_language = None
 
-            record_value = data_structure.find_actual_value(asset, ds_language, draft=True)
+            record_value = get_record_value(ds, asset, ds_language)
+            disabled = datastructure_is_disabled(ds, asset, context, language, can_edit_advanced)
+            widget_type = get_widget(ds)
 
-            widget_type = forms.TextInput(attrs={'size': 80, 'placeholder': data_structure.placeholder})
-
-            # If the data_structure is protected and published require users to have the edit advanced permission
-            disabled = not can_edit_advanced and (data_structure.protected and is_published or data_structure.advanced)
-            # Disable if datastructure is translatable and language is not default
-            disabled = disabled or (not data_structure.translatable and language != asset.default_language
-                                    and context.translatable)
-
-            if data_structure.type in [DataStructure.DATA_TYPES.object,
-                                       DataStructure.DATA_TYPES.array]:
-                record_value = json.dumps(record_value, indent=4, separators=(',', ': '))
-                widget_type = forms.Textarea()
-
-            elif data_structure.type == DataStructure.DATA_TYPES.html:
-                widget_type = forms.Textarea(
-                    attrs={'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': data_structure.placeholder})
-
-            elif data_structure.has_image_field:
-                if not record_value:
-                    record_value = data_structure.placeholder or data_structure.default
-                self.fields[data_structure.name] = forms.ImageField(label=ds_label,
-                                                                    help_text=ds_description,
-                                                                    initial=record_value,
-                                                                    required=False,
-                                                                    disabled=disabled)
-                if data_structure.meta_settings and 'size' in data_structure.meta_settings:
-                    file_size = data_structure.meta_settings['size'] * BYTES_TO_MEGABYTES
-                    self.fields[data_structure.name].widget.attrs['size'] = file_size
-                continue
-
-            elif data_structure.has_file_field:
-                if not record_value:
-                    record_value = data_structure.placeholder or data_structure.default
-                self.fields[data_structure.name] = forms.FileField(label=ds_label,
-                                                                   help_text=ds_description,
-                                                                   initial=record_value,
-                                                                   required=False,
-                                                                   disabled=disabled)
-
-                if data_structure.meta_settings and 'size' in data_structure.meta_settings:
-                    file_size = data_structure.meta_settings['size'] * BYTES_TO_MEGABYTES
-                    self.fields[data_structure.name].widget.attrs['size'] = file_size
-                continue
-
-            elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-                options = data_structure.meta_settings.get('options', [])
-                choices = []
-                for choice in options:
-                    if type(choice) == dict:
-                        choices.append((choice['label'], choice['label']))
-                    else:
-                        choices.append((choice, choice))
-
-                for i in range(len(record_value)):
-                    if type(record_value[i]) == dict:
-                        record_value[i] = record_value[i]['label']
-
-                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    self.fields[data_structure.name] = forms.MultipleChoiceField(label=ds_label,
-                                                                                 help_text=ds_description,
-                                                                                 initial=record_value,
-                                                                                 choices=choices,
-                                                                                 required=False,
-                                                                                 disabled=disabled,
-                                                                                 widget=forms.CheckboxSelectMultiple(attrs={'class': 'nodots'}))
-                else:
-                    self.fields[data_structure.name] = forms.ChoiceField(label=ds_label,
-                                                                         help_text=ds_description,
-                                                                         initial=record_value,
-                                                                         choices=choices,
-                                                                         required=False,
-                                                                         disabled=disabled)
-                continue
-
-            elif data_structure.type == DataStructure.DATA_TYPES.check_box:
-                # Off value for check box is empty string
-                record_value = 'on' if record_value else ''
-                self.fields[data_structure.name] = forms.BooleanField(label=ds_label,
-                                                                      help_text=ds_description,
-                                                                      initial=record_value,
-                                                                      required=False,
-                                                                      disabled=disabled)
-                continue
-
-            elif data_structure.type == DataStructure.DATA_TYPES.long_text:
-                widget_type = forms.Textarea(attrs={'placeholder': data_structure.placeholder})
-
-            elif data_structure.type == DataStructure.DATA_TYPES.foreign_key:
-                foreign_model, filters = data_structure.get_foreign_key_config()
-                temp_field = ForeignKey(foreign_model, on_delete=SET_NULL)
-                temp_field.model = Context
-                temp_field.remote_field.limit_choices_to = filters
-                self.fields[data_structure.name] = forms.ModelChoiceField(
-                    label=ds_label,
-                    help_text=ds_description,
-                    initial=record_value,
-                    required=False,
-                    disabled=disabled,
-                    queryset=foreign_model.objects.filter(**filters),
-                    widget=ForeignKeyRawIdWidget(rel=temp_field.remote_field, admin_site=site)
-                )
-                continue
-
-            validator = RegexValidator('')
-            pattern = None
-            char_limit = None
-            if data_structure.type in [DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.long_text]:
-                if 'regex' in data_structure.meta_settings:
-                    pattern = data_structure.meta_settings['regex']
-                    if not pattern.endswith('$'):
-                        pattern = f'{pattern}$'
-                    validator = RegexValidator(pattern)
-                if 'char_limit' in data_structure.meta_settings:
-                    char_limit = data_structure.meta_settings['char_limit']
-            elif data_structure.type == DataStructure.DATA_TYPES.guid:
-                pattern = GUID_REGEXP
-
-            self.fields[data_structure.name] = forms.CharField(required=not data_structure.optional,
-                                                               label=ds_label,
-                                                               help_text=ds_description,
-                                                               initial=record_value,
-                                                               widget=widget_type,
-                                                               disabled=disabled,
-                                                               validators=[validator])
-            if pattern:
-                self.fields[data_structure.name].widget.attrs['pattern'] = pattern
-                pattern_description = f'Regex pattern: {pattern}'
-                self.fields[data_structure.name].widget.attrs['title'] = pattern_description
-                self.fields[data_structure.name].help_text += f'<br>{pattern_description}'
-            if char_limit:
-                self.fields[data_structure.name].widget.attrs['maxlength'] = char_limit
+            self.__generate_form_field(ds, label, description, record_value, widget_type, disabled)
 
         if self.fields.get('language', None):
             fieldsets[None].append('language')
@@ -334,6 +265,81 @@ class CustomContextForm(forms.Form):
 
         self.fieldsets = fieldsets
 
+    def __generate_form_field(self, ds: DataStructure, label, description, record_value, widget, disabled):
+        if ds.has_image_field or ds.has_file_field:
+            field = forms.ImageField if ds.has_image_field else forms.FileField
+            self.fields[ds.name] = field(label=label,
+                                         help_text=description,
+                                         initial=record_value,
+                                         required=False,
+                                         disabled=disabled)
+            if ds.meta_settings and 'size' in ds.meta_settings:
+                    file_size = ds.meta_settings['size'] * BYTES_TO_MEGABYTES
+                    self.fields[ds.name].widget.attrs['size'] = file_size
+            return
+
+        if ds.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
+            choices = get_choices(ds)
+            field = forms.MultipleChoiceField if ds.type == DataStructure.DATA_TYPES.multiselect else forms.ChoiceField
+            field_widget = widget if ds.type == DataStructure.DATA_TYPES.multiselect else None
+            self.fields[ds.name] = field(label=label,
+                                         help_text=description,
+                                         initial=record_value,
+                                         choices=choices,
+                                         required=False,
+                                         disabled=disabled,
+                                         widget=field_widget)
+            return
+
+        if ds.type == DataStructure.DATA_TYPES.check_box:
+            self.fields[ds.name] = forms.BooleanField(label=label,
+                                                      help_text=description,
+                                                      initial=record_value,
+                                                      required=False,
+                                                      disabled=disabled)
+            return
+
+        if ds.type == DataStructure.DATA_TYPES.foreign_key:
+            foreign_model, filters = ds.get_foreign_key_config()
+            self.fields[ds.name] = forms.ModelChoiceField(
+                label=label,
+                help_text=description,
+                initial=record_value,
+                required=False,
+                disabled=disabled,
+                queryset=foreign_model.objects.filter(**filters),
+                widget=widget
+            )
+            return
+
+        validator = RegexValidator('')
+        pattern = None
+        char_limit = None
+        if ds.type in [DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.long_text]:
+            if 'regex' in ds.meta_settings:
+                pattern = ds.meta_settings['regex']
+                if not pattern.endswith('$'):
+                    pattern = f'{pattern}$'
+                validator = RegexValidator(pattern)
+            if 'char_limit' in ds.meta_settings:
+                char_limit = ds.meta_settings['char_limit']
+        elif ds.type == DataStructure.DATA_TYPES.guid:
+            pattern = GUID_REGEXP
+
+        self.fields[ds.name] = forms.CharField(required=not ds.optional,
+                                                            label=label,
+                                                            help_text=description,
+                                                            initial=record_value,
+                                                            widget=widget,
+                                                            disabled=disabled,
+                                                            validators=[validator])
+        if pattern:
+            self.fields[ds.name].widget.attrs['pattern'] = pattern
+            pattern_description = f'Regex pattern: {pattern}'
+            self.fields[ds.name].widget.attrs['title'] = pattern_description
+            self.fields[ds.name].help_text += f'<br>{pattern_description}'
+        if char_limit:
+            self.fields[ds.name].widget.attrs['maxlength'] = char_limit
 
 class AssetSettingsForm(forms.Form):
     file = forms.FileField(
