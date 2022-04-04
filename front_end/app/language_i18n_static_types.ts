@@ -665,6 +665,7 @@ export interface LicenseTypeTitles {
     "IO Module":      any;
     Bridge:           any;
     NVR:              any;
+    Invalid:          any;
 }
 
 export interface Messages {
@@ -1833,6 +1834,7 @@ const typeMap: any = {
         { json: "IO Module", js: "IO Module", typ: "any" },
         { json: "Bridge", js: "Bridge", typ: "any" },
         { json: "NVR", js: "NVR", typ: "any" },
+        { json: "Invalid", js: "Invalid", typ: "any" },
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "any" },

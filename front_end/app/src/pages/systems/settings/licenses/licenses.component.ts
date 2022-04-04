@@ -124,6 +124,14 @@ export class NxSystemLicensesComponent implements OnInit {
                 item.info[prop[0].toLowerCase()] = prop[1];
             });
 
+        if (!item.info.class || !item.info.brand || !item.info.hwid) {
+            item.info.serial = item.key;
+            item.info.status = this.LANG.license.info.error();
+            item.info.type = this.LANG.license.licenseTypeTitles.Invalid();
+
+            return;
+        }
+
         item.info.status = item.info.expired
             ? this.LANG.license.info.expired()
             : this.LANG.license.info.ok();

@@ -119,7 +119,8 @@ describe('Licenses (Details)', () => {
                     Time: () => 'Time',
                     Trial: () => 'Trial',
                     VMAX: () => 'VMAX',
-                    'Video Wall': () => 'Video Wall'
+                    'Video Wall': () => 'Video Wall',
+                    Invalid: () => 'Invalid',
                 },
                 messages: {
                     activated: () => 'License key activated',
