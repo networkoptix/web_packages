@@ -107,9 +107,9 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     ngOnDestroy(): void {}
 
     externalLinkForDesktop(relativePath: string) {
-        // @ts-ignore
+        // @ts-expect-error
         if (this.window.nativeClient) {
-            // @ts-ignore
+            // @ts-expect-error
             nativeClient.openUrlInBrowser(relativePath);
             return false;
         }

@@ -219,7 +219,6 @@ export class RestartServerModalContent {
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                     message = this.LANG.servers.serverOffline?.();
                     this.close(this.CONFIG.servers.status.offline);
-                    // @ts-ignore
                 } else if (err.errorId ===
                     this.CONFIG.servers.errors.oldSessionErrorId
                 ) {

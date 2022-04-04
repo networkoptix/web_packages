@@ -181,7 +181,7 @@ export class TimelineSelectionService {
             this._dragMode = SELECTION_DRAG_MODE.DRAGGING_BACKGROUND;
             this._dragAnchorPx = this._getOffsetPx(e);
             const mouseTime = this.timeline.domOffsetXtoTime(this._dragAnchorPx);
-            // @ts-ignore
+            // @ts-expect-error
             const playbackTime = this.playback.state?.currentTime || Infinity;
             const diff_ms = Math.abs(mouseTime - playbackTime);
             const diff_px = this.timeline.durationToDomWidth(diff_ms);
@@ -332,7 +332,7 @@ export class TimelineSelectionService {
     }
 
     protected _snapToPlaybackTime(t) {
-        // @ts-ignore
+        // @ts-expect-error
         const playbackTime = this.playback.state?.currentTime || Infinity;
         const diff_ms = Math.abs(t - playbackTime);
         const diff_px = this.timeline.durationToDomWidth(diff_ms);

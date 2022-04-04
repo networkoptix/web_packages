@@ -590,7 +590,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.$self.classList.add('controls-shown');
 
         // this.fpsMeter.install()
-        // @ts-ignore
+        // @ts-expect-error
         document.fpsMeter = this.fpsMeter;
         // allows calling document.fpsMeter.install() from the developer console, if needed
 

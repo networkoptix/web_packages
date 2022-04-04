@@ -157,7 +157,6 @@ export class NxBootstrapProvider {
                 }
             });
 
-            // @ts-ignore
             const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = data;
             this.CONFIG.company = {
                 copyrightYear,

@@ -1,16 +1,16 @@
 function getReqFullscreen() {
     const root = document.documentElement;
-    // @ts-ignore
+    // @ts-expect-error
     return root.requestFullscreen || root.webkitRequestFullscreen || root.mozRequestFullScreen || root.msRequestFullscreen;
 }
 
 function getExitFullscreen() {
-    // @ts-ignore
+    // @ts-expect-error
     return document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
 }
 
 function getFullscreenElement() {
-    // @ts-ignore
+    // @ts-expect-error
     return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
 }
 

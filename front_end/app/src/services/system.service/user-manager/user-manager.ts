@@ -188,9 +188,9 @@ export class UserManager {
         }, {}) : {};
         // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
         this.users = users.map(user => {
-            // @ts-ignore: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
+            // @ts-expect-error: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
             if (user.accountFullName && !user.fullName) {
-                // @ts-ignore TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
+                // @ts-expect-error TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
                 user.fullName = user.accountFullName;
             }
             user.permissions = this.normalizePermissionString(user.permissions);
@@ -205,12 +205,11 @@ export class UserManager {
                     return obj;
                 }, {});
             }
-            // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
+            // @ts-expect-error: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
             user.isCloudOwner = this.isOwner(user);
             user.isMe = !environment.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
             user.isAdmin = this.isAdmin(user);
-            // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
 
             /**
@@ -222,7 +221,6 @@ export class UserManager {
              * Furthermore, if the system is not mine and the user is an admin,
              *   they also can not be edited
              */
-            // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             const isNotMeOrOwner = !(user.isMe || user.isLocalOwner || user.isCloudOwner);
             user.canBeEdited = isNotMeOrOwner && (this.isMine || !user.isAdmin);
 

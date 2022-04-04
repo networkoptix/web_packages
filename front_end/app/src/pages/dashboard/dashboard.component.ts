@@ -401,7 +401,7 @@ export class NxDashboardComponent implements DashboardGroup {
             }
             this.cards = this.validateCards([...this.cards, card]);
             this.menu[activeIndex].cards = this.cards;
-            // @ts-ignore
+            // @ts-expect-error
             this.activeDashboard = this.cards;
             this.updatePersistedConfig();
             setTimeout(() => {

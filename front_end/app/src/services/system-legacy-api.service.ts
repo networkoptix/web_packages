@@ -110,7 +110,7 @@ export class NxSystemAPI {
 
         // This is to make it easy to access the systemService from the console for testing,
         // uncomment to add systemService to global context.
-        // @ts-ignore
+        // @ ts-expect-error
         // window.systemService = this;
         // console.log('systemService added to window');
         // console.log('to test system system api method just access the systemService from console');
@@ -1233,7 +1233,7 @@ export class NxSystemAPI {
         }
         this.location.path(
             `${systemLink}/view/${this.cleanId(cameraId)}`,
-            // @ts-ignore: TODO Expected 0-1 arguments, but got 2
+            // @ts-expect-error: TODO Expected 0-1 arguments, but got 2
             false
         );
     }

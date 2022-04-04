@@ -192,9 +192,9 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
     protected _startPlayback() {
         this._log('starting playback', { ...this.state });
-        // @ts-ignore
+        // @ts-expect-error
         const sourceUrl = this.state?.sourceUrl || '';
-        // @ts-ignore
+        // @ts-expect-error
         const posterUrl = `${this.state?.posterUrl}&rotate=0` || null;
 
         this.$video.setAttribute(

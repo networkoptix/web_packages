@@ -450,7 +450,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     }
                     return this.setTokens(tokens, false).pipe(
                         switchMap(() =>
-                            // @ts-ignore
+                            // @ts-expect-error
                             this.refreshTokens(tokens.refresh_token, true)
                         )
                     );

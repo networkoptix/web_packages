@@ -198,6 +198,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.accountService.get()
             .then(account => {
+                // Error for Cloud but not for WebAdmin
+                // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
                 // @ts-ignore
                 this.user = account;
             });

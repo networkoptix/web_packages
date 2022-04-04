@@ -252,7 +252,7 @@ export class NxSystemsService implements OnDestroy {
         });
         // Sort by usage frequency is more important than Alphabet
         return preSort.sort((systemA, systemB) => {
-            // @ts-ignore: TODO can't find usageFrequency property declared anywhere
+            // @ts-expect-error: TODO can't find usageFrequency property declared anywhere
             return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
         });
     }

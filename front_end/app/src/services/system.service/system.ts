@@ -571,7 +571,7 @@ export class NxSystem extends System {
                 () => this.mediaserver
                     .getMediaServersAndCameras().toPromise()
                     .then(
-                        // @ts-ignore
+                        // @ts-expect-error
                         response => {
                             if ((response.error && response.error !== '0') || !response.reply) {
                                 console.error('error getting mediaservers and cameras');
@@ -642,7 +642,7 @@ export class NxSystem extends System {
                         r => {
                             this.attempts = 0;
                             const now = Date.now();
-                            // @ts-ignore
+                            // @ts-expect-error
                             return r.reply.map(i => ({
                                 vmsTime: parseInt(i.vmsTime),
                                 vmsTimeOffset: now - parseInt(i.vmsTime),
@@ -1096,7 +1096,7 @@ export class NxSystem extends System {
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    // @ts-ignore
+    // @ts-expect-error
     get servers() {
         return this.serverManager.servers;
     }

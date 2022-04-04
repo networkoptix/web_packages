@@ -306,7 +306,7 @@ export abstract class BaseAccount implements OnDestroy {
                 // If the key login fails ask the user to login manually.
                 return this.loginService.login(true, true)
                     .catch(() => {
-                        // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
+                        // @ts-expect-error: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
                     });
             }).finally(() => {

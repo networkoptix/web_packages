@@ -94,12 +94,12 @@ ngMocks.defaultMock(TranslateService, () => ({
     instant: text => text
 }));
 
-// @ts-ignore
+// @ts-expect-error
 ngMocks.defaultMock(NxProcessService, () => ({
     createProcess: () => Promise.resolve()
 }));
 
-// @ts-ignore
+// @ts-expect-error
 ngMocks.defaultMock(Process, () => ({
     run: () => {}
 }));
@@ -114,7 +114,7 @@ ngMocks.defaultMock(NxSettingsService, () => ({
     selectedSectionSubject: new BehaviorSubject([])
 }));
 
-// @ts-ignore
+// @ts-expect-error
 ngMocks.defaultMock(NxSystemsService, () => ({
     systemsSubject: of([]),
 }));

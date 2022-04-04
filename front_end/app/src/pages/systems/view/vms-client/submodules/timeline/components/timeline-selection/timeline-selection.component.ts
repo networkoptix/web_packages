@@ -179,7 +179,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     @HostListener('document:mousemove', ['$event'])
     public mouseMoveHandler(e: MouseEvent) {
         const $host = this.selectedRangeView.nativeElement.parentElement;
-        // @ts-ignore
+        // @ts-expect-error
         this.timeUnderMouse.handleMouseMove({
             offsetX:
                 (e.target as HTMLElement).getBoundingClientRect().left -
@@ -210,7 +210,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         e.preventDefault();
         const $host = this.selectedRangeView.nativeElement.parentElement;
         if (e.target !== $host) {
-            // @ts-ignore
+            // @ts-expect-error
             this.wheel.handleWheel({
                 offsetX:
                     (e.target as HTMLElement).getBoundingClientRect().left -

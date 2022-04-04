@@ -337,7 +337,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             return;
         }
 
-        // @ts-ignore
+        // @ts-expect-error
         this.is2faDialogActive = await this.dialogService
             .toggleSystem2fa(this.system, this.system2faEnabled)
             .then(res => {

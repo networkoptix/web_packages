@@ -191,7 +191,7 @@ export class NxUrlProtocolService {
                 }, 100);
 
                 // Check on before unload
-                // @ts-ignore
+                // @ts-expect-error
                 this.window.protocolCheck(
                     link,
                     this.CONFIG.openClientTimeout,

@@ -236,7 +236,7 @@ export class NxDebugComponent {
         this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings))
             .then((data: any) => {
                 const link = data.link;
-                // @ts-ignore
+                // @ts-expect-error
                 this.window.protocolCheck(
                     link,
                     this.CONFIG.openClientTimeout,

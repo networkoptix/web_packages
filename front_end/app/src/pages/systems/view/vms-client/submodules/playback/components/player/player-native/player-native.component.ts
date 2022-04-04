@@ -130,7 +130,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this._handleRotation();
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     @HostListener('window:resize', ['$event'])
     protected _handleRotation() {
         if (!this.videoView) {
@@ -207,11 +207,11 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     protected _startPlayback() {
         this._log('starting playback', { ...this.state });
-        // @ts-ignore
+        // @ts-expect-error
         const sourceUrl = this.state?.sourceUrl || '';
         // Non-Hls videos are rotate by the server so we need to rotate the poster image.
         // Hls videos the video element is rotated so the poster doesn't need to be.
-        // @ts-ignore
+        // @ts-expect-error
         const posterUrl = `${this.state?.posterUrl}&rotate=${this.state.transport !== 'hls' ? this.rotation : 0}` || null;
 
         this.videoView.nativeElement.setAttribute(

@@ -178,7 +178,7 @@ export class VideoManagementSystemService {
     ) {
         this._log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this._systemId = systemId;
-        // @ts-ignore
+        // @ts-expect-error
         const prevSelectedCameraId: GUID | undefined = this._state?.selectedCameraId;
         this._state = createCameraNotSelectedState(systemId, mediaServers);
         if (prevSelectedCameraId) {

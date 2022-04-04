@@ -212,6 +212,7 @@ module.exports = {
                 }]),
                 ...tsExtension('object-curly-spacing', ['error', 'always']),
                 '@typescript-eslint/prefer-includes': 'error',
+                '@typescript-eslint/prefer-ts-expect-error': 'error',
                 ...tsExtension('semi'),
                 ...tsExtension('space-before-blocks', ['error', 'always']),
                 ...tsExtension('space-before-function-paren', ['error', {
