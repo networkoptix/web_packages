@@ -1,6 +1,7 @@
 *** Settings ***
 Resource          ../../resource.robot
 Resource          system-camera-resource.robot
+Resource          storage-resource.robot
 
 *** Keywords ***
 # Setups and teardowns
@@ -118,8 +119,9 @@ Change Input for Advanced Setting
     Click Button    ${SAVE BUTTON}
     Validate Success Dialog
     Click Element    ${SUCCESS DIALOG CLOSE BUTTON}
-    Run Keyword Unless    '${value}' == '${EMPTY}'
-    ...    Wait Until Textfield Contains    ${locator}    ${value}
+    IF    '${value}' != '${EMPTY}'
+        Wait Until Textfield Contains    ${locator}    ${value}
+    END
 
 Change Setting
     [Arguments]    ${locator}    ${buttons}=${True}
@@ -247,7 +249,9 @@ Elements Text Should Be
 Settings on page should match settings on server
     [Arguments]    ${server url}=${server url}
     FOR    ${setting}    IN    @{default settings.keys()}
-        Run Keyword Unless    '''${setting}''' == '''sessionLimitMinutes'''    Setting on page matches server    //*[@id="${setting}"]    ${setting}
+        IF    '''${setting}''' != '''sessionLimitMinutes'''
+            Setting on page matches server    //*[@id="${setting}"]    ${setting}
+        END
     END
     Log    Limit session duration to
     ${status}=   Run Keyword and Return Status    Checkbox Is Selected    ${LIMIT SESSION DURATION CHECKBOX}    ${True}

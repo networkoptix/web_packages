@@ -316,8 +316,10 @@ Force Tags        system    threaded
             ...    ${MERGE BUTTON SYSTEM}
             ...    ${LICENSES LINK}
             ...    ${USERS LINK}
-            ...    ${SERVERS LINK}   
-        Run Keyword Unless     '${text}' == 'Custom Cameras'    Wait Until Element Is Not Visible    ${CAMERAS LINK}
+            ...    ${SERVERS LINK}
+        IF    '${text}' != 'Custom Cameras'
+            Wait Until Element Is Not Visible    ${CAMERAS LINK}
+        END
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Log Out
         Wait Until Element Is Visible    ${ANONYMOUS BODY}

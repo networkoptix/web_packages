@@ -236,19 +236,15 @@ Force Tags        account
         ${info text} =    Get From Dictionary   ${lang dict}[${lang}]   ACCOUNT INFORMATION 
         Sleep    1
         Verify in Account Page
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    ${ACCOUNT SAVE}
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Click Button    ${ACCOUNT SAVE}
-        Sleep    2    #to allow the system to change languages
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"  
-        ...    Wait Until Element is Visible    //header/span[text()='${info text}']
+        IF    "${lang}"!="${LANGUAGE}"
+            Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
+            Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
+            Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
+            Wait Until Element is Visible    ${ACCOUNT SAVE}
+            Click Button    ${ACCOUNT SAVE}
+            Sleep    2    #to allow the system to change languages
+            Wait Until Element is Visible    //header/span[text()='${info text}']
+        END
     END
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}

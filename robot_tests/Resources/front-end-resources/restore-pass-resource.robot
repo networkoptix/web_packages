@@ -69,12 +69,16 @@ Test Email Invalid
         Sleep    1
         Click Element    //h3
     END
-    Run Keyword Unless  '${email}' == '${EMPTY}'    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
+    IF    '${email}' != '${EMPTY}'
+        Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
+    END
     Click Button    ${RESET PASSWORD BUTTON}
-    Run Keyword Unless    '${email}'=='${EMAIL UNREGISTERED}' or '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    restore-pass-resource.Check Email Outline    ${email}
+    IF    '${email}'!='${EMAIL UNREGISTERED}' and '${email}'!='${SPACE}myemail@gmail.com' and '${email}'!='myemail@gmail.com${SPACE}'
+        Check Email Outline    ${email}
+    END
     Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check Error Content and Reset Button Disabled
     IF    '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'
-        restore-pass-resource.Restart
+        Restart
     END
 
 Check Email Outline
@@ -114,8 +118,10 @@ Test Password Invalid
     Input Text    ${RESET PASSWORD INPUT}    ${new pw}
     #Check New Password Badge    ${new pw}
     Check Password Badge    ${new pw}    ${SAVE PASSWORD}
-    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Click Button    ${SAVE PASSWORD}
-    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    resetPassword
+    IF    '''${new pw}''' not in ${good passwords} and '''${new pw}''' not in ${fair passwords}
+        Click Button    ${SAVE PASSWORD}
+        Check New Password Outline and Error Message    ${new pw}    ${RESET PASSWORD FORM}    ${RESET PASSWORD INPUT}    resetPassword
+    END
 
 Restart Restore Pass Form Password
     Close Browser

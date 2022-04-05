@@ -58,7 +58,9 @@ Force Tags        Threaded
     Input Text    ${REGISTER LAST NAME INPUT}    ${TEST LAST NAME}
     ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}
     ${email}    Get Random Email    ${BASE EMAIL}
-    Run Keyword Unless    ${read only}    Input Text    ${REGISTER EMAIL INPUT}    ${email}
+    IF    ${read only} == ${False}
+        Input Text    ${REGISTER EMAIL INPUT}    ${email}
+    END
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Element    ${REGISTER FORM}

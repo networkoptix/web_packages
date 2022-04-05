@@ -26,7 +26,9 @@ loop expanders
     ELSE
         ${expandables}=    Get WebElements    ${first section}/../..//div/a
     END
-    Run Keyword Unless    ${expandables}    Fail    Expandables was empty
+    IF    '${expandables}' == '${EMPTY}'
+        Fail    Expandables was empty
+    END
     #open the expanders
     FOR    ${platform}    IN    @{expandables}
         Click Link    ${platform}

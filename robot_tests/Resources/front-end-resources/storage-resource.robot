@@ -183,10 +183,10 @@ Check Analytics Data is Present
     # ${year} =    Get Substring    ${date}    0    4
     # ${month} =    Get Substring    ${date}    5    7
     Verify File Exists    ${disk}-${random}    object_detection.sqlite
-    # Run Keyword Unless    '${IMAGE}' == '${IMAGE 4.3}' or ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
-    # Run Keyword Unless    '${IMAGE}' == '${IMAGE 4.3}' or ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
-    Run Keyword Unless    ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
-    Run Keyword Unless    ${keep}    Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
+    IF    ${keep} == ${False}
+        Verify File Exists    ${disk}-${random}    analytics_detailed_data.bin
+        Verify File Exists    ${disk}-${random}    analytics_detailed_index.bin
+    END
 
     # Open Connection    ${QA BURBANK IP}
     # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
@@ -206,7 +206,9 @@ Wait For Analytics Move Dialog
     [Arguments]    ${disk}
     ${status} =    Run Keyword and Return Status
     ...    Wait Until Element Is Visible    ${CHANGE ANALYTICS MODAL}
-    Run Keyword Unless    ${status}    Retry For Analytics Move Dialog    30    30    ${disk}
+    IF    ${status} == ${False}
+        Retry For Analytics Move Dialog    30    30    ${disk}
+    END
 
 Retry For Analytics Move Dialog
     [Arguments]    ${attempts}    ${interval}    ${disk}
@@ -226,7 +228,9 @@ Wait Until Analytics Data Exists
     [Arguments]    ${attempts}    ${interval}    ${disk}    ${camera}    ${server name}
     FOR    ${attempt}    IN RANGE     ${attempts}
         ${status} =    Run Keyword And Return Status    Check Analytics Data is Present     ${disk}    ${camera}    ${server name}
-        Run Keyword Unless    ${status}    Sleep    ${interval}
+        IF    ${status} == ${False}
+            Sleep    ${interval}
+        END
         Exit For Loop If     ${status}
     END
     Check Analytics Data is Present     ${disk}    ${camera}    ${server name}

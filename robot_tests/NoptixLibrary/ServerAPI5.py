@@ -23,8 +23,8 @@ class APIError(Exception):
 
 @library
 class ServerAPI5(ServerAPI):
-    def __init__(self):
-        self.image = BuiltIn().get_variable_value('${IMAGE}', None)
+    def __init__(self, image=None):
+        self.image = image
 
     def login(self, session, host, password="admin"):
         credentials = {"username": "admin", "password": password, "setCookie": True}

@@ -88,12 +88,16 @@ Check Language Anonymous
     Register Keyword To Run On Failure    NONE
     ${lang}=   Get Language Anonymous    ${ENV}
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
+    IF    "${lang}"!="${LANGUAGE}"
+        Set Language Anonymous
+    END
 
 Check Language Logged In
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language    ${email}    ${password}
-    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${email}    ${password}    ${LANGUAGE}
+    IF    '${curr lang}' != '${LANGUAGE}'
+        Set Account Language    ${email}    ${password}    ${LANGUAGE}
+    END
     Sleep    2
 
 Set Language Anonymous
@@ -117,11 +121,15 @@ Log In
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
     Sleep    2
-    Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
+    IF    '''${button}''' != "None" 
+        Wait Until Element Is Visible    ${button}
+    END
     IF    '${validate}' == 'True' and '${2fa}' == 'False'    # adding 2fa to conditions as workaround since if 2fa active Get Account Language is failing on 401
         Check Language Logged In    ${email}    ${password}
     END
-    Run Keyword Unless    '''${button}''' == "None"    Click Element    ${button}
+    IF    '''${button}''' != "None"
+        Click Element    ${button}
+    END
     IF    '''${button}''' == '''${RESET LOGIN BUTTON}''' or ${reset}
         Log     Reset autopopulates email
     ELSE
@@ -165,8 +173,10 @@ Log In Web Admin
 
 Log In With Remember Me
     [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}    ${remember me}=True
-    Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
-    Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
+    IF    '''${button}''' != "None"
+        Wait Until Element Is Visible    ${button}
+        Click Link    ${button}
+    END
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
     Input Text    ${EMAIL INPUT}    ${email}
@@ -183,7 +193,9 @@ Log in to Auto Tests System
     Log In    ${email}    ${password}    button=None
     Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${EDITABLE TITLE}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${EDITABLE TITLE}
-    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    IF    '${email}'!='${EMAIL OWNER}' and '${email}'!='${EMAIL ADMIN}'
+        Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    END
 
 Log in to system
     [Arguments]    ${system}    ${email}    ${password}=${BASE PASSWORD}    ${validate}=${True}
@@ -286,7 +298,9 @@ Register
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
     ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    10
-    Run Keyword Unless    ${read only}    Input Text    ${REGISTER EMAIL INPUT}    ${email}
+    IF    ${read only}==${False}
+        Input Text    ${REGISTER EMAIL INPUT}    ${email}
+    END
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
@@ -449,7 +463,9 @@ Share To
     ...    Element Style Should Be    //span[contains(text(),"${s}")]    color    ${ERROR COLOR WITH OPACITY}    AND
     ...    Click Button    ${ADD USER CLOSE}
     ${new user}=   Replace String    ${USER IN SYSTEM}    %user%    ${email}
-    Run Keyword Unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
+    IF    '${alert}'!='fail'
+        Wait Until Element is Visible    ${new user}
+    END
 
 Rename System or hardware
     [Arguments]    ${name}
@@ -573,9 +589,10 @@ Wait Until Elements Are Disabled
     [Arguments]    @{elements}    ${timeout}=10
     FOR    ${element}    IN    @{elements}
         ${status}=   Element Should Be Disabled    ${element}
-        Run Keyword Unless    ${status}    Run Keywords
-            ...    Sleep    ${timeout}
-            ...    AND    Element Should Be Disabled    ${element}
+        IF    ${status} == ${False}
+            Sleep    ${timeout}
+            Element Should Be Disabled    ${element}
+        END
     END
 
 Slow
@@ -652,7 +669,9 @@ Make sure notowner is in the system
     Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
-    Run Keyword Unless    ${status}    Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    IF    ${status} == ${False}
+        Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    END
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOT OWNER}    timeout=120    status=UNSEEN
     Delete Email    ${email}
@@ -664,7 +683,9 @@ Make sure viewer is in the system
     Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${VIEWER IN SYSTEM}
-    Run Keyword Unless    ${status}    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
+    IF    ${status} == ${False}
+        Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
+    END
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
     Delete Email    ${email}
@@ -683,7 +704,9 @@ User is in cloud system
 Add user to cloud system if not there
     [Arguments]    ${system id}    ${access role}    ${email}    ${auth}=${auth}
     ${is there}=   User is in cloud system    ${email}    ${system id}    ${auth}
-    Run Keyword Unless    ${is there}    Share    ${auth}    ${system id}    ${access role}    ${email}     ${permissions}[${access role}]
+    IF    ${is there} == ${False}
+        Share    ${auth}    ${system id}    ${access role}    ${email}     ${permissions}[${access role}]
+    END
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
@@ -778,8 +801,9 @@ Apply Saved Cookies
         Add Cookie    ${cookies[${i}].name}    ${cookies[${i}].value}
     END
     ${session expiry} =    Convert To String    ${cookies[2].expiry}
-    Run Keyword Unless    "${session expiry}"=="None"
-    ...    Add Cookie    ${cookies[2].name}    ${cookies[2].value}     expiry=${session expiry}
+    IF    "${session expiry}"!="None"
+        Add Cookie    ${cookies[2].name}    ${cookies[2].value}     expiry=${session expiry}
+    END
     Reload Page
 
 Persist Current Login State
@@ -869,8 +893,10 @@ Delete All Local Users
     Page Should Not Contain Element     ${locator}
 
 Check Password Badge
-    [arguments]    ${pass}    ${new focus}
-    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
+    [arguments]    ${pass}    ${new focus}  
+    IF    '''${pass}'''!='''${EMPTY}'''
+        Wait Until Element Is Visible    ${PASSWORD BADGE}
+    END
     Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''     Wait Until Element Is Visible    ${PASSWORD IS TOO COMMON BADGE}
     ...    ELSE IF    '''${pass}''' in ${weak passwords}          Wait Until Element Is Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}     Wait Until Element Is Visible    ${PASSWORD INCORRECT BADGE}
@@ -878,7 +904,9 @@ Check Password Badge
     ...    ELSE IF    '''${pass}''' in ${good passwords}          Wait Until Element Is Visible    ${PASSWORD IS GOOD BADGE}
     ...    ELSE IF    '''${pass}'''=='''${7CHAR PASSWORD}'''      Wait Until Element Is Visible    ${PASSWORD IS TOO SHORT BADGE}  
 
-    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Mouse Over    ${PASSWORD BADGE}
+    IF    '''${pass}'''!='''${EMPTY}'''
+        Mouse Over    ${PASSWORD BADGE}
+    END
     Run Keyword If    '''${pass}'''=='''${COMMON PASSWORD}'''    Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD TOO COMMON TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${weak passwords}         Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD IS WEAK TEXT}"]
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Wait Until Element Is Visible    ${PASSWORD BADGE TOOLTIP}//div[contains(@class, "tooltip-body") and text()="${PASSWORD SPECIAL CHARS TEXT}"]
@@ -919,10 +947,10 @@ Check New Password Outline and Error Message
          Element Style Should Be    ${input}    border-right-color    ${ERROR COLOR WITH OPACITY}
          Element Style Should Be    ${input}    border-left-color    ${ERROR COLOR WITH OPACITY}
     END
-    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
-    ...    Element Style Should Be    ${input}    color    ${ERROR COLOR WITH OPACITY}
-    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
-    ...    //nx-password-input[@name='${input name}' and contains(@class, 'ng-invalid')]//input[@id="${input name}"]
+    IF    '''${new pw}''' not in ${fair passwords} and '''${new pw}''' not in ${good passwords}
+        Element Style Should Be    ${input}    color    ${ERROR COLOR WITH OPACITY}
+        Wait Until Element Is Visible    //nx-password-input[@name='${input name}' and contains(@class, 'ng-invalid')]//input[@id="${input name}"]
+    END
     # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
     Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${input}    ${EMPTY}
     IF    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"
@@ -949,7 +977,9 @@ Check System Text
     Log in to user and system    ${user}    ${sysId}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+    IF    "${user}"!="${EMAIL ADMIN}"
+        Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+    END
 
 Get Lang List
     ${lang file} =    OperatingSystem.Get File    customizations/${CUST LANGUAGE LIST}
@@ -1162,7 +1192,9 @@ Execute Command Remotely
 Wait Until Element is Visible with Retry
     [Arguments]    ${element}    ${timeout}=120
     ${load} =    Run Keyword and Warn On Failure    Wait Until Element is Visible    ${element}    timeout=${timeout}
-    Run Keyword Unless    ${load} == ('PASS', None)    Reload Page
+    IF    ${load} != ('PASS', None)
+        Reload Page
+    END
     Wait Until Element is Visible    ${element}   timeout=${timeout}
     
 Verify No Horizontal Scrollbar
@@ -1446,7 +1478,9 @@ Remove User Permissions
 Select user in Users List
     [Arguments]    ${user email address}
     ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
-    Run Keyword Unless    ${status}   Go To Users List
+    IF    ${status} == ${False}
+        Go To Users List
+    END
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
     Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}

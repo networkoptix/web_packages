@@ -53,7 +53,9 @@ Users Test Tear Down
     Run Keyword If Test Failed    Reset
     ${status}=    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword And Return Status    validate log out
     ...     ELSE    Run Keyword And Return Status    validate log out web admin
-    Run keyword unless    ${status}    Log Out
+    IF    ${status} == ${False}
+        Log Out
+    END
 
 Users Teardown
     # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
@@ -71,7 +73,9 @@ Remove Temporary Users
     [Arguments]    ${sysID}=${AUTO TESTS SYSTEM ID}    ${sysIP}=${AUTO SYS IP}
     FOR    ${user}    IN     @{TMP USERS}
         ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${sysID}
-        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${sysIP}    ${user id}
+        IF    '${user id}'!='None'
+            Remove User    ${auth}    ${sysIP}    ${user id}
+        END
     END
     # Open Browser and go to URL    ${url}
     # Log in to Auto Tests System    ${email}
@@ -178,10 +182,12 @@ Verify In Local Users UI
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${server 1['cloud users']}[cloudAdmin]' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
-	    ...    ${DISABLE USER SWITCH}/..
-	    ...    ${LOCAL USER DELETE BUTTON}
-	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        IF    '${email}' != '${server 1['cloud users']}[cloudAdmin]' and '${role names}[${user}]' != '${ADMIN TEXT}'
+            Wait Until Elements Are Visible
+            ...    ${DISABLE USER SWITCH}/..
+	        ...    ${LOCAL USER DELETE BUTTON}
+	        ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        END
         IF    '${status}' == '${TRUE}'
             Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         ELSE
@@ -353,7 +359,9 @@ Reset Local Users API
 
 Check Special Hints
     FOR    ${type}    IN    @{USER TYPE LIST}
-        Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
+        IF    "${type}"!="${OWNER TEXT}"
+            Check Special Hint    ${type}
+        END
     END
 
 Get Custom Permissions
@@ -497,7 +505,9 @@ Check User Full Name is None
     [Arguments]    ${name}    ${check info}
     FOR    ${user}    IN    @{check info}
         ${full name} =    Set Variable If    '${name}' in '${user}[name]'    ${user}[fullName]
-        Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
+        IF    '${full name}' != 'None'
+            Exit For Loop
+        END
     END
     Should Be Equal    ${full name}    ${None}
 
@@ -506,7 +516,9 @@ Check User Email is None
     [Arguments]    ${name}    ${check info}
     FOR    ${user}    IN    @{check info}
         ${email field} =    Set Variable If    'name' in '${user}[name]'    ${user}[email]
-        Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
+        IF    '${email field}' != 'None'
+            Exit For Loop
+        END
     END
     Should Be Equal    ${email field}    ${None}
 

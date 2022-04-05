@@ -138,13 +138,19 @@ Choose System From Dropdown
 
     Slow    Click Button    ${MERGE SYSTEM DROPDOWN}    timeout=0.5
     ${menu shown}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${MERGE SYSTEMS MENU}    timeout=10
-    Run Keyword Unless    ${menu shown}    Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
+    IF    ${menu shown} == ${False}
+        Click Element    ${MERGE SYSTEM DROPDOWN ARROW}
+    END
     Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
     Slow    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]    timeout=0.5
-    Run Keyword Unless     ${check url}==${False}    Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
+    IF    ${check url}==${True}
+        Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
+    END
     ${url placeholder}=   Run Keyword If    ${check url}==${True}    Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
     Run Keyword If    ${check url}==${True}    Should Be Equal As Strings    ${url placeholder}    host:port
-    Run Keyword Unless    '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${input url}
+    IF    '${input url}'!='${EMPTY}'
+        Input Text    ${MERGE FORM SERVER URL INPUT}    ${input url}
+    END
 
 Choose Primary System
     [Arguments]    ${from target}=${False}
