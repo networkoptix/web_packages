@@ -91,7 +91,7 @@ export class NxMenusService {
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
             .pipe(
                 switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
-                    ? this.http.get<MenuStructure>(this.CONFIG.apiBase + `/cms/menus/${encodeURI(name)}`).pipe(
+                    ? this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(name)}`).pipe(
                         map((menu): [string, MenuStructure] => [login, menu])
                     )
                     : Promise.resolve([login, menu])
