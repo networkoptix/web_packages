@@ -152,8 +152,8 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         const ps = this.playback.state;
         if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
             this.timeMs = ps.currentTime; // prevents the weired jitter
-            const ho = this.honestOffset;
-            const vo = this.visibleOffset;
+            // const ho = this.honestOffset;
+            // const vo = this.visibleOffset;
             this.honestOffset = this.timeline.timeToDomOffsetX(this.timeMs);
             this.visibleOffset = Math.max(
                 MARGIN + PRIMARY_WIDTH / 2,

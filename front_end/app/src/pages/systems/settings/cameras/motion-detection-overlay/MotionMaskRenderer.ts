@@ -165,16 +165,14 @@ export class MotionMaskRenderer {
             ctrlKey: false,
             shiftKey: false
         });
-        const shiftCtrlState = merge(keyDown$, keyUp$)
-            .pipe(
-                filter(({ key }) => key === 'Control' || key === 'Shift'),
-                map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
-                distinctUntilChanged(
-                    (x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey
-                ),
-                takeUntil(this.unsub$)
-            )
-            .subscribe(shiftCtrlSubject$);
+        merge(keyDown$, keyUp$).pipe(
+            filter(({ key }) => key === 'Control' || key === 'Shift'),
+            map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
+            distinctUntilChanged(
+                (x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey
+            ),
+            takeUntil(this.unsub$)
+        ).subscribe(shiftCtrlSubject$);
         const mouseState$ = new BehaviorSubject({ x: 0, y: 0 });
         mouseMove$.pipe(
             throttleTime(0, animationFrame),

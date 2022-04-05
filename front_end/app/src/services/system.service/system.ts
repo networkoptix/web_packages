@@ -908,7 +908,7 @@ export class NxSystem extends System {
      * TODO: Refactor to allow for accessing straight from serverManager
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
+    updateOrGetSystemStorage<_T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
         if (!updateParams?.serverId) {
             return this.mediaserver.updateStorages(updateParams, customTimeout);
         }
@@ -953,7 +953,7 @@ export class NxSystem extends System {
         const email = currentUser ? currentUser.email : this.userManager.currentUserEmail;
         if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
-            const delPromise = this.userManager.deleteUser(currentUser);
+            this.userManager.deleteUser(currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
         const id = environment.isLocal ? this.CONFIG.cloudSystemId : this.id;

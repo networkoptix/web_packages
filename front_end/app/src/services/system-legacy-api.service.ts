@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
 import { from, of, throwError, Observable } from 'rxjs';
@@ -1386,11 +1386,11 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', { systemName }).toPromise();
     }
 
-    getBookmarks(): Observable<any> {
+    getBookmarks(): Observable<unknown> {
         throw new Error('should only be using rest version');
     }
 
-    getDevices(): Observable<any> {
+    getDevices(): Observable<unknown> {
         throw new Error('should only be using rest version');
     }
 

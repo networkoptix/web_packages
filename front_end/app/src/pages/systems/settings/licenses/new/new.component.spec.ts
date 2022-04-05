@@ -45,9 +45,9 @@ describe('Licenses (New)', () => {
     const configMock = { getConfig: () => nxConfig };
 
     let button;
-    let form;
-    let processService: NxProcessService;
-    let processServiceSpy: jasmine.SpyObj<NxProcessService>;
+    // let form;
+    // let processService: NxProcessService;
+    // let processServiceSpy: jasmine.SpyObj<NxProcessService>;
 
     beforeEach(waitForAsync(() => {
         const spyCreateProcess = jasmine.createSpyObj('NxProcessService', ['createProcess']);
@@ -76,8 +76,8 @@ describe('Licenses (New)', () => {
         fixture = TestBed.createComponent(NxLicenseNewComponent);
         component = fixture.componentInstance;
         el = fixture.debugElement;
-        processService = TestBed.inject(NxProcessService);
-        processServiceSpy = TestBed.inject(NxProcessService) as jasmine.SpyObj<NxProcessService>;
+        // processService = TestBed.inject(NxProcessService);
+        // processServiceSpy = TestBed.inject(NxProcessService) as jasmine.SpyObj<NxProcessService>;
     }));
 
     it('should create the component', () => {
@@ -116,7 +116,7 @@ describe('Licenses (New)', () => {
         beforeEach(() => {
             fixture.detectChanges();
             button = el.nativeElement.querySelector('nx-process-button').querySelector('button');
-            form = component.licenseForm; // el.nativeElement.querySelector('form[id=newLicenseForm]');
+            // form = component.licenseForm; // el.nativeElement.querySelector('form[id=newLicenseForm]');
         });
 
         // form is passed as ngForm but controls is empty

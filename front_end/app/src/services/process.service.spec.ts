@@ -36,10 +36,6 @@ describe('Process service', () => {
         }
     };
 
-    const cloudMock = {
-        checkResponseHasError: () => false
-    };
-
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             providers: [

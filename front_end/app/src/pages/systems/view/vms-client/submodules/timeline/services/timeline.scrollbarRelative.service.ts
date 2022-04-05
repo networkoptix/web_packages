@@ -13,7 +13,7 @@ export interface TimelineScrollbarRelativeServiceStatus {
     canScrollRight: boolean,
 }
 
-const SCROLL_TRESHOLD_MS = 10;
+// const SCROLL_TRESHOLD_MS = 10;
 
 @Injectable({
     providedIn: 'root'

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';

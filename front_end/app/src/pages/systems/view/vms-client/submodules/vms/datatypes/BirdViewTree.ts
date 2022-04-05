@@ -148,7 +148,7 @@ export class BirdViewTreeNode {
         // }
 
         if (!this._isPerfect && (minGapMs < this._minGapMs)) {
-            const zoomingRequired = false;
+            // const zoomingRequired = false;
             let result = [];
 
             const nextMinGap = this._minGapMs === Infinity

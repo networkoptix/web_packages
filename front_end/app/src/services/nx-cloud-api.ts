@@ -11,7 +11,6 @@ import { ConsoleSection } from '@components/console-table/console-table.componen
 import { PackageStatus } from '@dialogs/download-async/download-async.component.types';
 import { environment } from '@environments/environment';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
-import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { mapValuesToStrings } from '@utils/general';
@@ -187,7 +186,7 @@ export class NxCloudApiService {
         }
     }
 
-    checkResponseHasError<T extends any>(data: any) {
+    checkResponseHasError<_T extends any>(data: any) {
         // this is not a repetition
         if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
             return data;

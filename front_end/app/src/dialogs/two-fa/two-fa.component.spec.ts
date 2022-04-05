@@ -138,7 +138,7 @@ describe('TwoFAModalContent', () => {
     });
 
     describe('when in QR mode', () => {
-        const keyUrl = 'otpauth://totp/ttsolov@networkoptix.com?secret=JBSWY3DPEHPK3PXP';
+        // const keyUrl = 'otpauth://totp/ttsolov@networkoptix.com?secret=JBSWY3DPEHPK3PXP';
 
         beforeEach(fakeAsync(() => {
             fixture.detectChanges();

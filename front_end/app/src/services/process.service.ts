@@ -130,7 +130,7 @@ export class Process {
         this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
-    private checkResponseHasError<T extends any>(data: any) {
+    private checkResponseHasError<_T extends any>(data: any) {
         // this is not a repetition
         if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
             return data;

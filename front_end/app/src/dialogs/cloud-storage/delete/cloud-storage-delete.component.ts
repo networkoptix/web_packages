@@ -75,7 +75,6 @@ export class CloudStorageDeleteModalContent implements OnInit {
         this.delete = this.processService.createProcess(() => {
             this.deleteForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
-            const { LANG } = this;
             return this.deleteCloudStorage(this.systemId, this.auth.password);
         }, {
             errorCodes: {

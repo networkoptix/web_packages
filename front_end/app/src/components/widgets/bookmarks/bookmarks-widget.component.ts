@@ -23,17 +23,17 @@ interface SystemDropdownItem extends DropdownItem<string> {
     disabled: boolean;
 }
 
-const getMockBookmarks = (val?): any => Array.isArray(val) && val.length ? val : new Array(50).fill(Math.round(Math.random() * 10000)).map((_, i) => ({
-    id: `id-${i}`,
-    deviceId: `bookmark${i}`,
-    name: `Bookmark ${i}`,
-    description: `Description for bookmark number ${i}`,
-    startTimeMs: Date.now() - (Math.round(Math.random() * 100000000)),
-    durationMs: Math.round(Math.random() * 1000000),
-    tags: new Array(Math.ceil(Math.random() * 5)).fill('').map((_, i) => `Tag ${i}`),
-    creatorUserId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    creationTimeMs: '2021-02-05T19:00:30'
-}));
+// const getMockBookmarks = (val?): any => Array.isArray(val) && val.length ? val : new Array(50).fill(Math.round(Math.random() * 10000)).map((_, i) => ({
+//     id: `id-${i}`,
+//     deviceId: `bookmark${i}`,
+//     name: `Bookmark ${i}`,
+//     description: `Description for bookmark number ${i}`,
+//     startTimeMs: Date.now() - (Math.round(Math.random() * 100000000)),
+//     durationMs: Math.round(Math.random() * 1000000),
+//     tags: new Array(Math.ceil(Math.random() * 5)).fill('').map((_, i) => `Tag ${i}`),
+//     creatorUserId: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+//     creationTimeMs: '2021-02-05T19:00:30'
+// }));
 
 @UntilDestroy()
 @Component({

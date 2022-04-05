@@ -19,7 +19,7 @@ export class NxErrorStateComponent {
     ) {}
 
     get errorsToDisplay() {
-        const { name, ...errors } = this.errors;
+        const { name: _, ...errors } = this.errors;
         return errors;
     }
 

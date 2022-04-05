@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap, tap, retry, withLatestFrom, filter, scan, takeWhile } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
@@ -262,7 +262,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         ).subscribe(NxHealthMonitorWidgetComponent.systems$);
 
         NxHealthMonitorWidgetComponent.updateSystems$.next('update');
-        const countdown = 60;
+        // const countdown = 60;
 
         timer(0, 1000).pipe(
             scan(acc => this.loading ? 0 : ++acc % 60),

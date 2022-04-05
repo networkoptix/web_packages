@@ -78,7 +78,7 @@ export class CameraManager {
                 overrideAr,
                 mediaCapabilities,
                 isAudioSupported: audioSupported,
-                motionStream,
+                // motionStream,
                 ...parsedAddParams
             }: any = addParamsRaw.filter(({ name }) => [
                 'rotation',

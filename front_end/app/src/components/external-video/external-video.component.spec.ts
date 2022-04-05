@@ -8,7 +8,6 @@ import {
 } from '@angular/core/testing';
 import { MockProvider } from 'ng-mocks';
 
-import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { NxExternalVideoComponent } from './external-video.component';
@@ -17,11 +16,6 @@ describe('NxExternalVideoComponent', () => {
     let component: NxExternalVideoComponent;
     let fixture: ComponentFixture<NxExternalVideoComponent>;
     let el: DebugElement;
-
-    const domMock = {
-        bypassSecurityTrustResourceUrl: link => link
-    };
-    const configMock = { getConfig: () => nxConfig };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({

@@ -92,7 +92,7 @@ export class StorageManager extends StorageState {
         return { backup, custom };
     }
 
-    updateOrGetSystemStorage<T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
+    updateOrGetSystemStorage<_T extends any>(updateParams?: any, useCache = false, customTimeout = 8000) {
         if (!updateParams?.serverId) {
             return this.serverManager.mediaserver.updateStorages(updateParams, customTimeout);
         }

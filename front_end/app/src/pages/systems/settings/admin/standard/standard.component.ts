@@ -409,7 +409,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     toggleAlexaEnabled = () => {
         const {
             enabled,
-            selectedSystem,
+            // selectedSystem,
             accountLinked = false,
             eventRulesSetup = false
         } = this.alexaSettings;

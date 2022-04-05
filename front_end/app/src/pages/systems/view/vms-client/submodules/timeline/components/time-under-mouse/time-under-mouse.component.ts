@@ -18,7 +18,7 @@ const MARGIN = 5;
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
 
-const MAIN_MOUSE_BUTTON = 0;
+// const MAIN_MOUSE_BUTTON = 0;
 
 @Component({
     selector: 'time-under-mouse',

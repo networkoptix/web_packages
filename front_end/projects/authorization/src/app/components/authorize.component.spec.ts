@@ -629,7 +629,7 @@ describe('NxAuthorizeComponent', () => {
         expect(labels[0].innerHTML).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
         expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
-        const spans = el.nativeElement.querySelectorAll('span');
+        // const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 5 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(2);
@@ -764,7 +764,7 @@ describe('NxAuthorizeComponent', () => {
         expect(emailLabel[0].innerHTML).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
         expect(emailHeader.innerHTML).toBe(component.LANG.authorize.passResetHeader());
-        const spans = el.nativeElement.querySelectorAll('span');
+        // const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 4 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(1);

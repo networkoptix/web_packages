@@ -16,10 +16,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { GenericModalContent } from './generic/generic.component';
 import { NxToastService } from './toast.service';
 
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
 export class NxSimpleDialogsService {

@@ -29,7 +29,7 @@ export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
         this.classMutationObserver = new MutationObserver(mutations => {
             mutations.forEach((mutation: MutationRecord) => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    const el = mutation.target as HTMLElement;
+                    // const el = mutation.target as HTMLElement;
                     this.checkVisible(true);
                 }
             });

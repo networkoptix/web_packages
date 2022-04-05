@@ -848,7 +848,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     updateMotionWarning() {
         const [
-            always,
+            // always,
             motion,
             lowMotion
         ] = this.recordingModesWatcher.originalValue;
@@ -919,8 +919,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             if (cameraIndex === -1) {
                 cameraIndex = 0;
-                const systemId = this.system.id;
-                const urlSystem = systemId ? `/${systemId}` : '';
+                // const systemId = this.system.id;
+                // const urlSystem = systemId ? `/${systemId}` : '';
                 this.parsedCameraId =
                     cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
                 this.uriService

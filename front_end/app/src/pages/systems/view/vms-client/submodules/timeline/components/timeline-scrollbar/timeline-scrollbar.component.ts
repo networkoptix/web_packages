@@ -30,7 +30,7 @@ import {
 } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
 
-const MIN_BAR_WIDTH_PX = 50;
+// const MIN_BAR_WIDTH_PX = 50;
 
 @Component({
     selector: 'timeline-scrollbar',

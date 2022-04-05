@@ -63,8 +63,12 @@ module.exports = {
         'no-mixed-operators': 'off',
         'no-multi-assign': 'error',
         'no-return-await': 'error',
-        'no-unused-vars': 'off', // TODO: Restore for non-components
-        // ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
+        'no-unused-vars': ['error', {
+            varsIgnorePattern: '^_',
+            args: 'none',
+            // argsIgnorePattern: '^_',
+            // TODO: Restore args
+        }],
         'no-use-before-define': ['error', {
             functions: true,
             classes: true,
@@ -210,6 +214,11 @@ module.exports = {
                     allowTernary: true,
                     allowTaggedTemplates: true
                 }]),
+                ...tsExtension('no-unused-vars', ['error', {
+                    varsIgnorePattern: '^_',
+                    args: 'none',
+                    // argsIgnorePattern: '^_',
+                }]),
                 ...tsExtension('object-curly-spacing', ['error', 'always']),
                 '@typescript-eslint/prefer-includes': 'error',
                 '@typescript-eslint/prefer-ts-expect-error': 'error',
@@ -228,6 +237,11 @@ module.exports = {
             rules: {
                 '@typescript-eslint/dot-notation': 'off',
                 '@typescript-eslint/no-explicit-any': 'off',
+                '@typescript-eslint/no-unused-vars': ['error', {
+                    varsIgnorePattern: '(^_)|(component)|(fixture)|(el)',
+                    args: 'none',
+                    // argsIgnorePattern: '^_',
+                }],
             }
         },
     ]
