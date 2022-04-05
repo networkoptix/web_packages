@@ -75,6 +75,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     systemName: string;
     show2faRequired = false;
 
+    get showPlaceholder(): boolean {
+        return this.systemNoAccess ||
+            this.show2faRequired ||
+            this.system && (this.secondaryMerge || this.system.show404);
+    }
+
     private cancelPrevious$ = new Subject();
 
     private connectionSubscription: Subscription;
