@@ -81,7 +81,7 @@ export interface SystemAuth {
     authPlay: string
 }
 
-interface Firmwares {
+export interface Firmwares {
     count: number,
     name: string,
     percentage: string,

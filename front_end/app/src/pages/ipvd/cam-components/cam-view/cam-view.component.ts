@@ -10,10 +10,10 @@ import {
     ViewChild
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { Cameras, Firmwares } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -21,53 +21,40 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
 import { NgChanges } from '@utils/ng-changes';
 
-interface Firmware {
-    name: string,
-    percentage: any,
-    barLength: any
-}
+import type { IpvdParams } from '../../ipvd.types';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-cam-view',
     templateUrl: './cam-view.component.html',
     styleUrls: ['./cam-view.component.scss']
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
-    @Input() activeCamera;
-    @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
-    @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
+    @Input() activeCamera: Cameras;
+    @Output() public onCloseView = new EventEmitter<Cameras>();
+    @Output() public onFeedbackClick = new EventEmitter<Cameras>();
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    firmwares: Firmware[];
+    firmwares: Firmwares[];
     firmwaresToShow: number;
     analyticsToShow: number;
-    showAllFirmware: boolean;
-    showAllEvents: boolean;
-    debug;
-    beta;
-    params;
+    showAllFirmware: boolean = false;
+    showAllEvents: boolean = false;
+    debug: boolean;
+    beta: boolean;
+    params: IpvdParams;
     showAnalytics: boolean;
     showCameraAnalytics: boolean;
 
-    windowSize: any = {};
-    windowScroll;
-    searchHeight: number;
-    clientHeight: number;
-    offsetHeight: number;
     scrollHeight: number;
-    viewScrollFixedTop: boolean;
-    viewScrollFixedBottom: boolean;
+    viewScrollFixedTop: boolean = false;
+    viewScrollFixedBottom: boolean = false;
 
-    elementWidth;
     camera: { title: string, param?: string, secondaryParam?: string }[];
 
-    private windowScrollSubscription: Subscription;
-    private elementViewWidthSubscription: Subscription;
-    private searchViewHeightSubscription: Subscription;
-
-    @ViewChild('nxCamView', { static: false }) cameraView: ElementRef;
+    @ViewChild('nxCamView', { static: false })
+    cameraView: ElementRef<HTMLDivElement>;
 
     constructor(
         configService: NxConfigService,
@@ -77,27 +64,24 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.viewScrollFixedTop = false;
-        this.viewScrollFixedBottom = false;
-        this.elementWidth = '100%';
     }
 
     ngOnInit(): void {
         this.camera = [
-            { title: this.LANG.ipvd.maxResolution?.(), param: 'maxResolution' },
-            { title: this.LANG.ipvd.maxFps?.(), param: 'maxFps' },
-            { title: this.LANG.ipvd.primaryCodec?.(), secondaryParam: 'primaryCodec' },
-            { title: this.LANG.ipvd.isAudioSupported?.(), param: 'isAudioSupported' },
-            { title: this.LANG.ipvd.isTwAudioSupported?.(), param: 'isTwAudioSupported' },
-            { title: this.LANG.ipvd.isPtzSupported?.(), param: 'isPtzSupported' },
-            { title: this.LANG.ipvd.isAptzSupported?.(), param: 'isAptzSupported' },
-            { title: this.LANG.ipvd.isMdSupported?.(), param: 'isMdSupported' },
-            { title: this.LANG.ipvd.isFisheye?.(), param: 'isFisheye' },
-            { title: this.LANG.ipvd.isIoSupported?.(), param: 'isIoSupported' },
-            { title: this.LANG.ipvd.isDualStreamingSupported?.(), param: 'isDualStreamingSupported' },
-            { title: this.LANG.ipvd.sndResolution?.(), param: 'sndResolution' },
-            { title: this.LANG.ipvd.isMultiSensor?.(), param: 'isMultiSensor' },
-            { title: this.LANG.ipvd.isAnalyticsSupported?.(), param: 'isAnalyticsSupported' }
+            { title: this.LANG.ipvd.maxResolution(), param: 'maxResolution' },
+            { title: this.LANG.ipvd.maxFps(), param: 'maxFps' },
+            { title: this.LANG.ipvd.primaryCodec(), secondaryParam: 'primaryCodec' },
+            { title: this.LANG.ipvd.isAudioSupported(), param: 'isAudioSupported' },
+            { title: this.LANG.ipvd.isTwAudioSupported(), param: 'isTwAudioSupported' },
+            { title: this.LANG.ipvd.isPtzSupported(), param: 'isPtzSupported' },
+            { title: this.LANG.ipvd.isAptzSupported(), param: 'isAptzSupported' },
+            { title: this.LANG.ipvd.isMdSupported(), param: 'isMdSupported' },
+            { title: this.LANG.ipvd.isFisheye(), param: 'isFisheye' },
+            { title: this.LANG.ipvd.isIoSupported(), param: 'isIoSupported' },
+            { title: this.LANG.ipvd.isDualStreamingSupported(), param: 'isDualStreamingSupported' },
+            { title: this.LANG.ipvd.sndResolution(), param: 'sndResolution' },
+            { title: this.LANG.ipvd.isMultiSensor(), param: 'isMultiSensor' },
+            { title: this.LANG.ipvd.isAnalyticsSupported(), param: 'isAnalyticsSupported' }
         ];
         this.uri.getParams()
             .pipe(untilDestroyed(this))
@@ -115,8 +99,6 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
         this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
-        this.showAllFirmware = false;
-        this.showAllEvents = false;
     }
 
     ngOnDestroy(): void {}
@@ -129,23 +111,17 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             this.calcElementScrollMechanics();
         });
 
-        this.windowScrollSubscription = this.scrollMechanicsService
-            .windowScrollSubject
+        this.scrollMechanicsService.windowScrollSubject
+            .pipe(untilDestroyed(this))
             .subscribe(() => {
                 this.calcElementScrollMechanics();
             });
 
-        this.elementViewWidthSubscription = this.scrollMechanicsService
-            .elementViewWidthSubject
-            .subscribe(() => {
-                const width = this.scrollMechanicsService.elementViewWidth;
-                this.elementWidth = (width > 0)
-                    ? (width - 8 /* -gutter */) + 'px'
-                    : '100%';
-            });
-
-        this.searchViewHeightSubscription = this.scrollMechanicsService
-            .searchViewHeightSubject.pipe(delay(0))
+        this.scrollMechanicsService.searchViewHeightSubject
+            .pipe(
+                untilDestroyed(this),
+                delay(0)
+            )
             .subscribe(() => {
                 this.scrollHeight =
                     this.scrollMechanicsService.searchViewHeight +
@@ -163,41 +139,34 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    sendFeedback() {
+    sendFeedback(): false {
         this.onFeedbackClick.emit(this.activeCamera);
         return false;
     }
 
-    closeView() {
+    closeView(): void {
         this.activeCamera = undefined;
         this.onCloseView.emit(this.activeCamera);
     }
 
-    calcElementScrollMechanics() {
-        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-        this.windowScroll = this.scrollMechanicsService.windowScroll;
+    calcElementScrollMechanics(): void {
+        const {
+            height: windowHeight
+        } = this.scrollMechanicsService.windowSizeSubject.getValue();
+        const { windowScroll } = this.scrollMechanicsService;
 
-        this.clientHeight = this.cameraView.nativeElement.clientHeight;
-        this.searchHeight = this.scrollMechanicsService.searchViewHeight;
+        const { clientHeight } = this.cameraView.nativeElement;
+        const { searchViewHeight } = this.scrollMechanicsService;
 
-        if (
-            this.clientHeight < this.windowSize.height - this.searchHeight &&
-            this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET
-        ) {
-            this.viewScrollFixedTop = true;
-        } else {
-            this.viewScrollFixedTop = false;
-        }
+        const { SCROLL_OFFSET } = NxScrollMechanicsService;
 
-        if (
-            this.clientHeight > this.windowSize.height -
-                NxScrollMechanicsService.SCROLL_OFFSET - 8 &&
-            (this.clientHeight - this.windowSize.height + 18) <
-                (this.windowScroll - this.scrollHeight)
-        ) {
-            this.viewScrollFixedBottom = true;
-        } else {
-            this.viewScrollFixedBottom = false;
-        }
+        this.viewScrollFixedTop = (
+            clientHeight < windowHeight - searchViewHeight &&
+            windowScroll >= this.scrollHeight - SCROLL_OFFSET
+        );
+        this.viewScrollFixedBottom = (
+            clientHeight > windowHeight - SCROLL_OFFSET - 8 &&
+            (clientHeight - windowHeight + 18) < (windowScroll - this.scrollHeight)
+        );
     }
 }

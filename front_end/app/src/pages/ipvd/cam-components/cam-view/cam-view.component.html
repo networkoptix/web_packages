@@ -1,6 +1,13 @@
-<div class="camview col-12"
-    *ngIf="activeCamera" #nxCamView nxScrollMechanics
-    [ngClass]="{'view-scroll-fixed-top':viewScrollFixedTop, 'view-scroll-fixed-bottom':viewScrollFixedBottom}">
+<div
+    class="camview col-12"
+    *ngIf="activeCamera"
+    #nxCamView
+    nxScrollMechanics
+    [ngClass]="{
+        'view-scroll-fixed-top': viewScrollFixedTop,
+        'view-scroll-fixed-bottom': viewScrollFixedBottom
+    }"
+>
 
     <nx-block type='gray' >
         <header>
@@ -19,9 +26,12 @@
             </div>
 
             <div class="camview-link">
-                <a class="blue" target="_blank"
+                <a
+                    class="blue"
+                    target="_blank"
                     href="https://www.google.com/search?q={{ activeCamera.vendor }}+{{ activeCamera.model }}"
-                    translate>Search in Google</a>
+                    translate
+                >Search in Google</a>
             </div>
             <div class="active-camera-info" *ngFor="let setting of camera">
                 <div class="row">
@@ -43,58 +53,91 @@
             <div class="row">
                 <div class="col-7 card--body-heading">
                     <h4>
-                        <span *ngIf="activeCamera.analyticsEvents.length == 0 || activeCamera.analyticsEvents.length > 1" translate>Analytics Events</span>
-                        <span *ngIf="activeCamera.analyticsEvents.length == 1" translate>Analytics Event</span>
+                        <span
+                            *ngIf="activeCamera.analyticsEvents.length == 0 ||
+                                activeCamera.analyticsEvents.length > 1"
+                            translate
+                        >Analytics Events</span>
+                        <span
+                            *ngIf="activeCamera.analyticsEvents.length == 1"
+                            translate
+                        >Analytics Event</span>
                     </h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 mb-2 disclaimer" translate>This information is based on what camera reports through API. Actual list of events supported by this camera may be different.</div>
-                <div class="analytics-label col-12"
-                     *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow"
-                     [innerText]="event">
+                <div
+                    class="analytics-label col-12"
+                    *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow"
+                    [innerText]="event"
+                >
                 </div>
             </div>
 
-            <div class="row" *ngIf="!showAllEvents && activeCamera.analyticsEvents.length > analyticsToShow">
+            <div
+                class="row"
+                *ngIf="!showAllEvents &&
+                    activeCamera.analyticsEvents.length > analyticsToShow"
+            >
                 <div class="col-12">
-                    <a href (click)="showAllEvents = true; analyticsToShow = activeCamera.analyticsEvents.length; false"
-                        translate>Show All</a>
+                    <a
+                        href
+                        (click)="
+                            showAllEvents = true;
+                            analyticsToShow = activeCamera.analyticsEvents.length;
+                            false
+                        "
+                        translate
+                    >Show All</a>
                 </div>
             </div>
 
             <div class="row mt-2" *ngIf="showAllEvents">
                 <div class="col-12">
-                    <a href (click)="showAllEvents = false; analyticsToShow = CONFIG.ipvd.analyticsToShow; false"
-                        translate>Collapse</a>
+                    <a
+                        href
+                        (click)="
+                            showAllEvents = false;
+                            analyticsToShow = CONFIG.ipvd.analyticsToShow;
+                            false
+                        "
+                        translate
+                    >Collapse</a>
                 </div>
             </div>
 
             <div class="row" *ngIf="!activeCamera.analyticsEvents.length">
-                <div class="info-label col-12" translate>
-                    This device has reported to support some analytics events, but we don't have exact information about them.
-                </div>
+                <div class="info-label col-12" translate>This device has reported to support some analytics events, but we don't have exact information about them.</div>
             </div>
         </nx-section>
 
         <nx-section *ngIf="firmwares.length">
             <div class="firmware-info">
                 <div class="row">
-                    <div class="col-7 card--body-heading"><h4 class="m-0" translate>Firmware version</h4></div>
-                    <div class="col-5 card--body-heading"><h4 class="m-0" translate>Popularity</h4></div>
+                    <div class="col-7 card--body-heading">
+                        <h4 class="m-0" translate>Firmware version</h4>
+                    </div>
+                    <div class="col-5 card--body-heading">
+                        <h4 class="m-0" translate>Popularity</h4>
+                    </div>
                 </div>
 
                 <ng-container *ngFor="let firmware of firmwares | slice:0:firmwaresToShow">
                     <div class="row" *ngIf="firmware.name">
-                        <div class="col-7" title="{{ firmware.name }}">{{ firmware.name }}</div>
-                        <div class="col-5" title="{{ firmware.percentage }}">
+                        <div class="col-7" [title]="firmware.name">{{ firmware.name }}</div>
+                        <div class="col-5" [title]="firmware.percentage">
                             <div class="icon w-100" role="img" >
                                 <canvas class="icon-canvas" height="4"></canvas>
                                 <svg class="img-responsive icon-svg" height="4">
-                                    <line x1="0" y1="8"
+                                    <line
+                                        x1="0"
+                                        y1="8"
                                         [attr.x2]="firmware.barLength"
-                                        y2="8" class="firmware-line"
-                                        stroke-dasharray="8, 2"></line>
+                                        y2="8"
+                                        class="firmware-line"
+                                        stroke-dasharray="8, 2"
+                                    ></line>
                                 </svg>
                             </div>
                         </div>
@@ -103,15 +146,29 @@
 
                 <div class="row" *ngIf="!showAllFirmware && firmwares.length > firmwaresToShow">
                     <div class="col-12">
-                        <a href (click)="showAllFirmware = true; firmwaresToShow = firmwares.length; false"
-                            translate>Show All</a>
+                        <a
+                            href
+                            (click)="
+                                showAllFirmware = true;
+                                firmwaresToShow = firmwares.length;
+                                false
+                            "
+                            translate
+                        >Show All</a>
                     </div>
                 </div>
 
                 <div class="row" *ngIf="showAllFirmware">
                     <div class="col-12">
-                        <a href (click)="showAllFirmware = false; firmwaresToShow = CONFIG.ipvd.firmwaresToShow; false"
-                            translate>Collapse</a>
+                        <a
+                            href
+                            (click)="
+                                showAllFirmware = false;
+                                firmwaresToShow = CONFIG.ipvd.firmwaresToShow;
+                                false
+                            "
+                            translate
+                        >Collapse</a>
                     </div>
                 </div>
             </div>
@@ -121,7 +178,9 @@
             <div class="camview-link">
                 <a href translate (click)="sendFeedback()">Send feedback about this device</a>
             </div>
-            <div class="info-label"><span translate>Updated</span> {{ activeCamera.timestamp | date:'fullDate'}}</div>
+            <div class="info-label">
+                <span translate>Updated</span> {{ activeCamera.timestamp | date:'fullDate'}}
+            </div>
         </nx-section>
     </nx-block>
 </div>

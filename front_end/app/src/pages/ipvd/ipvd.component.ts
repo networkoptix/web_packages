@@ -657,7 +657,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }, 500);
     }
 
-    openFeedback(param: string): false {
+    openFeedback(param: 'device' | 'page'): false {
         const type = (param === 'device')
             ? this.CONFIG.dialogs.message.type.ipvd_device
             : this.CONFIG.dialogs.message.type.ipvd_page;
