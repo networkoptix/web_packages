@@ -916,7 +916,8 @@
             "Starter": "เริ่มต้น",
             "IO Module": "I/O โมดูล",
             "Bridge": "การเชื่อมต่อ",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "ประเภท",

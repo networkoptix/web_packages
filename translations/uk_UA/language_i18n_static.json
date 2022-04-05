@@ -916,7 +916,8 @@
             "Starter": "Стартер",
             "IO Module": "Модуль Вводу/Виводу",
             "Bridge": "Bridge",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Тип",

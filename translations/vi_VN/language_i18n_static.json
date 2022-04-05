@@ -916,7 +916,8 @@
             "Starter": "Bắt đầu",
             "IO Module": "Mô đun IO",
             "Bridge": "Cầu",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Kiểu",

@@ -440,7 +440,7 @@
             "message": "Twee-factorenauthenticatie is ingeschakeld voor dit account. Log in.",
             "title": "Twee factoren zijn vereist!",
             "wizardWarning": "Nadat u tweefactorauthenticatie hebt ingeschakeld, kunt u niet meer inloggen op {count, plural, =0{# systemen} one{# systeem} other{# systemen}} van %VMS_NAME% client en webbeheerder:",
-            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+            "unsupportedSystem": "Om in te loggen op dit systeem, schakelt u \"Vraag om verificatiecode bij elke login met %CLOUD_NAME% account\" uit in uw <a href=\"/account/security\">accountinstellingen</a>."
         }
     },
     "downloads": {
@@ -584,7 +584,7 @@
         "networkConnection": "Kan geen verbinding maken met %CLOUD_NAME%, controleer je netwerkverbinding.",
         "archiveEncrypted": "ARCHIEF\nVERSLEUTELD",
         "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen.",
-        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+        "webadmin2faRequired": "Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem. U kunt tweefactorauthenticatie inschakelen in uw <a href=\"{ cloudHost }/account/security\">accountinstellingen</a>."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -859,7 +859,7 @@
             "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "transferNotification": "<strong>{ ownerName }</strong> wil het eigendom van dit systeem aan u overdragen"
     },
     "systemStatuses": {
         "activated": "geactiveerd",
@@ -916,7 +916,8 @@
             "Starter": "Starter",
             "IO Module": "I/O module",
             "Bridge": "Bridge",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Type",

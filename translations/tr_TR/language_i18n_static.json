@@ -916,7 +916,8 @@
             "Starter": "Başlangıç",
             "IO Module": "I/O Modül",
             "Bridge": "Köprü",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Tür",

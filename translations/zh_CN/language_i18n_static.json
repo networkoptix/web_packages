@@ -916,7 +916,8 @@
             "Starter": "Starter",
             "IO Module": "I/O模块",
             "Bridge": "桥接",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "类型",

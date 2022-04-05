@@ -916,7 +916,8 @@
             "Starter": "Starter",
             "IO Module": "IO Module",
             "Bridge": "Bro",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Skriv",

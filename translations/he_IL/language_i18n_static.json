@@ -916,7 +916,8 @@
             "Starter": "מתחיל",
             "IO Module": "מודול קלט/פלט",
             "Bridge": "Bridge",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "סוג",

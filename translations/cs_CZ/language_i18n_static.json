@@ -916,7 +916,8 @@
             "Starter": "Základní",
             "IO Module": "I/O Modul",
             "Bridge": "Most",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Typ",
