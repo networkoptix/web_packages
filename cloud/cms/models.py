@@ -190,16 +190,29 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 
     if not data or force:
         customization = Customization.objects.get(name=customization_name)
+        global_vars = ['%INTEGRATION_STORE_ENABLED%', '%PUSH_CONFIG_WEB%', '%CLOUD_NAME%', '%VMS_NAME%',
+                       '%INTEGRATION_SEO_PAGE_DESCRIPTION%']
+        email = ['%MAIL_FROM_NAME%', '%MAIL_FROM_EMAIL%', '%SMTP_HOST%', '%SMTP_PORT%', '%SMTP_USER%',
+                 '%SMTP_PASSWORD%', '%SMTP_TLS%']
+        config = ['%APP_TYPES_FOR_PLATFORM%', '%AVAILABLE_DOWNLOADS_PLATFORM%', '%ALEXA_INTEGRATION_ENABLED%',
+                  '%BOOKMARKS_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_ENABLED%', '%CLOUD_STORAGE_SIZE%',
+                  '%COPYRIGHT_YEAR%', '%COMPANY_NAME%', '%COMPANY_LINK%', '%DEVELOPERS_ENABLED%', '%FEEDBACK_ENABLED%',
+                  '%INTEGRATION_FILTER_ITEMS%', '%INTEGRATION_SHOW_FILTER_LIMITATION%', '%HM_CACHE_TIMEOUT%',
+                  '%PUBLIC_CUSTOM_CLIENTS%', '%PUBLIC_DOWNLOADS%', '%PUBLIC_RELEASE_HISTORY%', '%SHOW_ALL_BETAS%',
+                  '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
+                  '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
+                  '%TESTED_OPERATING_SYSTEMS%', '%VENDORS_SHOWN%', '%GOOGLE_TAG_MANAGER_ID%', '%TRIAL_LICENSE_KEY%']
+        cloud_capabilities = ['%REVIEWS_ENABLED%', '%SMTP_DISABLED%']
+        ds_data = asset.read_all_global_values(global_vars + email + config + cloud_capabilities)
 
-        integration_store_enabled = asset.read_global_value(
-            "%INTEGRATION_STORE_ENABLED%")
+        integration_store_enabled = ds_data.get('%INTEGRATION_STORE_ENABLED%')
 
-        public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
+        public_push_config = ds_data.get('%PUSH_CONFIG_WEB%') or \
             getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
 
-        cloud_name = asset.read_global_value("%CLOUD_NAME%") or ''
-        vms_name = asset.read_global_value("%VMS_NAME%") or ''
-        seo_description = (asset.read_global_value("%INTEGRATION_SEO_PAGE_DESCRIPTION%") or '')\
+        cloud_name = ds_data.get('%CLOUD_NAME%') or ''
+        vms_name = ds_data.get('%VMS_NAME%') or ''
+        seo_description = (ds_data.get('%INTEGRATION_SEO_PAGE_DESCRIPTION%') or '')\
             .replace("%CLOUD_NAME%", cloud_name)\
             .replace("%VMS_NAME%", vms_name)
         landing_description = ''
@@ -214,57 +227,57 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'languages': customization.languages_list,
             'default_language': customization.default_language.code,
             'email': {
-                'mail_from_name': asset.read_global_value('%MAIL_FROM_NAME%'),
-                'mail_from_email': asset.read_global_value('%MAIL_FROM_EMAIL%'),
+                'mail_from_name': ds_data.get('%MAIL_FROM_NAME%'),
+                'mail_from_email': ds_data.get('%MAIL_FROM_EMAIL%'),
                 'portal_url': SpecialStructures.calc_cloud_link(asset),
-                'smtp_host': asset.read_global_value('%SMTP_HOST%'),
-                'smtp_port': asset.read_global_value('%SMTP_PORT%'),
-                'smtp_user': asset.read_global_value('%SMTP_USER%'),
-                'smtp_password': asset.read_global_value('%SMTP_PASSWORD%'),
-                'smtp_tls': asset.read_global_value('%SMTP_TLS%')
+                'smtp_host': ds_data.get('%SMTP_HOST%'),
+                'smtp_port': ds_data.get('%SMTP_PORT%'),
+                'smtp_user': ds_data.get('%SMTP_USER%'),
+                'smtp_password': ds_data.get('%SMTP_PASSWORD%'),
+                'smtp_tls': ds_data.get('%SMTP_TLS%')
             },
             'config': {
-                'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
-                'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
-                'alexa_integration_enabled': asset.read_global_value("%ALEXA_INTEGRATION_ENABLED%"),
-                'bookmarks_enabled': asset.read_global_value("%BOOKMARKS_ENABLED%"),
-                'cloud_storage_enabled': asset.read_global_value("%CLOUD_STORAGE_ENABLED%"),
-                'cloud_storage_size': asset.read_global_value('%CLOUD_STORAGE_SIZE%'),
-                'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
-                'company_name': asset.read_global_value("%COMPANY_NAME%"),
-                'company_link': asset.read_global_value("%COMPANY_LINK%"),
-                'developers_enabled': asset.read_global_value("%DEVELOPERS_ENABLED%"),
-                'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
-                'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
-                'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
+                'app_types_for_platform': ds_data.get('%APP_TYPES_FOR_PLATFORM%'),
+                'available_downloads_platform': ds_data.get('%AVAILABLE_DOWNLOADS_PLATFORM%'),
+                'alexa_integration_enabled': ds_data.get("%ALEXA_INTEGRATION_ENABLED%"),
+                'bookmarks_enabled': ds_data.get("%BOOKMARKS_ENABLED%"),
+                'cloud_storage_enabled': ds_data.get("%CLOUD_STORAGE_ENABLED%"),
+                'cloud_storage_size': ds_data.get('%CLOUD_STORAGE_SIZE%'),
+                'copyright_year': ds_data.get("%COPYRIGHT_YEAR%"),
+                'company_name': ds_data.get("%COMPANY_NAME%"),
+                'company_link': ds_data.get("%COMPANY_LINK%"),
+                'developers_enabled': ds_data.get("%DEVELOPERS_ENABLED%"),
+                'feedback_enabled': ds_data.get("%FEEDBACK_ENABLED%"),
+                'integration_filter_items': ds_data.get("%INTEGRATION_FILTER_ITEMS%"),
+                'integration_filter_limitation': ds_data.get("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_seo_page_description': seo_description,
                 'integration_store_enabled': integration_store_enabled,
                 'landing_description': landing_description,
-                'health_monitor_cache_timeout': asset.read_global_value('%HM_CACHE_TIMEOUT%'),
-                'public_custom_clients': asset.read_global_value('%PUBLIC_CUSTOM_CLIENTS%'),
-                'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
-                'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
-                'show_all_betas': asset.read_global_value("%SHOW_ALL_BETAS%"),
-                'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
-                'sort_supported_devices_by_popularity': asset.read_global_value(
+                'health_monitor_cache_timeout': ds_data.get('%HM_CACHE_TIMEOUT%'),
+                'public_custom_clients': ds_data.get('%PUBLIC_CUSTOM_CLIENTS%'),
+                'public_downloads': ds_data.get("%PUBLIC_DOWNLOADS%"),
+                'public_releases': ds_data.get("%PUBLIC_RELEASE_HISTORY%"),
+                'show_all_betas': ds_data.get("%SHOW_ALL_BETAS%"),
+                'show_analytics_events': ds_data.get("%SHOW_ANALYTICS_EVENTS%"),
+                'sort_supported_devices_by_popularity': ds_data.get(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
-                'support_link': asset.read_global_value("%SUPPORT_LINK%"),
-                'privacy_link': asset.read_global_value("%PRIVACY_LINK%"),
-                'supported_resolutions': asset.read_global_value("%SUPPORTED_RESOLUTIONS%"),
-                'supported_hardware_types': asset.read_global_value("%SUPPORTED_HARDWARE_TYPES%"),
-                'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
-                'tested_operating_systems': asset.read_global_value("%TESTED_OPERATING_SYSTEMS%"),
-                'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
+                'support_link': ds_data.get("%SUPPORT_LINK%"),
+                'privacy_link': ds_data.get("%PRIVACY_LINK%"),
+                'supported_resolutions': ds_data.get("%SUPPORTED_RESOLUTIONS%"),
+                'supported_hardware_types': ds_data.get("%SUPPORTED_HARDWARE_TYPES%"),
+                'search_tags': ds_data.get("%SEARCH_TAGS%"),
+                'tested_operating_systems': ds_data.get("%TESTED_OPERATING_SYSTEMS%"),
+                'vendors_shown': ds_data.get("%VENDORS_SHOWN%"),
                 'cloud_name': cloud_name,
                 'vms_name': vms_name,
                 'push_config': public_push_config,
-                'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%'),
-                'trial_license_key': asset.read_global_value('%TRIAL_LICENSE_KEY%')
+                'google_tag_manager_id': ds_data.get('%GOOGLE_TAG_MANAGER_ID%'),
+                'trial_license_key': ds_data.get('%TRIAL_LICENSE_KEY%')
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled,
-                'reviews_enabled': asset.read_global_value('%REVIEWS_ENABLED%'),
-                'smtp_disabled': asset.read_global_value("%SMTP_DISABLED%")
+                'reviews_enabled': ds_data.get('%REVIEWS_ENABLED%'),
+                'smtp_disabled': ds_data.get("%SMTP_DISABLED%")
             }
         }
         customization_cache.set(f'customization_{customization_name}', data)
@@ -745,6 +758,17 @@ class Asset(models.Model):
         return data_structure.find_actual_value(asset=self, language=language,
                                                 version_id=self.version_id(),
                                                 customization_name=customization)
+
+    def read_all_global_values(self, record_names, language=None):
+        customization = None
+        if self.asset_type.single_customization and self.customizations.exists():
+            customization = self.customizations.first().name
+        data_structures = DataStructure.objects.filter(
+                name__in=record_names, context__in=self.asset_type.context_set.filter(is_global=True))
+        data = DataStructure.find_actual_values(
+            data_structures, asset=self, customization_name=customization, version_id=self.version_id(),
+            language=language)
+        return {ds.name: value for ds, value in data.items()}
 
     def replace_global_values(self, content: str, global_contexts_dict=None):
         if not global_contexts_dict:
