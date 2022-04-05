@@ -2,6 +2,7 @@ from functools import wraps
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from django.conf import settings
+from django.utils.functional import SimpleLazyObject
 from inlinestyler.utils import inline_css
 import re
 import sass
@@ -148,7 +149,7 @@ SEARCH_SETTINGS = {
     'sortableAttributes': ATTRIBUTES,
     'filterableAttributes': ['labels', 'kbMenus'],
 }
-DOC_CACHE = SearchableCache(cache_key='documentation', search_settings=SEARCH_SETTINGS)
+DOC_CACHE = SimpleLazyObject(lambda: SearchableCache(cache_key='documentation', search_settings=SEARCH_SETTINGS))
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
