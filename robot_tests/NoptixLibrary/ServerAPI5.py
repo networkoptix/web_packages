@@ -85,7 +85,7 @@ class ServerAPI5(ServerAPI):
                     "owner": data["ownerAccountEmail"]
                 }
                 r = s.post(f"{serverUrl}/rest/v1/system/cloudBind", json=cloud_info)
-                s.delete(f"{serverUrl}/res/v1/login/sessions")
+                s.delete(f"{serverUrl}/rest/v1/login/sessions")
                 logger.info(f"{name} has been connected to {cloudHost} with {cloud_info['owner']}'s account.")
                 logger.trace(r)
                 return cloud_info["systemId"]
@@ -134,6 +134,7 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.patch(f'{serverUrl}/rest/v1/system/settings', json=settings, auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
@@ -142,7 +143,7 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/system/settings?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            # s.delete(f"{serverUrl}/res/v1/login/sessions")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
@@ -151,7 +152,7 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/userRoles?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/res/v1/login/sessions")
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
     @keyword
@@ -161,6 +162,7 @@ class ServerAPI5(ServerAPI):
             f = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             logger.trace(f.json())
             r = s.post(f'{serverUrl}/rest/v1/servers/this/restart', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
             assert r.status_code == 200
 
     @keyword
@@ -182,7 +184,41 @@ class ServerAPI5(ServerAPI):
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.patch(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), json=body,
                           verify=False)
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
         return r.json()
+
+    @keyword
+    def change_server_name_via_api(self, auth, newName, serverId, serverUrl):
+        body = {
+            "name": newName
+        }
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r =  r = s.patch(f'{serverUrl}/rest/v1/servers/this', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            return r.json()
+
+    @keyword
+    def get_cameras(self, auth, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r = s.get(f'{serverUrl}/rest/v1/devices', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
+            #s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            return r.json()
+
+    @keyword
+    def change_server_port_via_api(self, auth, serverUrl, newPort, serverId):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+
+            s.headers.update({'X-Runtime-Guid': s.cookies['x-runtime-guid'], "X-Server-guid": serverId})
+            body = {"port": newPort}
+            r = s.post(f'{serverUrl}/api/configure', json=body, verify=False)
+            return r
+
 
         #@keyword
     #def save_user(self, auth, server_url, name, permissions, email, full_name, password, is_cloud=True):
