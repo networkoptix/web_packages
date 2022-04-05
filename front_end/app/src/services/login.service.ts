@@ -144,7 +144,7 @@ export class NxLoginService {
             Object.assign(config, {
                 keyboard: false,
                 backdropClass: 'webadmin-backdrop-login',
-                panelClass: 'modal-panel webadmin-window no-scroll'
+                panelClass: 'webadmin-window' //  only one class is allowed
             });
         }
 

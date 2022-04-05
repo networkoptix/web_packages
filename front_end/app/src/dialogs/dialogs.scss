@@ -83,10 +83,6 @@ nx-modal-wizard {
     }
 }
 
-.modal-open .modal:not(.no-scroll) {
-    overflow-y: scroll;
-}
-
 .modal {
     &.fade {
         transition: none !important;

@@ -1,57 +1,44 @@
-@use "../../../../styles/theme_variables_common";
 @import "./account-settings.component.scss";
 
-.st0 {
+.icon-with-fill {
     fill-rule: evenodd;
     clip-rule: evenodd;
-    fill: theme_variables_common.$light1 !important;
+    fill: var(--tab-link-webadm-color) !important;
 }
 
 #accountSettingsSelect {
-    color: theme_variables_common.$light1 !important;
-}
-
-.popup {
-    &.arrow {
-        border-bottom-color : theme_variables_common.$dark11 !important;
-
-        &.small-override {
-            left: 12px !important;
-        }
-    }
+    color: var(--tab-link-webadm-color) !important;
 }
 
 .dropdown {
     & button {
-        color: theme_variables_common.$light1 !important;
+        color: var(--tab-link-webadm-color) !important;
     }
     &:not(.show) {
         & > #accountSettingsSelect {
-            background: theme_variables_common.$dark14 !important;
-            color: theme_variables_common.$light1 !important;
             border: 1px solid transparent !important;
+            
             &:hover {
-                background: theme_variables_common.$dark15 !important;
+                background: var(--tab-link-webadm-hover-bg) !important;
             }
+            
             &:active {
-                background: theme_variables_common.$dark13 !important;
+                background: var(--tab-link-webadm-active-bg) !important;
             }
-
         }
     }
     &.show {
         & > #accountSettingsSelect {
-            color: theme_variables_common.$light1 !important;
-            border: 1px solid theme_variables_common.$dark11 !important;
-            background: theme_variables_common.$dark12 !important;
+            border: 1px solid transparent !important;
 
             &:hover {
-                background: theme_variables_common.$dark13 !important;
-                border: 1px solid theme_variables_common.$dark12 !important;
+                background: var(--tab-link-webadm-hover-bg) !important;
+                border: 1px solid var(--tab-link-webadm-hover-bg) !important;
             }
+            
             &:active {
-                background: theme_variables_common.$dark12 !important;
-                border: 1px solid theme_variables_common.$dark11 !important;
+                background: var(--tab-link-webadm-active-bg) !important;
+                border: 1px solid var(--tab-link-webadm-active-bg) !important;
             }
 
         }

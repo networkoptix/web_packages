@@ -5,15 +5,17 @@ svg-icon {
 }
 
 .logo-header {
-    background: $additional_light1;
+    background: var(--auth-header-bg);
     height: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid $light3;
+    border-bottom: 1px solid var(--border-color);
+    
     img {
         height: 80px;
     }
+    
     @media screen and (max-height: $collapse-webadmin-window-width), (max-width: $collapse-webadmin-window-width) {
         height: 80px;
         img {
@@ -46,7 +48,7 @@ svg-icon {
 }
 
 .separator {
-    color: $light16;
+    color: var(--auth-header-color);
     display: flex;
     align-items: center;
     text-align: center;
@@ -59,7 +61,7 @@ svg-icon {
 .separator::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid $additional_light8;
+  border-bottom: 1px solid var(--horizontal-sep-color);
 }
 
 .separator:not(:empty)::before {

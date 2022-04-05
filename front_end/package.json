@@ -18,7 +18,7 @@
     "serve-webadmin-amir2": "export WEBADMIN_TARGET=amir2 && npm run serve:webadmin",
     "serve:auth": "npm run setVarSkin && npm run lang && npm run update-lang-types && ng serve authorization --proxy-config proxy.conf.auth.js",
     "serve:cloud": "npm run setVarSkin && npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve -c $CLOUD_TARGET --proxy-config proxy.conf.front_end.js",
-    "serve:webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --proxy-config proxy.conf.webadmin.js",
+    "serve:webadmin": "npm run lang && npm run update-lang-types && node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve -c webadmin --proxy-config proxy.conf.webadmin.js",
     "build": "npm run build:cloud && npm run build:auth",
     "build:auth": "ng build authorization --configuration production",
     "build:cloud": "npm run lang && ng build --configuration production",

@@ -5,9 +5,13 @@
 :root {
     --body-bg    : #{$additional_light2};
     --alt-body-bg : #{$light1};
-    --header-bg  : #{$light1};
-    --header-border-color : #{$light4};
     --body-text-color : #{$dark9};
+    
+    --header-bg                  : #{$light1};
+    --header-border-color        : #{$light4};
+    --header-webadm-bg           : #{$dark14};
+    --header-webadm-border-color : transparent;
+    
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
     
@@ -243,12 +247,21 @@
     --btn-header-main-bg         : #{$light4};
     --btn-header-main-color      : #{$dark9};
     --btn-header-main-hover-bg   : #{$light2};
+    
+    --btn-header-webadm-main-bg         : #{$dark14};
+    --btn-header-webadm-main-color      : #{$additional_light1};
+    --btn-header-webadm-main-hover-bg   : #{$dark15};
+    --btn-header-webadm-main-active-bg  : #{$dark13};
 
     --tab-link-hover-bg            : #{$light3};
     --tab-link-hover-bottom-color  : #{$light6};
     --tab-link-active-bg           : #{$light3};
     --tab-link-active-bottom-color : #{$light6};
     --tab-link-selected-color      : #{$brand-core};
+    
+    --tab-link-webadm-color               : #{$additional_light1};
+    --tab-link-webadm-hover-bg            : #{$dark15};
+    --tab-link-webadm-active-bg           : #{$dark13};
 
     --dropdown-menu-arrow-color : #{$light4};
     --dropdown-menu-arrow-fill-color : #{$additional_light1};

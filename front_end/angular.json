@@ -76,7 +76,11 @@
             },
             "vendorChunk": true,
             "extractLicenses": false,
-            "sourceMap": true,
+            "sourceMap": {
+              "scripts": true,
+              "styles": false,
+              "vendor": false
+            },
             "optimization": false,
             "namedChunks": true
           },
@@ -206,7 +210,11 @@
             "host": "0.0.0.0",
             "port": 9000,
             "browserTarget": "front-end:build",
-            "sourceMap": true,
+            "sourceMap": {
+              "scripts": true,
+              "styles": true,
+              "vendor": false
+            },
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
@@ -329,7 +337,11 @@
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
-            "sourceMap": true,
+            "sourceMap": {
+              "scripts": true,
+              "styles": true,
+              "vendor": false
+            },
             "optimization": false,
             "namedChunks": true
           },
@@ -388,7 +400,11 @@
             "browserTarget": "authorization:build:development",
             "host": "0.0.0.0",
             "port": 9002,
-            "sourceMap": true,
+            "sourceMap": {
+              "scripts": true,
+              "styles": true,
+              "vendor": false
+            },
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true

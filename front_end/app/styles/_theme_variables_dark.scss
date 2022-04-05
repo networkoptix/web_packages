@@ -4,9 +4,13 @@
 html[data-theme="dark"] {
     --body-bg    : #0D0E0F; //$dark3;
     --alt-body-bg : #000000; //$dark1;
-    --header-bg  : #212A2F; //$dark7;
-    --header-border-color: transparent;
     --body-text-color : #A5B7C0; //$light10;
+    
+    --header-bg                  : #212A2F; //$dark7;
+    --header-border-color        : transparent;
+    --header-webadm-bg           : #212A2F; //$dark7;
+    --header-webadm-border-color : transparent;
+    
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;
     
@@ -240,13 +244,22 @@ html[data-theme="dark"] {
     --btn-header-saparator-color : #A5B7C0; //light10;
     --btn-header-main-bg         : transparent;
     --btn-header-main-color      : #E1E7EA; //$light4;
-    --btn-header-main-hover-bg   : #35464F; //dark11;
+    --btn-header-main-hover-bg   : #35464F; //$dark11;
+    
+    --btn-header-webadm-main-bg         : transparent;
+    --btn-header-webadm-main-color      : #E1E7EA; //$light4;
+    --btn-header-webadm-main-hover-bg   : #35464F; //$dark11;
+    --btn-header-webadm-main-active-bg  : #49626F; //$dark15;
 
-    --tab-link-hover-bg           : #35464F; //dark11;
+    --tab-link-hover-bg           : #35464F; //$dark11;
     --tab-link-hover-bottom-color : #1C2327; //$dark6;
     --tab-link-active-bg           : #171C1F; //$dark5;
     --tab-link-active-bottom-color : #171C1F; //$dark5;
     --tab-link-selected-color       : #2FA2DB; //$brand-core;
+    
+    --tab-link-webadm-color               : #E1E7EA; //$light4;
+    --tab-link-webadm-hover-bg            : #35464F; //dark11;
+    --tab-link-webadm-active-bg           : #171C1F; //$dark5;
 
     --dropdown-menu-arrow-color      : #49626F; //$dark15;
     --dropdown-menu-arrow-fill-color : #121517; //dark4;

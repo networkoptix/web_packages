@@ -200,3 +200,18 @@ span.marked {
         width : 100%;
     }
 }
+
+.cdk-overlay-pane.webadmin-window {
+    position         : relative !important;
+    margin           : 0;
+    width            : 500px;
+    background-color : var(--card-body-bg);
+    border           : 1px solid var(--border-color);
+    max-width        : none;
+    max-height       : none;
+    overflow         : hidden;
+    
+    > * {
+        width : 100%;
+    }
+}

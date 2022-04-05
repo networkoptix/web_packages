@@ -72,7 +72,7 @@ require('./scripts/vendor/protocolcheck');
             ></nx-pre-loader>
             <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
             <!-- test component - REMOVE AFTER TESTING -->
-            <div style="position: absolute; bottom : 20px; left : 20px;">
+            <div style="position: absolute; bottom : 20px; left : 20px; z-index : 99999;">
                 <nx-theme-switcher-component layout="test"></nx-theme-switcher-component>
             </div>
             <!-- end test component - REMOVE AFTER TESTING -->

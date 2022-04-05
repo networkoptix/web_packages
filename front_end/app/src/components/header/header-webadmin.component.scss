@@ -3,9 +3,9 @@
 @import "./header.component.scss";
 
 .navbar {
-    border-bottom : 1px solid transparent !important;
+    border-bottom : 1px solid var(--header-webadm-border-color) !important;
     &.navbar-default {
-        background-color: theme_variables_common.$dark14 !important;
+        background-color: var(--header-webadm-bg) !important;
     }
 }
 

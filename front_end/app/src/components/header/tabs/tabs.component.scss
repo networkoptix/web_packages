@@ -30,7 +30,7 @@
             color    : var(--tab-link-selected-color);
     
             & > a {
-                color : var(--tab-link-selected-color) !important;
+                color : var(--tab-link-selected-color);
             }
     
             &::after {
