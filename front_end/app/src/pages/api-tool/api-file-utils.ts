@@ -124,9 +124,11 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc) => {
 /**
     Creates the developers-menu content from an API File
  */
-export const createMenuContent = (API: APIDoc) => {
+export const createMenuContent = (API: APIDoc, seperator: string = '') => {
     const menuContent: MenuNodeWithParent[] = [];
-
+    if (seperator) {
+        menuContent.push(new MenuNode(`${seperator}-seperator`, '', seperator));
+    }
     generateMenuNodesFromCategoryTags(API, menuContent);
     generateMenuNodesFromEndpoints(API, menuContent);
     return menuContent;

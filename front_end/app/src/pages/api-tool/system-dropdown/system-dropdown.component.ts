@@ -44,5 +44,6 @@ export class NxSystemDropdownComponent {
         this.APIToolService.selectedAPI = api;
         this.APIToolService.setAPIInfo();
         this.APIToolService.menuNodes = api.menu;
+        this.APIToolService.activeNode = this.APIToolService.menuNodes?.find(node => true);
     }
 }

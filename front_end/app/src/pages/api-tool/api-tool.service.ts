@@ -415,11 +415,11 @@ export class NxAPIToolService {
                                                 APIInfoCreated = true;
                                                 // Success
                                                 const APIDoc = this.selectedServer.apiDocFull;
-                                                const mainAPIContent = createMenuContent(APIDoc);
+                                                const mainAPIContent = createMenuContent(APIDoc, 'REST');
                                                 await this.getAPIInformation(server.id, mainAPIContent, APIDoc);
                                                 this.APIDropdown.push({
                                                     value: 'api_information',
-                                                    name: 'Current Version',
+                                                    name: 'Current API',
                                                     menu: mainAPIContent,
                                                     disabled: false
                                                 });
@@ -519,7 +519,7 @@ export class NxAPIToolService {
         addAPIInfoNodesToMenu(APIDoc, mainAPIContent, false);
         this.APIDropdown.push({
             value: 'api_information',
-            name: 'Current Version',
+            name: 'Current API',
             menu: mainAPIContent,
             disabled: false
         });
@@ -612,11 +612,11 @@ export class NxAPIToolService {
             const APIType: APIDocVersion = 'deprecated';
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths, deprecatedAPI.paths);
-            const deprecatedMenuContent = createMenuContent(deprecatedAPI);
-            addAPIInfoNodesToMenu(apiDocFull, deprecatedMenuContent, false);
+            const deprecatedMenuContent = createMenuContent(deprecatedAPI, 'LEGACY');
+            addAPIInfoNodesToMenu(apiDocFull, deprecatedMenuContent, true);
             this.APIDropdown.push({
                 value: 'deprecated',
-                name: 'Deprecated',
+                name: 'Deprecated API',
                 menu: deprecatedMenuContent,
                 disabled: false
             });
