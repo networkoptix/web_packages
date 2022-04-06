@@ -107,11 +107,13 @@ class ServerAPI5(ServerAPI):
         userId=None, 
         userRoleId=None, 
         isEnabled=True, 
-        isCloud=True
+        isCloud=True,
+        patch=False
         ):
         body= {
             "email":email,
             "name":name,
+            "fullName":fullName,
             "permissions":permissions,
             "isCloud":isCloud,
             "isEnabled":isEnabled,
@@ -121,12 +123,27 @@ class ServerAPI5(ServerAPI):
             body["id"]=userId
         if isCloud:
             body["fullName"]=fullName
+        else:
+            body["type"] = "local"
         if userRoleId:
             body["id"]=userRoleId
-            with requests.session() as s:
-                self.login(s, serverUrl, password=password)
-                r = requests.post(f'{serverUrl}/ec2/saveUser', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
-                return r.json()
+        with requests.session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            if patch:
+                r = s.patch(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+            else:
+                r = s.post(f'{serverUrl}/rest/v1/users', auth=HTTPBasicAuth(auth[0], auth[1]), json=body, verify=False)
+            return r.json()
+
+    @keyword
+    def remove_user(self, auth, serverUrl, userId):
+        with requests.session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r = s.delete(f'{serverUrl}/rest/v1/users/{userId}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+            assert r.status_code == 200
+            # return r.json()
 
     @keyword
     def set_system_settings(self, auth, serverUrl, settings):
@@ -152,6 +169,15 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             r = s.get(f'{serverUrl}/rest/v1/userRoles?_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            return r.json()
+
+    @keyword
+    def get_users(self, auth, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r = s.get(f'{serverUrl}/rest/v1/users?_format=JSON&_keepDefault=true', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
             s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
 
@@ -219,6 +245,17 @@ class ServerAPI5(ServerAPI):
             r = s.post(f'{serverUrl}/api/configure', json=body, verify=False)
             return r
 
+    def save_user_role(self, auth, serverUrl, name, permissions):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            body = {
+                "name": name,
+                "permissions": permissions
+            }
+            r = s.post(f'{serverUrl}/rest/v1/userRoles', auth=HTTPDigestAuth(auth[0], auth[1]), json=body,
+                              verify=False)
+        return r.json()
 
         #@keyword
     #def save_user(self, auth, server_url, name, permissions, email, full_name, password, is_cloud=True):
@@ -262,3 +299,12 @@ class ServerAPI5(ServerAPI):
     def get_local_system_owner(self, server_url, local_auth):
         system_settings = ServerAPI5.get_system_settings_from_server(self, local_auth, server_url)
         return system_settings["cloudAccountName"]
+
+    @keyword
+    def get_cameras(self, auth, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            r = s.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
+            s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            return r.json()
