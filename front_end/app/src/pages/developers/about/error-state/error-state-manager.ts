@@ -23,6 +23,7 @@ type AboutNodeFields = 'assetId'
     | 'subtitle';
 
 type BaseErrorConfig = {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     [key in AboutNodeFields]: string | ErrorConfig
 };
 

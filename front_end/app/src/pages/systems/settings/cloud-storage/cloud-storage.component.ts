@@ -30,15 +30,6 @@ import { NxSettingsService } from '../settings.service';
 
 type UsageTypes = '&mdash;' | number;
 
-export const emptyUsage: IUsageStats = {
-    currentRecordings: '&mdash;',
-    whenFullyUsed: '&mdash;',
-    amountUsed: '&mdash;',
-    archiveFrom: '&mdash;',
-    recordingBitrate: '&mdash;',
-    delayFromLive: '&mdash;'
-};
-
 export interface IUsageStats {
     currentRecordings: UsageTypes
     whenFullyUsed: UsageTypes
@@ -47,6 +38,15 @@ export interface IUsageStats {
     recordingBitrate: UsageTypes
     delayFromLive: UsageTypes
 }
+
+export const emptyUsage: IUsageStats = {
+    currentRecordings: '&mdash;',
+    whenFullyUsed: '&mdash;',
+    amountUsed: '&mdash;',
+    archiveFrom: '&mdash;',
+    recordingBitrate: '&mdash;',
+    delayFromLive: '&mdash;'
+};
 
 @Component({
     selector: 'nx-cloud-storage',

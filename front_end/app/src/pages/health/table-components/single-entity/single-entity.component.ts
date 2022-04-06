@@ -14,6 +14,10 @@ import {
 
 import { NxHealthService } from '../../health.service';
 
+export type SectionLookup = {
+    [key: string]: [InfoBlockSection]
+};
+
 @Component({
     selector: 'nx-single-entity',
     templateUrl: './single-entity.component.html',
@@ -74,7 +78,3 @@ export class NxSingleEntityComponent implements OnChanges {
         }
     }
 }
-
-export type SectionLookup = {
-    [key: string]: [InfoBlockSection]
-};

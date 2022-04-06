@@ -26,6 +26,38 @@ export enum AboutTemplates {
     SUPPORT = 'support'
 }
 
+export interface AboutNode {
+    title: string;
+    subtitle: string;
+    displayName: string;
+    assetId: number;
+    asset: any;
+    url: string;
+    icon: string;
+    newWindow?: boolean;
+    nodes?: AboutNode[];
+
+    aniIcon?: string;
+    currentIcon?: string;
+}
+
+export type AboutStructureNode = { template: AboutTemplates; node: AboutNode };
+
+export type AboutStructure = AboutStructureNode[];
+
+export interface AboutAssetBlock {
+    title: string;
+    titleHTML: string;
+    content: string;
+    contentHTML: string;
+}
+
+export interface AboutAsset {
+    title: string;
+    shortDescription: string;
+    blocks: AboutAssetBlock;
+}
+
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
 @Component({
     selector: 'nx-about',
@@ -223,36 +255,4 @@ export class NxAboutComponent {
     ngOnDestroy(): void {
         this.ribbonService.hide();
     }
-}
-
-export type AboutStructureNode = { template: AboutTemplates, node: AboutNode };
-
-export type AboutStructure = AboutStructureNode[];
-
-export interface AboutNode {
-    title: string;
-    subtitle: string;
-    displayName: string;
-    assetId: number;
-    asset: any;
-    url: string;
-    icon: string;
-    newWindow?: boolean;
-    nodes?: AboutNode[];
-
-    aniIcon?: string;
-    currentIcon?: string;
-}
-
-export interface AboutAsset {
-    title: string;
-    shortDescription: string;
-    blocks: AboutAssetBlock;
-}
-
-export interface AboutAssetBlock {
-    title: string;
-    titleHTML: string;
-    content: string;
-    contentHTML: string;
 }

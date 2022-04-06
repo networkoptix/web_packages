@@ -7,11 +7,13 @@ export interface ISimpleTimeRange {
     start: ms,
     end: ms,
     duration: ms,
+    /* eslint-disable @typescript-eslint/no-use-before-define */
     clone(): SimpleTimeRange,
     contains(r: SimpleTimeRange): boolean,
     isContained(r: SimpleTimeRange): boolean,
     isDisjointWith(r: SimpleTimeRange): boolean,
     overlapsWith(r: SimpleTimeRange): boolean,
+    /* eslint-enable @typescript-eslint/no-use-before-define */
 }
 
 export type IRecord = ISimpleTimeRange;

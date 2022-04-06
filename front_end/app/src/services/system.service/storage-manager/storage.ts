@@ -53,6 +53,7 @@ export interface SaveStoragePayload {
  * This will allow for checking against the parent for things like comparing freeSpace on a storage with total freeSpace on all storages.
  */
 export class CurrentStorageState {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     locations: Storage[];
     vmsSpaceLoaded: boolean;
     storageInfoLoaded: boolean;
@@ -168,8 +169,10 @@ export class CurrentStorageState {
         this.#hasPlugins = hasPlugins;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     checkAnalytics = (storage: Storage) => ({
         analyticsDbLocation: storage.storageId === this.#metadataStorageId,
         canStoreAnalyticsDb: this.#checkCanStoreAnalytics(storage)

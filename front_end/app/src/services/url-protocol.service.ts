@@ -9,6 +9,19 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { WINDOW } from './window-provider';
 
+export interface linkSettings {
+    native?: boolean,
+    from?: string,
+    context?: {},
+    command?: string,
+    systemId?: string,
+    action?: {},
+    actionParameters?: {},
+    auth?: boolean | string | undefined,
+    code?: string | undefined,
+    useOauth?: boolean
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -235,18 +248,4 @@ export class NxUrlProtocolService {
     getSource() {
         return this.parseSource();
     }
-}
-
-export interface linkSettings {
-    native?: boolean,
-    from?: string,
-    context?: {},
-    command?: string,
-    systemId?: string,
-    action?: {},
-    actionParameters?: {},
-    auth?: boolean | string | undefined,
-    // eslint-disable-next-line camelcase
-    code?: string | undefined,
-    useOauth?: boolean
 }

@@ -11,6 +11,14 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
+export class ActionItems {
+    constructor(
+        public name: string,
+        public action: () => void,
+        public id?: string
+    ) {}
+}
+
 /* Usage
  <nx-select
      [items]="ActionItems[]"
@@ -31,7 +39,6 @@ import { BaseDropdown } from '../injDropdown';
         }
     ]
 })
-
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
     @Input() componentId: string = 'three-dot-menu';
@@ -46,12 +53,4 @@ export class NxThreeDotDropdown extends BaseDropdown {
     change(item) {
         item.action();
     }
-}
-
-export class ActionItems {
-    constructor(
-        public name: string,
-        public action: () => void,
-        public id?: string
-    ) {}
 }

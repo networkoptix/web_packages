@@ -205,10 +205,10 @@ module.exports = {
                     classes: true,
                     // Will false positive on useExisting: forwardRef
                     variables: true,
-                    enums: false,
-                    typedefs: false,
-                    ignoreTypeReferences: true,
-                }]), // TODO: Restore
+                    enums: true,
+                    typedefs: true,
+                    ignoreTypeReferences: false,
+                }]),
                 ...tsExtension('no-unused-expressions', ['error', {
                     allowShortCircuit: true,
                     allowTernary: true,
@@ -241,6 +241,17 @@ module.exports = {
                     varsIgnorePattern: '(^_)|(component)|(fixture)|(el)',
                     args: 'none',
                     // argsIgnorePattern: '^_',
+                }],
+            }
+        },
+        {
+            /* Allow top-down organization in types files */
+            files: ['*types.ts'],
+            rules: {
+                '@typescript-eslint/no-use-before-define': ['error', {
+                    enums: true,
+                    typedefs: true,
+                    ignoreTypeReferences: true,
                 }],
             }
         },

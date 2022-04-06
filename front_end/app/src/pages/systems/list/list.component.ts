@@ -35,6 +35,7 @@ class GroupTile {
         public readonly systems: SystemTile[] = [],
     ) {}
 
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     get tiles(): Tile[] {
         return [...this.groups, ...this.systems];
     }

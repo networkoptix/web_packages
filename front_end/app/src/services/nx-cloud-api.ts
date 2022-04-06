@@ -85,6 +85,7 @@ export class CustomClientAPI {
     private readonly apiBase: string;
 
     constructor(
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         private cloudAPI: NxCloudApiService,
         private config: IConfig,
         private http: HttpClient,

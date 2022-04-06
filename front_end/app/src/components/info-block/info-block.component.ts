@@ -24,6 +24,29 @@ export enum InfoDetailClass {
     WARNING = 'warning'
 }
 
+export class InfoBlockLine <Name = string, Value = string> {
+    constructor(
+        public name: Name,
+        public value: Value,
+        public customClass?: InfoDetailClass,
+        public icon?: string,
+        public show: boolean = true,
+        public tooltip?: string
+    ) {}
+}
+
+export class InfoBlockSection<Heading = string> {
+    constructor(
+        public lines: InfoBlockLine[],
+        public heading?: Heading,
+        public maxParamWidth?: number
+    ) {}
+}
+
+export type InfoBlockSections = InfoBlockSection[];
+
+export type InfoBlockColumns = InfoBlockSections[];
+
 @Component({
     selector: 'nx-info-block',
     templateUrl: 'info-block.component.html',
@@ -71,26 +94,3 @@ export class NxInfoBlockComponent implements OnInit {
         });
     }
 }
-
-export class InfoBlockLine <Name = string, Value = string> {
-    constructor(
-        public name: Name,
-        public value: Value,
-        public customClass?: InfoDetailClass,
-        public icon?: string,
-        public show: boolean = true,
-        public tooltip?: string
-    ) {}
-}
-
-export class InfoBlockSection<Heading = string> {
-    constructor(
-        public lines: InfoBlockLine[],
-        public heading?: Heading,
-        public maxParamWidth?: number
-    ) {}
-}
-
-export type InfoBlockSections = InfoBlockSection[];
-
-export type InfoBlockColumns = InfoBlockSections[];
