@@ -917,7 +917,7 @@
             "IO Module": "I/Oモジュール",
             "Bridge": "ブリッジ",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "無効"
         },
         "info": {
             "type": "タイプ",
