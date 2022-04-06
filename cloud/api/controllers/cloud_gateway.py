@@ -26,7 +26,7 @@ def get(system_id, url, params=None, email=None, password=None, tokens=None):
         with MakeTokenForSystem(system_id,
                                 access_token=tokens.get('access_token'),
                                 refresh_token=tokens.get('refresh_token')) as token:
-            return requests.get(request, params=params, headers={"Authorization": f"Bearer {token}"})
+            return requests.get(request, params=params, headers={"x-runtime-guid": token})
 
     return requests.get(request, params=params, auth=auth)
 
@@ -44,6 +44,6 @@ def post(system_id, url, data, email=None, password=None, tokens=None):
         with MakeTokenForSystem(system_id,
                                 access_token=tokens.get('access_token'),
                                 refresh_token=tokens.get('refresh_token')) as token:
-            return requests.post(request, json=data, headers={"Authorization": f"Bearer {token}"})
+            return requests.post(request, json=data, headers={"x-runtime-guid": token})
 
     return requests.post(request, json=data, auth=auth)
