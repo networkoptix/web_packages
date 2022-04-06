@@ -3,7 +3,7 @@ import {
     Input,
     SimpleChanges
 } from '@angular/core';
-import { ActivationEnd, Router } from '@angular/router';
+import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -77,7 +77,9 @@ export class NxDropMenu extends BaseDropdown {
             .events
             .pipe(
                 untilDestroyed(this),
-                filter(event => event instanceof ActivationEnd)
+                filter(event => event instanceof ActivationEnd ||
+                    event instanceof NavigationCancel
+                )
             )
             .subscribe(() => {
                 this.headerService.show$ = false;
