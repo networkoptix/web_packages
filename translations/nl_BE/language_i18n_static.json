@@ -917,7 +917,7 @@
             "IO Module": "I/O module",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Ongeldig"
         },
         "info": {
             "type": "Type",
