@@ -1,9 +1,10 @@
 import {
-    Component, EventEmitter, Input, Output
+    Component, EventEmitter, Input, Output, SimpleChanges
 } from '@angular/core';
 
 import { NxConfigService, IConfig }  from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxUtilsService }            from '@services/utils.service';
 import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { AuthorizeStateType } from '../authorize.component';
 import { environment } from '@environments/environment';
@@ -32,5 +33,11 @@ export class NxAuthorizeNotSecureComponent {
         const lang = language.translations;
         this.LANG = lang;
         this.CONFIG = configService.getConfig();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.redirectUrl?.currentValue) {
+            this.redirectUrl = NxUtilsService.htmlToEntity(this.redirectUrl);
+        }
     }
 }
