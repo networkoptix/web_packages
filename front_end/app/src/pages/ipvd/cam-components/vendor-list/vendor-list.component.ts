@@ -9,18 +9,29 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { ActivationEnd, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { SearchFilter } from '@components/search/search.component.types';
+import type { Vendors } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+
+import type { IpvdParams } from '../../ipvd.types';
+
+/** Filters to activate when the tag is clicked */
+interface TagFilter {
+    label: string;
+    tagId?: string;
+    select?: { id: string, value: string },
+    multiselect?: { id: string, value: string }
+}
 
 /* USAGE
  <nx-vendor-list
@@ -30,7 +41,7 @@ import { NgChanges } from '@utils/ng-changes';
  </nx-vendor-list>
  */
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-vendor-list',
     templateUrl: 'vendor-list.component.html',
@@ -44,42 +55,34 @@ import { NgChanges } from '@utils/ng-changes';
     }]
 })
 export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() vendors;
-    @Input() cameras;
+    @Input() vendors: Vendors[];
+    @Input() numCameras: number;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    topXByVolume: any = {};
-    public debug: boolean;
-    public filters: any = [];
-    public allVendors;
+    topXByVolume: { value: number };
+    public debug: boolean = false;
+    public tagFilters: TagFilter[] = [];
+    public allVendors: Vendors[];
 
-    private readonly uriPath: string;
-    private filter: any = {};
-    private ASC = true;
-    private DESC = false;
-    private uriSubscription: Subscription;
-    private routerSubscription: Subscription;
+    private searchFilter: SearchFilter;
 
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private uri: NxUriService,
         private router: Router,
-        private _route: ActivatedRoute,
         private renderer: Renderer2
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
-        this.debug = false;
-        this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 
         this.topXByVolume = {
             value: this.CONFIG.ipvd.vendorsShown
         };
 
-        this.filters = [
+        this.tagFilters = [
             {
                 label: this.LANG.cameraFilters.highRes(),
                 select: { id: 'resolution', value: '8000000' },
@@ -134,35 +137,34 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.uriSubscription = this.uri.getParams()
+        this.uri.getParams()
+            .pipe(untilDestroyed(this))
             .subscribe(params => {
-                if (params.debug !== undefined) {
-                    this.debug = true;
-                }
+                this.debug = params.debug !== undefined;
             });
 
-        this.routerSubscription = this.router.events
+        this.router.events
             .pipe(
+                untilDestroyed(this),
                 filter(event => event instanceof ActivationEnd)
             )
             .subscribe((event: ActivationEnd) => {
-                this.filter.multiselects
+                this.searchFilter.multiselects
                     .find(s => s.id === 'vendors')
                     ?.selected.push(event.snapshot.queryParams.vendors);
 
                 // Propagate component's value attribute (model)
-                this.propagateChange({ ...this.filter });
+                this.propagateChange({ ...this.searchFilter });
             });
     }
 
     // Form control functions
     // The method set in registerOnChange to emit changes back to the form
-    private propagateChange = (_: any) => {
-    };
+    private propagateChange = (_: SearchFilter): void => {};
 
-    writeValue(value: any) {
+    writeValue(value: SearchFilter): void {
         if (value) {
-            this.filter = value;
+            this.searchFilter = value;
         }
     }
 
@@ -173,23 +175,23 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    setVendorsShown(vendors) {
-        const byCountDESC = paramSortFunc((elm: any) => elm.count, false);
+    setVendorsShown(vendors: Vendors[]): void {
+        const byCountDESC = paramSortFunc<Vendors>(elm => elm.count, false);
 
-        const byNameASC = paramSortFunc((elm: any) => elm.name.toLowerCase());
+        const byNameASC = paramSortFunc<Vendors>(elm => elm.name.toLowerCase());
 
         this.vendors = vendors.sort(byCountDESC)
             .slice(0, this.CONFIG.ipvd.vendorsShown)
             .sort(byNameASC);
     }
 
-    toggleVendorsShown(element) {
+    toggleVendorsShown(element: HTMLButtonElement): void {
         if (this.vendors.length !== this.allVendors.length) {
             this.vendors = this.allVendors;
             this.renderer.setProperty(
                 element,
                 'innerText',
-                'Show Top ' + this.CONFIG.ipvd.vendorsShown
+                `Show Top ${this.CONFIG.ipvd.vendorsShown}`
             );
         } else {
             this.setVendorsShown(this.allVendors);
@@ -197,7 +199,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    trackItem(index, item) {
+    trackItem(_index: number, item: Vendors): string | undefined {
         return item ? item.name : undefined;
     }
 
@@ -205,7 +207,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn: (change: SearchFilter) => void): void {
         this.propagateChange = fn;
     }
 
@@ -213,22 +215,17 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: () => void): void {
-    }
+    registerOnTouched(_fn: () => void): void {}
 
-    setFilter(filter) {
-        interface Params {
-            [key: string]: string;
-        }
+    setFilter(tagFilter: TagFilter): false {
+        const queryParams: IpvdParams = {};
 
-        const queryParams: Params = {};
-
-        if (filter.select) {
-            this.filter.selects.find(select => {
-                if (select.id === filter.select.id) {
-                    select.selected = select.items.find(item => {
-                        return item.value === filter.select.value;
-                    });
+        if (tagFilter.select) {
+            this.searchFilter.selects.find(select => {
+                if (select.id === tagFilter.select.id) {
+                    select.selected = select.items.find(item =>
+                        item.value === tagFilter.select.value
+                    );
                     queryParams.resolution = select.selected.value;
                     return true;
                 } else {
@@ -237,10 +234,10 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             });
         }
 
-        if (filter.tagId) {
-            queryParams.tags = filter.tagId;
-            this.filter.tags.find(tag => {
-                if (tag.id === filter.tagId) {
+        if (tagFilter.tagId) {
+            queryParams.tags = tagFilter.tagId;
+            this.searchFilter.tags.find(tag => {
+                if (tag.id === tagFilter.tagId) {
                     tag.value = true;
                     return true;
                 } else {
@@ -249,15 +246,15 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             });
         }
 
-        if (filter.multiselect) {
-            this.filter.multiselects.find(select => {
-                if (select.id === filter.multiselect.id) {
+        if (tagFilter.multiselect) {
+            this.searchFilter.multiselects.find(select => {
+                if (select.id === tagFilter.multiselect.id) {
                     select.selected.push(
                         select.items.find(item =>
-                            item.id === filter.multiselect.value
+                            item.id === tagFilter.multiselect.value
                         ).id
                     );
-                    queryParams.hardwareTypes = select.selected;
+                    queryParams.hardwareTypes = select.selected.toString();
                     return true;
                 } else {
                     return false;
@@ -272,7 +269,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             });
 
         // Propagate component's value attribute (model)
-        this.propagateChange({ ...this.filter });
+        this.propagateChange({ ...this.searchFilter });
 
         return false;
     }

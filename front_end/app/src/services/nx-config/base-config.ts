@@ -8,12 +8,13 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-import {
+import type {
     ConsoleManifest,
     ConsoleSection
 } from '@components/console-table/console-table.component.types';
+import type { SearchTag } from '@components/search/search.component.types';
 
-import { MenuNode } from '../menus.service.types';
+import type { MenuNode } from '../menus.service.types';
 
 interface OauthStoreFlags {
     code: string;
@@ -504,7 +505,7 @@ export interface Ipvd {
     sortSupportedDevicesByPopularity: string;
     supportedResolutions: string;
     supportedHardwareTypes: string[];
-    searchTags: string;
+    searchTags: SearchTag[];
     vendorsShown: number;
     showAnalyticsEvents?: boolean;
 }

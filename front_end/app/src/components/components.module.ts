@@ -89,7 +89,6 @@ import { NxSearchComponent } from './search/search.component';
 import { NxStepperComponent } from './stepper/stepper.component';
 import { NxSwitchComponent } from './switch/switch.component';
 import { NxSystemsListComponent } from './systems-list/list.component';
-import { NxVendorListComponent } from './vendor-list/vendor-list.component';
 import { NxAssetExplorerWidgetComponent } from './widgets/asset-explorer/asset-explorer-widget.component';
 import { NxBookmarksWidgetComponent } from './widgets/bookmarks/bookmarks-widget.component';
 import { NxHealthMonitorWidgetComponent } from './widgets/health-monitor/health-monitor-widget.component';
@@ -139,7 +138,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         // NxLayoutRightComponent,
         NxCarouselComponent,
         NxRibbonComponent,
-        NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
@@ -192,7 +190,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         // NxLayoutRightComponent,
         NxCarouselComponent,
         NxRibbonComponent,
-        NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
@@ -247,7 +244,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         // NxLayoutRightComponent,
         NxCarouselComponent,
         NxRibbonComponent,
-        NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,

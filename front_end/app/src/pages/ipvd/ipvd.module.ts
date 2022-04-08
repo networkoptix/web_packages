@@ -14,6 +14,7 @@ import { BoolIconComponent } from './cam-components/bool-icon/bool-icon.componen
 import { CamTableComponent } from './cam-components/cam-table/cam-table.component';
 import { CamViewComponent } from './cam-components/cam-view/cam-view.component';
 import { CsvButtonComponent } from './cam-components/csv-button/csv-button.component';
+import { NxVendorListComponent } from './cam-components/vendor-list/vendor-list.component';
 import { IpvdSearchService } from './ipvd-search.service';
 import { NxIpvdComponent } from './ipvd.component';
 
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
         CamTableComponent,
         CamViewComponent,
         CsvButtonComponent,
-        BoolIconComponent
+        BoolIconComponent,
+        NxVendorListComponent,
     ],
     bootstrap: [],
     exports: [

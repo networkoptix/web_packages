@@ -64,7 +64,7 @@
     <div class="row px-3 m-0" *ngIf="vendors && !camerasTable.length && !noResult && hasNoSearch">
         <nx-vendor-list
                 [vendors]="vendors"
-                [cameras]="cameras.length"
+                [numCameras]="cameras.length"
                 [ngModel]="filterModel"
                 (ngModelChange)="modelChanged($event)">
         </nx-vendor-list>

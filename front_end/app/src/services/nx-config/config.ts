@@ -265,7 +265,7 @@ export const nxConfig: IConfig = {
         sortSupportedDevicesByPopularity: '',
         supportedResolutions: '',
         supportedHardwareTypes: [''],
-        searchTags: '',
+        searchTags: [],
         vendorsShown: 0
     },
     isInIframe: false,

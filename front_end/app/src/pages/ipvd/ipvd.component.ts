@@ -18,11 +18,12 @@ import { isArray } from 'rxjs/internal-compatibility';
 import { delay } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { MessageParams } from '@dialogs/message/message.component';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { Cameras } from '@services/nx-cloud-api.types';
+import type { Cameras, Vendors } from '@services/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -56,7 +57,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     data;
     company: string;
     vmsName: string;
-    vendors: any = [];
+    vendors: Vendors[] = [];
     resolution: string;
     itemsPerPage: number;
     query: string;
@@ -68,7 +69,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     resolutions;
     camerasTable: Cameras[];
     allowedParameters: string[];
-    filterModel;
+    filterModel: SearchFilter;
     toggleCamview: boolean;
     params: IpvdParams;
     mobileDetailMode: boolean;
@@ -277,7 +278,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.targets = clearPseudoAnchors(this.targets);
     }
 
-    findVendorForCamera(name: string): string {
+    findVendorForCamera(name: string): [string] | [] {
         const camera = this.cameras.find(camera => {
             return camera.model === name;
         });
@@ -291,10 +292,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     console.error(error);
                 });
 
-            return camera.vendor;
+            return [camera.vendor];
+        } else {
+            return [];
         }
-
-        return '';
     }
 
     updateFilterModel() {
@@ -305,7 +306,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
 
         if (this.filterModel.tags && this.filterModel.tags.length) {
-            this.filterModel.tags.forEach((tag: any) => {
+            this.filterModel.tags.forEach(tag => {
                 tag.value = false;
             });
             if (this.params.tags) {
@@ -351,7 +352,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                             select.selected = this.findVendorForCamera(
                                 this.params.camera
                             );
-                            if (select.selected === '') {
+                            if (!select.selected.length) {
                                 // not found. wrong camera model? try search...
                                 this.filterModel.search = this.params.camera;
                             }
@@ -434,7 +435,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             );
         }
 
-        this.filterModel.tags.forEach((tag: any) => {
+        this.filterModel.tags.forEach(tag => {
             tag.label = this.LANG.ipvd[tag.id]();
         });
     }
@@ -457,7 +458,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         ];
     }
 
-    modelChanged(model) {
+    modelChanged(model: SearchFilter) {
         this.filterModel = cloneDeep(model);
         this.searchVendor();
     }
@@ -488,7 +489,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
                 this.vendors = data.vendors;
                 this.vendors.sort(
-                    paramSortFunc((elm: any) => elm.name.toLowerCase())
+                    paramSortFunc(elm => elm.name.toLowerCase())
                 );
 
                 // reformat vendors to fit the multiselect component
@@ -530,23 +531,23 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     filterEmpty() {
-        let tags = false;
+        let tags;
         if (this.filterModel.tags) {
             tags = this.filterModel.tags.find(tag => tag.value);
         }
 
-        let multiselect = false;
+        let multiselect;
         if (this.filterModel.multiselects) {
             this.filterModel.multiselects.forEach(select => {
                 multiselect = multiselect || (select.selected.length > 0);
             });
         }
 
-        let singleselect = false;
+        let singleselect;
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
                 singleselect = singleselect ||
-                    (select.selected && select.selected.value > 0);
+                    (select.selected && select.selected.value !== '0');
                 // 0 is default choice
             });
         }
@@ -599,11 +600,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setVendor(vendor) {
-        this.filterModel.query = vendor;
-        this.searchVendor();
-        return false;
-    }
+    // setVendor(vendor) {
+    //     this.filterModel.query = vendor;
+    //     this.searchVendor();
+    //     return false;
+    // }
 
     activateCamera(elementSelected: Cameras): void {
         if (!elementSelected) {

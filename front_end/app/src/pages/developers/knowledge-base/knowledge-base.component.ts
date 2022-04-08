@@ -33,7 +33,7 @@ import type {
     RelatedLinks
 } from '@components/developers-menu/developers-menu-types';
 import { NxRibbonService, RibbonActionInput } from '@components/ribbon/ribbon.service';
-import { SearchFilter } from '@components/search/search.component';
+import type { SearchFilter } from '@components/search/search.component.types';
 import { IntersectionStatus } from '@directives/nx-intersection.directive';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';

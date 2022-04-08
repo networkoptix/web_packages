@@ -121,7 +121,7 @@ export interface Cameras {
     sortKey: string
 }
 
-interface Vendors {
+export interface Vendors {
     name: string,
     count: number
 }

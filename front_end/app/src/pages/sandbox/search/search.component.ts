@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import type { SearchFilter } from '@components/search/search.component';
+import type { SearchFilter } from '@components/search/search.component.types';
 import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({

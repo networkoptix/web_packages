@@ -1,11 +1,13 @@
-export type IpvdParams = Partial<{
-  search: string;
-  tags: string;
+import type { SearchParams } from '@components/search/search.component.types';
+
+export type IpvdParams = SearchParams & Partial<{
   vendors: string;
 
   sortBy: string;
-  page: string;
   camera: string;
+
+  resolution: string;
+  hardwareTypes: string;
 
   debug: string;
   beta: string;

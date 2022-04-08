@@ -13,27 +13,22 @@ import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
 } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import {
-    ButtonArrowType,
-    NxSearchService,
-    SearchModel,
-} from '@services/search.service';
+import { ButtonArrowType, NxSearchService } from '@services/search.service';
 import { NxUriService } from '@services/uri.service';
+
+import type { SearchFilter } from './search.component.types';
 
 /* Usage
  <nx-search
@@ -59,38 +54,6 @@ import { NxUriService } from '@services/uri.service';
  - will show advanced search and selected filters buttons (tags)
 
  */
-
-export interface SearchTag {
-    id: string,
-    label: string,
-    value: boolean,
-}
-
-interface Item {
-    id: string,
-    label: string,
-}
-
-export interface SearchFilter extends SearchModel {
-    tags?: SearchTag[],
-    selects?: Array<{
-        id: string;
-        label: string;
-        items: DropdownItem<string>[];
-        selected: DropdownItem<string>;
-        css?: string;
-    }>,
-    multiselects?: Array<{
-        id: string;
-        label: string;
-        items: Item[];
-        selected: string[];
-        singular?: string;
-        searchLabel?: string;
-        searchLabelSingular?: string;
-    }>,
-    search?: string;
-}
 
 @UntilDestroy()
 @Component({
@@ -124,7 +87,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private debounceShortTime: number;
     private debounceTime: number;
-    private params: Params = {};
+    private params: Record<string, string> = {};
     private searchUpdated = new Subject<string>();
     private modelUpdated = new Subject<void>();
 
@@ -226,7 +189,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (this.localFilter.tags?.length) {
             this.localFilter.tags.forEach(tag => { tag.value = false; });
             if (this.params.tags) {
-                (this.params.tags as string)
+                this.params.tags
                     .split(',')
                     .forEach(tagName => {
                         this.localFilter.tags.forEach(tag => {
@@ -418,7 +381,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     setRouteParams(): Promise<void | boolean | null> {
         const hasExistingParams = Object.values(this.params).some(Boolean);
-        const queryParams: Params = {};
+        const queryParams: Record<string, string> = {};
 
         queryParams.tags = undefined;
         if (this.localFilter.tags?.length) {

@@ -13,11 +13,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
-interface Item {
-    id: string,
-    label: string,
-    selected?: any,
-}
+import type { MultiSelectItem } from './multi-select.component.types';
 
 /* Usage
  <nx-multi-select
@@ -49,11 +45,11 @@ interface Item {
 
 export class NxMultiSelectDropdown extends BaseDropdown {
     @Input() id: string;
-    @Input('items') itemsOrig: Item[];
+    @Input('items') itemsOrig: MultiSelectItem[];
     @IBool() @Input() canSelectAll: CoercedBoolInput;
     @IBool() @Input() canSearch: CoercedBoolInput;
 
-    public items: Item[] = [];
+    public items: MultiSelectItem[] = [];
     public filter: string;
     public textSelected: any = {};
 

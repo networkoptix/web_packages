@@ -246,7 +246,7 @@ module.exports = {
         },
         {
             /* Allow top-down organization in types files */
-            files: ['*types.ts'],
+            files: ['*types.ts', 'app/src/services/nx-config/base-config.ts'],
             rules: {
                 '@typescript-eslint/no-use-before-define': ['error', {
                     enums: true,
