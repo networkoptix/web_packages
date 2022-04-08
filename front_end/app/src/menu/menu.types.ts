@@ -1,6 +1,7 @@
-import type { Params } from '@angular/router';
-
-import type { SearchModel } from '@services/search.service';
+export interface ContentToggle {
+    nodeId: string;
+    state: boolean;
+}
 
 export interface Content {
     base: string;
@@ -30,9 +31,8 @@ interface Alert {
 }
 
 // NxMenuService.sanitizeContent()
-export interface SanitizedLevel1Item extends Level1Item {
-    level3?: SanitizedLevel3Item[];
-}
+// After HTML has been sanitized
+export type SanitizedLevel1Item = Level1Item;
 
 export interface Level2Item {
     id: string;
@@ -42,26 +42,24 @@ export interface Level2Item {
 
     path?: string;
     disabled?: boolean;
-    additionalText?: string;
     additionalLabel?: string;
-    query?: SearchModel;
+    query?: Record<string, string>;
     icon?: string;
 }
 
 export interface Level2Button {
     id: string;
-    label: (() => string) | string;
+    label: string;
     disabled: boolean;
 }
 
 export interface Level3Item {
     id: string;
-    label: string | string[];
+    label: string;
     path: string;
-    query?: Params;
+    query?: Record<string, string>;
 
-    additionalLabel?: string | string[];
-    additionalText?: string | string[];
+    additionalLabel?: string;
     subNode?: Level1Item | Level2Item;
     icon?: string;
     svgIcon?: string;
@@ -74,8 +72,5 @@ export interface Level3Item {
 }
 
 // NxMenuService.sanitizeContent()
-export interface SanitizedLevel3Item extends Level3Item {
-    label: string;
-    additionalLabel?: string;
-    additionalText?: string;
-}
+// After HTML has been sanitized
+export type SanitizedLevel3Item = Level3Item;

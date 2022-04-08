@@ -32,21 +32,18 @@ import type { NgChanges } from '@utils/ng-changes';
 
 import { NxMenuService } from './menu.service';
 import type {
+    ContentToggle,
     Content,
     Level1Item,
     Level2Item,
     Level2Button,
+    Level3Item,
 } from './menu.types';
 
 /* Usage
  <nx-menu>
  </nx-menu>
 */
-
-interface ContentToggle {
-    nodeId: string;
-    state: boolean;
-}
 
 const SCROLL_AREA_LIMIT = 120;
 
@@ -59,7 +56,7 @@ const SCROLL_AREA_LIMIT = 120;
 })
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
-    @Input() content: Partial<Content>;
+    @Input() content: Content;
     @IBool() @Input() searchable: CoercedBoolInput;
     @Input() autoFit: boolean = false;
 
@@ -170,10 +167,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             });
 
-        fromEvent(window, 'resize')
+        fromEvent<FocusEvent>(window, 'resize')
             .pipe(
                 untilDestroyed(this),
-                map((event: FocusEvent) => (event.target as Window).innerHeight),
+                map(event => (event.target as Window).innerHeight),
                 startWith(window.innerHeight)
             ).subscribe(height => {
                 this.totalWindowHeight = height;
@@ -208,7 +205,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             const sanitizedContent = this.menuService.sanitizeContent(
                 currentContent.level1
             );
-            if (this.menuService.hasUpdatedContent(sanitizedContent)) {
+            if (!isEqual(sanitizedContent, this.menuService.content)) {
                 this.menuService.content = sanitizedContent;
                 this.menuInit = true;
             }
@@ -424,43 +421,28 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     subLevelItemsFor(item: Level1Item): Level2Item[] {
-        let levelItems: Level2Item[] = [];
-
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
-        if (item.level2) {
-            levelItems = item.level2.filter(subSection =>
-                !this.CONFIG ||
-                subSection.id !== this.CONFIG.menus.systemSettings.buttons.id
-            );
-        }
+        const levelItems = item.level2?.filter(subSection =>
+            subSection.id !== this.CONFIG.menus.systemSettings.buttons.id
+        );
 
-        return levelItems;
+        return levelItems ?? [];
     }
 
     subLevelButtonsFor(item: Level1Item): Level2Button[] {
-        let level2Item: Level2Item;
-
         // To avoid complicated code this cover only level2 for now ...
         // as only level2 have complex structure
-        if (item.level2) {
-            level2Item = item.level2.find(subSection =>
-                this.CONFIG &&
-                subSection.id === this.CONFIG.menus.systemSettings.buttons.id
-            );
-        }
+        const level2Item = item.level2?.find(subSection =>
+            subSection.id === this.CONFIG.menus.systemSettings.buttons.id
+        );
 
-        let buttons: Level2Button[] = [];
-        if (level2Item?.items.length) {
-            buttons = level2Item.items;
-        }
-
-        return buttons;
+        return level2Item?.items ?? [];
     }
 
-    trackItem<T extends { id: string }>(
-        index: number,
-        item: T
+    trackItem(
+        _index: number,
+        item: Level1Item | Level2Item | Level3Item,
     ): string | undefined {
         return item ? item.id : undefined;
     }

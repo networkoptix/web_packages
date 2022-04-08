@@ -5,9 +5,7 @@ import {
     OnChanges,
     OnDestroy
 } from '@angular/core';
-import { Params } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { SubscriptionLike } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -19,7 +17,7 @@ import type { Level3Item } from '../menu.types';
 /* Usage
  */
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-level-3-item',
     templateUrl: 'level-3-item.component.html',
@@ -27,7 +25,7 @@ import type { Level3Item } from '../menu.types';
 })
 export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() base: string = '';
-    @Input() item: Partial<Level3Item> = {};
+    @Input() item: Level3Item;
     @Input() selected: boolean;
     @Input() first: boolean;
     @Input() idx: number;
@@ -36,23 +34,20 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
 
     itemPath: string;
     menuNavItemId: string;
-    queryParams: Params = {};
-
-    navItemSubscription: SubscriptionLike;
-
-    public hovered: boolean;
 
     constructor(
         configService: NxConfigService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
     ) {
         this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
-        this.navItemSubscription = this.menuService.navItemSubject.subscribe(
-            () => { this.menuNavItemId = this.menuService.navItemId; }
-        );
+        this.menuService.navItemSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+                this.menuNavItemId = this.menuService.navItemId;
+            });
     }
 
     ngOnDestroy(): void {}
@@ -66,17 +61,10 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
             this.itemPath += (changes.item.currentValue.path !== '')
                 ? `/${changes.item.currentValue.path}`
                 : '';
-            this.queryParams = changes.item.currentValue.query;
-
-            if (!changes.item.currentValue.additionalText) {
-                this.item.additionalText = this.menuService.getAdditionalText(
-                    changes.item.currentValue.additionalLabel
-                );
-            }
         }
     }
 
-    setNavIdx(item: Partial<Level3Item>): void {
+    setNavIdx(item: Level3Item): void {
         this.menuService.hoverItemId = item.id;
     }
 }

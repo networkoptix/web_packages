@@ -122,7 +122,7 @@ describe('NxMenuComponent', () => {
                         label: '🐛',
                         indent: true,
                         path: 'cameras/f2265688-130d-2535-0e25-5d5437ffe6bc',
-                        additionalLabel: ['192.168.5.100']
+                        additionalLabel: '192.168.5.100'
                     },
                     {
                         id: '28211a91-4d61-e6b9-da49-172c127da68b',
@@ -131,7 +131,7 @@ describe('NxMenuComponent', () => {
                         label: '💉',
                         indent: true,
                         path: 'cameras/28211a91-4d61-e6b9-da49-172c127da68b',
-                        additionalLabel: ['192.168.5.56']
+                        additionalLabel: '192.168.5.56'
                     },
                     {
                         id: '786086a2-0cef-a2db-7c76-eba5207927ea',
@@ -140,7 +140,7 @@ describe('NxMenuComponent', () => {
                         label: '😷',
                         indent: true,
                         path: 'cameras/786086a2-0cef-a2db-7c76-eba5207927ea',
-                        additionalLabel: ['10.1.5.207']
+                        additionalLabel: '10.1.5.207'
                     },
                     {
                         id: '162ff0a3-32fd-e049-f037-2ee378df5a8b',
@@ -149,7 +149,7 @@ describe('NxMenuComponent', () => {
                         label: '🦆',
                         indent: true,
                         path: 'cameras/162ff0a3-32fd-e049-f037-2ee378df5a8b',
-                        additionalLabel: ['10.1.5.178']
+                        additionalLabel: '10.1.5.178'
                     },
                     {
                         id: 'b9544f11-e84a-9c1d-c58d-320d6898f9bd',
@@ -158,7 +158,7 @@ describe('NxMenuComponent', () => {
                         label: '🦠',
                         indent: true,
                         path: 'cameras/b9544f11-e84a-9c1d-c58d-320d6898f9bd',
-                        additionalLabel: ['10.1.5.116']
+                        additionalLabel: '10.1.5.116'
                     },
                     {
                         id: '2375d7f9-4372-adc2-07a4-ade8ff55052e',
@@ -167,7 +167,7 @@ describe('NxMenuComponent', () => {
                         label: '🪲',
                         indent: true,
                         path: 'cameras/2375d7f9-4372-adc2-07a4-ade8ff55052e',
-                        additionalLabel: ['10.1.5.168']
+                        additionalLabel: '10.1.5.168'
                     },
                     {
                         id: '1b8be533-0015-766a-9587-06af266b5881',
@@ -176,7 +176,7 @@ describe('NxMenuComponent', () => {
                         label: '🪳',
                         indent: true,
                         path: 'cameras/1b8be533-0015-766a-9587-06af266b5881',
-                        additionalLabel: ['10.1.5.150']
+                        additionalLabel: '10.1.5.150'
                     }
                 ]
             },
@@ -402,7 +402,7 @@ describe('NxMenuComponent', () => {
                         expect(component.menuContent.length).toBe(1);
                         expect(component.menuContent[0].id).toBe('cameras');
                         expect(component.menuContent[0].level3.length).toBe(1);
-                        expect(component.menuContent[0].level3[0].additionalText)
+                        expect(component.menuContent[0].level3[0].additionalLabel)
                             .toBe('<span class="highlighted">192.168.5.10</span>0');
                     }));
             });

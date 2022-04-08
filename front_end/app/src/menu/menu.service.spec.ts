@@ -253,13 +253,7 @@ describe('NxMenuService', () => {
         expect(menuService.getItemBy('blah-blah')).toBeUndefined();
     });
 
-    it('should get additional text', () => {
-        expect(menuService.getAdditionalText(() => 'admin')).toBe('admin');
-        expect(menuService.getAdditionalText(['admin', 'ghost'])).toBe('admin');
-        expect(menuService.getAdditionalText('admin')).toBe('admin');
-    });
-
-    it('should filler items by',
+    it('should filter items by',
         inject([NxSearchService], (searchService: NxSearchService) => {
             const menuModel = {
                 query: '192.168.5.10'
@@ -270,7 +264,7 @@ describe('NxMenuService', () => {
             expect(filtered.length).toBe(1);
             expect(filtered[0].id).toBe('cameras');
             expect(filtered[0].level3.length).toBe(1);
-            expect(filtered[0].level3[0].additionalText)
+            expect(filtered[0].level3[0].additionalLabel)
                 .toBe('<span class="highlighted">192.168.5.10</span>0');
         }));
 

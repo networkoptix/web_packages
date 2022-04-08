@@ -32,12 +32,16 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import type { NxSystemRestAPI } from '@services/system-api.service';
+import type {
+    ICamera
+} from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
-import type { Content, Level3Item } from '@src/menu/menu.types';
+import type { ContentToggle, Content, Level3Item } from '@src/menu/menu.types';
 import { cleanId, htmlToEntity, paramSortFunc } from '@utils/general';
 import { setServerIpAndPort } from '@utils/nx';
 
@@ -56,7 +60,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
-    content: Partial<Content> = {};
+    content: Content = { base: '', selectedSection: '', level1: [] };
     menuSearchable: boolean;
 
     account: Account;
@@ -107,7 +111,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuVisible = true;
     }
 
-    private canNavMenu(origTargetValue, contentTarget, selection) {
+    private canNavMenu(
+        origTargetValue: string,
+        contentTarget: 'selectedSection' |
+            'selectedSubSection' |
+            'selectedDetailsSection',
+        selection: string,
+    ): void {
         if (this.applyService.locked) {
             origTargetValue = selection;
 
@@ -544,7 +554,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
     }
 
-    contentToggle(event) {
+    contentToggle(event: ContentToggle): void {
         this.content.level1.find(node => {
             if (node.id === event.nodeId) {
                 node.toggle = event.state;
@@ -555,13 +565,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    menuMode(event) {
+    menuMode(event: boolean): void {
         setTimeout(() => {
             this._menuSearchMode = event;
         });
     }
 
-    async updateMenu() {
+    async updateMenu(): Promise<void> {
         this.systemNoAccess = false;
 
         if (this.system.userManager.permissions.editCameras) {
@@ -593,7 +603,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                         additionalLabel: camera.url.match(
                             /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
-                        )
+                        )[0]
                     }));
             } else {
                 camerasNode.level3 = [];
@@ -639,18 +649,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode.level2 = [];
             }
             if (this.system && this.system.users?.length > 0) {
-                const {
-                    cloudUsers,
-                    localUsers
-                }: {
-                    cloudUsers: Level3Item[];
-                    localUsers: Level3Item[];
-                } = this.system.userManager.users.reduce((result, user) => {
+                const cloudUsers: Level3Item[] = [];
+                const localUsers: Level3Item[] = [];
+                this.system.userManager.users.forEach(user => {
                     const id = cleanId(user.id);
                     const node: Level3Item = {
-                        additionalLabel: this.LANG.accessRoles[user.role.name]?.label?.() ||
-                            user.role.name,
                         id,
+                        additionalLabel:
+                            this.LANG.accessRoles[user.role.name]?.label() ||
+                            user.role.name,
                         disabled: !user.isEnabled,
                         label: user.name || user.email,
                         path: 'users/' + id,
@@ -663,12 +670,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         node.svgIcon = 'user_cloud';
                         node.icon = '';
                         node.label = user.email;
-                        result.cloudUsers.push(node);
+                        cloudUsers.push(node);
                     } else {
-                        result.localUsers.push(node);
+                        localUsers.push(node);
                     }
-                    return result;
-                }, { cloudUsers: [], localUsers: [] });
+                });
 
                 usersNode.level3 = [];
                 if (localUsers.length) {
@@ -775,7 +781,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content = { ...this.content };
     }
 
-    getCameraStatusIcon({ status, scheduleEnabled }) {
+    getCameraStatusIcon({ status, scheduleEnabled }: ICamera): string {
         if (scheduleEnabled && !(status === 'Recording')) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
         }
@@ -784,7 +790,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         ];
     }
 
-    getServerStatusIcon({ status }) {
+    getServerStatusIcon({ status }: NxSystemServer): string {
         return this.CONFIG.menus.systemSettings.servers.statusIcons[
             status.toLowerCase()
         ];

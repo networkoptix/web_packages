@@ -12,20 +12,22 @@ import type { Level2Button } from '../menu.types';
 
 @Component({
     selector: 'nx-menu-button',
-    template: `<button
-        *ngIf="!environment.isLocal ||
-            CONFIG.cloudSystemId ||
-            button.id !== 'addUser'"
-        class="inset btn btn-menu btn-clear"
-        [disabled]="button.disabled"
-        (click)="action()"
-    >{{caption}}</button>`
+    template: `
+        <button
+            *ngIf="!environment.isLocal ||
+                CONFIG.cloudSystemId ||
+                button.id !== 'addUser'"
+            class="inset btn btn-menu btn-clear"
+            [disabled]="button.disabled"
+            (click)="action()"
+        >{{
+            button.label
+        }}</button>`
 })
 export class NxMenuButtonComponent {
     @Input() button: Level2Button;
     @Input() system: NxSystem;
 
-    caption: string;
     CONFIG: IConfig;
     readonly environment = environment;
 
@@ -38,11 +40,7 @@ export class NxMenuButtonComponent {
         this.CONFIG = configService.config;
     }
 
-    ngOnInit(): void {
-        this.caption = (typeof this.button.label === 'function')
-            ? this.button.label()
-            : this.button.label;
-    }
+    ngOnInit(): void {}
 
     action(): void {
         if (this.button.id === 'addUser') {

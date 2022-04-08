@@ -5,10 +5,10 @@
         'item-disabled': item.disabled,
         'focus': menuNavItemId === item.id
     }"
-    tabindex="{{ selected ? '-1': undefined }}"
+    [tabindex]="selected ? '-1': undefined"
     [id]="item.id"
     [routerLink]="[itemPath]"
-    [queryParams]="queryParams"
+    [queryParams]="item.query"
     (mouseover)="setNavIdx(item)"
 >
     <div *ngIf="first" class="top-shadow-cover"></div>
@@ -32,9 +32,9 @@
                 'indent': item.indent && !item.icon && !item.svgIcon
             }"
         ></span>
-        <span *ngIf="item.additionalText" class="menu-level-3-additional">
+        <span *ngIf="item.additionalLabel" class="menu-level-3-additional">
             <span class="ml-1 mr-1">&ndash;</span>
-            <span [innerHTML]="item.additionalText | safe: 'html'"></span>
+            <span [innerHTML]="item.additionalLabel | safe: 'html'"></span>
         </span>
     </div>
 </a>

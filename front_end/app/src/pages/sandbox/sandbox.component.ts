@@ -11,7 +11,7 @@ import type { Content } from '@src/menu/menu.types';
 })
 
 export class NxSandboxComponent {
-    content: Partial<Content> = {};
+    content: Content;
     menuReady = false;
 
     private menuSectionSubscription: Subscription;

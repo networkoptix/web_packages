@@ -10,18 +10,11 @@ import {
 
 @Pipe({ name: 'safe' })
 export class NxSafePipe implements PipeTransform {
-    constructor(
-        private sanitizer: DomSanitizer
-    ) {
-    }
+    constructor(private sanitizer: DomSanitizer) {}
 
-    /* FIXME: Type of value should be string, but menu allowing string[]
-    for labels in level 3 is causing errors. Search component passing
-    data through url instead of data binding also complicates things. */
     public transform(
-        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-        value: any,
-        type: string
+        value: string,
+        type: 'html' | 'style' | 'script' | 'url' | 'resourceUrl'
     ): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
         switch (type) {
             case 'html':

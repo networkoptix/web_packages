@@ -13,9 +13,9 @@
     </div>
     <div class="ellipsis" >
         <span [innerText]="item.label" class="user"></span>
-        <span *ngIf="item.additionalText" class="menu-level-2-additional">
+        <span *ngIf="item.additionalLabel" class="menu-level-2-additional">
             <span class="ml-1 mr-1">&ndash;</span>
-            <span [outerHTML]="item.additionalText | safe: 'html'"></span>
+            <span [outerHTML]="item.additionalLabel | safe: 'html'"></span>
         </span>
     </div>
 </a>

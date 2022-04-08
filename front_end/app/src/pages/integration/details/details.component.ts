@@ -35,16 +35,13 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin;
-    content: Partial<Content> = {};
+    content: Content;
 
     private integrationSubscription: Subscription;
     private menuDetailsSubscription: Subscription;
     private routeSubscription: Subscription;
     private acceptProcess: Process;
     private account: Account;
-
-    private setupDefaults() {
-    }
 
     constructor(
         configService: NxConfigService,
@@ -66,8 +63,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
-
-        this.setupDefaults();
     }
 
     setUpRouteSubscription() {

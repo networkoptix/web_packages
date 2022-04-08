@@ -26,7 +26,7 @@ import type { Level1Item } from '../menu.types';
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
     @Input() searchMode: boolean;
     @Input() base: string = '';
-    @Input() item: Partial<Level1Item> = {};
+    @Input() item: Level1Item;
     @Input() selected: boolean;
 
     @Output() toggle = new EventEmitter<boolean>();

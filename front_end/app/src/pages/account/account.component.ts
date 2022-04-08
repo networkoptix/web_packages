@@ -21,7 +21,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    content: Partial<Content> = {};
+    content: Content;
     menuReady = false;
     userEmail: string;
     private loginStateSubscription: Subscription;
@@ -42,6 +42,12 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnInit(): void {
+        this.content = {
+            base: this.CONFIG.menus.account.baseUrl,
+            selectedSection: this.CONFIG.menus.account.settings.id,
+            level1: [],
+        };
+
         this.loginStateSubscription = this.sessionService.loginStateSubject
             .subscribe((loginState: string) => {
                 this.userEmail = loginState;
@@ -54,35 +60,29 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         if (!this.userEmail) {
             return;
         }
-        this.content = {
-            base: accountMenu.baseUrl,
-            selectedSection: accountMenu.settings.id,
-            level1: [
+        this.content.level1 = [{
+            id: accountMenu.settings.id,
+            svg: accountMenu.icon,
+            label: this.userEmail,
+            path: accountMenu.settings.path,
+            level3: [
                 {
                     id: accountMenu.settings.id,
-                    svg: accountMenu.icon,
-                    label: this.userEmail,
-                    path: accountMenu.settings.path,
-                    level3: [
-                        {
-                            id: accountMenu.settings.id,
-                            label: this.LANG.account.accountSettings(),
-                            path: accountMenu.settings.path
-                        },
-                        {
-                            id: accountMenu.password.id,
-                            label: this.LANG.account.changePassword(),
-                            path: accountMenu.password.path
-                        },
-                        {
-                            id: accountMenu.security.id,
-                            label: this.LANG.account.security(),
-                            path: accountMenu.security.path
-                        }
-                    ]
+                    label: this.LANG.account.accountSettings(),
+                    path: accountMenu.settings.path
+                },
+                {
+                    id: accountMenu.password.id,
+                    label: this.LANG.account.changePassword(),
+                    path: accountMenu.password.path
+                },
+                {
+                    id: accountMenu.security.id,
+                    label: this.LANG.account.security(),
+                    path: accountMenu.security.path
                 }
             ]
-        };
+        }];
 
         this.menuDetailSubscription = this.menuService
             .selectedDetailsSection

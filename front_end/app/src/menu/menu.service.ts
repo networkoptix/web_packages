@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { isEqual, cloneDeep } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxSearchService, SearchModel } from '@services/search.service';
@@ -94,49 +94,6 @@ export class NxMenuService implements OnDestroy {
         }
     }
 
-    getAdditionalText(label: (() => string) | string[] | string): string {
-        if (typeof label === 'function') {
-            return label();
-        } else if (Array.isArray(label)) {
-            return label[0];
-        } else {
-            return label;
-        }
-    }
-
-    isEqual(
-        currentContent: Level1Item[],
-        newContent: Level1Item[],
-        nodeGroup: string
-    ): boolean {
-        return isEqual(
-            currentContent.filter(node => node.id === nodeGroup),
-            newContent.filter(node => node.id === nodeGroup)
-        );
-    }
-
-    hasUpdatedContent(content: Level1Item[]): boolean {
-        const cleanedContent = this.cleanUpAdditionalTextIfNeeded(content);
-        return !isEqual(cleanedContent, content) ||
-            !this.isEqual(cleanedContent, content, 'cameras') ||
-            !this.isEqual(cleanedContent, content, 'users') ||
-            !this.isEqual(cleanedContent, content, 'servers');
-    }
-
-    // level-3-item adds additionalText if it doesn't exist
-    // cleaning that up if it was added for hasUpdatedContent comparison
-    cleanUpAdditionalTextIfNeeded(
-        newContent: Level1Item[]
-    ): Omit<Level1Item, 'additionalText'>[] {
-        return this.content.map(c => {
-            const node = newContent.find(nC => nC.id === c.id)?.level3;
-            if (!node?.[0]?.additionalText && c?.level3?.[0]?.additionalText) {
-                c.level3.forEach(menuItem => delete menuItem.additionalText);
-            }
-            return c;
-        });
-    }
-
     filterItemsBy(
         model: SearchModel,
         searchSubMenus: boolean = false
@@ -208,10 +165,10 @@ export class NxMenuService implements OnDestroy {
 
         (subNode || node).level3.forEach(item => {
             if (item.id) {
-                const additional = this.getAdditionalText(item.additionalLabel);
+                const { additionalLabel } = item;
 
                 let searchAggregate = item.label || '';
-                searchAggregate += additional ? ` ${additional}` : '';
+                searchAggregate += additionalLabel ? ` ${additionalLabel}` : '';
                 searchAggregate += (model.query.length > 10 && item.id)
                     ? ` ${item.id}`
                     : '';
@@ -222,7 +179,6 @@ export class NxMenuService implements OnDestroy {
                         haveNode.level3 = []; // remove items so we can all only matches
                     }
                     const filteredItem = cloneDeep(item);
-                    filteredItem.additionalText = additional;
                     filteredItem.subNode = subNode || node;
                     filteredItem.query = { search: model.query };
                     haveNode.level3.push(this.highlighted(filteredItem));
@@ -237,30 +193,29 @@ export class NxMenuService implements OnDestroy {
         return haveNode;
     }
 
+    /**
+     * Sanitizes unsafe HTML in content.
+     * @param content Content with potentially unsafe HTML
+     * @returns Sanitized content
+     */
     sanitizeContent(content: Level1Item[]): SanitizedLevel1Item[] {
         const clean = cloneDeep(content);
         return clean.map(node => {
-            if (node.level3?.length) {
-                node.level3.forEach(item => {
-                    if (item.label) {
-                        item.label = htmlToEntity(item.label);
-                    }
-                    if (item.additionalLabel) {
-                        item.additionalLabel = htmlToEntity(
-                            item.additionalLabel
-                        );
-                    }
-                    if (item.additionalText) {
-                        item.additionalText = htmlToEntity(
-                            item.additionalText
-                        );
-                    }
-                });
-            }
-            return node as SanitizedLevel1Item;
+            node.level3?.forEach(item => {
+                if (item.label) {
+                    item.label = htmlToEntity(item.label);
+                }
+                if (item.additionalLabel) {
+                    item.additionalLabel = htmlToEntity(item.additionalLabel);
+                }
+            });
+            return node;
         });
     }
 
+    /**
+     * Deletes toggle property on level 1 items for deep equality comparisons
+     */
     cleanMenuContent(content: Level1Item[]): Level1Item[] {
         const clean = cloneDeep(content);
         return clean.map(node => {
@@ -269,20 +224,24 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
+    /**
+     * Generates regex for highlighting labels.
+     *
+     * Should only be used after `NxSearchService.getMatchPatterns()`,
+     * which will always make one of the search model matches type `string[]`.
+     *
+     * @param model Search model
+     */
     private setHighlightPattern(model: SearchModel): void {
-        const pattern = (
-            model.queryExactMatch ||
-            model.queryEndsWith ||
-            model.queryStartsWith ||
-            model.queryOrMatch ||
+        const match = [
+            model.queryExactMatch,
+            model.queryEndsWith,
+            model.queryStartsWith,
+            model.queryOrMatch,
             model.queryAndMatch
-        /* Assuming that NxMenuService.setHighlightPattern() is only called
-        after NxSearchService.getMatchPatterns(), which will always make
-        one of the above type string[] */
-        // @ts-expect-error: See above
-        ).join('|');
+        ].find(m => Array.isArray(m)) as string[];
 
-        this.regex = new RegExp(pattern, 'gi');
+        this.regex = new RegExp(match.join('|'), 'gi');
     }
 
     private highlighted(item: SanitizedLevel3Item): SanitizedLevel3Item {
@@ -293,8 +252,8 @@ export class NxMenuService implements OnDestroy {
             );
         }
 
-        if (item.additionalText) {
-            item.additionalText = item.additionalText.replace(
+        if (item.additionalLabel) {
+            item.additionalLabel = item.additionalLabel.replace(
                 this.regex,
                 match => `<span class="highlighted">${match}</span>`
             );
