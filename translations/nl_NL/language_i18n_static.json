@@ -121,7 +121,7 @@
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
         "connectErrorAdditional": "Please try again later.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
+        "connectedText": "Systeem verbonden met %CLOUD_NAME%",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
@@ -150,7 +150,7 @@
         "account": {
             "created": {
                 "title": "Account aangemaakt",
-                "message": "Confirmation message with the activation link is sent to {email}"
+                "message": "Een bevestigingsbericht met de activeringslink is verzonden naar {email}"
             },
             "activated": {
                 "title": "Account succesvol geactiveerd"
@@ -182,7 +182,7 @@
         },
         "chromeCastWarning": "Een Chromecast vraagt veel resources en kan tot prestatieproblemen lijden op uw server.",
         "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "login": "aanmelden",
         "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
         "disableMotionWarning": "De opnamemodus wordt gewijzigd naar \"Altijd opnemen\"",
         "recordingModes": {
@@ -209,9 +209,9 @@
         "general": "Algemeen",
         "generalError": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
         "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
-        "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
+        "morePlugins": "{startTag}{count, plural, =0{#{endTag} meer integraties...} one{#{endTag} meer integraties...} other{#{endTag} meer integraties...}}",
         "searchCamPlaceholder": "Zoeken",
-        "system": "system",
+        "system": "systeem",
         "systemHasNoCameras": "Geen camera's",
         "systemHasNoCamerasMessage": "Er zijn geen toegankelijke camera's voor u in het systeem. <br><br>Verbind een paar camera's met het lokale netwerk van de server om ze te ontdekken, of vraag de systeembeheerder om uw toegangsniveau te wijzigen.",
         "systemNewVersion": "Update uw systeem",
@@ -223,7 +223,7 @@
         "systemServerError": "Interne server error",
         "systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
         "systemUnreachable": "SYSTEEM IS ONBEREIKBAAR",
-        "systemUnresponsive": "System seems to be unresponsive. Please reload the page.",
+        "systemUnresponsive": "Het systeem lijkt niet te reageren. Gelieve de pagina te herladen.",
         "unknown": "Unknown",
         "vendor": "Fabrikant",
         "model": "Model",
@@ -284,8 +284,8 @@
             "title": "Cloudopslag",
             "enableStorage": "Cloud-opslag inschakelen",
             "otherSystem": "Ander systeem...",
-            "initial": "We are offering {compCapacity} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
+            "initial": "We bieden {compCapacity} gratis cloud opslag aan per systeem om je op weg te helpen.",
+            "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
             "camera": "camera",
             "cameras": "camera's",
             "usageLabels": {
@@ -310,7 +310,7 @@
             },
             "moveCloudStorage": {
                 "title": "Cloud-opslag verplaatsen",
-                "success": "Storage successfully moved",
+                "success": "Opslag met succes verplaatst",
                 "errorPrefix": "Fout bij het verplaatsen van cloudopslag",
                 "notFound": "Opslag is niet gevonden. Opslag is mogelijk verplaatst of verwijderd door een andere gebruiker",
                 "status": {
@@ -326,24 +326,24 @@
             }
         },
         "changeStorage": {
-            "support": "If you intended to move analytics data to another storage location, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> before proceeding."
+            "support": "Als u van plan was analysegegevens te verplaatsen naar een andere opslaglocatie, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a> voordat u verder gaat."
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
-            "adminPasswordWrong": "Password for admin user is wrong",
+            "adminPasswordTitle": "Voer het wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
+            "adminPasswordWrong": "Het wachtwoord voor de admin gebruiker is onjuist",
             "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Controleren...",
             "cloud": "Cloud",
-            "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
+            "commonText": "Kan systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>niet samenvoegen.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
+            "enterSystemAddressTitle": "Voer een adres in van elke server in het systeem dat u wilt samenvoegen met deze.",
+            "latestBuild": "laatste build",
+            "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong>samen te voegen.</p><p>de instellingen en de naam worden overgenomen van het <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "Het samenvoegen van systemen {primaryName} en {secondaryName} is voltooid",
             "mergeSystemsTitle": "Huidig systeem samenvoegen met",
             "noServerFound": "Geen server gevonden",
             "newSystemDisplayName": "Nieuw systeem",
@@ -351,9 +351,9 @@
             "ownerCanMergeText": "U kunt alleen cloud systemen samenvoegen, waarvan u de eigenaar bent",
             "passwordRequired": "Wachtwoord is vereist",
             "passwordWrong": "Wachtwoord onjuist",
-            "primaryCannotMerge": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} System.",
-            "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
-            "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
+            "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "We raden u aan om te overleggen met",
                 "b_support": "ondersteuning",
@@ -364,24 +364,24 @@
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
                 "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
             },
-            "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
-            "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {url}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "secondaryCannotMerge": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {targetSystem} naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "secondarySystemUnavailable": "Systeem {targetSystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server op {url}",
+            "serverNotAvailable": "<p class=\"mb-2\">Geen toegang tot het {targetSystem} systeem.</p><p>Controleer of de opgegeven server online is en probeer het opnieuw.</p>",
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
-            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+            "serverVersionOld": "Deze server heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk het bij naar de nieuwste versie om het samen te voegen met de huidige versie.",
+            "serverVersionNew": "Deze server heeft nieuwere softwareversie dan het huidige systeem. Update beide systemen naar dezelfde build om ze samen te voegen.",
+            "systemOffline": "Systeem {targetSystem} is offline en kan niet worden samengevoegd met de huidige",
+            "systemOfflineUrl": "{targetSystem} is ontoegankelijk",
+            "systemsIncompatible": "Deze server heeft een incompatibele softwareversie. Update beide systemen naar het {downloadHTML}.",
+            "systemVersionOld": "Systeem {targetSystem} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update %targetSystem% naar de {downloadHTML} om hem samen te voegen met de huidige.",
+            "systemVersionNew": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
+            "systemVersionsNotMatch": "De systemen hebben onjuiste softwareversies. Update beide naar {downloadHTML}.",
             "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -398,15 +398,15 @@
             },
             "sent": "Het Bericht werd verstuurd.",
             "subject": {
-                "integration_feedback": "Feedback for integration {asset}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration_feedback": "Feedback voor integratie {asset}",
+                "ipvd_feedback_device": "Feedback over {asset}",
                 "ipvd_feedback_page": "Feedback voor de camerapagina",
-                "sales_inquiry": "Sales inquiry for {asset}",
-                "technical_inquiry": "Technical inquiry for {asset}"
+                "sales_inquiry": "Verkoopaanvraag voor {asset}",
+                "technical_inquiry": "Technische aanvraag voor {asset}"
             },
             "title": {
-                "integration": "Get in touch with {companyName}",
-                "ipvd_feedback_device": "Feedback about {asset}",
+                "integration": "Neem contact op met {companyName}",
+                "ipvd_feedback_device": "Feedback over {asset}",
                 "ipvd_feedback_page": "Feedback voor de camerapagina"
             },
             "twoFactor": {
@@ -418,8 +418,8 @@
         },
         "removeSystem": {
             "action": "Verbinding verbreken",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "U staat op het punt dit systeem los te koppelen van uw account. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
+            "title": "Systeem loskoppelen?"
         },
         "renewAuth": {
             "action": "Login",
@@ -430,7 +430,7 @@
             "error": "Error",
             "success": "Succes",
             "changeAccount": "Je bent al ingelogd als {email}",
-            "changePasswordFor": "Change Password for User \"{username}\"",
+            "changePasswordFor": "Wijzig wachtwoord voor gebruiker \"{username}\"",
             "deleteUser": "Gebruiker verwijderen?",
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
@@ -527,10 +527,10 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "DUPLICATE_MEDIASERVER_FOUND": "Sommige serverlijsten zoals aanwezig in beide systemen - in de geselecteerde en in de huidige.<br>Verwijder offline en incompatibele servers uit elk systeem en probeer het opnieuw.",
         "EmailAlreadyExists": "Dit Email is al geregistreerd",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
-        "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
+        "FAIL": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "Connection timed out": "Systeem <strong>{failedSystem}</strong> is offline.",
+        "Bad Gateway": "Systeem <strong>{failedSystem}</strong> is momenteel onbereikbaar.<br>Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "De systemen hebben onjuiste softwareversies. Update beide naar het {downloadHTML}.",
         "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
         "This user does not exist.": "This user does not exist.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
@@ -884,25 +884,25 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Er is iets fout gegaan. Ververs de pagina over ongeveer 30 seconden.",
-        "nameFail": "Failed to change {type} name",
+        "nameFail": "Kan naam {type} niet wijzigen",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
-        "reviewAccepted": "The review has been accepted",
+        "reviewAccepted": "De beoordeling is geaccepteerd",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "Systeem {systemName} is succesvol verwijderd van uw account"
             },
             "disconnected": {
                 "success": "Systeem is met succes losgekoppeld van %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
-                "failed": "Failed to connect system to %CLOUD_NAME%"
+                "success": "Systeem verbonden met %CLOUD_NAME%",
+                "failed": "Kan systeem niet verbinden met %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "Het samenvoegen van systemen is mislukt",
-                "success": "System merge completed"
+                "success": "Systeem samenvoegen voltooid"
             },
             "rename": {
                 "success": "Systeemnaam opgeslagen"
@@ -915,7 +915,7 @@
         "failedToUpdateSession": "Updating the session failed."
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Status rapport voor systeem {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
@@ -948,9 +948,9 @@
             "serverNotFound": "Server niet gevonden"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} meer vereist",
             "activated": "Licentie geactiveerd",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "Licentiesleutel is al geactiveerd en gekoppeld aan server met hardware ID {hwid} in een ander systeem",
             "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
         }
     },
@@ -1043,7 +1043,7 @@
         "osTimeChangeCheckPeriodMs": "Controle van de tijd van het besturingssysteem",
         "syncTimeExchangePeriod": "Tijdsynchronisatie-interval synchroniseren voor netwerkverzoeken",
         "syncTimeEpsilon": "Synchroniseer tijd epsilon. Nieuwe waarde wordt niet toegepast als delta tijd minder is dan epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtual camera archive sync threads",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Max virtuele camera archief sync threads",
         "updateNotificationsEnabled": "Update meldingen ingeschakeld",
         "upnpPortMappingEnabled": "UPNP-poorttoewijzing ingeschakeld",
         "useTextEmailFormat": "Verstuur e-mails met platte tekst",
@@ -1052,7 +1052,7 @@
         "videoTrafficEncryptionForced": "Forceer videoverkeer encryptie",
         "updateStatus": "Status bijwerken",
         "watermarkSettings": "Watermerk instellingen",
-        "maxHttpTranscodingSessions": "Max amount of HTTP connections using transcoding for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxHttpTranscodingSessions": "Maximaal aantal HTTP-verbindingen met transcodering voor de server. Chrome opent 2 verbindingen tegelijk en sluit vervolgens de eerste. Het wordt dus aanbevolen om de waarde >=2 voor deze parameter in te stellen.",
         "maxEventLogRecords": "Maximaal aantal records in het gebeurtenislogboek om in de het logbestand te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
         "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"yes\" - altijd ingeschakeld (kan veel RAM gebruiken), \"no\" - altijd uitgeschakeld behalve wanneer vereist voor het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"no\", maar ingeschakeld wanneer de gebruikerservaring te verbeteren (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
     },
@@ -1069,7 +1069,7 @@
     },
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
+            "mainSuccess": "Herindexering hoofdopslag voltooid",
             "backupSuccess": "Backup storage reindexing completed",
             "mainFailed": "Main storage reindexing failed",
             "backupFailed": "Backup storage reindexing failed"
