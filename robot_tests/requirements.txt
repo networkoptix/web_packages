@@ -22,3 +22,5 @@ qrcode[pil]
 pyzbar==0.1.8
 pypng==0.0.21
 image==1.5.33
+googletrans==3.1.0a0
+deepdiff==5.7.0
