@@ -241,7 +241,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
             if (!this.selection.handleMouseUp(e)) {
-                this._play(e.screenX - (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left);
+                this._play(e.clientX - (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left);
             }
         }
     }
