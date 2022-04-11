@@ -15,48 +15,12 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 
-export enum AboutTemplates {
-    INTRO = 'intro',
-    CAPABILITIES = 'capabilities',
-    DEV_CAPABILITIES = 'devCapabilities',
-    SUPPORTED_TECH = 'supportedTech',
-    GET_STARTED = 'getStarted',
-    DEV_TOOLS = 'devTools',
-    INTEGRATIONS = 'integrations',
-    SUPPORT = 'support'
-}
-
-export interface AboutNode {
-    title: string;
-    subtitle: string;
-    displayName: string;
-    assetId: number;
-    asset: any;
-    url: string;
-    icon: string;
-    newWindow?: boolean;
-    nodes?: AboutNode[];
-
-    aniIcon?: string;
-    currentIcon?: string;
-}
-
-export type AboutStructureNode = { template: AboutTemplates; node: AboutNode };
-
-export type AboutStructure = AboutStructureNode[];
-
-export interface AboutAssetBlock {
-    title: string;
-    titleHTML: string;
-    content: string;
-    contentHTML: string;
-}
-
-export interface AboutAsset {
-    title: string;
-    shortDescription: string;
-    blocks: AboutAssetBlock;
-}
+import {
+    AboutStructure,
+    AboutTemplates,
+    AboutNode,
+    AboutStructureNode
+} from './about.component.types';
 
 @UntilDestroy({ checkProperties: true, blackList: ['aboutStructure$'] })
 @Component({

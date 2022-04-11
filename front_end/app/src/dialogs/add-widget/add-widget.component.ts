@@ -11,7 +11,7 @@ import { WidgetCard } from '@components/widgets/helper-classes';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
-import { DashboardConfiguration } from '@pages/dashboard/dashboard.component';
+import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

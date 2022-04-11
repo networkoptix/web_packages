@@ -26,14 +26,12 @@ import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOW } from '@services/window-provider';
 import { PipesModule } from '@src/pipes/pipes.module';
 
-import {
-    NxConsoleTableComponent,
-    TableDataSource
-} from './console-table.component';
+import { NxConsoleTableComponent } from './console-table.component';
 import {
     ListSerializer,
     ConsoleSection
 } from './console-table.component.types';
+import { TableDataSource } from './table-data-source';
 
 const section = 'custom-clients';
 

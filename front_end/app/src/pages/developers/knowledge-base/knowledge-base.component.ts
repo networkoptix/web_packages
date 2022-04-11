@@ -50,14 +50,14 @@ import { highlight } from '@utils/general';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';
 
-export enum CardClasses {
+enum CardClasses {
     NORMAL = 'text',
     CONTENT = 'content',
     SIDE = 'side',
     ARTICLE = 'article'
 }
 
-export class KnowledgeNode {
+class KnowledgeNode {
     private constructor(
         public title: string,
         public url: string,

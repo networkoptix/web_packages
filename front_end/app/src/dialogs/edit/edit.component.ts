@@ -30,13 +30,13 @@ import { pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';
 
-export const manifestLookupByType = (config: IConfig, type: ModalType) => {
-    const manifestKeyLookup = {
-        [ModalType.CLIENT_EDIT]: 'custom-clients',
-        [ModalType.CLIENT_CREATE]: 'custom-clients'
-    };
-    return config.manifest[manifestKeyLookup[type]];
-};
+// export const manifestLookupByType = (config: IConfig, type: ModalType) => {
+//     const manifestKeyLookup = {
+//         [ModalType.CLIENT_EDIT]: 'custom-clients',
+//         [ModalType.CLIENT_CREATE]: 'custom-clients'
+//     };
+//     return config.manifest[manifestKeyLookup[type]];
+// };
 
 @UntilDestroy({ checkProperties: true })
 @Component({

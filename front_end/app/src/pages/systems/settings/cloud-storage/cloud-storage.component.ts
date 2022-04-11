@@ -13,7 +13,7 @@ import {
     InfoBlockColumns,
     InfoBlockSection,
     InfoBlockLine,
-} from '@components/info-block/info-block.component';
+} from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -30,7 +30,7 @@ import { NxSettingsService } from '../settings.service';
 
 type UsageTypes = '&mdash;' | number;
 
-export interface IUsageStats {
+interface IUsageStats {
     currentRecordings: UsageTypes
     whenFullyUsed: UsageTypes
     amountUsed: UsageTypes
@@ -39,7 +39,7 @@ export interface IUsageStats {
     delayFromLive: UsageTypes
 }
 
-export const emptyUsage: IUsageStats = {
+const emptyUsage: IUsageStats = {
     currentRecordings: '&mdash;',
     whenFullyUsed: '&mdash;',
     amountUsed: '&mdash;',

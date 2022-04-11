@@ -14,7 +14,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
-export enum mainButtonState {
+enum mainButtonState {
     ALL = 'all',
     NODE = 'node',
     SYSTEM = 'system',

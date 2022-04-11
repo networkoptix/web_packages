@@ -20,7 +20,7 @@ import {
     InfoBlockLine,
     InfoBlockSection,
     InfoBlockSize
-} from '@components/info-block/info-block.component';
+} from '@components/info-block/info-block.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
 import { Account, NxAccountService } from '@services/account.service';
@@ -33,17 +33,7 @@ import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.servic
 import { WINDOW } from '@services/window-provider';
 import { htmlToEntity, pickFrom } from '@utils/general';
 
-export enum T_FA_STEPS {
-    ChangePassword,
-    Code,
-    // WizardWarning,
-    WizardLogin,
-    WizardQR,
-    WizardCode,
-    WizardFinish,
-    VerificationToggle,
-    Disable2FaCode
-}
+import { T_FA_STEPS } from './two-fa.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

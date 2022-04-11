@@ -12,11 +12,8 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import {
-    InfoBlockLine,
-    InfoBlockSection,
-    NxInfoBlockComponent
-} from './info-block.component';
+import { NxInfoBlockComponent } from './info-block.component';
+import { InfoBlockLine, InfoBlockSection } from './info-block.component.types';
 
 describe('NxInfoBlockComponent', () => {
     let component: NxInfoBlockComponent;

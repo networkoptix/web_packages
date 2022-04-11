@@ -150,6 +150,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-ngrx": "^2.0.4",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-nx": "file:eslint-plugin-nx",
     "eslint-plugin-promise": "^6.0.0",
     "esprint": "^3.3.0",
     "html-loader": "^1.1.0",

@@ -4,7 +4,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
-import { AboutNode } from '../about.component';
+import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @Component({

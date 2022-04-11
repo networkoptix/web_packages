@@ -17,10 +17,8 @@ import { NxProcessService } from '@services/process.service';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
 
-import {
-    NxSystemStandardServerComponent,
-    DropdownStorage
-} from './server-standard.component';
+import { NxSystemStandardServerComponent } from './server-standard.component';
+import type { DropdownStorage } from './server-standard.component.types';
 
 describe('NxSystemStandardServerComponent', () => {
     let component: NxSystemStandardServerComponent;

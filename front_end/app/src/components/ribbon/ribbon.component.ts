@@ -10,16 +10,9 @@ import { Subscription } from 'rxjs';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { Process } from '@services/process.service';
 
+import type { RibbonAction } from './ribbon.component.types';
 import { NxRibbonService } from './ribbon.service';
-
-export interface RibbonAction {
-    type: 'link' | 'process-button',
-    text: string,
-    value: string | Process,
-    external?: boolean
-}
 
 @UntilDestroy({ checkProperties: true })
 @Component({

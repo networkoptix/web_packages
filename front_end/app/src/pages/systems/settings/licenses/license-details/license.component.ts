@@ -14,14 +14,14 @@ import {
     InfoBlockStyle,
     InfoDetailClass,
     InfoLineStyle,
-} from '@components/info-block/info-block.component';
+} from '@components/info-block/info-block.component.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
-import { getDynamicLicense } from '../licenses.component';
+import { getDynamicLicense } from '../dynamic-license';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

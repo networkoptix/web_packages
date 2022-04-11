@@ -3,10 +3,10 @@ import { NgForm } from '@angular/forms';
 
 import { NxMenuService } from '@src/menu/menu.service';
 
-import {
+import type {
     AspectRatioDropdownItem,
     RotationDropdownItem,
-} from '../../systems/settings/cameras/cameras.component';
+} from '../../systems/settings/cameras/cameras.component.types';
 
 @Component({
     selector: 'form-elements',

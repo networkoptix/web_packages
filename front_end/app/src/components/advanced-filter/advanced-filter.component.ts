@@ -15,26 +15,11 @@ import {
 } from '@pages/developer-console/console/edit/console-edit.component.types';
 import { NgChanges } from '@utils/ng-changes';
 
-export enum FilterSort {
-    ASC = 'asc',
-    DESC = 'desc',
-    NONE = ''
-}
-
-export interface Selection {
-    name: string,
-    value: boolean
-}
-
-export interface FilterState {
-    sort: FilterSort,
-    selections: Selection[]
-}
-
-export interface FilterUpdatePayload {
-    filter: AdditionalFilter,
-    state: FilterState
-}
+import {
+    FilterSort,
+    FilterState,
+    FilterUpdatePayload
+} from './advanced-filter.component.types';
 
 @Component({
     selector: 'nx-advanced-filter',

@@ -2,20 +2,16 @@ import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxHeaderService } from '@services/nx-header.service';
 
-import { forUnitTest, NxDevConsoleComponent } from './console.component';
-
-const {
-    NxConfigService,
-    ActivatedRoute,
-    Router,
-    NxCloudApiService,
-    NxHeaderService
-} = forUnitTest;
+import { NxDevConsoleComponent } from './console.component';
 
 @Component({
     selector: 'console-menu',

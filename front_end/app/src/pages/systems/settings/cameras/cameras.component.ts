@@ -30,15 +30,12 @@ import {
 } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
 import {
     InfoBlockColumns,
     InfoBlockSection,
     InfoBlockLine,
     InfoBlockSize
-} from '@components/info-block/info-block.component';
+} from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxHealthService } from '@pages/health/health.service';
@@ -54,7 +51,6 @@ import {
     ITask,
     MotionType,
     RecordingType,
-    StreamQuality
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService, ChildRoutes } from '@services/uri.service';
@@ -63,11 +59,13 @@ import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
 
-export type AspectRatioDropdownItem = DropdownItem<number | ''>;
-export type RotationDropdownItem = DropdownItem<number>;
-type QualityDropdownItem = DropdownItem<StreamQuality>;
+import type {
+    AspectRatioDropdownItem,
+    RotationDropdownItem,
+    QualityDropdownItem,
+} from './cameras.component.types';
 
-export class Alert {
+class Alert {
     errors: string[] = [];
     warnings: string[] = [];
 

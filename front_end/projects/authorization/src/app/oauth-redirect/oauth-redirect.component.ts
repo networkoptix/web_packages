@@ -12,7 +12,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
-import { AuthorizeParams, ClientType } from '../components/authorize.component';
+import { AuthorizeParams, ClientType } from '../components/authorize.component.types';
 
 /* eslint-disable camelcase */
 @UntilDestroy()

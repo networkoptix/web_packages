@@ -31,6 +31,7 @@ module.exports = {
         jasmine: true,
     },
     plugins: [
+        'nx',
         'import',
         // 'node',
         // 'promise',
@@ -254,6 +255,12 @@ module.exports = {
                     ignoreTypeReferences: true,
                 }],
             }
+        },
+        {
+            files: ['*.component.ts'],
+            rules: {
+                'nx/only-export-component': 'error',
+            },
         },
     ]
 };

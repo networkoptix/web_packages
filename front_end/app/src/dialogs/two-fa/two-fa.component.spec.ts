@@ -28,7 +28,8 @@ import { NxProcessService } from '@services/process.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 
-import { T_FA_STEPS, TwoFAModalContent } from './two-fa.component';
+import { TwoFAModalContent } from './two-fa.component';
+import { T_FA_STEPS } from './two-fa.component.types';
 
 describe('TwoFAModalContent', () => {
     let component: TwoFAModalContent;

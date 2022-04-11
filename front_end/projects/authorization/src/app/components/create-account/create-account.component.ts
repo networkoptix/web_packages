@@ -20,7 +20,7 @@ import { Process } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
-import { AuthorizeStateType } from '../authorize.component';
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

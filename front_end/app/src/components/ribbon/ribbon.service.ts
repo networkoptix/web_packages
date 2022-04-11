@@ -7,7 +7,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import { RibbonAction } from './ribbon.component';
+import type { RibbonAction } from './ribbon.component.types';
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'> {
     text: string | Function;

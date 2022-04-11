@@ -10,11 +10,11 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import {
     InfoBlockLine,
     InfoBlockSection
-} from '@src/components/info-block/info-block.component';
+} from '@src/components/info-block/info-block.component.types';
 
 import { NxHealthService } from '../../health.service';
 
-export type SectionLookup = {
+type SectionLookup = {
     [key: string]: [InfoBlockSection]
 };
 

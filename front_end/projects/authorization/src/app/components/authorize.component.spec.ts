@@ -31,12 +31,12 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
 import { NxAuthorizeAuthCodeComponent } from './auth-code/auth-code.component';
+import { NxAuthorizeComponent } from './authorize.component';
 import {
     AuthorizeParams,
     AuthorizeState,
     ClientType,
-    NxAuthorizeComponent
-} from './authorize.component';
+} from './authorize.component.types';
 import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.component';
 import { NxAuthorizeConfirmationComponent } from './confirmation/confirmation.component';
 import { NxAuthorizeConnectErrorComponent } from './connect-error/connect-error.component';

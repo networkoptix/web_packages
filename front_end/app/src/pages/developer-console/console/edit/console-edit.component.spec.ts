@@ -3,25 +3,21 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement, Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MockDirective } from 'ng-mocks';
 import { v4 as uuid } from 'uuid';
 
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxProcessService } from '@services/process.service';
 
-import { forUnitTest, NxDevConsoleEditComponent } from './console-edit.component';
-
-const {
-    NxConfigService,
-    NxLanguageProviderService,
-    ActivatedRoute,
-    Router,
-    NxProcessService,
-    NxCloudApiService,
-    NxHeaderService,
-    NxConsoleService
-} = forUnitTest;
+import { NxDevConsoleEditComponent } from './console-edit.component';
 
 @Component({
     selector: 'nx-block',

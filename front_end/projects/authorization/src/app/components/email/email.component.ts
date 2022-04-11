@@ -19,7 +19,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Process } from '@services/process.service';
 import { NgChanges } from '@utils/ng-changes';
 
-import { AuthorizeStateType } from '../authorize.component';
+import type { AuthorizeStateType } from '../authorize.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

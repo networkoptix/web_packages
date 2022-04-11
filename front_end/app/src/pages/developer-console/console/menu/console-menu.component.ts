@@ -7,11 +7,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NgChanges } from '@utils/ng-changes';
 
-export interface ConsoleMenuNode {
-    title: string,
-    url: string,
-    icon?: string
-}
+import type { ConsoleMenuNode } from './console-menu.component.types';
 
 @Component({
     selector: 'console-menu',
@@ -62,9 +58,3 @@ export class NxDevConsoleMenuComponent {
         this.loading = !menu.length;
     }
 }
-
-export const forUnitTest = {
-    NxHeaderService,
-    NxConfigService,
-    ConsoleMode
-};

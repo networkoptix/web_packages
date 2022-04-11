@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService, RibbonActionInput } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { MessageParams } from '@dialogs/message/message.component';
+import type { MessageParams } from '@dialogs/message/message.component.types';
 import { NxAccountService, Account } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';

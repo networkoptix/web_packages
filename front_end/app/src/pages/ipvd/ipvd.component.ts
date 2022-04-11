@@ -20,7 +20,7 @@ import { delay } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { MessageParams } from '@dialogs/message/message.component';
+import type { MessageParams } from '@dialogs/message/message.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { Cameras, Vendors } from '@services/nx-cloud-api.types';

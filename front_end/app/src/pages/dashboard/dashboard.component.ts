@@ -30,18 +30,12 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { WINDOW } from '@services/window-provider';
 
-export class DashboardConfiguration {
-    constructor(
-        public dashboardName = 'New Dashboard',
-        public cards: WidgetCard[] = [],
-        public id = uuid()
-    ) { }
-}
+import { DashboardConfiguration } from './dashboard-configuration';
 
 /**
  * Configuration JSON format for saving, retrieving, uploading, or downloading dashboard settings
  */
-export class DashboardGroup {
+class DashboardGroup {
     constructor(
         public dashboardGroupName: string,
         public menu?: DashboardConfiguration[],

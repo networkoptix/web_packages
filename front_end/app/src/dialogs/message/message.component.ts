@@ -20,14 +20,6 @@ import { NxProcessService, Process } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
 import { pickFrom } from '@utils/general';
 
-export interface MessageParams {
-    disclaimer: string;
-    email?: string;
-    asset: string;
-    assetId?: string;
-    to?: string;
-}
-
 type Subject = DropdownItem<string>;
 
 @Component({

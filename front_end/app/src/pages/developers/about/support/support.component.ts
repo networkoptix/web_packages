@@ -10,7 +10,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
-import { AboutNode } from '../about.component';
+import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';
 
 @UntilDestroy()

@@ -11,13 +11,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { BaseDropdown } from '../injDropdown';
 
-export class ActionItems {
-    constructor(
-        public name: string,
-        public action: () => void,
-        public id?: string
-    ) {}
-}
+import type { ActionItems } from './three-dot.component.types';
 
 /* Usage
  <nx-select

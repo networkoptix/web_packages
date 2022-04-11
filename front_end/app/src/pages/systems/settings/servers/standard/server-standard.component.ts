@@ -13,13 +13,10 @@ import { of, SubscriptionLike, Subject } from 'rxjs';
 import { catchError, filter, skipWhile, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
 import {
     InfoBlockSection,
     InfoBlockLine
-} from '@components/info-block/info-block.component';
+} from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
@@ -36,15 +33,7 @@ import { NxMenuService } from '@src/menu/menu.service';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-export interface DropdownStorage extends DropdownItem<string> {
-    id: string,
-    isOnline: boolean,
-    isUsedForWriting?: boolean,
-    isWritable: boolean,
-    isNotSystem: boolean,
-    selected: boolean,
-    freeSpace: number
-}
+import type { DropdownStorage } from './server-standard.component.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

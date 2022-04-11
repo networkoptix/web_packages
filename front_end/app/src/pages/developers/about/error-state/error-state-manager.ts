@@ -1,4 +1,4 @@
-import { AboutNode } from '../about.component';
+import type { AboutNode } from '../about.component.types';
 
 export interface AssetBlock {
     type: string,

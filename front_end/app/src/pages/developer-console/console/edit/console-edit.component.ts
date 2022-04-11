@@ -188,16 +188,3 @@ export class NxDevConsoleEditComponent {
         this.hasErrors = !!Object.keys(this.errors).length;
     }
 }
-
-export const forUnitTest = {
-    NxConfigService,
-    NxLanguageProviderService,
-    ActivatedRoute,
-    Router,
-    NxProcessService,
-    NxToastService,
-    NxCloudApiService,
-    NxHeaderService,
-    NxConsoleService,
-    Location
-};

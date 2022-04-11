@@ -7,15 +7,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { v4 as uuid } from 'uuid';
 
+import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
 import { nxConfig } from '@services/nx-config/config';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxHeaderService } from '@services/nx-header.service';
 
-import { forUnitTest, NxDevConsoleMenuComponent } from './console-menu.component';
-
-const {
-    NxConfigService,
-    NxHeaderService,
-    ConsoleMode
-} = forUnitTest;
+import { NxDevConsoleMenuComponent } from './console-menu.component';
 
 describe('NxDevConsoleMenuComponent', () => {
     let component: NxDevConsoleMenuComponent;
