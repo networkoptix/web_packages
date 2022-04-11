@@ -61,6 +61,10 @@ describe('NxRibbonService', () => {
                     publishedRibbon: () => 'This page is the live version that is publicly available.',
                     reject: () => 'Reject'
                 },
+                newVersionAvailable: {
+                    notification: () => 'New version of %CLOUD_NAME% is available',
+                    installButton: () => 'Install Now'
+                },
                 systemOffline: () => 'System is offline. Some settings may not be available.',
                 systemsMerging: () => 'This system is currently involved in a merge operation.'
             };

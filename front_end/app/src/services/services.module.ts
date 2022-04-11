@@ -13,6 +13,7 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPageService } from './page.service';
 import { NxScrollMechanicsService } from './scroll-mechanics.service';
 import { NxSearchService } from './search.service';
+import { NxSwPromptUpdateService } from './sw-prompt-update.service';
 import { NxSystemsService } from './systems.service';
 import { NxUrlProtocolService } from './url-protocol.service';
 import { NxUtilsService } from './utils.service';
@@ -37,9 +38,14 @@ import { NxUtilsService } from './utils.service';
         NxUrlProtocolService,
         NxHeaderService,
         NxScrollMechanicsService,
-        NxSwCacheService
+        NxSwCacheService,
+        NxSwPromptUpdateService
     ],
     exports: []
 })
 export class ServiceModule {
+    constructor(
+        // Do not remove, IDE will show that these services aren't used, but we just need them to be instantiated here.
+        swPromptUpdateService: NxSwPromptUpdateService
+    ) {}
 }

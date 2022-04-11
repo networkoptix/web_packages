@@ -799,11 +799,12 @@ export interface Registration {
 }
 
 export interface Ribbon {
-    beingMerged:    BeingMerged;
-    finishingMerge: any;
-    integration:    RibbonIntegration;
-    systemOffline:  any;
-    systemsMerging: any;
+    beingMerged:         BeingMerged;
+    finishingMerge:      any;
+    integration:         RibbonIntegration;
+    newVersionAvailable: NewVersionAvailable;
+    systemOffline:       any;
+    systemsMerging:      any;
 }
 
 export interface BeingMerged {
@@ -817,6 +818,11 @@ export interface RibbonIntegration {
     backToEditText:  any;
     previewRibbon:   any;
     publishedRibbon: any;
+}
+
+export interface NewVersionAvailable {
+    notification:  any;
+    installButton: any;
 }
 
 export interface Search {
@@ -1954,6 +1960,7 @@ const typeMap: any = {
         { json: "beingMerged", js: "beingMerged", typ: r("BeingMerged") },
         { json: "finishingMerge", js: "finishingMerge", typ: "any" },
         { json: "integration", js: "integration", typ: r("RibbonIntegration") },
+        { json: "newVersionAvailable", js: "newVersionAvailable", typ: r("NewVersionAvailable") },
         { json: "systemOffline", js: "systemOffline", typ: "any" },
         { json: "systemsMerging", js: "systemsMerging", typ: "any" },
     ], false),
@@ -1967,6 +1974,10 @@ const typeMap: any = {
         { json: "backToEditText", js: "backToEditText", typ: "any" },
         { json: "previewRibbon", js: "previewRibbon", typ: "any" },
         { json: "publishedRibbon", js: "publishedRibbon", typ: "any" },
+    ], false),
+    "NewVersionAvailable": o([
+        { json: "notification", js: "notification", typ: "any" },
+        { json: "installButton", js: "installButton", typ: "any" },
     ], false),
     "Search": o([
         { json: "Any", js: "Any", typ: "any" },
