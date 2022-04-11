@@ -5,23 +5,23 @@ html[data-theme="dark"] {
     --body-bg    : #0D0E0F; //$dark3;
     --alt-body-bg : #000000; //$dark1;
     --body-text-color : #A5B7C0; //$light10;
-    
+
     --header-bg                  : #212A2F; //$dark7;
     --header-border-color        : transparent;
     --header-webadm-bg           : #212A2F; //$dark7;
     --header-webadm-border-color : transparent;
-    
+
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;
-    
+
     --search-link-color               : #F5F7F8; // $light2;
     --search-link-hover-color         : #CDD7DC; // $light6;
     --search-link-visited-color       : #CDD7DC; // $light6;
     --search-link-visited-hover-color : #B9C7CE; // $light8;
     --search-highlight-color          : rgba(var(--brand_d1--rgb), 0.8);
-    
+
     --user-selected-highlight-color : rgba(var(--brand_d1--rgb), 0.5);
-    
+
     --spot-gradient : radial-gradient(
                     ellipse farthest-corner at center center,
                     #303F47 0,
@@ -56,15 +56,15 @@ html[data-theme="dark"] {
     --scrollbar-thumb-bg                : #A5B7C0; //$light10;
     --scrollbar-thumb-border-color      : #2B383F; //$dark9;
     --menu-scrollbar-thumb-border-color : #2B383F; //$dark9;
-    
+
     --tooltip-shadow-color : #000000;  //$dark1;
     --tooltip-bg : #3F545F; //$dark13;
     --tooltip-color : #E1E7EA; //$light4;
-    
+
     --popover-shadow-color : none;
     --popover-bg           : #3F545F; //$dark13;
     --popover-color        : #E1E7EA; //$light4;
-    
+
     --radio-color              : #A5B7C0; //$light10;
     --radio-check-color        : #2592C3; //$brand_d1;
     --radio-hover-color        : #E1E7EA; //$light4;
@@ -80,7 +80,7 @@ html[data-theme="dark"] {
     --checkbox-active-color       : #F5F7F8; //$light2;
     --checkbox-active-check-color : #39B2EF; //$brand_l1;
     --checkbox-active-hover-color : #E1E7EA; //$light4;
-    
+
     --auth-header-bg : #1C2327; //$dark6;
     --auth-header-color : #E1E7EA; //$light4;
     --auth-subheader-color : #A5B7C0; //$light10;
@@ -92,12 +92,12 @@ html[data-theme="dark"] {
     --border-active-color  : #1C2327; //$dark6;
     --horizontal-sep-color : #2B383F; //$dark9;
     --label-color          : #E1E7EA; //light4;
-    
+
     --placehoder-cloud-color   : #171C1F; //$dark5
     --placehoder-cloud-opacity : 1;
     --placehoder-title-color   : #E1E7EA; //$light4;
     --placehoder-body-color    : #A5B7C0; //light10;
-    
+
     --switch-disabled-color       : #3A4D57; //$dark12;
     --switch-selected-color       : #32731E; //$green_d1;
     --switch-selected-hover-color : #44A624; //$green_l1};
@@ -112,7 +112,7 @@ html[data-theme="dark"] {
 
     --developer-menu-bg: #171C1F; //$dark5;
     --developer-menu-base-color : #879FAB; //$light13;
-    
+
     --left-menu-border-color                    : transparent;
     --left-menu-l1-bg                           : transparent;
     --left-menu-l1-bg-hover                     : #3A4D57; //$dark11;
@@ -132,7 +132,7 @@ html[data-theme="dark"] {
     --left-menu-l3-selected-color               : #F5F7F8; //$light2;
     --left-menu-disabled-item-color             : #3F545F; //$dark13;
     --left-menu-disabled-item-addtitional-color : #445B67; //$dark14;
-    
+
     --header-level-one-active-bg     : #{$dark5};
     --header-level-one-active-color  : #{$light4};
     --header-level-two-bg            : #{$dark6};
@@ -187,7 +187,7 @@ html[data-theme="dark"] {
     --btn-clear-hover-color  : #A5B7C0; //light10;
     --btn-clear-active-bg : transparent;
     --btn-clear-active-color : #5F7F8F; //$light17;
-    
+
     --btn-dropdown-toggle-bg             : #263137; //$dark8
     --btn-dropdown-toggle-selected-color : #D7DFE3; //$light5;
     --btn-dropdown-toggle-color          : #A5B7C0; //$light10
@@ -196,7 +196,7 @@ html[data-theme="dark"] {
     --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #1C2327; //$dark6;
     --btn-dropdown-toggle-active-bg      : #35464F; //$dark11;
     --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #1C2327; //$dark6;
-    
+
     --btn-tag-bg                 : #3A4D57; //$dark12;
     --btn-tag-color              : #F5F7F8; //$light2;
     --btn-tag-selected-bg        : #49626F; //$dark15;
@@ -220,7 +220,7 @@ html[data-theme="dark"] {
     --btn-default-active-bg    : #2B383F; //$dark9;
     --btn-default-active-color : #D7DFE3; //$light5;
     --btn-default-active-shadow : inset 0 1px 0 0 #1C2327; //$dark6;
-    
+
     --btn-primary-bg           : #2FA2DB; //$brand_core;
     --btn-primary-color        : #F5F7F8; //$light2;
     --btn-primary-shadow       : none;
@@ -230,7 +230,7 @@ html[data-theme="dark"] {
     --btn-primary-active-bg    : #076281; //$brand-d4;
     --btn-primary-active-color : #F5F7F8; //$light2;
     --btn-primary-active-shadow : inset 0 1px 0 0 #076281; //$brand-d4;
-    
+
     --btn-danger-bg            : #741414; //$red_d3;
     --btn-danger-color         : #F5F7F8; //$light2;
     --btn-danger-shadow        : #5E1010; //red_d4;
@@ -245,7 +245,7 @@ html[data-theme="dark"] {
     --btn-header-main-bg         : transparent;
     --btn-header-main-color      : #E1E7EA; //$light4;
     --btn-header-main-hover-bg   : #35464F; //$dark11;
-    
+
     --btn-header-webadm-main-bg         : transparent;
     --btn-header-webadm-main-color      : #E1E7EA; //$light4;
     --btn-header-webadm-main-hover-bg   : #35464F; //$dark11;
@@ -256,7 +256,7 @@ html[data-theme="dark"] {
     --tab-link-active-bg           : #171C1F; //$dark5;
     --tab-link-active-bottom-color : #171C1F; //$dark5;
     --tab-link-selected-color       : #2FA2DB; //$brand-core;
-    
+
     --tab-link-webadm-color               : #E1E7EA; //$light4;
     --tab-link-webadm-hover-bg            : #35464F; //dark11;
     --tab-link-webadm-active-bg           : #171C1F; //$dark5;
@@ -303,6 +303,10 @@ html[data-theme="dark"] {
     --swagger-btn-value-number-color : #{$green_d2};
     --swagger-textarea-color : #{$light10};
     --swagger-required-color : #{$red_main};
+    --swagger-input-disabled: #{$light2};
+    --api-tool-section-header: #{$dark1};
+    --media-type-bg: #{$light2};
+    --media-type-border: #{$light4};
 
     --footer-color : rgba(var(--light10--rgb), .65);
 
@@ -384,7 +388,7 @@ html[data-theme="dark"] {
 
     --grey-section-bg : #1C2327; //$dark6;
     --grey-section-sep-color : #35464F; //$dark11;
-    
+
     --dashboard-add-widget-color : #{$brand_d2};
     --dashboard-widget-hover-color : #{$brand_core};
     --dashboard-settings-menu-bg : #1C2327; //$dark6;

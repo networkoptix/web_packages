@@ -6,23 +6,23 @@
     --body-bg    : #{$additional_light2};
     --alt-body-bg : #{$light1};
     --body-text-color : #{$dark9};
-    
+
     --header-bg                  : #{$light1};
     --header-border-color        : #{$light4};
     --header-webadm-bg           : #{$dark14};
     --header-webadm-border-color : transparent;
-    
+
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
-    
+
     --search-link-color               : #{$dark9};
     --search-link-hover-color         : #{$dark15};
     --search-link-visited-color       : #{$dark19};
     --search-link-visited-hover-color : #{$light14};
     --search-highlight-color          : rgba(var(--yellow_main--rgb), 0.5);
-    
+
     --user-selected-highlight-color : rgba(var(--yellow_main--rgb), 0.3);
-    
+
     --spot-gradient : radial-gradient(
             ellipse farthest-corner at center center,
             #A5B7C0 0,
@@ -57,15 +57,15 @@
     --scrollbar-thumb-bg                : var(--light10);
     --scrollbar-thumb-border-color      : var(--additional_light1);
     --menu-scrollbar-thumb-border-color : var(--light6);
-    
+
     --tooltip-shadow-color : #{$dark15};
     --tooltip-bg : #{$dark1};
     --tooltip-color : #{$light1};
-    
+
     --popover-shadow-color : 0 1rem 2rem 0 #{$light15};
     --popover-bg           : #{$light1};
     --popover-color        : #{$dark9};
-    
+
     --radio-color              : #{$dark11};
     --radio-check-color        : #{$brand_core};
     --radio-hover-color        : #{$dark3};
@@ -113,8 +113,8 @@
 
     --developer-menu-bg : #{$additional_light2};
     --developer-menu-base-color : #{$dark10};
-    
-    
+
+
     --left-menu-border-color                    : transparent;
     --left-menu-l1-bg                           : transparent;
     --left-menu-l1-bg-hover                     : #{$additional_light3};
@@ -134,7 +134,7 @@
     --left-menu-l3-selected-color               : #{$light1};
     --left-menu-disabled-item-color             : #{$light13};
     --left-menu-disabled-item-addtitional-color : #{$light10};
-    
+
     --header-level-one-active-bg     : #{$additional_light2};
     --header-level-one-active-color  : #{$dark9};
     --header-level-two-bg            : #{$light5};
@@ -198,7 +198,7 @@
     --btn-dropdown-toggle-hover-shadow   : inset 0 -1px 0 0 #{$light8};
     --btn-dropdown-toggle-active-bg      : #{$light6};
     --btn-dropdown-toggle-active-shadow  : inset 0 1px 0 0 #{$light8};
-    
+
     --btn-tag-bg                         : #{$light4};
     --btn-tag-color                      : #{$light16};
     --btn-tag-selected-bg                : #{$light16};
@@ -222,7 +222,7 @@
     --btn-default-active-bg    : #{$light6};
     --btn-default-active-color : #{$dark9};
     --btn-default-active-shadow : inset 0 1px 0 0 #{$light9};
-    
+
     --btn-primary-bg           : #{$brand_core};
     --btn-primary-color        : #{$light1};
     --btn-primary-shadow       : inset 0 -1px 0 0 #{$brand-d2};
@@ -232,7 +232,7 @@
     --btn-primary-active-bg    : #{$brand-d2};
     --btn-primary-active-color : #{$light1};
     --btn-primary-active-shadow : inset 0 1px 0 0 #{$brand-d4};
-    
+
     --btn-danger-bg            : #{$red_main};
     --btn-danger-color         : #{$light1};
     --btn-danger-shadow        : #{$red_d2};
@@ -247,7 +247,7 @@
     --btn-header-main-bg         : #{$light4};
     --btn-header-main-color      : #{$dark9};
     --btn-header-main-hover-bg   : #{$light2};
-    
+
     --btn-header-webadm-main-bg         : #{$dark14};
     --btn-header-webadm-main-color      : #{$additional_light1};
     --btn-header-webadm-main-hover-bg   : #{$dark15};
@@ -258,7 +258,7 @@
     --tab-link-active-bg           : #{$light3};
     --tab-link-active-bottom-color : #{$light6};
     --tab-link-selected-color      : #{$brand-core};
-    
+
     --tab-link-webadm-color               : #{$additional_light1};
     --tab-link-webadm-hover-bg            : #{$dark15};
     --tab-link-webadm-active-bg           : #{$dark13};
@@ -306,6 +306,10 @@
     --swagger-btn-value-number-color : #{$green_main};
     --swagger-textarea-color : #{$light12};
     --swagger-required-color : rgba(var(--red_main--rgb), .6);
+    --swagger-input-disabled: #{$light2};
+    --api-tool-section-header: #{$light1};
+    --media-type-bg: #{$light2};
+    --media-type-border: #{$light4};
 
     --tabset-bg : #{$light1};
     --tabset-hover-bg : #{$light3};
@@ -315,7 +319,7 @@
 
     --table-alt-row-bg : #{$additional_light1};
     --table-row-hover-bg : rgba(var(--brand_core--rgb), .1);
-    
+
     --card-shadow: 0 2px 5px 0 #{$light4};
     --card-active-shadow: 0 2px 5px 0 #{$light10};
     --card-header-bg : #{$additional_light1};
@@ -387,7 +391,7 @@
 
     --grey-section-bg: var(--light4);
     --grey-section-sep-color: var(--light6);
-    
+
     --dashboard-add-widget-color : #{$brand_core};
     --dashboard-widget-hover-color : #{$brand_l4};
     --dashboard-settings-menu-bg : #{$light4};
