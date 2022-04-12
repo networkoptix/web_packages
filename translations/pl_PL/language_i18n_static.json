@@ -429,7 +429,7 @@
             "removeUser": "Remove user",
             "serversDetach": "Detach server { title } from current system?",
             "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }"
+            "serversRestart": "Restart serwera { title }"
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
