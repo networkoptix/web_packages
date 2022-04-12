@@ -454,7 +454,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             }
                             this.systemInfoSubscription =
                                 this.system.infoSubject
-                                    .pipe(distinctUntilChanged())
                                     .subscribe(() => {
                                         this.systemReady();
                                         this.updateAlert();
