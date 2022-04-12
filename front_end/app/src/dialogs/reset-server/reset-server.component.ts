@@ -178,6 +178,8 @@ export class ResetServerModalContent {
                             this.needsUpdate = !ready;
                             if (ready) {
                                 this.resetServer.run();
+                            } else {
+                                this.close();
                             }
                         });
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {

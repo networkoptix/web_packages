@@ -224,6 +224,8 @@ export class RestartServerModalContent {
                             this.needsUpdate = !ready;
                             if (ready) {
                                 this.restartServer.run();
+                            } else {
+                                this.close('');
                             }
                         });
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
