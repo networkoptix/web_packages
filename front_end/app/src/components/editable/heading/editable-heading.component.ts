@@ -72,7 +72,7 @@ export class NxEditableHeading implements OnInit, OnChanges {
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         if (value !== null) {
             this.value = value;
         }
@@ -82,7 +82,7 @@ export class NxEditableHeading implements OnInit, OnChanges {
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
@@ -94,12 +94,12 @@ export class NxEditableHeading implements OnInit, OnChanges {
         this.onTouchedCallback = fn;
     }
 
-    onChange() {
+    onChange(): void {
         this.nameWatcherValueChange.emit(this.value);
         this.onChangeCallback(this.value);
     }
 
-    editModeChanged(event) {
+    editModeChanged(event): void {
         this.hostClass = event ? 'w-100' : 'w-auto';
         this.editMode = event;
         this.editModeChange.emit(event);

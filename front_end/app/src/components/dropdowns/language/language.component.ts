@@ -51,7 +51,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         this.currentLang = languageService.currentLang;
     }
 
-    private splitLanguages() {
+    private splitLanguages(): void {
         if (this.languages.length > 12) {
             const halfWayThough = Math.ceil(this.languages.length / 2);
 
@@ -114,14 +114,14 @@ class BaseLanguageDropdown extends BaseDropdown {
     /**
      * Overwrite
      */
-    writeValue(langCode: any) {
+    writeValue(langCode: any): void {
         this.langCode = langCode;
         if (langCode) {
             this.setLanguage();
         }
     }
 
-    onBlur() {
+    onBlur(): void {
         this.onTouchedCallback();
     }
 }

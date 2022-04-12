@@ -30,7 +30,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     updateFunction;
     private ribbonSubscription: Subscription;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.visibility = false;
         this.message = '';
         this.actions = [];

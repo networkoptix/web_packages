@@ -51,7 +51,7 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
 
     updater$ = new BehaviorSubject(null);
 
-    refreshData() {
+    refreshData(): void {
         this.loading = true;
         this.updater$.next(0);
     }

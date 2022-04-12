@@ -56,7 +56,7 @@ export class NxProcessButtonComponent implements OnInit {
         }
     }
 
-    touchForm() {
+    touchForm(): void {
         const form = this.form.form || this.form;
         for (const ctrl in form.controls) {
             // eslint-disable-next-line no-prototype-builtins
@@ -67,7 +67,7 @@ export class NxProcessButtonComponent implements OnInit {
         }
     }
 
-    setFocusToInvalid() {
+    setFocusToInvalid(): void {
         const form = this.form.form || this.form;
         for (const ctrl in form.controls) {
             // eslint-disable-next-line no-prototype-builtins
@@ -93,7 +93,7 @@ export class NxProcessButtonComponent implements OnInit {
         }
     }
 
-    clickHandler(event) {
+    clickHandler(event): void {
         event.stopPropagation();
         this.clickFn();
         this.checkForm();

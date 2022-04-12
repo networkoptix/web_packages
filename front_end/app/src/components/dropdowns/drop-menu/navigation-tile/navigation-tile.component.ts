@@ -54,7 +54,7 @@ export class NxNavigationTileComponent {
         return breadcrumbUrls.includes(url);
     }
 
-    protected _setupIds() {
+    protected _setupIds(): void {
         this.node.htmlID = this._generateNodeId(this.node);
         this.node.nodes.forEach(link => {
             link.htmlID = this._generateLinkId(this.node, link);

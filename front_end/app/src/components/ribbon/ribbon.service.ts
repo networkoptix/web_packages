@@ -76,7 +76,7 @@ export class NxRibbonService {
         this.appStateService.ribbonVisibility = true;
     }
 
-    hide() {
+    hide(): void {
         this.context = {
             visibility: false,
             message: '',

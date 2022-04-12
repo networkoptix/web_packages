@@ -15,7 +15,7 @@ export class NxHeaderLevelOneComponent {
 
     constructor(public headerService: NxHeaderService) { }
 
-    onNodeSelect(event: MenuNode) {
+    onNodeSelect(event: MenuNode): void {
         this.nodeSelect.emit(event);
     }
 }

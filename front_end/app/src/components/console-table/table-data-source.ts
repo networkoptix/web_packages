@@ -30,7 +30,7 @@ export class TableDataSource extends DataSource<any> {
         map(([items, perPage]) => Math.min(items, perPage))
     );
 
-    updateFilters(filtersToUpdate: Record<string, AdditionalFilter>, fieldName: string, filterState: FilterState) {
+    updateFilters(filtersToUpdate: Record<string, AdditionalFilter>, fieldName: string, filterState: FilterState): void {
         if (this.filterStates.get(fieldName)?.sort !== filterState.sort) {
             this.filterStates.delete(fieldName);
         }
@@ -123,11 +123,11 @@ export class TableDataSource extends DataSource<any> {
 
     disconnect() {}
 
-    updateBaseData(data) {
+    updateBaseData(data): void {
         this.#baseData$.next(data);
     }
 
-    updateState({ page, search, perPage }) {
+    updateState({ page, search, perPage }): void {
         this.#currentPage$.next(page || 1);
         this.search$.next(search || '');
         if (page > this.numberOfPages$.value && this.updatePageParam) {

@@ -44,7 +44,7 @@ export class NxThreeDotDropdown extends BaseDropdown {
         super(languageService, configService);
     }
 
-    change(item) {
+    change(item): void {
         item.action();
     }
 }

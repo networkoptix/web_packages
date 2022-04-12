@@ -29,7 +29,7 @@ export class NxPopoverComponent extends BasePortalOutlet {
         return this.portalOutlet.attachComponentPortal(componentPortal);
     }
 
-    attachTemplate(portal: TemplatePortal) {
+    attachTemplate(portal: TemplatePortal): void {
         this.template = portal;
     }
 

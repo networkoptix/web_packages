@@ -56,13 +56,13 @@ export class NxHTMLComponent implements ControlValueAccessor {
         this.#onChangeCallback?.(value);
     }
 
-    writeValue(value: any) {
+    writeValue(value: any): void {
         // Handles a weird edge case where value is null which prevents editor from rendering
         this.valueLoaded = value !== null;
         this.#value = value;
     }
 
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.#onChangeCallback = fn;
     }
 

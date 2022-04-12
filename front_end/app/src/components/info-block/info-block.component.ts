@@ -41,11 +41,11 @@ export class NxInfoBlockComponent implements OnInit {
         return this.heightCache[`${columnIndex}-${blockIndex}-${lineIndex}`];
     }
 
-    check(columnIndex, blockIndex, section) {
+    check(columnIndex, blockIndex, section): void {
         setTimeout(() => this.getRowsHeight(columnIndex, blockIndex, section));
     }
 
-    private getRowsHeight(columnIndex, blockIndex, section) {
+    private getRowsHeight(columnIndex, blockIndex, section): void {
         const keys = [...section.querySelectorAll('div.block-section-keys p')];
         const values = [...section.querySelectorAll('div.block-section-values p')];
         keys.forEach((key, idx) => {

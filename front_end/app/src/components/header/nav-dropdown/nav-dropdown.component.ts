@@ -56,7 +56,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
         return false;
     }
 
-    updateOffset() {
+    updateOffset(): void {
         this.offset = this.window.innerWidth > 420
             ? 0
             : -this.dropDownButton.nativeElement.getBoundingClientRect().left;

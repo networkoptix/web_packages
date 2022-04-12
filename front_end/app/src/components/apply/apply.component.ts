@@ -44,7 +44,7 @@ export class NxApplyComponent {
     _disabled: boolean;
 
     @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent) {
+    handleKeyboardEvent(event: KeyboardEvent): void {
         if (
             event.key === 'Enter' &&
             document.activeElement.tagName === 'INPUT' &&
@@ -59,12 +59,12 @@ export class NxApplyComponent {
         this._disabled = false;
     }
 
-    setInvalidField(field: string) {
+    setInvalidField(field: string): void {
         this.invalidFields.push(field);
         this._disabled = !!this.invalidFields.length;
     }
 
-    unsetInvalidField(name: string) {
+    unsetInvalidField(name: string): void {
         this.invalidFields.forEach((item, index) => {
             if (item === name) {
                 this.invalidFields.splice(index, 1);
@@ -73,7 +73,7 @@ export class NxApplyComponent {
         });
     }
 
-    setInvalid(flag: boolean) {
+    setInvalid(flag: boolean): void {
         this._disabled = flag;
     }
 }

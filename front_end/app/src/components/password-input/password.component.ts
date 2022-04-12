@@ -131,7 +131,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         this.CONFIG = configService.getConfig();
     }
 
-    private loadCommonPasswords() {
+    private loadCommonPasswords(): void {
         if (!this.CONFIG.commonPasswordsList) {
             this.passwordSubscription = this.api.getCommonPasswords()
                 .subscribe(data => {
@@ -175,7 +175,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         return classesCount;
     }
 
-    setValue() {
+    setValue(): void {
         // update the form
         this.onChangeCallback(this.value);
         this.form.form.get(this.componentId).markAsUntouched();
@@ -195,7 +195,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         this.value = value;
         if (value) {
             this.setValue();
@@ -206,7 +206,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
@@ -218,7 +218,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         this.onTouchedCallback = fn;
     }
 
-    onBlur() {
+    onBlur(): void {
         this.onTouchedCallback();
     }
 }

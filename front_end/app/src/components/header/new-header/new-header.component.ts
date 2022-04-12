@@ -16,13 +16,13 @@ export class NxNewHeaderComponent implements OnChanges {
     constructor(private headerService: NxHeaderService) {
     }
 
-    handleNodeSelect(node: MenuNode) {
+    handleNodeSelect(node: MenuNode): void {
         if (this.selectedNode !== node) {
             this.selectedNode = node;
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxNewHeaderComponent>) {
+    ngOnChanges(changes: NgChanges<NxNewHeaderComponent>): void {
         if (changes.nodes) {
             this.selectedNode = changes.nodes.currentValue.find(node => node.nodes.find(subNode => subNode.url === this.headerService.currentLocation?.path));
         }

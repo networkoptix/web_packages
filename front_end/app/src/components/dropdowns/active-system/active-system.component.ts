@@ -36,11 +36,11 @@ export class NxActiveSystemDropdown extends BaseDropdown {
         super(languageService, configService);
     }
 
-    updateActiveByUri() {
+    updateActiveByUri(): void {
         this.updateActive(this.router.url.split('/').filter(String)[2]); // .filter(String) <- remove leading "/"
     }
 
-    updateActive(endpoint = 'settings') {
+    updateActive(endpoint = 'settings'): void {
         this.active.health = (endpoint === 'health');
         this.active.view = (endpoint === 'view');
         this.active.settings = (endpoint === 'settings');

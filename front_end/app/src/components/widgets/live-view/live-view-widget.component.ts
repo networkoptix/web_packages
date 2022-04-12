@@ -124,14 +124,14 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         return this.system.getMediaServersAndCameras(true);
     };
 
-    updateSystem(system: SystemDropdownItem) {
+    updateSystem(system: SystemDropdownItem): void {
         this.selectedSystem = system;
         this.card.config.selectedSystem = system.value;
         this.system = this.systemService.createSystem(this.accountService.email, system.value);
         this.refreshCameras();
     }
 
-    updateCamera(camera: CameraDropdownItem) {
+    updateCamera(camera: CameraDropdownItem): void {
         this.selectedCamera = camera;
         this.card.config.selectedCamera = camera.value;
     }

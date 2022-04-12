@@ -169,17 +169,17 @@ export class NxConsoleTableComponent {
         }
     );
 
-    updateEditValues(asset) {
+    updateEditValues(asset): void {
         this.editValues.emit(asset.values);
     }
 
-    toggleSearch() {
+    toggleSearch(): void {
         if (!this.route.snapshot.queryParams.search || !this.showSearch) {
             this.showSearch = !this.showSearch;
         }
     }
 
-    updateFixedWidth(column, event, defaultWidth = 0) {
+    updateFixedWidth(column, event, defaultWidth = 0): void {
         this.fixedWidths[column] = Math.max(defaultWidth, Math.round(event.width + 24), this.fixedWidths[column] || 0);
     }
 
@@ -196,7 +196,7 @@ export class NxConsoleTableComponent {
         this.#paramUpdaterFactory('search')(query);
     };
 
-    updateData() {
+    updateData(): void {
         this.update$.next('update');
     }
 
@@ -204,16 +204,16 @@ export class NxConsoleTableComponent {
         this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search, perPage: perPage || this.selectedManifest.perPage });
     };
 
-    resetSearch() {
+    resetSearch(): void {
         this.updateSearchParam({ query: '' });
         this.updatePageState({ search: '', page: this.route.snapshot.params.page || '1' });
     }
 
-    updateActiveFilter(filter: string | false = false) {
+    updateActiveFilter(filter: string | false = false): void {
         this.activeFilter = filter;
     }
 
-    async handleModal(modalContent?) {
+    async handleModal(modalContent?): Promise<void> {
         const createClientModalContent = {
             modal: ModalType.CLIENT_CREATE,
             manifest: this.manifest,
@@ -294,12 +294,12 @@ export class NxConsoleTableComponent {
         });
     };
 
-    updateTableSize({ width, height }) {
+    updateTableSize({ width, height }): void {
         this.noResultsHeight = height;
         this.noResultsWidth = width;
     }
 
-    handleIgnoreActive(event, ignore) {
+    handleIgnoreActive(event, ignore): void {
         this.ignoreActive = ignore;
         event.stopPropagation();
     }

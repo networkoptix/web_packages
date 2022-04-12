@@ -111,7 +111,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         this._value = value;
         this._previousValue = value;
     }
@@ -120,7 +120,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
@@ -132,7 +132,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
         this.onTouchedCallback = fn;
     }
 
-    valueChanged(event) {
+    valueChanged(event): void {
         const value = +event.target.value;
         if (value >= this.min && value <= this.max) {
             this._value = value;
@@ -149,7 +149,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
         return true;
     }
 
-    setValue(event?) {
+    setValue(event?): void {
         if (
             this._value === null ||
             (typeof this._value === 'number' && !Number.isNaN(this._value))
@@ -174,7 +174,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
         }
     }
 
-    onPaste(event: ClipboardEvent) {
+    onPaste(event: ClipboardEvent): void {
         event.preventDefault();
         let data = event.clipboardData.getData('text');
         data = data.replace(/[^0-9]+/g, '');
@@ -184,7 +184,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference
-    onBlur() {
+    onBlur(): void {
         this.onTouchedCallback();
     }
 }

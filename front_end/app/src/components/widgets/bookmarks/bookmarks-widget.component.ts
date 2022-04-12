@@ -104,17 +104,17 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
         shareReplay()
     );
 
-    toggleLoading() {
+    toggleLoading(): void {
         this.loading = !this.loading;
     }
 
-    updateSystem(system: SystemDropdownItem) {
+    updateSystem(system: SystemDropdownItem): void {
         this.selectedSystem = system;
         this.card.config.selectedSystem = system.value;
         this.refreshData();
     }
 
-    refreshData() {
+    refreshData(): void {
         this.updater$.next('update bookmarks');
     }
 

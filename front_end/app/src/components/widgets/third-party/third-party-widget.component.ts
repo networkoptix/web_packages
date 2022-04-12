@@ -38,7 +38,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
 
     static MAX_SIZE = 250000;
 
-    passStateToIframe(frame) {
+    passStateToIframe(frame): void {
         frame.contentWindow.sharedState = NxThirdPartyWidgetComponent.sharedState$;
         const editableSource = frame.contentDocument.querySelector('pre#plain-text-editable');
         if (editableSource) {
@@ -50,7 +50,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         }
     }
 
-    fileLeave() {
+    fileLeave(): void {
         console.log('leave');
     }
 

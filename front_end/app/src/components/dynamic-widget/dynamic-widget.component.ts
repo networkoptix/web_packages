@@ -55,7 +55,7 @@ export class NxDynamicWidgetComponent {
     /**
      * Dynamically resolves and renders widget based on the WidgetCard identifier.
      */
-    initializeWidget() {
+    initializeWidget(): void {
         const component = NxDynamicWidgetComponent.findWidget(this.card.identifier);
         const dynamicComponentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
         this.componentInstance = this.widgetTarget.createComponent(dynamicComponentFactory).instance;

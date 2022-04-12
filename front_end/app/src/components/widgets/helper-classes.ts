@@ -57,7 +57,7 @@ export class FirstPartyWidget extends BaseFirstPartyWidget {
     /**
      * Handles triggering change detection when widget is initialized. Any code normally run on the ngOnInit lifecycle should use update instead.
      */
-    update() {
+    update(): void {
         this.cd.detectChanges();
     }
 

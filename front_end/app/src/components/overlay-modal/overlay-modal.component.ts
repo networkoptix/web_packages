@@ -178,7 +178,7 @@ export class NxOverlayModalComponent implements OnInit {
             });
     }
 
-    getServers() {
+    getServers(): void {
         this.system.serverManager.getServers().toPromise()
             .then(res => {
                 this.servers = (<Server[]>(res as unknown) || [])
@@ -187,7 +187,7 @@ export class NxOverlayModalComponent implements OnInit {
             .catch(err => console.error(err));
     }
 
-    manualRefresh() {
+    manualRefresh(): void {
         this.oneCheckAtATime = false;
         this.checking$.next(true);
         this.timeoutUntilRefresh$.next(0);

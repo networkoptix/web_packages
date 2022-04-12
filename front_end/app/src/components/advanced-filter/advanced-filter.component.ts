@@ -54,7 +54,7 @@ export class NxAdvancedFilterComponent {
 
     initialized = false;
 
-    close() {
+    close(): void {
         if (this.initialized) {
             this.onClose.emit(true);
         } else {
@@ -62,7 +62,7 @@ export class NxAdvancedFilterComponent {
         }
     }
 
-    reset() {
+    reset(): void {
         const value = !!this.filter.multiSelect;
         this.updateState({
             sort: FilterSort.NONE,
@@ -70,12 +70,12 @@ export class NxAdvancedFilterComponent {
         });
     }
 
-    updateState(updateState: Partial<FilterState>) {
+    updateState(updateState: Partial<FilterState>): void {
         this.currentState = { ...this.currentState, ...updateState };
         this.updateFilter.emit({ state: this.currentState, filter: this.generateFilter() });
     }
 
-    updateSelection(updatedName, updatedValue, event: MouseEvent) {
+    updateSelection(updatedName, updatedValue, event: MouseEvent): void {
         event.stopPropagation();
         const selections = this.currentState.selections.map(({
             name, value

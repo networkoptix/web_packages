@@ -83,7 +83,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
         this.LANG = this.language.translations;
     }
 
-    setValue(newValue) {
+    setValue(newValue): void {
         // update the form
         this.onChangeCallback(newValue);
         this.form.form.get(this.componentId).markAsUntouched();
@@ -92,7 +92,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         if (value !== null) {
             this.value = value;
         }
@@ -102,7 +102,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 

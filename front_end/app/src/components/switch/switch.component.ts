@@ -90,7 +90,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         if (value !== null && !this.disabled) {
             this._value = value;
         }
@@ -100,7 +100,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
@@ -118,17 +118,17 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
         }
     }
 
-    private setState() {
+    private setState(): void {
         // update the form
         this.onChangeCallback(this._value);
         this.onSwitch.emit(this._value);
     }
 
-    preventBubbling(event: Event) {
+    preventBubbling(event: Event): void {
         event.stopPropagation();
     }
 
-    changeState() {
+    changeState(): void {
         if (this.disabled) {
             // tell parent I'm "disabled"
             this.onSwitch.emit(undefined);
@@ -141,7 +141,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference
-    onBlur() {
+    onBlur(): void {
         this.onTouchedCallback();
     }
 }

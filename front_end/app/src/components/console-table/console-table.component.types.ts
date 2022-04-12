@@ -129,7 +129,7 @@ export class ListSerializer<Initial, Serialized> {
         }
     }
 
-    update(data) {
+    update(data): void {
         this.data = this.#serializer(data);
     }
 

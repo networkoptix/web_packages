@@ -29,7 +29,7 @@ export class NxThemeSwitcherComponent implements OnInit {
         NxConfigService.isDarkTheme = this.theme === 'dark';
     }
 
-    setTheme(name) {
+    setTheme(name): void {
         this.theme = name;
         NxConfigService.isDarkTheme = this.theme === 'dark';
         this.localStorageService.store('theme', name);

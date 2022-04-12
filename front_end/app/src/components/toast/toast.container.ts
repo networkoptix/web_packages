@@ -32,7 +32,7 @@ export class NxToastsContainer {
     ) {
     }
 
-    remove(toast) {
+    remove(toast): void {
         this.toastService.remove(toast);
     }
 }

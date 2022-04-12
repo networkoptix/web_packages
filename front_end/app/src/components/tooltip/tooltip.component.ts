@@ -24,11 +24,11 @@ export class NxTooltipComponent extends BasePortalOutlet {
 
     template: Portal<any>;
 
-    attachTemplate(portal: TemplatePortal) {
+    attachTemplate(portal: TemplatePortal): void {
         this.template = portal;
     }
 
-    attachText(text: string) {
+    attachText(text: string): void {
         this._text = text;
     }
 

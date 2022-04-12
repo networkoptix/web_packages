@@ -33,7 +33,7 @@ export class NxLoggerComponent implements AfterViewInit {
         this.relayUrl = config.getConfig().trafficRelayHost;
     }
 
-    async getLogs(logger: LoggerDropdownItem) {
+    async getLogs(logger: LoggerDropdownItem): Promise<void> {
         let params = new HttpParams({ fromObject: { name: logger.value, lines: '1000' } });
         const { host, protocol } = this.window.location;
         let loggerHost = host;

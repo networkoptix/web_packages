@@ -265,7 +265,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         return this.router.url.includes(val);
     }
 
-    private stopActiveSubscription() {
+    private stopActiveSubscription(): void {
         if (this.system) {
             this.system.stopPoll();
             this.system = undefined;
@@ -423,11 +423,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    logout() {
+    logout(): void {
         this.accountService.logout(true);
     }
 
-    updateActive() {
+    updateActive(): void {
         this.active.ipvd = this.isActive('/ipvd');
         this.active.integrations = this.isActive('/integrations');
         this.active.register = this.isActive('/authorize/register');

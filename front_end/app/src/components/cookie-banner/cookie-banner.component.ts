@@ -48,7 +48,7 @@ export class NxCookieBannerComponent implements OnInit {
             });
     }
 
-    onCookieBannerClose() {
+    onCookieBannerClose(): void {
         // will set cookie_reviewed in backend later
         this.localStorage.store('cookiereviewed', true);
         this.cookieBannerReviewed = true;

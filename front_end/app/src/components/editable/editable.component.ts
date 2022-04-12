@@ -52,13 +52,13 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     private _disabled: boolean;
 
     @HostListener('input')
-    callOnChange() {
+    callOnChange(): void {
         this.onChangeCallback(this.el.nativeElement.textContent);
         this.checkError();
     }
 
     @HostListener('blur')
-    callOnTouched() {
+    callOnTouched(): void {
         if (this.required && !this.el.nativeElement.textContent) {
             this.el.nativeElement.textContent = this._initialValue;
             this.el.nativeElement.classList.remove(this.errorClass);
@@ -74,14 +74,14 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     }
 
     @HostListener('focus')
-    callOnFocus() {
+    callOnFocus(): void {
         this.el.nativeElement.classList.remove(this.initialClass);
         this.el.nativeElement.classList.add(this.editClass);
         this.onEditModeChanged.emit(true);
     }
 
     @HostListener('keyup.enter')
-    callOnEnter() {
+    callOnEnter(): void {
         this.el.nativeElement.innerText = this.el.nativeElement.textContent;
         this.el.nativeElement.blur();
     }
@@ -100,7 +100,7 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
         // disabled state is controller by "setDisabledState"
     }
 
-    private checkError() {
+    private checkError(): void {
         if (this.required && !this.el.nativeElement.textContent) {
             this.el.nativeElement.classList.add(this.errorClass);
         } else {
@@ -109,7 +109,7 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     }
 
     // called when model is written to view. (model -> view)
-    writeValue(value: string) {
+    writeValue(value: string): void {
         if (!this._initialValue && value || value) { // do not update before component is initialized
             this._initialValue = value;
             this.el.nativeElement.textContent = value || '';
@@ -119,11 +119,11 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
-    registerOnTouched(fn) {
+    registerOnTouched(fn): void {
         this.onTouchedCallback = fn;
     }
 

@@ -74,7 +74,7 @@ export class NxMonitoringGraphComponent implements OnInit {
 
     @Input() system: NxSystem;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         // leave "view" undefined to "fitContent"
         // this.view = [700, 500];
     }

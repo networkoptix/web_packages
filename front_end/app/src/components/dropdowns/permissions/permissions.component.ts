@@ -58,7 +58,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     /**
      * Overwrite
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         if (value !== null && !this.applyService.locked) {
             this.selected = value;
             this.selection = this.LANG.accessRoles[this.selected.name]?.label?.() ||
@@ -74,7 +74,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
         this.processAccessRoles();
     }
 
-    private processAccessRoles() {
+    private processAccessRoles(): void {
         this.accessRoles = [];
         this.roles.forEach(role => {
             if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {

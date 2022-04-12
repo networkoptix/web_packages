@@ -84,7 +84,7 @@ export class NxDropMenu extends BaseDropdown {
             });
     }
 
-    replaceCloudHost(nodes) {
+    replaceCloudHost(nodes): void {
         nodes.forEach(node => {
             node.url = node.url.replace('{{CLOUD_HOST}}', this.CONFIG.cloudHost);
             this.replaceCloudHost(node.nodes);
@@ -100,7 +100,7 @@ export class NxDropMenu extends BaseDropdown {
      * sizes from the spec. Updates are triggered by a (resize) directive on the containing element.
      * @param event$ - {width: number}
      */
-    handleResize({ width }) {
+    handleResize({ width }): void {
         if (!width) return;
         const minWidth = 160;
 
@@ -128,7 +128,7 @@ export class NxDropMenu extends BaseDropdown {
         this.additionalSystems$.next(additionalSystems);
     }
 
-    updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false) {
+    updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false): void {
         this.headerService.show$ = false;
         this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home)).then(() => {
             const activeSystem = this.headerService.activeSystem ||

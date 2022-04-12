@@ -43,7 +43,7 @@ export class NxAlertBlockComponent implements OnInit {
         this.isNotDefaultType = ['error', 'warning', 'info'].includes(this.type);
     }
 
-    onClick() {
+    onClick(): void {
         this.onAction.emit();
     }
 }

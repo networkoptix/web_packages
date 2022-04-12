@@ -16,7 +16,7 @@ import { NxPageService } from '@services/page.service';
 export class NxNoSystemsComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 

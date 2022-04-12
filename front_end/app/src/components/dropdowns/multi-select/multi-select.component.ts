@@ -111,7 +111,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         return item ? item.id : undefined;
     }
 
-    updateItems() {
+    updateItems(): void {
         this.items.forEach((item: any) => {
             item.selected = (this.innerValue !== undefined)
                 ? this.innerValue.includes(item.id)
@@ -147,7 +147,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         }
     }
 
-    updateModel() {
+    updateModel(): void {
         // update the form
         this.updateLabel();
         this.onChangeCallback(this.innerValue);
@@ -163,7 +163,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     /**
      * Overwrite
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         if (value !== null) {
             this.innerValue = value;
             this.updateLabel();

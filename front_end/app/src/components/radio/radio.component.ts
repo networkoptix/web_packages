@@ -76,7 +76,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     /**
      * Write a new value to the element.
      */
-    writeValue(value) {
+    writeValue(value): void {
         if (value === 'tristate' || value === 1) {
             this.state = this._rbxStates.rbOrElse; // 'checked'
         } else if ((value && this.value === value)) {
@@ -91,7 +91,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.propagateChange = fn;
     }
 
@@ -102,7 +102,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     registerOnTouched(fn: () => void): void {
     }
 
-    changeState() {
+    changeState(): void {
         if (this.disabled) {
             return;
         }

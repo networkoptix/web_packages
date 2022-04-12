@@ -119,7 +119,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         if (value !== null && !this.disabled ||
             this.disabled && !value) {
             this.value = value;
@@ -131,7 +131,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
@@ -143,7 +143,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.onTouchedCallback = fn;
     }
 
-    private setState() {
+    private setState(): void {
         this.state = this.cbxStates[this.value];
 
         // update the form
@@ -152,7 +152,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.onClick.emit(this.value);
     }
 
-    changeState(event) {
+    changeState(event): void {
         if (this.disabled) {
             return;
         }
@@ -163,7 +163,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference
-    onBlur() {
+    onBlur(): void {
         this.onTouchedCallback();
     }
 }

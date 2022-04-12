@@ -157,7 +157,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         this.highlightedTopNode = last(this.activeRouteNodes.filter(name => !this.openNodes.includes(name)));
     }
 
-    prefetchAsset(assetId, state, version) {
+    prefetchAsset(assetId, state, version): void {
         if (assetId) {
             timer(this.CONFIG.featureFlags.kbInstantSearch ? 50 : 250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
                 this.handlePrefetch.emit({ assetId, state, version });
@@ -165,7 +165,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         }
     }
 
-    handleClick(node: MenuNodeWithParent, clearSearch = false, toggleOpen = true) {
+    handleClick(node: MenuNodeWithParent, clearSearch = false, toggleOpen = true): void {
         if (toggleOpen) this.toggleOpen(node);
         this.onClick.emit({ node, clearSearch });
     }
@@ -180,7 +180,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         }
     };
 
-    updateSearchQuery({ query }) {
+    updateSearchQuery({ query }): void {
         if (query !== '' && query === this.searchQuery$.value) return;
         this.queryChanged = true;
         this.searchQuery$.next(query);

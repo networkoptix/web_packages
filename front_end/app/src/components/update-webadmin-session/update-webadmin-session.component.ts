@@ -103,7 +103,7 @@ export class UpdateWebadminSessionComponent implements OnInit {
 
     resetForm() {}
 
-    setLogin(login) {
+    setLogin(login): void {
         this.auth.login = login;
     }
 

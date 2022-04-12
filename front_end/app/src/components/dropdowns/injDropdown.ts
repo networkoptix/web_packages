@@ -56,7 +56,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any) {
+    writeValue(value: any): void {
         let _value = value;
         if (value instanceof Watcher) {
             _value = value.value;
@@ -75,7 +75,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn) {
+    registerOnChange(fn): void {
         this.onChangeCallback = fn;
     }
 
