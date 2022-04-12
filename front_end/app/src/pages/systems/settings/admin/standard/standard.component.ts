@@ -170,6 +170,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             )
                 .pipe(
                     AlexaSettings.cleanObservable(this.system.id),
+                    switchMap(this.#syncEventRulesSetup),
                     untilDestroyed(this)
                 ).subscribe(
                     settings => { this.alexaSettings = settings; },
@@ -383,6 +384,29 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
                     );
                 })
             ).toPromise();
+    };
+
+    #syncEventRulesSetup = (settings: Partial<AlexaSettings>) => {
+        return this.system.mediaserver.getEventRules().pipe(
+            switchMap(async rules => {
+                const checkCommand = (command: string) => rules.find(rule => {
+                    const condition = JSON.parse(rule.eventCondition);
+                    const resourceName = condition.resourceName;
+                    return resourceName === command;
+                });
+                const currentUserEmail = this.system.userManager.currentUser.email;
+                const layoutCommand = `"Alexa layout command for ${currentUserEmail}"`;
+                const customCommand = `"Alexa command for ${currentUserEmail}"`;
+                const rulesSetup = !!checkCommand(layoutCommand) && !!checkCommand(customCommand);
+                if (settings.eventRulesSetup !== rulesSetup) {
+                    settings.eventRulesSetup = rulesSetup;
+                    await this.cloudApi.saveCustomAccountProperty(
+                        settings,
+                        AlexaSettings.CUSTOM_PROPERTY_ENDPOINT
+                    ).toPromise();
+                }
+                return settings;
+            }));
     };
 
     #updateAlexa = (settings: Partial<AlexaSettings>) =>
