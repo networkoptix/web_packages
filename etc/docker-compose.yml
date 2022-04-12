@@ -25,15 +25,15 @@ services:
       - "6379:6379"
     expose:
       - "6379"
-  
+
   meilisearch:
-    image: getmeili/meilisearch
+    image: getmeili/meilisearch:v0.24.0
     command: ./meilisearch --master-key=qweasd1234 --no-analytics=true
     ports:
         -   target: 7700
             published: 7700
             protocol: tcp
-      
+
   # How to run nginx locally as proxy for django
   # build docker image for nginx.
   # cd nx_vms/cloud/deploy/cloud_portal-nginx

@@ -2,7 +2,6 @@ from functools import wraps
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from django.conf import settings
-from django.utils.functional import SimpleLazyObject
 from inlinestyler.utils import inline_css
 import re
 import sass
@@ -20,6 +19,7 @@ from cms.models import DataStructure, AssetType, AssetCustomizationReview, Conte
 from util.helpers import get_meilisearch_client
 
 logger = logging.getLogger(__name__)
+
 
 def html2md(html):
     parser = HTML2Text()
@@ -64,17 +64,32 @@ class SearchableCache(BaseCache):
     def __init__(self, *args, **kwargs):
         self.custom_settings = kwargs.pop('search_settings', {})
         self.current_settings = None
+        self._search_index = None
         super().__init__(*args, **kwargs)
+        self.get_search_index()
+
+        self.fields_from_doc = [
+            *self.custom_settings.pop('displayedAttributes'), 'blocks']
+
+    @property
+    def search_index(self):
+        return self._search_index or self.get_search_index()
+
+    def get_search_index(self):
         client = get_meilisearch_client()
-        self.search_index = client.index(self.cache_key)
+        self._search_index = client.index(self.cache_key)
         try:
             self.search_index.get_stats()
             self.check_and_update_custom_settings()
-        except (MeiliSearchApiError, MeiliSearchCommunicationError) as e:
-            if isinstance(e, MeiliSearchApiError):
+        except MeiliSearchApiError:
+            try:
                 client.create_index('documentation')
+            except MeiliSearchApiError:
+                self._search_index = None
+        except MeiliSearchCommunicationError:
+            self._search_index = None
 
-        self.fields_from_doc = [*self.custom_settings.pop('displayedAttributes'), 'blocks']
+        return self._search_index
 
     def check_if_settings_changed(self):
         for key, value in self.custom_settings.items():
@@ -106,7 +121,7 @@ class SearchableCache(BaseCache):
         try:
             self.search_index.delete_all_documents()
         except (MeiliSearchCommunicationError, MeiliSearchApiError, TypeError, AttributeError) as e:
-        # MeiliSearchApiError is only raised when running with an empty db
+            # MeiliSearchApiError is only raised when running with an empty db
             # raised when meilisearch service is unavailable
             logger.warning(e)
 
@@ -141,7 +156,9 @@ class SearchableCache(BaseCache):
                 # TypeError is raised when switch is enabled but no master key provided
                 logger.warning(e)
 
-ATTRIBUTES = ['title', 'shortDescription', 'body', 'version', 'id', 'labels', 'kbMenus']
+
+ATTRIBUTES = ['title', 'shortDescription',
+              'body', 'version', 'id', 'labels', 'kbMenus']
 
 SEARCH_SETTINGS = {
     'displayedAttributes': ATTRIBUTES,
@@ -149,7 +166,8 @@ SEARCH_SETTINGS = {
     'sortableAttributes': ATTRIBUTES,
     'filterableAttributes': ['labels', 'kbMenus'],
 }
-DOC_CACHE = SimpleLazyObject(lambda: SearchableCache(cache_key='documentation', search_settings=SEARCH_SETTINGS))
+DOC_CACHE = SearchableCache(
+    cache_key='documentation', search_settings=SEARCH_SETTINGS)
 BODY_REGEX = re.compile(r'<body>(.*)</body>', re.S)
 
 
@@ -210,24 +228,28 @@ def sub_files(value, datastructures, record_values):
             value = value.replace(ds.name, record_values[ds.name])
     return value
 
-def filter_internal_url(link, base = settings.CLOUD_PORTAL_URL):
+
+def filter_internal_url(link, base=settings.CLOUD_PORTAL_URL):
     url = link.get('href', '').replace('%CLOUD_LINK%', '') or '/'
     if url.startswith('../'):
         url = f"/{url.split('../')[-1]}"
     return url if url.startswith('/') or url.startswith(base) else None
+
 
 def apply_replacements(html, replacements):
     for replacement in replacements:
         html = html.replace(replacement['original'], replacement['updated'])
     return html
 
-def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link = False, force_update = False):
+
+def generate_doc_json(docs, language, draft=False, review=False, trust_cache=False, global_contexts=None, global_contexts_dict=None, external_link=False, force_update=False):
     S3_LINK = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}"
     REPLACEMENT_LINK = '' if external_link else f"{settings.CLOUD_PORTAL_URL}/static/media"
     doc_structures = DataStructure.objects.filter(
         context__asset_type__type=AssetType.ASSET_TYPES.documentation
     )
-    doc_file_structures = doc_structures.filter(type=DataStructure.DATA_TYPES.external_file)
+    doc_file_structures = doc_structures.filter(
+        type=DataStructure.DATA_TYPES.external_file)
     if review:
         state = 'review'
     elif draft:
@@ -249,7 +271,8 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
         # Check if we need to query for the asset and version
         if not doc_dict or not trust_cache or review or draft:
             if type(doc) is int:
-                doc = Asset.objects.filter(id=doc, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
+                doc = Asset.objects.filter(
+                    id=doc, asset_type__type=AssetType.ASSET_TYPES.documentation).first()
             if doc:
                 version = doc.version_id()
             else:
@@ -270,8 +293,10 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()
-                global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
-                global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+                global_contexts = Context.objects.filter(
+                    asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
+                global_contexts_dict = global_contexts_to_dict(
+                    global_contexts, cloud_portal)
 
             # Get values of article for this version
             values = DataStructure.find_actual_values(
@@ -281,30 +306,37 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict = dict()
             doc_dict['title'] = values['title']
             doc_dict['shortDescription'] = values['shortDescription']
-            internal_link_replacements = get_internal_links(external_link, cloud_portal, doc, doc_dict, values)
-
+            internal_link_replacements = get_internal_links(
+                external_link, cloud_portal, doc, doc_dict, values)
 
             doc_dict['blocks'] = values['body']
-            doc_dict['blocks'] = sub_files(doc_dict['blocks'], doc_file_structures, values)
-            doc_dict['blocks'] = apply_replacements(doc_dict['blocks'], internal_link_replacements)
-            doc_dict['blocks'] = doc_dict['blocks'].replace(S3_LINK, REPLACEMENT_LINK)
+            doc_dict['blocks'] = sub_files(
+                doc_dict['blocks'], doc_file_structures, values)
+            doc_dict['blocks'] = apply_replacements(
+                doc_dict['blocks'], internal_link_replacements)
+            doc_dict['blocks'] = doc_dict['blocks'].replace(
+                S3_LINK, REPLACEMENT_LINK)
             doc_dict['script'] = values['script']
-            doc_dict['labels'] = [label.strip() for label in values.get('labels', []) if label.strip()]
+            doc_dict['labels'] = [label.strip()
+                                  for label in values.get('labels', []) if label.strip()]
             css = values['styling']
 
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
 
-            process_asset_global_contexts(language, cloud_portal, global_contexts, doc.version_id(), doc_dict, global_contexts_dict)
+            process_asset_global_contexts(
+                language, cloud_portal, global_contexts, doc.version_id(), doc_dict, global_contexts_dict)
 
             doc_dict['version'] = version
-            doc_dict['blocks'] = split_blocks(inline_styles(doc_dict['blocks'], css))
+            doc_dict['blocks'] = split_blocks(
+                inline_styles(doc_dict['blocks'], css))
             doc_dict['id'] = doc.id
 
             if review and pending_review:
                 doc_dict['reviewId'] = pending_review.id
 
             if not draft:
-                doc_dict['kbMenus'] = [node.get_parent().name for node in doc.nodes.all()]
+                doc_dict['kbMenus'] = [
+                    node.get_parent().name for node in doc.nodes.all()]
                 DOC_CACHE[cache_key] = doc_dict
 
         doc_dict_copy = doc_dict.copy()
@@ -324,16 +356,17 @@ def get_internal_links(external_link, cloud_portal, doc, doc_dict, values):
         return internal_link_replacements
 
     doc_dict['external_files'] = [{
-                'id': file.id,
-                'original_url': str(file),
-                'external_file_name': '_'.join(str(file).split('/')[1:])
-            } for file in ExternalFile.objects.filter(asset_ds_pair__asset=doc)]
-    internal_links = list(filter(lambda url: url is not None, [filter_internal_url(href) for href in BeautifulSoup(values['body'], features="lxml").find_all('a')]))
+        'id': file.id,
+        'original_url': str(file),
+        'external_file_name': '_'.join(str(file).split('/')[1:])
+    } for file in ExternalFile.objects.filter(asset_ds_pair__asset=doc)]
+    internal_links = list(filter(lambda url: url is not None, [filter_internal_url(
+        href) for href in BeautifulSoup(values['body'], features="lxml").find_all('a')]))
     for link in internal_links:
         internal_default = {
-                        'original': link,
-                        'updated': f'{SpecialStructures.calc_cloud_link(cloud_portal)}{link}'
-                }
+            'original': link,
+            'updated': f'{SpecialStructures.calc_cloud_link(cloud_portal)}{link}'
+        }
         is_doc = link.startswith('/docs')
         if is_doc:
             menu_url = ''
@@ -346,14 +379,14 @@ def get_internal_links(external_link, cloud_portal, doc, doc_dict, values):
             asset_id = int(slug.split('-')[0]) if slug else None
             customization = cloud_portal.customizations.first().name
             articles = [] if not asset_id else ZendeskArticle.objects.filter(
-                        site__customization__name=customization, asset_id=asset_id)
+                site__customization__name=customization, asset_id=asset_id)
             for article in articles:
                 menu = article.menu_node.get_parent()
                 if menu.base_url == base_url and menu.url == menu_url:
                     internal_link_replacements.append({
-                                'original': link,
-                                'updated': article.html_url
-                            })
+                        'original': link,
+                        'updated': article.html_url
+                    })
                     break
             else:
                 internal_link_replacements.append(internal_default)
@@ -361,4 +394,3 @@ def get_internal_links(external_link, cloud_portal, doc, doc_dict, values):
             internal_link_replacements.append(internal_default)
 
     return internal_link_replacements
-

@@ -369,6 +369,7 @@ on-wheel-upload:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - cloud/requirements.txt
+      when: on_failure
 
 .hooker:
   image: ${DJANGO_PYTHON_IMAGE}:${DJANGO_PYTHON_IMAGE_TAG}

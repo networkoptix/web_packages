@@ -1,5 +1,11 @@
 [
   {
+    "License": "MIT License",
+    "Name": "Deprecated",
+    "URL": "https://github.com/tantale/deprecated",
+    "Version": "1.2.13"
+  },
+  {
     "License": "BSD License",
     "Name": "Django",
     "URL": "https://www.djangoproject.com/",
@@ -141,7 +147,7 @@
     "License": "BSD License",
     "Name": "click",
     "URL": "https://palletsprojects.com/p/click/",
-    "Version": "7.1.2"
+    "Version": "8.0.0"
   },
   {
     "License": "BSD License",
@@ -261,7 +267,7 @@
     "License": "BSD License",
     "Name": "django-oauth-toolkit",
     "URL": "https://github.com/jazzband/django-oauth-toolkit",
-    "Version": "1.3.3"
+    "Version": "1.7.0"
   },
   {
     "License": "MIT License",
@@ -468,6 +474,12 @@
     "Version": "2.0.2"
   },
   {
+    "License": "LGPLv3+",
+    "Name": "jwcrypto",
+    "URL": "https://github.com/latchset/jwcrypto",
+    "Version": "1.0"
+  },
+  {
     "License": "BSD License",
     "Name": "kombu",
     "URL": "https://kombu.readthedocs.io",
@@ -489,7 +501,7 @@
     "License": "MIT License",
     "Name": "meilisearch",
     "URL": "https://github.com/meilisearch/meilisearch-python",
-    "Version": "0.16.1"
+    "Version": "0.17.0"
   },
   {
     "License": "MIT License",
@@ -778,6 +790,12 @@
     "Name": "wcwidth",
     "URL": "https://github.com/jquast/wcwidth",
     "Version": "0.2.5"
+  },
+  {
+    "License": "BSD License",
+    "Name": "wrapt",
+    "URL": "https://github.com/GrahamDumpleton/wrapt",
+    "Version": "1.14.0"
   },
   {
     "License": "GNU General Public License v3 (GPLv3)",
