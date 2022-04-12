@@ -191,6 +191,10 @@ export class NxDevelopersMenuComponent implements OnInit {
         const highlightText = (node: MenuNodeWithParent, startInd: number) => {
             return NxUtilsService.highlight(node.display_name || node.name, startInd, startInd + query.length);
         };
+        const isSeperator = (node: MenuNodeWithParent) => {
+            if (!node) return false;
+            return node.name.includes('-seperator');
+        };
         const search = (menuNode: MenuNodeWithParent) => {
             let inQuery = false;
             const name = menuNode.display_name.toLowerCase();
@@ -201,7 +205,9 @@ export class NxDevelopersMenuComponent implements OnInit {
             displayedNode.nodes = [];
             let newName = displayedNode.display_name || displayedNode.name;
             if (startInd !== -1) {
-                newName = highlightText(menuNode, startInd);
+                if (menuNode && !menuNode.name.includes('seperator')) {
+                    newName = highlightText(menuNode, startInd);
+                }
                 inQuery = true;
             }
             if (pathMatchesQuery || isSeperator) {
@@ -227,9 +233,11 @@ export class NxDevelopersMenuComponent implements OnInit {
                 newDisplayedNodes.push(queriedNode);
             }
         }
-
-        if (newDisplayedNodes[newDisplayedNodes.length - 1].name.includes('-seperator')) {
+        while (isSeperator(newDisplayedNodes[newDisplayedNodes.length - 1])) {
             newDisplayedNodes.pop();
+        }
+        if (isSeperator(newDisplayedNodes[0]) && isSeperator(newDisplayedNodes[1])) {
+            newDisplayedNodes.shift();
         }
         this.openNodes = newOpenNodes;
         this.displayedMenuNodes = newDisplayedNodes;
