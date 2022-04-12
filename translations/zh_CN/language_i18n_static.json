@@ -748,6 +748,10 @@
             "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "系统离线。某些设置可能无法使用。",
         "systemsMerging": "此系统正在合并中。"
     },

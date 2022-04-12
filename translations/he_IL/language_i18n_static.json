@@ -748,6 +748,10 @@
             "previewRibbon": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "המערכת אינה מקוונת. ייתכן שהגדרות מסוימות אינן זמינות.",
         "systemsMerging": "מערכת זו מעורבת כעת בפעולת מיזוג."
     },

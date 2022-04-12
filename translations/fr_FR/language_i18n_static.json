@@ -748,6 +748,10 @@
             "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique.",
             "publishedRibbon": "Cette page est la version live qui est disponible au public."
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
     },

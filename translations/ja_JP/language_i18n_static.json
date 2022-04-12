@@ -748,6 +748,10 @@
             "previewRibbon": "このページは最新の変更のプレビューであり、公開されているバージョンとは一致しません。",
             "publishedRibbon": "公開されているライブバージョンのページです。"
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"
     },

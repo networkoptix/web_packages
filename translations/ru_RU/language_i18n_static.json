@@ -748,6 +748,10 @@
             "previewRibbon": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "Система не в сети. Некоторые настройки могут быть недоступны.",
         "systemsMerging": "Эта система в настоящее время участвует в операции объединения."
     },
