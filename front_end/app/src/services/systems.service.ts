@@ -29,7 +29,7 @@ export class NxSystemsService implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
     private activeSubscription: Subscription;
     private currentUser: string;
-    private mergingSystems: Set<string>;
+    mergingSystems: Set<string>;
     systems: NxSystemWithUserInfo[];
     systemsPoll: Observable<NxSystemWithUserInfo[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
     systemsSubject = new ReplaySubject<NxSystemWithUserInfo[]>(0);
