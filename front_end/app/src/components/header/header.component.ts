@@ -249,7 +249,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
 
         if (!environment.production) {
-            this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
+            this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}`;
         }
         this.createUrl = `${this.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
     }

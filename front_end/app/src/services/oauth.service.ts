@@ -79,7 +79,7 @@ export class OauthService {
         const params = new URLSearchParams({
             client_type: clientTypes[state] || clientTypes.login,
             view_type: 'web',
-            redirect_url: cleanRedirect(href),
+            redirect_uri: cleanRedirect(href),
             client_id: environment.isLocal ? 'webadmin' : 'cloud_portal',
             response_type: 'code',
             grant_type: 'password'
