@@ -203,7 +203,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 untilDestroyed(this),
                 catchError(() => of(false)),
                 map((servers: any) => {
-                    return servers.some(({ remoteAddresses }) => remoteAddresses
+                    return servers?.some(({ remoteAddresses }) => remoteAddresses
                         .some((address) => this.initialData.redirect_uri.includes(address))
                     );
                 }));
