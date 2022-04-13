@@ -749,8 +749,8 @@
             "publishedRibbon": "公開されているライブバージョンのページです。"
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "notification": "%CLOUD_NAME% の新しいバージョンが利用可能です",
+            "installButton": "今すぐインストール"
         },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"

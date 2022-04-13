@@ -749,8 +749,8 @@
             "publishedRibbon": "Cette page est la version live qui est disponible au public."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "notification": "Une nouvelle version de %CLOUD_NAME% est disponible",
+            "installButton": "Installer maintenant"
         },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
