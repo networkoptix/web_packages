@@ -1,16 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { LocalStorageService }       from 'ngx-webstorage';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { LocalStorageService }       from 'ngx-webstorage';
 
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
 import { NxConfigService, IConfig }  from '@services/nx-config';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService }             from '@services/page.service';
 import { NxUtilsService }            from '@services/utils.service';
-import { LanguageI18NStaticTypes }   from '@app/language_i18n_static_types';
-import { AuthorizeParams, ClientType } from '../components/authorize.component';
 import { WINDOW } from '@services/window-provider';
+
+import { AuthorizeParams, ClientType } from '../components/authorize.component';
 
 /* eslint-disable camelcase */
 @UntilDestroy()
@@ -88,7 +89,7 @@ export class NxOAuthRedirectComponent implements OnInit {
             queryParams: {
                 client_id: client_id || this.deviceService.isMobile ? 'mobile' : 'desktop',
                 client_type: client_type || 'loginSystem',
-                redirect_url: '/redirect-oauth',
+                redirect_uri: '/redirect-oauth',
                 view_type: view_type || 'desktop',
                 response_type: 'code'
             }

@@ -60,7 +60,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     routeToCreate() {
         let url = '/authorize?client_type=create';
         if (!environment.production) {
-            url = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}&client_type=create`;
+            url = `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}&client_type=create`;
         }
         this.window.location.href = url;
     }

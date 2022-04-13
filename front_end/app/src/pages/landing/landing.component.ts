@@ -51,7 +51,7 @@ export class NxLandingComponent implements OnInit {
 
         this.createUrl = environment.production
             ? '/authorize?client_type=create'
-            : `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}&client_type=create`;
+            : `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}&client_type=create`;
     }
 
     ngOnInit(): void {
