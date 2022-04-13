@@ -1,12 +1,23 @@
-const proxyTargetConfig = {
+const legacyTargetConfigs = {
     'cloud-test': 'https://cloud-test.hdw.mx',
-    dev2: 'https://dev2.cloud.hdw.mx',
-    dev3: 'https://dev3.cloud.hdw.mx',
-    local: 'http://localhost:8000',
     prod: 'https://nxvms.com',
     stage: 'https://stage.nxvms.com/'
 };
+
+const proxyTargetConfig = {
+    dev2: 'https://dev2.cloud.hdw.mx',
+    dev3: 'https://dev3.cloud.hdw.mx',
+    local: 'http://localhost:8000',
+    ...legacyTargetConfigs
+};
+
 const target = process.env.CLOUD_TARGET || 'cloud-test';
+const rewriteLegacy = target in legacyTargetConfigs;
+const rewritePaths = {
+    '/api/cms': '/api',
+    '/api/notifications': '/api'
+};
+
 const PROXY_CONFIG = [
     {
         context: [
@@ -34,7 +45,8 @@ const PROXY_CONFIG = [
         ],
         target: proxyTargetConfig[target],
         changeOrigin: true,
-        secure: false
+        secure: false,
+        pathRewrite: rewriteLegacy ? rewritePaths : {}
     }, {
         context: [
             '/static/lang_en_US',
