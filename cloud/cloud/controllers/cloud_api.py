@@ -4,8 +4,6 @@ from functools import wraps
 import random
 import string
 import logging
-import re
-import ast
 
 import requests
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
@@ -18,8 +16,6 @@ from cloud.helpers.exceptions import (validate_response, ErrorCodes, APIRequestE
                                       kill_session, kill_tokens)
 
 logger = logging.getLogger(__name__)
-
-# See if we can break to its own package
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
@@ -303,7 +299,9 @@ def post_wrapper(url, params=None, auth=None, data=None, json=None, headers=None
     if params:
         default_params.update(params)
 
-    return cdb_logger(requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers), f'\nPOST: {url} \nQuery Parameters: {default_params} \nJson: {json} \nData: {data}', headers)
+    logger.info(f'\nPOST: {url}\nQuery Parameters: {default_params}\nJson: {json}\nData: {data}')
+
+    return requests.post(url, params=default_params, auth=auth, data=data, json=json, headers=headers)
 
 
 @basic_digest_handler()
@@ -434,10 +432,9 @@ class System(object):
     @validate_response
     @auto_refresh_token
     def bind(request, name, headers=None):
-        customization = settings.CLOUD_CONNECT['customization']
         params = {
             'name': name,
-            'customization': customization
+            'customization': settings.CUSTOMIZATION
         }
         return post_wrapper(System.get_request_url('bind'), json=params, headers=headers)
 
@@ -546,7 +543,6 @@ class Account(object):
                 'cloud_api.Account.register - making request: ' + request)
             return post_wrapper(request, json=params, headers=headers)
 
-        customization = settings.CLOUD_CONNECT['customization']
         password_ha1, password_ha1_sha256 = Account.encode_password(
             email, password)
 
@@ -555,7 +551,7 @@ class Account(object):
             'passwordHa1': password_ha1,
             'passwordHa1Sha256': password_ha1_sha256,
             'fullName': ' '.join((first_name, last_name)),
-            'customization': customization
+            'customization': settings.CUSTOMIZATION
         }
 
         if not code:
@@ -629,7 +625,8 @@ class Account(object):
     @lower_case_email
     def reset_password(email, ip):
         params = {
-            'email': email
+            'email': email,
+            'customization': settings.CUSTOMIZATION
         }
         headers = {
             'X-Forwarded-For': ip

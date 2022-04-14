@@ -80,7 +80,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         this.licenses = Object.keys(response)
             .filter(licence => licence !== '') // don't calculate invalid licences
             .map(licence => {
-                const title = this.CONFIG.licenseTypes.find((item) =>
+                const title = this.CONFIG.licenseTypes.find(item =>
                     item.name === licence
                 ).title || licence.charAt(0).toUpperCase() + licence.slice(1);
                 return {

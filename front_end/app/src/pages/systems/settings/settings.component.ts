@@ -479,20 +479,19 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.system.info.systemName || this.system.info.name;
                     });
 
-                            if (this.systemInfoSubscription) {
-                                this.systemInfoSubscription.unsubscribe();
-                            }
-                            this.systemInfoSubscription =
-                                this.system.infoSubject
-                                    .subscribe(() => {
-                                        this.systemReady();
-                                        this.updateAlert();
-                                        this.updateMenu(this.system);
-                                    });
-                        });
+                    if (this.systemInfoSubscription) {
+                        this.systemInfoSubscription.unsubscribe();
                     }
-                }
-            });
+                    this.systemInfoSubscription =
+                        this.system.infoSubject
+                            .subscribe(() => {
+                                this.systemReady();
+                                this.updateAlert();
+                                this.updateMenu();
+                            });
+                });
+            }
+        });
     }
 
     updateAlert() {

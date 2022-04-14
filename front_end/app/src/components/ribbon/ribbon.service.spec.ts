@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject } from 'rxjs';
 
@@ -50,6 +50,7 @@ describe('NxRibbonService', () => {
                 systemOffline: () => 'System is offline. Some settings may not be available.',
                 systemsMerging: () => 'This system is currently involved in a merge operation.'
             };
+        }));
 
     it('show() should emit data to contextSubject', () => {
         const actions: RibbonActionInput[] = [{

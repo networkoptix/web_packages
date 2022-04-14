@@ -18,7 +18,7 @@ import { NxPageService } from '@services/page.service';
 // import { NxProcessService, Process } from '@services/process.service';
 import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service';
+import { htmlToEntity } from '@utils/general';
 
 interface SystemTile extends NxSystemWithUserInfo {
     readonly type: 'system';
@@ -130,7 +130,7 @@ export class NxSystemGroupsListComponent implements OnInit, OnDestroy {
                 this.systems = systems.map(system => ({
                     ...system,
                     type: 'system',
-                    name: NxUtilsService.htmlToEntity(system.name)
+                    name: htmlToEntity(system.name)
                     // avoid html being interpreted
                 }) as SystemTile);
 

@@ -1,7 +1,8 @@
 export interface AuthorizeParams {
     response_type: string,
     client_id: string,
-    redirect_url: string,
+    redirect_uri?: string,
+    redirect_url?: string,
     client_type?: ClientType,
     view_type?: 'desktop' | 'mobile' | 'web',
     grant_type?: string,
