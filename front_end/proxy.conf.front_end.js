@@ -29,6 +29,8 @@ const PROXY_CONFIG = [
             '/static/503.html',
             '/static/customization',
             '/static/lang_ru_RU',
+            '/static/lang_ja_JP',
+            '/static/lang_ge_DE',
             '/swagger-ui'
         ],
         target: proxyTargetConfig[target],

@@ -16,6 +16,7 @@ export interface LanguageI18NStaticTypes {
     Privacy:               any;
     Support:               any;
     Terms:                 any;
+    "Developers Console":  any;
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
@@ -1247,6 +1248,7 @@ const typeMap: any = {
         { json: "Privacy", js: "Privacy", typ: "any" },
         { json: "Support", js: "Support", typ: "any" },
         { json: "Terms", js: "Terms", typ: "any" },
+        { json: "Developers Console", js: "Developers Console", typ: "any" },
         { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
