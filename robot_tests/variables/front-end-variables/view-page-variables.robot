@@ -8,6 +8,11 @@ ${camera name1}=                              good cam 1
 ${camera name2}=                              unauth cam
 ${camera name3}=                              offline cam
 ${camera name4}=                              good cam 2
+@{camera auth1}=                              admin    QAbur777$
+@{camera auth2}=                              admin    wrongPass
+@{camera auth3}=                              admin    admin
+@{camera auth4}=                              admin    QAbur777$
+
 
 #view-page web elements
 ${SERVER LIST}                                //nx-system-view-index-page//div[@class="server-list"]

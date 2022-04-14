@@ -226,15 +226,6 @@ class ServerAPI5(ServerAPI):
             return r.json()
 
     @keyword
-    def get_cameras(self, auth, serverUrl):
-        with requests.Session() as s:
-            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            r = s.get(f'{serverUrl}/rest/v1/devices', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
-            #s.delete(f"{serverUrl}/rest/v1/login/sessions")
-            return r.json()
-
-    @keyword
     def change_server_port_via_api(self, auth, serverUrl, newPort, serverId):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
@@ -301,10 +292,45 @@ class ServerAPI5(ServerAPI):
         return system_settings["cloudAccountName"]
 
     @keyword
+    def add_camera(self, serverUrl, camuser, campassword, uniqueId, url, local_auth, manufacturer=None):
+        with requests.Session() as s:
+            credentials = {"username": local_auth[0], "password": local_auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            for i in range(len(url)):
+                if url[i].isdigit():
+                    cam_ip = url[i:]
+                    break
+            time.sleep(1)
+            body = {"ip": cam_ip, "credentials":{"user": camuser, "password": campassword}, "mode": "addFoundDevices"}
+            r = s.post(f'{serverUrl}/rest/v1/devices/*/searches', json=body, verify=False)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices/*/searches status code is {r.status_code}"
+    
+    @keyword
     def get_cameras(self, auth, serverUrl):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
-            s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
-            r = s.get(f'{serverUrl}/ec2/getCamerasEx', auth=HTTPDigestAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            time.sleep(1)
+            r = s.get(f'{serverUrl}/rest/v1/devices', verify=False)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
             return r.json()
+    
+    @keyword
+    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            time.sleep(1)
+            body = {f"{attribute}": value, "credentials":{"user": camera_auth[0], "password": camera_auth[1]}}
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=body, verify=False)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
+
+    @keyword
+    def activate_license(self, auth, serverUrl, license):
+        self._login(serverUrl, auth[0], auth[1])
+        time.sleep(1)
+        body = {"licenseKey": str(license)}
+        r = requests.post(f'{serverUrl}/api/activateLicense', json=body, auth=self._auth, verify=False)
+        assert r.status_code == 200, f"Endpoint /api/activateLicense status code is {r.status_code}"
+        return r.json()

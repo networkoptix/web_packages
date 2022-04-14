@@ -303,7 +303,7 @@ class ServerAPI:
         r = requests.get(f'{serverUrl}/api/systemSettings?systemName={newName}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
 
     @keyword
-    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value):
+    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth):
         body = {
             "cameraId": cameraId,
             f"{attribute}": value
@@ -519,3 +519,24 @@ class ServerAPI:
                 return obj['value']
         else:
             return 'Cannot find cloudAccountName key'
+    
+    @keyword
+    def add_camera(self, serverUrl, camuser, campassword, uniqueId, url, local_auth, manufacturer=None):
+        body = {
+            "user": camuser,
+            "password": campassword,
+            "cameras":
+                [
+                    {
+                        "uniqueId": uniqueId,
+                        "url": url,
+                        "manufacturer": manufacturer
+                    }
+                ]
+        }
+        logger.trace(body)
+        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth(local_auth[0], local_auth[1]),
+                          headers={'Content-Type': 'application/json'}, json=body, verify=False)
+        logger.trace(r.status_code)
+        logger.trace(r.text)
+        assert r.status_code == 200

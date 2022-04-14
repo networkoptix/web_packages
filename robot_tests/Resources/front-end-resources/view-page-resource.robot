@@ -8,21 +8,34 @@ View Page Suite Setup
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}
     ${system}     Create Base System    View_Page-${random}    owner=${owner}
     Set Suite Variable    ${system}
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    http://192.168.0.27     manufacturer=Sony    #SNC-XM636
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    http://192.168.0.201    manufacturer=Sony    #SNC-CH120
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    http://192.168.0.208    manufacturer=Sony    #SNC-DH120T
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    00-16-6C-7F-65-67    http://192.168.0.206     manufacturer=Hanwha_Sunapi    #SND-6084
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    00-16-6C-7F-65-67    http://192.168.0.206    ${system}[local auth]    manufacturer=Hanwha_Sunapi    #SND-6084
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    http://192.168.0.208    ${system}[local auth]    manufacturer=Sony    #SNC-DH120T
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    http://192.168.0.201    ${system}[local auth]    manufacturer=Sony    #SNC-CH120
+    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    http://192.168.0.27     ${system}[local auth]    manufacturer=Sony    #SNC-XM636
+    
     Sleep    50
     ${camera id1}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SND-6084    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id1}    cameraName    ${camera name1}
     ${camera id2}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-DH120T    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    cameraName    ${camera name2}
-    ${data}=   evaluate    json.loads('''[{"name": "credentials", "value": "test:test", "resourceId": "${CAMERA ID2}"}]''')
-    Set All Camera Add Params    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
     ${camera id3}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-CH120    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    cameraName    ${camera name3}
     ${camera id4}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id4}    cameraName    ${camera name4}
+
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id1}    name    ${camera name1}    ${camera auth1}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id1}    model    SND-6084    ${camera auth1}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    name    ${camera name2}    ${camera auth2}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    model    SNC-DH120T    ${camera auth2}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    name    ${camera name3}    ${camera auth3}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    model    SNC-CH120    ${camera auth3}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id4}    name    ${camera name4}    ${camera auth4}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id4}    model    SNC-XM636    ${camera auth4}
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id1}    cameraName    ${camera name1}    ${camera auth1}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id2}    cameraName    ${camera name2}    ${camera auth2}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id3}    cameraName    ${camera name3}    ${camera auth3}
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id4}    cameraName    ${camera name4}    ${camera auth4}
+        ${data}=   evaluate    json.loads('''[{"name": "credentials", "value": "test:test", "resourceId": "${CAMERA ID2}"}]''')
+        Set All Camera Add Params    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
+    END
  
     FOR   ${i}    IN RANGE    1    5
          ${camera id}=    Remove String        ${camera id${i}}   {    }
@@ -31,7 +44,6 @@ View Page Suite Setup
          Set Suite Variable    ${camera URL${i}}    ${camera URL}
     END
 
-    ${custom cameras}=    Create And Add Custom Camera User Type and User
     Activate License    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    ${TRIAL LICENSE}
     Sleep    30
     Restart Docker Servers    ${system}[name]
