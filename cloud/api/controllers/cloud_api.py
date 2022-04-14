@@ -384,10 +384,9 @@ class System(object):
     @validate_response
     @auto_refresh_token
     def bind(request, name, headers=None):
-        customization = settings.CLOUD_CONNECT['customization']
         params = {
             'name': name,
-            'customization': customization
+            'customization': settings.CUSTOMIZATION
         }
         return post_wrapper(System.get_request_url('bind'), json=params, headers=headers)
 
@@ -491,7 +490,6 @@ class Account(object):
             logger.debug('cloud_api.Account.register - making request: ' + request)
             return post_wrapper(request, json=params, headers=headers)
 
-        customization = settings.CLOUD_CONNECT['customization']
         password_ha1, password_ha1_sha256 = Account.encode_password(email, password)
 
         params = {
@@ -499,7 +497,7 @@ class Account(object):
             'passwordHa1': password_ha1,
             'passwordHa1Sha256': password_ha1_sha256,
             'fullName': ' '.join((first_name, last_name)),
-            'customization': customization
+            'customization': settings.CUSTOMIZATION
         }
 
         if not code:
@@ -570,7 +568,8 @@ class Account(object):
     @lower_case_email
     def reset_password(email, ip):
         params = {
-            'email': email
+            'email': email,
+            'customization': settings.CUSTOMIZATION
         }
         headers = {
             'X-Forwarded-For': ip

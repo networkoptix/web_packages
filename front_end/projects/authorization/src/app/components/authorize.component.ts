@@ -145,6 +145,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     activated$ = new BehaviorSubject<boolean>(false);
     fromEmail$ = new BehaviorSubject<boolean>(false);
 
+    // resend activation
+    resendActivateTimeout = 3000; // 3 seconds
+    blockResendingActivation = false;
+
     // password reset request
     confirmRequest: boolean;
     resetPasswordEmail: string;
@@ -202,7 +206,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 untilDestroyed(this),
                 catchError(() => of(false)),
                 map((servers: any) => {
-                    return servers && servers.some(({ remoteAddresses }) => remoteAddresses
+                    return servers?.some(({ remoteAddresses }) => remoteAddresses
                         .some((address) => this.initialData.redirect_uri.includes(address))
                     );
                 }));
@@ -610,12 +614,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     reactivate = () => {
+        if (this.blockResendingActivation) {
+            return;
+        }
+        this.blockResendingActivation = true;
         return this.cloudService.reactivate(this.loginEmail)
             .then(() => {
                 this.toastService.notify(
                     this.LANG.authorize.emailSent(),
                     'success'
                 );
+            }).finally(() => {
+                setTimeout(() => {
+                    this.blockResendingActivation = false;
+                }, this.resendActivateTimeout);
             });
     }
 
