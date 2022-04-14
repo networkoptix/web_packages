@@ -5,8 +5,7 @@ import {
     HttpRequest
 } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { throwError, timer } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
+import { throwError, timer, Observable } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';

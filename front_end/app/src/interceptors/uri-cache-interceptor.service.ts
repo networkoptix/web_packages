@@ -5,9 +5,8 @@ import {
     HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import 'rxjs/add/operator/do';
 import { Observable, of } from 'rxjs';
-import { share } from 'rxjs/operators';
+import { share, tap } from 'rxjs/operators';
 
 import { NxUriCacheService } from '@services/uri-cache.service';
 
@@ -52,15 +51,17 @@ export class NxUriCachingInterceptor implements HttpInterceptor {
         // then let the request proceed and cache the response
         const requestHandle = handler
             .handle(httpRequest)
-            .pipe(share())
-            .do(stateEvent => {
-                if (stateEvent instanceof HttpResponse) {
-                    this.cacheRegistrationService.setData(
-                        httpRequest.urlWithParams,
-                        stateEvent.clone()
-                    );
-                }
-            });
+            .pipe(
+                share(),
+                tap(stateEvent => {
+                    if (stateEvent instanceof HttpResponse) {
+                        this.cacheRegistrationService.setData(
+                            httpRequest.urlWithParams,
+                            stateEvent.clone()
+                        );
+                    }
+                }),
+            );
 
         // Meanwhile cache the request Observable to handle parallel request
         this.cacheRegistrationService.setData(httpRequest.urlWithParams, requestHandle);
