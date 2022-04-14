@@ -130,7 +130,8 @@
             "message": "Voer een code van uw authenticatie-app in om te bevestigen dat u het echt bent die probeert {suffix}",
             "newPass": "stel een nieuw wachtwoord in",
             "login": "inloggen"
-        }
+        },
+        "emailSent": "Email verzonden!"
     },
     "cameraFilters": {
         "H265": "H.265 Cameras",

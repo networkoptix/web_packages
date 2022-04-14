@@ -130,7 +130,8 @@
             "message": "Geben Sie einen Code aus Ihrer Authentifizierungs-App ein, um zu bestätigen, dass Sie es wirklich sind, der versucht {suffix}",
             "newPass": "ein neues Passwort festlegen",
             "login": "anmelden"
-        }
+        },
+        "emailSent": "E-Mail gesendet!"
     },
     "cameraFilters": {
         "H265": "H.265-Kameras",

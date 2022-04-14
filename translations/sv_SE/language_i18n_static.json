@@ -130,7 +130,8 @@
             "message": "Ange en kod från din autentiseringsapp för att bekräfta att det verkligen är du som försöker {suffix}",
             "newPass": "ange nytt lösenord",
             "login": "logga in"
-        }
+        },
+        "emailSent": "Epost skickad!"
     },
     "cameraFilters": {
         "H265": "H.265 kameror",
