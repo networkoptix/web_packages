@@ -202,6 +202,8 @@
     "Failed to detach server from system.": "Det gick inte att ta bort servern från systemet.",
     "Failed to disconnect system from %CLOUD_NAME%.": "Det gick inte att koppla bort systemet från %CLOUD_NAME%.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Det gick inte att slå samman {primarySystem} och {secondarySystem}.",
+    "Failed to reset server.": "Det gick inte att återställa servern.",
+    "Failed to restart server.": "Det gick inte att starta om servern.",
     "Failed to the check current system's password.": "Det gick inte att kontrollera det aktuella systemets lösenord.",
     "Fetching Results...": "Hämtar resultat...",
     "Fill in all required fields": "Var god fyll i obligatoriska fält",

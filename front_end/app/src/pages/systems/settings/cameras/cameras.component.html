@@ -1,9 +1,8 @@
 <nx-pre-loader *ngIf="!system?.show404 && showPreloader && !system?.userManager?.permissions?.editCameras"></nx-pre-loader>
-
 <div *ngIf="system && !system.show404 && system.userManager.permissions.editCameras" class="row auth-visible">
     <nx-page-placeholder
             class="placeholder-section"
-            *ngIf="(!system.isAvailable || !selectedCamera || !system.isOnline || noCameras) && !showPreloader; else cameraContent"
+            *ngIf="(!system.isAvailable || !selectedCamera || !system.isOnline || noCameras); else cameraContent"
             [type]="!system.isOnline || !system.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'" >
     </nx-page-placeholder>
     <ng-template #cameraContent>

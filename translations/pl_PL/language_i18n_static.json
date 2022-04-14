@@ -756,6 +756,10 @@
             "previewRibbon": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją.",
             "publishedRibbon": "Ta strona jest wersją dostępną publicznie."
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."
     },
@@ -930,7 +934,8 @@
             "Starter": "Starter",
             "IO Module": "Moduł I/O",
             "Bridge": "Bridge",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Nieprawidłowy"
         },
         "info": {
             "type": "Rodzaj",

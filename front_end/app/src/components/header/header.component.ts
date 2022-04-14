@@ -149,6 +149,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.LANG = languageService.translations;
         this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
             this.headerService.nodes = this.menusService.cleanEmptyNodes(header.nodes);
+            this.headerService.setLocation(this.window.location.pathname);
         });
         // Updates windowWidth$ behavior subject on window resize
         this.resizeSubscription = fromEvent(this.window, 'resize').pipe(
@@ -256,7 +257,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
 
         if (!environment.production) {
-            this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
+            this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}`;
         }
         this.createUrl = `${this.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
     }

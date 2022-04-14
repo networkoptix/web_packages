@@ -7,8 +7,12 @@ Change Password Form Validation
     Sleep    .3    #added to make sure the page is loaded fully
     Input Text    ${CURRENT PASSWORD INPUT}    ${old password}
     Input Text    ${NEW PASSWORD INPUT}    ${new password}
-    Run Keyword Unless    '${new password}' == '${EMPTY}'    Check Password Badge    ${new password}    ${CHANGE PASSWORD BUTTON}
-    Run Keyword Unless  '${old password}' == '${EMPTY}' and '${new password}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
+    IF    '${new password}' != '${EMPTY}'
+        Check Password Badge    ${new password}    ${CHANGE PASSWORD BUTTON}
+    END
+    IF    '${old password}' != '${EMPTY}' or '${new password}' != '${EMPTY}'
+        Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
+    END
     IF    '${new password}' == '${BASE PASSWORD}'
         Click Button    ${CHANGE PASSWORD BUTTON}
     ELSE
@@ -46,17 +50,23 @@ Test Passwords Invalid
     ...    ${NEW PASSWORD INPUT}
     Input Text    ${CURRENT PASSWORD INPUT}    ${old pw}
     Input Text    ${NEW PASSWORD INPUT}    ${new pw}
-    Run Keyword Unless    '${new pw}' == '${EMPTY}'    Check Password Badge    ${new pw}    ${CHANGE PASSWORD BUTTON}
-    Run Keyword Unless  '${old pw}' == '${EMPTY}' and '${new pw}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
+    IF    '${new pw}' != '${EMPTY}'
+        Check Password Badge    ${new pw}    ${CHANGE PASSWORD BUTTON}
+    END
+    IF    '${old pw}' != '${EMPTY}' or '${new pw}' != '${EMPTY}'
+        Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
+    END
     IF    '${new pw}' == '${BASE PASSWORD}'
         Click Button    ${CHANGE PASSWORD BUTTON}
     ELSE
         Click Element    ${PASSWORD HEADLINE}
     END
-    Run Keyword Unless    "${old pw}" == "${BASE PASSWORD}" or "${old pw}" == "${7char password}"
-    ...    Check Old Password Outline
-    Run Keyword Unless    '''${new pw}''' == "${BASE PASSWORD}"    
-    ...    Check New Password Outline and Error Message    ${new pw}    ${CHANGE PASSWORD BUTTON}    ${NEW PASSWORD INPUT}     newPassword
+    IF    "${old pw}" != "${BASE PASSWORD}" and "${old pw}" != "${7char password}"
+        Check Old Password Outline
+    END
+    IF    "${new pw}" != "${BASE PASSWORD}" 
+        Check New Password Outline and Error Message    ${new pw}    ${CHANGE PASSWORD BUTTON}    ${NEW PASSWORD INPUT}     newPassword
+    END
     Run Keyword If    "${old pw}" == "${7char password}"    Check Old Password Alert
     ${status} =   Run Keyword and Return Status    Should Contain Any    ${TEST NAME}    Good    Fair
     Run Keyword If    ${status}    Wait Until Element is Not Visible    ${CHANGE PASSWORD BUTTON}

@@ -109,7 +109,9 @@ Force Tags        merge
 
     # One of compatible systems is chosen by default
     ${sys 2 shown}=   Run keyword and return status    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]    timeout=30
-    Run Keyword Unless    ${sys 2 shown}    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 3}[name]")]
+    IF    ${sys 2 shown} == ${False}
+        Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 3}[name]")]
+    END
 
     Click Button    ${MERGE SYSTEM DROPDOWN}
     Validate Check Merge Dialog
@@ -1446,7 +1448,9 @@ Force Tags        merge
     ${error p1}=   Replace String    ${error p1}    %SYSTEM2%    ${system 2}[name]
     ${error p2}=   Replace String    ${FAILED TO MERGE SYSTEM IS OFFLINE TEXT}    %SYSTEM%    ${system 2}[name]
     ${offline status}=   Run Keyword And Return Status    Should be equal as strings    ${txt}    ${error p1}\n${error p2}
-    Run Keyword Unless    $offline_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    IF    ${offline status} == ${False}
+        Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    END
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1484,7 +1488,9 @@ Force Tags        merge
     ${error unreach}=   Replace String    ${FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT}    %SYSTEM%    ${system 1}[name]
     ${offline status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error offline}
     ${unreach status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error unreach}\n${FAILED TO MERGE TRY AGAIN TEXT}
-    Run Keyword Unless    $offline_status or $unreach_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    IF    ${offline_status} == ${False} and ${unreach_status} == ${False}
+        Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    END
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}
@@ -1521,7 +1527,9 @@ Force Tags        merge
     ${error unreach}=   Replace String    ${FAILED TO MERGE SYSTEM IS UNREACHABLE TEXT}    %SYSTEM%    ${system 2}[name]
     ${offline status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error offline}
     ${unreach status}=   Run Keyword and return status    Should be equal as strings    ${txt}    ${error p1}\n${error unreach}\n${FAILED TO MERGE TRY AGAIN TEXT}
-    Run Keyword Unless    $offline_status or $unreach_status    Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    IF    ${offline_status} == ${False} and ${unreach_status} == ${False}
+        Should be equal as strings    ${txt}    ${error p1}\n${MERGE FAILED UNKNOWN ERROR TEXT}
+    END
 
     Log    Step 3
     Click Button    ${MERGE FAILED OK BUTTON}

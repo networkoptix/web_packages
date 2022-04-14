@@ -85,6 +85,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     systemName: string;
     show2faRequired = false;
 
+    get showPlaceholder(): boolean {
+        return this.systemNoAccess ||
+            this.show2faRequired ||
+            this.system && (this.secondaryMerge || this.system.show404);
+    }
+
     private cancelPrevious$ = new Subject();
     private connection$ = new Subject();
 
@@ -473,19 +479,20 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.system.info.systemName || this.system.info.name;
                     });
 
-                    if (this.systemInfoSubscription) {
-                        this.systemInfoSubscription.unsubscribe();
-                    }
-                    this.systemInfoSubscription = this.system.infoSubject
-                        .pipe(distinctUntilChanged())
-                        .subscribe(() => {
-                            this.systemReady();
-                            this.updateAlert();
-                            this.updateMenu();
+                            if (this.systemInfoSubscription) {
+                                this.systemInfoSubscription.unsubscribe();
+                            }
+                            this.systemInfoSubscription =
+                                this.system.infoSubject
+                                    .subscribe(() => {
+                                        this.systemReady();
+                                        this.updateAlert();
+                                        this.updateMenu(this.system);
+                                    });
                         });
-                });
-            }
-        });
+                    }
+                }
+            });
     }
 
     updateAlert() {

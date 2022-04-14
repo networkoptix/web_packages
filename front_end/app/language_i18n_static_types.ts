@@ -16,6 +16,7 @@ export interface LanguageI18NStaticTypes {
     Privacy:               any;
     Support:               any;
     Terms:                 any;
+    "Developers Console":  any;
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
@@ -676,6 +677,7 @@ export interface LicenseTypeTitles {
     "IO Module":      any;
     Bridge:           any;
     NVR:              any;
+    Invalid:          any;
 }
 
 export interface Messages {
@@ -809,11 +811,12 @@ export interface Registration {
 }
 
 export interface Ribbon {
-    beingMerged:    BeingMerged;
-    finishingMerge: any;
-    integration:    RibbonIntegration;
-    systemOffline:  any;
-    systemsMerging: any;
+    beingMerged:         BeingMerged;
+    finishingMerge:      any;
+    integration:         RibbonIntegration;
+    newVersionAvailable: NewVersionAvailable;
+    systemOffline:       any;
+    systemsMerging:      any;
 }
 
 export interface BeingMerged {
@@ -827,6 +830,11 @@ export interface RibbonIntegration {
     backToEditText:  any;
     previewRibbon:   any;
     publishedRibbon: any;
+}
+
+export interface NewVersionAvailable {
+    notification:  any;
+    installButton: any;
 }
 
 export interface Search {
@@ -1258,6 +1266,7 @@ const typeMap: any = {
         { json: "Privacy", js: "Privacy", typ: "any" },
         { json: "Support", js: "Support", typ: "any" },
         { json: "Terms", js: "Terms", typ: "any" },
+        { json: "Developers Console", js: "Developers Console", typ: "any" },
         { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
@@ -1861,6 +1870,7 @@ const typeMap: any = {
         { json: "IO Module", js: "IO Module", typ: "any" },
         { json: "Bridge", js: "Bridge", typ: "any" },
         { json: "NVR", js: "NVR", typ: "any" },
+        { json: "Invalid", js: "Invalid", typ: "any" },
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "any" },
@@ -1980,6 +1990,7 @@ const typeMap: any = {
         { json: "beingMerged", js: "beingMerged", typ: r("BeingMerged") },
         { json: "finishingMerge", js: "finishingMerge", typ: "any" },
         { json: "integration", js: "integration", typ: r("RibbonIntegration") },
+        { json: "newVersionAvailable", js: "newVersionAvailable", typ: r("NewVersionAvailable") },
         { json: "systemOffline", js: "systemOffline", typ: "any" },
         { json: "systemsMerging", js: "systemsMerging", typ: "any" },
     ], false),
@@ -1993,6 +2004,10 @@ const typeMap: any = {
         { json: "backToEditText", js: "backToEditText", typ: "any" },
         { json: "previewRibbon", js: "previewRibbon", typ: "any" },
         { json: "publishedRibbon", js: "publishedRibbon", typ: "any" },
+    ], false),
+    "NewVersionAvailable": o([
+        { json: "notification", js: "notification", typ: "any" },
+        { json: "installButton", js: "installButton", typ: "any" },
     ], false),
     "Search": o([
         { json: "Any", js: "Any", typ: "any" },

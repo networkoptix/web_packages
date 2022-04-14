@@ -20,3 +20,6 @@ pabot_results
 *check.robot
 *.csv
 server-connect.robot
+robot.sh
+pabot.sh
+/test_results

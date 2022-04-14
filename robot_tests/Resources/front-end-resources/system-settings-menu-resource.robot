@@ -12,7 +12,9 @@ System Settings Menu Test Setup
 
 System Settings Menu Test Restart
     ${logged in}=   Run keyword and return status    Wait until element is visible    ${ACCOUNT DROPDOWN}
-    Run Keyword Unless    ${logged in}    Log in to system    ${system 1}    ${system 1}[owner]
+    IF    ${logged in} == ${False}
+        Log in to system    ${system 1}    ${system 1}[owner]
+    END
 
 System Settings Menu Suite Setup
     ${rand}=   Generate Random String

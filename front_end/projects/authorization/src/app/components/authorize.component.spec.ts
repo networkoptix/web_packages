@@ -275,7 +275,7 @@ describe('NxAuthorizeComponent', () => {
             grant_type: 'password',
             response_type: 'code',
             scope: 'anythingElse',
-            redirect_url: ''
+            redirect_uri: ''
         });
     });
 

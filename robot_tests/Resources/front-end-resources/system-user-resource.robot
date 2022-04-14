@@ -53,7 +53,9 @@ Users Test Tear Down
     Run Keyword If Test Failed    Reset
     ${status}=    Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword And Return Status    validate log out
     ...     ELSE    Run Keyword And Return Status    validate log out web admin
-    Run keyword unless    ${status}    Log Out
+    IF    ${status} == ${False}
+        Log Out
+    END
 
 Users Teardown
     # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
@@ -71,7 +73,9 @@ Remove Temporary Users
     [Arguments]    ${sysID}=${AUTO TESTS SYSTEM ID}    ${sysIP}=${AUTO SYS IP}
     FOR    ${user}    IN     @{TMP USERS}
         ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${sysID}
-        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${sysIP}    ${user id}
+        IF    '${user id}'!='None'
+            Remove User    ${auth}    ${sysIP}    ${user id}
+        END
     END
     # Open Browser and go to URL    ${url}
     # Log in to Auto Tests System    ${email}
@@ -142,7 +146,16 @@ Verify Changed Info Via API
     @{users} =    Get Users     ${server auth}    ${ip}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
-        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
+        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
+        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
+        IF      ${isCloud key}
+            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
+        ELSE IF    ${type key}
+            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
+        ELSE
+            ${local state} =    Set Variable    ${True}
+        END
+        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
     END
     FOR    ${user}    IN    @{locals}
         Keep in Dictionary    ${user}    name    fullName    permissions    email
@@ -178,15 +191,19 @@ Verify In Local Users UI
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${server 1['cloud users']}[cloudAdmin]' or '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible
-	    ...    ${DISABLE USER SWITCH}/..
-	    ...    ${LOCAL USER DELETE BUTTON}
-	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        IF    '${email}' != '${server 1['cloud users']}[cloudAdmin]' and '${role names}[${user}]' != '${ADMIN TEXT}'
+            Wait Until Elements Are Visible
+            ...    ${DISABLE USER SWITCH}/..
+	        ...    ${LOCAL USER DELETE BUTTON}
+	        ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
+        END
         IF    '${status}' == '${TRUE}'
             Wait Until Element Contains    ${EDITABLE TITLE}    Local+${user}
         ELSE
             Wait Until Element Contains    ${LOCAL USER LOGIN}    Local+${user}
         END
+        Capture Page Screenshot
+        Capture Element Screenshot    ${LOCAL USER NAME}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
         log    ${email}
@@ -313,7 +330,16 @@ Reset Local Users
     @{users} =    Get Users     ${auth}    ${server}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
-        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
+        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
+        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
+        IF      ${isCloud key}
+            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
+        ELSE IF    ${type key}
+            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
+        ELSE
+            ${local state} =    Set Variable    ${True}
+        END
+        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
     END
     ${count} =    Get Length    ${locals}
     ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    5
@@ -348,12 +374,14 @@ Reset Local Users API
         ...    '${variable}' == 'liveviewer'    liveViewer
         ...    '${variable}' == 'advancedviewer'    advancedViewer
         ...    ${variable}
-        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}
+        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    userId=${user}[id]    isCloud=${False}   patch=${True}
     END
 
 Check Special Hints
     FOR    ${type}    IN    @{USER TYPE LIST}
-        Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
+        IF    "${type}"!="${OWNER TEXT}"
+            Check Special Hint    ${type}
+        END
     END
 
 Get Custom Permissions
@@ -489,7 +517,16 @@ Get Local Users
     @{users} =    Get Users     ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
-        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}
+        ${isCloud key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    isCloud
+        ${type key} =    Run Keyword and Return Status   Dictionary Should Contain Key    ${node}    type
+        IF      ${isCloud key}
+            ${local state} =    Set Variable If    ${node}[isCloud] == ${False}    ${True}    ${False}
+        ELSE IF    ${type key}
+            ${local state} =    Set Variable If    '${node}[type]' == 'cloud'    ${False}    ${True}
+        ELSE
+            ${local state} =    Set Variable    ${True}
+        END
+        Run Keyword If    ${local state} and ${name state}    Append To List    ${locals}    ${node}
     END
     [Return]    ${locals}
 
@@ -497,7 +534,9 @@ Check User Full Name is None
     [Arguments]    ${name}    ${check info}
     FOR    ${user}    IN    @{check info}
         ${full name} =    Set Variable If    '${name}' in '${user}[name]'    ${user}[fullName]
-        Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
+        IF    '${full name}' != 'None'
+            Exit For Loop
+        END
     END
     Should Be Equal    ${full name}    ${None}
 
@@ -506,7 +545,9 @@ Check User Email is None
     [Arguments]    ${name}    ${check info}
     FOR    ${user}    IN    @{check info}
         ${email field} =    Set Variable If    'name' in '${user}[name]'    ${user}[email]
-        Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
+        IF    '${email field}' != 'None'
+            Exit For Loop
+        END
     END
     Should Be Equal    ${email field}    ${None}
 

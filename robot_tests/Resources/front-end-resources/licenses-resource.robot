@@ -113,17 +113,20 @@ Validate Licenses Page
 Activate Key
     [Arguments]    ${key}    ${success}=${True}    ${server name}=${EMPTY}    ${error text}=${EMPTY}
     Input Text    ${LICENSE KEY INPUT}    ${key}
-    Run Keyword Unless    '${server name}' == '${EMPTY}'    Run Keywords
-    ...    Click Button    ${BIND TO SERVER DROPDOWN}
-    ...    AND    Sleep    2
-    ...    AND    Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
+    IF    '${server name}' != '${EMPTY}'
+        Click Button    ${BIND TO SERVER DROPDOWN}
+        Sleep    2
+        Click Link    ${BIND TO SERVER DROPDOWN}/following-sibling::div//a[span[contains(text(), "${server name}")]]
+    END
     Sleep    2    # To avoid clicking the button before key is completely input
     Click Button    ${ACTIVATE BUTTON}
     Run Keyword If    ${success}    Run Keywords
         ...    Check For Alert    ${LICENSE IS ACTIVATED TEXT}
         ...    AND    Verify license is listed first    ${key}
         ...    AND    Wait Until Element Is Not Visible    ${NEW LICENSE FORM}//span[contains(@class, "input-error")]
-    Run Keyword Unless    '${error text}' == '${EMPTY}'   Validate Input Error     ${error text}
+    IF    '${error text}' != '${EMPTY}'
+        Validate Input Error     ${error text}
+    END
 
 Activate Trial
     Wait Until Elements Are Visible    ${ACTIVATE TRIAL TEXT}    ${ACTIVATE TRIAL BUTTON}
@@ -209,13 +212,17 @@ Validate License Info
     FOR    ${p}    IN    @{key params}
         ${style}=   Get Element Attribute    ${p}    style
         ${visible}=   Run Keyword And Return Status    Should Not Contain    ${style}    display: none
-        Run Keyword Unless    ${visible}    Continue For Loop
+        IF    ${visible} == ${False}
+            Continue For Loop
+        END
 
         ${title}=   Get Element Attribute    ${p}    title
         @{kv}=  Split String    ${title}    separator=-
         ${k}=   Set Variable    ${kv}[0]
         ${v}=   Set Variable    ${kv}[1]
-        Run Keyword Unless    $k in $supp_params   Should Be Equal As Strings    ${v}    ${key info}[${k}]
+        IF    $k not in ${supp_params}
+            Should Be Equal As Strings    ${v}    ${key info}[${k}]
+        END
     END
 
     ${key status}=   Get Key Status    ${key}

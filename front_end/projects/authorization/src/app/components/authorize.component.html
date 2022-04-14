@@ -8,7 +8,7 @@
             *ngSwitchCase="AuthorizeState.notSecure"
             [viewType]="viewType"
             [loginEmail]="loginEmail"
-            [redirectUrl]="initialData.redirect_url"
+            [redirectUrl]="initialData.redirect_uri"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-not-secure-component>
         <nx-authorize-email-component
@@ -135,3 +135,4 @@
     </div>
     <!-- end test component - REMOVE AFTER TESTING -->
 </div>
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

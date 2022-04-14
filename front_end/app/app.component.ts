@@ -14,7 +14,6 @@ import {
     GuardsCheckStart,
     Router,
 } from '@angular/router';
-import { SwUpdate } from '@angular/service-worker';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import type { DeviceInfo } from 'ngx-device-detector';
@@ -98,7 +97,6 @@ export class AppComponent {
     constructor(
         bootstrapProvider: NxBootstrapProvider,
         configService: NxConfigService,
-        updates: SwUpdate,
         public appStateService: NxAppStateService,
         public systemGuard: SystemGuard,
         private cookieService: CookieService,
@@ -285,11 +283,6 @@ export class AppComponent {
                     (event.target as Window).innerWidth
                 );
             });
-        updates.available.subscribe(evt => {
-            console.log(`Downloading new app version: ${evt.available.hash}`);
-            updates.activateUpdate().then(() => { this.window.location.reload(); });
-        });
-        updates.checkForUpdate().catch(() => {});
     }
 
     headerResize(size: { width: number, height: number }) {

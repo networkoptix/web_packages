@@ -18,7 +18,9 @@ Log in to Auto Tests System
     Log In    ${email}    ${password}    None
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    IF    '${email}' != '${EMAIL OWNER}' and '${email}' != '${EMAIL ADMIN}'
+        Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    END
 Check For Alert2
     [arguments]    ${alert text}
     Wait Until Element Is Visible    ${ALERT}

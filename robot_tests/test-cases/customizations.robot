@@ -18,7 +18,9 @@ Force Tags        Threaded    Customizations
     
 2. Verify Default language for Cloud Portal
     [Tags]    C43009
-    Run Keyword Unless     '${LANGUAGE}' != 'en_US'    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${DEFAULT LANGUAGE}']
+    IF    '${LANGUAGE}' == 'en_US'
+        Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${DEFAULT LANGUAGE}']
+    END
     
 3. Verify About Product Name
     [Tags]    C43010

@@ -90,7 +90,7 @@ export class NxOAuthRedirectComponent implements OnInit {
             queryParams: {
                 client_id: client_id || this.deviceService.isMobile ? 'mobile' : 'desktop',
                 client_type: client_type || 'loginSystem',
-                redirect_url: '/redirect-oauth',
+                redirect_uri: '/redirect-oauth',
                 view_type: view_type || 'desktop',
                 response_type: 'code'
             }

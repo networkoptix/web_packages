@@ -20,10 +20,14 @@ Check Customizations
         ...    //div[@class="mainContainer"]
         ...    //a[@role="button" and contains(@href, "register")]
         ...    //span[contains(@class, "login")]/..
-        Run Keyword Unless   ${status}    Append To List    ${open portal failed}    ${host}
+        IF    ${status} == ${False}
+            Append To List    ${open portal failed}    ${host}
+        END
 
         ${status}=   Run Keyword and return status    API Log In     ${email customizations}    ${password}    env=https://${host}
-        Run Keyword Unless   ${status}    Append To List    ${log in failed}    ${host}
+        IF    ${status} == ${False}
+            Append To List    ${log in failed}    ${host}
+        END
 
     END
     Run Keyword If    ${log in failed}    Fail    Fail to log in: ${log in failed}

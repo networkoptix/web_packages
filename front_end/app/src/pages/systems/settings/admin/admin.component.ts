@@ -328,6 +328,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemsService.forceUpdateSystems().toPromise()
                     .catch(console.error);
             } else {
+                this.systemsService.mergingSystems.add(this.system.id);
+                this.systemsService.checkMerge(this.system);
                 this.ribbonService.hide();
             }
         }

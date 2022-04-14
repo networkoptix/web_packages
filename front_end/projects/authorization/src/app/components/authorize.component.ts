@@ -88,6 +88,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     activated$ = new BehaviorSubject<boolean>(false);
     fromEmail$ = new BehaviorSubject<boolean>(false);
 
+    // resend activation
+    resendActivateTimeout = 3000; // 3 seconds
+    blockResendingActivation = false;
+
     // password reset request
     confirmRequest: boolean;
     resetPasswordEmail: string;
@@ -145,8 +149,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 untilDestroyed(this),
                 catchError(() => of(false)),
                 map((servers: any) => {
-                    return servers.some(({ remoteAddresses }) => remoteAddresses
-                        .some(address => this.initialData.redirect_url.includes(address))
+                    return servers?.some(({ remoteAddresses }) => remoteAddresses
+                        .some((address) => this.initialData.redirect_uri.includes(address))
                     );
                 }));
     }
@@ -190,11 +194,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
             if ([ClientType.loginCloud, ClientType.create].includes(this.clientType)) {
                 this.initialData.client_id = 'cloud';
-                this.initialData.redirect_url ||= '';
+                this.initialData.redirect_uri ||= '';
                 this.initialData.response_type = 'code';
             }
 
-            const { access_token, access_code, code, email, redirect_url } = this.initialData;
+            // Add backwards support for redirect_url. If redirect_uri exists it should take priority.
+            this.initialData.redirect_uri ||= this.initialData.redirect_url || '';
+
+            const { access_token, access_code, code, email, redirect_uri } = this.initialData;
             const skipTo2FaClientTypes = [
                 'renewSessionDesktop',
                 'renewSessionWeb',
@@ -204,7 +211,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             if (skipTo2FaClientTypes.includes(this.clientType) && (access_token || access_code || code)) {
                 this.loginEmail = email;
                 this.loginCode = access_token || access_code || code;
-                this.redirectLink = redirect_url;
+                this.redirectLink = redirect_uri;
                 this.currentState = AuthorizeState.auth;
             } else if (this.action === 'restore_password') {
                 this.currentState = AuthorizeState.reset;
@@ -224,7 +231,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else {
                 const { scope } = this.initialData;
                 let verifiedCheck = of(true);
-                if (scope && !this.initialData.redirect_url.includes(this.window.location.origin)) {
+                if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
                     const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
                     if (findId?.groups.systemId) {
                         verifiedCheck = this.verifyRedirectUrl(findId.groups.systemId);
@@ -299,7 +306,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 });
             }
         } else if (this.clientType === 'setupWizard') {
-            this.initialData.redirect_url = link;
+            this.initialData.redirect_uri = link;
             this.currentState = AuthorizeState.confirm;
         } else {
             this.redirect(link);
@@ -321,7 +328,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     initProcesses() {
-        const timeoutMs = 3000;
+        // 3 seconds was creating too many false positives
+        // 60 seconds should cover most cases unless we discover different edge cases we need to address
+        const timeoutMs = 60000;
         this.checkEmailProcess = this.processService.createProcess(
             async () => {
                 this.emailErrorCode = '';
@@ -532,7 +541,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.loginEmail,
             this.loginPassword,
             this.initialData.client_id, // use for testing || 'cloud',
-            this.initialData.redirect_url, // || 'http://localhost:9000/',
+            this.initialData.redirect_uri, // || 'http://localhost:9000/',
             this.initialData.response_type, // || 'code',
             this.initialData.state,
             this.initialData.scope,
@@ -548,18 +557,26 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     };
 
     reactivate = () => {
+        if (this.blockResendingActivation) {
+            return;
+        }
+        this.blockResendingActivation = true;
         return this.cloudService.reactivate(this.loginEmail)
             .then(() => {
                 this.toastService.notify(
                     this.LANG.authorize.emailSent(),
                     'success'
                 );
+            }).finally(() => {
+                setTimeout(() => {
+                    this.blockResendingActivation = false;
+                }, this.resendActivateTimeout);
             });
     };
 
     redirect = (route?: string) => {
-        this.window.location.href = route || this.initialData.redirect_url || '/';
-    };
+        this.window.location.href = route || this.initialData.redirect_uri || '/';
+    }
 
     ngOnDestroy(): void {}
 }

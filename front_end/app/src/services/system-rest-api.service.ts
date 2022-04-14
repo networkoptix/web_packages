@@ -467,7 +467,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         const params = new URLSearchParams({
             client_type: 'loginWebadmin',
             view_type: 'web',
-            redirect_url: href,
+            redirect_uri: href,
             client_id: 'webadmin',
             response_type: 'code',
             grant_type: 'password',

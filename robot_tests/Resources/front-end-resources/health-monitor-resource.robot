@@ -60,7 +60,9 @@ Web Admin Test Setup
 Health Monitor Test Teardown
     ${status}=   Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword and Return Status    Validate Log Out
     ...    ELSE    Run Keyword and Return Status    Validate Log Out Web Admin
-    Run Keyword Unless    ${status}    Log Out
+    IF    ${status} == ${False}
+        Log Out
+    END
 
 Open New Browser On Failure
     Close Browser

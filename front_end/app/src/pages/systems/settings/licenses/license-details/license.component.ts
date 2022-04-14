@@ -107,9 +107,16 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const warning = info.expiration
             ? info.expiration < next30days.getTime()
             : false;
-        const deactivationsRemaining =
-            dynamicLicense[info.class].deactivationsAllowed -
-                (info.deactivations === '-' ? 0 : info.deactivations);
+
+        let deactivationsRemaining;
+        if (info.status === this.LANG.license.info.error()) {
+            deactivationsRemaining = 0;
+        } else {
+            deactivationsRemaining =
+                    dynamicLicense[info.class].deactivationsAllowed -
+                    (info.deactivations === '-' ? 0 : info.deactivations);
+        }
+
         const block = new InfoBlockSection(
             [
                 new InfoBlockLine(

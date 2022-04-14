@@ -341,7 +341,8 @@ class ServerAPI:
                   userId=None,
                   userRoleId=None,
                   isEnabled=True,
-                  isCloud=True
+                  isCloud=True,
+                  patch=False
                   ):
         body = {
             "email": email,

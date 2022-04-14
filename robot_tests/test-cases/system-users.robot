@@ -66,6 +66,7 @@ Force Tags        system    Threaded
     Go To    ${url}/systems/${server 2['cloud id']}
     Run Keyword If    '''${mode}'''=='''cloud'''    Log In    ${user 1}    ${password}    button=None
     ...    ELSE    Log In Web Admin    admin    ${password}
+    Reload Page
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}    65
     Disconnect from my account    ${server 2['name']}
     Log out
@@ -880,7 +881,7 @@ Force Tags        system    Threaded
 #    END
     
 26. Cloud Owner Can Change Local User Full Name
-    [Tags]    local_user    C76244    webadmin    cloud
+    [Tags]    local_user    C76244    webadmin    cloud    debug
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
     @{new locals} =    Create List
@@ -1393,7 +1394,8 @@ Force Tags        system    Threaded
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
         ...    userId=${id}    
-        ...    isCloud=${False}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=65
         Log    Step 5
         Save User    
@@ -1405,7 +1407,8 @@ Force Tags        system    Threaded
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
         ...    userId=${id}    
-        ...    isCloud=${False}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
         Log    Step 6
         Save User    
@@ -1417,7 +1420,8 @@ Force Tags        system    Threaded
         ...    Api Changed    
         ...    ${BASE PASSWORD}    
         ...    userId=${id}    
-        ...    isCloud=${False}    
+        ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="${VIEWER TEXT}"]    timeout=45
         Log    Step 7
         Save User    
@@ -1431,6 +1435,7 @@ Force Tags        system    Threaded
         ...    userId=${id}    
         ...    isCloud=${False}    
         ...    isEnabled=${False}
+        ...    patch=${True}
         Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 8
         Save User    
@@ -1443,6 +1448,7 @@ Force Tags        system    Threaded
         ...    ${BASE PASSWORD}    
         ...    userId=${id}    
         ...    isCloud=${False}
+        ...    patch=${True}
         Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
         Log    Step 9
         Remove User    ${server 1}[local auth]    https://${QA BURBANK IP}:${server 1['port']}    ${id}
@@ -1454,11 +1460,11 @@ Force Tags        system    Threaded
         ...    https://${QA BURBANK IP}:${server 1['port']}    
         ...    Local+newApiUser   
         ...    ${permissions}[advancedViewer]    
-        ...    noptixautoqa+local_advancedViewer@gmail.com    
+        ...    noptixautoqa+local_advancedViewer@gmail.com
         ...    New Api   
         ...    ${BASE PASSWORD}    
-        ...    isCloud=${False}      
-        Wait Until Elements Are Visible    
+        ...    isCloud=${False}
+        Wait Until Elements Are Visible
         ...    //span[text()="Local+newApiUser"]    
         ...    //span[text()="Local+newApiUser"]//preceding-sibling::${LOCAL USER ICON}
         ...    timeout=45   

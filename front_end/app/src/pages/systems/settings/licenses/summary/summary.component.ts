@@ -77,19 +77,21 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     setLicenses(response) {
-        this.licenses = Object.keys(response).map(licence => {
-            const title = this.CONFIG.licenseTypes.find(item =>
-                item.name === licence
-            ).title || licence.charAt(0).toUpperCase() + licence.slice(1);
-            return {
-                type: title,
-                count: response[licence].total,
-                countAvail: response[licence].available,
-                inUse: response[licence].inUse,
-                required: -1 * (
-                    response[licence].available - response[licence].inUse
-                )
-            };
-        });
+        this.licenses = Object.keys(response)
+            .filter(licence => licence !== '') // don't calculate invalid licences
+            .map(licence => {
+                const title = this.CONFIG.licenseTypes.find((item) =>
+                    item.name === licence
+                ).title || licence.charAt(0).toUpperCase() + licence.slice(1);
+                return {
+                    type: title,
+                    count: response[licence].total,
+                    countAvail: response[licence].available,
+                    inUse: response[licence].inUse,
+                    required: -1 * (
+                        response[licence].available - response[licence].inUse
+                    )
+                };
+            });
     }
 }

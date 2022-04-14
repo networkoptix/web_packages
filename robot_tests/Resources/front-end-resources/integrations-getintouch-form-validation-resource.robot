@@ -45,9 +45,10 @@ Test Get In Touch Invalid
     ...    ${INTEGRATION GET IN TOUCH NAME INPUT}
     ...    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
     Get In Touch Form Validation    ${name}    ${email}    ${subject}    ${button}     ${message}
-    # Run Keyword Unless    '''${pass}'''=='''${BASE PASSWORD}''' or '''${pass}'''=='''${symbol password}'''
     # ...    Check Password Outline    ${pass}
-    Run Keyword Unless    "${email}"=="${valid email}"    integrations-getintouch-form-validation-resource.Check Email Outline    ${email}
+    IF    "${email}" != "${valid email}"
+        Check Email Outline    ${email}
+    END
     Run Keyword If        "${name}"=="${EMPTY}"    Check Name Outline    ${name}
     Run Keyword If        "${message}"=="${EMPTY}"    Check Message Outline    ${message}
     IF    "${expected}"=="success"
@@ -93,7 +94,6 @@ Check Email Outline
     # ...    Element Should Be Visible    ${EMAIL IS REQUIRED}
     # Run Keyword If    "${email}"=="${existing email}"
     # ...    Element Should Be Visible    ${EMAIL ALREADY REGISTERED}
-    # Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}" or "${email}"=="${existing email}"
     # ...    Element Should Be Visible    ${EMAIL INVALID}
 
 Check Name Outline

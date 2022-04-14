@@ -22,7 +22,7 @@ Test Login Invalid
         Wait Until Element Is Visible    ${ACCOUNT NOT FOUND MESSAGE}
     ELSE
         Log In Email Form Validation    ${EMAIL}
-        login-form-validation-resource.Check Email Outline
+        Check Email Outline
     END
 
 Log In Email Form Validation
@@ -40,9 +40,9 @@ Log In Password Form Validation
 Outline Error
     [Arguments]    ${email}    ${pass}
     Run Keyword If    "${pass}" == "${EMPTY}"    Check Password Outline
-    Run Keyword Unless
-    ...    "${email}" == "${good email}" or "${email}" == "${good email unregistered}"
-    ...    login-form-validation-resource.Check Email Outline
+    IF    "${email}" != "${good email}" and "${email}" != "${good email unregistered}"
+        Check Email Outline
+    END
 
 Check Email Outline
     Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${ERROR COLOR}

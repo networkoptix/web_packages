@@ -756,6 +756,10 @@
             "previewRibbon": "Trang này là bản xem trước của những thay đổi mới nhất và nó không phù hợp với phiên bản có sẵn công khai.",
             "publishedRibbon": "This page is the live version that is publicly available."
         },
+        "newVersionAvailable": {
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
+        },
         "systemOffline": "Hệ thống đang ngoại tuyến. Một số cài đặt có thể không có sẵn.",
         "systemsMerging": "Hệ thống này hiện đang tham gia vào một hoạt động hợp nhất."
     },
@@ -930,7 +934,8 @@
             "Starter": "Bắt đầu",
             "IO Module": "Mô đun IO",
             "Bridge": "Cầu",
-            "NVR": "NVR"
+            "NVR": "NVR",
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Kiểu",

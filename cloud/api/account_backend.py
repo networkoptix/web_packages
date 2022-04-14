@@ -41,7 +41,7 @@ class AccountBackend(ModelBackend):
             if auth:
                 auth_type, token = auth.split()
 
-            if auth_type.lower() == "bearer":
+            if auth_type and auth_type.lower() == "bearer":
                 validate_token = Auth.validate_token(token)
                 user = {
                     'email': validate_token['username']

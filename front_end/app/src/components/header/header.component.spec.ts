@@ -90,7 +90,8 @@ describe('NxHeaderComponent', () => {
     };
     const headerMock = {
         systemIdSubject: of(''),
-        currentLocation: {}
+        currentLocation: {},
+        setLocation: () => {}
     };
     const appStateMock = {
         headerVisibleSubject: of(true)

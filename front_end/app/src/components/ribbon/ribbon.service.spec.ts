@@ -28,12 +28,28 @@ describe('NxRibbonService', () => {
         expect(ribbonService).toBeTruthy();
     });
 
-    it('should be initialized', () => {
-        expect(ribbonService.context.visibility).toBeFalsy();
-        expect(ribbonService.context.message).toBe('');
-        expect(ribbonService.context.actions).toEqual([]);
-        expect(ribbonService.context.type).toBe('');
-    });
+    it('show() should emit data to contextSubject',
+        inject([NxRibbonService], (service: NxRibbonService) => {
+            service.LANG.ribbon = {
+                beingMerged: {
+                    mayTake: () => 'Depending on the size of the database, it may take up to several hours.',
+                    to: () => 'is being merged to this system'
+                },
+                finishingMerge: () => 'Finishing systems merge',
+                integration: {
+                    accept: () => 'Accept',
+                    backToEditText: () => 'Back to the editing interfaces',
+                    previewRibbon: () => 'This page is a preview of the latest changes, and it doesn\'t match publicly available version.',
+                    publishedRibbon: () => 'This page is the live version that is publicly available.',
+                    reject: () => 'Reject'
+                },
+                newVersionAvailable: {
+                    notification: () => 'New version of %CLOUD_NAME% is available',
+                    installButton: () => 'Install Now'
+                },
+                systemOffline: () => 'System is offline. Some settings may not be available.',
+                systemsMerging: () => 'This system is currently involved in a merge operation.'
+            };
 
     it('show() should emit data to contextSubject', () => {
         const actions: RibbonActionInput[] = [{

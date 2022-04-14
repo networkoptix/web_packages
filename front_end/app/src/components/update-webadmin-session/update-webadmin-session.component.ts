@@ -26,6 +26,8 @@ import { WINDOW } from '@services/window-provider';
 export class UpdateWebadminSessionComponent implements OnInit {
     @Input() noConnectionMsg: string;
     @Input() system: NxSystem;
+    @Input() processAction: string;
+
     @Input() dialogRef: DialogRef;
     @Output() loginSuccess = new EventEmitter<any>();
 

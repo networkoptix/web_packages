@@ -25,8 +25,9 @@ Check Email Outline
     ...    Element Should Be Visible    ${EMAIL IS REQUIRED}
     Run Keyword If    "${email}"=="${existing email}"
     ...    Element Should Be Visible    ${EMAIL ALREADY REGISTERED}
-    Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}" or "${email}"=="${existing email}"
-    ...    Element Should Be Visible    ${EMAIL INVALID}
+    IF    "${email}"!="${EMPTY}" and "${email}"!="${SPACE}" and "${email}"!="${existing email}"
+        Element Should Be Visible    ${EMAIL INVALID}
+    END
 
 Check First Name Outline
     [Arguments]    ${first}
@@ -72,12 +73,21 @@ Test Register Invalid
     ...    ${LAST NAME IS REQUIRED}
     ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
-    Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
-    ...    Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    createAccountPassword
-    Run Keyword Unless    "${email}"=="${valid email}"    register-form-validation-resource.Check Email Outline    ${email}
-    Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
-    Run Keyword Unless    "${last}"=="hamill"    Check Last Name Outline    ${last}
-    Run Keyword Unless    "${checked}"=="True"    Check Terms and Conditions Error
+    IF    '''${pass}''' not in ${good passwords} and '''${pass}''' not in ${fair passwords}
+        Check New Password Outline and Error Message    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    createAccountPassword
+    END
+    IF    "${email}"!="${valid email}"
+        Check Email Outline    ${email}
+    END
+    IF    "${first}"!="mark"
+        Check First Name Outline    ${first}
+    END
+    IF    "${last}"!="hamill"
+        Check Last Name Outline    ${last}
+    END
+    IF    "${checked}"!="True"
+        Check Terms and Conditions Error
+    END
 
 Restart
     Close Browser

@@ -41,7 +41,9 @@ Merge Suite Setup
     ${ids}=   Evaluate    [sys['id'] for sys in $systems]
     ${sys 1 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 1}[id]
     ${sys 2 connected}=   Run keyword and return status    Should Contain    ${ids}    ${merge 2}[id]
-    Run Keyword Unless    $sys_1_connected and $sys_2_connected    Fatal Error    One or more system is not connected to cloud
+    IF    ${sys_1_connected} == ${False} or ${sys_2_connected} == ${False}
+        Fatal Error    One or more system is not connected to cloud
+    END
     Sleep   90
 
 Merge Suite Teardown

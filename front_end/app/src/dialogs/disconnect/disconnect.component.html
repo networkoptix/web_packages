@@ -32,5 +32,6 @@
         (loginSuccess)="needsUpdate = false; disconnect.run()"
         [noConnectionMsg]="'Failed to disconnect system from %CLOUD_NAME%.' | translate"
         [dialogRef]="dialogRef"
+        processAction="danger"
         [system]="system"></nx-update-webadmin-session>
 </form>
