@@ -1314,7 +1314,11 @@ export class NxSystemAPI {
         });
     }
 
-    getServerInfo(remoteEndpoint: string) {
+    getServerInfo(serverId: string) {
+        throw (this.notImplementedMsg);
+    }
+
+    getRemoteServerInfo(remoteEndpoint: string) {
         return of({});
     }
 

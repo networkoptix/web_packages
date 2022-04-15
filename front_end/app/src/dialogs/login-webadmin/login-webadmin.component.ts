@@ -239,13 +239,10 @@ export class LoginWebadminModalContent implements OnInit {
             );
         };
 
-        this.account.mediaServerApi.getModuleInfo()
+        this.account.mediaServerApi.getServerInfo('*')
             .subscribe((data) => {
-                // Handles legacy and rest apis
-                if (data.reply) {
-                    data = data.reply;
-                }
-                if (this.window.navigator.onLine && data.serverFlags.includes('SF_HasPublicIP')) {
+                const systemHasInternet = data.some((system) => system.serverFlags.includes('SF_HasPublicIP'));
+                if (this.window.navigator.onLine && systemHasInternet) {
                     this.account.mediaServerApi.redirectOauth();
                 } else {
                     displayCloudConnectionError();
