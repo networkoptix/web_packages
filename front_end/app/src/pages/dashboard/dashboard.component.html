@@ -41,12 +41,8 @@
         <div class="menu-item" (click)="addWidget()" translate>Add widget</div>
         <a class="menu-item" (click)="prepareConfigDownload()" [href]="settingsDownloadLink"
           [download]="downloadFileName" translate>Download dashboard config </a>
-        <label for="settings_upload"
-               class="menu-item"
-               [ngClass]="{disabled:!dragEnabled}"
-               [nxTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''"
-               translate
-        >Apply existing config</label>
+        <label for="settings_upload" class="menu-item" [ngClass]="{disabled:!dragEnabled}"
+          [nxTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''" translate>Apply existing config</label>
         <input type="file" id="settings_upload" (change)="handleConfigUpload($event)" [disabled]="!dragEnabled">
       </div>
     </div>
@@ -64,9 +60,9 @@
   <div cdkDropList (cdkDropListDropped)="moveDashboard($event)" [cdkDropListDisabled]="!dragEnabled"
     class="dashboard-list">
     <ng-container *ngFor="let dashboard of menu">
+      <ng-template #dashboardTooltip><span translate>Drag dashboards to update order</span></ng-template>
       <div *ngIf="dragEnabled || dashboard?.cards?.length" cdkDrag cdkDragLockAxis="y" [routerLink]="[]"
-        (mousedown)="showSettings = false"
-        [nxTooltip]="dragEnabled ? ('Drag dashboards to update order' | translate) : ''"
+        (mousedown)="showSettings = false" [nxTooltip]="dragEnabled ? dashboardTooltip : ''"
         [queryParams]="{'dashboardId': dashboard.id}" routerLinkActive="active" class="menu-item"
         [ngClass]="{'drag-cursor': dragEnabled}">
         <span>{{dashboard.dashboardName}}</span>
@@ -102,9 +98,8 @@
         (mouseleave)="hoverCellIndex = -1"
         [ngClass]="{'active-widget': dragEnabled && activeCellIndex === i, 'drag-enabled': dragEnabled}">
         <div cdkDragHandle>
-          <div class="heading"
-               [nxTooltip]="dragEnabled ? '' : LANG.dashboard.unlockToMove()"
-               [ngClass]="{'drag-heading': dragEnabled && [activeCellIndex, hoverCellIndex].includes(i)}">
+          <div class="heading" [nxTooltip]="dragEnabled ? '' : LANG.dashboard.unlockToMove()"
+            [ngClass]="{'drag-heading': dragEnabled && [activeCellIndex, hoverCellIndex].includes(i)}">
             <ng-template #cardTitle>
               <h3>{{card.title}}</h3>
             </ng-template>

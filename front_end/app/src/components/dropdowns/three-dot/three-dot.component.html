@@ -6,7 +6,7 @@
                     <a class="dropdown-item inset"
                         [id]="item.id"
                        (click)="show = false; change(item)">
-                        <span [innerText]="item.name"></span>
+                        <span [innerText]="item.name || name"></span>
                     </a>
             </li>
         </ul>

@@ -33,6 +33,7 @@ import { BaseDropdown } from '../injDropdown';
 
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
+    @Input() name: string;
     @Input() componentId: string = 'three-dot-menu'
 
     constructor(
@@ -49,8 +50,8 @@ export class NxThreeDotDropdown extends BaseDropdown {
 
 export class ActionItems {
     constructor(
-        public name: string,
         public action: () => void,
+        public name?: string,
         public id?: string
     ) {}
 }
