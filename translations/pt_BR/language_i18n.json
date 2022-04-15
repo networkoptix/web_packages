@@ -202,8 +202,6 @@
     "Failed to detach server from system.": "Falha ao desanexar o servidor do sistema.",
     "Failed to disconnect system from %CLOUD_NAME%.": "Falha ao desconectar o sistema de %CLOUD_NAME%.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Falha ao mesclar {primarySystem} e {secondarySystem}.",
-    "Failed to reset server.": "Falha ao redefinir o servidor.",
-    "Failed to restart server.": "Falha ao reiniciar o servidor.",
     "Failed to the check current system's password.": "Falha ao verificar a senha do sistema atual.",
     "Fetching Results...": "Buscando resultados...",
     "Fill in all required fields": "Preencha todos os campos obrigatórios",

@@ -7,6 +7,7 @@
     "Privacy": "Confidentialité",
     "Support": "Support",
     "Terms": "Conditions",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Accès illimité, y compris la possibilité de partager",

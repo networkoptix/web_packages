@@ -7,6 +7,7 @@
     "Privacy": "Datenschutz",
     "Support": "Support",
     "Terms": "Bedingungen",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen",

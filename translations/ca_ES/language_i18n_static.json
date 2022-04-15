@@ -7,6 +7,7 @@
     "Privacy": "Privacitat",
     "Support": "Suport",
     "Terms": "Termes",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Accés sense restriccions, inclosa la possibilitat de compartir",

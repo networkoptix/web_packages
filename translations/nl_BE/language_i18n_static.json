@@ -7,6 +7,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen",
@@ -757,8 +758,8 @@
             "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
+            "installButton": "Nu installeren"
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."

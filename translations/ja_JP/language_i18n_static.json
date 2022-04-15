@@ -7,6 +7,7 @@
     "Privacy": "プライバシー",
     "Support": "サポート",
     "Terms": "利用規約",
+    "Developers Console": "開発者用コンソール",
     "accessRoles": {
         "Administrator": {
             "description": "共有する権利を含む無制限のアクセス",

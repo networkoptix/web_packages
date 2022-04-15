@@ -202,8 +202,6 @@
     "Failed to detach server from system.": "Kan de server niet loskoppelen van het systeem.",
     "Failed to disconnect system from %CLOUD_NAME%.": "Kan systeem niet loskoppelen van %CLOUD_NAME%.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Kan {primarySystem} en {secondarySystem} niet samenvoegen.",
-    "Failed to reset server.": "Kan server niet resetten.",
-    "Failed to restart server.": "Herstarten van server is mislukt.",
     "Failed to the check current system's password.": "Kan het wachtwoord van het huidige systeem niet controleren.",
     "Fetching Results...": "Resultaten ophalen...",
     "Fill in all required fields": "Vul alle verplichte velden in",

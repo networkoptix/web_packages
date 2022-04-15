@@ -7,6 +7,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen",

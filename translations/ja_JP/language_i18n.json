@@ -202,8 +202,6 @@
     "Failed to detach server from system.": "サーバーをシステムから切り離しできませんでした。",
     "Failed to disconnect system from %CLOUD_NAME%.": "%CLOUD_NAME% からのシステム切断に失敗しました。",
     "Failed to merge {primarySystem} and {secondarySystem}.": "システム {primarySystem} および {secondarySystem} を統合できませんでした。",
-    "Failed to reset server.": "サーバーのリセットに失敗しました。",
-    "Failed to restart server.": "サーバーの再起動に失敗しました。",
     "Failed to the check current system's password.": "現在のシステムのパスワードの確認に失敗しました。",
     "Fetching Results...": "結果を取得しています...",
     "Fill in all required fields": "すべての必須項目を入力してください",
