@@ -505,7 +505,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         this.checkMergeSubscription = this.system.checkMergeStatus(true)
             .subscribe(res => {
-                const { mergeInProgress } = res.reply;
+                const mergeInProgress = res?.reply?.mergeInProgress;
                 if (environment.isLocal) {
                     if (
                         !mergeInProgress &&
