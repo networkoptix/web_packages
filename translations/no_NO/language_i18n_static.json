@@ -7,6 +7,7 @@
     "Privacy": "Personvern",
     "Support": "Brukerstøtte",
     "Terms": "Vilkår",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Ubegrenset tilgang, inkludert evnen til å dele",

@@ -7,6 +7,7 @@
     "Privacy": "Gizlilik",
     "Support": "Destek",
     "Terms": "Şartlar",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Sınırsız erişim, paylaşma imkanı dahil",

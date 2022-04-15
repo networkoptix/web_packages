@@ -7,6 +7,7 @@
     "Privacy": "פרטיות",
     "Support": "תמיכה",
     "Terms": "תנאי שימוש",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "גישה בלתי מוגבלת כולל את היכולת לשתף",

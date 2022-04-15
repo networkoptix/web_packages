@@ -7,6 +7,7 @@
     "Privacy": "개인 정보 보호 정책",
     "Support": "지원",
     "Terms": "이용 약관",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "공유 기능을 포함한 무제한 액세스",

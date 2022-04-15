@@ -7,6 +7,7 @@
     "Privacy": "Quyền riêng tư",
     "Support": "Hỗ trợ",
     "Terms": "Điều khoản",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ",
