@@ -13,7 +13,7 @@ export class SystemGroupsDataService {
     constructor(@Inject(WINDOW) private window: Window) {}
 
     connect(): Observable<any> {
-        return of(`wss://${this.window.location.host}/ws`).pipe(
+        return of(`wss://${this.window.location.host}/system-groups`).pipe(
             switchMap(url => {
                 if (!this.connection$) {
                     this.connection$ = webSocket(url);
