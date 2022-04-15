@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-export type TargetState = {
-    id: number;
-    download: boolean;
-};
+import type { TargetState } from './console.types';
 
 @Injectable({
     providedIn: 'root'

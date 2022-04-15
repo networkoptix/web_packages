@@ -17,20 +17,22 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxPollService } from '../poll.service';
-import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
+import { NxSystemAPIService } from '../system-api.service';
 import {
     EventRule,
     EventTypes,
     RawRule,
     SystemConfigSettings
 } from '../system-api.types';
-import { NxSystemsService, NxSystemWithUserInfo } from '../systems.service';
+import { NxSystemAPI } from '../system-legacy-api.service';
+import { NxSystemsService } from '../systems.service';
 
 import { CameraManager } from './camera-manager/camera-manager';
 import type { ICamera, ITask } from './camera-manager/camera-manager-types';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
-import { System, ServerTimeInfo } from './system-types';
+import { System } from './system-types';
+import type { ServerTimeInfo, NxSystemWithUserInfo } from './system-types';
 import { UserManager } from './user-manager/user-manager';
 import type {
     NxSystemUser,

@@ -7,7 +7,7 @@ import { environment } from '@environments/environment';
 
 import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
-import { ContextManifest } from './nx-cloud-api.types';
+import { ContextManifest } from './nx-cloud-api/nx-cloud-api.types';
 
 type createButtonType = 'default' | 'primary';
 interface MenuNodeNavProps {

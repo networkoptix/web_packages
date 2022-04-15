@@ -13,7 +13,8 @@ import {
 } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { Account, NxAccountService } from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 

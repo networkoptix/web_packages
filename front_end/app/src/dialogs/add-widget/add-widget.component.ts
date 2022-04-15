@@ -15,7 +15,8 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { pickFrom, delayInitial } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;

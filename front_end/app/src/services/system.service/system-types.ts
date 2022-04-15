@@ -1,5 +1,7 @@
 import type { Params, GetStorages } from '../system-api.types';
-import type { NxSystemWithUserInfo } from '../systems.service';
+// import type { NxSystemWithUserInfo } from '../systems.service';
+
+import type { NxSystem } from './system';
 
 export interface IParams<Value = any> {
     [key: string]: Value;
@@ -198,4 +200,17 @@ export class System extends SystemInterface {
 
     mediaservers: NxMediaServer[] = null;
     resourceTypes: any[] = null;
+}
+
+/* TODO: Fix NxSystemWithUserInfo parent type (shouldn't be NxSystem) */
+export interface NxSystemWithUserInfo extends NxSystem {
+    ownerAccountEmail: string;
+    ownerFullName: string;
+    name: string;
+    systemName: string;
+    isMine: boolean;
+    capabilities: IParams;
+    state: string;
+    stateOfHealth: string;
+    system2faEnabled: boolean;
 }

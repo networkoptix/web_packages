@@ -8,7 +8,8 @@ import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({

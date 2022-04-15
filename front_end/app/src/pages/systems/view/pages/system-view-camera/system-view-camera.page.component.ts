@@ -42,7 +42,8 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxSettingsService } from '../../../settings/settings.service';
 import { CameraQualityStorageService } from '../../services/cameraQualityStorage.service';
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
-import { WebClientUxService, WebclientUxState } from '../../services/webclient-ux.service';
+import { WebClientUxService } from '../../services/webclient-ux.service';
+import type { WebClientUxState } from '../../view.types';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
@@ -618,7 +619,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
-    protected _onUxStateChange(s: WebclientUxState) {
+    protected _onUxStateChange(s: WebClientUxState) {
         this._log('UX state change');
         if (s.isTimelineShown) {
             this.$self.classList.add('controls-shown');

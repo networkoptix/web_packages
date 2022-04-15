@@ -26,7 +26,7 @@ import { percentageToHex } from './utils/percentageToHex';
 
 const dateformat = df.default || df;
 
-export interface RulerSerif {
+interface RulerSerif {
     interval: IrregularLengthInterval,
     time: ms,
     weight: int,

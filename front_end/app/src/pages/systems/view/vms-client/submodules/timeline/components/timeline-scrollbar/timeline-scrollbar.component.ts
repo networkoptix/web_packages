@@ -21,14 +21,16 @@ import { float, px } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineScrollbarAbsoluteService,
-    TimelineScrollbarAbsoluteServiceStatus
 } from '../../services/timeline.scrollbarAbsolute.service';
 import { TimelineScrollbarRelativeService } from '../../services/timeline.scrollbarRelative.service';
 import {
     TimelineSelectionService,
-    TimelineSelectionServiceStatus
 } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
+import type {
+    TimelineScrollbarAbsoluteServiceStatus,
+    TimelineSelectionServiceStatus,
+} from '../../services/timeline.services.types';
 
 // const MIN_BAR_WIDTH_PX = 50;
 

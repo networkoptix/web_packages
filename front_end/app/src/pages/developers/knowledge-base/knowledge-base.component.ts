@@ -32,18 +32,21 @@ import type {
     MenuNodeWithParent,
     RelatedLinks
 } from '@components/developers-menu/developers-menu-types';
-import { NxRibbonService, RibbonActionInput } from '@components/ribbon/ribbon.service';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import type { RibbonActionInput } from '@components/ribbon/ribbon.types';
 import type { SearchFilter } from '@components/search/search.component.types';
-import { IntersectionStatus } from '@directives/nx-intersection.directive';
+import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { highlight } from '@utils/general';

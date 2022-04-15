@@ -5,15 +5,19 @@ import { filter } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
-import { Watcher } from '@services/apply.service';
+import { Watcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
+import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
+import type { LinkSettings } from '@services/url-protocol.service';
 import { WINDOW } from '@services/window-provider';
 
 @Component({
@@ -39,7 +43,7 @@ export class NxDebugComponent {
         result: ''
     };
 
-    linkSettings = {
+    linkSettings: LinkSettings = {
         native: true,
         from: undefined, // client, mobile, portal, webadmin
         context: undefined,

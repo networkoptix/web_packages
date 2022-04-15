@@ -7,9 +7,11 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
 import { px } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from '../../services/timeline.service';
+import type {
+    TimelineTimeUnderMouseServiceStatus
+} from '../../services/timeline.services.types';
 import {
     TimelineTimeUnderMouseService,
-    TimelineTimeUnderMouseServiceStatus
 } from '../../services/timeline.time-under-mouse.service';
 
 const dateformat = df.default || df;

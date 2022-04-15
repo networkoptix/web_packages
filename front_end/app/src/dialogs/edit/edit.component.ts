@@ -14,18 +14,19 @@ import {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import {
-    ConsoleMode
-} from '@pages/developer-console/console/console.component.types';
-import {
     NxConsoleService
 } from '@pages/developer-console/console/console.service';
+import {
+    ConsoleMode
+} from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { ContentSettings, ContextManifest } from '@services/nx-cloud-api.types';
+import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
 
 import { NxToastService } from '../toast.service';

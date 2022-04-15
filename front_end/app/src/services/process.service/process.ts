@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
 import {
     Observable,
     Subject,
-    defer,
     race,
     timer
 } from 'rxjs';
@@ -11,10 +9,10 @@ import { map, takeUntil } from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 
-import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { NxSessionService } from './session.service';
+import type { IConfig } from '../nx-config/config-types';
+import { NxConfigService } from '../nx-config/nx-config.service';
+import { NxLanguageProviderService } from '../nx-language-provider';
+import { NxSessionService } from '../session.service';
 
 export interface IErrorCodes {
     [key: string]: string | Function
@@ -33,9 +31,9 @@ export interface ProcessSettings {
     timeoutMs: number;
 }
 
-type Handler = (...args: any[]) => any;
+export type Handler = (...args: any[]) => any;
 
-const logError = (...args) => console.error(args);
+export const logError = (...args) => console.error(args);
 
 export const formatError = (
     error,
@@ -271,49 +269,5 @@ export class Process {
         this.errorData = data;
         this.processing = false;
         this._errorHandler(data);
-    }
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class NxProcessService {
-    constructor(
-        private configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
-        private sessionService: NxSessionService,
-        private toastService: NxToastService
-    ) { }
-
-    /**
-     * NxProcessService.createProcess has been updated to allow passing in either a promise or an observable.
-     *
-     * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
-     *
-     * @param caller - Can be a function that returns a promise or an observable
-     * @param settings - ProcesSettings
-     * @param successHandler - Success handler can be assigned here or on .then(successHandler, errorHandler) method
-     * @param errorHandler - Error handler can be assigned here or on .then(successHandler, errorHandler) method.
-     * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
-     */
-    public createProcess(
-        caller: (() => PromiseLike<any>) | Observable<any>,
-        settings?: Partial<ProcessSettings>,
-        successHandler: Handler = () => {},
-        errorHandler: Handler = logError,
-        catchHandler: Handler = logError
-    ) {
-        const _caller = typeof caller === 'function' ? defer(caller) : caller;
-        return new Process(
-            this.configService,
-            this.languageService,
-            this.sessionService,
-            this.toastService,
-            _caller,
-            settings,
-            successHandler,
-            errorHandler,
-            catchHandler
-        );
     }
 }

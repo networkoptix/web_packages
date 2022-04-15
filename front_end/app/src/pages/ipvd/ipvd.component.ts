@@ -23,7 +23,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { MessageParams } from '@dialogs/message/message.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { Cameras, Vendors } from '@services/nx-cloud-api.types';
+import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

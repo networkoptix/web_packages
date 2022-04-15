@@ -1,12 +1,7 @@
-/* eslint-disable camelcase */
-import { Injectable } from '@angular/core';
 import { last } from 'lodash-es';
 
 import { User } from '../system-api.types';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class Account {
     email: string;
     first_name: string;

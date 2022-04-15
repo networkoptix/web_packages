@@ -18,12 +18,14 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxApplyService } from '@services/apply.service';
+import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxMenuService } from '@src/menu/menu.service';

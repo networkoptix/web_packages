@@ -21,7 +21,8 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { Account, NxAccountService } from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -29,16 +30,20 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import type { NxSystemRestAPI } from '@services/system-api.service';
+import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type {
     ICamera
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type {
+    NxSystemServer,
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import type { ContentToggle, Content, Level3Item } from '@src/menu/menu.types';

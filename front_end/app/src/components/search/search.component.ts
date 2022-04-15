@@ -25,7 +25,8 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { ButtonArrowType, NxSearchService } from '@services/search.service';
+import { NxSearchService } from '@services/search.service';
+import { ButtonArrowType } from '@services/search.service.types';
 import { NxUriService } from '@services/uri.service';
 
 import type { SearchFilter } from './search.component.types';

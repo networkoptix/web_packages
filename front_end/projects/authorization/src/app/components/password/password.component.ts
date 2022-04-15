@@ -15,7 +15,7 @@ import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

@@ -9,8 +9,12 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { NxAccountService, Account } from '@services/account.service';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
+import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable({

@@ -15,7 +15,7 @@ import { filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
-import type { Vendors } from '@services/nx-cloud-api.types';
+import type { Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

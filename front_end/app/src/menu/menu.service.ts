@@ -2,7 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxSearchService, SearchModel } from '@services/search.service';
+import { NxSearchService } from '@services/search.service';
+import type { SearchModel } from '@services/search.service.types';
 import { htmlToEntity } from '@utils/general';
 
 import type {

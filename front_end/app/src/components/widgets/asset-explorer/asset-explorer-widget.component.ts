@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { ExplorerNode } from '@services/nx-cloud-api.types';
+import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 

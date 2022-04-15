@@ -34,7 +34,8 @@ import { IConfig } from '../../../../../services/nx-config/config-types';
 import { NxConfigService } from '../../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSettingsService } from '../../../settings/settings.service';
-import { WebClientUxService, WebclientUxState } from '../../services/webclient-ux.service';
+import { WebClientUxService } from '../../services/webclient-ux.service';
+import type { WebClientUxState } from '../../view.types';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
@@ -203,7 +204,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     }
 
-    protected _onUxStateChange(s: WebclientUxState) {
+    protected _onUxStateChange(s: WebClientUxState) {
         if (s.isSidebarShown) {
             this.$self.classList.add('sidebarShown');
         } else {

@@ -5,10 +5,13 @@ import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxRibbonService, RibbonActionInput } from '@components/ribbon/ribbon.service';
-import { NxAccountService, Account } from '@services/account.service';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import type { RibbonActionInput } from '@components/ribbon/ribbon.types';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
-import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';

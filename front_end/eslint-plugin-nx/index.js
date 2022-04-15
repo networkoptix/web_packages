@@ -4,6 +4,6 @@
 
 module.exports = {
     rules: {
-        'only-export-component': require('./rules/only-export-component'),
+        'only-export-injectable': require('./rules/only-export-injectable'),
     }
 };

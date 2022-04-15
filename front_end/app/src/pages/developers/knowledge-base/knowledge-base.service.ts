@@ -4,7 +4,8 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxAccountService, Account } from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { MenuStructure } from '@services/nx-config/base-config';

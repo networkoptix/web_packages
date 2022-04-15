@@ -13,14 +13,6 @@ import { NxSystemAPI } from './system-legacy-api.service';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { NxUriCacheService } from './uri-cache.service';
 
-export interface IParams<Value = any> {
-    [key: string]: Value;
-}
-
-export interface AddResponseTypeHere extends IParams {}
-
-export { NxSystemAPI, NxSystemRestAPI };
-
 @Injectable({
     providedIn: 'root'
 })
@@ -76,10 +68,4 @@ export class NxSystemAPIService {
             this.injector
         );
     }
-}
-
-export interface ResourceParam {
-    value: string;
-    name: string;
-    resourceId?: string;
 }

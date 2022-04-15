@@ -724,3 +724,9 @@ export interface EventRule extends BaseRule {
     actionParams: string
     eventCondition: string
 }
+
+export interface ResourceParam {
+    value: string;
+    name: string;
+    resourceId?: string;
+}

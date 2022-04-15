@@ -2,19 +2,7 @@ import { Injectable } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-export enum ButtonArrowType {
-    up = 'UP',
-    down = 'DOWN',
-}
-
-export interface SearchModel {
-    query: string;
-    queryExactMatch?: '' | string[];
-    queryEndsWith?: '' | [string];
-    queryStartsWith?: '' | [string];
-    queryOrMatch?: '' | string[];
-    queryAndMatch?: '' | string[];
-}
+import type { ButtonArrowType, SearchModel } from './search.service.types';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({

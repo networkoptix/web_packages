@@ -8,7 +8,9 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import type { NxSystemWithUserInfo } from '@services/systems.service';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
 import { selectSystems } from '@src/store/systems/systems.selectors';
 import { SystemsState } from '@src/store/systems/systems.state';
 

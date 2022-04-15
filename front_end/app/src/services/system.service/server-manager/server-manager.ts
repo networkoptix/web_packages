@@ -7,7 +7,9 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
-import { NxSystemAPIService, NxSystemAPI, ResourceParam } from '../../system-api.service';
+import { NxSystemAPIService } from '../../system-api.service';
+import { ResourceParam } from '../../system-api.types';
+import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo, IParams } from '../system-types';
 

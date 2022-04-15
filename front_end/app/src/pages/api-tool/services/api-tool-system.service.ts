@@ -14,9 +14,12 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type {
+    NxSystemServer,
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
 
 import type { APIDoc } from '../api-tool-types';

@@ -2,7 +2,8 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 
 import { NxSystemGroupsService } from '../../pages/systems/groups/services/system-groups.service';
 

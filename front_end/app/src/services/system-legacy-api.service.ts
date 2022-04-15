@@ -16,12 +16,11 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 
-import { Account } from './account.service';
+import { Account } from './account.service/account';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-import { IParams, ResourceParam } from './system-api.service';
 import * as t from './system-api.types';
 import { User } from './system-api.types';
 import type {
@@ -31,6 +30,10 @@ import type {
     NxSystemUser
 } from './system.service/user-manager/user-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
+
+interface IParams<Value = any> {
+    [key: string]: Value;
+}
 
 export class NxSystemAPI {
     /*
@@ -997,7 +1000,7 @@ export class NxSystemAPI {
         );
     }
 
-    setResourceParams(params: ResourceParam[]) {
+    setResourceParams(params: t.ResourceParam[]) {
         return this.post<t.EmptyObjectReturned>(
             '/ec2/setResourceParams',
             params

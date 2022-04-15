@@ -4,7 +4,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { takeWhile } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
-import { NxCloudApiService, DOC_TYPES } from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';

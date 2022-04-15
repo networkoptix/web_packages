@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Injectable, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Resolve, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
@@ -18,14 +18,7 @@ import { NxAccountSettingsModule } from '@pages/account/settings/settings.module
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
-@Injectable()
-export class TypeResolver implements Resolve<any> {
-    constructor() {}
-
-    resolve() {
-        return 'password';
-    }
-}
+import { TypeResolver } from './type-resolver';
 
 const appRoutes: Routes = [
     {

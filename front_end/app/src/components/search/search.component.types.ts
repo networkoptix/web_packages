@@ -4,7 +4,7 @@ import type {
 import type {
     MultiSelectItem
 } from '@components/dropdowns/multi-select/multi-select.component.types';
-import type { SearchModel } from '@services/search.service';
+import type { SearchModel } from '@services/search.service.types';
 
 /** Extend this with selects/mulitselects and other params */
 export type SearchParams = Partial<{

@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { strSplice } from '@utils/general';
 
-export type extraParams = {
+type extraParams = {
     length: number,
     translateParams: Record<string, string>
 };

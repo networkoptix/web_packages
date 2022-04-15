@@ -7,20 +7,8 @@ import { NxAccountService } from './account.service';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
+import type { LinkSettings } from './url-protocol.service.types';
 import { WINDOW } from './window-provider';
-
-export interface linkSettings {
-    native?: boolean,
-    from?: string,
-    context?: {},
-    command?: string,
-    systemId?: string,
-    action?: {},
-    actionParameters?: {},
-    auth?: boolean | string | undefined,
-    code?: string | undefined,
-    useOauth?: boolean
-}
 
 @Injectable({
     providedIn: 'root'
@@ -69,8 +57,8 @@ export class NxUrlProtocolService {
         return source;
     }
 
-    generateLink(linkSettings: linkSettings = {}) {
-        let settings: linkSettings = {
+    generateLink(linkSettings: LinkSettings = {}) {
+        let settings: LinkSettings = {
             native: true,
             from: 'portal', // client, mobile, portal, webadmin
             context: undefined,
@@ -93,7 +81,7 @@ export class NxUrlProtocolService {
             : this.window.location.protocol;
         const host = this.window.location.host;
 
-        const getParams: linkSettings = { ...settings.actionParameters };
+        const getParams: LinkSettings = { ...settings.actionParameters };
 
         if (settings.from) {
             getParams.from = settings.from;
@@ -129,11 +117,10 @@ export class NxUrlProtocolService {
     }
 
     getLink(
-        linkSettings: linkSettings
+        linkSettings: LinkSettings
     ): Promise<{
         link: string,
         authKey?: string | undefined,
-        // eslint-disable-next-line camelcase
         code?: string
     }> {
         const auth = linkSettings.useOauth

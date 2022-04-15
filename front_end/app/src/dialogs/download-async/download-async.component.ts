@@ -9,7 +9,8 @@ import {
     ModalType
 } from '@components/console-table/console-table.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { CustomClientAPI, NxCloudApiService } from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { CustomClientAPI } from '@services/nx-cloud-api/custom-client-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';

@@ -1,10 +1,10 @@
 import { waitForAsync, TestBed } from '@angular/core/testing';
 
+import { NxSearchService } from './search.service';
 import {
     ButtonArrowType,
-    NxSearchService,
     SearchModel
-} from '@services/search.service';
+} from './search.service.types';
 
 describe('Search service', () => {
     let search: NxSearchService;

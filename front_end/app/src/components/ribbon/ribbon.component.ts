@@ -11,8 +11,8 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
-import type { RibbonAction } from './ribbon.component.types';
 import { NxRibbonService } from './ribbon.service';
+import type { RibbonAction } from './ribbon.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

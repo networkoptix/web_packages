@@ -7,17 +7,7 @@ import { int, float, ms, px, CanvasGeometry } from '@vms-client/utils/type-alias
 
 import { TimeRange } from './TimeRange';
 import { cfg } from './timeline.config';
-
-export interface TimelineServiceStatus {
-    fullRange: TimeRange,
-    visibleRange: TimeRange,
-    canvasGeometry: CanvasGeometry,
-    zoom: {
-        canZoomIn: boolean,
-        canZoomOut: boolean,
-    },
-    canvasGeometryUpdateRequested: boolean,
-}
+import type { TimelineServiceStatus } from './timeline.services.types';
 
 @Injectable({
     providedIn: 'root'

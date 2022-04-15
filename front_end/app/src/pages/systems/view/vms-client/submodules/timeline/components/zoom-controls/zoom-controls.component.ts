@@ -6,7 +6,10 @@ import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsStat
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, int, ms } from '@vms-client/utils/type-aliases';
 
-import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
+import { TimelineService } from '../../services/timeline.service';
+import type {
+    TimelineServiceStatus,
+} from '../../services/timeline.services.types';
 
 type signType = int; // -1 | 0 | 1
 

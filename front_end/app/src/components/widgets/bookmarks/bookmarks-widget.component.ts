@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { debounceTime, switchMap, shareReplay, map, tap, catchError } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { Bookmark } from '@pages/systems/bookmarks/bookmark.service';
+import type { Bookmark } from '@pages/systems/bookmarks/bookmark.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';

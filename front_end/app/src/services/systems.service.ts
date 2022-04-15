@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* TODO: Fix NxSystemWithUserInfo parent type (shouldn't be NxSystem) */
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -20,11 +18,8 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPollService } from './poll.service';
 import { NxStorageService } from './storage.service';
 import type { NxSystem } from './system.service/system';
+import type { NxSystemWithUserInfo } from './system.service/system-types';
 import { NxUriService } from './uri.service';
-
-interface IParams<Value = any> {
-    [key: string]: Value;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -258,16 +253,4 @@ export class NxSystemsService implements OnDestroy {
             return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
         });
     }
-}
-
-export interface NxSystemWithUserInfo extends NxSystem {
-    ownerAccountEmail: string;
-    ownerFullName: string;
-    name: string;
-    systemName: string;
-    isMine: boolean;
-    capabilities: IParams;
-    state: string;
-    stateOfHealth: string;
-    system2faEnabled: boolean;
 }

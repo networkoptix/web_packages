@@ -16,8 +16,8 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxRibbonComponent } from './ribbon.component';
-import type { RibbonAction } from './ribbon.component.types';
 import { NxRibbonService } from './ribbon.service';
+import type { RibbonAction } from './ribbon.types';
 
 describe('NxRibbonComponent', () => {
     let component: NxRibbonComponent;

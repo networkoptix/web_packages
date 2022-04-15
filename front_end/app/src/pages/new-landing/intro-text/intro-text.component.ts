@@ -13,7 +13,7 @@ import { Observable, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { IntersectionStatus } from '@directives/nx-intersection.directive';
+import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

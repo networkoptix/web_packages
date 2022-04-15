@@ -31,7 +31,6 @@ module.exports = {
         jasmine: true,
     },
     plugins: [
-        'nx',
         'import',
         // 'node',
         // 'promise',
@@ -118,7 +117,10 @@ module.exports = {
                 project: './tsconfig.json',
                 createDefaultProgram: true,
             },
-            plugins: ['@typescript-eslint', 'ngrx'],
+            plugins: ['nx', '@typescript-eslint', 'ngrx'],
+            rules: {
+                'nx/only-export-injectable': 'error',
+            }
         },
         {
             /* This override is for folders/files that have been fully typed.
@@ -255,12 +257,6 @@ module.exports = {
                     ignoreTypeReferences: true,
                 }],
             }
-        },
-        {
-            files: ['*.component.ts'],
-            rules: {
-                'nx/only-export-component': 'error',
-            },
         },
     ]
 };

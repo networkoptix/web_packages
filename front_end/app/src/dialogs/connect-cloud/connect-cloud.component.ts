@@ -10,12 +10,13 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import * as t from '@services/nx-cloud-api.types';
+import * as t from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { OauthService } from '@services/oauth.service';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })

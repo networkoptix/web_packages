@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { OpenAPIJSON } from '@services/nx-cloud-api.types';
+import { OpenAPIJSON } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 

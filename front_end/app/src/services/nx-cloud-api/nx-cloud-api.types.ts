@@ -355,3 +355,8 @@ export interface SystemTransferInfo {
     systemName: string;
     toAccount: string;
 }
+
+export enum DOC_TYPES {
+    knowledgebase = 'kb',
+    struct = 'struct'
+}

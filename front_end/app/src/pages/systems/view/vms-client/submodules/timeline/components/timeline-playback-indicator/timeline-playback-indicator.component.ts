@@ -18,7 +18,10 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
 import { assertNever } from '@vms-client/utils';
 import type { ms, px } from '@vms-client/utils/type-aliases';
 
-import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
+import { TimelineService } from '../../services/timeline.service';
+import type {
+    TimelineServiceStatus
+} from '../../services/timeline.services.types';
 
 const dateformat = df.default || df;
 

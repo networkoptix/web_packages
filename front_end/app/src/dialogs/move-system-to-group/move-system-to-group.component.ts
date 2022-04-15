@@ -10,7 +10,8 @@ import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
 import { selectGroupState } from '@pages/systems/groups/store/groups/groups.selectors';
 import type { GroupsState } from '@pages/systems/groups/store/groups/groups.state';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { selectSystems } from '@src/store/systems/systems.selectors';
 import { SystemsState } from '@src/store/systems/systems.state';
 

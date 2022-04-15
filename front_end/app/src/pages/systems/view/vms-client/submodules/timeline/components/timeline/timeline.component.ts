@@ -21,7 +21,10 @@ import { px, ms } from '@vms-client/utils/type-aliases';
 
 import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
-import { TimelineService, TimelineServiceStatus } from '../../services/timeline.service';
+import { TimelineService } from '../../services/timeline.service';
+import type {
+    TimelineServiceStatus,
+} from '../../services/timeline.services.types';
 import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
 import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
 

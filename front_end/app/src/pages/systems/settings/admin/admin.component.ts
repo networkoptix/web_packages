@@ -18,14 +18,16 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import { FormWatcher, NxApplyService } from '@services/apply.service';
+import { NxApplyService } from '@services/apply.service';
+import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { SystemTransferInfo, CloudResponse } from '@services/nx-cloud-api.types';
+import type { SystemTransferInfo, CloudResponse } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import type {
     NxSystemUser

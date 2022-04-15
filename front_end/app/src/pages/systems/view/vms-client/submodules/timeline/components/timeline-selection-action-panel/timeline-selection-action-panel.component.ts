@@ -18,9 +18,11 @@ import { NxAccountService } from '../../../../../../../../services/account.servi
 import { TimeRange } from '../../services/TimeRange';
 import {
     TimelineSelectionService,
-    TimelineSelectionServiceStatus
 } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
+import type {
+    TimelineSelectionServiceStatus,
+} from '../../services/timeline.services.types';
 
 import { msDurationToString } from './utils';
 

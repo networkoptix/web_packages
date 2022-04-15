@@ -1,6 +1,8 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
-import { NxSystemWithUserInfo } from '../../services/systems.service';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
 
 export const selectSystems =
     createFeatureSelector<Array<NxSystemWithUserInfo>>('systems');

@@ -6,7 +6,7 @@ import {
 import { NgForm } from '@angular/forms';
 
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 import { pickFrom } from '@utils/general';
 
 @Component({

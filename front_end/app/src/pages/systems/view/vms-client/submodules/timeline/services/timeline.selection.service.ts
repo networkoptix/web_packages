@@ -9,6 +9,10 @@ import { ms, px } from '@vms-client/utils/type-aliases';
 import { TimeRange } from './TimeRange';
 import { TimelineScrollbarRelativeService } from './timeline.scrollbarRelative.service';
 import { TimelineService } from './timeline.service';
+import type {
+    PixelRange,
+    TimelineSelectionServiceStatus
+} from './timeline.services.types';
 
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;
@@ -28,17 +32,6 @@ enum EDGE_SCROLLING_SPEED {
     SLOW = 1,
     MEDIUM = 2,
     FAST = 3,
-}
-
-export interface PixelRange {
-    left: px,
-    right: px,
-}
-
-export interface TimelineSelectionServiceStatus {
-    isActive: boolean,
-    range: TimeRange,
-    pixelRange: PixelRange,
 }
 
 @Injectable({

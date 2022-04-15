@@ -5,27 +5,21 @@ import { Router } from '@angular/router';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
-import { v4 as uuid } from 'uuid';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
-import { PackageStatus } from '@dialogs/download-async/download-async.component.types';
 import { environment } from '@environments/environment';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { mapValuesToStrings } from '@utils/general';
 
-import { Account } from './account.service/account';
-import type * as t from './nx-cloud-api.types';
-import { InstantSearchOptions } from './nx-cloud-api.types';
-import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
-import { NxUriCacheService } from './uri-cache.service';
+import { Account } from '../account.service/account';
+import type { IConfig } from '../nx-config/config-types';
+import { NxConfigService } from '../nx-config/nx-config.service';
+import { NxUriCacheService } from '../uri-cache.service';
 
-export const DOC_TYPES = {
-    knowledgebase: 'kb',
-    struct: 'struct'
-};
+import { CustomClientAPI } from './custom-client-api';
+import * as t from './nx-cloud-api.types';
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
@@ -81,75 +75,6 @@ const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: stri
     };
 };
 
-export class CustomClientAPI {
-    private readonly apiBase: string;
-
-    constructor(
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        private cloudAPI: NxCloudApiService,
-        private config: IConfig,
-        private http: HttpClient,
-        private consoleService: NxConsoleService
-    ) {
-        this.apiBase = this.config.apiBase + '/custom_clients/';
-    }
-
-    create = (name: string, baseVms?, values: Record<string, string> = {}) => {
-        if (!Object.keys(values).length) {
-            const id = uuid();
-            this.consoleService.unsavedAssets[id] = { name, base_vms: baseVms, id, unsaved: true, values: {} };
-            return Promise.reject(id);
-        }
-        const body: any = { name };
-        if (Object.entries(values).length) {
-            body.values = values;
-        }
-
-        if (baseVms) {
-            body.base_vms = baseVms;
-        }
-        return this.http.post<t.CustomClient>(this.apiBase, body);
-    };
-
-    retrieve = id => {
-        return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
-    };
-
-    list = () => {
-        return this.http.get<t.CustomClient[]>(this.apiBase);
-    };
-
-    update = (id, name, values) => {
-        return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
-    };
-
-    partialUpdate = (id, name?, data: Record<string, any> = {}, values: Record<string, any> = {}) => {
-        if (name !== undefined) {
-            data.name = name;
-        }
-        data.values = { ...(data.values || {}), ...values };
-        return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
-    };
-
-    destroy = id => {
-        return this.http.delete(`${this.apiBase}${id}/`);
-    };
-
-    getManifest = () => {
-        return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
-    };
-
-    generatePackage = <Id, DownloadId = { downloadId: string }>(id: Id) => {
-        return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
-    };
-
-    checkPackage = <Id, DownloadId>(id: Id, downloadId: DownloadId) => {
-        return this.http.get<PackageStatus>(`${this.apiBase}${id}/check_package/?downloadId=${downloadId}`);
-    };
-
-    getDownloadUrl = <Id, DownloadId>(id: Id, downloadId: DownloadId) => `${this.apiBase}${id}/download_package/?downloadId=${downloadId}`;
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -171,7 +96,7 @@ export class NxCloudApiService {
         private oauthService: OauthService
     ) {
         this.CONFIG = configService.getConfig();
-        this.customClient = new CustomClientAPI(this, this.CONFIG, this.http, this.consoleService);
+        this.customClient = new CustomClientAPI(this.CONFIG, this.http, this.consoleService);
     }
 
     getSubAPI(route: ConsoleSection) {
@@ -674,12 +599,12 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    getDocumentation(name, type, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string, assetVersion?: number) {
+    getDocumentation(name, type: t.DOC_TYPES, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string, assetVersion?: number) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
             const urlAppend = assetIdOrSearchObject ? `/${assetIdOrSearchObject}` : '';
-            if (type === DOC_TYPES.knowledgebase) {
+            if (type === t.DOC_TYPES.knowledgebase) {
                 endpoint = urlAppend;
             } else {
                 endpoint += urlAppend;
@@ -707,7 +632,7 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    documentationInstantSearch(name, query, options?: Partial<InstantSearchOptions>) {
+    documentationInstantSearch(name, query, options?: Partial<t.InstantSearchOptions>) {
         if (!this.CONFIG.featureFlags.kbInstantSearch) {
             return throwError(new Error('Instant search feature not enabled'));
         }

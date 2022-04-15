@@ -6,20 +6,13 @@ import { px } from '@vms-client/utils/type-aliases';
 
 import {
     TimelineScrollbarRelativeService,
-    TimelineScrollbarRelativeServiceStatus
 } from './timeline.scrollbarRelative.service';
 import { TimelineService } from './timeline.service';
+import type {
+    TimelineScrollbarAbsoluteServiceStatus
+} from './timeline.services.types';
 
 const MIN_BAR_WIDTH_PX = 50;
-
-export interface TimelineScrollbarAbsoluteServiceStatus extends TimelineScrollbarRelativeServiceStatus {
-    isIllusionary: boolean,
-    left: px,
-    honestLeft: px,
-    width: px,
-    honestWidth: px,
-    isBarGrabbed: boolean,
-}
 
 @Injectable({
     providedIn: 'root'

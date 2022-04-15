@@ -9,8 +9,9 @@ import { NxToastService } from '@dialogs/toast.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService } from '@services/process.service';
 import { NxSessionService } from '@services/session.service';
+
+import { NxProcessService } from './process.service';
 
 describe('Process service', () => {
     let process: jasmine.SpyObj<NxProcessService>;

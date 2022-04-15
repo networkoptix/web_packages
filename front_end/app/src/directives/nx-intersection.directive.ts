@@ -10,11 +10,7 @@ import {
 import { Subject, Observable } from 'rxjs';
 import { takeUntil, debounceTime, startWith } from 'rxjs/operators';
 
-export enum IntersectionStatus {
-    Visible = 'Visible',
-    Pending = 'Pending',
-    NotVisible = 'NotVisible'
-}
+import { IntersectionStatus } from './nx-intersection.directive.types';
 
 async function isVisible(element: HTMLElement) {
     return new Promise(resolve => {
@@ -31,7 +27,7 @@ function isIntersecting(entry: IntersectionObserverEntry) {
     return entry.isIntersecting || entry.intersectionRatio > 0;
 }
 
-export const fromIntersectionObserver = (
+const fromIntersectionObserver = (
     element: HTMLElement,
     config: IntersectionObserverInit,
     debounce = 0,
@@ -39,9 +35,9 @@ export const fromIntersectionObserver = (
 ) =>
     new Observable<IntersectionStatus>(subscriber => {
         const subject$ = new Subject<{
-      entry: IntersectionObserverEntry;
-      observer: IntersectionObserver;
-    }>();
+            entry: IntersectionObserverEntry;
+            observer: IntersectionObserver;
+        }>();
 
         const intersectionObserver = new IntersectionObserver(
             (entries, observer) => {
@@ -89,40 +85,40 @@ export const fromIntersectionObserver = (
     selector: '[nxOnIntersect]'
 })
 export class NxIntersectionObserver implements OnInit, OnDestroy {
-  @Input() intersectionDebounce = 0;
-  @Input() intersectionRootMargin = '0px';
-  @Input() intersectionRoot: HTMLElement;
-  @Input() intersectionThreshold: number | number[];
-  @Input() emitVisibleOnlyOnce = false;
+    @Input() intersectionDebounce = 0;
+    @Input() intersectionRootMargin = '0px';
+    @Input() intersectionRoot: HTMLElement;
+    @Input() intersectionThreshold: number | number[];
+    @Input() emitVisibleOnlyOnce = false;
 
-  @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
+    @Output() nxOnIntersect = new EventEmitter<IntersectionStatus>();
 
-  private destroy$ = new Subject();
+    private destroy$ = new Subject();
 
-  constructor(private element: ElementRef) {}
+    constructor(private element: ElementRef) { }
 
-  ngOnInit(): void {
-      const element = this.element.nativeElement;
-      const config = {
-          root: this.intersectionRoot,
-          rootMargin: this.intersectionRootMargin,
-          threshold: this.intersectionThreshold
-      };
+    ngOnInit(): void {
+        const element = this.element.nativeElement;
+        const config = {
+            root: this.intersectionRoot,
+            rootMargin: this.intersectionRootMargin,
+            threshold: this.intersectionThreshold
+        };
 
-      fromIntersectionObserver(
-          element,
-          config,
-          this.intersectionDebounce,
-          this.emitVisibleOnlyOnce
-      ).pipe(
-          startWith(IntersectionStatus.NotVisible),
-          takeUntil(this.destroy$)
-      ).subscribe(status => {
-          this.nxOnIntersect.emit(status);
-      });
-  }
+        fromIntersectionObserver(
+            element,
+            config,
+            this.intersectionDebounce,
+            this.emitVisibleOnlyOnce
+        ).pipe(
+            startWith(IntersectionStatus.NotVisible),
+            takeUntil(this.destroy$)
+        ).subscribe(status => {
+            this.nxOnIntersect.emit(status);
+        });
+    }
 
-  ngOnDestroy(): void {
-      this.destroy$.next();
-  }
+    ngOnDestroy(): void {
+        this.destroy$.next();
+    }
 }

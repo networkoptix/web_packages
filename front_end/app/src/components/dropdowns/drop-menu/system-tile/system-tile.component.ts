@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { System } from '@services/nx-cloud-api.types';
+import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 

@@ -27,15 +27,16 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { PackageProgress } from '@dialogs/download-async/download-async.component.types';
 import { PackageHandler } from '@dialogs/download-async/package-handler';
 import { NxToastService } from '@dialogs/toast.service';
-import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxMenusService } from '@services/menus.service';
-import { CustomClientAPI, NxCloudApiService } from '@services/nx-cloud-api';
+import { NxCloudApiService } from '@services/nx-cloud-api';
+import { CustomClientAPI } from '@services/nx-cloud-api/custom-client-api';
 import {
     ContentManifest,
     ContextManifest,
     DocAsset
-} from '@services/nx-cloud-api.types';
+} from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';

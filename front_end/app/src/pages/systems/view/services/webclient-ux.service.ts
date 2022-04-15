@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface WebclientUxState {
-  isFullScreen: boolean,
-  isSidebarShown: boolean,
-  isTimelineShown: boolean,
-}
+import type { WebClientUxState } from '../view.types';
 
-const webClientUxInitialState = {
+const webClientUxInitialState: WebClientUxState = {
     isFullScreen: false,
     isSidebarShown: true,
     isTimelineShown: true
@@ -19,7 +15,7 @@ const webClientUxInitialState = {
 export class WebClientUxService {
     constructor() {}
 
-    protected _subject = new BehaviorSubject<WebclientUxState>({
+    protected _subject = new BehaviorSubject<WebClientUxState>({
         ...webClientUxInitialState
     });
 
@@ -27,13 +23,13 @@ export class WebClientUxService {
         this._subject.next(this.state);
     }
 
-    public get subject(): BehaviorSubject<WebclientUxState> {
+    public get subject(): BehaviorSubject<WebClientUxState> {
         return this._subject;
     }
 
-    protected _state: WebclientUxState = { ...webClientUxInitialState };
+    protected _state: WebClientUxState = { ...webClientUxInitialState };
 
-    public get state(): WebclientUxState {
+    public get state(): WebClientUxState {
         return { ...this._state };
     }
 

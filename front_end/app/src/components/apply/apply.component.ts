@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 
 import { NxProcessButtonComponent } from '../process-button/process-button.component';
 

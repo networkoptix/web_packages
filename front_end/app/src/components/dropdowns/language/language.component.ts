@@ -10,7 +10,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { ILanguage, ILanguages } from '@services/nx-cloud-api.types';
+import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';

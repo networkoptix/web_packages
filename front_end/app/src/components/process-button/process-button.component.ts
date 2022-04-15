@@ -7,7 +7,7 @@ import {
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { Process } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 
 interface SvgData {
     src: string;

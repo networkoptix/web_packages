@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
-import { NxSystemWithUserInfo } from '../../services/systems.service';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
 
 export const set = createAction(
     '[App Systems] Set System',

@@ -17,14 +17,19 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { PopoverRef } from '@components/popover/popover-ref';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { Account, NxAccountService } from '@services/account.service';
-import { NxApplyService, Watcher } from '@services/apply.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
+import { NxApplyService } from '@services/apply.service';
+import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
+import { NxSystemsService } from '@services/systems.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import {
     htmlToEntity,

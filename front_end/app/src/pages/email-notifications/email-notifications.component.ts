@@ -5,9 +5,10 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { filter, finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { Account, NxAccountService } from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { EmailNotification } from '@services/nx-cloud-api.types';
+import { EmailNotification } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';

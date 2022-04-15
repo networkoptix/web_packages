@@ -23,13 +23,18 @@ import {
 } from '@components/info-block/info-block.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
-import { Account, NxAccountService } from '@services/account.service';
+import { NxAccountService } from '@services/account.service';
+import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
-import { NxSystemsService, NxSystemWithUserInfo } from '@services/systems.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
+import type {
+    NxSystemWithUserInfo
+} from '@services/system.service/system-types';
+import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { htmlToEntity, pickFrom } from '@utils/general';
 

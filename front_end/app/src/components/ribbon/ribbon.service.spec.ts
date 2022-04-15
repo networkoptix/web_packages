@@ -6,7 +6,8 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import { NxRibbonService, RibbonActionInput } from './ribbon.service';
+import { NxRibbonService } from './ribbon.service';
+import type { RibbonActionInput } from './ribbon.types';
 
 describe('NxRibbonService', () => {
     let ribbonService: NxRibbonService;

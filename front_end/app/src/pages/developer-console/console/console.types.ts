@@ -3,3 +3,8 @@ export enum ConsoleMode {
     EDIT = 'edit',
     QUICK_EDIT = 'quick-edit'
 }
+
+export type TargetState = {
+    id: number;
+    download: boolean;
+};
