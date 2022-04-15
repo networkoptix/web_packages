@@ -49,7 +49,6 @@
     {
       "name": "apiFresh",
       "urls": [
-        "/api/account",
         "/api/utils/language"
       ],
       "cacheConfig": {
@@ -74,7 +73,6 @@
     {
       "name": "dynamicAssets",
       "urls": [
-        "**/language_compiled.json",
         "**/languages.json"
       ],
       "cacheConfig": {
