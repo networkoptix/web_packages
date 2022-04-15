@@ -194,6 +194,15 @@ def language(request):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Gets supported languages",
+                     responses={'302': 'Redirect to languages file with cache busting'})
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@handle_exceptions
+def languages(request):
+    return redirect(f'/static/languages.json?version={settings.VERSION}')
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns a list of builds and patch notes for the current cloud portal.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))

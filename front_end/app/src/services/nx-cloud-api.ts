@@ -54,7 +54,7 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
 
 const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
-    descriptor.value = function(...args) {
+    descriptor.value = function (...args) {
         const returnPromise = this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {
             return originalMethod.apply(this, args);
         });
@@ -215,7 +215,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     getIntegrations() {
-        return this.http.get<{data: t.Integration[]}>(this.CONFIG.apiBase + '/integrations');
+        return this.http.get<{ data: t.Integration[] }>(this.CONFIG.apiBase + '/integrations');
     }
 
     getIntegrationsCount() {
@@ -268,7 +268,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     getOpenAPIJSONs() {
-        return this.http.get<{data: t.OpenAPIJSON[]}>(this.CONFIG.apiBase + '/openapi_jsons');
+        return this.http.get<{ data: t.OpenAPIJSON[] }>(this.CONFIG.apiBase + '/openapi_jsons');
     }
 
     // not used, except in debug
@@ -458,9 +458,7 @@ export class NxCloudApiService {
     }
 
     getLanguages() {
-        const endpoint = '/static/languages.json';
-        this.cacheService.addToCache(endpoint);
-        return this.http.get<t.ILanguages>(endpoint).toPromise();
+        return this.http.get<t.ILanguages>(`${this.CONFIG.apiBase}/utils/languages/`).toPromise();
     }
 
     @swClear('apiFresh', '/utils/language', true)
@@ -605,7 +603,7 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    getDocumentation(name, type, assetIdOrSearchObject?: string | number | {query: string | number, page?: number}, state?: string) {
+    getDocumentation(name, type, assetIdOrSearchObject?: string | number | { query: string | number, page?: number }, state?: string) {
         let endpoint = name ? `/${type}/${name}` : '';
         let params = new HttpParams();
         if (typeof assetIdOrSearchObject === 'string' || typeof assetIdOrSearchObject === 'number') {
@@ -641,7 +639,7 @@ export class NxCloudApiService {
         }
         const params = NxUtilsService.mapValuesToStrings({ query, ...options });
         const route = `${this.CONFIG.apiBase}/documentation/kb/${name}/search?`;
-        return this.http.get<any>(route,  { params });
+        return this.http.get<any>(route, { params });
     }
 
     getDocAsset(assetId) {
@@ -698,7 +696,7 @@ export class NxCloudApiService {
         return this.oauthService.logoutTokens(accessToken, refreshToken);
     }
 
-    getAssets = (maxAge = 0, params) => this.http.get<{last: string, data: t.ExplorerNode[]}>(`${this.CONFIG.apiBase}/assets`, { params: { maxAge, ...params } });
+    getAssets = (maxAge = 0, params) => this.http.get<{ last: string, data: t.ExplorerNode[] }>(`${this.CONFIG.apiBase}/assets`, { params: { maxAge, ...params } });
 
     testEmailNotification(emailNotificationPayload: t.EmailNotification) {
         return this.http.post(this.CONFIG.apiBase + '/notifications/email_notification', emailNotificationPayload);
@@ -762,7 +760,7 @@ export class CustomClientAPI {
         return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
     }
 
-    generatePackage = <Id, DownloadId = {downloadId: string}>(id: Id) => {
+    generatePackage = <Id, DownloadId = { downloadId: string }>(id: Id) => {
         return this.http.post<DownloadId>(`${this.apiBase}${id}/generate_package/`, {});
     }
 
