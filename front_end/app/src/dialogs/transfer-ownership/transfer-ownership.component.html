@@ -27,12 +27,20 @@
                     id="newSystemOwner"
                     name="newSystemOwner"
                     [(ngModel)]="newOwnerEmail"
+                    list="system-emails"
                     [placeholder]="'Email' | translate"
                     [pattern]="CONFIG.credentialsValidation.emailRegex"
+                    [disabled]="noUsers"
                     autofocus
                     required
                 >
-                <!-- <p class="subtext mt-2" translate>Enter the email of the future system owner</p> -->
+                <datalist id="system-emails">
+                    <option
+                        *ngFor="let user of system.userManager.users"
+                        [value]="user.email"
+                        [disabled]="user.email === system.userManager.currentOwner.email"
+                    >{{ user.email }}</option>
+                </datalist>
                 <div class="col-12 ml-n2 d-flex">
                     <ng-container *ngIf="newSystemOwner.errors">
                         <ng-container *ngIf="newSystemOwner.touched">
@@ -49,8 +57,7 @@
                             <span
                                 *ngIf="newSystemOwner.errors.accountDoesNotExist"
                                 class="input-error"
-                                translate
-                            >User not found</span>
+                            >{{ LANG.dialogs.transferOwnership.userNotFound({ newOwnerEmail }) }}</span>
                             <span
                                 *ngIf="newSystemOwner.errors.selfTransfer"
                                 class="input-error"
@@ -66,17 +73,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <!-- <label for="permissionsSelect" translate>Your new role in the current system</label> -->
-                <!-- <nx-permissions-select
-                    id="permissionsSelect"
-                    name="permissionsSelect"
-                    [system]="system"
-                    [roles]="system.accessRoles"
-                    [(ngModel)]="newRole"
-                ></nx-permissions-select> -->
-                <!-- <span class="help-block" [innerText]="accessDescription"></span> -->
-                <p translate>Your new role in the current system:</p>
-                <p id="new-role-text">{{ newRole }}</p>
+                <p *ngIf="noUsers; else transferWarning" class="input-error" translate>
+                    There are no users on the system to transfer ownership to.
+                </p>
+                <ng-template #transferWarning>
+                    <p
+                        class="input-error"
+                        translate
+                    >Once the ownership transfer is completed you will be removed from the system.</p>
+                </ng-template>
             </div>
         </div>
         <div class="modal-footer">
@@ -84,6 +89,7 @@
                 [process]="transferOwnership"
                 [form]="transferOwnershipForm"
                 [buttonText]="'Send Request' | translate"
+                [buttonDisabled]="noUsers"
             ></nx-process-button>
             <nx-cancel-button
                 [process]="transferOwnership"

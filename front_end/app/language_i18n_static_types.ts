@@ -286,18 +286,19 @@ export interface DevConsole {
 }
 
 export interface Dialogs {
-    twoFa:         DialogsTwoFa;
-    addUser:       AddUser;
-    buttons:       Buttons;
-    cloudStorage:  CloudStorage;
-    changeStorage: ChangeStorage;
-    merge:         DialogsMerge;
-    message:       DialogsMessage;
-    removeSystem:  RemoveSystem;
-    renewAuth:     RemoveSystem;
-    titles:        DialogsTitles;
-    tooltips:      Tooltips;
-    twoFactor:     DialogsTwoFactor;
+    twoFa:             DialogsTwoFa;
+    addUser:           AddUser;
+    buttons:           Buttons;
+    cloudStorage:      CloudStorage;
+    changeStorage:     ChangeStorage;
+    merge:             DialogsMerge;
+    message:           DialogsMessage;
+    removeSystem:      RemoveSystem;
+    renewAuth:         RemoveSystem;
+    transferOwnership: TransferOwnership;
+    titles:            DialogsTitles;
+    tooltips:          Tooltips;
+    twoFactor:         DialogsTwoFactor;
 }
 
 export interface AddUser {
@@ -495,6 +496,10 @@ export interface DialogsTitles {
 
 export interface Tooltips {
     deleteAccount: any;
+}
+
+export interface TransferOwnership {
+    userNotFound: any;
 }
 
 export interface DialogsTwoFa {
@@ -1526,6 +1531,7 @@ const typeMap: any = {
         { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
         { json: "renewAuth", js: "renewAuth", typ: r("RemoveSystem") },
+        { json: "transferOwnership", js: "transferOwnership", typ: r("TransferOwnership") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
         { json: "twoFactor", js: "twoFactor", typ: r("DialogsTwoFactor") },
@@ -1706,6 +1712,9 @@ const typeMap: any = {
     ], false),
     "Tooltips": o([
         { json: "deleteAccount", js: "deleteAccount", typ: "any" },
+    ], false),
+    "TransferOwnership": o([
+        { json: "userNotFound", js: "userNotFound", typ: "any" },
     ], false),
     "DialogsTwoFa": o([
         { json: "wizardWarning", js: "wizardWarning", typ: "any" },

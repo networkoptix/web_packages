@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -19,9 +19,9 @@ import { pickFrom } from '@utils/general';
     styleUrls: ['./transfer-ownership.component.scss']
 })
 export class TransferOwnershipModalContent implements OnInit {
-    @Input() system: NxSystem;
-    @Input() transfers: SystemTransferInfo[];
-    @Input() closable: boolean = true;
+    system: NxSystem;
+    transfers: SystemTransferInfo[];
+    closable: boolean = true;
 
     @ViewChild('transferOwnershipForm') form: NgForm;
 
@@ -32,9 +32,11 @@ export class TransferOwnershipModalContent implements OnInit {
     hideErrors: boolean = false;
     transferOwnership: Process;
     newOwnerEmail: string;
-    newRole: string = 'Administrator'; // Probably not actually hardcoded
-    // newRole: NxSystemRole;
-    // accessDescription: string;
+
+    get noUsers(): boolean {
+        return this.system.userManager.users.length === 2;
+        // Local admin and cloud owner
+    }
 
     constructor(
         configService: NxConfigService,
@@ -42,24 +44,19 @@ export class TransferOwnershipModalContent implements OnInit {
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) private dialogData: {
+            system: NxSystem,
+            transfers: SystemTransferInfo[],
+        },
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
+
+        pickFrom(this.dialogData, ['system', 'transfers'], this);
     }
 
     ngOnInit(): void {
-        pickFrom(this.dialogData, ['system'], this);
-        // this.newRole = this.system.userManager.accessRoles.find(role =>
-        //     role.name.toLowerCase() === 'administrator'
-        // );
-
         const errorCodes = {
-            accountDoesNotExist: () => {
-                this.form.controls.newSystemOwner.setErrors({
-                    accountDoesNotExist: true
-                });
-            },
             selfTransfer: () => {
                 this.form.controls.newSystemOwner.setErrors({
                     selfTransfer: true
@@ -70,6 +67,11 @@ export class TransferOwnershipModalContent implements OnInit {
                     duplicateTransfer: true
                 });
             },
+            accountDoesNotExist: () => {
+                this.form.controls.newSystemOwner.setErrors({
+                    accountDoesNotExist: true
+                });
+            },
         };
 
         this.transferOwnership = this.processService.createProcess(
@@ -77,19 +79,21 @@ export class TransferOwnershipModalContent implements OnInit {
                 if (this.system.userManager.currentOwner.email === this.newOwnerEmail) {
                     return Promise.reject({ error: 'selfTransfer' });
                 }
+
                 if (this.transfers.some(t => t.toAccount === this.newOwnerEmail)) {
                     return Promise.reject({ error: 'duplicateTransfer' });
                 }
-                const res = await this.cloudService
-                    .checkIfEmailExistsInCloud(this.newOwnerEmail);
-                if (!res.emailExists) {
+
+                const notInSystem = !this.system.userManager.users.some(user =>
+                    user.email === this.newOwnerEmail
+                );
+                if (notInSystem) {
                     return Promise.reject({ error: 'accountDoesNotExist' });
-                } else {
-                    return this.cloudService
-                        .startTransfer(this.system.id, this.newOwnerEmail)
-                        .toPromise();
                 }
-                // TODO: Check for if user has verified account
+
+                return this.cloudService
+                    .startTransfer(this.system.id, this.newOwnerEmail)
+                    .toPromise();
             },
             { errorCodes },
             (res: SystemTransferInfo) => {
