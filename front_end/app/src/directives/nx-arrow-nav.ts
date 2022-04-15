@@ -25,7 +25,7 @@ export class NxArrowNavDirective {
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeydown(e) {
+    onKeydown(e): void {
         // filter events
         if (![38, 40].includes(e.keyCode)) {
             return;

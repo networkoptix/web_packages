@@ -94,7 +94,7 @@ export class NxHeaderService {
         return this.dynamicRoutes[url.split('?')[0]];
     }
 
-    setDynamicRoute(routes: string[], node, url?) {
+    setDynamicRoute(routes: string[], node, url?): void {
         for (const route of routes) {
             this.dynamicRoutes[route] = JSON.parse(JSON.stringify(node));
             this.dynamicRoutes[route].path = route;
@@ -140,7 +140,7 @@ export class NxHeaderService {
         }
     }
 
-    setLocation(url?) {
+    setLocation(url?): void {
         const bestMatch: any = {};
         // Check if system url or go through nodes
         const settingsBase = environment.isLocal ? '/settings' : '/systems';
@@ -235,7 +235,7 @@ export class NxHeaderService {
      *
      * @param param0 - Accepts MenuNode which contains a url property
      */
-    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event) {
+    handleNav({ url, new_window: newWindow, queryParamsHandling = '' }: MenuNodeNavProps, event): void {
         const openNewWindow = newWindow || event?.metaKey || event?.ctrlKey;
         this.showSubject.next(false);
         const urlPattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=\+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;

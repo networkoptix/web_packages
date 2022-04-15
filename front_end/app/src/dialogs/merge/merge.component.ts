@@ -141,7 +141,7 @@ export class MergeModalContent {
         this.init();
     }
 
-    async init(targetSystem?, currentUrl?) {
+    async init(targetSystem?, currentUrl?): Promise<void> {
         this.dryRunAvailable = this.system.info.capabilities.merge_systems >= 1;
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
@@ -242,7 +242,7 @@ export class MergeModalContent {
         }
     }
 
-    updateShow(newShow?, templateVariable: any = {}) {
+    updateShow(newShow?, templateVariable: any = {}): void {
         const { showUpdates, show, template } = this.machine.state;
         if (newShow) {
             if (newShow.includes('Error')) {
@@ -286,7 +286,7 @@ export class MergeModalContent {
         }
     }
 
-    setTargetSystem(targetSystem, serverUrlInputValue = '') {
+    setTargetSystem(targetSystem, serverUrlInputValue = ''): void {
         // cancels process service if new system selected while checking
         if (this.checkMergeabilityProcess.processing && !this.systemUpdating) {
             this.checkMergeabilityProcess.processing = false;
@@ -370,7 +370,7 @@ export class MergeModalContent {
             });
     }
 
-    checkIfExistingSystem(url: string) {
+    checkIfExistingSystem(url: string): void {
         // if using otherSystem, checks if it matches an existing system in dropdown
         if (url && (/^https?:\/\//).test(url)) {
             url = url.slice(url.indexOf('://') + 3);
@@ -386,7 +386,7 @@ export class MergeModalContent {
         }
     }
 
-    private handleOldSession(process) {
+    private handleOldSession(process): void {
         this.updateSession = true;
         this.loginService.currentSystem = this.system;
         this.loginService.updateSession('passwordMerge')
@@ -656,7 +656,7 @@ export class MergeModalContent {
             });
     }
 
-    checkForChoosePrimary() {
+    checkForChoosePrimary(): void {
         const primary = this.system.moduleInfo;
         const secondary = this.targetSystem.moduleInfo || this.targetSystem;
         if (!!primary.cloudSystemId !== !!secondary.cloudSystemId) {
@@ -673,7 +673,7 @@ export class MergeModalContent {
         }
     }
 
-    handleMergeError(error) {
+    handleMergeError(error): void {
         const err = error.data ? cloneDeep(error.data) : {};
         err.resultCode = error && error.resultCode || '';
         err.errorText = (error && error.errorText) || '';
@@ -832,7 +832,7 @@ export class MergeModalContent {
         return this.targetSystem.isNew ? isNew : { error: '0' };
     }
 
-    goBack() {
+    goBack(): void {
         this.confirmMergeForm && this.confirmMergeForm.form.markAsUntouched();
         this.adminPassword && this.adminPassword.form.markAsUntouched();
         this.machine.goBack();
@@ -847,7 +847,7 @@ export class MergeModalContent {
         }
     }
 
-    insertErrorMessages() {
+    insertErrorMessages(): void {
         const { errorText } = this.machine.state;
         for (const error in errorText) {
             if (Object.prototype.hasOwnProperty.call(errorText, error)) {
@@ -974,13 +974,13 @@ export class MergeModalContent {
         return { ...systems[0], value: systems[0].id };
     }
 
-    setSystems() {
+    setSystems(): void {
         this.setPrimarySystem(this.primarySystem.id === this.system.id ? this.system : this.targetSystem);
         this.secondarySystem = this.primarySystem.id === this.system.id ? this.targetSystem : this.system;
         this.getSecondaryName();
     }
 
-    serverUrlChange(input) {
+    serverUrlChange(input): void {
         // handles changing auto-discovered to Other System if url changed
         const { serverUrlInputValue } = this.machine.state.template;
         if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
@@ -1004,7 +1004,7 @@ export class MergeModalContent {
     }
 
     // handles password error messages
-    passwordChange(input) {
+    passwordChange(input): void {
         let showUpdate = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
         if (input.touched && input.errors?.required) {
@@ -1017,13 +1017,13 @@ export class MergeModalContent {
         this.updateShow(showUpdate, templateUpdates);
     }
 
-    close(msg?) {
+    close(msg?): void {
         this.remotePassword = undefined;
         this.clearTemplate();
         this.dialogRef.close(msg);
     }
 
-    clearTemplate() {
+    clearTemplate(): void {
         const { store } = this.machine;
         for (const state in store) {
             if (Object.prototype.hasOwnProperty.call(store, state)) {
@@ -1037,14 +1037,14 @@ export class MergeModalContent {
         }
     }
 
-    setPrimarySystem(system) {
+    setPrimarySystem(system): void {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
         this.primaryName = htmlToEntity(this.primarySystem.name || this.primarySystem?.info.systemName || this.primarySystem?.info.name);
     }
 
-    getSecondaryName() {
+    getSecondaryName(): void {
         let name: string = this.secondarySystem.name || this.secondarySystem.systemName ||
             this.secondarySystem?.info.name || this.secondarySystem?.info.systemName;
         if (name === this.LANG.dialogs.merge.otherSystem?.()) {

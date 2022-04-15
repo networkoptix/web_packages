@@ -30,7 +30,7 @@ export class NxResizeObserver implements OnDestroy {
         observer.observe(target);
     }
 
-    _resizeCallback({ contentRect: { width, height } }) {
+    _resizeCallback({ contentRect: { width, height } }): void {
         this.resize.emit({ width, height });
     }
 

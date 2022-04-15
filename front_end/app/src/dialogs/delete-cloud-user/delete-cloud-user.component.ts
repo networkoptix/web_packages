@@ -69,11 +69,11 @@ export class DeleteCloudUserModalContent {
         this.dialogRef.close(msg);
     };
 
-    clearErrors() {
+    clearErrors(): void {
         this.deleteForm.form.controls.password.setErrors({});
     }
 
-    setPassword(input) {
+    setPassword(input): void {
         this.passwordError = input.touched && input.errors?.required
             ? this.LANG.passwordRequirements.missingMessage()
             : '';

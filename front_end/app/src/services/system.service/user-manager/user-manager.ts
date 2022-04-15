@@ -84,7 +84,7 @@ export class UserManager {
         return user?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
     }
 
-    checkPermissions() {
+    checkPermissions(): void {
         const isMine = this.isMine || this.currentUser?.isLocalOwner || false;
         let isAdmin = isMine ||
             this.CONFIG.accessRoles.adminAccess.includes(this._accessRole.toLowerCase());

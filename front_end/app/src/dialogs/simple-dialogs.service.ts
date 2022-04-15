@@ -45,7 +45,7 @@ export class NxSimpleDialogsService {
             });
     }
 
-    public dismiss() {
+    public dismiss(): void {
         this.toastService.remove();
     }
 

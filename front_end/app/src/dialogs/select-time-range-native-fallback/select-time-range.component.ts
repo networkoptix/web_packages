@@ -43,7 +43,7 @@ export class SelectTimeRangeModalContent {
         return this.close(false);
     };
 
-    public handleChange(v: string, a: 'start' | 'end', b: 'Date' | 'Time') {
+    public handleChange(v: string, a: 'start' | 'end', b: 'Date' | 'Time'): void {
         this[a + b] = v;
         switch (a) {
             case 'start':

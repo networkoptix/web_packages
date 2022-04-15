@@ -115,7 +115,7 @@ export class ConnectCloudModalContent implements OnInit {
         ).toPromise();
     }
 
-    private setupAuth() {
+    private setupAuth(): void {
         this.auth.password = '';
         this.account
             .get()

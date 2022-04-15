@@ -62,7 +62,7 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems = new Set();
     }
 
-    protected _registerStoreConnection() {
+    protected _registerStoreConnection(): void {
         this.systemsSubject.subscribe((systems: Array<NxSystemWithUserInfo>) => {
             this.store.dispatch(SystemsActions.set({ systems }));
         });
@@ -77,11 +77,11 @@ export class NxSystemsService implements OnDestroy {
         this.systemsMerging.secondary = mergeInfo.secondary;
     }
 
-    addToMergeList(systemId: string) {
+    addToMergeList(systemId: string): void {
         this.mergingSystems.add(systemId);
     }
 
-    private removeFromMergeList(systemId: string) {
+    private removeFromMergeList(systemId: string): void {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const primaryName = this.systemsMerging.primary.name;
@@ -183,7 +183,7 @@ export class NxSystemsService implements OnDestroy {
         return this.getSystem(systemId, useCache).toPromise();
     }
 
-    getSystems(userEmail: string) {
+    getSystems(userEmail: string): void {
         this.currentUser = userEmail;
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
@@ -196,7 +196,7 @@ export class NxSystemsService implements OnDestroy {
             .subscribe(() => this.systemsSubject.next(this.systems));
     }
 
-    stopPoll() {
+    stopPoll(): void {
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
         }
@@ -208,7 +208,7 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    private processSystems(systems: NxSystemWithUserInfo[]) {
+    private processSystems(systems: NxSystemWithUserInfo[]): void {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach(system => {
             system.name = system.name || system.systemName;

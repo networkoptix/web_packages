@@ -61,7 +61,7 @@ export class AddStorageModalContent {
         this.LANG = language.translations;
     }
 
-    checkUrlValidity() {
+    checkUrlValidity(): void {
         const urlC = this.getControls('url');
         if (
             urlC.touched &&
@@ -251,7 +251,7 @@ export class AddStorageModalContent {
         this.passwordChecked = true;
     };
 
-    goBack() {
+    goBack(): void {
         this.alreadyCheckedAndExists = false;
     }
 

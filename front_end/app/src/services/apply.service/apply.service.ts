@@ -113,7 +113,7 @@ export class NxApplyService {
      * same but the data changes. For an example of how to use this function look at
      * NxSystemUsersComponent.
      */
-    reset(hardReset = false) {
+    reset(hardReset = false): void {
         if (this.watchers) {
             this.watchers.forEach(watcher => {
                 hardReset ? watcher.value = undefined : watcher.reset();
@@ -127,7 +127,7 @@ export class NxApplyService {
         }
     }
 
-    private touched() {
+    private touched(): void {
         this.locked = true;
     }
 
@@ -243,14 +243,14 @@ export class NxApplyService {
         }, 0);
     }
 
-    resetFormWatchers() {
+    resetFormWatchers(): void {
         this.applyComponentInstance.forms && this.resetForms$.next();
         for (const id in this.applyComponentInstance.forms) {
             delete this.applyComponentInstance.forms[id];
         }
     }
 
-    removeFormWatcher(id: string) {
+    removeFormWatcher(id: string): void {
         const watcher = this.applyComponentInstance.forms[id];
         watcher?.subscr.unsubscribe();
         delete this.applyComponentInstance.forms[id];
@@ -581,7 +581,7 @@ export class NxApplyService {
         this.updatedWatchers$.next('update');
     }
 
-    private createComponent(onlyShowSectionWatchers: boolean = false) {
+    private createComponent(onlyShowSectionWatchers: boolean = false): void {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
@@ -595,12 +595,12 @@ export class NxApplyService {
         });
     }
 
-    public setForm(form: NgForm) {
+    public setForm(form: NgForm): void {
         this.form = form;
         this.applyComponentRef.instance.form = form;
     }
 
-    public setVisible(state?: boolean) {
+    public setVisible(state?: boolean): void {
         state = (state === undefined) ? true : state;
         if (this.applyComponentRef) {
             setTimeout(() => {
@@ -609,25 +609,25 @@ export class NxApplyService {
         }
     }
 
-    public setWarn(message: string) {
+    public setWarn(message: string): void {
         if (this.applyComponentRef) {
             this.applyComponentRef.instance.warn = message;
         }
     }
 
-    public setInvalidField(name: string) {
+    public setInvalidField(name: string): void {
         if (this.applyComponentRef) {
             this.applyComponentRef.instance.setInvalidField(name);
         }
     }
 
-    public unsetInvalidField(name: string) {
+    public unsetInvalidField(name: string): void {
         if (this.applyComponentRef) {
             this.applyComponentRef.instance.unsetInvalidField(name);
         }
     }
 
-    public setInvalid(flag: boolean) {
+    public setInvalid(flag: boolean): void {
         if (this.applyComponentRef) {
             this.applyComponentRef.instance.setInvalid(flag);
         }
@@ -709,11 +709,11 @@ export class NxApplyService {
         this.applyFunctions.push(applyFunction);
     }
 
-    private extendDiscardFunction(discardFunction: () => void) {
+    private extendDiscardFunction(discardFunction: () => void): void {
         this.discardFunctions.push(discardFunction);
     }
 
-    private extendSubmitFunction(submitFunction: () => void) {
+    private extendSubmitFunction(submitFunction: () => void): void {
         this.submitFunctions.push(submitFunction);
     }
 }

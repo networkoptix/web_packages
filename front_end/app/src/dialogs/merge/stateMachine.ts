@@ -11,7 +11,7 @@ export class StateMachine {
         this.history = [];
     }
 
-    transition(newState, goingBack = false) {
+    transition(newState, goingBack = false): void {
         const nextState = this.store[newState];
         if (!nextState) {
             throw new Error(`invalid: ${this.state} -> ${newState}`);
@@ -23,7 +23,7 @@ export class StateMachine {
         this.state = nextState;
     }
 
-    goBack() {
+    goBack(): void {
         for (const variable in this.state.template) {
             if (Object.prototype.hasOwnProperty.call(this.state.template, variable)) {
                 if (variable.includes('Error')) {

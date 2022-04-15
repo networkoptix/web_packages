@@ -104,7 +104,7 @@ export class LocalAccount extends BaseAccount {
             );
     }
 
-    logout(doNotRedirect = false, skipReload = false) {
+    logout(doNotRedirect = false, skipReload = false): void {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -121,7 +121,7 @@ export class LocalAccount extends BaseAccount {
             });
     }
 
-    logoutHelper(doNotRedirect = false, skipReload = false) {
+    logoutHelper(doNotRedirect = false, skipReload = false): void {
         this.mediaServerApi
             .logout()
             .finally(() => {

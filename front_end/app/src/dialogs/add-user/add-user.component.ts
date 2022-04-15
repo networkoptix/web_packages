@@ -71,7 +71,7 @@ export class AddUserModalContent {
         this.hideErrors = false;
     };
 
-    setPermission(role) {
+    setPermission(role): void {
         this.selectedPermission = role;
         this.accessDescription = this.getAccessDescription();
     }

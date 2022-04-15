@@ -46,7 +46,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         this.LANG = languageService.translations;
     }
 
-    clearPassword() {
+    clearPassword(): void {
         if (this.cameraPasswordCredentials === '******') {
             this.cameraPasswordCredentials = '';
         }

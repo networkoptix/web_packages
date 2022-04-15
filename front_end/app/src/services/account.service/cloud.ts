@@ -151,7 +151,7 @@ export class CloudAccount extends BaseAccount {
         });
     }
 
-    logout(doNotRedirect = false, skipReload = false) {
+    logout(doNotRedirect = false, skipReload = false): void {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -168,7 +168,7 @@ export class CloudAccount extends BaseAccount {
             });
     }
 
-    logoutHelper(doNotRedirect = false, skipReload = false) {
+    logoutHelper(doNotRedirect = false, skipReload = false): void {
         this.cloudApi
             .logout()
             .finally(() => {

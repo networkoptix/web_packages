@@ -13,7 +13,7 @@ export class NxStorageService {
         this.storage = localStorageService;
     }
 
-    clear(key?: string) {
+    clear(key?: string): void {
         if (key) {
             this.storage.clear(key);
         } else {

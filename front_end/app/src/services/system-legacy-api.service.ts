@@ -124,7 +124,7 @@ export class NxSystemAPI {
         return false;
     }
 
-    public setAccessTokenAsCookie() {
+    public setAccessTokenAsCookie(): void {
         throw new Error(this.notImplementedMsg);
     }
 
@@ -662,7 +662,7 @@ export class NxSystemAPI {
         return this.post('/api/ifconfig', networkSettings).toPromise();
     }
 
-    setAuthKeys(authGet: string, authPost: string, authPlay: string) {
+    setAuthKeys(authGet: string, authPost: string, authPlay: string): void {
         this.authGet = authGet;
         this.authPost = authPost;
         this.authPlay = authPlay;
@@ -1222,7 +1222,7 @@ export class NxSystemAPI {
 
     /* End of Working with archive */
 
-    setCameraPath(cameraId: string) {
+    setCameraPath(cameraId: string): void {
         let systemLink = '';
         const route =
             this.location.path().startsWith('/embed') ? '/embed/' : '';

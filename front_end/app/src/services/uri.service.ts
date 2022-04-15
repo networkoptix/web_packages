@@ -115,7 +115,7 @@ export class NxUriService {
         });
     }
 
-    resetURI(navigateTo: string, queryParams: Params = {}) {
+    resetURI(navigateTo: string, queryParams: Params = {}): void {
         this.router
             .navigate([navigateTo], {
                 queryParams,

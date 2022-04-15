@@ -213,7 +213,7 @@ export class NxMenusService {
         return (!environment.isLocal && systemId) ? url + segment : segment;
     }
 
-    updateActiveSystemMenu(activeSystem, isLocalAdmin?) {
+    updateActiveSystemMenu(activeSystem, isLocalAdmin?): void {
         if (!activeSystem) {
             return;
         }

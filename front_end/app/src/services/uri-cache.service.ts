@@ -5,7 +5,7 @@ export class NxUriCacheService {
     private cachedUri = [];
     private cachedData = new Map<string, any>();
 
-    public setData(key: string, value: any) {
+    public setData(key: string, value: any): void {
         this.cachedData.set(key, value);
     }
 
@@ -13,11 +13,11 @@ export class NxUriCacheService {
         return this.cachedData.get(key);
     }
 
-    public deleteData(key: string) {
+    public deleteData(key: string): void {
         this.cachedData.delete(key);
     }
 
-    public clearData() {
+    public clearData(): void {
         this.cachedData.clear();
     }
 
@@ -25,7 +25,7 @@ export class NxUriCacheService {
         return this.cachedUri.includes(serviceUri);
     }
 
-    public addToCache(serviceUri: string) {
+    public addToCache(serviceUri: string): void {
         // Check if not already added to list
         if (!this.addedToCache(serviceUri)) {
             this.cachedUri.push(serviceUri);

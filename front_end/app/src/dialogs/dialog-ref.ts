@@ -35,7 +35,7 @@ export class DialogRef {
     /**
      * Closes the overlay. You can optionally provide a result.
      */
-    public close(result?: any) {
+    public close(result?: any): void {
         this.overlayRef.dispose();
         this.afterClosedS$.next(result);
         this.afterClosedS$.complete();

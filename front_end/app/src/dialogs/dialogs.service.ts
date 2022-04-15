@@ -103,7 +103,7 @@ export class NxDialogsService {
     public ngOnDestroy(): void {
     }
 
-    public dismiss() {
+    public dismiss(): void {
         this.toastService.remove();
     }
 

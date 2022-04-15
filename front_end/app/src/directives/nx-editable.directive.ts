@@ -92,17 +92,17 @@ export class NxEditableDirective implements OnInit {
     }
 
     // toggle mode handlers
-    editOn() {
+    editOn(): void {
         this.addClass(this.editClass);
         this.removeClass(this.initialClass);
     }
 
-    editOff() {
+    editOff(): void {
         this.removeClass(this.editClass, this.errorClass);
         this.addClass(this.initialClass);
     }
 
-    checkError() {
+    checkError(): void {
         if (this.hasError) {
             this.addClass(this.errorClass);
         } else {
@@ -111,22 +111,22 @@ export class NxEditableDirective implements OnInit {
     }
 
     // Helper methods for updating classes
-    addClass(...classToAdd: string[]) {
+    addClass(...classToAdd: string[]): void {
         this.elementClass = `${this.elementClass} ${classToAdd.join(' ')}`;
     }
 
-    removeClass(...classToRemove: string[]) {
+    removeClass(...classToRemove: string[]): void {
         this.elementClass = this._elementClass.filter(currentClass => !classToRemove.find(toRemove => toRemove === currentClass)).join(' ');
     }
 
     // Updated event handlers: Add event handling used by directive here then call event handler from DOM element
     @HostListener('input')
-    callOnChange() {
+    callOnChange(): void {
         this.content = this.elementRef.nativeElement[this.propValueAccessor];
     }
 
     @HostListener('blur')
-    callOnTouched() {
+    callOnTouched(): void {
         this.editOff();
         this.elementRef.nativeElement.blur();
         this.elementRef.nativeElement.innerText = '';
@@ -136,12 +136,12 @@ export class NxEditableDirective implements OnInit {
     }
 
     @HostListener('focus')
-    callOnFocus() {
+    callOnFocus(): void {
         this.editOn();
     }
 
     @HostListener('keyup.enter')
-    callOnEnter() {
+    callOnEnter(): void {
         this.callOnTouched();
     }
 }

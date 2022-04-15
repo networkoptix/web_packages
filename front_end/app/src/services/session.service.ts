@@ -29,7 +29,7 @@ export class NxSessionService {
         });
     }
 
-    invalidateSession() {
+    invalidateSession(): void {
         this.session.store('loginState', null);
         this.session.store('loginRegister', false);
         this.loginStateSubject.next(this.loginState);

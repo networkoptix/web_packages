@@ -50,7 +50,7 @@ export class AddWidgetModalContent {
     downloadingThirdParty = false;
     readonly environment = environment;
 
-    updateSize(size) {
+    updateSize(size): void {
         this.selectedWidget.value.size = size;
     }
 
@@ -66,7 +66,7 @@ export class AddWidgetModalContent {
         return this.dashboardMenu.find(({ id }) => id === dashboardId);
     }
 
-    toggleEditMode(card: WidgetCard) {
+    toggleEditMode(card: WidgetCard): void {
         card.editMode = !card.editMode;
     }
 

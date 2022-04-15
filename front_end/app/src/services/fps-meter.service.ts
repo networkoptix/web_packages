@@ -6,14 +6,14 @@ import { Injectable } from '@angular/core';
 export class FpsMeterService {
     protected _isInstalled: boolean = false;
 
-    public install() {
+    public install(): void {
         if (!this._isInstalled) {
             this._install();
             this._isInstalled = true;
         }
     }
 
-    protected _install() {
+    protected _install(): void {
         // a guard against SSR failure
         if (typeof (document) === 'object') {
             const script = document.createElement('script');

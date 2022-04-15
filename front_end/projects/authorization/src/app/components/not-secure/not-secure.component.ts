@@ -41,7 +41,7 @@ export class NxAuthorizeNotSecureComponent {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnChanges(changes: NgChanges<any>) {
+    ngOnChanges(changes: NgChanges<NxAuthorizeNotSecureComponent>) {
         if (changes.redirectUrl?.currentValue) {
             this.redirectUrl = htmlToEntity(this.redirectUrl);
         }

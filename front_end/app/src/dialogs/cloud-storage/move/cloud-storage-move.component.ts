@@ -149,7 +149,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.dialogRef.close(msg);
     };
 
-    setTargetSystem({ value, state }: SystemDropdownItem) {
+    setTargetSystem({ value, state }: SystemDropdownItem): void {
         this.target$.next(value);
         this.targetOnline$.next(state !== 'offline');
         if (value === 'otherSystem') {

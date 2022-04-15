@@ -188,7 +188,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return cloudLoginObservable;
     }
 
-    private clearTokens() {
+    private clearTokens(): void {
         const storageService = this.storageService;
         this.cookieService.delete(this.cloudAccessTokenName);
         this.cookieService.delete('x-runtime-guid');
@@ -461,7 +461,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
-    async redirectOauth(allSystems?: boolean) {
+    async redirectOauth(allSystems?: boolean): Promise<void> {
         const window = this.injector.get(WINDOW);
         const { href } = window.location;
         const params = new URLSearchParams({

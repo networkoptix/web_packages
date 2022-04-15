@@ -52,7 +52,7 @@ export class GenericModalContent implements OnInit {
         this.footerClass ||= '';
     }
 
-    close(action?) {
+    close(action?): void {
         this.dialogRef.close(action);
     }
 }

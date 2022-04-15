@@ -83,13 +83,13 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
         this.overlayRef = undefined;
     }
 
-    private close() {
+    private close(): void {
         this.destroy$.next();
         this.overlayRef?.detach();
     }
 
     @HostListener('mouseenter')
-    show() {
+    show(): void {
         timer(300).pipe(
             takeUntil(this.destroy$),
         ).subscribe(() => {
@@ -113,7 +113,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     @HostListener('mouseleave')
-    hide() {
+    hide(): void {
         this.close();
     }
 }

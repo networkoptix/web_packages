@@ -187,7 +187,7 @@ export class NxSystem extends System {
         this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
 
-    private updateSystemState() {
+    private updateSystemState(): void {
         this.stateMessage = '';
         if (!this.isAvailable) {
             this.stateMessage = this.LANG.system.status.unavailable?.();
@@ -197,7 +197,7 @@ export class NxSystem extends System {
         }
     }
 
-    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
+    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string): void {
         this.systemIdInit = systemId;
         this.serverIdInit = serverId;
         this.userIdInit = userId;
@@ -403,7 +403,7 @@ export class NxSystem extends System {
         return this.infoPromise;
     }
 
-    startPoll(systemId?: string) {
+    startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
             if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
@@ -416,7 +416,7 @@ export class NxSystem extends System {
         }
     }
 
-    stopPoll() {
+    stopPoll(): void {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
         } else {
@@ -899,7 +899,7 @@ export class NxSystem extends System {
      * TODO: This should be refactored to be moved into cameraManager
      * @deprecated Not really deprecated yet but should be soon.
      */
-    filterCamerasFromUserPermissions() {
+    filterCamerasFromUserPermissions(): void {
         const accessRights: { [resourceId: string]: true; } = this.userManager.currentUser?.accessRights;
         if (accessRights && this.cameraManager.cameras) {
             this.cameraManager.cameras = this.cameraManager.cameras.filter(camera => accessRights[camera.id]);

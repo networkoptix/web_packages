@@ -227,13 +227,13 @@ export class Process {
     /**
      * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
      */
-    public cancel() {
+    public cancel(): void {
         this.processing = false;
         this.canceled = true;
         this.canceled$.next(true);
     }
 
-    private errorHelper(data) {
+    private errorHelper(data): void {
         if (this.canceled) {
             return;
         }

@@ -62,7 +62,7 @@ export class SelectTimeRangeModalContent {
     public activeTab: string = 'start';
 
     // Not used?
-    public activateTab(name: 'start' | 'end') {
+    public activateTab(name: 'start' | 'end'): void {
         this.activeTab = name;
     }
 }

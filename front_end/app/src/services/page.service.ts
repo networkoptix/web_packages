@@ -79,7 +79,7 @@ export class NxPageService {
      * @param property string
      * @param value string
      */
-    updateLookups(property, value) {
+    updateLookups(property, value): void {
         const { url } = this.router;
         this.metaLookup[url] ||= this.generateDefaultMeta(url);
         const urlProperties = this.metaLookup[url];
@@ -148,11 +148,11 @@ export class NxPageService {
         this.updateLookups('title', title());
     }
 
-    setDefaultLayout() {
+    setDefaultLayout(): void {
         this.updateLookups('viewport', this.CONFIG.meta.viewport.default);
     }
 
-    setDesktopLayout() {
+    setDesktopLayout(): void {
         this.updateLookups('viewport', this.CONFIG.meta.viewport.desktopLayout);
     }
 

@@ -109,7 +109,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @ViewChild('disable2FaCode', { static: true }) disable2FaCodeTemplate: TemplateRef<any>;
 
     @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent) {
+    handleKeyboardEvent(event: KeyboardEvent): void {
         if (
             ['Enter', 'NumpadEnter'].includes(event.code) &&
             document.activeElement.tagName === 'INPUT'
@@ -125,13 +125,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         }
     }
 
-    private resetDefaults() {
+    private resetDefaults(): void {
         this.newCodes = [];
         this.password = '';
         this.tfaCode = '';
     }
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.resetDefaults();
         this.account = this.accountService.account;
 
@@ -434,7 +434,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         });
     }
 
-    async setTemplate(step) {
+    async setTemplate(step): Promise<void> {
         await new Promise(resolve => setTimeout(resolve)); // sleep
         this.currentStep = step;
         switch (step) {
@@ -524,7 +524,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         this.close('canceled');
     };
 
-    next() {
+    next(): void {
         switch (this.currentStep) {
             case T_FA_STEPS.ChangePassword:
                 this.changePasswordProcess.run();
@@ -552,13 +552,13 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         }
     }
 
-    prev() {
+    prev(): void {
         if (this.currentStep === T_FA_STEPS.WizardCode) {
             this.setTemplate(T_FA_STEPS.WizardQR);
         }
     }
 
-    copyToClipboard() {
+    copyToClipboard(): void {
         this.clipboardService.copy(this.newCodes.join('\n'));
     }
 }

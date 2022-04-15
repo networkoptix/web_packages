@@ -15,7 +15,7 @@ export class NxClickElsewhereDirective {
     }
 
     @HostListener('document:click', ['$event.target'])
-    onMouseClick(targetElement) {
+    onMouseClick(targetElement): void {
         if (targetElement.type === 'checkbox') {
             // special case for nx-checkbox component not being recognized as internal
             // for nx-multi-select

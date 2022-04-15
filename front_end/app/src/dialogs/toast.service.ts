@@ -14,14 +14,14 @@ export class NxToastService {
         this.CONFIG = configService.getConfig();
     }
 
-    show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
+    show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {
         const toast = this.toasts.find(obj => obj.textOrTpl === textOrTpl);
         if (!toast) {
             this.toasts.push({ textOrTpl, ...options });
         }
     }
 
-    remove(toast?) {
+    remove(toast?): void {
         if (toast) {
             this.toasts = this.toasts.filter(t => t !== toast);
         } else {

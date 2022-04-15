@@ -63,7 +63,7 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
     }
 
     // Iterates through all the children with the target class and sets their height to the height of the largest one.
-    matchHeight(parent: HTMLElement, className: string) {
+    matchHeight(parent: HTMLElement, className: string): void {
         if (!parent) return;
 
         const children = parent.getElementsByClassName(className);

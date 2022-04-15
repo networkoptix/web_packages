@@ -60,7 +60,7 @@ export class NxScrollMechanicsService {
         return this.searchViewHeightSubject.getValue();
     }
 
-    setWindowSize(height: number, width: number) {
+    setWindowSize(height: number, width: number): void {
         this.windowSizeSubject.next({ height, width });
     }
 

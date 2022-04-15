@@ -197,13 +197,13 @@ export abstract class BaseAccount implements OnDestroy {
         return !!emailExists;
     }
 
-    protected clearLoginState() {
+    protected clearLoginState(): void {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
     }
 
     // TODO: @Chris require login add check for !this.loginWithAuthKeyInProgress
-    redirectAuthorised() {
+    redirectAuthorised(): void {
         this.get()
             .then((account: Account) => {
                 if (account && !environment.isLocal) {
@@ -353,7 +353,7 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    private clearCodeFromUri() {
+    private clearCodeFromUri(): void {
         const url = new URL(this.window.location.href);
         url.searchParams.delete('code');
         this.window.history.pushState({ url: url.toString() }, '', url.toString());
@@ -478,7 +478,7 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    protected stopAccountPoll() {
+    protected stopAccountPoll(): void {
         if (this.accountPollSubscription) {
             this.accountPollSubscription.unsubscribe();
         }

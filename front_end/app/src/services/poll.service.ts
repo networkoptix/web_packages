@@ -30,7 +30,7 @@ export class NxPollService {
         this.unsub$.next('done');
     }
 
-    cancel() {
+    cancel(): void {
         this.unsub$.next('done');
     }
 

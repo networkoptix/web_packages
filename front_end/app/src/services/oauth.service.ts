@@ -111,12 +111,12 @@ export class OauthService {
         return false;
     }
 
-    add2fa(accessToken) {
+    add2fa(accessToken): void {
         const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize?state=renew&access_token=${accessToken}`;
         window.open(authorizeUrl, '_blank').focus();
     }
 
-    setTokens(tokens) {
+    setTokens(tokens): void {
         this.storage.cloudApiAccessToken = tokens.access_token;
         this.storage.cloudApiRefreshToken = tokens.refresh_token;
     }

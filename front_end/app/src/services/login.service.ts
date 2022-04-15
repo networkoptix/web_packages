@@ -180,7 +180,7 @@ export class NxLoginService {
         //     });
     }
 
-    cancelCodeSubscription() {
+    cancelCodeSubscription(): void {
         this.done$.next(true);
     }
 

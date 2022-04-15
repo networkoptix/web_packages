@@ -78,7 +78,7 @@ export class NxBootstrapProvider {
         });
     }
 
-    setLocalInfo(data) {
+    setLocalInfo(data): void {
         const hostProtocol = data.cloudHost.split('://')[0];
         this.CONFIG.cloudHost = (hostProtocol === data.cloudHost)
             ? `https://${data.cloudHost}`
