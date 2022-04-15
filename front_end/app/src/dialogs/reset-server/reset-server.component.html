@@ -45,5 +45,6 @@
     <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
                                 (loginSuccess)="needsUpdate = false; resetServer.run()"
                                 [noConnectionMsg]="'Failed to reset server.' | translate"
-                                [system]="system"></nx-update-webadmin-session>
+                                [system]="system"
+                                processAction="danger"></nx-update-webadmin-session>
 </form>

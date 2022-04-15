@@ -3,7 +3,7 @@
       (submit)="flags.hideErrors = false">
     <div class="modal-body">
         <ng-container *ngIf="isCloud; else local">
-            <p translate>Please login using %CLOUD_NAME% in the tab that popped up.</p>
+            <p translate>To continue log in to %CLOUD_NAME% in the tab that popped up.</p>
         </ng-container>
         <ng-template #local>
             <p translate>Enter your account password to continue</p>
