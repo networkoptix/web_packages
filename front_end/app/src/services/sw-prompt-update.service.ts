@@ -4,7 +4,7 @@ import { concat, interval, zip } from 'rxjs';
 import { first, tap, filter, take } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { NxRibbonService } from '@components/ribbon';
+import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';

@@ -1,0 +1,798 @@
+<div class="content-block arch-svg" style="height: 700px; padding: 2rem;">
+    <style>
+        .arch-svg {
+            background-color : var(--alt-body-bg);
+        }
+        /*** architecture svg ***/
+        svg#ourArchitecture a {
+            text-decoration : none !important;
+        }
+
+        svg#ourArchitecture a:hover {
+            text-decoration : none;
+        }
+
+        svg#ourArchitecture a text {
+            fill : var(--h7);
+        }
+
+        svg#ourArchitecture .spacer {
+            fill : var(--arch-svg-spacer-fill);
+        }
+
+        svg#ourArchitecture .dashed-line {
+            stroke : var(--arch-svg-dash-stroke);
+        }
+
+        svg#ourArchitecture .solid-path-arrow {
+            fill : var(--arch-svg-solid-path-arrow-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .shadow {
+            filter : url(#dropShadow);
+        }
+
+        svg#ourArchitecture a.arch-node .shadowSmall {
+            filter : url(#dropShadowSmall);
+        }
+
+        svg#ourArchitecture a.arch-node .nx-server-left {
+            fill : var(--arch-svg-server-fill); /* url(#linearGradientLeft); */
+        }
+
+        svg#ourArchitecture a.arch-node .nx-server-right {
+            fill : var(--arch-svg-server-fill);  /*url(#linearGradientRight); */
+        }
+
+        svg#ourArchitecture a.arch-node:hover .nx-server-left {
+            fill : var(--arch-svg-server-hover-fill); /* url(#linearGradientLeftHover); */
+        }
+
+        svg#ourArchitecture a.arch-node:hover .nx-server-right {
+            fill : var(--arch-svg-server-hover-fill);  /* url(#linearGradientRightHover); */
+        }
+
+        svg#ourArchitecture a.arch-node:hover .shadow {
+            filter : url(#dropShadowHover);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .shadowSmall {
+            filter : url(#dropShadowSmallHover);
+        }
+
+        svg#ourArchitecture a.arch-node .transparent-tile {
+            stroke : var(--arch-svg-transparent-tile-stroke);
+            stroke-width: 2px;
+        }
+
+        svg#ourArchitecture a.arch-node:hover .transparent-tile {
+            stroke : var(--arch-svg-transparent-tile-stroke);
+        }
+
+        svg#ourArchitecture a.arch-node .third-party {
+            fill : var(--arch-svg-third-party-fill);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .third-party {
+            fill : var(--arch-svg-third-party-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .built-in {
+            fill : var(--arch-svg-built-in-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .built-in-text {
+            fill : var(--arch-svg-built-in-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .level1 {
+            fill : var(--arch-svg-level1-fill);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .level1 {
+            fill : var(--arch-svg-level1-fill);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .level1-text {
+            fill : var(--arch-svg-level1-color);
+        }
+
+        svg#ourArchitecture a.arch-node .level2 {
+            fill : var(--arch-svg-level2-fill);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .level2 {
+            fill : var(--arch-svg-level2-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .level3 {
+            fill : var(--arch-svg-level3-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .rest-streaming-api {
+            fill : var(--arch-svg-rest-streaming-api-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .rest-streaming-api-text {
+            fill : var(--arch-svg-rest-streaming-api-color);
+        }
+
+        svg#ourArchitecture a.arch-node .cloud {
+            fill : var(--arch-svg-cloud-fill);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .cloud {
+            fill : var(--arch-svg-cloud-fill);
+        }
+
+        svg#ourArchitecture .cloud-text {
+            fill : var(--arch-svg-cloud-color);
+        }
+
+        svg#ourArchitecture a.arch-node .cloud-relay {
+            fill : var(--arch-svg-cloud-relay-fill);
+        }
+
+        svg#ourArchitecture a.arch-node:hover .cloud-relay {
+            fill : var(--arch-svg-cloud-relay-fill);
+        }
+
+        svg#ourArchitecture a.arch-node .cloud-relay-text {
+            fill : var(--arch-svg-cloud-relay-color);
+        }
+
+        .nx-svg-container {
+            position : relative;
+        }
+
+        .nx-tooltip {
+            font-family      : robotoregular,sans-serif;
+            font-size        : 13px;
+            color            : var(--h1);
+            line-height      : 16px;
+            border           : 1px solid var(--border-color);
+            border-radius    : 4px;
+            box-shadow       : 0 8px 16px 0 rgba(0, 0, 0, 0.15);
+            display          : none;
+            position         : absolute;
+            background-color : var(--alt-body-bg);
+            padding          : 1rem;
+            z-index          : 99;
+            max-width        : 300px;
+        }
+
+        .nx-tooltip:after {
+            content      : "";
+            position     : absolute;
+            top          : 50%;
+            left         : -16px;
+            transform    : translateY(-50%);
+            border-style : solid;
+            border-width : 16px 16px 16px 0;
+            border-color : transparent var(--alt-body-bg);
+            display      : block;
+            width        : 0;
+            z-index      : 1;
+        }
+
+        .nx-tooltip:before {
+            content      : "";
+            position     : absolute;
+            top          : 50%;
+            left         : -17px;
+            transform    : translateY(-50%);
+            border-style : solid;
+            border-width : 17px 17px 17px 0;
+            border-color : transparent var(--border-color);
+            display      : block;
+            width        : 0;
+            z-index      : 0;
+        }
+
+        .nx-tooltip.left:before {
+            border-width : 17px 0 17px 17px;
+            left         : auto;
+            right        : -17px;
+        }
+
+        .nx-tooltip.left:after {
+            border-width : 16px 0 16px 16px;
+            left         : auto;
+            right        : -16px;
+        }
+
+        .nx-tooltip.top:before {
+            border-color : var(--border-color) transparent;
+            border-width : 17px 17px 0 17px;
+            left         : 50%;
+            bottom       : -17px;
+            top          : auto;
+            transform    : translateX(-50%);
+        }
+
+        .nx-tooltip.top:after {
+            border-color : var(--alt-body-bg) transparent;
+            border-width : 16px 16px 0 16px;
+            left         : 50%;
+            bottom       : -16px;
+            top          : auto;
+            transform    : translateX(-50%);
+        }
+    </style>
+    <div id="tooltips-content">
+        <div id="web-admin" class="nx-tooltip">Web Admin is a browser application that provides some basic VMS features
+            including video playback. Click to read more about embedding video in web applications.
+        </div>
+        <div id="nx-mobile" class="nx-tooltip">%VMS_NAME% Mobile Client is a rich client for iOS and Android mobile
+            computing devices that allows users to view live or recorded video from their %VMS_NAME% system. %VMS_NAME%
+            Mobile uses Server API, and it is possible to implement full-featured alternative mobile applications. Also,
+            %VMS_NAME% Mobile client can be visually customised to create new VMS products.
+        </div>
+        <div id="third-party" class="nx-tooltip">The most common ways to integrate third-party services are using REST
+            API and Built-in browser in the desktop client. Also, Cloud relay could be used to access remote systems
+            thorugh the internet.
+        </div>
+        <div id="nx-desktop" class="nx-tooltip">%VMS_NAME% Desktop is full-featured VMS application. Almost all
+            functions are using Server API, so it is possible to implement alternative client application with most of
+            the features. Also, %VMS_NAME% Desktop client can be visually customised to create new VMS products.
+        </div>
+        <div id="rest_sreaming_api" class="nx-tooltip">REST &amp; Streaming API provides access to system information
+            using standard HTTP or RTSP protocols, this is a universal integration approach.
+        </div>
+        <div id="cloud-relay" class="nx-tooltip">Cloud relay (proxy) helps send requests and pull video from cloud
+            systems for web interfaces or thrid party applications.
+        </div>
+        <div id="device-driver" class="nx-tooltip">The result of using Video Source SDK is a plugin (dynamic library)
+            which implements device-specific interactions (driver).
+        </div>
+        <div id="built-in-browser" class="nx-tooltip">%VMS_NAME% Desktop client has built-in browser which allows you
+            introduce new interfaces for the user, or pull configuration interfaces for plugins and devices.
+        </div>
+        <div id="vid-sdk" class="nx-tooltip">Video Source SDK handles device-specific integrations such as advanced
+            camera capabilitites or I/O modules.
+        </div>
+        <div id="meta-sdk" class="nx-tooltip">Metadata SDK handles metadata and events from different video analytics
+            applications.
+        </div>
+        <div id="vid-plugin" class="nx-tooltip">Plugin can also run video analytics as part of server process to ensure
+            lower latency and more efficient resource utilisation.
+        </div>
+        <div id="vid-service" class="nx-tooltip">Plugin can establish connection to third party video-analytics
+            solutions or cameras.
+        </div>
+        <div id="ipcam" class="nx-tooltip">Server uses Onvif protocol for camera management and RTSP for video streaming
+            for most cameras. MJPEG cameras are also supported. Click to see the list of supported cameras.
+        </div>
+        <div id="meta-cam" class="nx-tooltip">A Camera Metadata plugin uses our Metadata SDK to connect to the camera
+            using an API or protocol, retrieve metadata events from the camera, and send them to the server.
+        </div>
+        <div id="ipusb" class="nx-tooltip">Using video source SDK, it is possible to implement support for non-standard
+            cameras, optical sensors, I/O devices, etc. %VMS_NAME% Server supports USB cameras, v4l2 video sources and
+            IP cameras right out of the box.
+        </div>
+        <div id="onvifdr" class="nx-tooltip">%VMS_NAME% Servers operate with a standard ONVIF profile S API that is now
+            commonly used in most IP cameras.
+        </div>
+        <div id="serverdesc1" class="nx-tooltip">%VMS_NAME% Server is the core of the system, it performs camera
+            discovery and management, access control, recording, event rules processing, and all other logic. It also
+            comes with a built-in web admin interface to allow for remote management and has several SDKs for device and
+            system integration. %VMS_NAME% Server maintains a server hive architecture which syncs user and
+            configuration data in real-time and adapts in the event of server failure by directing another server to
+            restore connectivity and maintain the cameras.
+        </div>
+        <div id="serverdesc2" class="nx-tooltip">%VMS_NAME% Server is the core of the system, it performs camera
+            discovery and management, access control, recording, event rules processing, and all other logic. It also
+            comes with a built-in web admin interface to allow for remote management and has several SDKs for device and
+            system integration. %VMS_NAME% Server maintains a server hive architecture which syncs user and
+            configuration data in real-time and adapts in the event of server failure by directing another server to
+            restore connectivity and maintain the cameras.
+        </div>
+        <div id="serverdesc3" class="nx-tooltip left">%VMS_NAME% Server is the core of the system, it performs camera
+            discovery and management, access control, recording, event rules processing, and all other logic. It also
+            comes with a built-in web admin interface to allow for remote management and has several SDKs for device and
+            system integration. %VMS_NAME% Server maintains a server hive architecture which syncs user and
+            configuration data in real-time and adapts in the event of server failure by directing another server to
+            restore connectivity and maintain the cameras.
+        </div>
+        <div id="serverdesc4" class="nx-tooltip left">%VMS_NAME% Server is the core of the system, it performs camera
+            discovery and management, access control, recording, event rules processing, and all other logic. It also
+            comes with a built-in web admin interface to allow for remote management and has several SDKs for device and
+            system integration. %VMS_NAME% Server maintains a server hive architecture which syncs user and
+            configuration data in real-time and adapts in the event of server failure by directing another server to
+            restore connectivity and maintain the cameras.
+        </div>
+        <div id="serverdesc5" class="nx-tooltip">%VMS_NAME% Server is the core of the system, it performs camera
+            discovery and management, access control, recording, event rules processing, and all other logic. It also
+            comes with a built-in web admin interface to allow for remote management and has several SDKs for device and
+            system integration. %VMS_NAME% Server maintains a server hive architecture which syncs user and
+            configuration data in real-time and adapts in the event of server failure by directing another server to
+            restore connectivity and maintain the cameras.
+        </div>
+        <div id="nx-cloud" class="nx-tooltip top">%CLOUD_NAME% helps establish remote connection between servers and
+            client applications. In most scenarios, it establishes direct P2P connection (torrent-like); if not
+            possible, it falls back to relaying data through cloud servers.
+        </div>
+        <div id="apiclient" class="nx-tooltip">All client applications developed by %COMPANY_NAME% are mostly using the
+            same REST API to retrieve data, configure and control the system as available to thrid-party services and
+            applications.
+        </div>
+    </div>
+    <div class="nx-svg-container remove-portal-styles" style="height: 100%;">
+        <svg id="ourArchitecture" style="pointer-events: all;" width="100%" height="100%" viewbox="0 0 1006 630"
+             version="1.1" xmlns="//www.w3.org/2000/svg" xmlns:xlink="//www.w3.org/1999/xlink">
+            <desc></desc>
+            <defs>
+                <rect id="path-5" x="290" y="320" width="490" height="40" rx="4"></rect>
+                <rect id="path-7" x="550" y="470" width="100" height="80" rx="4"></rect>
+                <rect id="path-9" x="420" y="470" width="100" height="80" rx="4"></rect>
+                <rect id="path-11" x="420" y="140" width="130" height="30" rx="2"></rect>
+                <rect id="path-13" x="660" y="470" width="110" height="80" rx="4"></rect>
+                <rect id="path-15" x="300" y="470" width="110" height="80" rx="4"></rect>
+                <path id="path-20"
+                      d="M0,75 L15,60 L15,4 C15,1.790861 16.790861,4.05812251e-16 19,0 L271,0 C273.209139,-4.05812251e-16 275,1.790861 275,4 L275,146 																									C275,148.209139 273.209139,150 271,150 L19,150 C16.790861,150 15,148.209139 15,146 L15,90 L0,75 Z"></path>
+                <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradientLeftHover">
+                    <stop stop-color="#E8E8E8" stop-opacity="0.983828671" offset="0%"></stop>
+                    <stop stop-color="#E8E8E8" stop-opacity="0" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradientLeft">
+                    <stop stop-color="#EFEFEF" stop-opacity="0.983828671" offset="0%"></stop>
+                    <stop stop-color="#EFEFEF" stop-opacity="0" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradientRightHover">
+                    <stop stop-color="#E8E8E8" stop-opacity="0.983828671" offset="0%"></stop>
+                    <stop stop-color="#E8E8E8" stop-opacity="0" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradientRight">
+                    <stop stop-color="#EFEFEF" stop-opacity="0.983828671" offset="0%"></stop>
+                    <stop stop-color="#EFEFEF" stop-opacity="0" offset="100%"></stop>
+                </linearGradient>
+                <filter x="-1.4%" y="-12.5%" width="102.9%" height="135.0%" filterUnits="objectBoundingBox"
+                        id="filter-6">
+                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0 0 0 0 0.876217165   0 0 0 0 0.859606575   0 0 0 0 0.811435865  0 0 0 1 0"
+                                   type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter x="-7.0%" y="-6.2%" width="114.0%" height="117.5%" filterUnits="objectBoundingBox"
+                        id="filter-8">
+                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0 0 0 0 0.782750226   0 0 0 0 0.754365434   0 0 0 0 0.672049537  0 0 0 1 0"
+                                   type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter x="-7.0%" y="-6.2%" width="114.0%" height="117.5%" filterUnits="objectBoundingBox"
+                        id="filter-10">
+                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0 0 0 0 0.782750226   0 0 0 0 0.754365434   0 0 0 0 0.672049537  0 0 0 1 0"
+                                   type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter x="-5.4%" y="-16.7%" width="110.8%" height="146.7%" filterUnits="objectBoundingBox"
+                        id="filter-12">
+                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0 0 0 0 0.876217165   0 0 0 0 0.859606575   0 0 0 0 0.811435865  0 0 0 1 0"
+                                   type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter x="-12.7%" y="-12.5%" width="125.5%" height="135.0%" filterUnits="objectBoundingBox"
+                        id="filter-14">
+                    <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="4" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0 0 0 0 0.782750226   0 0 0 0 0.754365434   0 0 0 0 0.672049537  0 0 0 1 0"
+                                   type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter x="-6.4%" y="-6.2%" width="112.7%" height="117.5%" filterUnits="objectBoundingBox"
+                        id="filter-16">
+                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0 0 0 0 0.782750226   0 0 0 0 0.754365434   0 0 0 0 0.672049537  0 0 0 1 0"
+                                   type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <linearGradient xmlns="http://www.w3.org/2000/svg" x1="50%" y1="100%" x2="50%" y2="0%"
+                                id="linearGradient-17">
+                    <stop stop-color="#B4B4B4" offset="0%"></stop>
+                    <stop stop-color="#35B3FF" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient xmlns="http://www.w3.org/2000/svg" x1="50%" y1="0%" x2="50%" y2="100%"
+                                id="linearGradient-18">
+                    <stop stop-color="#B4B4B4" offset="0%"></stop>
+                    <stop stop-color="#35B3FF" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient xmlns="http://www.w3.org/2000/svg" x1="50%" y1="100%" x2="50%" y2="0%"
+                                id="linearGradient-19">
+                    <stop stop-color="#35B3FF" offset="0%"></stop>
+                    <stop stop-color="#35B3FF" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient xmlns="http://www.w3.org/2000/svg" x1="50%" y1="0%" x2="50%" y2="100%"
+                                id="linearGradient-20">
+                    <stop stop-color="var(--arch-svg-solid-path-arrow-fill)" offset="0%"></stop>
+                    <stop stop-color="#35B3FF" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient xmlns="http://www.w3.org/2000/svg" x1="50%" y1="100%" x2="50%" y2="0%"
+                                id="linearGradient-21">
+                    <stop stop-color="#35B3FF" offset="0%"></stop>
+                    <stop stop-color="#35B3FF" offset="100%"></stop>
+                </linearGradient>
+                <linearGradient xmlns="http://www.w3.org/2000/svg" x1="50%" y1="0%" x2="50%" y2="100%"
+                                id="linearGradient-22">
+                    <stop stop-color="var(--arch-svg-solid-path-arrow-fill)" offset="0%"></stop>
+                    <stop stop-color="#35B3FF" offset="100%"></stop>
+                </linearGradient>
+                <filter x="-10.2%" y="-13.3%" width="120.4%" height="137.3%" filterUnits="objectBoundingBox"
+                        id="filter-21">
+                    <feOffset dx="0" dy="8" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="8" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out"
+                                 result="shadowBlurOuter1"></feComposite>
+                    <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.15 0" type="matrix"
+                                   in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter filterUnits="objectBoundingBox" id="dropShadow">
+                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0.78 0    0    0   0
+                                                               0    0.75 0    0   0
+                                                               0    0    0.67 0   0
+                                                               0    0    0    0.2 0" type="matrix"
+                                   in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter filterUnits="objectBoundingBox" id="dropShadowHover">
+                    <feOffset dx="0" dy="3" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="3" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0.78 0    0    0   0
+                                                               0    0.75 0    0   0
+                                                               0    0    0.67 0   0
+                                                               0    0    0    0.3 0" type="matrix"
+                                   in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter filterUnits="objectBoundingBox" id="dropShadowSmall">
+                    <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0.78 0    0    0   0
+                                                               0    0.75 0    0   0
+                                                               0    0    0.67 0   0
+                                                               0    0    0    0.2 0" type="matrix"
+                                   in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+                <filter filterUnits="objectBoundingBox" id="dropShadowSmallHover">
+                    <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                    <feColorMatrix values="0.78 0    0    0   0
+                                                               0    0.75 0    0   0
+                                                               0    0    0.67 0   0
+                                                               0    0    0    0.3 0" type="matrix"
+                                   in="shadowBlurOuter1"></feColorMatrix>
+                </filter>
+            </defs>
+            <g id="Page-5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Artboard" transform="translate(-50.000000, -50.000000)"><a id="apiclient" class="arch-node"
+                                                                                  href="/docs/developers/knowledgebase/418"
+                                                                                  target="_blank" rel="noopener">
+                    <rect id="path-2" class="transparent-tile" stroke="#C8C8C8" stroke-width="2" x="281" y="51"
+                          width="508" height="138" rx="4"></rect>
+                    <text id="API-Clients" font-family="robotobold, robotoregular" font-size="20" font-weight="bold"
+                          fill="#000000">
+                        <tspan x="485.043945" y="84">API Clients</tspan>
+                    </text>
+                </a>
+                    <rect id="Rectangle" class="spacer" fill="#FFFFFF" x="461" y="184" width="8" height="10"></rect>
+                    <rect id="Rectangle-Copy" class="spacer" fill="#FFFFFF" x="356" y="184" width="8" height="10"></rect>
+                    <rect id="Rectangle-Copy-3" class="spacer" fill="#FFFFFF" x="316" y="184" width="8" height="10"></rect>
+                    <rect id="Rectangle-Copy-4" class="spacer" fill="#FFFFFF" x="501" y="184" width="8" height="10"></rect>
+                    <rect id="Rectangle-Copy-5" class="spacer" fill="#FFFFFF" x="596" y="184" width="8" height="10"></rect>
+                    <rect id="Rectangle-Copy-7" class="spacer" fill="#FFFFFF" x="636" y="184" width="8" height="10"></rect>
+                    <rect id="Rectangle-Copy-11" class="spacer" fill="#FFFFFF" x="726" y="184" width="8" height="10"></rect>
+                    <a id="nx-cloud" class="arch-node" target="_blank" rel="noopener">
+                        <rect class="cloud" id="Rectangle-Copy-63" fill="#E5F6FF" x="68" y="220" width="934" height="60"
+                              rx="30"></rect>
+                        <path class="cloud"
+                              d="M101.162473,240 C112.118437,240 121,248.954305 121,260 C121,271.045695 112.118437,280 101.162473,280 L50,280"
+                              id="Path-Copy-6" fill="#E5F6FF"
+                              transform="translate(85.500000, 260.000000) scale(-1, 1) translate(-85.500000, -260.000000) "></path>
+                        <path class="cloud"
+                              d="M1000.16247,240 C1011.11844,240 1020,248.954305 1020,260 C1020,271.045695 1011.11844,280 1000.16247,280 L949,280"
+                              id="Path-Copy-7" fill="#E5F6FF"></path>
+                    </a> <a id="serverdesc1" class="arch-node" href="/docs/developers/knowledgebase/470" target="_blank"
+                            rel="noopener">
+                        <rect id="path-1" class="level1" fill="none" x="280" y="310" width="510" height="260"
+                              rx="4"></rect>
+                        <text id="Nx-Server" class="level1-text" font-family="robotobold, robotoregular" font-size="20" font-weight="bold"
+                              fill="#000000">
+                            <tspan x="50%" y="400">Server</tspan>
+                        </text>
+                    </a> <a id="serverdesc5" class="arch-node" href="/docs/developers/knowledgebase/470" target="_blank"
+                            rel="noopener">
+                        <rect class="nx-server-left" id="Rectangle-Copy-30" x="50" y="50" width="200" height="140"
+                              rx="4"></rect>
+                        <text id="Nx-Server1" font-family="robotomedium, robotoregular" font-size="20" font-weight="400"
+                              fill="#C1C1C1">
+                            <tspan x="120.611328" y="125">Server</tspan>
+                        </text>
+                    </a> <a id="serverdesc2" class="arch-node" href="/docs/developers/knowledgebase/470" target="_blank"
+                            rel="noopener">
+                        <rect class="nx-server-left" id="Rectangle-Copy-29" x="50" y="310" width="200" height="160"
+                              rx="4"></rect>
+                        <text id="Nx-Server-Copy" font-family="robotomedium, robotoregular" font-size="20"
+                              font-weight="400" fill="#C1C1C1">
+                            <tspan x="120.611328" y="395">Server</tspan>
+                        </text>
+                    </a> <a id="serverdesc3" class="arch-node" href="/docs/developers/knowledgebase/470" target="_blank"
+                            rel="noopener">
+                        <rect class="nx-server-right" id="Rectangle-Copy-32" x="820" y="50" width="200" height="140"
+                              rx="4"></rect>
+                        <text id="Nx-Server" font-family="robotomedium, robotoregular" font-size="20" font-weight="400"
+                              fill="#C1C1C1">
+                            <tspan x="890.611328" y="125">Server</tspan>
+                        </text>
+                    </a> <a id="serverdesc4" class="arch-node" href="/docs/developers/knowledgebase/470" target="_blank"
+                            rel="noopener">
+                        <rect class="nx-server-right" id="Rectangle-Copy-31" x="820" y="310" width="200" height="160"
+                              rx="4"></rect>
+                        <text id="Nx-Server" font-family="robotomedium, robotoregular" font-size="20" font-weight="400"
+                              fill="#C1C1C1">
+                            <tspan x="890.611328" y="395">Server</tspan>
+                        </text>
+                    </a> <a id="ipusb" class="arch-node">
+                        <rect class="transparent-tile" id="Rectangle-Copy-6" stroke="#C8C8C8" stroke-width="2" x="281"
+                              y="601" width="148" height="78" rx="4"></rect>
+                        <text id="IP-&amp;-USB-Cameras-I/O" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="297.680664" y="632"> IP &amp; USB Cameras,</tspan>
+                            <tspan x="316.568359" y="657">I/O Modules</tspan>
+                        </text>
+                    </a> <a id="ipcam" class="arch-node" href="/ipvd" target="_blank" rel="noopener">
+                        <rect class="transparent-tile" id="Rectangle-Copy-13" stroke="#C8C8C8" stroke-width="2" x="441"
+                              y="601" width="188" height="78" rx="4"></rect>
+                        <text id="IP-Cameras" font-family="robotomedium, robotoregular" font-size="14" font-weight="400"
+                              fill="#000000">
+                            <tspan x="500" y="643">IP Cameras</tspan>
+                        </text>
+                    </a> <a id="vid-service" class="arch-node" href="/docs/developers/knowledgebase/368" target="_blank"
+                            rel="noopener">
+                        <rect class="transparent-tile" id="Rectangle-Copy-17" stroke="#C8C8C8" stroke-width="2" x="641"
+                              y="601" width="148" height="78" rx="4"></rect>
+                        <text id="Video-Analytics-Serv" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="666.485352" y="635"> Video Analytics</tspan>
+                            <tspan x="688.213379" y="651">Services</tspan>
+                        </text>
+                    </a> <a id="vid-sdk" class="arch-node" href="/docs/developers/knowledgebase/357" target="_blank"
+                            rel="noopener">
+                        <rect class="level2" id="Rectangle-Copy-2" fill="none" x="290" y="430" width="240"
+                              height="130" rx="4"></rect>
+                        <text id="Video-Source-SDK" font-family="robotomedium, robotoregular" font-size="16"
+                              font-weight="400" fill="#000000">
+                            <tspan x="345.289062" y="455"> Video Source SDK</tspan>
+                        </text>
+                    </a> <a id="meta-sdk" class="arch-node" href="/docs/developers/knowledgebase/357" target="_blank"
+                            rel="noopener">
+                        <rect class="level2" id="Rectangle-Copy-8" fill="none" x="540" y="430" width="240"
+                              height="130" rx="4"></rect>
+                        <text id="Metadata-SDK" font-family="robotomedium, robotoregular" font-size="16"
+                              font-weight="400" fill="#000000">
+                            <tspan x="608.792969" y="455">Metadata SDK</tspan>
+                        </text>
+                    </a> <a id="rest_sreaming_api" class="arch-node" href="/docs/developers/knowledgebase/418"
+                            target="_blank" rel="noopener">
+                        <g id="Rectangle-Copy-28">
+                            <use class="shadowSmall" fill="black" fill-opacity="1" href="#path-5"></use>
+                            <use class="rest-streaming-api" fill="#FFFFFF" fill-rule="evenodd" href="#path-5"></use>
+                        </g>
+                        <text class="rest-streaming-api-text" id="Rest-Streaming-API" font-family="robotomedium, robotoregular" font-size="16"
+                              font-weight="400" fill="#000000">
+                            <tspan x="458.304688" y="345"> Rest &amp; Streaming API</tspan>
+                        </text>
+                    </a> <a id="nx-desktop" class="arch-node" target="_blank" rel="noopener">
+                        <rect class="level1" fill="none" x="410" y="100" width="150" height="80" rx="4"></rect>
+                        <text class="level1-text" id="Nx-Desktop-Copy-2" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="440.019043" y="126">Desktop Client</tspan>
+                        </text>
+                    </a> <a id="built-in-browser" class="arch-node" href="/docs/developers/knowledgebase/471"
+                            target="_blank" rel="noopener">
+                        <g id="Rectangle-Copy-46">
+                            <use class="shadowSmall" fill="black" fill-opacity="1" href="#path-11"></use>
+                            <use class="built-in" fill="#FFFFFF" fill-rule="evenodd" href="#path-11"></use>
+                        </g>
+                        <text id="Built-in-browser" font-family="robotomedium, robotoregular" font-size="13"
+                              font-weight="400" fill="#000000">
+                            <tspan x="439.290527" y="160"> Built-in browser</tspan>
+                        </text>
+                    </a> <a id="third-party" class="arch-node" href="/docs/developers/knowledgebase/418" target="_blank"
+                            rel="noopener">
+                        <rect class="third-party" fill="#F1F1F1" x="290" y="100" width="100" height="80" rx="4"></rect>
+                        <text id="Third-party-Services-Copy-2" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="305.338379" y="134">Third-party</tspan>
+                            <tspan x="313.213379" y="150">Services</tspan>
+                        </text>
+                    </a> <a id="nx-mobile" class="arch-node" target="_blank" rel="noopener">
+                        <rect class="level1" fill="none" x="570" y="100" width="100" height="80" rx="4"></rect>
+                        <text class="level1-text" id="Nx-Mobile" font-family="robotomedium, robotoregular" font-size="14" font-weight="400"
+                              fill="#000000">
+                            <tspan x="600.61377" y="134">Mobile</tspan>
+                            <tspan x="608.61377" y="150">App</tspan>
+                        </text>
+                    </a> <a id="web-admin" class="arch-node" href="/docs/developers/knowledgebase/407" target="_blank"
+                            rel="noopener">
+                        <rect class="level1" fill="none" x="680" y="100" width="100" height="80" rx="4"></rect>
+                        <text class="level1-text" id="Web-Admin" font-family="robotomedium, robotoregular" font-size="14" font-weight="400"
+                              fill="#000000">
+                            <tspan x="716.249512" y="134">Web</tspan>
+                            <tspan x="709.618652" y="150">Admin</tspan>
+                        </text>
+                    </a> <a id="device-driver" class="arch-node" href="/docs/developers/knowledgebase/357"
+                            target="_blank" rel="noopener">
+                        <g id="Rectangle-Copy-10">
+                            <use class="shadow" fill="black" fill-opacity="1" href="#path-15"></use>
+                            <use class="level3" fill="#FFFFFF" fill-rule="evenodd" href="#path-15"></use>
+                        </g>
+                        <text id="Device-Driver" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="334.044434" y="505">Device</tspan>
+                            <tspan x="336.542969" y="521">Driver</tspan>
+                        </text>
+                    </a> <a id="onvifdr" class="arch-node" target="_blank" rel="noopener">
+                        <g id="Rectangle-Copy-16">
+                            <use class="shadow" fill="black" fill-opacity="1" href="#path-9"></use>
+                            <use class="level3" fill="#FFFFFF" fill-rule="evenodd" href="#path-9"></use>
+                        </g>
+                        <text id="ONVIF-Driver" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="449.847656" y="505">ONVIF</tspan>
+                            <tspan x="451.542969" y="521">Driver</tspan>
+                        </text>
+                    </a> <a id="meta-cam" class="arch-node" href="/docs/developers/knowledgebase/375" target="_blank"
+                            rel="noopener">
+                        <g id="Rectangle-Copy-15">
+                            <use class="shadow" fill="black" fill-opacity="1" href="#path-7"></use>
+                            <use class="level3" fill="#FFFFFF" fill-rule="evenodd" href="#path-7"></use>
+                        </g>
+                        <text id="Camera-Metadata-Plug" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="575.650391" y="498">Camera</tspan>
+                            <tspan x="570.147461" y="514">Metadata</tspan>
+                            <tspan x="580.199707" y="530">Plugin</tspan>
+                        </text>
+                    </a> <a id="vid-plugin" class="arch-node" href="/docs/developers/knowledgebase/378" target="_blank"
+                            rel="noopener">
+                        <g id="Rectangle-Copy-9">
+                            <use class="shadow" fill="black" fill-opacity="1" href="#path-13"></use>
+                            <use class="level3" fill="#FFFFFF" fill-rule="evenodd" href="#path-13"></use>
+                        </g>
+                        <text id="Video-Analytics-Plug" font-family="robotomedium, robotoregular" font-size="14"
+                              font-weight="400" fill="#000000">
+                            <tspan x="696.990723" y="498">Video</tspan>
+                            <tspan x="686.237793" y="514">Analytics</tspan>
+                            <tspan x="695.199707" y="530">Plugin</tspan>
+                        </text>
+                    </a> <a id="cloud-relay" class="arch-node" href="/docs/developers/knowledgebase/358" target="_blank"
+                            rel="noopener">
+                        <rect class="cloud-relay" id="Rectangle-Copy-65" fill="#CAE7F7" x="170" y="230" width="170"
+                              height="40" rx="4"></rect>
+                        <text class="cloud-relay-text" id="Cloud-relay-(API-Pro" font-family="robotomedium, robotoregular" font-size="13"
+                              font-weight="400" fill="#000000">
+                            <tspan x="180" y="254"> Cloud relay (API Proxy)</tspan>
+                        </text>
+                    </a>
+                    <g xmlns="http://www.w3.org/2000/svg" id="Group-Copy" transform="translate(312.000000, 176.000000)">
+                        <path id="Path"
+                              d="M13.7501774,89 C14.3024621,89 14.7501774,89.4477153 14.7501774,90 C14.7501774,90.5128358 14.3641372,90.9355072 13.8667985,90.9932723 L13.7501774,91 L8.75017735,91 L8.75017735,135.878424 L13.6286018,135.878424 C13.6420814,135.887904 14.096027,135.887904 14.9904386,135.878424 C15.4374138,136.129848 15.6165432,136.673531 15.423064,137.135319 L15.3717529,137.240261 L8.62175289,149.240261 C8.26068793,149.882154 7.36779263,149.917815 6.94763542,149.347243 L6.87860182,149.240261 L0.128601813,137.240261 C-0.142161987,136.758903 0.0285582328,136.149188 0.509916113,135.878424 C0.505174463,135.878338 0.959120056,135.878338 1.87175289,135.878424 L6.75017735,135.878424 L6.75017735,91 L1.75017735,91 C1.1978926,91 0.750177353,90.5522847 0.750177353,90 C0.750177353,89.4871642 1.13621754,89.0644928 1.63355622,89.0067277 L1.75017735,89 L13.7501774,89 Z"
+                              fill="url(#linearGradient-21)" fill-rule="nonzero"></path>
+                        <path id="Path"
+                              d="M1.75017735,61.0803029 C1.1978926,61.0803029 0.750177353,60.6325876 0.750177353,60.0803029 C0.750177353,59.567467 1.13621754,59.1447957 1.63355622,59.0870306 L1.75017735,59.0803029 L6.75017735,59.08 L6.75017735,2 L1.75017735,2 C1.1978926,2 0.750177353,1.55228475 0.750177353,1 C0.750177353,0.487164161 1.13621754,0.064492839 1.63355622,0.006727731 L1.75017735,0 L7.74209279,0 C7.74478512,0 7.74747999,0 7.75017735,0 L13.7501774,0 C14.3024621,0 14.7501774,0.44771525 14.7501774,1 C14.7501774,1.51283584 14.3641372,1.93550716 13.8667985,1.99327227 L13.7501774,2 L8.75017735,1.999 L8.75017735,59.08 L13.7501774,59.0803029 C14.3024621,59.0803029 14.7501774,59.5280181 14.7501774,60.0803029 C14.7501774,60.5931387 14.3641372,61.01581 13.8667985,61.0735751 L13.7501774,61.0803029 L1.75017735,61.0803029 Z"
+                              fill="url(#linearGradient-22)" fill-rule="nonzero"></path>
+                        <line x1="7.75017735" y1="65" x2="7.75017735" y2="85" id="Path-5" stroke="#75C6F2" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,8"></line>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" id="Group-Copy-6"
+                       transform="translate(592.000000, 176.000000)">
+                        <path id="Path"
+                              d="M13.7501774,99.1954936 C14.3024621,99.1954936 14.7501774,99.6432088 14.7501774,100.195494 C14.7501774,100.708329 14.3641372,101.131001 13.8667985,101.188766 L13.7501774,101.195494 L8.75017735,101.195 L8.75017735,135.878424 L13.6286018,135.878424 L14.9904386,135.878424 C15.4374138,136.129848 15.6165432,136.673531 15.423064,137.135319 L15.3717529,137.240261 L8.62175289,149.240261 C8.26068793,149.882154 7.36779263,149.917815 6.94763542,149.347243 L6.87860182,149.240261 L0.128601813,137.240261 C-0.142161987,136.758903 0.0285582328,136.149188 0.509916113,135.878424 L1.87175289,135.878424 L6.75017735,135.878424 L6.75017735,101.195 L1.75017735,101.195494 C1.1978926,101.195494 0.750177353,100.747778 0.750177353,100.195494 C0.750177353,99.6826577 1.13621754,99.2599864 1.63355622,99.2022213 L1.75017735,99.1954936 L13.7501774,99.1954936 Z"
+                              fill="url(#linearGradient-19)" fill-rule="nonzero"></path>
+                        <path id="Path"
+                              d="M1.75017735,51.0803029 C1.1978926,51.0803029 0.750177353,50.6325876 0.750177353,50.0803029 C0.750177353,49.567467 1.13621754,49.1447957 1.63355622,49.0870306 L1.75017735,49.0803029 L6.75017735,49.08 L6.75017735,2 L1.75017735,2 C1.1978926,2 0.750177353,1.55228475 0.750177353,1 C0.750177353,0.487164161 1.13621754,0.064492839 1.63355622,0.006727731 L1.75017735,0 L7.74209279,0 C7.74478512,0 7.74747999,0 7.75017735,0 L13.7501774,0 C14.3024621,0 14.7501774,0.44771525 14.7501774,1 C14.7501774,1.51283584 14.3641372,1.93550716 13.8667985,1.99327227 L13.7501774,2 L8.75017735,1.999 L8.75017735,49.08 L13.7501774,49.0803029 C14.3024621,49.0803029 14.7501774,49.5280181 14.7501774,50.0803029 C14.7501774,50.5931387 14.3641372,51.01581 13.8667985,51.0735751 L13.7501774,51.0803029 L1.75017735,51.0803029 Z"
+                              fill="url(#linearGradient-20)" fill-rule="nonzero"></path>
+                        <line class="dashed-line" x1="7.75017735" y1="54" x2="7.75017735" y2="96.053448" id="Path-5" stroke="#BBE7FF" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,6"></line>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" id="Group-Copy-10"
+                       transform="translate(919.000000, 187.000000)">
+                        <path id="Path"
+                              d="M13.7501774,88.9454936 C14.3024621,88.9454936 14.7501774,89.3932088 14.7501774,89.9454936 C14.7501774,90.4583294 14.3641372,90.8810007 13.8667985,90.9387658 L13.7501774,90.9454936 L8.75017735,90.945 L8.75017735,115.628424 L13.6286018,115.628424 L14.9904386,115.628424 C15.4374138,115.879848 15.6165432,116.423531 15.423064,116.885319 L15.3717529,116.990261 L8.62175289,128.990261 C8.26068793,129.632154 7.36779263,129.667815 6.94763542,129.097243 L6.87860182,128.990261 L0.128601813,116.990261 C-0.142161987,116.508903 0.0285582328,115.899188 0.509916113,115.628424 L1.87175289,115.628424 L6.75017735,115.577113 L6.75017735,90.945 L1.75017735,90.9454936 C1.1978926,90.9454936 0.750177353,90.4977783 0.750177353,89.9454936 C0.750177353,89.4326577 1.13621754,89.0099864 1.63355622,88.9522213 L1.75017735,88.9454936 L13.7501774,88.9454936 Z"
+                              fill="url(#linearGradient-17)" fill-rule="nonzero"></path>
+                        <path id="Path"
+                              d="M1.75017735,40.8303029 C1.1978926,40.8303029 0.750177353,40.3825876 0.750177353,39.8303029 C0.750177353,39.317467 1.13621754,38.8947957 1.63355622,38.8370306 L1.75017735,38.8303029 L6.75017735,38.83 L6.75017735,13.8715755 L1.87175289,13.8715755 L0.509916113,13.8715755 C0.0629409428,13.620152 -0.116188497,13.0764695 0.0772907228,12.6146812 L0.128601813,12.5097388 L6.87860182,0.509738759 C7.23966677,-0.132154491 8.13256207,-0.167815231 8.55271928,0.402756549 L8.62175289,0.509738759 L15.3717529,12.5097388 C15.6425167,12.9910966 15.4717965,13.6008117 14.9904386,13.8715755 L13.6286018,13.8715755 L8.75017735,13.8715755 L8.75017735,38.83 L13.7501774,38.8303029 C14.3024621,38.8303029 14.7501774,39.2780181 14.7501774,39.8303029 C14.7501774,40.3431387 14.3641372,40.76581 13.8667985,40.8235751 L13.7501774,40.8303029 L1.75017735,40.8303029 Z"
+                              fill="url(#linearGradient-18)" fill-rule="nonzero"></path>
+                        <line class="dashed-line" x1="7.75017735" y1="43.75" x2="7.75017735" y2="85.803448" id="Path-5" stroke="#BBE7FF" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,6"></line>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" id="Group-Copy-13"
+                       transform="translate(497.000000, 176.000000)">
+                        <path id="Path"
+                              d="M13.7501774,99.1954936 C14.3024621,99.1954936 14.7501774,99.6432088 14.7501774,100.195494 C14.7501774,100.708329 14.3641372,101.131001 13.8667985,101.188766 L13.7501774,101.195494 L8.75017735,101.195 L8.75017735,135.878424 L13.6286018,135.878424 L14.9904386,135.878424 C15.4374138,136.129848 15.6165432,136.673531 15.423064,137.135319 L15.3717529,137.240261 L8.62175289,149.240261 C8.26068793,149.882154 7.36779263,149.917815 6.94763542,149.347243 L6.87860182,149.240261 L0.128601813,137.240261 C-0.142161987,136.758903 0.0285582328,136.149188 0.509916113,135.878424 L1.87175289,135.878424 L6.75017735,135.878424 L6.75017735,101.195 L1.75017735,101.195494 C1.1978926,101.195494 0.750177353,100.747778 0.750177353,100.195494 C0.750177353,99.6826577 1.13621754,99.2599864 1.63355622,99.2022213 L1.75017735,99.1954936 L13.7501774,99.1954936 Z"
+                              fill="url(#linearGradient-19)" fill-rule="nonzero"></path>
+                        <path id="Path"
+                              d="M1.75017735,51.0803029 C1.1978926,51.0803029 0.750177353,50.6325876 0.750177353,50.0803029 C0.750177353,49.567467 1.13621754,49.1447957 1.63355622,49.0870306 L1.75017735,49.0803029 L6.75017735,49.08 L6.75017735,2 L1.75017735,2 C1.1978926,2 0.750177353,1.55228475 0.750177353,1 C0.750177353,0.487164161 1.13621754,0.064492839 1.63355622,0.006727731 L1.75017735,0 L7.74209279,0 C7.74478512,0 7.74747999,0 7.75017735,0 L13.7501774,0 C14.3024621,0 14.7501774,0.44771525 14.7501774,1 C14.7501774,1.51283584 14.3641372,1.93550716 13.8667985,1.99327227 L13.7501774,2 L8.75017735,1.999 L8.75017735,49.08 L13.7501774,49.0803029 C14.3024621,49.0803029 14.7501774,49.5280181 14.7501774,50.0803029 C14.7501774,50.5931387 14.3641372,51.01581 13.8667985,51.0735751 L13.7501774,51.0803029 L1.75017735,51.0803029 Z"
+                              fill="url(#linearGradient-20)" fill-rule="nonzero"></path>
+                        <line class="dashed-line" x1="7.75017735" y1="54" x2="7.75017735" y2="96.053448" id="Path-5" stroke="#BBE7FF" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,6"></line>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" id="Group-Copy-14"
+                       transform="translate(149.000000, 187.000000)">
+                        <path id="Path"
+                              d="M13.7501774,88.9454936 C14.3024621,88.9454936 14.7501774,89.3932088 14.7501774,89.9454936 C14.7501774,90.4583294 14.3641372,90.8810007 13.8667985,90.9387658 L13.7501774,90.9454936 L8.75017735,90.945 L8.75017735,115.628424 L13.6286018,115.628424 C13.6227006,115.624615 14.0766462,115.624615 14.9904386,115.628424 C15.4374138,115.879848 15.6165432,116.423531 15.423064,116.885319 L15.3717529,116.990261 L8.62175289,128.990261 C8.26068793,129.632154 7.36779263,129.667815 6.94763542,129.097243 L6.87860182,128.990261 L0.128601813,116.990261 C-0.142161987,116.508903 0.0285582328,115.899188 0.509916113,115.628424 C0.502455085,115.630065 0.956400679,115.630065 1.87175289,115.628424 L6.75017735,115.628424 L6.75017735,90.945 L1.75017735,90.9454936 C1.1978926,90.9454936 0.750177353,90.4977783 0.750177353,89.9454936 C0.750177353,89.4326577 1.13621754,89.0099864 1.63355622,88.9522213 L1.75017735,88.9454936 L13.7501774,88.9454936 Z"
+                              fill="url(#linearGradient-17)" fill-rule="nonzero"></path>
+                        <path id="Path"
+                              d="M1.75017735,40.8303029 C1.1978926,40.8303029 0.750177353,40.3825876 0.750177353,39.8303029 C0.750177353,39.317467 1.13621754,38.8947957 1.63355622,38.8370306 L1.75017735,38.8303029 L6.75017735,38.83 L6.75017735,13.8715755 L1.87175289,13.8715755 C1.87175289,13.8715755 1.4178073,13.8715755 0.509916113,13.8715755 C0.0629409428,13.620152 -0.116188497,13.0764695 0.0772907228,12.6146812 L0.128601813,12.5097388 L6.87860182,0.509738759 C7.23966677,-0.132154491 8.13256207,-0.167815231 8.55271928,0.402756549 L8.62175289,0.509738759 L15.3717529,12.5097388 C15.6425167,12.9910966 15.4717965,13.6008117 14.9904386,13.8715755 C14.9847514,13.8799188 14.5308058,13.8799188 13.6286018,13.8715755 L8.75017735,13.8715755 L8.75017735,38.83 L13.7501774,38.8303029 C14.3024621,38.8303029 14.7501774,39.2780181 14.7501774,39.8303029 C14.7501774,40.3431387 14.3641372,40.76581 13.8667985,40.8235751 L13.7501774,40.8303029 L1.75017735,40.8303029 Z"
+                              fill="url(#linearGradient-18)" fill-rule="nonzero"></path>
+                        <line class="dashed-line" x1="7.75017735" y1="43.75" x2="7.75017735" y2="85.803448" id="Path-5" stroke="#BBE7FF" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,6"></line>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(722.5, 176)">
+                        <path id="Path-4-Copy-4" class="solid-path-arrow"
+                              d="M13.7501773,0 C14.3024623,0 14.7501773,0.447715 14.7501773,1 C14.7501773,1.512836 14.3641373,1.935507 13.8667983,1.993272 L13.7501773,2 L8.75017731,2 L8.75017731,135.878424 L13.6286013,135.878424 L14.9904383,135.878424 C15.4374133,136.129848 15.6165433,136.673531 15.4230643,137.135319 L15.3717533,137.240261 L8.62175331,149.240261 C8.26068831,149.882154 7.36779231,149.917815 6.94763531,149.347243 L6.87860131,149.240261 L0.128601312,137.240261 C-0.142161688,136.758903 0.0285583119,136.149188 0.509916312,135.878424 L1.87175331,135.878424 L6.75017731,135.878424 L6.75017731,2 L1.75017731,2 C1.19789231,2 0.750177312,1.552285 0.750177312,1 C0.750177312,0.487164 1.13621731,0.064493 1.63355631,0.006728 L1.75017731,0 L13.7501773,0 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-5" class="solid-path-arrow"
+                              d="M596,125 C596.552285,125 597,125.447715 597,126 C597,126.512836 596.61396,126.935507 596.116621,126.993272 L596,127 L591,127 L591,260.878424 L595.878424,260.878424 L597.240261,260.878424 C597.687236,261.129848 597.866366,261.673531 597.672887,262.135319 L597.621576,262.240261 L590.871576,274.240261 C590.510511,274.882154 589.617615,274.917815 589.197458,274.347243 L589.128424,274.240261 L582.378424,262.240261 C582.107661,261.758903 582.278381,261.149188 582.759739,260.878424 L584.121576,260.878424 L589,260.878424 L589,127 L584,127 C583.447715,127 583,126.552285 583,126 C583,125.487164 583.38604,125.064493 583.883379,125.006728 L584,125 L596,125 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-7" class="solid-path-arrow"
+                              d="M316,125 C316.552285,125 317,125.447715 317,126 C317,126.512836 316.61396,126.935507 316.116621,126.993272 L316,127 L311,127 L311,260.878424 L317.240261,260.878424 C317.687236,261.129848 317.866366,261.673531 317.672887,262.135319 L317.621576,262.240261 L310.871576,274.240261 C310.510511,274.882154 309.617615,274.917815 309.197458,274.347243 L309.128424,274.240261 L302.378424,262.240261 C302.107661,261.758903 302.278381,261.149188 302.759739,260.878424 L304.121576,260.878424 L309,260.878424 L309,127 L304,127 C303.447715,127 303,126.552285 303,126 C303,125.487164 303.38604,125.064493 303.883379,125.006728 L304,125 L316,125 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-6" class="solid-path-arrow"
+                              d="M421,125 C421.552285,125 422,125.447715 422,126 C422,126.512836 421.61396,126.935507 421.116621,126.993272 L421,127 L416,126.999 L416,260.878424 L420.878424,260.878424 L422.240261,260.878424 C422.687236,261.129848 422.866366,261.673531 422.672887,262.135319 L422.621576,262.240261 L415.871576,274.240261 C415.510511,274.882154 414.617615,274.917815 414.197458,274.347243 L414.128424,274.240261 L407.378424,262.240261 C407.107661,261.758903 407.278381,261.149188 407.759739,260.878424 L409.121576,260.878424 L414,260.878424 L414,126.999 L409,127 C408.447715,127 408,126.552285 408,126 C408,125.487164 408.38604,125.064493 408.883379,125.006728 L409,125 L421,125 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <text id="Nx-Cloud" class="cloud-text" font-family="robotomedium, robotoregular" font-size="20" font-weight="bold"
+                          style="pointer-events: none;" fill="#000000">
+                        <tspan x="524.282227" y="255">Cloud</tspan>
+                    </text>
+
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-10" class="solid-path-arrow"
+                              d="M348.121576,97.759739 L348.121576,99.121576 L348.121576,104 L360.878424,104 L360.878424,99.121576 L360.878424,97.759739 C361.129848,97.312764 361.673531,97.133634 362.135319,97.327113 L362.240261,97.378424 L374.240261,104.128424 C374.882154,104.489489 374.917815,105.382385 374.347243,105.802542 L374.240261,105.871576 L362.240261,112.621576 C361.758903,112.892339 361.149188,112.721619 360.878424,112.240261 L360.878424,110.878424 L360.878424,106 L348.121576,106 L348.121576,110.878424 L348.121576,112.240261 C347.870152,112.687236 347.326469,112.866366 346.864681,112.672887 L346.759739,112.621576 L334.759739,105.871576 C334.117846,105.510511 334.082185,104.617615 334.652757,104.197458 L334.759739,104.128424 L346.759739,97.378424 C347.241097,97.107661 347.850812,97.278381 348.121576,97.759739 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-11" class="solid-path-arrow"
+                              d="M749.121576,332.759739 L749.121576,334.121576 L749.121576,339 L760.878424,339 L760.878424,334.121576 L760.878424,332.759739 C761.129848,332.312764 761.673531,332.133634 762.135319,332.327113 L762.240261,332.378424 L774.240261,339.128424 C774.882154,339.489489 774.917815,340.382385 774.347243,340.802542 L774.240261,340.871576 L762.240261,347.621576 C761.758903,347.892339 761.149188,347.721619 760.878424,347.240261 L760.878424,345.878424 L760.878424,341 L749.121576,341 L749.121576,345.878424 L749.121576,347.240261 C748.870152,347.687236 748.326469,347.866366 747.864681,347.672887 L747.759739,347.621576 L735.759739,340.871576 C735.117846,340.510511 735.082185,339.617615 735.652757,339.197458 L735.759739,339.128424 L747.759739,332.378424 C748.241097,332.107661 748.850812,332.278381 749.121576,332.759739 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-12" class="solid-path-arrow"
+                              d="M209.121576,332.759739 L209.121576,334.121576 L209.121576,339 L220.878424,339 L220.878424,332.759739 C221.129848,332.312764 221.673531,332.133634 222.135319,332.327113 L222.240261,332.378424 L234.240261,339.128424 C234.882154,339.489489 234.917815,340.382385 234.347243,340.802542 L234.240261,340.871576 L222.240261,347.621576 C221.758903,347.892339 221.149188,347.721619 220.878424,347.240261 L220.878424,345.878424 L220.878424,341 L209.121576,341 L209.121576,345.878424 L209.121576,347.240261 C208.870152,347.687236 208.326469,347.866366 207.864681,347.672887 L207.759739,347.621576 L195.759739,340.871576 C195.117846,340.510511 195.082185,339.617615 195.652757,339.197458 L195.759739,339.128424 L207.759739,332.378424 C208.241097,332.107661 208.850812,332.278381 209.121576,332.759739 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy" class="solid-path-arrow"
+                              d="M420.802542,495.652757 L420.871576,495.759739 L427.621576,507.759739 C427.892339,508.241097 427.721619,508.850812 427.240261,509.121576 L425.878424,509.121576 L421,509.121576 L421,540.878424 L425.878424,540.878424 L427.240261,540.878424 C427.687236,541.129848 427.866366,541.673531 427.672887,542.135319 L427.621576,542.240261 L420.871576,554.240261 C420.510511,554.882154 419.617615,554.917815 419.197458,554.347243 L419.128424,554.240261 L412.378424,542.240261 C412.107661,541.758903 412.278381,541.149188 412.759739,540.878424 L414.121576,540.878424 L419,540.878424 L419,509.121576 L414.121576,509.121576 L412.759739,509.121576 C412.312764,508.870152 412.133634,508.326469 412.327113,507.864681 L412.378424,507.759739 L419.128424,495.759739 C419.489489,495.117846 420.382385,495.082185 420.802542,495.652757 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-2" class="solid-path-arrow"
+                              d="M550.802542,495.652757 L550.871576,495.759739 L557.621576,507.759739 C557.892339,508.241097 557.721619,508.850812 557.240261,509.121576 L555.878424,509.121576 L551,509.121576 L551,540.878424 L555.878424,540.878424 L557.240261,540.878424 C557.687236,541.129848 557.866366,541.673531 557.672887,542.135319 L557.621576,542.240261 L550.871576,554.240261 C550.510511,554.882154 549.617615,554.917815 549.197458,554.347243 L549.128424,554.240261 L542.378424,542.240261 C542.107661,541.758903 542.278381,541.149188 542.759739,540.878424 L544.121576,540.878424 L549,540.878424 L549,509.172887 L544.121576,509.121576 L542.759739,509.121576 C542.312764,508.870152 542.133634,508.326469 542.327113,507.864681 L542.378424,507.759739 L549.128424,495.759739 C549.489489,495.117846 550.382385,495.082185 550.802542,495.652757 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4-Copy-3" class="solid-path-arrow"
+                              d="M665.802542,495.652757 L665.871576,495.759739 L672.621576,507.759739 C672.892339,508.241097 672.721619,508.850812 672.240261,509.121576 L670.878424,509.121576 L666,509.121576 L666,540.878424 L670.878424,540.878424 L672.240261,540.878424 C672.687236,541.129848 672.866366,541.673531 672.672887,542.135319 L672.621576,542.240261 L665.871576,554.240261 C665.510511,554.882154 664.617615,554.917815 664.197458,554.347243 L664.128424,554.240261 L657.378424,542.240261 C657.107661,541.758903 657.278381,541.149188 657.759739,540.878424 L659.121576,540.878424 L664,540.878424 L664,509.121576 L659.121576,509.121576 L657.759739,509.121576 C657.312764,508.870152 657.133634,508.326469 657.327113,507.864681 L657.378424,507.759739 L664.128424,495.759739 C664.489489,495.117846 665.382385,495.082185 665.802542,495.652757 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                    <g xmlns="http://www.w3.org/2000/svg" transform="translate(50, 51)">
+                        <path id="Path-4" class="solid-path-arrow"
+                              d="M305.802542,495.652757 L305.871576,495.759739 L312.621576,507.759739 C312.892339,508.241097 312.721619,508.850812 312.240261,509.121576 L310.878424,509.121576 L306,509.172887 L306,540.878424 L310.878424,540.878424 L312.240261,540.878424 C312.687236,541.129848 312.866366,541.673531 312.672887,542.135319 L312.621576,542.240261 L305.871576,554.240261 C305.510511,554.882154 304.617615,554.917815 304.197458,554.347243 L304.128424,554.240261 L297.378424,542.240261 C297.107661,541.758903 297.278381,541.149188 297.759739,540.878424 L299.121576,540.878424 L304,540.827113 L304,509.172887 L299.121576,509.121576 L297.759739,509.121576 C297.312764,508.870152 297.133634,508.326469 297.327113,507.864681 L297.378424,507.759739 L304.128424,495.759739 C304.489489,495.117846 305.382385,495.082185 305.802542,495.652757 Z"
+                              fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+</div>

@@ -112,7 +112,29 @@ html[data-theme="dark"] {
 
     --developer-menu-bg: #171C1F; //$dark5;
     --developer-menu-base-color : #879FAB; //$light13;
-
+    
+    // *** arch svg ***********************
+    --arch-svg-dash-stroke              : var(--brand-d6);
+    --arch-svg-solid-path-arrow-fill    : #E1E7EA; //$light4;
+    --arch-svg-level1-fill              : #49626F; //$dark15;
+    --arch-svg-level1-color             : #F5F7F8; //$light2;
+    --arch-svg-level2-fill              : #3A4D57; //$dark12;
+    --arch-svg-level3-fill              : #171C1F; //$dark5;
+    --arch-svg-spacer-fill              : #0D0E0F; //$dark3;
+    --arch-svg-cloud-fill               : #{$brand_d2};
+    --arch-svg-cloud-color              : #F5F7F8; //$light2;
+    --arch-svg-cloud-relay-fill         : #{$brand_d5};
+    --arch-svg-cloud-relay-color        : #E1E7EA; //$light4;
+    --arch-svg-third-party-fill         : #212A2F; //$dark7;
+    --arch-svg-built-in-fill            : #171C1F; //$dark5;
+    --arch-svg-built-in-color           : #E1E7EA; //$light4;
+    --arch-svg-rest-streaming-api-fill  : #171C1F; //$dark5;
+    --arch-svg-rest-streaming-api-color : #E1E7EA; //$light4;
+    --arch-svg-server-fill              : #212A2F; //$dark7;
+    --arch-svg-server-hover-fill        : #212A2F; //$dark7;
+    --arch-svg-transparent-tile-stroke  : #587787; //$dark18
+    // ***************************************
+    
     --left-menu-border-color                    : transparent;
     --left-menu-l1-bg                           : transparent;
     --left-menu-l1-bg-hover                     : #3A4D57; //$dark11;

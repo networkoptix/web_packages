@@ -18,6 +18,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { NxGridLayoutComponent } from '../layout/layout.component';
 import { NxGridLayoutModule } from '../layout/layout.module';
 
+import { NxArchSvgComponent } from './arch-svg/arch-svg.component';
 import {
     DynamicFormApplyExampleComponent
 } from './dynamic-form-apply-example/dynamic-form-apply-example.component';
@@ -97,6 +98,10 @@ const appRoutes: Routes = [
             {
                 path: 'websocket',
                 component: WebsocketComponent
+            },
+            {
+                path: 'arch',
+                component: NxArchSvgComponent
             }
         ]
     }
@@ -132,7 +137,8 @@ const appRoutes: Routes = [
         FormElementsComponent,
         TagsComponent,
         ValidationComponent,
-        WebsocketComponent
+        WebsocketComponent,
+        NxArchSvgComponent,
     ],
     bootstrap: [
     ],

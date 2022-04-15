@@ -90,6 +90,10 @@ export class NxSandboxComponent {
                             id: 'websocket',
                             label: 'Websocket',
                             path: '/websocket'
+                        }, {
+                            id: 'archsvg',
+                            label: 'Architecture (SVG)',
+                            path: '/arch'
                         }
                     ]
                 }
