@@ -7,7 +7,7 @@
     "Privacy": "Sekretess",
     "Support": "Support",
     "Terms": "Villkor",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Utvecklarkonsol",
     "accessRoles": {
         "Administrator": {
             "description": "Obegränsad tillgång, inklusive möjligheten att dela",
@@ -426,6 +426,9 @@
             "action": "Logga in",
             "message": "Var god logga in igen.",
             "title": "Din session har gått ut"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Fel",

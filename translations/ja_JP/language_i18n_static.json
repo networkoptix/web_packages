@@ -427,6 +427,9 @@
             "message": "もう一度ログインしてください。",
             "title": "セッションの期限が切れました"
         },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+        },
         "titles": {
             "error": "エラー",
             "success": "成功",

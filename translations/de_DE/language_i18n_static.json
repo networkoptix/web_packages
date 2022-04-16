@@ -427,6 +427,9 @@
             "message": "Bitte loggen Sie sich erneut ein.",
             "title": "Ihre Sitzung ist abgelaufen"
         },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+        },
         "titles": {
             "error": "Fehler",
             "success": "Erfolgreich",

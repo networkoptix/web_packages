@@ -427,6 +427,9 @@
             "message": "Por favor, inicie sesión de nuevo.",
             "title": "Su sesión ha expirado"
         },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+        },
         "titles": {
             "error": "Error",
             "success": "Éxito",

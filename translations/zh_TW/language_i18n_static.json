@@ -7,7 +7,7 @@
     "Privacy": "隱私政策",
     "Support": "支援",
     "Terms": "條款",
-    "Developers Console": "Developers Console",
+    "Developers Console": "開發者工具",
     "accessRoles": {
         "Administrator": {
             "description": "不受限的權限包括共用的能力",
@@ -426,6 +426,9 @@
             "action": "Login",
             "message": "Please log in again.",
             "title": "Your session has expired"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "錯誤",

@@ -427,6 +427,9 @@
             "message": "Please log in again.",
             "title": "Your session has expired"
         },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+        },
         "titles": {
             "error": "Hiba",
             "success": "Sikeres",

@@ -427,6 +427,9 @@
             "message": "Veuillez vous reconnecter.",
             "title": "Votre session a expiré"
         },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+        },
         "titles": {
             "error": "Erreur",
             "success": "Succès",

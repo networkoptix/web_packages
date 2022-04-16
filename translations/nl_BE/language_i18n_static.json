@@ -7,7 +7,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Developer Tools",
     "accessRoles": {
         "Administrator": {
             "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen",
@@ -426,6 +426,9 @@
             "action": "Login",
             "message": "Log opnieuw in.",
             "title": "Uw sessie is verlopen"
+        },
+        "transferOwnership": {
+            "userNotFound": "{ newOwnerEmail } is not a user in the system"
         },
         "titles": {
             "error": "Fout",
