@@ -24,6 +24,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
+import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 
 // HELPERS ******************************************
@@ -111,9 +112,7 @@ ngMocks.defaultMock(NxScrollMechanicsService, () => ({
 }));
 
 ngMocks.defaultMock(NxSettingsService, () => ({
-    footerSubject: new BehaviorSubject(false),
-    systemSubject: new BehaviorSubject<any>(false),
-    selectedSectionSubject: new BehaviorSubject([])
+    systemSubject: new BehaviorSubject<NxSystem>(undefined),
 }));
 
 // @ts-expect-error

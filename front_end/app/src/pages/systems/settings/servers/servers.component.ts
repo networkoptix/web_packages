@@ -110,9 +110,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.settingsService.systemSubject
             .pipe(
                 filter(data => data !== undefined),
-                switchMap(async (system: any) => {
+                switchMap(async system => {
                     this.isOffline = !system.isOnline;
-                    this.settingsService.footerSubject.next(true);
                     if (system && (!this.system || !this.environment.isLocal)) {
                         this.system = system;
                     }

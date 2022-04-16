@@ -1,6 +1,6 @@
 import type { NxSystem } from '@services/system.service/system';
 
-export function setupTest41System() : Partial<NxSystem> {
+export function setupTest41System(): NxSystem {
     return {
         cloudStorageSystemEnabled: false,
         mediaservers: null,
@@ -67,10 +67,10 @@ export function setupTest41System() : Partial<NxSystem> {
         show404: false,
         currentServerNotBusy: true,
         currentUserEmail: 'noptixautoqa+owner@gmail.com'
-    };
+    } as NxSystem;
 }
 
-export function setupTest50System(): Partial<NxSystem> {
+export function setupTest50System(): NxSystem {
     return {
         cloudStorageSystemEnabled: false,
         mediaservers: null,
@@ -138,5 +138,5 @@ export function setupTest50System(): Partial<NxSystem> {
         show404: false,
         currentServerNotBusy: true,
         currentUserEmail: 'noptixautoqa+owner@gmail.com'
-    };
+    } as NxSystem;
 }

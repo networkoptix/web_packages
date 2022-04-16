@@ -64,8 +64,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     ngOnInit(): void {
-        this.settingsService.footerSubject.next(true);
-
         this.serverSubscription = this.system.infoSubject
             .pipe(
                 map((system: any) => {
@@ -77,7 +75,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             )
             .pipe(take(1))
             .subscribe(() => {
-                this.settingsService.footerSubject.next(true);
                 if (this.system.currentServerNotBusy) {
                     if (
                         this.system &&

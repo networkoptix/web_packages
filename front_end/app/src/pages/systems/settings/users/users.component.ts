@@ -326,8 +326,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 ? 'Owner'
                 : user.role.name;
 
-            this.settingsService.footerSubject.next(true);
-
             setTimeout(() => {
                 this.userEnabledFormWatcher = this.applyService
                     .createFormWatcher(
