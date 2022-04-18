@@ -458,7 +458,10 @@ export class NxCloudApiService {
     }
 
     getLanguages() {
-        return this.http.get<t.ILanguages>(`${this.CONFIG.apiBase}/utils/languages/`).toPromise();
+        const uri = environment.isLocal
+            ? '/static/languages.json'
+            : `${this.CONFIG.apiBase}/utils/languages/`;
+        return this.http.get<t.ILanguages>(uri).toPromise();
     }
 
     @swClear('apiFresh', '/utils/language', true)
