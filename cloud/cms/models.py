@@ -1711,17 +1711,22 @@ def unblock_child_reviews(sender, instance, **kwargs):
 
 
 class ExternalFileManager(models.Manager):
-    def create(self, file, asset=None, data_structure=None, user=None):
+    def create(self, file=None, asset=None, data_structure=None, user=None, md5=None, size=None):
         '''
         Adds to asset_ds_pair if file already exist else creates new file.
         '''
         raw_bytes = b''
-        md5 = hashlib.md5()
-        for count, chunk in enumerate(file.chunks()):
-            md5.update(chunk)
-            if count < 5:
-                raw_bytes += chunk
-        md5 = md5.hexdigest()
+
+        if file:
+            # Handle new upload, md5 provided for files directly uploaded to s3
+            # TODO: Migrate old md5 using metadata from s3 once all file uploads use chunked uploader
+            md5 = hashlib.md5()
+            for count, chunk in enumerate(file.chunks()):
+                md5.update(chunk)
+                if count < 5:
+                    raw_bytes += chunk
+            md5 = md5.hexdigest()
+
         asset_ds_pair = None
         if asset and data_structure:
             try:
@@ -1737,24 +1742,26 @@ class ExternalFileManager(models.Manager):
         try:
             external_file_obj = ExternalFile.objects.get(md5=md5)
 
-            if not external_file_obj.admin_upload and user:
+            if not external_file_obj.admin_upload and user and not asset_ds_pair:
                 external_file_obj.admin_upload = user
 
         except ExternalFile.DoesNotExist:
             external_file_obj = ExternalFile(
-                md5=md5, size=file.size, admin_upload=user)
+                md5=md5, size=size or file.size, admin_upload=None if asset_ds_pair else user)
             external_file_obj.save()
             external_file_obj.file = file
         else:
             if external_file_obj.file and MediaStorage().exists(external_file_obj.file.name):
-                external_raw_bytes = b''
-                for count, chunk in enumerate(external_file_obj.file.chunks()):
-                    if count < 5:
-                        external_raw_bytes += chunk
-                    else:
-                        break
-                if external_raw_bytes != raw_bytes:
-                    raise ValueError('md5 Hash Collision')
+                if file:
+                    # raw_bytes only populated when uploaded the old way, for files directly uploaded to S3 we just use their calculated hash
+                    external_raw_bytes = b''
+                    for count, chunk in enumerate(external_file_obj.file.chunks()):
+                        if count < 5:
+                            external_raw_bytes += chunk
+                        else:
+                            break
+                    if external_raw_bytes != raw_bytes:
+                        raise ValueError('md5 Hash Collision')
             else:
                 external_file_obj.file = file
 
@@ -1779,7 +1786,7 @@ class ExternalFile(models.Model):
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
     # Since we slugify the asset name, data structure name and file name we need a long length.
     file = models.FileField(upload_to=rename_file,
-                            storage=MediaStorage(), max_length=1000)
+                            storage=MediaStorage(), max_length=1000, blank=True, null=True)
     md5 = models.CharField(max_length=32, blank=False, unique=True)
     size = models.FloatField(default=0.0)
     asset_ds_pair = models.ManyToManyField(
@@ -1807,16 +1814,29 @@ class ExternalFile(models.Model):
 
 
 def file_saved(sender, created, signal, instance, **kwargs):
-    if not created:
-        file = instance.file
-        md5 = hashlib.md5()
-        for chunk in file.file.chunks():
-            md5.update(chunk)
-        md5 = md5.hexdigest()
-        if instance.md5 != md5:
-            instance.md5 = md5
-            instance.size = file.size
-            instance.save()
+    if created:
+        return
+
+    file = instance.file
+
+    if not file:
+        return
+
+    md5 = hashlib.md5()
+
+    try:
+        chunks = file.file.chunks()
+    except OSError:
+        # Skip if chunked upload transferred directly into S3
+        return
+
+    for chunk in chunks:
+        md5.update(chunk)
+    md5 = md5.hexdigest()
+    if instance.md5 != md5:
+        instance.md5 = md5
+        instance.size = file.size
+        instance.save()
 
 
 if not settings.TESTING:

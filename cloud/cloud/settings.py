@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'zapier',
     'tinymce',
     'nested_admin',
+    'upload',
     # Needs to be last to insure file deletion isn't interrupted by other exceptions
     'django_cleanup.apps.CleanupConfig'
 )
@@ -663,7 +664,8 @@ NPM_FILE_PATTERNS = {
     'bootstrap': ['dist/*'],
     'split.js': ['dist/*'],
     'uuid': ['dist/*'],
-    'csstree-validator': ['dist/*']
+    'csstree-validator': ['dist/*'],
+    'uppy': ['dist/*']
 }
 
 SILKY_AUTHENTICATION = True
@@ -823,3 +825,16 @@ else:
     MEILISEARCH_MASTER_KEY = 'qweasd1234'
 
 VERSION = os.getenv('VERSION', '0')
+
+# Testing
+# import boto3
+# AWS_STORAGE_BUCKET_NAME = 'custom-local-bucket-name-here'
+# s3 = boto3.session.Session().client("s3")
+# try:
+#     s3.head_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
+# except s3.exceptions.ClientError:
+#     s3.create_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
+
+# upload app shared settings
+UPLOAD_BUCKET = f'{AWS_STORAGE_BUCKET_NAME}-uploads'
+UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'

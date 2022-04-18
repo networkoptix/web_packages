@@ -580,6 +580,7 @@ class AssetAdmin(CMSAdmin):
         admin_files = [
             {'title': upload.file.url.split('/')[-1],  'value': upload.file.url}
             for upload in ExternalFile.objects.exclude(admin_upload=None)
+            if upload.file
         ]
         admin_uploads = [
             upload for upload in admin_files
@@ -957,6 +958,7 @@ class ExternalFileAdmin(CMSAdmin):
     list_display = 'id', 'file_path', 'download', 'admin_uploaded', 'asset_ds_pair_count', 'size', 'md5'
     fields = 'file',
     list_filter = AdminUploadedFilter,
+    change_list_template = 'cms/externalfile_change_list.html'
 
     def asset_ds_pair_count(self, obj):
         return obj.asset_ds_pair.count()
@@ -971,7 +973,7 @@ class ExternalFileAdmin(CMSAdmin):
         return mark_safe(f'<a href="/serve/{obj}" target="_blank">{obj}</a>')
 
     def has_add_permission(self, request):
-        return request.user.is_superuser
+        return False
 
     def has_change_permission(self, request, obj=None):
         return obj.admin_upload == request.user if obj else  request.user.is_superuser

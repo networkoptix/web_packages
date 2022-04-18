@@ -71,6 +71,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls')),
     url(r'^api/cms/', include('cms.urls')),
+    url(r'^api/upload/', include('upload.urls')),
     url(r'^api/notifications/', include(notifications_urls.public_patterns)),
     url(r'^notifications/', include('notifications.urls')),
     url(r'^oauth/', include('oauth.urls')),

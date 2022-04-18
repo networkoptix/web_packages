@@ -1,0 +1,37 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_static %}
+{% load static %}
+{% block extrahead %}
+{{ block.super }}
+<link href="{% static 'uppy/dist/uppy.min.css' %}" rel="stylesheet" />
+<script src="{% static 'uppy/dist/uppy.min.js' %}"></script>
+{% endblock %}
+
+{% block object-tools-items %}
+{{ block.super }}
+<li>
+    {% if request.user.is_superuser %}
+    <a href="javascript:;" class="addlink" id="uppyModalOpener">Add External File(s)</a>
+    {% endif %}
+</li>
+<script>
+  const companionUrl = "{% url 'upload_companion' %}"
+  const moveCompleted = "{% url 'move_completed_upload' %}"
+  const uppy = new Uppy.Core({ debug: true, autoProceed: false })
+    .use(Uppy.Dashboard, { trigger: "#uppyModalOpener", showLinkToUploadResults: true, showProgressDetails: true, onRequestCloseModal: () => {
+        const dashboard = uppy.getPlugin('Dashboard')
+        if (window.forceRefresh) {
+            window.location.reload()
+        } else if (dashboard.isModalOpen()) {
+            dashboard.closeModal()
+        }
+    } })
+    .use(Uppy.Webcam, { target: Uppy.Dashboard })
+    .use(Uppy.AwsS3Multipart, { companionUrl });
+    uppy.on('upload-success', (file, response) => {
+        const key = response.uploadURL.split('/').reverse()[0]
+        fetch(moveCompleted, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({key})})
+        window.forceRefresh = true
+      })
+</script>
+{% endblock %}
