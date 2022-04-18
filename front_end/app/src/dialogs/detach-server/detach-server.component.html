@@ -43,5 +43,6 @@
         (loginSuccess)="needsUpdate = false; detachServer.run()"
         [noConnectionMsg]="'Failed to detach server from system.' | translate"
         [dialogRef]="dialogRef"
-        [system]="system"></nx-update-webadmin-session>
+        [system]="system"
+        processAction="danger"></nx-update-webadmin-session>
 </form>

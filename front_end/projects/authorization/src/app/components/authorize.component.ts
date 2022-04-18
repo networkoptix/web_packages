@@ -145,12 +145,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     private verifyRedirectUrl(systemId) {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
+        const redirectPort = new URL(this.initialData.redirect_uri).port;
         return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
             .pipe(
                 untilDestroyed(this),
                 catchError(() => of(false)),
                 map((servers: any) => {
-                    return servers?.some(({ remoteAddresses }) => remoteAddresses
+                    return servers?.some(({ port, remoteAddresses }) => redirectPort === port.toString() && remoteAddresses
                         .some((address) => this.initialData.redirect_uri.includes(address))
                     );
                 }));

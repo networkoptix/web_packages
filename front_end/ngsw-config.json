@@ -49,7 +49,6 @@
     {
       "name": "apiFresh",
       "urls": [
-        "/api/account",
         "/api/utils/language"
       ],
       "cacheConfig": {
@@ -63,19 +62,6 @@
       "name": "cloudSystemAPI",
       "urls": [
         "/api/systems**"
-      ],
-      "cacheConfig": {
-        "maxAge": "2h",
-        "maxSize": 100,
-        "timeout": "0u",
-        "strategy": "freshness"
-      }
-    },
-    {
-      "name": "dynamicAssets",
-      "urls": [
-        "**/language_compiled.json",
-        "**/languages.json"
       ],
       "cacheConfig": {
         "maxAge": "2h",

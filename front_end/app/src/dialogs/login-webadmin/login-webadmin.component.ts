@@ -157,7 +157,7 @@ export class LoginWebadminModalContent implements OnInit {
             const paramString = params.toString();
             url.hash = hash + (paramString ? '?' + paramString : '');
             this.window.location.href = url.toString();
-            return this.oauthLogin(code);
+            this.oauthLogin(code);
         }
 
         // remove any leftovers  *****************************
@@ -279,13 +279,10 @@ export class LoginWebadminModalContent implements OnInit {
             );
         };
 
-        this.account.mediaServerApi.getModuleInfo()
-            .subscribe(data => {
-                // Handles legacy and rest apis
-                if (data.reply) {
-                    data = data.reply;
-                }
-                if (this.window.navigator.onLine && data.serverFlags.includes('SF_HasPublicIP')) {
+        this.account.mediaServerApi.getServerInfo('*')
+            .subscribe((data) => {
+                const systemHasInternet = data.some((system) => system.serverFlags.includes('SF_HasPublicIP'));
+                if (this.window.navigator.onLine && systemHasInternet) {
                     this.account.mediaServerApi.redirectOauth();
                 } else {
                     displayCloudConnectionError();

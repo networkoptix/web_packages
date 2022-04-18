@@ -227,6 +227,8 @@ webadmin:
   extends: .frontend-changes
   stage: build
   image: nx/ci
+  tags:
+  - ru-moscow
   secrets:
     JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
   script:
@@ -243,6 +245,8 @@ frontend:
   extends: .frontend-changes
   stage: build
   image: nx/ci
+  tags:
+  - ru-moscow
   secrets: !reference [.tokens, secrets]
   script:
     - !reference [.get_target_branch_script, script]

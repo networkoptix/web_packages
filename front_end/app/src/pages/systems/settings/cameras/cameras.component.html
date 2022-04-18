@@ -1,81 +1,65 @@
-<nx-pre-loader *ngIf="!system?.show404 && showPreloader && !system?.userManager?.permissions?.editCameras"></nx-pre-loader>
+<nx-pre-loader *ngIf="!system?.show404 && showPreloader && !system?.userManager?.permissions?.editCameras">
+</nx-pre-loader>
 <div *ngIf="system && !system.show404 && system.userManager.permissions.editCameras" class="row auth-visible">
-    <nx-page-placeholder
-            class="placeholder-section"
-            *ngIf="(!system.isAvailable || !selectedCamera || !system.isOnline || noCameras); else cameraContent"
-            [type]="!system.isOnline || !system.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'" >
+    <nx-page-placeholder class="placeholder-section"
+        *ngIf="(!system.isAvailable || !selectedCamera || !system.isOnline || noCameras); else cameraContent"
+        [type]="!system.isOnline || !system.isAvailable ? 'NO_SETTINGS' : 'NO_CAMS'">
     </nx-page-placeholder>
     <ng-template #cameraContent>
         <ng-container *ngIf="selectedCamera">
             <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
-                <nx-alert-block
-                    *ngIf="showUnauthorized"
-                    type="error"
-                    id="unauthorized-warning"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
-                    [line1]="'Camera is unauthorized' | translate"
-                    [btnIconSrc]="CONFIG.icons.dir + 'settings.svg'"
-                    [btnCaption]="'Edit Credentials' | translate"
+                <nx-alert-block *ngIf="showUnauthorized" type="error" id="unauthorized-warning"
+                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'" [line1]="'Camera is unauthorized' | translate"
+                    [btnIconSrc]="CONFIG.icons.dir + 'settings.svg'" [btnCaption]="'Edit Credentials' | translate"
                     (onAction)="updateCredentials()">
                 </nx-alert-block>
-                <nx-alert-block
-                    *ngIf="showOffline"
-                    type="error"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                <nx-alert-block *ngIf="showOffline" type="error" [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
                     [line1]="'Camera is offline' | translate">
                 </nx-alert-block>
-                <nx-alert-block
-                    *ngFor="let error of errors"
-                    type="error"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
-                    [line1]="error">
+                <nx-alert-block *ngFor="let error of errors" type="error"
+                    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'" [line1]="error">
                 </nx-alert-block>
-                <nx-alert-block
-                    *ngFor="let warning of warnings"
-                    type="warning"
-                    [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'"
-                    [line1]="warning">
+                <nx-alert-block *ngFor="let warning of warnings" type="warning"
+                    [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'" [line1]="warning">
                 </nx-alert-block>
             </div>
             <div class="col-12 camera-settings-info">
                 <nx-block header-style="extended">
                     <header>
                         <div class="header-editable mb-3">
-                            <nx-editable-heading
-                                    name="cameraName"
-                                    [(editMode)]="editMode"
-                                    [(nameWatcherValue)]="cameraNameWatcher.value"
-                                    [editEnabled]="enableEdit"></nx-editable-heading>
+                            <nx-editable-heading name="cameraName" [(editMode)]="editMode"
+                                [(nameWatcherValue)]="cameraNameWatcher.value" [editEnabled]="enableEdit">
+                            </nx-editable-heading>
                             <div *ngIf="!editMode" class="camera-button-div">
-                                <button class="camera-buttons" [routerLink]="cameraViewPath"  id="view-camera">
+                                <button class="camera-buttons" [routerLink]="cameraViewPath" id="view-camera">
                                     <span>
-                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'play.svg'" [applyClass]="true"></svg-icon>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'play.svg'"
+                                            [applyClass]="true"></svg-icon>
                                     </span>
                                     <span class="ml-1" translate>View</span>
                                 </button>
-                                <button *ngIf="canSeeInfo" class="camera-buttons" id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                                <button *ngIf="canSeeInfo" class="camera-buttons" id="detailed-info"
+                                    [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                                     <span>
-                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'" [applyClass]="true"></svg-icon>
+                                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                                            [applyClass]="true"></svg-icon>
                                     </span>
                                     <span class="ml-1" translate>Detailed Info</span>
                                 </button>
                             </div>
                         </div>
                         <div class="camera-feed-img" [style.width.px]="previewWidth" [style.height.px]="120">
-                            <nx-health-image [isPrimary]="true"
-                                aspect="override"
-                                [preloader]="true"
-                                [state]="selectedCamera.status"
-                                [url]="preview + '&reload=' + (reload$ | async)"
+                            <nx-health-image [isPrimary]="true" aspect="override" [preloader]="true"
+                                [state]="selectedCamera.status" [url]="preview + '&reload=' + (reload$ | async)"
                                 [lightBackground]="true"></nx-health-image>
                         </div>
-                        <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
+                        <nx-info-block [sectionsOrColumns]="cameraDetailColumns"
+                            [infoBlockSize]="infoBlockSizeEnum.COMPACT"></nx-info-block>
                     </header>
                     <ng-template #deviceNotSupported>
-                        <nx-open-client-section-placeholder
-                                [system]="system"
-                                [translatedMessage]="'Settings for this device are not available.' | translate"
-                        ></nx-open-client-section-placeholder>
+                        <nx-open-client-section-placeholder [system]="system"
+                            [translatedMessage]="'Settings for this device are not available.' | translate">
+                        </nx-open-client-section-placeholder>
 
                     </ng-template>
                     <ng-container *ngIf="!settingsDisabled; else deviceNotSupported">
@@ -110,10 +94,7 @@
                         <nx-section>
                             <h4 class="mb-3" translate>Audio</h4>
                             <div class="d-flex checkbox-block align-items-center mt-1">
-                                <nx-checkbox
-                                    name="audioEnabled"
-                                    componentId="audioEnabled"
-                                    [(ngModel)]="audioEnabled"
+                                <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="audioEnabled"
                                     [disabled]="!selectedCamera.isAudioSupported">
                                 </nx-checkbox>
                                 <label class="control-label mb-0"
@@ -125,7 +106,8 @@
                         </nx-section>
                         <nx-section>
                             <h4 class="mb-3" translate>Authentication</h4>
-                            <button class="btn btn-default" (click)="updateCredentials()" id="update-credentials"><span translate>Edit Credentials</span></button>
+                            <button class="btn btn-default" (click)="updateCredentials()" id="update-credentials"><span
+                                    translate>Edit Credentials</span></button>
                         </nx-section>
                     </ng-container>
                 </nx-block>
@@ -139,10 +121,7 @@
                                     <h4 translate>Recording</h4>
                                 </ng-template>
                                 <div *ngIf="!system.useRest; else notAvailable">
-                                    <nx-switch
-                                        [checked]="recording"
-                                        [label]="'Recording' | translate"
-                                        id="recording"
+                                    <nx-switch [checked]="recording" [label]="'Recording' | translate" id="recording"
                                         name="recording"
                                         [disabled]="!recording && !recordingWatcher.originalValue && availableLicenses <= 0"
                                         (onSwitch)="handleRecordingToggle($event)"></nx-switch>
@@ -150,17 +129,15 @@
                                         [ngClass]="{
                                                 'input-error': recordingWatcher.originalValue ? availableLicenses < 0 : availableLicenses <= 0,
                                                 'shake-hint': shakeHint
-                                        }">{{ availableLicenses > 0 ?
-                                                ('1 professional license channel will be used' | translate)  :
-                                                ('Professional license is required' | translate)}}
+                                        }">
+                                        <ng-template #licenseRequired><span translate>Professional license is required</span></ng-template>
+                                        <span *ngIf="availableLicenses > 0; else licenseRequired" translate>1 professional license channel will be used</span>
                                     </div>
                                 </div>
                             </div>
                         </header>
                         <ng-container *ngIf="system.useRest">
-                            <nx-open-client-section-placeholder
-                                svgFileName="system_settings_placeholder"
-                                width="64"
+                            <nx-open-client-section-placeholder svgFileName="system_settings_placeholder" width="64"
                                 [system]="system"
                                 [translatedMessage]="'Recording settings are not available.' | translate">
                             </nx-open-client-section-placeholder>
@@ -168,17 +145,12 @@
                         <ng-container *ngIf="!system.useRest && recording">
                             <nx-section>
                                 <h4 class="mb-3" translate>Mode</h4>
-                                    <nx-radio
-                                        *ngFor="let mode of recordingModes" class="d-flex pb-2"
-                                        [name]="mode.name"
-                                        [componentId]="mode.name"
-                                        [value]="mode.value"
-                                        [label]="LANG.common.recordingModes[mode.name]()"
-                                        [disabled]="!mode.enabled"
-                                        [(ngModel)]="mode.value"
-                                        (click)="toggleMode(mode)"
-                                        ></nx-radio>
-                                <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
+                                <nx-radio *ngFor="let mode of recordingModes" class="d-flex pb-2" [name]="mode.name"
+                                    [componentId]="mode.name" [value]="mode.value"
+                                    [label]="LANG.common.recordingModes[mode.name]()" [disabled]="!mode.enabled"
+                                    [(ngModel)]="mode.value" (click)="toggleMode(mode)"></nx-radio>
+                                <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error"
+                                    translate>Please select recording mode.</span>
                                 <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                             </nx-section>
                             <nx-section *ngIf="!selectedCamera.isStream">
@@ -189,20 +161,15 @@
                                     </div>
                                     <div class="grid-item mb-2 mb-lg-0">
                                         <div style="width: 100%">
-                                            <nx-numeric
-                                                    id="fps"
-                                                    name="fps"
-                                                    [class]="'pl-2'"
-                                                    [step]="1"
-                                                    [min]="1"
-                                                    [placeholder]="selectedCamera.maxFps || 15"
-                                                    [max]="selectedCamera.maxFps || 15"
-                                                    [(ngModel)]="selectedFps"
-                                            ></nx-numeric>
+                                            <nx-numeric id="fps" name="fps" [class]="'pl-2'" [step]="1" [min]="1"
+                                                [placeholder]="selectedCamera.maxFps || 15"
+                                                [max]="selectedCamera.maxFps || 15" [(ngModel)]="selectedFps">
+                                            </nx-numeric>
                                         </div>
                                     </div>
                                     <div class="grid-item mb-2">
-                                        <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error error-span col-8" translate>Please select FPS.</span>
+                                        <span *ngIf="!existingRecordingsScheduled && variousFps"
+                                            class="input-error error-span col-8" translate>Please select FPS.</span>
                                     </div>
                                     <div class="grid-item">
                                         <span class="text-right" translate>Quality</span>
@@ -216,7 +183,8 @@
                                         ></nx-select>
                                     </div>
                                     <div class="grid-item">
-                                        <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error error-span col-8" translate>Please select recording quality</span>
+                                        <span *ngIf="!existingRecordingsScheduled && variousQualities"
+                                            class="input-error error-span col-8" translate>Please select recording quality</span>
                                     </div>
                                 </div>
                             </nx-section>
@@ -237,11 +205,14 @@
                             <div class="d-flex flex-column">
                                 <span translate>Motion Detection Sensitivity</span>
                             </div>
-                            <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
+                            <nx-three-dot
+                                [name]="'Disable Motion Detection' | translate"
+                                [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]"
+                                id="motion-three-dot-menu"></nx-three-dot>
                         </div>
                     </header>
                     <nx-section>
-                        <div class="preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)" (click)="lockGrid(true)">
+                        <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)" (click)="lockGrid(true)">
                             <div class="position-relative mx-auto" [style.width.px]="width" [style.height.px]="height">
                                 <nx-health-image [isPrimary]="true"
                                     [motionPreview]="true"

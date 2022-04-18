@@ -87,7 +87,7 @@ export class RestartServerModalContent {
                 }
                 this.applyService.isOnline$.next(haveOnlineServers);
                 this.system.isAvailable = false;
-                return this.system.restartServer(this.serverId);
+                return this.system.serverManager.restartServer(this.serverId);
             },
             { ignoreError: true },
             () => {
@@ -217,12 +217,12 @@ export class RestartServerModalContent {
                 this.system.currentBusyServerIds.delete(this.serverId);
                 this.system.isAvailable = true;
                 let message = this.LANG.servers.restartFailed();
+
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                     message = this.LANG.servers.serverOffline?.();
                     this.close(this.CONFIG.servers.status.offline);
-                } else if (err.errorId ===
-                    this.CONFIG.servers.errors.oldSessionErrorId
-                ) {
+                    this.toastService.show(message, options);
+                } else if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
                     this.loginService.updateSession('restart')
@@ -236,8 +236,9 @@ export class RestartServerModalContent {
                         });
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
+                } else {
+                    this.toastService.show(message, options);
                 }
-                this.toastService.show(message, options);
             });
     }
 

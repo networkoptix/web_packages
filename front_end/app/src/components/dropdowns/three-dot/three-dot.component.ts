@@ -35,6 +35,7 @@ import type { ActionItems } from './three-dot.component.types';
 })
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
+    @Input() name: string;
     @Input() componentId: string = 'three-dot-menu';
 
     constructor(

@@ -306,27 +306,6 @@ class CloudPortalAPI(object):
                          params={'uuid': uuid}, verify=False)
         return r.json()
 
-    @keyword
-    def add_camera(self, serverUrl, camuser, campassword, uniqueId, url, manufacturer=None):
-        body = {
-            "user": camuser,
-            "password": campassword,
-            "cameras":
-                [
-                    {
-                        "uniqueId": uniqueId,
-                        "url": url,
-                        "manufacturer": manufacturer
-                    }
-                ]
-        }
-        logger.trace(body)
-        r = requests.post(f'{serverUrl}/api/manualCamera/add', auth=HTTPDigestAuth('admin', 'qweasd 123'),
-                          headers={'Content-Type': 'application/json'}, json=body, verify=False)
-        logger.trace(r.status_code)
-        logger.trace(r.text)
-        assert r.status_code == 200
-        return r.text
 
     # @keyword
     # def add_fake_camera(self, erverUrl, cameras, user="mark", password="hamill"):

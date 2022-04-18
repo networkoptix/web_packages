@@ -692,6 +692,8 @@ class AccountCustomPropertyView(APIView):
    Could maybe be used to allow an easy place to persist user specific data for other either developer experiments or integrations
     """
 
+    permission_classes = IsAuthenticatedOrTokenHasScope,
+
     def get_and_validate_user(self, request, username=None):
         is_superuser = request.user.is_superuser
         current_user = request.user.email

@@ -548,7 +548,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
-    getServerInfo(remoteEndpoint: string) {
+    // serverId can be a server id, this, or *
+    getServerInfo(serverId: string) {
+        return this.get(`/rest/v1/servers/${serverId}/info`);
+    }
+
+    getRemoteServerInfo(remoteEndpoint: string) {
         remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '');
         return this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
     }
