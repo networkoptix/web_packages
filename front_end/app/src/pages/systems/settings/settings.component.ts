@@ -109,7 +109,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private origSelectedSubSection: string;
     private origSelectedDetailSection: string;
 
-    archivesPresent = {}
+    archivesPresent = {};
 
     private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
@@ -125,7 +125,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.updateArchivesPresent();
     }
 
-    private updateArchivesPresent () {
+    private updateArchivesPresent() {
         this.system.getCameraHistoryItems().toPromise().then(response => {
             this.archivesPresent = {};
             this.archivesPresent = response.reduce((acc, server) => {

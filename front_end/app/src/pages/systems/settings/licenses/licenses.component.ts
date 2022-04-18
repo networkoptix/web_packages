@@ -291,14 +291,14 @@ export class NxSystemLicensesComponent implements OnInit {
                                             // only one license per type "NVR" or "STARTER" is allowed per system
                                             // since it's not possible to register new one with fewer channels
                                             // it's safe to assume that last one is the active
-                                            const nvrs = result.filter((item) => {
+                                            const nvrs = result.filter(item => {
                                                 return item.info.type() === this.LANG.license.licenseTypeTitles.NVR();
                                             });
                                             if (nvrs.length) {
                                                 nvrs[nvrs.length - 1].info.status = this.LANG.license.info.ok();
                                             }
 
-                                            const starters = result.filter((item) => {
+                                            const starters = result.filter(item => {
                                                 return item.info.type() === this.LANG.license.licenseTypeTitles.Starter();
                                             });
                                             if (starters.length) {

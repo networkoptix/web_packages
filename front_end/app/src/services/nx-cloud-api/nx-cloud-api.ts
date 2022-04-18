@@ -9,6 +9,7 @@ import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { mapValuesToStrings } from '@utils/general';
@@ -452,9 +453,7 @@ export class NxCloudApiService {
     }
 
     getLanguages() {
-        const endpoint = '/static/languages.json';
-        this.cacheService.addToCache(endpoint);
-        return this.http.get<t.ILanguages>(endpoint).toPromise();
+        return this.http.get<t.ILanguages>(`${this.CONFIG.apiBase}/utils/languages/`).toPromise();
     }
 
     @swClear('apiFresh', '/utils/language', true)
@@ -633,7 +632,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     documentationInstantSearch(name, query, options?: Partial<t.InstantSearchOptions>) {
-        if (!this.CONFIG.featureFlags.kbInstantSearch) {
+        if (!this.configService.flagsEnabled(FeatureFlagStrings.kbInstantSearch)) {
             return throwError(new Error('Instant search feature not enabled'));
         }
         const params = mapValuesToStrings({ query, ...options });

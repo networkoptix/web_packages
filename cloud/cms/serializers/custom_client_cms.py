@@ -4,13 +4,45 @@ Serializers for Custom Client CMS on the frontend.
 
 import re
 from django.conf import settings
-from rest_framework import serializers
+from django.core import validators, exceptions
+from rest_framework import serializers, fields
 
 from cms.models import AssetType, CustomClient, Customization
 
+
+class EmailOrUrlValidator:
+    def __init__(self, message=None):
+        if message is not None:
+            self.message = message
+
+    def __call__(self, value):
+        self.validators = validators.EmailValidator(), validators.URLValidator()
+        for validator in self.validators:
+            try:
+                validator(value)
+            except exceptions.ValidationError:
+                pass
+            else:
+                return
+
+        raise exceptions.ValidationError(self.message, code='invalid')
+
+
+class EmailOrUrlField(fields.CharField):
+    default_error_messages = {
+        'invalid': 'Enter a valid url or email address.'
+    }
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        validator = EmailOrUrlValidator(message=self.error_messages['invalid'])
+        self.validators.append(validator)
+
+
 REGEX_FIELD_MAP = {
     'emailField': serializers.EmailField,
-    'urlField': serializers.URLField
+    'urlField': serializers.URLField,
+    'emailOrUrlField': EmailOrUrlField
 }
 
 
@@ -22,12 +54,12 @@ class CustomClientSerializer(serializers.ModelSerializer):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.custom_fields = AssetType.get_custom_fields_by_type(
-                AssetType.ASSET_TYPES.vms) if not settings.MIGRATING else {}
+            custom_fields = {} if settings.MIGRATING else AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms)
+
             self.custom_fields = {
-                key: value for key, value in self.custom_fields.items()
-                if self.custom_fields[key].get('source', '') == 'custom' and not (
-                    self.custom_fields[key].get('metaOnly', False) and not settings.META)
+                key: value for key, value in custom_fields.items()
+                if custom_fields[key].get('source', '') == 'custom' and not (
+                    custom_fields[key].get('metaOnly', False) and not settings.META)
             }
             for field_name, field_props in self.custom_fields.items():
                 optional = field_props.get('optional', False)
@@ -93,7 +125,7 @@ class CustomClientSerializer(serializers.ModelSerializer):
             self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets
 
 
-class FieldManifestSerializer(serializers.Serializer):
+class FieldeManifestSerialzier(serializers.Serializer):
     name = serializers.CharField()
     label = serializers.CharField()
     type = serializers.CharField()
@@ -103,7 +135,7 @@ class FieldManifestSerializer(serializers.Serializer):
 
 
 class ContextManifestSerializer(serializers.Serializer):
-    fields = FieldManifestSerializer(many=True)
+    fields = FieldeManifestSerialzier(many=True)
 
 
 class ContentManifestSerializer(serializers.Serializer):
@@ -127,10 +159,11 @@ class CheckPackageCustomClientSerializer(serializers.Serializer):
         if instance.ready():
             if instance.successful():
                 return {'state': 'ready'}
-            if type(instance.result) == TaskErrors:
-                return {'state': 'failed', 'message': 'Failed to generate package', 'errors': instance.result.errors}
             else:
-                return {'state': 'failed', 'message': 'Unknown error occured while generating package'}
+                if type(instance.result) == TaskErrors:
+                    return {'state': 'failed', 'message': 'Failed to generate package', 'errors': instance.result.errors}
+                else:
+                    return {'state': 'failed', 'message': 'Unknown error occured while generating package'}
         elif instance.result:
             current = instance.result.get('current', 0)
             total = instance.result.get('total', 0)

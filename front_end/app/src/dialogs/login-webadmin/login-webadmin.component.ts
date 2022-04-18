@@ -280,8 +280,8 @@ export class LoginWebadminModalContent implements OnInit {
         };
 
         this.account.mediaServerApi.getServerInfo('*')
-            .subscribe((data) => {
-                const systemHasInternet = data.some((system) => system.serverFlags.includes('SF_HasPublicIP'));
+            .subscribe(data => {
+                const systemHasInternet = data.some(system => system.serverFlags.includes('SF_HasPublicIP'));
                 if (this.window.navigator.onLine && systemHasInternet) {
                     this.account.mediaServerApi.redirectOauth();
                 } else {

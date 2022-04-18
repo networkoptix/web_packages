@@ -32,7 +32,7 @@ import type { ICamera, ITask } from './camera-manager/camera-manager-types';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
 import { System } from './system-types';
-import type { ServerTimeInfo, NxSystemWithUserInfo } from './system-types';
+import type { IParams, NxSystemWithUserInfo, ServerTimeInfo } from './system-types';
 import { UserManager } from './user-manager/user-manager';
 import type {
     NxSystemUser,
@@ -487,6 +487,10 @@ export class NxSystem extends System {
         return this.mediaserver.getStoragesInfo(queryParams);
     }
 
+    getRemoteServerInfo(remoteEndpoint: string) {
+        return this.mediaserver.getRemoteServerInfo(remoteEndpoint);
+    }
+
     mergeSystems(url: string, targetSystemId: string, dryRun: boolean, currentPassword?: string, takeRemoteSettings = false) {
         return this.mediaserver.mergeSystems(url, targetSystemId, dryRun, currentPassword, takeRemoteSettings);
     }
@@ -538,7 +542,9 @@ export class NxSystem extends System {
                     this.mediaserver.setAuthKeys(auth.authGet, auth.authPost, auth.authPlay);
                     this.authPromise = null;
                 } else if (auth.access_token) {
-                    (this.mediaserver as NxSystemRestAPI).setTokens(auth, true);
+                    (this.mediaserver as NxSystemRestAPI)
+                        .setTokens(auth, true)
+                        .subscribe(() => {});
                 } else {
                     this.authPromise = null;
                     return Promise.reject(auth);
@@ -868,7 +874,7 @@ export class NxSystem extends System {
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    if (this.isAdmin) {
+                    if (!environment.isLocal && this.isAdmin) {
                         return this.getUsersCachedInCloud().then(users => {
                             this.userManager.processUsers(users);
                             return Promise.resolve();
@@ -877,7 +883,7 @@ export class NxSystem extends System {
                         return Promise.resolve();
                     }
                 });
-            } else if (this.isAdmin) { // or we get old cached data from the cloud
+            } else if (!environment.isLocal && this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then(users => {
                     return this.userManager.processUsers(users);
                 });
@@ -1059,6 +1065,17 @@ export class NxSystem extends System {
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
+    getModuleInfo(serverId?: string) {
+        return this.serverManager.getModuleInfo(serverId);
+    }
+
+    getModuleInfoUsingUrl(url: string) {
+        return this.serverManager.getModuleInfoUsingUrl(url);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
     renameServer(serverId: string, serverName: string) {
         return this.serverManager.renameServer(serverId, serverName)
             .then(() => this.update())
@@ -1110,7 +1127,33 @@ export class NxSystem extends System {
         return this.serverManager.moduleInfo;
     }
 
-    getModuleInfoUsingUrl(url: string) {
-        return this.serverManager.getModuleInfoUsingUrl(url);
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    getServerApiDoc(serverId: string) {
+        return this.serverManager
+            .getApiDoc(serverId)
+            .catch(err => Promise.reject(err));
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    logLevel(serverId: string) {
+        return this.serverManager.logLevel(serverId);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    setLogLevels(serverId: string, loggers: IParams[]) {
+        return this.serverManager.setLogLevels(serverId, loggers);
+    }
+
+    /**
+     * @deprecated Method should be refrenced from serverManager instead of directly from system.
+     */
+    activateLicense(serverId, key) {
+        return this.serverManager.activateLicense(serverId, key);
     }
 }

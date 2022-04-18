@@ -149,7 +149,7 @@ export class ServerManager {
 
     setLogLevels(
         serverId: string,
-        loggers: { key: string; value: string }[]
+        loggers: IParams[]
     ): Promise<void> {
         const promises = loggers.map<Promise<LogLevel>>(logger =>
             this.mediaserverConnections[serverId]
