@@ -526,7 +526,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 if (res.resultCode === 'alreadyExists') {
                     this.createErrorCode = ['email', 'alreadyExists'];
                 } else if (res.resultCode === 'portalError') {
-                    // how to handle this? errorText: 'User is not in portal'
+                    // errorText: 'User is not in portal'
+                    this.createErrorCode = ['email', 'portalError'];
                 } else {
                     // if we support code in the future, so that account can be activated upon registration
                     // then res.activated === true
