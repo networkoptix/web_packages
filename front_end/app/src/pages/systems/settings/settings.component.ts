@@ -97,6 +97,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private origSelectedSubSection: string;
     private origSelectedDetailSection: string;
 
+    archivesPresent = {}
+
     private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
@@ -108,6 +110,19 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private systemReady() {
         this.settingsService.system = this.system;
         this.menuVisible = true;
+        this.updateArchivesPresent();
+    }
+
+    private updateArchivesPresent () {
+        this.system.getCameraHistoryItems().toPromise().then(response => {
+            this.archivesPresent = {};
+            this.archivesPresent = response.reduce((acc, server) => {
+                server.archivedCameras.forEach(c => {
+                    acc[c] = true;
+                });
+                return acc;
+            }, {});
+        });
     }
 
     private canNavMenu(origTargetValue, contentTarget, selection) {
@@ -750,9 +765,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content = { ...this.content };
     }
 
-    getCameraStatusIcon({ status, scheduleEnabled }) {
+    getCameraStatusIcon({ id, status, scheduleEnabled }) {
         if (scheduleEnabled && !(status === 'Recording')) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
+        }
+        if (this.archivesPresent[id] && !(status === 'Recording')) {
+            return this.CONFIG.menus.systemSettings.cameras.statusIcons.archive;
         }
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[
             status.toLowerCase()
