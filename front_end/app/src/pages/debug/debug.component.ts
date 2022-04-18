@@ -99,7 +99,7 @@ export class NxDebugComponent {
         return temp;
     }
 
-    private parseActionParams() {
+    private parseActionParams(): void {
         this.linkSettings.actionParameters = undefined;
         try {
             this.actionParametersError = false;
@@ -162,7 +162,7 @@ export class NxDebugComponent {
         this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
     }
 
-    debugProxy() {
+    debugProxy(): void {
         let data;
         if (this.debugProxySettings.data) {
             data = JSON.parse(this.debugProxySettings.data);
@@ -204,7 +204,7 @@ export class NxDebugComponent {
         );
     }
 
-    getTempKey() {
+    getTempKey(): void {
         this.accountService.authKey().then(authKey => {
             this.linkSettings.auth = authKey;
         }, noAccount => {
@@ -213,7 +213,7 @@ export class NxDebugComponent {
         });
     }
 
-    mergeSystems() {
+    mergeSystems(): void {
         this.mergeSettings.result = 'working';
         this.cloudApiService.merge(
             this.mergeSettings.masterSystemId,
@@ -226,7 +226,7 @@ export class NxDebugComponent {
         });
     }
 
-    notify() {
+    notify(): void {
         const states = Object.values(this.CONFIG.toast);
         const type = states[Math.floor(Math.random() * states.length)];
         const hold = Math.random() > 0.9;
@@ -235,7 +235,7 @@ export class NxDebugComponent {
         );
     }
 
-    openLink() {
+    openLink(): void {
         this.parseActionParams();
         this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings))
             .then((data: any) => {
@@ -251,7 +251,7 @@ export class NxDebugComponent {
             });
     }
 
-    testNotification() {
+    testNotification(): void {
         this.result = undefined;
         let message = this.message;
         try {

@@ -55,7 +55,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         }
     }
 
-    updateTagSize(tagName: string, { width }) {
+    updateTagSize(tagName: string, { width }): void {
         if (this.gridColumnLookup[tagName]) return;
         const gridGap = 5;
         const columns = Math.round(width / gridGap);

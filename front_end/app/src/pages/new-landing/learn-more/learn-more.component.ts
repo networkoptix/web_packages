@@ -44,7 +44,7 @@ export class NxLearnMoreComponent implements OnChanges {
         return true;
     };
 
-    onClick() {
+    onClick(): void {
         if (this.landingService.contentStartRef) {
             // Scroll behavior smooth not supported in safari...
             // if smooth scroll is desired might need different implementation
@@ -57,7 +57,7 @@ export class NxLearnMoreComponent implements OnChanges {
         }
     }
 
-    ngOnChanges() {
+    ngOnChanges(): void {
         this.visible = this.renderLearnMore();
     }
 }

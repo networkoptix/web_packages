@@ -60,7 +60,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     // TODO: Fix arm supported. It says the same thing as linux
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.canViewDownloads = false;
         this.tabsVisible = false;
         this.downloads = { ...this.CONFIG.downloads };
@@ -118,7 +118,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    private calcDisplayedPackages(platformName) {
+    private calcDisplayedPackages(platformName): void {
         const platform = this.sortedPlatforms.find(platform =>
             platform.name === platformName
         );

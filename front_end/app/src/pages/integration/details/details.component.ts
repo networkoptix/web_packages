@@ -207,7 +207,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.pageService.setDefaultLayout();
     }
 
-    openMessageDialog() {
+    openMessageDialog(): void {
         const disclaimer = this.LANG.privacyPolicy.integration({
             INTEGRATION_COMPANY: this.plugin.information.companyName,
             INTEGRATION_PRIVACY_POLICY: this.plugin.information.companyPrivacyPolicyLink
@@ -225,7 +225,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             .then(() => { });
     }
 
-    handleDashboardOpen(open, queryParams, url) {
+    handleDashboardOpen(open, queryParams, url): void {
         if (open === true) {
             const route = ['dashboard'];
             const options = { queryParams };
@@ -240,13 +240,13 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    async addWidgetDialog({ url, name }) {
+    async addWidgetDialog({ url, name }): Promise<void> {
         const open = await this.dialogs.confirm(`Would you like to add "${name}" to your dashboard?`, 'Add widget to dashboard?', 'Add to dashboard', 'btn-primary', 'Download file');
         const queryParams = { widgetUrl: url };
         this.handleDashboardOpen(open, queryParams, url);
     }
 
-    async updateDashboardDialog({ url }) {
+    async updateDashboardDialog({ url }): Promise<void> {
         const open = await this.dialogs.confirm('Would you like to replace your dashboard with the one from this config?', 'Update dashboard?', 'Update dashboard', 'btn-primary', 'Download file');
         const queryParams = { dashboardUrl: url };
         this.handleDashboardOpen(open, queryParams, url);

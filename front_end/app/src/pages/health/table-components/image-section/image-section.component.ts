@@ -85,7 +85,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
             });
     }
 
-    showPreloader() {
+    showPreloader(): void {
         setTimeout(() => {
             this.ready = this.thumbnails.every(thumbnail => thumbnail.loaded);
         });

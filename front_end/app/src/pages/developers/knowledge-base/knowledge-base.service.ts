@@ -70,7 +70,7 @@ export class NxKnowledgebaseService {
         this.activeAssetIdSubject.next(value);
     }
 
-    mapParentNodeAndUrl(currentNode, parentNode?) {
+    mapParentNodeAndUrl(currentNode, parentNode?): void {
         currentNode.parentNode = parentNode;
         if (!currentNode.url && currentNode.asset_id && this.baseRoute) {
             currentNode.url =

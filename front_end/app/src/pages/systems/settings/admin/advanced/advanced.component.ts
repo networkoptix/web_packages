@@ -133,7 +133,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         );
     }
 
-    getAdvancedSettings() {
+    getAdvancedSettings(): void {
         this.system.updateOrGetSystemSettings()
             .toPromise()
             .then((response: any) => {

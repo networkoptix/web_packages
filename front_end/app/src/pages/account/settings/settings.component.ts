@@ -50,7 +50,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     isSystemOwner = true;
     hideErrors = true;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.menuService.detail = 'settings';
     }
 
@@ -135,7 +135,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.applyService.removeWatchers();
     }
 
-    changeLanguage(langCode: string) {
+    changeLanguage(langCode: string): void {
         this.langCode = langCode;
     }
 
@@ -151,7 +151,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.hideErrors = false;
     };
 
-    deleteUser() {
+    deleteUser(): void {
         this.dialogs.deleteCloudUser(this.cloudApiService)
             .then((res: any) => {
                 if (res && res.resultCode === 'ok') {

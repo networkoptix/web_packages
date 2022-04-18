@@ -95,7 +95,7 @@ export class NxDynamicTablePanelComponent implements AfterContentInit {
         });
     }
 
-    closeView() {
+    closeView(): void {
         this.healthLayoutService.activeEntity = undefined;
         this.onCloseView.emit(undefined);
     }

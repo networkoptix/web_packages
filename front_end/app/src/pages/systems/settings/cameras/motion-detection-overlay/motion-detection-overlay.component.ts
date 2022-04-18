@@ -90,7 +90,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     }
 
     // Init methods
-    private initMask() {
+    private initMask(): void {
         this.motionMask = new MotionMaskState(
             this.initialMask,
             this.motionCanvas,
@@ -104,7 +104,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     /**
      * Renderer has to be initialized after content checked, needs motionCanvas ref.
      */
-    private initRenderer() {
+    private initRenderer(): void {
         this.motionMaskRenderer = new MotionMaskRenderer(
             this.motionMask,
             this.config.cameraSettings.sensitivityColors,

@@ -50,11 +50,11 @@ export class NxAPIToolSystemService {
     serversLoading$ = new BehaviorSubject(true);
     private serverSubscription: Subscription;
 
-    emitSystem(system: NxSystem, disabled = false, error = '') {
+    emitSystem(system: NxSystem, disabled = false, error = ''): void {
         this.systemEmitter$.next({ info: system, disabled, error });
     }
 
-    emitServer(server: NxSystemServer, json: APIDoc, disabled = false, error = '', markdown = null) {
+    emitServer(server: NxSystemServer, json: APIDoc, disabled = false, error = '', markdown = null): void {
         this.serverEmitter$.next({ info: { server, json, markdown }, disabled, error });
     }
 
@@ -133,7 +133,7 @@ export class NxAPIToolSystemService {
         });
     }
 
-    async initSystems(systems: NxSystemWithUserInfo[]) {
+    async initSystems(systems: NxSystemWithUserInfo[]): Promise<void> {
         this.emitAllSystems(systems);
         if (!environment.isLocal) {
             await this.readonlyAPIService.getReadonlyAPIs();
@@ -168,7 +168,7 @@ export class NxAPIToolSystemService {
         this.showError();
     }
 
-    async handleSystemChange() {
+    async handleSystemChange(): Promise<void> {
         if (environment.isLocal) {
             const systemInfo = await this.currentSystem.serverManager.getModuleInfo().toPromise();
             const version = systemInfo?.reply?.version;
@@ -234,7 +234,7 @@ export class NxAPIToolSystemService {
             });
     }
 
-    private getServersAndJSONs() {
+    private getServersAndJSONs(): void {
         let validServerFound = false;
         this.mediaServer.updating = true;
         const cachedItem = this.retrieveJSONFromLocalStorage('main');
@@ -286,7 +286,7 @@ export class NxAPIToolSystemService {
         }
     }
 
-    async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc) {
+    async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc): Promise<void> {
         let markdown = await this.getAPIInfoMarkdown(server.id);
         markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
         this.storeJSONInLocalStorage(json, 'main', markdown);
@@ -295,7 +295,7 @@ export class NxAPIToolSystemService {
         this.emitServer(server, json, false, '', markdown);
     }
 
-    getLocalSystem() {
+    getLocalSystem(): void {
         this.accountService.get().then(account => {
             if (!account) {
                 this.router.navigate(['/']);
@@ -311,7 +311,7 @@ export class NxAPIToolSystemService {
         return onlineSystem;
     };
 
-    async tryNextSystem() {
+    async tryNextSystem(): Promise<void> {
         if (environment.isLocal) {
             this.showError();
         } else {
@@ -349,7 +349,7 @@ export class NxAPIToolSystemService {
         return { legacyAPI, deprecatedAPI };
     }
 
-    emitAllSystems(systems: NxSystemWithUserInfo[]) {
+    emitAllSystems(systems: NxSystemWithUserInfo[]): void {
         systems.forEach(system => {
             const isDisabled = !this.systemIsOnline(system);
             const error = isDisabled ? 'Offline' : '';
@@ -410,12 +410,12 @@ export class NxAPIToolSystemService {
         return this.currentSystem.serverManager.mediaserverConnections[serverID] instanceof NxSystemRestAPI;
     }
 
-    private setRequestURL(api: APIDoc, serverID) {
+    private setRequestURL(api: APIDoc, serverID): void {
         // servers.url currently only has a single item which determines the route that API requests go to.
         api.servers[0].url = this.currentSystem.serverManager.mediaserverConnections[serverID].urlBase;
     }
 
-    private serversFinishedLoading() {
+    private serversFinishedLoading(): void {
         this.mediaServer.updating = false;
         this.serversLoading$.next(false); // triggers a check to make sure a valid server exists
         this.serverSubscription?.unsubscribe();

@@ -58,7 +58,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         );
     }
 
-    routeToCreate() {
+    routeToCreate(): void {
         let url = '/authorize?client_type=create';
         if (!environment.production) {
             url = `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}&client_type=create`;
@@ -76,7 +76,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         return !(rect.bottom - headerHeight < 0 || rect.top - viewHeight >= 0);
     }
 
-    logItem(info: any) {
+    logItem(info: any): void {
         console.log(info);
     }
 

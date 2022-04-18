@@ -13,7 +13,7 @@ export class NxSwaggerAPIInformationComponent {
 
     constructor() {}
 
-    modifyElements() {
+    modifyElements(): void {
         if (this.markdown) {
             this.modifyTable();
         }

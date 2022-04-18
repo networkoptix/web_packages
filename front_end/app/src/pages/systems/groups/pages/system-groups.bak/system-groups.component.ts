@@ -121,11 +121,11 @@ export class NxSystemGroupsPageComponent implements OnInit, OnDestroy {
 
     public tiles: Array<Tile> = [];
 
-    protected _updateTiles() {
+    protected _updateTiles(): void {
         this.tiles = [...this.groups || [], ...this.systems || []];
     }
 
-    onGroupsChanged(groups: Array<GroupTile>) {
+    onGroupsChanged(groups: Array<GroupTile>): void {
         this.groups = groups;
         this._updateTiles();
     }

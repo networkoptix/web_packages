@@ -202,7 +202,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.applyService.removeWatchers();
     }
 
-    setValues(settings) {
+    setValues(settings): void {
         const sw = this.systemAndSecuritySettings;
         Object.keys(sw).forEach(setting => {
             let curr = settings[setting];
@@ -306,7 +306,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    updateLimitSessionValue(newTimeValue: number) {
+    updateLimitSessionValue(newTimeValue: number): void {
         const sw = this.systemAndSecuritySettings;
         if (this.selectedTimeUnit.value === 'days') {
             sw.sessionLimitMinutes = newTimeValue * DAY_MINS;
@@ -319,7 +319,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     }
 
     // handles showing default value on open and clearing to 0 on close
-    handleSessionLimitToggle() {
+    handleSessionLimitToggle(): void {
         if (this.sessionLimitToggle) {
             if (!this.timeValue) { // prevent overwriting current value with default (in case of late init of the checkbox)
                 this.selectedTimeUnit = this.limitSessionTimeUnits.days;

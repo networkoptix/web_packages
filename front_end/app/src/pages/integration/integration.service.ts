@@ -76,7 +76,7 @@ export class IntegrationService implements OnDestroy {
         return elm;
     }
 
-    private formatRequirementsAndCompatibility(plugin) {
+    private formatRequirementsAndCompatibility(plugin): void {
         const section = plugin.requirementsAndCompatibility;
 
         if (section) {
@@ -270,7 +270,7 @@ export class IntegrationService implements OnDestroy {
         return this.api.getIntegrationBy(id, status);
     }
 
-    setIntegrationPlugin(plugin: any = {}) {
+    setIntegrationPlugin(plugin: any = {}): void {
         this.pluginSubject.next(plugin);
     }
 

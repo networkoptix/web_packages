@@ -74,7 +74,7 @@ export class NxCloudStorageComponent implements OnInit {
     cloudStorageInitial: string;
 
     // Constructor and class initialization methods
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.usageStats = emptyUsage;
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
@@ -325,7 +325,7 @@ export class NxCloudStorageComponent implements OnInit {
         );
     }
 
-    private updateEnabledAndUsageStats() {
+    private updateEnabledAndUsageStats(): void {
         if (!this.systemId || !this.system$.value.cloudStorageCapable) {
             this.cloudStorageSystemEnabled = true;
             return;
@@ -341,14 +341,14 @@ export class NxCloudStorageComponent implements OnInit {
             });
     }
 
-    public deleteCloudStorage() {
+    public deleteCloudStorage(): void {
         this.dialogService.cloudStorageDelete(
             this.system$,
             this.handleCloudStorageDisabled
         );
     }
 
-    public moveCloudStorage() {
+    public moveCloudStorage(): void {
         // TODO: Need list of systems
         this.dialogService.cloudStorageMove(
             this.system$,

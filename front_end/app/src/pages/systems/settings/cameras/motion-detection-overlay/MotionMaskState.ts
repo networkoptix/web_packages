@@ -54,7 +54,7 @@ export class MotionMaskState {
      * Call this method to update mask on route changes.
      * @param mask initial mask from server
      */
-    public reInitialize(mask: string) {
+    public reInitialize(mask: string): void {
         const parsedInitial = this.initialToMaskZones(mask, this.rotation);
         this.maskZones.next(parsedInitial);
         this.maskMatrix.next(this.zonesToMatrix(parsedInitial));

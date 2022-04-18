@@ -241,7 +241,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.healthLayoutService.resetActiveEntity();
     }
 
-    modelChanged(model: SearchFilter) {
+    modelChanged(model: SearchFilter): void {
         if (!isEqual(this.filterModel, model)) { // avoid unnecessary trips
             this.healthService.tableReady = false;
             this.filterModel = cloneDeep(model);
@@ -257,7 +257,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
     }
 
-    resetFilterModel() {
+    resetFilterModel(): void {
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(filter => {
                 filter.selected = filter.items[0];
@@ -289,7 +289,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             });
     }
 
-    addFilterTypes() {
+    addFilterTypes(): void {
         const typesItems = [];
         let selected;
 
@@ -317,7 +317,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             });
     }
 
-    addFilterServers() {
+    addFilterServers(): void {
         const serverItems = [];
         let selected;
 
@@ -355,7 +355,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         return !singleSelect;
     }
 
-    countAlerts() {
+    countAlerts(): void {
         this.alertsCount = Object.values(this.alerts).length;
     }
 
@@ -399,7 +399,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.alertCardCount = Object.keys(this.alertCards).length;
     }
 
-    initializeHeader() {
+    initializeHeader(): void {
         this.tableHeaders = {
             id: 'alerts',
             values: [{
@@ -433,7 +433,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         };
     }
 
-    setActiveEntity(alarm, updateURI = true) {
+    setActiveEntity(alarm, updateURI = true): void {
         if (alarm?.entity) {
             this.layoutReady = !!this.healthLayoutService.activeEntity;
             this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
@@ -471,7 +471,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
     }
 
-    resetActiveEntity(updateURI = true) {
+    resetActiveEntity(updateURI = true): void {
         if (updateURI) {
             const queryParams: Params = {};
             queryParams.id = undefined;
@@ -486,7 +486,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.healthLayoutService.resetActiveEntity();
     }
 
-    private setLayout() {
+    private setLayout(): void {
         this.healthLayoutService.setAlertLayout();
     }
 }

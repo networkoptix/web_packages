@@ -84,7 +84,7 @@ export class NxIntegrationsComponent implements OnInit {
         };
     }
 
-    navigate(url: string) {
+    navigate(url: string): void {
         // Need to figure out why router.navigate doesn't work
         window.location.href = url;
     }

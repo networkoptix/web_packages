@@ -106,7 +106,7 @@ export class NxDashboardComponent implements DashboardGroup {
     @ViewChild('actionFrame', { static: true }) actionFrame: ElementRef;
 
     @HostListener('window:keydown', ['$event'])
-    keyEvent(event: KeyboardEvent) {
+    keyEvent(event: KeyboardEvent): void {
         const moveForward = ['ArrowDown', 'ArrowRight'].includes(event.key);
         const moveBackward = ['ArrowUp', 'ArrowLeft'].includes(event.key);
 
@@ -137,7 +137,7 @@ export class NxDashboardComponent implements DashboardGroup {
     /**
      * Scrolls active / selected widget if not currently fully visible
      */
-    showActive() {
+    showActive(): void {
         const active = this.dropsQuery.find(({ data }) => data === this.activeCellIndex);
         const activeElement = active?.element?.nativeElement;
         const { top, bottom } = activeElement?.getBoundingClientRect?.() || {};
@@ -152,23 +152,23 @@ export class NxDashboardComponent implements DashboardGroup {
      * Handles updating order when cards are dragged
      * @param $event CdkDragEnter
      */
-    entered($event: CdkDragEnter) {
+    entered($event: CdkDragEnter): void {
         this.activeCellIndex = $event.container.data;
         moveItemInArray(this.cards, $event.item.data, $event.container.data);
         this.updatePersistedConfig();
     }
 
-    removeCard(i) {
+    removeCard(i): void {
         this.cards.splice(i, 1);
         this.updatePersistedConfig();
     }
 
-    updateActive(index, e: any = {}) {
+    updateActive(index, e: any = {}): void {
         e.stopPropagation?.();
         this.activeCellIndex = index;
     }
 
-    toggleSidePanel() {
+    toggleSidePanel(): void {
         this.gridSize = 0;
         this.showSidePanel = !this.showSidePanel;
         setTimeout(() => {
@@ -176,7 +176,7 @@ export class NxDashboardComponent implements DashboardGroup {
         });
     }
 
-    adjustGridHeight({ width }: any) {
+    adjustGridHeight({ width }: any): void {
         const calculatedColumns = Math.floor(width / this.MIN_GRID_SIZE / this.MIN_COLUMNS) * this.MIN_COLUMNS;
         this.gridColumns = Math.min(Math.max(this.showSidePanel ? calculatedColumns : calculatedColumns - 4, this.MIN_COLUMNS), this.MAX_COLUMNS);
         this.gridSize = Math.ceil((width - (this.gridColumns * (this.GRID_GAP || 1))) / this.gridColumns);
@@ -295,7 +295,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.router.navigate([], { queryParams: { dashboardId } });
     };
 
-    private updateCards(activeId: string, menu: DashboardConfiguration[] = this.menu) {
+    private updateCards(activeId: string, menu: DashboardConfiguration[] = this.menu): void {
         // Default to show systems widget if not configured
         const systemsWidget = FirstPartyWidget.getConfig(NxSystemsListWidgetComponent);
         systemsWidget.size = systemsWidget.sizes[2];
@@ -313,7 +313,7 @@ export class NxDashboardComponent implements DashboardGroup {
     }
 
     @HostListener('window:message', ['$event'])
-    async onMessage({ data: { route, options } }) {
+    async onMessage({ data: { route, options } }): Promise<void> {
         const updatedDashboard = options.queryParams.dashboardUrl;
 
         if (updatedDashboard) {
@@ -328,7 +328,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.hidePreview = false;
     }
 
-    openAction(action?) {
+    openAction(action?): void {
         if (!action) {
             this.activeAction = null;
             return;
@@ -343,7 +343,7 @@ export class NxDashboardComponent implements DashboardGroup {
         }
     }
 
-    async openPage(newWindow = false) {
+    async openPage(newWindow = false): Promise<void> {
         this.loading = !newWindow;
         const url = this.activeAction.url.replace('adminPreview=true', '');
         if (!newWindow && this.activeAction.url.startsWith('/') && !this.activeAction.url.startsWith('/admin')) {
@@ -358,7 +358,7 @@ export class NxDashboardComponent implements DashboardGroup {
     /**
      * Prepares download link to allow downloading of current configuration
      */
-    prepareConfigDownload(config?) {
+    prepareConfigDownload(config?): void {
         const settings = JSON.stringify(this.getPreparedConfig(config));
         const dataUri = 'data:text/json;charset=UTF-8,' + encodeURIComponent(settings);
         if (config) {
@@ -406,12 +406,12 @@ export class NxDashboardComponent implements DashboardGroup {
         }
     }
 
-    moveDashboard(event: CdkDragDrop<string[]>) {
+    moveDashboard(event: CdkDragDrop<string[]>): void {
         moveItemInArray(this.menu, event.previousIndex, event.currentIndex);
         this.updatePersistedConfig();
     }
 
-    async removeDashboard(dashboardId) {
+    async removeDashboard(dashboardId): Promise<void> {
         const removeIndex = this.menu.findIndex(({ id }) => id === dashboardId);
         const result = await this.dialogsService.confirm(`Are you sure that you want to remove "${this.menu[removeIndex].dashboardName}" dashboard?`, 'Confirm Remove Dashboard', 'Remove', 'btn-primary', 'Cancel');
         if (result !== true) {
@@ -427,7 +427,7 @@ export class NxDashboardComponent implements DashboardGroup {
         this.updatePersistedConfig();
     }
 
-    addDashboard() {
+    addDashboard(): void {
         const newDashboard = new DashboardConfiguration();
         const existingNewDashboard = this.menu.find(({ dashboardName, cards }) => dashboardName === newDashboard.dashboardName && !cards.length);
         if (!existingNewDashboard) {
@@ -436,12 +436,12 @@ export class NxDashboardComponent implements DashboardGroup {
         this.updateSelectedDashboard((existingNewDashboard || newDashboard).id);
     }
 
-    updateSelectedSize(size: WidgetSize, card: WidgetCard) {
+    updateSelectedSize(size: WidgetSize, card: WidgetCard): void {
         card.size = size;
         this.updatePersistedConfig();
     }
 
-    toggleEditMode(card: WidgetCard) {
+    toggleEditMode(card: WidgetCard): void {
         card.editMode = !card.editMode;
         if (!card.editMode) {
             this.updatePersistedConfig();
@@ -451,7 +451,7 @@ export class NxDashboardComponent implements DashboardGroup {
     /**
      * Handles updating dashboard configuration from user uploaded json
      */
-    handleConfigUpload({ target: { files } }: any) {
+    handleConfigUpload({ target: { files } }: any): void {
         this.cards = [];
         const settingsFile = files.item(0);
         const fileReader = new FileReader();
@@ -469,7 +469,7 @@ export class NxDashboardComponent implements DashboardGroup {
         fileReader.readAsText(settingsFile);
     }
 
-    toggleDragEnabled(enabled) {
+    toggleDragEnabled(enabled): void {
         this.showSettings &&= enabled;
         this.dragEnabled = enabled;
         if (!enabled) {

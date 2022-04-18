@@ -160,7 +160,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         });
     }
 
-    onSystemChange(system: SystemDropdownItem) {
+    onSystemChange(system: SystemDropdownItem): void {
         if (isUUID(system.value)) {
             this.APIToolSystemService.manualSystemChange = true;
             this.APIToolSystemService.currentSystemId = system.value;
@@ -169,11 +169,11 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         }
     }
 
-    onServerChange(server: ServerDropdownItem) {
+    onServerChange(server: ServerDropdownItem): void {
         this.APIToolSystemService.currentServerId = server.value;
     }
 
-    onTypeChange(type: TypeDropdownItem) {
+    onTypeChange(type: TypeDropdownItem): void {
         this.openAPIJSONService.setAPIType(this.server.value, type.value);
     }
 

@@ -91,7 +91,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     // newSystemOwner: string = '';
     // TODO: Get these from system
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.advanced = (this.router.url.includes('/advanced') ||
             this.route.snapshot.routeConfig.path === 'advanced');
         this.debugMode = this.CONFIG.clientMode.debug;
@@ -141,7 +141,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         });
     }
 
-    private setNameAndTitle() {
+    private setNameAndTitle(): void {
         const systemName = this.system.info.systemName || this.system.info.name;
         if (this.systemName !== systemName) {
             this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
@@ -157,7 +157,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateSettings(forceMergeState?: boolean) {
+    private updateSettings(forceMergeState?: boolean): void {
         this.merging = this.system && typeof this.system.mergeInfo !== 'undefined' ||
             forceMergeState;
         this.settings = {
@@ -317,7 +317,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         });
     }
 
-    syncMergeAlerts() {
+    syncMergeAlerts(): void {
         if (this.system?.mergeInfo) {
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (
@@ -347,7 +347,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    transferOwnership() {
+    transferOwnership(): void {
         this.dialogs.transferOwnership(this.system, this.transfers);
     }
 
@@ -550,7 +550,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         return userRole;
     }
 
-    hideAdvancedSettings() {
+    hideAdvancedSettings(): void {
         if (this.router.url.includes('/advanced')) {
             this.environment.isLocal && this.router.navigate(['settings']) ||
                 this.router.navigate([`systems/${this.system.id}`]);

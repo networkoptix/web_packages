@@ -59,7 +59,7 @@ export class MultiSelectComponent {
         this.ddWidth = Math.round(btn.getBoundingClientRect().width + 100);
     }
 
-    modelChanged(result: any) {
+    modelChanged(result: any): void {
         // ensure 'change' will be triggered
         this.itemsSelected = [...result];
     }

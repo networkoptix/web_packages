@@ -16,15 +16,15 @@ export class NgrxDemoCounterComponent {
 
     constructor(private store: Store) { }
 
-    increment() {
+    increment(): void {
         this.store.dispatch(increment());
     }
 
-    decrement() {
+    decrement(): void {
         this.store.dispatch(decrement());
     }
 
-    reset() {
+    reset(): void {
         this.store.dispatch(reset());
     }
 }

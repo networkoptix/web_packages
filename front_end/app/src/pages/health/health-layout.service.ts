@@ -176,12 +176,12 @@ export class NxHealthLayoutService {
         });
     }
 
-    resetActiveEntity() {
+    resetActiveEntity(): void {
         this.activeEntity = undefined;
         this.mobileDetailMode = false;
     }
 
-    setAlertLayout() {
+    setAlertLayout(): void {
         const searchElementHeight = this.searchElement
             ? this.searchElement.nativeElement.offsetHeight
             : 0;
@@ -196,7 +196,7 @@ export class NxHealthLayoutService {
         this.setLayout(cannotSetSearch);
     }
 
-    setMetricsLayout() {
+    setMetricsLayout(): void {
         if (this.metricsValuesCount === 1) {
             this.fixedLayoutClass = 'fixedLayout--no-panel';
         } else {
@@ -210,7 +210,7 @@ export class NxHealthLayoutService {
         }
     }
 
-    setTableDimensions() {
+    setTableDimensions(): void {
         if (this.mobileDetailMode && this.activeEntity) {
             // In mobile view and when an entity is active we need to break up self invoking setTableDimensions
             this.healthService.tableReady = true;
@@ -276,7 +276,7 @@ export class NxHealthLayoutService {
         this.healthService.tableReady = true;
     }
 
-    private setLayout(cannotSearchStyle?: boolean) {
+    private setLayout(cannotSearchStyle?: boolean): void {
         if (!this.tableElement || !this.healthService.tableReady) {
             return;
         }
@@ -300,7 +300,7 @@ export class NxHealthLayoutService {
         this.layoutReady = true;
     }
 
-    private setSearchWidth(width) {
+    private setSearchWidth(width): void {
         if (this.searchElement) {
             this.searchElement.nativeElement.style.width = `${width}px`;
         }

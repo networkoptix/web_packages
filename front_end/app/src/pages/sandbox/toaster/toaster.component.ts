@@ -22,7 +22,7 @@ export class ToasterComponent {
         this.menuService.detail = 'taster';
     }
 
-    notify(msg: string, type: string) {
+    notify(msg: string, type: string): void {
         this.dialogs.notify(msg, type, this.autohide);
     }
 }

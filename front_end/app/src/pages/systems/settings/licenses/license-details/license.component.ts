@@ -43,7 +43,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     infoLineStyle = InfoLineStyle.CONDENSED;
     infoBlockStyle = InfoBlockStyle.DARK;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.orderedLicense = [];
     }
 

@@ -103,7 +103,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         return !node.nodes.length && method;
     };
 
-    private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list') {
+    private setSwaggerDescription(node: MenuNodeWithParent, expand: 'full' | 'list'): void {
         const selection = expand === 'full' ? node.parentNode?.name || node.name : node.name;
         // slice(0, -2) to remove the hidden tags that are added
         const title = selection.slice(0, -2);
@@ -356,7 +356,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private addCustomTextareas() {
+    private addCustomTextareas(): void {
         const textareas = this.document.body.querySelectorAll('textarea:not(.custom-textarea):not([readonly])');
         for (const textarea of textareas) {
             const sibling = textarea.previousElementSibling;

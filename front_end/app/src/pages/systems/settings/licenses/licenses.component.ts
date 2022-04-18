@@ -41,7 +41,7 @@ export class NxSystemLicensesComponent implements OnInit {
     }>;
 
     // Constructor and class initialization methods
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.settingsService.systemSubject
             .pipe(
                 untilDestroyed(this),
@@ -105,7 +105,7 @@ export class NxSystemLicensesComponent implements OnInit {
         this.menuService.detail = this.CONFIG.menus.systemSettings.licenses.id;
     }
 
-    private createLicenseInfo(item) {
+    private createLicenseInfo(item): void {
         item.info = {
             type: '',
             count: '',
@@ -169,7 +169,7 @@ export class NxSystemLicensesComponent implements OnInit {
         }
     }
 
-    private addLicenseSummary(item) {
+    private addLicenseSummary(item): void {
         // for license summary block
         const type = typeof item.info.type === 'function'
             ? item.info.type()

@@ -184,7 +184,7 @@ export class NxDevConsoleEditComponent {
         );
     };
 
-    clearErrors(structureName) {
+    clearErrors(structureName): void {
         delete this.errors[structureName];
         this.hasErrors = !!Object.keys(this.errors).length;
     }

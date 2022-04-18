@@ -55,7 +55,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     currentTab: string;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.tabsVisible = false;
         this.canViewRelease = false;
         this.noteTypes = [];
@@ -95,7 +95,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         }).reverse();
     }
 
-    private getData() {
+    private getData(): void {
         this.cloudApiService
             .getDownloadsHistory(this.build)
             .then((data: any) => {

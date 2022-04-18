@@ -39,7 +39,7 @@ export class PushComponent implements OnInit, OnDestroy {
     private timeSubscription: Subscription;
     private tokenSubscription: Subscription;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.notification = {
             title: '',
             body: '',
@@ -91,7 +91,7 @@ export class PushComponent implements OnInit, OnDestroy {
         });
     }
 
-    setSystems() {
+    setSystems(): void {
         this.timeSubscription = timer(10000, 10000).subscribe(() =>
             this.updateSubStates()
         );
@@ -103,7 +103,7 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    setFirebase() {
+    setFirebase(): void {
         this.permission = Notification.permission;
         if (this.permission === 'granted') {
             this.tokenSubscribe();
@@ -129,7 +129,7 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    writeSubscription(device, token) {
+    writeSubscription(device, token): void {
         device.deviceToken = token;
         this.deviceSubscriptions[token] = {};
         this.deviceSubscriptions[token].all = device.systems.includes('all');
@@ -139,7 +139,7 @@ export class PushComponent implements OnInit, OnDestroy {
         });
     }
 
-    updateSubStates() {
+    updateSubStates(): void {
         this.http.get('/api/notifications/subscriptions').subscribe(
             (response: any) => {
                 if (!this.subChanges) {
@@ -164,7 +164,7 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    tokenSubscribe() {
+    tokenSubscribe(): void {
         if (this.tokenSubscription && !this.tokenSubscription.closed) {
             this.tokenSubscription.unsubscribe();
         }
@@ -180,7 +180,7 @@ export class PushComponent implements OnInit, OnDestroy {
             );
     }
 
-    onAllowNotifications() {
+    onAllowNotifications(): void {
         Notification.requestPermission().then(permission => {
             this.permission = permission;
             if (permission === 'granted') {
@@ -189,7 +189,7 @@ export class PushComponent implements OnInit, OnDestroy {
         });
     }
 
-    onRegisterDevice(form?) {
+    onRegisterDevice(form?): void {
         let deviceToken = '';
         const systems = [];
         const deviceInfo = {
@@ -242,7 +242,7 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    onDeleteToken() {
+    onDeleteToken(): void {
         this.afMessaging.deleteToken(this.deviceToken).subscribe(
             () => {
                 this.onAllowNotifications();
@@ -268,7 +268,7 @@ export class PushComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSendNotification(form) {
+    onSendNotification(form): void {
         const payload = this.validateJsonInput(form.controls.payload);
         const options = this.validateJsonInput(form.controls.options);
         const httpOptions = {
@@ -295,7 +295,7 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    onToggleSubscribe(device, systemId) {
+    onToggleSubscribe(device, systemId): void {
         const deviceToken = device.deviceToken;
         const provider = device.provider;
         this.subChanges = true;

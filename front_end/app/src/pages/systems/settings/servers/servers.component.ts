@@ -48,7 +48,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     serverLoaded = false;
     storagesOutdated = false;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.menuService.section = 'servers';
     }
 
@@ -162,7 +162,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.applyService.removeWatchers();
     }
 
-    hideAdvancedSettings() {
+    hideAdvancedSettings(): void {
         const queryParams: Params = {};
         queryParams.advanced = undefined;
 

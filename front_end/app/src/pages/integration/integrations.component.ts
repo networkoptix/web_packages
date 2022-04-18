@@ -42,7 +42,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     private integrationSubscription: Subscription;
     private uriSubscription: Subscription;
 
-    private setupDefaults(configService) {
+    private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
 
         this.allElements = [];
@@ -97,13 +97,13 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
             });
     }
 
-    setIntegrations(integrations) {
+    setIntegrations(integrations): void {
         this.allElements = integrations;
         this.setTags();
         this.setFilter();
     }
 
-    setTags() {
+    setTags(): void {
         const found = this.allElements.find(elm => elm.mine);
         const haveMyIntegration = (found && found.mine) || false;
 
@@ -171,7 +171,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.setFilter();
     }
 
-    markMatch(item, text) {
+    markMatch(item, text): void {
         const pattern = new RegExp(text, 'gm');
         item.name = item.name.replace(
             pattern,

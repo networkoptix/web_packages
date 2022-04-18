@@ -40,7 +40,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     account: Account;
     restEndpointUsed = true;
 
-    private setupDefaults(configService) {
+    private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
 
         this.allElements = [];

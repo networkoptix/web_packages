@@ -180,7 +180,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         return [];
     }
 
-    updateSearchQuery({ query }) {
+    updateSearchQuery({ query }): void {
         if (this.searchQuery$.value.query === query) {
             return;
         }
@@ -209,7 +209,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.searchMode = false;
     };
 
-    navigateSearch(event) {
+    navigateSearch(event): void {
         const openNewWindow = event?.metaKey || event?.ctrlKey;
         if (!openNewWindow) {
             this.searchMode = false;
@@ -289,7 +289,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.LANG = languageService.translations;
     }
 
-    prefetchDocument({ assetId, state = null, version = 0 }) {
+    prefetchDocument({ assetId, state = null, version = 0 }): void {
         if (this.kbService.contentAssetId) {
             return;
         }
@@ -349,7 +349,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         );
     }
 
-    showRibbon(id, state, reviewId?) {
+    showRibbon(id, state, reviewId?): void {
         const draftActions: RibbonActionInput[] = [
             {
                 type: 'link',
@@ -421,7 +421,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         });
     }
 
-    setupRouteSubscription() {
+    setupRouteSubscription(): void {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             startWith(''),

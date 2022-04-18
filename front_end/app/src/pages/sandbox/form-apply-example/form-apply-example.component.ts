@@ -157,17 +157,17 @@ export class FormApplyExampleComponent {
         // }, 5000);
     }
 
-    ddModelChanged(result: []) {
+    ddModelChanged(result: []): void {
         // ensure 'change' will be triggered
         this.itemsSelected = [...result];
     }
 
-    ddSingleModelChanged(result: DropdownItem<string>) {
+    ddSingleModelChanged(result: DropdownItem<string>): void {
         // ensure 'change' will be triggered
         this.selectedDDItem = { ...result };
     }
 
-    changeLanguage(result: string) {
+    changeLanguage(result: string): void {
         // ensure 'change' will be triggered
         this.langCode = result;
     }

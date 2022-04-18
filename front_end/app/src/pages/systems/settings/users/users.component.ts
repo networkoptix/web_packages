@@ -88,7 +88,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     private systemSubscription: Subscription;
     private userSubscription: Subscription;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.locked = {};
         this.menuService.section = 'users';
     }
@@ -228,17 +228,17 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
     }
 
-    public handleUserNameBlur() {
+    public handleUserNameBlur(): void {
         if (!this.localUserName || this.emptyName) {
             this.passwordChanged = false;
         }
     }
 
-    public handleUserNameChange(newName) {
+    public handleUserNameChange(newName): void {
         this.emptyName = /^\s+$/.test(newName);
     }
 
-    public removeUser() {
+    public removeUser(): void {
         const user = this.selectedUser;
         if (this.locked[user.email]) {
             return;
@@ -281,7 +281,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         );
     }
 
-    private setUser() {
+    private setUser(): void {
         if (this.system && this.system.users?.length > 0) {
             let user;
             if (this.paramUser) {
@@ -355,7 +355,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
     }
 
-    public changePassword() {
+    public changePassword(): void {
         const dialog = this.dialogs
             .changePassword(this.system, this.selectedUser);
         dialog.then(this._onPasswordChanged);
@@ -368,7 +368,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.passwordChanged = true;
     };
 
-    public setPermission(role: NxSystemRole) {
+    public setPermission(role: NxSystemRole): void {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description()
@@ -377,7 +377,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.role = role.name;
     }
 
-    public routeToAccountSettings() {
+    public routeToAccountSettings(): void {
         this.uriService
             .updateURI('/account')
             .catch(error => {

@@ -22,7 +22,7 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.menuService.detail = 'how-it-works';
     }
 

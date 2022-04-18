@@ -75,14 +75,14 @@ export class WebsocketComponent implements OnInit {
         }
     };
 
-    sendGroupAction(action: string) {
+    sendGroupAction(action: string): void {
         if (!this.systemGroupsData.connection$) {
             return;
         }
         this.systemGroupsData.send({ action, ...this.group });
     }
 
-    sendAggregateAction(action: string) {
+    sendAggregateAction(action: string): void {
         if (!this.systemGroupsData.connection$) {
             return;
         }

@@ -18,7 +18,7 @@ export class NxReadonlyAPIService {
     isEnabled = true;
     currentReadonlyAPI$ = new BehaviorSubject<ReadonlyAPI>(null);
     readonlyAPIEmitter$ = new Subject<EmitInfo<OpenAPIJSON>>();
-    emitReadOnlyAPI(info: OpenAPIJSON, disabled = false, error = '') {
+    emitReadOnlyAPI(info: OpenAPIJSON, disabled = false, error = ''): void {
         this.readonlyAPIEmitter$.next({ info, disabled, error });
     }
 
@@ -39,7 +39,7 @@ export class NxReadonlyAPIService {
         });
     }
 
-    async getReadonlyAPIs() {
+    async getReadonlyAPIs(): Promise<void> {
         if (!this.isEnabled) return;
 
         const readOnlyJSONs = await this.api.getOpenAPIJSONs().toPromise();

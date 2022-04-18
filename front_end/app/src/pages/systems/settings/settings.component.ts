@@ -111,7 +111,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     archivesPresent = {};
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.systemNoAccess = false;
@@ -119,7 +119,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = { email: '' };
     }
 
-    private systemReady() {
+    private systemReady(): void {
         this.settingsService.system = this.system;
         this.menuVisible = true;
         this.updateArchivesPresent();
@@ -341,7 +341,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
     }
 
-    setHeaderHeight() {
+    setHeaderHeight(): void {
         this.headerHeight = this.appStateService.ribbonVisibility
             ? this.CONFIG.headerHeight + this.CONFIG.ribbonHeight
             : this.CONFIG.headerHeight;
@@ -355,7 +355,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.pageService.setDefaultLayout();
     }
 
-    private getCloudSystemInfo() {
+    private getCloudSystemInfo(): void {
         // Starts the systems poll if starting on a system.
         if (!this.systemsService.isPolling) {
             this.systemsService.getSystems(this.account.email);
@@ -474,7 +474,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
     }
 
-    getSystemInfo() {
+    getSystemInfo(): void {
         this.settingsService.system = undefined;
         this.accountService.get(true).then(account => {
             if (!account) {
@@ -514,7 +514,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    updateAlert() {
+    updateAlert(): void {
         if (this.checkMergeSubscription) {
             this.checkMergeSubscription.unsubscribe();
         }
@@ -833,7 +833,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
     }
 
-    connectionLost() {
+    connectionLost(): void {
         const sysName = htmlToEntity(
             this.system.info.name || this.LANG.errorCodes.thisSystem()
         );

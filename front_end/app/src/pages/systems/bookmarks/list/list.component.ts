@@ -33,14 +33,14 @@ export class NxBookmarksListComponent implements OnDestroy {
 
     ngOnDestroy(): void {}
 
-    updateTagSize(tagName: string, { width }: { width: number, height: number }) {
+    updateTagSize(tagName: string, { width }: { width: number, height: number }): void {
         if (this.gridColumnLookup[tagName]) return;
         const gridGap = 5;
         const columns = Math.round(width / gridGap);
         this.gridColumnLookup[tagName] = `span ${columns}`;
     }
 
-    reloadWindow() {
+    reloadWindow(): void {
         this.window.location.reload();
     }
 }

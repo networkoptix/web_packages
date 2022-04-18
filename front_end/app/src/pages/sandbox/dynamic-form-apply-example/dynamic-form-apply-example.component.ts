@@ -63,11 +63,11 @@ export class DynamicFormApplyExampleComponent {
             this.saveForm3);
     }
 
-    addField() {
+    addField(): void {
         this.fields.push(this.formBuilder.control('test'));
     }
 
-    removeField(i: number) {
+    removeField(i: number): void {
         this.fields.removeAt(i);
     }
 

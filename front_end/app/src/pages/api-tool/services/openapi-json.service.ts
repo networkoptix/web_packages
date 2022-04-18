@@ -40,7 +40,7 @@ export class NxOpenAPIJSONService {
     isReadOnly = false;
 
     APITypeEmitter = new Subject<EmitInfo<APIType>>();
-    emitAPIType(type: APIType, disabled = false, error = '') {
+    emitAPIType(type: APIType, disabled = false, error = ''): void {
         this.APITypeEmitter.next({ info: type, disabled, error });
     }
 
@@ -112,7 +112,7 @@ export class NxOpenAPIJSONService {
         });
     }
 
-    async handleNewServer(serverInfo: ServerInfo) {
+    async handleNewServer(serverInfo: ServerInfo): Promise<void> {
         const { json, server, markdown } = serverInfo;
         const main = this.APITypes.main;
         this.createAPIStore(server.id, json);
@@ -152,7 +152,7 @@ export class NxOpenAPIJSONService {
         }
     }
 
-    changeServer(serverID: string) {
+    changeServer(serverID: string): void {
         const API = this.APIStore[serverID];
         const queryparamsType = this.APIToolService.queryParams?.type;
         const type = API.menus[queryparamsType] ? queryparamsType : this.APITypes.main.type;
@@ -176,7 +176,7 @@ export class NxOpenAPIJSONService {
         this.navigateToMenuNodeFromURL();
     };
 
-    createAPIStore(serverID: string, api: APIDoc) {
+    createAPIStore(serverID: string, api: APIDoc): void {
         this.APIStore[serverID] = {
             json: api,
             menus: {},
@@ -184,18 +184,18 @@ export class NxOpenAPIJSONService {
         };
     }
 
-    storeAPIInfo(serverID: string, APIType: string, APIInfo: APIInfo) {
+    storeAPIInfo(serverID: string, APIType: string, APIInfo: APIInfo): void {
         if (APIInfo?.description) {
             const { title, description, version } = APIInfo;
             this.APIStore[serverID].infos[APIType] = { title, description, version };
         }
     }
 
-    storeMarkdown(serverID: string, markdown: Markdown) {
+    storeMarkdown(serverID: string, markdown: Markdown): void {
         this.APIStore[serverID].markdown = markdown;
     }
 
-    storeAPIMenu(serverID: string, APIType: string, menu: MenuNodeWithParent[]) {
+    storeAPIMenu(serverID: string, APIType: string, menu: MenuNodeWithParent[]): void {
         this.APIStore[serverID].menus[APIType] = menu;
     }
 

@@ -31,7 +31,7 @@ export class NxLandingComponent implements OnInit {
     startParams;
     startUrl;
 
-    private setupDefaults(configService) {
+    private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
     }

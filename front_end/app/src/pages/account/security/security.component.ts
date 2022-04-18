@@ -66,7 +66,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     @ViewChild('popLegendSubV5Template') popLegendSubV5Template: TemplateRef<any>;
     @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.menuService.detail = 'security';
     }
 
@@ -154,7 +154,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         );
     }
 
-    private clearPopoverTargets() {
+    private clearPopoverTargets(): void {
         this.targets = clearPseudoAnchors(this.targets);
 
         if (this.popover) {
@@ -163,7 +163,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         }
     }
 
-    private setPopoverTargets() {
+    private setPopoverTargets(): void {
         if (this.subV5Systems.length && this.v5WarningSpan) {
             const targetV5 = this.v5WarningSpan.nativeElement.querySelector('span#targetV5');
             addPseudoAnchor(
@@ -210,7 +210,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     @HostListener('document:click', ['$event.target'])
-    onMouseClick(targetElement) {
+    onMouseClick(targetElement): void {
         if (targetElement.className !== 'pseudo-anchor' && this.popover) {
             this.popover.close();
             this.popover = undefined;
@@ -228,7 +228,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.verificationWatcher.originalValue = this.verificationWatcher.value;
     }
 
-    switchToggle(targetState: boolean) {
+    switchToggle(targetState: boolean): void {
         this.account2faEnabled = targetState;
         this.totpExistsForAccount = targetState;
 
@@ -260,7 +260,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         }
     }
 
-    genNewCode() {
+    genNewCode(): void {
         this.dialogs
             .newCode2FA();
     }

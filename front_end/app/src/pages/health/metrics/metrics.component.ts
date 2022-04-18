@@ -219,21 +219,21 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.healthLayoutService.resetActiveEntity();
     }
 
-    handleInitialId() {
+    handleInitialId(): void {
         if (this.initialId) {
             this.setActiveEntity(this.initialId);
             this.initialId = undefined;
         }
     }
 
-    modelChanged(model: SearchFilter) {
+    modelChanged(model: SearchFilter): void {
         if (this.filterModel.query !== model.query) {
             this.filterModel.query = model.query;
             this.search();
         }
     }
 
-    search() {
+    search(): void {
         this.selectedValues = this.healthService.itemsSearch(
             this.healthService.values[this.metricId],
             this.filterModel
@@ -248,7 +248,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setActiveEntity(entity, forceURIUpdate = true) {
+    setActiveEntity(entity, forceURIUpdate = true): void {
         const queryParams: Params = {};
         this.layoutReady = !!this.healthLayoutService.activeEntity;
 
@@ -289,7 +289,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    resetActiveEntity(updateURI = true) {
+    resetActiveEntity(updateURI = true): void {
         if (!this.healthLayoutService.activeEntity) {
             return;
         }
@@ -306,7 +306,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.healthLayoutService.resetActiveEntity();
     }
 
-    private setLayout() {
+    private setLayout(): void {
         this.healthLayoutService.setMetricsLayout();
     }
 }

@@ -188,7 +188,7 @@ export class NxAboutComponent {
     //     ).toPromise();
     // }
 
-    loadMenu(baseName) {
+    loadMenu(baseName): void {
         if (!this.getMenuNameFromConfig(baseName)) {
             return;
         }
@@ -203,7 +203,7 @@ export class NxAboutComponent {
             .then(this.fetchUpdatedDocs);
     }
 
-    showRibbon(id, state) {
+    showRibbon(id, state): void {
         const ribbonActions: RibbonActionInput[] = [
             {
                 type: 'link',

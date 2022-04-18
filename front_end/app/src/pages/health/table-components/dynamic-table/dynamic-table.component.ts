@@ -205,7 +205,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             });
     }
 
-    initLayoutService() {
+    initLayoutService(): void {
         this.healthLayoutService.tableHeaderElement = this.tableHeadElement;
         this.healthLayoutService.tableTitleElement = this.tableTitleElement;
         this.healthLayoutService.tableElement = this.tableElement;
@@ -229,7 +229,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             });
     }
 
-    private setPagerSize() {
+    private setPagerSize(): void {
         if (
             this.scrollMechanicsService.mediaQueryMax(
                 NxScrollMechanicsService.MEDIA.md
@@ -326,7 +326,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    private setTableDimensions() {
+    private setTableDimensions(): void {
         setTimeout(() => this.healthLayoutService.setTableDimensions());
     }
 
@@ -340,7 +340,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     ngOnDestroy(): void {
     }
 
-    showTooltip(event) {
+    showTooltip(event): void {
         if (this.deviceDetectorService.browser.toLowerCase() !== 'ie') {
             this.showHorizontalTooltip = true;
             if (this.hideTooltip) {
@@ -353,7 +353,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    sortBy(param) {
+    sortBy(param): void {
         const sortBy = param.split(',');
         this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
         this.selectedGroup = sortBy[GROUP_ID];
@@ -368,12 +368,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         );
     }
 
-    setClickedRow(element) {
+    setClickedRow(element): void {
         this.onRowClick.emit(element);
         this.selectedEntity = element;
     }
 
-    setPagedItems(startIndex) {
+    setPagedItems(startIndex): void {
         const page = Math.floor(this.startIndex / this.pageSize) + 1;
         startIndex = (page - 1) * this.pageSize;
         if (page !== this.currentPage) {
@@ -389,7 +389,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    selectPage(page: number, startIndex?) {
+    selectPage(page: number, startIndex?): void {
         if (page) {
             this.currentPage = page;
             this.startIndex = (page - 1) * this.pageSize;
@@ -402,7 +402,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         setTimeout(() => this.setPagedItems(this.startIndex));
     }
 
-    setPage(page: number, startIndex?, fromComponent = false) {
+    setPage(page: number, startIndex?, fromComponent = false): void {
         // TODO: possible optimization - we may not need snapshot params here
         if (
             this.mobileDetailMode ||

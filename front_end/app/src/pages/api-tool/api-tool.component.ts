@@ -67,13 +67,13 @@ export class NxAPIToolComponent {
         });
     }
 
-    setMenuOffset() {
+    setMenuOffset(): void {
         if (this.developersMenuRef?.nativeElement) {
             this.menuOffset = this.developersMenuRef.nativeElement.getBoundingClientRect().top;
         }
     }
 
-    setHeaderHeight() {
+    setHeaderHeight(): void {
         this.headerHeight = this.appStateService.ribbonVisibility ? this.CONFIG.headerHeight + this.CONFIG.ribbonHeight : this.CONFIG.headerHeight;
     }
 }

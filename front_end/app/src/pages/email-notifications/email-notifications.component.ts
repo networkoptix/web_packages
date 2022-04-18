@@ -127,7 +127,7 @@ export class EmailNotificationsComponent {
         this.notificationTypes = getTestEvents(systemDropdown.value);
     }
 
-    updateUser(userSelection) {
+    updateUser(userSelection): void {
         userSelection.value = !userSelection.value;
         this.users$.next(
             this.users$.value.map(
@@ -137,16 +137,16 @@ export class EmailNotificationsComponent {
             ));
     }
 
-    handleSendAnother() {
+    handleSendAnother(): void {
         this.response = '';
         this.payload = '';
     }
 
-    updatePreview() {
+    updatePreview(): void {
         this.payloadPreview = this.getPayloadJSON();
     }
 
-    checkStep({ selectedIndex }) {
+    checkStep({ selectedIndex }): void {
         if (selectedIndex === 2) {
             this.updatePreview();
         }
@@ -163,7 +163,7 @@ export class EmailNotificationsComponent {
         return JSON.stringify(payload || this.preparePayload(), null, 4);
     }
 
-    handleSend() {
+    handleSend(): void {
         this.sending = true;
         const payload = this.preparePayload();
         this.payload = this.getPayloadJSON(payload);
@@ -208,7 +208,7 @@ export class EmailNotificationsComponent {
         });
     };
 
-    removeAttachment(index) {
+    removeAttachment(index): void {
         this.attachments.splice(index);
         this.updatePreview();
     }

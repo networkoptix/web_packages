@@ -65,7 +65,7 @@ export class FormElementsComponent {
         this.selectedRotation = this.rotations[0];
     }
 
-    private touchForm(form) {
+    private touchForm(form): void {
         for (const ctrl in form.form.controls) {
             if (Object.prototype.hasOwnProperty.call(form.form.controls, ctrl)) {
                 form.form.get(ctrl).markAsTouched();

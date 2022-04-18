@@ -59,7 +59,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         }
     }
 
-    getLicenses() {
+    getLicenses(): void {
         if (this.system.useRest) {
             this.system
                 .getLicenseSummaries()

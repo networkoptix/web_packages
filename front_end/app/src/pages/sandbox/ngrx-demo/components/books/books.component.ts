@@ -13,11 +13,11 @@ export class NgrxDemoBooksComponent {
     books$ = this.store.select(selectBooks);
     bookCollection$ = this.store.select(selectBookCollection);
 
-    onAdd(bookId: string) {
+    onAdd(bookId: string): void {
         this.store.dispatch(addBook({ bookId }));
     }
 
-    onRemove(bookId: string) {
+    onRemove(bookId: string): void {
         this.store.dispatch(removeBook({ bookId }));
     }
 

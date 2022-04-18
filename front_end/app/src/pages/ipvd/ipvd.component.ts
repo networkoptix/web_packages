@@ -96,7 +96,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef<HTMLDivElement>;
     @ViewChild('ipvdRequest', { static: false }) ipvdRequest: ElementRef<HTMLSpanElement>;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.allowedParameters = [
             'vendor',
             'model',
@@ -253,7 +253,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
     }
 
-    initPseudoAnchors() {
+    initPseudoAnchors(): void {
         if (this.ipvdRequest) {
             this.targets = clearPseudoAnchors(this.targets);
             const linkRequest = this.ipvdRequest.nativeElement
@@ -298,7 +298,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    updateFilterModel() {
+    updateFilterModel(): void {
         this.filterModel.query = '';
 
         if (this.params.search && this.params.search.length > 0) {
@@ -364,7 +364,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    resetFilterModel() {
+    resetFilterModel(): void {
         this.filterModel.search = '';
         if (this.filterModel.tags) {
             this.filterModel.tags.forEach(filter => {
@@ -387,7 +387,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.filterModel = { ...this.filterModel };
     }
 
-    addFilterResolutions() {
+    addFilterResolutions(): void {
         this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
         this.filterModel.selects.push(
@@ -399,7 +399,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
     }
 
-    addAnalyticsEvents() {
+    addAnalyticsEvents(): void {
         if (this.showAnalytics && this.analytics) {
             this.filterModel.multiselects.push(
                 {
@@ -416,7 +416,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setActiveCamera() {
+    setActiveCamera(): void {
         if (this.params.camera) {
             this.uri.pageOffset = window.pageYOffset;
             const selectedCamera = this.cameras.find(camera =>
@@ -426,7 +426,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    addFilterTags() {
+    addFilterTags(): void {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
 
         if (!this.showAnalytics) {
@@ -440,7 +440,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         });
     }
 
-    addFilterTypes() {
+    addFilterTypes(): void {
         this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
             type.label = this.LANG.ipvd[type.id]();
@@ -458,12 +458,12 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         ];
     }
 
-    modelChanged(model: SearchFilter) {
+    modelChanged(model: SearchFilter): void {
         this.filterModel = cloneDeep(model);
         this.searchVendor();
     }
 
-    getIPVDData() {
+    getIPVDData(): void {
         if (this.debug) {
             this.cameraReloadSubscription = this.cloudApi
                 .reloadIPVD()
@@ -477,7 +477,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.activate();
     }
 
-    activate() {
+    activate(): void {
         this.getIPVDSubscription = this.cloudApi
             .getIPVD()
             .subscribe(data => {
@@ -558,7 +558,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.filterModel.query !== '';
     }
 
-    searchVendor() {
+    searchVendor(): void {
         if (!this.params.camera && this.activeCamera) {
             this.resetActiveCamera();
         }

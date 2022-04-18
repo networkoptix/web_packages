@@ -40,7 +40,7 @@ export class NxContentComponent implements OnInit {
     public showAgree = false;
     public agreeProcess: Process;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.title = '';
         this.body = '';
     }
@@ -99,7 +99,7 @@ export class NxContentComponent implements OnInit {
         }).finally(() => this.subscribeParams());
     }
 
-    subscribeParams() {
+    subscribeParams(): void {
         this.route.paramMap.subscribe(paramMap => {
             this.agreement =
                 this.route.snapshot.parent.routeConfig.path === 'agreement';
@@ -123,7 +123,7 @@ export class NxContentComponent implements OnInit {
         });
     }
 
-    getContent() {
+    getContent(): void {
         let uri;
         if (this.agreement) {
             uri = `${this.CONFIG.apiBase}/agreement?`;
@@ -165,7 +165,7 @@ export class NxContentComponent implements OnInit {
             });
     }
 
-    loadStaticContent() {
+    loadStaticContent(): void {
         const templateUrl =
             `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
 

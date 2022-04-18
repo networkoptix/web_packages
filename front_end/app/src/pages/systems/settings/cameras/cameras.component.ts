@@ -604,7 +604,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     // Update menu options after language is loaded
-    updateSelects() {
+    updateSelects(): void {
         this.various = { name: this.LANG.common.resolution.various(), value: 'various' };
         this.auto = { name: this.LANG.common.resolution.auto(), value: '' };
         this.aspectRatios = [
@@ -677,16 +677,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }, { ignoreError: true });
     }
 
-    handleBlur() {
+    handleBlur(): void {
         this.editMode = false;
         this.handleBlankName();
     }
 
-    handleFocus() {
+    handleFocus(): void {
         this.editMode = true;
     }
 
-    handleBlankName() {
+    handleBlankName(): void {
         if (!this.cameraName) {
             this.cameraName = this.cameraNameWatcher.originalValue;
         }
@@ -731,7 +731,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         );
     }
 
-    handleResize({ width }) {
+    handleResize({ width }): void {
         this.width$.next(width);
         this.toggleMotionGrid();
     }
@@ -761,7 +761,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return { width, height };
     }
 
-    toggleMotionGrid() {
+    toggleMotionGrid(): void {
         this.showOverlay = false;
         this.sensitivityButtons = false;
         setTimeout(() => {
@@ -769,7 +769,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         });
     }
 
-    resetSensitivity() {
+    resetSensitivity(): void {
         this.sensitivityButtons = 'reset';
     }
 
@@ -783,7 +783,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             : enabled);
     }
 
-    handleRecordingToggle(switchValue: boolean | undefined) {
+    handleRecordingToggle(switchValue: boolean | undefined): void {
         const needLic = (!this.recording && !this.recordingWatcher.originalValue)
             ? this.availableLicenses <= 0
             : this.availableLicenses < 0;
@@ -800,7 +800,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.recording = switchValue;
     }
 
-    toggleMode({ name: toggledName, enabled }) {
+    toggleMode({ name: toggledName, enabled }): void {
         if (!enabled) return;
         this.recordingModes = this.recordingModes.map(
             ({ name, id, enabled }) => ({
@@ -812,7 +812,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         );
     }
 
-    updateMask(maskString) {
+    updateMask(maskString): void {
         this.motionMask = maskString;
     }
 
@@ -846,7 +846,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     };
 
-    updateMotionWarning() {
+    updateMotionWarning(): void {
         const [
             // always,
             motion,
@@ -993,7 +993,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     };
 
-    private updateAlerts() {
+    private updateAlerts(): void {
         const currentAlerts = (this.alerts || []).find(({ cameraId }) =>
             cameraId === this.parsedCameraId
         );
@@ -1013,7 +1013,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.alertsLoaded = true;
     }
 
-    updateValues() {
+    updateValues(): void {
         this.healthService.ready = false;
         if (this.system.canViewInfo) {
             this.healthReportSubscription = this.system.mediaserver
@@ -1045,12 +1045,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
-    toggle(property: string, disabled = false) {
+    toggle(property: string, disabled = false): void {
         if (disabled) return;
         this.selectedCamera[property] = !this.selectedCamera[property];
     }
 
-    lockGrid(lock: boolean) {
+    lockGrid(lock: boolean): void {
         if (!this.isMobile) {
             this.motionGridChangeWatcher.value = lock;
         }

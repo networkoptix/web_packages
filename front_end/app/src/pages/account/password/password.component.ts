@@ -42,7 +42,7 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
     changePassword: Process;
     passwordFormWatcher: any;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.hideErrors = false;
         this.pass = {
             password: '',

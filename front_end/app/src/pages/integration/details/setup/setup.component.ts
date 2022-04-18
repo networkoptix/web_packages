@@ -25,7 +25,7 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     plugin: any = {};
     pluginSubscription: SubscriptionLike;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.menuService.detail = 'how-to-setup';
     }
 
