@@ -199,7 +199,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    private verifyRedirectUrl(systemId) {
+    private verifyRedirectUrlHelper(systemId) {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
         const redirectPort = new URL(this.initialData.redirect_uri).port;
         return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
@@ -211,6 +211,18 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         .some((address) => this.initialData.redirect_uri.includes(address))
                     );
                 }));
+    }
+
+    private checkRedirectUrl() {
+        const { scope } = this.initialData;
+        let verifiedCheck = of(true);
+        if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
+            const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
+            if (findId?.groups.systemId) {
+                verifiedCheck = this.verifyRedirectUrlHelper(findId.groups.systemId);
+            }
+        }
+        return verifiedCheck.toPromise();
     }
 
     // method only used by child components to transition between child components
@@ -285,23 +297,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else if (this.clientType.includes('Password')) { // confirmPassword clientTypes
                 this.loginEmail = email;
                 this.emailLocked = true;
-                this.currentState = AuthorizeState.password;
+                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.password : AuthorizeState.notSecure;
             } else {
-                const { scope } = this.initialData;
-                let verifiedCheck = of(true);
-                if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
-                    const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
-                    if (findId?.groups.systemId) {
-                        verifiedCheck = this.verifyRedirectUrl(findId.groups.systemId);
-                    }
+                if (email) {
+                    this.loginEmail = email;
+                    this.checkEmailProcess.run();
                 }
-                verifiedCheck.subscribe((verified) => {
-                    if (email) {
-                        this.loginEmail = email;
-                        this.checkEmailProcess.run();
-                    }
-                    this.currentState = verified ? AuthorizeState.email : AuthorizeState.notSecure;
-                });
+                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
             }
         });
     }
