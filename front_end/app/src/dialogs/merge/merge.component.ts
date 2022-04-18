@@ -374,7 +374,7 @@ export class MergeModalContent {
     private handleOldSession(process) {
         this.updateSession = true;
         this.loginService.currentSystem = this.system;
-        this.loginService.updateSession('passwordMerge')
+        this.loginService.updateSession('merge')
             .then((ready) => {
                 this.updateSession = !ready;
                 if (ready) {

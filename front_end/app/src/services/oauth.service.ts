@@ -71,6 +71,7 @@ export class OauthService {
             login: environment.isLocal ? 'loginWebadmin' : 'loginCloud',
             disconnect: 'passwordDisconnect',
             detach: 'passwordDetach',
+            merge: 'passwordMerge',
             renew: 'renewWeb',
             reset: 'passwordReset',
             restart: 'passwordRestart',
