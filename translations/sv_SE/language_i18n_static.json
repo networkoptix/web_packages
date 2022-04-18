@@ -428,7 +428,7 @@
             "title": "Din session har gått ut"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } är inte en användare i systemet"
         },
         "titles": {
             "error": "Fel",

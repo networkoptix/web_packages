@@ -428,7 +428,7 @@
             "title": "Your session has expired"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } 不是該系統的使用者。"
         },
         "titles": {
             "error": "錯誤",

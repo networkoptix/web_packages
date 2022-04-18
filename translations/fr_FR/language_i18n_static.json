@@ -428,7 +428,7 @@
             "title": "Votre session a expiré"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } n'est pas un utilisateur dans le système"
         },
         "titles": {
             "error": "Erreur",
