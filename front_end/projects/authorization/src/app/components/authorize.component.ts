@@ -205,12 +205,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
             .pipe(
                 untilDestroyed(this),
-                catchError(() => of(false)),
                 map((servers: any) => {
                     return servers?.some(({ port, remoteAddresses }) => redirectPort === port.toString() && remoteAddresses
                         .some((address) => this.initialData.redirect_uri.includes(address))
                     );
-                }));
+                }),
+                catchError(() => of(false)));
     }
 
     private checkRedirectUrl() {
