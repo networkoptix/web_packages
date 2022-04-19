@@ -6,6 +6,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth, AuthBase
 from robot.api.deco import keyword, library
 from robot.api import logger
+import re
 import time
 import urllib3
 
@@ -198,8 +199,10 @@ class ServerAPI:
         r = requests.get(f'{serverUrl}/ec2/getMediaServersEx', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
         netAddress = re.sub(r'https://', "", serverUrl)
         netAddress = re.sub(r'http://', "", netAddress)
+        logger.trace(netAddress)
+        logger.trace(r.json())
         for server in r.json():
-            if netAddress in server["networkAdresses"]:
+            if netAddress in server["networkAddresses"]:
                 return server['name']
             else:
                 raise AssertionError('No server with that URL')
