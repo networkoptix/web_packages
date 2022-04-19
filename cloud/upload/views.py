@@ -1,4 +1,5 @@
 from time import sleep
+import sys
 import boto3
 from botocore import exceptions
 from uuid import uuid4
@@ -50,21 +51,21 @@ CORS_CONFIG = {
     ]
 }
 
-try:
-    s3 = boto3.session.Session().client("s3")
 
+if "pytest" not in sys.modules:
+    # Don't connect to S3 within unit tests
     try:
+        s3 = boto3.session.Session().client("s3")
         # Check if upload bucket exists
         s3.head_bucket(Bucket=UPLOAD_BUCKET)
-
+        raise exceptions.ClientError({}, 'test')
+    except exceptions.NoCredentialsError:
+        # Prevent pipeline failure
+        pass
     except exceptions.ClientError:
         # Create upload bucket if doesn't exist
         s3.create_bucket(Bucket=UPLOAD_BUCKET)
         s3.put_bucket_cors(Bucket=UPLOAD_BUCKET, CORSConfiguration=CORS_CONFIG)
-
-except exceptions.NoCredentialsError:
-    # Prevent pipeline failure
-    pass
 
 
 def get_param(request, key):
