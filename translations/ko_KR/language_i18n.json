@@ -202,6 +202,7 @@
     "Failed to detach server from system.": "시스템에서 서버를 분리하지 못했습니다.",
     "Failed to disconnect system from %CLOUD_NAME%.": "%CLOUD_NAME%에서 시스템을 분리하지 못했습니다.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "{primarySystem} 시스템과 {secondarySystem} 시스템을 병합하지 못했습니다.",
+    "Failed to reset server.": "Failed to reset server.",
     "Failed to the check current system's password.": "현재 시스템의 암호를 확인할 수 없습니다.",
     "Fetching Results...": "Fetching Results...",
     "Fill in all required fields": "Fill in all required fields",

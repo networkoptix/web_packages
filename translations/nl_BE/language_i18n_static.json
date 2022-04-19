@@ -428,7 +428,7 @@
             "title": "Uw sessie is verlopen"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } is geen gebruiker in het systeem"
         },
         "titles": {
             "error": "Fout",
