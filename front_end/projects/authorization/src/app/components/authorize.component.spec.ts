@@ -82,6 +82,7 @@ describe('NxAuthorizeComponent', () => {
                 setupErrorAdditional: () => '<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>',
                 passResetHeader: () => 'Reset Password',
                 newPassHeader: () => 'Set New Password',
+                termsAndConditionsHelpText: () => 'Checkbox agreeing to terms and conditions and the privacy policy',
                 authCode: {
                     message: () => 'Enter a code from your authentication app to confirm it\'s really you trying to {suffix}',
                     newPass: () => 'set a new password',
@@ -685,9 +686,9 @@ describe('NxAuthorizeComponent', () => {
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 9 because of theme test component
         // UNCOMMENT after tests!!!
-        // expect(spans.length).toBe(6);
-        expect(spans[2].innerHTML).toBe('I agree to the');
-        expect(spans[3].innerHTML).toBe('and');
+        // expect(spans.length).toBe(7);
+        expect(spans[3].innerHTML).toBe('I agree to the');
+        expect(spans[4].innerHTML).toBe('and');
         const links = el.nativeElement.querySelectorAll('a');
         expect(links.length).toBe(2);
         expect(links[0].innerHTML).toBe('Terms and Conditions');

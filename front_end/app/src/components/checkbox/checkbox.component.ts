@@ -56,6 +56,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @IBool() @Input() checked: CoercedBoolInput;
     @IBool() @Input() disabled: CoercedBoolInput;
     @Input() labelText: string;
+    @Input() ariaText: string = '';
     @Input() color: string;
     @Output() onClick = new EventEmitter<string>();
 

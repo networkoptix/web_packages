@@ -73,15 +73,15 @@
     
     &.ng-untouched {
         input {
-            border-color : var(--input-border-color) !important;
-            color        : var(--input-color) !important;
+            border : 1px solid var(--input-border-color) !important;
+            color  : var(--input-color) !important;
         }
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched) {
         input {
-            border-color : var(--input-error-border-color) !important;
-            color        : var(--input-error-color) !important;
+            border : 1px solid var(--input-error-border-color) !important;
+            color  : var(--input-error-color) !important;
 
             + .input-group-addon {
                 border-color     : transparent;

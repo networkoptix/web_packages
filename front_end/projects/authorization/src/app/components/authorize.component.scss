@@ -74,11 +74,11 @@
 
 .authorize-main {
     .main-w .stroke-color-main, .header-w .stroke-color-main {
-        stroke: $dark9;
+        stroke: var(--btn-text-color);
     }
 
     .main-w .fill-color-main, .header-w .fill-color-main {
-        fill: $dark9;
+        fill: var(--btn-text-color);
     }
 
     .main-d .stroke-color-main, .header-d .stroke-color-main {
@@ -420,21 +420,27 @@
                     display: flex;
                     button.btn.text-button {
                         color: var(--btn-text-color);
-                        svg .st0 {
-                            stroke: var(--btn-text-color);
+                        svg {
+                            .st0, .stroke-color-main {
+                                stroke : var(--btn-text-color);
+                            }
                         }
 
                         &:hover {
                             color: var(--btn-text-hover-color);
-                            svg .st0 {
-                                stroke: var(--btn-text-hover-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-hover-color);
+                                }
                             }
                         }
 
                         &:active {
                             color: var(--btn-text-active-color);
-                            svg .st0 {
-                                stroke: var(--btn-text-active-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-active-color);
+                                }
                             }
                         }
                     }
@@ -445,22 +451,27 @@
                     display: flex;
                     button.btn.text-button {
                         color: var(--btn-text-color);
-
-                        svg .st0 {
-                            stroke: var(--btn-text-color);
+                        svg {
+                            .st0, .stroke-color-main {
+                                stroke : var(--btn-text-color);
+                            }
                         }
 
                         &:hover {
                             color: var(--btn-text-hover-color);
-                            svg .st0 {
-                                stroke: var(--btn-text-hover-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-hover-color);
+                                }
                             }
                         }
 
                         &:active {
                             color: var(--btn-text-active-color);
-                            svg .st0 {
-                                stroke: var(--btn-text-active-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-active-color);
+                                }
                             }
                         }
                     }
@@ -471,19 +482,27 @@
                     display: flex;
                     button.btn.text-button {
                         color: var(--btn-text-color);
-                        svg .st0 {
-                            stroke: var(--btn-text-color);
-                        }
-                        &:hover {
-                            color: var(--btn-text-hover-color);
-                            svg .st0 {
-                                stroke: var(--btn-text-hover-color);
+                        svg {
+                            .st0, .stroke-color-main {
+                                stroke : var(--btn-text-color);
                             }
                         }
+                        
+                        &:hover {
+                            color: var(--btn-text-hover-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-hover-color);
+                                }
+                            }
+                        }
+                        
                         &:active {
                             color: var(--btn-text-active-color);
-                            svg .st0 {
-                                stroke: var(--btn-text-active-color);
+                            svg {
+                                .st0, .stroke-color-main {
+                                    stroke : var(--btn-text-active-color);
+                                }
                             }
                         }
                     }

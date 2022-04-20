@@ -49,6 +49,7 @@
                     type="text"
                     id="firstName"
                     name="firstName"
+                    class="form-control"
                     [disabled]="createAccountProcess?.processing"
                     [ngClass]="{ 'invalid-state': firstName.invalid && (firstName.dirty || firstName.touched) && firstName.errors.required }"
                     [(ngModel)]="createFirstName"
@@ -68,6 +69,7 @@
                     type="text"
                     id="lastName"
                     name="lastName"
+                    class="form-control"
                     [disabled]="createAccountProcess?.processing"
                     [ngClass]="{ 'invalid-state': lastName.invalid && (lastName.dirty || lastName.touched) && lastName.errors.required }"
                     [(ngModel)]="createLastName"
@@ -105,7 +107,7 @@
             </div>
         </div>
         <div class="d-flex flex-column">
-            <div class="d-flex align-items-start">
+            <div class="d-flex justify-content-start">
                 <nx-checkbox
                     [color]="['desktop', 'mobile'].includes(viewType) && 'desktop'"
                     name="termsAndConditions"
@@ -114,7 +116,7 @@
                     componentId="termsAndConditions"
                     [disabled]="createAccountProcess?.processing"
                     required
-                    [labelText]="LANG.authorize.termsAndConditionsHelpText">
+                    [ariaText]="LANG.authorize.termsAndConditionsHelpText()">
                 </nx-checkbox>
                 <label class="mb-0" for="termsAndConditions">
                     <span class="mr-1" translate>I agree to the</span>
