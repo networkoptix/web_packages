@@ -941,19 +941,18 @@ export interface ReindexingDone {
 }
 
 export interface LanguageI18NStaticTypesSystem {
-    connected:            any;
-    not_connected:        any;
-    MERGE_FINISHES:       any;
-    mergeUnknownName:     any;
-    mySystemSearch:       any;
-    settings:             Settings;
-    status:               SystemStatus;
-    users:                Users;
-    yourSystem:           any;
-    loggers:              Loggers;
-    loggerDropdownLabel:  any;
-    storageToolTips:      StorageToolTips;
-    transferNotification: any;
+    connected:           any;
+    not_connected:       any;
+    MERGE_FINISHES:      any;
+    mergeUnknownName:    any;
+    mySystemSearch:      any;
+    settings:            Settings;
+    status:              SystemStatus;
+    users:               Users;
+    yourSystem:          any;
+    loggers:             Loggers;
+    loggerDropdownLabel: any;
+    storageToolTips:     StorageToolTips;
 }
 
 export interface Loggers {
@@ -2120,7 +2119,6 @@ const typeMap: any = {
         { json: "loggers", js: "loggers", typ: r("Loggers") },
         { json: "loggerDropdownLabel", js: "loggerDropdownLabel", typ: "any" },
         { json: "storageToolTips", js: "storageToolTips", typ: r("StorageToolTips") },
-        { json: "transferNotification", js: "transferNotification", typ: "any" },
     ], false),
     "Loggers": o([
         { json: "none", js: "none", typ: r("Debug") },

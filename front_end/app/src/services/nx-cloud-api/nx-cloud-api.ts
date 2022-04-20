@@ -552,8 +552,10 @@ export class NxCloudApiService {
         );
     }
 
-    cancelTransfer(systemId: string): Observable<unknown> {
-        return this.http.delete<unknown>(`${this.CONFIG.apiBase}/transfer/${systemId}/`);
+    cancelTransfer(systemId: string): Observable<t.CloudResponse> {
+        return this.http.delete<t.CloudResponse>(
+            `${this.CONFIG.apiBase}/transfer/${systemId}/`
+        );
     }
 
     respondToTransfer(

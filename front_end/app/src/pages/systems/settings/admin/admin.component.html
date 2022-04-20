@@ -18,23 +18,49 @@
                     </div>
                 </form>
 
-                <span class="system-owner" *ngIf="!environment.isLocal">
-                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
-                    <span>
-                        <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
-                        <ng-container *ngIf="!system.userManager.isMine">
-                            <span class="system-header-bold">{{system.info.ownerFullName}}</span>
-                            <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
-                        </ng-container>
+                <div class="d-flex align-items-center">
+                    <span class="system-owner" *ngIf="!environment.isLocal">
+                        <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                        <span>
+                            <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
+                            <ng-container *ngIf="!system.userManager.isMine">
+                                <span class="system-header-bold">{{system.info.ownerFullName}}</span>
+                                <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                            </ng-container>
+                        </span>
+                        <span
+                            *ngIf="ownershipTransferEnabled && system.userManager.isMine"
+                            id="change-ownership"
+                            class="ml-1"
+                            (click)="transferOwnership()"
+                            translate
+                        >(change)</span>
                     </span>
-                    <span
-                        *ngIf="ownershipTransferEnabled && system.userManager.isMine"
-                        id="change-ownership"
-                        class="ml-1"
-                        (click)="transferOwnership()"
+                </div>
+
+                <div *ngIf="transfers.length && system.userManager.isMine">
+                    <button
+                        class="btn btn-danger mt-4"
+                        (click)="cancelOwnershipTransfer()"
                         translate
-                    >(change)</span>
-                </span>
+                    >Cancel ownership transfer</button>
+                </div>
+
+                <ng-container *ngIf="ownershipOffered">
+                    <div class="mb-2 mt-4" translate>The system owner wants to transfer ownership of this system to you</div>
+                    <div class="d-flex">
+                        <button
+                            class="btn btn-primary mr-2"
+                            (click)="acceptOwnershipTransfer()"
+                            translate
+                        >Accept</button>
+                        <button
+                            class="btn btn-default"
+                            (click)="rejectOwnershipTransfer()"
+                            translate
+                        >Reject</button>
+                    </div>
+                </ng-container>
             </header>
 
             <nx-section *ngIf="system.isMine">
@@ -59,41 +85,16 @@
                     </div>
                 </div>
             </nx-section>
-            <nx-section
-                *ngIf="!environment.isLocal && ownershipTransferEnabled && systemTransferInProcess
-                    else notOwner"
-            >
-                <div
-                    class="system-owner mb-2"
-                    [innerHTML]="'system.transferNotification' | translate: {
-                        ownerName: system.userManager.currentOwner.fullName
-                    }"
-                ></div>
-                <div class="d-flex">
-                    <button
-                        class="btn btn-primary mr-2"
-                        (click)="acceptOwnershipTransfer()"
-                        translate
-                    >Accept</button>
-                    <button
-                        class="btn btn-default"
-                        (click)="rejectOwnershipTransfer()"
-                        translate
-                    >Reject</button>
+            <nx-section *ngIf="!system.isMine">
+                <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
+                    <span class="name" [innerText]="updateUserRole()"></span>
+                </span>
+                <div class="mt-2" *ngIf="!environment.isLocal || user?.isCloud">
+                    <button [disabled]="settings.disconnectDisabled"
+                            class="btn btn-default"
+                            (click)="delete()" translate>Disconnect from My Account</button>
                 </div>
             </nx-section>
-            <ng-template #notOwner>
-                <nx-section *ngIf="!system.isMine">
-                    <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
-                        <span class="name" [innerText]="updateUserRole()"></span>
-                    </span>
-                    <div class="mt-2" *ngIf="!environment.isLocal || user?.isCloud">
-                        <button [disabled]="settings.disconnectDisabled"
-                                class="btn btn-default"
-                                (click)="delete()" translate>Disconnect from My Account</button>
-                    </div>
-                </nx-section>
-            </ng-template>
         </nx-block>
 
         <nx-block header-style="extended" *ngIf="environment.isLocal">

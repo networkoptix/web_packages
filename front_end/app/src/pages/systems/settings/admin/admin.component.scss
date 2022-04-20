@@ -5,11 +5,6 @@
         font-family: typography.$font-family-bold;
     }
 
-    .system-owner {
-        @include typography.regular13dark9;
-        color : var(--card-header-text) !important;
-    }
-
     #change-ownership {
         cursor: pointer;
         @include typography.regular13light16;

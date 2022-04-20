@@ -88,8 +88,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     transfers: SystemTransferInfo[] = [];
     systemTransferInProcess: boolean = false;
-    // newSystemOwner: string = '';
-    // TODO: Get these from system
+
+    get ownershipOffered(): boolean {
+        return !environment.isLocal &&
+            this.ownershipTransferEnabled &&
+            this.systemTransferInProcess;
+    }
 
     private setupDefaults(): void {
         this.advanced = (this.router.url.includes('/advanced') ||
@@ -569,6 +573,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.cloudApiService.respondToTransfer(this.system.id, 'rejected')
             .subscribe((_res: CloudResponse) => {
                 this.systemTransferInProcess = false;
+            });
+    }
+
+    cancelOwnershipTransfer(): void {
+        this.cloudApiService.cancelTransfer(this.system.id)
+            .subscribe((_res: CloudResponse) => {
+                this.transfers = [];
             });
     }
 }
