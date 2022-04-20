@@ -27,11 +27,11 @@ export class NxOpenAPIJSONService {
     APITypes: { [key: string]: APIType } = {
         main: {
             type: 'main',
-            displayName: 'Current Version'
+            displayName: 'Current API'
         },
         deprecated: {
             type: 'deprecated',
-            displayName: 'Deprecated'
+            displayName: 'Deprecated API'
         }
     };
     APIInfoNodes = ['APIInformation', 'APIPreamble', 'APIChangelog'];
@@ -117,7 +117,7 @@ export class NxOpenAPIJSONService {
         const main = this.APITypes.main;
         this.createAPIStore(server.id, json);
         prepareSwaggerAPIDoc(json, 'main');
-        const mainContent = createMenuContent(json);
+        const mainContent = createMenuContent(json, markdown ? 'REST' : '');
         this.emitAPIType(main);
         this.storeAPIInfo(server.id, main.type, json.info);
         if (markdown) {
@@ -138,7 +138,8 @@ export class NxOpenAPIJSONService {
             const deprecatedType = this.APITypes.deprecated;
             prepareSwaggerAPIDoc(deprecatedAPI, deprecatedType.type as APIDocType);
             mergeAPIDocs(json, deprecatedAPI);
-            const deprecatedMenu = createMenuContent(deprecatedAPI);
+            const deprecatedMenu = createMenuContent(deprecatedAPI, markdown ? 'LEGACY' : '');
+            addAPIInfoNodesToMenu(deprecatedAPI, deprecatedMenu, !!markdown);
             this.emitAPIType(deprecatedType);
             this.storeAPIMenu(server.id, deprecatedType.type, deprecatedMenu);
             this.storeAPIInfo(server.id, deprecatedType.type, deprecatedAPI.info);
@@ -215,6 +216,7 @@ export class NxOpenAPIJSONService {
 
         this.setAPIInfo(info);
         this.setMenuNodes(menu);
+        this.activeNode = this.menuNodes[0];
     };
 
     determineIsInfoNode = (node: MenuNodeWithParent) => {
