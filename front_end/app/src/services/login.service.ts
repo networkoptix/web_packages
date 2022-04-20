@@ -117,7 +117,7 @@ export class NxLoginService {
         redirectClose?: boolean,
         redirectHome = false,
         blockNavigation = false
-    ) {
+    ): undefined | Promise<string | boolean> {
         if (this.CONFIG.browserNotSupported) {
             return;
         }
@@ -151,7 +151,8 @@ export class NxLoginService {
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
         return this.open(LoginWebadminModalContent, dialogConfig)
-            .afterClosed().then(result => {
+            .afterClosed()
+            .then(result => {
                 this.closeResult = `Closed with: ${result}`;
 
                 if (redirectClose && result === 'canceled') {

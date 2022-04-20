@@ -71,8 +71,7 @@ export class LocalAccount extends BaseAccount {
             .createConnection(undefined, undefined, undefined, () => of(''), true);
     }
 
-    // Explicitly specifying return type Promise<Account> breaks requireLogin()
-    async get(forceUpdate = false) {
+    async get(forceUpdate = false): Promise<Account | undefined> {
         try {
             const user: any = await this.mediaServerApi.getCurrentUser(forceUpdate);
             const account = new Account(user);
@@ -151,22 +150,23 @@ export class LocalAccount extends BaseAccount {
         this.loginService.login(keepPage, redirectClose, redirectHome, blockNavigation);
     }
 
-    private showLoginDialog(): Promise<string | Account> {
+    private showLoginDialog(): Promise<string | Account | undefined | boolean> {
         this.loginDialogActive = true;
-        return this.loginService.login(true, true).then((result: string) => {
-            this.storageService.loginRegister = true;
-            if (result === 'register') {
-                return this.router.navigate(['/authorize/register']).then(() => result);
-            }
-            return this.get();
-        })
+        return this.loginService.login(true, true)
+            .then<string | Account | undefined, boolean>(result => {
+                this.storageService.loginRegister = true;
+                if (result === 'register') {
+                    return this.router.navigate(['/authorize/register']).then(() => result);
+                }
+                return this.get();
+            })
             .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
             .finally(() => {
                 this.loginDialogActive = false;
             });
     }
 
-    requireLogin(): Promise<string | boolean | Account> {
+    requireLogin(): Promise<string | boolean | Account | undefined> {
         return this.get()
             .then(account => {
                 return account || !this.loginDialogActive && this.showLoginDialog();

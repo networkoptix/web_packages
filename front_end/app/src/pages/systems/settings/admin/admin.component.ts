@@ -18,6 +18,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import type { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -29,9 +30,6 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import type {
-    NxSystemUser
-} from '@services/system.service/user-manager/user-manager-types';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
@@ -56,7 +54,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     ownershipTransferEnabled: boolean = false;
 
-    user: NxSystemUser;
+    user: Account;
     system: NxSystem;
     systems;
 
@@ -203,10 +201,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.accountService.get()
-            .then(account => {
-                // Error for Cloud but not for WebAdmin
-                // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-                // @ts-ignore
+            .then((account?: Account) => {
                 this.user = account;
             });
 
