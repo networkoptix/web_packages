@@ -964,7 +964,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/sourcemap-codec",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/sourcemap-codec/LICENSE"
         },
-        "@jridgewell/trace-mapping@0.3.4": {
+        "@jridgewell/trace-mapping@0.3.8": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/trace-mapping",
             "publisher": "Justin Ridgewell",
@@ -1739,7 +1739,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.111": {
+        "electron-to-chromium@1.4.114": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -2214,7 +2214,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/functional-red-black-tree",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/functional-red-black-tree/LICENSE"
         },
-        "functions-have-names@1.2.2": {
+        "functions-have-names@1.2.3": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/functions-have-names",
             "publisher": "Jordan Harband",
@@ -2338,7 +2338,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/hard-rejection",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/hard-rejection/license"
         },
-        "has-bigints@1.0.1": {
+        "has-bigints@1.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/has-bigints",
             "publisher": "Jordan Harband",
@@ -2647,7 +2647,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/is-ci",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/is-ci/LICENSE"
         },
-        "is-core-module@2.8.1": {
+        "is-core-module@2.9.0": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/is-core-module",
             "publisher": "Jordan Harband",
@@ -6371,7 +6371,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.111": {
+        "electron-to-chromium@1.4.114": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -6453,7 +6453,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/es-to-primitive",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/es-to-primitive/LICENSE"
         },
-        "es5-ext@0.10.60": {
+        "es5-ext@0.10.61": {
             "licenses": "ISC",
             "repository": "https://github.com/medikoo/es5-ext",
             "publisher": "Mariusz Nowak",
@@ -6863,7 +6863,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/function-bind",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/function-bind/LICENSE"
         },
-        "functions-have-names@1.2.2": {
+        "functions-have-names@1.2.3": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/functions-have-names",
             "publisher": "Jordan Harband",
@@ -7029,7 +7029,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/has-ansi",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/has-ansi/license"
         },
-        "has-bigints@1.0.1": {
+        "has-bigints@1.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/has-bigints",
             "publisher": "Jordan Harband",
@@ -7470,7 +7470,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/is-callable",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/is-callable/LICENSE"
         },
-        "is-core-module@2.8.1": {
+        "is-core-module@2.9.0": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/is-core-module",
             "publisher": "Jordan Harband",

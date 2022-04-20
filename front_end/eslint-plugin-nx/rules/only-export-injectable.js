@@ -1,5 +1,5 @@
 /**
- * @fileoverview Rule to disallow exporting anything other than the injectable
+ * @fileoverview Disallow exporting anything other than the injectable
  * in files with an injectable.
  *
  * Because of the way Angular builds the dependency graph, it will attempt to

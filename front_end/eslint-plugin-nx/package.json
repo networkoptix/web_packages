@@ -2,5 +2,8 @@
     "name": "eslint-plugin-nx",
     "version": "0.1.0",
     "main": "index.js",
-    "license": "ISC"
+    "license": "ISC",
+    "scripts": {
+        "test": "cd .. && npx jasmine eslint-plugin-nx/tests/**/*.test.js"
+    }
 }

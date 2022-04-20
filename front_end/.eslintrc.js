@@ -141,6 +141,8 @@ module.exports = {
                 'plugin:@typescript-eslint/recommended',
             ],
             rules: {
+                'nx/explicit-input-output-types': 'error',
+
                 '@typescript-eslint/ban-types': ['error', {
                     extendDefaults: true,
                     types: {
