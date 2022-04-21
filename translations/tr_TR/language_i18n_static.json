@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Sistem silinemiyor",
         "emailNotFound": "Hesap mevcut değil.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %CLOUD_NAME% bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
         "lostConnection": "Connection to {systemName} lost",

@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "不能删除系统",
         "emailNotFound": "帐户不存在.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "此连结无法连接至任何系统。可能当系统断开 %CLOUD_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您没有权限执行此操作",
         "lostConnection": "Connection to {systemName} lost",

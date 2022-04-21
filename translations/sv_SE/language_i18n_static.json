@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan inte ta bort System",
         "emailNotFound": "Kontot existerar inte.",
         "failedToAccess2FA": "<p class=\"mb-0\">Tvåfaktorsautentisering krävs för att komma åt detta system.</p><p>Du kan aktivera tvåfaktorsautentisering i dina <a href=\"/account/security\">kontoinställningar</a>.</p>",
-        "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %CLOUD_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
+        "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats bort från %CLOUD_NAME%, åtkomst till detta system har återkallats, systemet i länken inte existerar eller om du är inloggad på fel konto.",
         "failedToAccessCamera": "Ingen kamera kan nås via den här länken.",
         "forbidden": "Du har inte behörighet att utföra denna åtgärd",
         "lostConnection": "Anslutning till {systemName} förlorade",

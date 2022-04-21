@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan ikke slette system",
         "emailNotFound": "Kontoen eksisterer ikke.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Ingen koblinger kan nås via denne lenken. Dette kan skje når et system er koblet fra %CLOUD_NAME%, tilgang til dette systemet er opphevet, eller du er logget inn på feil konto.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Du har ikke tillatelser til å utføre denne handlingen",
         "lostConnection": "Connection to {systemName} lost",

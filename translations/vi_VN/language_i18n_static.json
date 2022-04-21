@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Không thể xóa bỏ hệ thống",
         "emailNotFound": "Tài khoản không tồn tại.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Không có hệ thống có thể được truy cập bởi liên kết này. Điều này có thể xảy ra khi một hệ thống bị ngắt kết nối từ %CLOUD_NAME%, quyền truy cập vào hệ thống này đã bị thu hồi hoặc nếu bạn đăng nhập vào tài khoản không chính xác.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Bạn không có quyền thực hiện công việc này",
         "lostConnection": "Connection to {systemName} lost",

@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Не удается удалить систему",
         "emailNotFound": "Учетная запись не существует.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Ни одна система не может быть доступна по этой ссылке. Это может произойти, когда система была отключена от %CLOUD_NAME%, доступ к этой системе был отозван, или если вы вошли с некорректнуой учетной записью.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Отсутствуют полномочия на выполнение этого действия",
         "lostConnection": "Connection to {systemName} lost",

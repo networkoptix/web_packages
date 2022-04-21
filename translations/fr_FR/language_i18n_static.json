@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Impossible de supprimer le système",
         "emailNotFound": "Compte n’existe pas.",
         "failedToAccess2FA": "<p class=\"mb-0\">L'authentification à deux facteurs est requise pour accéder à ce système.</p><p>Vous pouvez activer l'authentification à deux facteurs dans vos <a href=\"/account/security\">paramètres de compte</a>.</p>",
-        "failedToAccessSystem": "Aucun système ne peut être accédé par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué, ou si vous êtes connecté au compte incorrect.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "Aucune caméra ne peut être accédée par ce lien.",
         "forbidden": "Vous n’avez pas l'autorisation nécessaire pour effectuer cette action",
         "lostConnection": "Connexion à {systemName} perdue",
