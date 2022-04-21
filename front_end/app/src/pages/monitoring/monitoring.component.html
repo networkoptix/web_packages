@@ -1,7 +1,14 @@
-<nx-pre-loader type="page" *ngIf="!system; else graph"></nx-pre-loader>
+<div class="block-container mt-3">
+    <div class="row">
+        <div class="col-12 col-md-4 col-xl-3">
+            <nx-pre-loader *ngIf="!system; else menu"></nx-pre-loader>
+            <ng-template #menu>
+                <nx-menu [content]="content"></nx-menu>
+            </ng-template>
+        </div>
 
-<ng-template #graph>
-    <div class="container">
-        <monitoring-graph [system]="system"></monitoring-graph>
+        <div class="col-12 col-md-8 col-xl-9 pt-3 pt-md-0 section-height">
+            <router-outlet></router-outlet>
+        </div>
     </div>
-</ng-template>
+</div>

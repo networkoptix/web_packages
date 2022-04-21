@@ -1,0 +1,5 @@
+:host {
+    .section-height {
+        height: calc(100vh - 64px); // header 48 + 16 margin
+    }
+}

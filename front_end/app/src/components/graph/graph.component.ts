@@ -1,7 +1,8 @@
 import {
     Component,
-    OnInit,
-    Input
+    Input,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
@@ -23,7 +24,9 @@ import { NxSystem } from '@services/system.service';
     styleUrls: ['graph.component.scss']
 })
 
-export class NxMonitoringGraphComponent implements OnInit {
+export class NxMonitoringGraphComponent implements OnChanges {
+    @Input() system: NxSystem;
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -72,9 +75,7 @@ export class NxMonitoringGraphComponent implements OnInit {
         ]
     };
 
-    @Input() system: NxSystem;
-
-    private setupDefaults() {
+    private setupDefaults(): void {
         // leave "view" undefined to "fitContent"
         // this.view = [700, 500];
     }
@@ -91,35 +92,43 @@ export class NxMonitoringGraphComponent implements OnInit {
         this.multi = [];
     }
 
-    ngOnInit() {
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.system.currentValue) {
+            this.getStats();
+        }
+    }
+
+    private getStats() {
         timer(0, 1000).pipe(
             untilDestroyed(this)
         ).subscribe(() => {
-            this.system.mediaserver.getStatistics().subscribe(response => {
-                response.reply && response.reply.statistics.forEach(data => {
-                    const seriesData = this.multi.find(series => series.name === data.description);
-                    if (!seriesData) {
-                        const series = Array.from({ length: 50 }, (_, i) => { return { name: i + 1, value: 0 }; });
-                        this.multi.push({
-                            name: data.description,
-                            series: series
-                        });
-                        this.multi[this.multi.length - 1].series.push({
-                            name: response.reply.uptimeMs,
-                            value: Math.round(data.value * 100)
-                        });
-                        this.multi[this.multi.length - 1].series.shift();
-                    } else {
-                        seriesData.series.push({
-                            name: response.reply.uptimeMs,
-                            value: Math.round(data.value * 100)
-                        });
-                        seriesData.series.shift();
-                    }
-                });
+            this.system.mediaserver.getStatistics()
+                .pipe(untilDestroyed(this))
+                .subscribe(response => {
+                    response.reply && response.reply.statistics.forEach(data => {
+                        const seriesData = this.multi.find(series => series.name === data.description);
+                        if (!seriesData) {
+                            const series = Array.from({ length: 50 }, (_, i) => { return { name: i + 1, value: 0 }; });
+                            this.multi.push({
+                                name: data.description,
+                                series: series
+                            });
+                            this.multi[this.multi.length - 1].series.push({
+                                name: response.reply.uptimeMs,
+                                value: Math.round(data.value * 100)
+                            });
+                            this.multi[this.multi.length - 1].series.shift();
+                        } else {
+                            seriesData.series.push({
+                                name: response.reply.uptimeMs,
+                                value: Math.round(data.value * 100)
+                            });
+                            seriesData.series.shift();
+                        }
+                    });
 
-                this.multi = [...this.multi];
-            });
+                    this.multi = [...this.multi];
+                });
         });
     }
 }

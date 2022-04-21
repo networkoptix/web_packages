@@ -1,15 +1,25 @@
-<div class="mb-3 row">
-    <label class="col-12 col-md-3 col-xl-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center" for="log-levels" translate>Current Logger</label>
-    <div class="col-12 col-md-9 col-xl-10">
-        <nx-select id="log-levels" [(ngModel)]="selectedLogLevel" [items]="logLevels" (onSelected)="getLogs($event)"></nx-select>
-    </div>
-</div>
-<ng-container *ngIf="logData">
-    <pre class="mb-3 w-100" [style.height.px]="iframeHeight" name="log-frame" [innerText]="logData"></pre>
-    <div class="d-flex justify-content-between">
-        <button id="refresh-logger" class="btn btn-primary"
-           (click)="getLogs(selectedLogLevel)" translate>Refresh</button>
-        <a *ngIf="logUrl" id="open-logger" class="btn btn-default"
-           target="_blank" [href]="logUrl" translate>Open in a new window</a>
-    </div>
-</ng-container>
+<nx-block class="d-block">
+    <header><h4 translate>System Logs</h4></header>
+    <nx-section>
+        <div class="mb-3 row">
+            <label class="col-12 col-md-3 col-xl-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center" for="log-levels" translate>Current Logger</label>
+            <div class="col-12 col-md-9 col-xl-10">
+                <nx-select
+                    id="log-levels"
+                    [(ngModel)]="selectedLogLevel"
+                    [items]="logLevels"
+                    (onSelected)="getLogs($event)"
+                ></nx-select>
+            </div>
+        </div>
+        <ng-container *ngIf="logData">
+            <pre class="mb-3 w-100" [style.height.px]="iframeHeight" name="log-frame" [innerText]="logData"></pre>
+            <div class="d-flex justify-content-between">
+                <button id="refresh-logger" class="btn btn-primary"
+                   (click)="getLogs(selectedLogLevel)" translate>Refresh</button>
+                <a *ngIf="logUrl" id="open-logger" class="btn btn-default"
+                   target="_blank" [href]="logUrl" translate>Open in a new window</a>
+            </div>
+        </ng-container>
+    </nx-section>
+</nx-block>

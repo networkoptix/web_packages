@@ -860,6 +860,7 @@ export interface ServerTabTitles {
     Settings:    any;
     Information: any;
     Bookmarks:   any;
+    Monitoring:  any;
 }
 
 export interface Servers {
@@ -2012,6 +2013,7 @@ const typeMap: any = {
         { json: "Settings", js: "Settings", typ: "any" },
         { json: "Information", js: "Information", typ: "any" },
         { json: "Bookmarks", js: "Bookmarks", typ: "any" },
+        { json: "Monitoring", js: "Monitoring", typ: "any" },
     ], false),
     "Servers": o([
         { json: "analyticsDataPolicyError", js: "analyticsDataPolicyError", typ: "any" },
