@@ -256,7 +256,7 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.verify(password);
     }
 
-    update2fa(password, mfaCode, action = 'toggle') {
+    update2fa(password, mfaCode, action: 'activate' | 'deactivate' | 'toggle' = 'toggle') {
         return this.cloudApi.update2fa(password, mfaCode, action);
     }
 

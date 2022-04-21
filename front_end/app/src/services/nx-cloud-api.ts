@@ -159,7 +159,11 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    update2fa(password, mfaCode, action) {
+    update2fa(
+        password: string,
+        mfaCode: string,
+        action: 'activate' | 'deactivate' | 'toggle'
+    ) {
         return this.http.post<t.CloudResponse>(
             this.CONFIG.apiBase + '/account/security',
             { password, mfaCode, action }
@@ -189,8 +193,11 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    toggle2faForSystem(systemId, mfaCode) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/toggle2fa', { systemId, mfaCode }).toPromise();
+    toggle2faForSystem(systemId: string, mfaCode: string) {
+        return this.http.post(
+            this.CONFIG.apiBase + '/systems/toggle2fa',
+            { systemId, mfaCode }
+        ).toPromise();
     }
 
     getStaticLanding() {
