@@ -91,13 +91,13 @@ export class TestCamera implements ICamera {
         return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
     }
 
-    public setRecords(range: ISimpleTimeRange, archive: CameraArchive) {
+    public setRecords(range: ISimpleTimeRange, archive: CameraArchive): void {
         this._archiveRange = range;
         this._archive = archive;
         this._initBirdView();
     }
 
-    protected _initBirdView() {
+    protected _initBirdView(): void {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
     }
 
@@ -112,7 +112,7 @@ export class TestCamera implements ICamera {
         return ['hls', 'wemb'];
     }
 
-    public setNewlyRecordedChunks(rs: CameraArchive) {
+    public setNewlyRecordedChunks(rs: CameraArchive): void {
         // noop
     }
 

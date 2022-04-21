@@ -44,11 +44,11 @@ export class TimelineService {
         return this._canvasGeometryUpdateRequested;
     }
 
-    public requestCanvasGeometryUpdate() {
+    public requestCanvasGeometryUpdate(): void {
         this._canvasGeometryUpdateRequested = true;
     }
 
-    protected _emit() {
+    protected _emit(): void {
         this._subject.next({
             fullRange: this.fullRange,
             visibleRange: this.visibleRange,
@@ -166,7 +166,7 @@ export class TimelineService {
         return Math.round(w * this.msPerCanvasPx);
     }
 
-    public shiftVisibleRange(offset: ms) {
+    public shiftVisibleRange(offset: ms): void {
         // If the visible start is less than full range ignore the move.
         if (
             this.fullRange.start <= this.visibleRange.start + offset &&
@@ -177,7 +177,7 @@ export class TimelineService {
         }
     }
 
-    public zoom(durationDelta: ms, offset: float) {
+    public zoom(durationDelta: ms, offset: float): void {
         const MIN_DURATION = this.canvasGeometry.width * this.canvasGeometry.dpr;
         const duration = this.visibleRange.duration;
         if (duration - durationDelta < MIN_DURATION) {
@@ -187,7 +187,7 @@ export class TimelineService {
         this._emit();
     }
 
-    public fullZoomOut() {
+    public fullZoomOut(): void {
         this._visibleRange.start = this._fullRange.start;
         this._visibleRange.end = this._fullRange.end;
         this._targetScrollMs = undefined;
@@ -237,7 +237,7 @@ export class TimelineService {
         }
     }
 
-    protected _sanitizeVisibleRangePosition() {
+    protected _sanitizeVisibleRangePosition(): void {
         let diff = this._visibleRange.end - this._fullRange.end;
         if (diff > 0) {
             this._visibleRange.shift(-diff);
@@ -248,14 +248,14 @@ export class TimelineService {
         }
     }
 
-    protected _changeVisibleDurationStart(t: ms) {
+    protected _changeVisibleDurationStart(t: ms): void {
         const duration = this._visibleRange.duration;
         this._visibleRange.start = t;
         this._visibleRange.end = t + duration;
         this._sanitizeVisibleRangePosition();
     }
 
-    protected _onAnimationFrame() {
+    protected _onAnimationFrame(): void {
         const now = Date.now();
         const diff = now - this._scrollAnimationStartTime;
         if (diff < cfg.SCROLL_ANIMATION_DURATION_MS) {

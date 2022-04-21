@@ -15,7 +15,7 @@ export class NxCameraDetailsComponent {
     ) {
     }
 
-    public emitClose() {
+    public emitClose(): void {
         this.close.emit();
     }
 }

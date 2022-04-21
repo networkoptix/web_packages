@@ -33,14 +33,14 @@ export class VideoManagementSystemService {
     protected _logPrefix: string = 'VMS_SERVICE ::';
     protected _logDisable: boolean = true;
 
-    protected _log(...args: any[]) {
+    protected _log(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    protected _warn(...args: any[]) {
+    protected _warn(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
@@ -54,7 +54,7 @@ export class VideoManagementSystemService {
         this.reset();
     }
 
-    public reset() {
+    public reset(): void {
         this._log('reset');
         this._state = createNotInitializedState();
         this._serverTimes = undefined;
@@ -189,11 +189,11 @@ export class VideoManagementSystemService {
         }
     }
 
-    public setCameraRecords(cameraId: string, range, records) {
+    public setCameraRecords(cameraId: string, range, records): void {
         this.selectedCamera?.setRecords(range, records);
     }
 
-    public addRecordsToSelectedCamera(cameraId: string, records: CameraArchive) {
+    public addRecordsToSelectedCamera(cameraId: string, records: CameraArchive): void {
         if (this._state.mode !== VMS_MODE.NOT_INITIALIZED) {
             this.selectedCamera.pushRecordedChunks(records);
         } else {
@@ -210,7 +210,7 @@ export class VideoManagementSystemService {
     //   this.setMediaServers('test', testMediaServers)
     // }
 
-    public selectCamera(cameraId: GUID) {
+    public selectCamera(cameraId: GUID): void {
         if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
             this._warn('attempt to select camera while VMS is not initialized yet');
             return;
@@ -229,7 +229,7 @@ export class VideoManagementSystemService {
         this._emit();
     }
 
-    public clearCameraSelection() {
+    public clearCameraSelection(): void {
         if (this._state.mode === VMS_MODE.NOT_INITIALIZED) {
             this._warn('attempt to clear camera selection while VMS is not initialized yet');
             return;

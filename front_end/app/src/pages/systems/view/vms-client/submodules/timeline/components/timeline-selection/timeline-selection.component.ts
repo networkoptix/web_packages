@@ -108,7 +108,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.selectionSubscription && this.selectionSubscription.unsubscribe();
     }
 
-    protected _updateCss() {
+    protected _updateCss(): void {
         if (this.selectedRangeView && this.selectionStatus.isActive) {
             this.selectedRangeView.nativeElement.classList.add('active');
             const left = this.timeline.timeToDomOffsetX(
@@ -149,12 +149,12 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         return this._playbackOverlays(this.selectionStatus.range.end);
     }
 
-    public onSelectionSubjectChange(s: TimelineSelectionServiceStatus) {
+    public onSelectionSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.selectionStatus = s;
         this._updateCss();
     }
 
-    public onTimelineSubjectChange(s: TimelineServiceStatus) {
+    public onTimelineSubjectChange(s: TimelineServiceStatus): void {
         this._updateCss();
     }
 
@@ -164,23 +164,23 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     @HostListener('document:mouseup', ['$event'])
-    public mouseUpHandler(e: MouseEvent) {
+    public mouseUpHandler(e: MouseEvent): void {
         this.selection.handleMouseUp(e);
     }
 
     @HostListener('mouseenter', ['$event'])
-    public mouseEnterHandler(e: MouseEvent) {
+    public mouseEnterHandler(e: MouseEvent): void {
         this.timeUnderMouse.handleMouseEnter(e);
     }
 
     @HostListener('mouseleave', ['$event'])
-    public mouseLeaveHandler(e: MouseEvent) {
+    public mouseLeaveHandler(e: MouseEvent): void {
         this.selection.handleMouseLeave(e);
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
     @HostListener('document:mousemove', ['$event'])
-    public mouseMoveHandler(e: MouseEvent) {
+    public mouseMoveHandler(e: MouseEvent): void {
         const $host = this.selectedRangeView.nativeElement.parentElement;
         // @ts-expect-error
         this.timeUnderMouse.handleMouseMove({
@@ -192,19 +192,19 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.selection.handleMouseMove(e);
     }
 
-    public selectedRangeMouseDownHandler(e: MouseEvent) {
+    public selectedRangeMouseDownHandler(e: MouseEvent): void {
         this.selection.handleSelectedRangeMouseDown(e);
     }
 
-    public selectedRangeDoubleClickHandler(e: MouseEvent) {
+    public selectedRangeDoubleClickHandler(e: MouseEvent): void {
         this.selection.reset();
     }
 
-    public leftEarMouseDownHandler(e: MouseEvent) {
+    public leftEarMouseDownHandler(e: MouseEvent): void {
         this.selection.handleLeftEarMouseDown(e);
     }
 
-    public rightEarMouseDownHandler(e: MouseEvent) {
+    public rightEarMouseDownHandler(e: MouseEvent): void {
         this.selection.handleRightEarMouseDown(e);
     }
 

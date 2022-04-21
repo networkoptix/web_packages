@@ -98,7 +98,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         }
     }
 
-    setupText() {
+    setupText(): void {
         const auth = this.LANG.authorize;
         const connect = {
             header: auth.connectHeader(),
@@ -159,7 +159,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
         };
     }
 
-    setText() {
+    setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
         if (this.clientType.includes('Password')) {

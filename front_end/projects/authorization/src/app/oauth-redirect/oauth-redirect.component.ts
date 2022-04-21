@@ -31,7 +31,7 @@ export class NxOAuthRedirectComponent implements OnInit {
     viewType: 'desktop' | 'mobile' | 'web';
     state: 'sendingCode' | 'readyToLogin' | 'noNativeClient';
 
-    private setupDefaults(configService) {
+    private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
     }
@@ -84,7 +84,7 @@ export class NxOAuthRedirectComponent implements OnInit {
         }
     }
 
-    redirectToOAuth() {
+    redirectToOAuth(): void {
         const { client_id, client_type, view_type } = this.initialData || {};
         this.router.navigate(['/'], {
             queryParams: {

@@ -134,7 +134,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
     }
 
-    private _calculateRotation() {
+    private _calculateRotation(): void {
         let rotation = this.rotation;
         if (this.transport !== 'hls') {
             rotation = 0;
@@ -149,7 +149,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
     }
 
-    protected _reactOnPlaybackStateChange(prevMode: number) {
+    protected _reactOnPlaybackStateChange(prevMode: number): void {
         !this.player && this.initPlayer();
         const isPaused = this.player.paused() || false;
         switch (this.mode) {
@@ -180,7 +180,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
     }
 
-    protected _startPlayback() {
+    protected _startPlayback(): void {
         this._log(`starting playback source: ${this.sourceUrl}\t poster: ${this.posterUrl}`);
 
         const sourceUrl = this.sourceUrl || null;

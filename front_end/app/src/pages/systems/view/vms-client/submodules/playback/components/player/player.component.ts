@@ -95,7 +95,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         this.vmsSubscription.unsubscribe();
     }
 
-    public onPlaybackSubjectChange(s: PlaybackState | ArchivePlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState | ArchivePlaybackState): void {
         if (s.transport !== this.transport) {
             this.transport = s.transport;
         }
@@ -110,11 +110,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
             : false;
     }
 
-    public onVmsSubjectChange(s: VmsState) {
+    public onVmsSubjectChange(s: VmsState): void {
         this.rotateDeg = this.vms.selectedCamera?.rotation || 0;
     }
 
-    public onBufferingChange(s: number) {
+    public onBufferingChange(s: number): void {
         /*
         s is the timeout value for when the player waits.
         s === 0 means we loaded and need the overlay.
@@ -145,11 +145,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public videoEnded(event: boolean) {
+    public videoEnded(event: boolean): void {
         this.playback.playLive();
     }
 
-    public videoErrorEventHandler(event: any) {
+    public videoErrorEventHandler(event: any): void {
         const { player } = event.target;
         const toggleTransport = () => {
             this.transportChangeByError = true;
@@ -197,7 +197,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public onClick(e: MouseEvent) {
+    public onClick(e: MouseEvent): void {
         if (this.playback.canPause) {
             this.playback.pause();
         } else if (this.playback.canUnpause) {
@@ -209,7 +209,7 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    public onDblClick(e: MouseEvent) {
+    public onDblClick(e: MouseEvent): void {
         this.videoDblClick.emit(true);
     }
 }

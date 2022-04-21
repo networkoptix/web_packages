@@ -116,12 +116,12 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
 
     protected _prev;
 
-    public onSubjectChange(s: TimelineSelectionServiceStatus) {
+    public onSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.status = s;
         this.$self.classList.toggle('active', s.isActive);
     }
 
-    public handleDurationClick(e: MouseEvent) {
+    public handleDurationClick(e: MouseEvent): void {
         this.timeline.jumpScrollTo(
             this.selection.range.start -
             this.timeline.domWidthToDuration(EAR_WIDTH)
@@ -142,7 +142,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         }
     }
 
-    public initSetTimeDialog() {
+    public initSetTimeDialog(): void {
         const dialog = this.dialogs.selectTimeRange();
         dialog.then(this._onTimeSetDialogDone);
     }

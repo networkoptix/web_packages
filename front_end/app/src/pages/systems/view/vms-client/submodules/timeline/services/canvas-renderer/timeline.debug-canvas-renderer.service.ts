@@ -20,13 +20,13 @@ export class TimelineDebugCanvasRendererService {
         return cfg;
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         this._renderTimeZoneOffset(ctx);
         ctx.restore();
     }
 
-    protected _renderTimeZoneOffset(ctx: CanvasRenderingContext2D) {
+    protected _renderTimeZoneOffset(ctx: CanvasRenderingContext2D): void {
         const offsetMs = this.vms.timeZoneOffset;
         const offsetH = offsetMs / (60 * 60 * 1000);
         const x = this.timeline.canvasGeometry.width / 2;

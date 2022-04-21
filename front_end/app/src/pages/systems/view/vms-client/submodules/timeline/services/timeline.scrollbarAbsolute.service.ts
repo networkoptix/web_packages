@@ -21,14 +21,14 @@ export class TimelineScrollbarAbsoluteService {
     protected _logPrefix: string = 'SCROLLBAR_ABSOLUTE_SERVICE ::';
     protected _logDisable: boolean = true;
 
-    protected _log(...args: any[]) {
+    protected _log(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    protected _warn(...args: any[]) {
+    protected _warn(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
@@ -55,7 +55,7 @@ export class TimelineScrollbarAbsoluteService {
         honestWidth: 0
     });
 
-    protected _emit() {
+    protected _emit(): void {
         this._subject.next({
             ...this.relative.subject.value,
             isIllusionary: this.isIllusionary,
@@ -112,7 +112,7 @@ export class TimelineScrollbarAbsoluteService {
     protected _dragAnchorAbsolute: px = -1;
     protected _isBarGrabbed: boolean = false;
 
-    public handleBarMouseDown(e: MouseEvent | TouchEvent) {
+    public handleBarMouseDown(e: MouseEvent | TouchEvent): void {
         this._dragAnchorAbsolute = calcClientX(e);
         this._isBarGrabbed = true;
         if (e instanceof MouseEvent) {
@@ -121,11 +121,11 @@ export class TimelineScrollbarAbsoluteService {
         }
     }
 
-    public handleBarMouseUp(e: MouseEvent | TouchEvent) {
+    public handleBarMouseUp(e: MouseEvent | TouchEvent): void {
         this._isBarGrabbed = false;
     }
 
-    public handleBarDragMouseMove(e: MouseEvent) {
+    public handleBarDragMouseMove(e: MouseEvent): void {
         if (this._isBarGrabbed) {
             const dx = calcClientX(e) - this._dragAnchorAbsolute;
             const leftEdgeMeansMs = this.timeline.visibleRange.start;

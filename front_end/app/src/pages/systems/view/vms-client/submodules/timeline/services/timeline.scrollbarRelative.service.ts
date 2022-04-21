@@ -18,14 +18,14 @@ export class TimelineScrollbarRelativeService {
     protected _logPrefix: string = 'SCROLLBAR_RELATIVE_SERVICE ::';
     protected _logDisable: boolean = true;
 
-    protected _log(...args: any[]) {
+    protected _log(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    protected _warn(...args: any[]) {
+    protected _warn(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
@@ -47,7 +47,7 @@ export class TimelineScrollbarRelativeService {
         }
     );
 
-    protected _emit() {
+    protected _emit(): void {
         this._subject.next({
             magnification: this.magnification,
             offset: this.offset,
@@ -85,7 +85,7 @@ export class TimelineScrollbarRelativeService {
         // return this.timeline.fullRange.end - this.timeline.visibleRange.end > SCROLL_TRESHOLD_MS;
     }
 
-    public handleBarDblClick(e: MouseEvent | TouchEvent) {
+    public handleBarDblClick(e: MouseEvent | TouchEvent): void {
         e.preventDefault();
         this.timeline.fullZoomOut();
     }
@@ -95,7 +95,7 @@ export class TimelineScrollbarRelativeService {
     protected _timestampMouseDown: ms;
     protected _scrollDirection: sign = 0;
 
-    public handleBackgroundMouseDown(e: MouseEvent) {
+    public handleBackgroundMouseDown(e: MouseEvent): void {
         this.isBackgroundMouseDown = true;
         this._timestampMouseDown = Date.now();
         this.holdScrollTargetTime = this._targetTimeFromMouseEvent(e);
@@ -105,7 +105,7 @@ export class TimelineScrollbarRelativeService {
                 : +1;
     }
 
-    public handleBackgroundMouseUp(e: MouseEvent | TouchEvent) {
+    public handleBackgroundMouseUp(e: MouseEvent | TouchEvent): void {
         this.isBackgroundMouseDown = false;
         this.holdScrollTargetTime = -1;
         const sinceMouseDown: ms = Date.now() - this._timestampMouseDown;
@@ -124,36 +124,36 @@ export class TimelineScrollbarRelativeService {
         }
     }
 
-    public handleButtonLeftMouseDown() {
+    public handleButtonLeftMouseDown(): void {
         this.isBackgroundMouseDown = true;
         this.holdScrollTargetTime = this.timeline.fullRange.start;
     }
 
-    public handleButtonRightMouseDown() {
+    public handleButtonRightMouseDown(): void {
         this.isBackgroundMouseDown = true;
         this.holdScrollTargetTime = this.timeline.fullRange.end - this.timeline.visibleRange.duration;
     }
 
-    public updateIfMouseIsDown() {
+    public updateIfMouseIsDown(): void {
         if (this.isBackgroundMouseDown) {
             this.timeline.stepScrollToStartTime(this.holdScrollTargetTime);
             this._emit();
         }
     }
 
-    public handleBackgroundDblClick(e: MouseEvent) {
+    public handleBackgroundDblClick(e: MouseEvent): void {
         this.isBackgroundMouseDown = false;
         const targetTime = this._targetTimeFromMouseEvent(e);
         this.timeline.jumpScrollTo(targetTime, true);
         this._emit();
     }
 
-    public handleButtonLeftDblClick() {
+    public handleButtonLeftDblClick(): void {
         this.timeline.jumpScrollTo(this.timeline.fullRange.start, true);
         this._emit();
     }
 
-    public handleButtonRightDblClick() {
+    public handleButtonRightDblClick(): void {
         this.timeline.jumpScrollTo(
             this.timeline.fullRange.end - this.timeline.visibleRange.duration,
             true

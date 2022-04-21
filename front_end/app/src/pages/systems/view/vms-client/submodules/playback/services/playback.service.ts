@@ -23,14 +23,14 @@ export class PlaybackService implements OnDestroy {
     protected _logPrefix: string = 'PLAYBACK_SERVICE ::';
     protected _logDisable: boolean = true;
 
-    protected _log(...args: any[]) {
+    protected _log(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.log.apply(console, [this._logPrefix, ...arguments]);
         }
     }
 
-    protected _warn(...args: any[]) {
+    protected _warn(...args: any[]): void {
         if (isDevMode() && !this._logDisable) {
             // eslint-disable-next-line no-useless-call
             console.warn.apply(console, [this._logPrefix, ...arguments]);
@@ -143,7 +143,7 @@ export class PlaybackService implements OnDestroy {
         return this.vms.selectedCamera?.hasArchive;
     }
 
-    public playLive() {
+    public playLive(): void {
         this.livePaused = false;
         if (!this.canPlayLive) {
             return;
@@ -222,17 +222,17 @@ export class PlaybackService implements OnDestroy {
         this._emit();
     }
 
-    public unplayableArchive() {
+    public unplayableArchive(): void {
         (<ArchivePlaybackState> this._state).encrypted = true;
         this._emit();
     }
 
-    public setError(error) {
+    public setError(error): void {
         this._state.error = error;
         this._emit();
     }
 
-    public stop(withError: string = '') {
+    public stop(withError: string = ''): void {
         this._log('PLAYBACK.STOP()', withError);
         this._state = createInitialStoppedState(
             this._state.quality,
@@ -242,7 +242,7 @@ export class PlaybackService implements OnDestroy {
         this._emit();
     }
 
-    public pause() {
+    public pause(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this._warn('PAUSE request while playback mode is STOPPED');
@@ -272,7 +272,7 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    public unpause() {
+    public unpause(): void {
         switch (this._state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this._warn('UNPAUSE request while playback mode is STOPPED');
@@ -323,7 +323,7 @@ export class PlaybackService implements OnDestroy {
 
     protected _previousFrameTime: ms;
 
-    public handleAnimationFrame() {
+    public handleAnimationFrame(): void {
         const thisFrameTime = Date.now();
         if (this._previousFrameTime === undefined) {
             this._previousFrameTime = thisFrameTime;
@@ -471,7 +471,7 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    private _jumpOverTheGapIfNeeded() {
+    private _jumpOverTheGapIfNeeded(): void {
         if (
             this.vms.selectedCamera &&
             this._state.mode === PLAYBACK_MODE.ARCHIVE &&
@@ -532,7 +532,7 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    public changeTransport(st: PlaybackTransport) {
+    public changeTransport(st: PlaybackTransport): void {
         if (this._state.transport === st) {
             return;
         }
@@ -552,7 +552,7 @@ export class PlaybackService implements OnDestroy {
         }
     }
 
-    public changeQuality(q: PlaybackQuality) {
+    public changeQuality(q: PlaybackQuality): void {
         if (this._state.quality === q) {
             return;
         }
@@ -575,12 +575,12 @@ export class PlaybackService implements OnDestroy {
 
     protected _prevState: PlaybackState;
 
-    public save() {
+    public save(): void {
         this._prevState = { ...this.state };
         this._log('PLAYBACK STATE SAVED', { ...this.state });
     }
 
-    public restore(hasArchive = false) {
+    public restore(hasArchive = false): void {
         this._log('PLAYBACK SAVE RESTORE', hasArchive, { ...this._prevState });
         if (hasArchive && this._prevState.mode === PLAYBACK_MODE.ARCHIVE) {
             this._log('trying to start archive from the same place');

@@ -132,7 +132,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     // @ts-expect-error
     @HostListener('window:resize', ['$event'])
-    protected _handleRotation() {
+    protected _handleRotation(): void {
         if (!this.videoView) {
             return;
         }
@@ -163,13 +163,13 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         this.$video.src = '';
     }
 
-    public onPlaybackSubjectChange(s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState): void {
         const prevState = { ...this.state };
         this.state = { ...s };
         this._reactOnPlaybackStateChange(prevState);
     }
 
-    private pauseVideo() {
+    private pauseVideo(): void {
         this.$video.pause();
         // remind player it have poster to show (Safari)
         const poster = this.videoView.nativeElement.getAttribute('poster');
@@ -179,7 +179,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         );
     }
 
-    protected _reactOnPlaybackStateChange(prevState: PlaybackState) {
+    protected _reactOnPlaybackStateChange(prevState: PlaybackState): void {
         switch (this.state.mode) {
             case PLAYBACK_MODE.STOPPED:
                 this.pauseVideo();
@@ -205,7 +205,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    protected _startPlayback() {
+    protected _startPlayback(): void {
         this._log('starting playback', { ...this.state });
         // @ts-expect-error
         const sourceUrl = this.state?.sourceUrl || '';
@@ -264,7 +264,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    public onVideoCanPlay(e: MediaStreamEvent) {
+    public onVideoCanPlay(e: MediaStreamEvent): void {
         this._log('video can play', this.state.mode, this.state);
         this.bufferingChange.emit(false);
         switch (this.state.mode) {
@@ -282,7 +282,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
         }
     }
 
-    public onVideoEnded(e: MediaStreamEvent) {
+    public onVideoEnded(e: MediaStreamEvent): void {
         this._log('video ended');
         this.playback.playLive();
     }

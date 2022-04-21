@@ -107,7 +107,7 @@ export class TimelineSelectionService {
 
     protected _pixelRange: PixelRange = { left: 0, right: 0 };
 
-    protected updatePixelRange() {
+    protected updatePixelRange(): void {
         this._pixelRange = {
             left: this.timeline.timeToDomOffsetX(this.range.start),
             right: this.timeline.timeToDomOffsetX(this.range.end)
@@ -146,7 +146,7 @@ export class TimelineSelectionService {
         return this._rightEar?.getBoundingClientRect().left || Infinity;
     }
 
-    protected _emit() {
+    protected _emit(): void {
         this.updatePixelRange();
         this._subject.next({
             isActive: this.isActive,
@@ -165,7 +165,7 @@ export class TimelineSelectionService {
         return e.clientX - this._$background.getBoundingClientRect().left;
     }
 
-    public handleBackgroundMouseDown(e: MouseEvent) {
+    public handleBackgroundMouseDown(e: MouseEvent): void {
         this._activate();
 
         if (this._dragMode === SELECTION_DRAG_MODE.NO_DRAGGING) {
@@ -193,7 +193,7 @@ export class TimelineSelectionService {
         this._emit();
     }
 
-    public handleSelectedRangeMouseDown(e: MouseEvent) {
+    public handleSelectedRangeMouseDown(e: MouseEvent): void {
         e.preventDefault();
         e.stopPropagation();
         this.playback.pause();
@@ -204,7 +204,7 @@ export class TimelineSelectionService {
         }
     }
 
-    public handleLeftEarMouseDown(e: MouseEvent) {
+    public handleLeftEarMouseDown(e: MouseEvent): void {
         e.preventDefault();
         e.stopPropagation();
         this.playback.pause();
@@ -216,7 +216,7 @@ export class TimelineSelectionService {
         }
     }
 
-    public handleRightEarMouseDown(e: MouseEvent) {
+    public handleRightEarMouseDown(e: MouseEvent): void {
         e.preventDefault();
         e.stopPropagation();
         this.playback.pause();
@@ -374,32 +374,32 @@ export class TimelineSelectionService {
         return result;
     }
 
-    public handleMouseLeave(e: MouseEvent) {
+    public handleMouseLeave(e: MouseEvent): void {
         // this.handleMouseUp(e);
     }
 
-    protected _activate() {
+    protected _activate(): void {
         this._isActive = true;
         this.playback.pause();
     }
 
-    protected _sanitizeRange() {
+    protected _sanitizeRange(): void {
         this._selectedRange.fitWithin(this.timeline.archiveRange);
     }
 
-    protected _sanitizeStart() {
+    protected _sanitizeStart(): void {
         this._selectedRange.fitStart(this.timeline.archiveRange);
     }
 
-    protected _sanitizeEnd() {
+    protected _sanitizeEnd(): void {
         this._selectedRange.fitEnd(this.timeline.archiveRange);
     }
 
-    protected _deactivate() {
+    protected _deactivate(): void {
         this._isActive = false;
     }
 
-    public reset() {
+    public reset(): void {
         this._deactivate();
         this._selectedRange = new TimeRange(0, 0);
         this._emit();
@@ -407,7 +407,7 @@ export class TimelineSelectionService {
 
     protected _animationFrameHandle: number;
 
-    public onAnimationFrame() {
+    public onAnimationFrame(): void {
         this._animationFrameHandle = requestAnimationFrame(this.onAnimationFrame);
         let speed, offset;
         const STEP = 0.2;

@@ -29,7 +29,7 @@ export class PlaybackControlsComponent implements OnInit {
 
     public btnClass: BtnClassesEnum = 'play';
 
-    public handleClick() {
+    public handleClick(): void {
         if (!this.enabled) {
             return;
         }
@@ -65,7 +65,7 @@ export class PlaybackControlsComponent implements OnInit {
             });
     }
 
-    public onSubjectChange(s: PlaybackState) {
+    public onSubjectChange(s: PlaybackState): void {
         this.state = { ...s };
 
         switch (this.state.mode) {

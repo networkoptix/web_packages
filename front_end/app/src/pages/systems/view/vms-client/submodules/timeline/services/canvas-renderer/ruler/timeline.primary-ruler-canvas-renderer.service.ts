@@ -82,7 +82,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         });
     }
 
-    protected _withContext(ctx, actualDrawing: () => void) {
+    protected _withContext(ctx, actualDrawing: () => void): void {
         ctx.save();
         actualDrawing();
         ctx.restore();
@@ -164,7 +164,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return result;
     }
 
-    protected _drawSerif(ctx: CanvasRenderingContext2D, s: RulerSerif) {
+    protected _drawSerif(ctx: CanvasRenderingContext2D, s: RulerSerif): void {
         if (s.weight > MAX_WEIGHT || s.weight < MIN_WEIGHT) {
             return;
         }

@@ -62,7 +62,7 @@ export class Camera implements ICamera {
         }
     }
 
-    public parseAdditionalParams(ps: Array<NameValue>) {
+    public parseAdditionalParams(ps: Array<NameValue>): void {
         const ms = ps.find(p => p.name === 'mediaStreams');
         if (ms) {
             try {
@@ -221,17 +221,17 @@ export class Camera implements ICamera {
         return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
     }
 
-    public setRecords(range: ISimpleTimeRange, archive: CameraArchive) {
+    public setRecords(range: ISimpleTimeRange, archive: CameraArchive): void {
         this._archiveRange = range;
         this._archive = archive;
         this._initBirdView();
     }
 
-    protected _initBirdView() {
+    protected _initBirdView(): void {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
     }
 
-    public pushRecordedChunks(rs: CameraArchive) {
+    public pushRecordedChunks(rs: CameraArchive): void {
         // console.log('SNR', rs, this)
         this._birdViewTree.setNewlyRecorded(rs);
         // this._archiveRange.end = rs[rs.length - 1].end;

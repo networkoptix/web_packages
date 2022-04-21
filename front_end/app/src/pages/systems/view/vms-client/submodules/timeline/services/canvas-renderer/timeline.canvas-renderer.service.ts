@@ -25,7 +25,7 @@ export class TimelineCanvasRendererService {
         this.CONFIG = configService.getConfig();
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D): void {
         ctx.clearRect(0, 0, this.timeline.canvasGeometry.width, this.timeline.canvasGeometry.height);
         this.rulerRenderer.render(ctx);
         this.recordsRenderer.render(ctx);

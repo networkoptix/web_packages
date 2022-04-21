@@ -14,18 +14,18 @@ export class TimeRange {
         return this.end - this.start;
     }
 
-    public shift(offset: ms) {
+    public shift(offset: ms): void {
         this.start += offset;
         this.end += offset;
     }
 
-    public moveStartTo(s: ms) {
+    public moveStartTo(s: ms): void {
         const duration = this.duration;
         this.start = s;
         this.end = s + duration;
     }
 
-    public zoom(durationDelta: ms, offset: float = 0.5, limitingRange: TimeRange) {
+    public zoom(durationDelta: ms, offset: float = 0.5, limitingRange: TimeRange): void {
         this.start += Math.round(durationDelta * offset);
         this.end -= Math.round(durationDelta * (1.0 - offset));
         if (this.start < limitingRange.start) {

@@ -62,7 +62,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.CONFIG = configService.getConfig();
     }
 
-    private handleErrors(changes) {
+    private handleErrors(changes): void {
         const { email } = this.emailForm?.controls;
         if (!email) {
             return;
@@ -100,11 +100,11 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnDestroy(): void {}
 
-    setupNonCloudSystem() {
+    setupNonCloudSystem(): void {
         // TODO: waiting for new setup wizard
     }
 
-    setupText() {
+    setupText(): void {
         const auth = this.LANG.authorize;
         const connect = {
             header: auth.connectHeader(),
@@ -127,7 +127,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         };
     }
 
-    setText() {
+    setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
     }

@@ -67,7 +67,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public readonly archiveSelectionEnabled: boolean = false;
 
-    protected _onTimelineStatusChange(s: TimelineServiceStatus) {
+    protected _onTimelineStatusChange(s: TimelineServiceStatus): void {
         if (s.canvasGeometryUpdateRequested) {
             this.updateCanvas.next();
         }

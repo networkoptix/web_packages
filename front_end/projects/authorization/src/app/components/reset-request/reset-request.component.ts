@@ -71,7 +71,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
         }
     }
 
-    goBack() {
+    goBack(): void {
         if (this.confirm) {
             this.confirm = false;
         } else {

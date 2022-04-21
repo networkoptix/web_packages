@@ -24,14 +24,14 @@ export class TimelineRecordsCanvasRendererService {
         return cfg;
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         this._drawBackground(ctx);
         this._drawRecords(ctx);
         ctx.restore();
     }
 
-    protected _drawBackground(ctx: CanvasRenderingContext2D) {
+    protected _drawBackground(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = this.cfg.BACKGROUND_FILL_STYLE;
         ctx.fillRect(
             0,
@@ -45,7 +45,7 @@ export class TimelineRecordsCanvasRendererService {
         );
     }
 
-    protected _drawRecords(ctx: CanvasRenderingContext2D) {
+    protected _drawRecords(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = this.cfg.RECORD_FILL_STYLE;
 
         if (this.vms.selectedCamera) {
@@ -70,7 +70,7 @@ export class TimelineRecordsCanvasRendererService {
         }
     }
 
-    protected _drawRecord(ctx, r, startMs, pxPerMs) {
+    protected _drawRecord(ctx, r, startMs, pxPerMs): void {
         const x0 = Math.round((r.start - startMs) * pxPerMs);
         let x1 = Math.round((r.end - startMs) * pxPerMs);
         if (x1 - x0 < this.cfg.MIN_RECORD_WIDTH_PX) {
@@ -83,7 +83,7 @@ export class TimelineRecordsCanvasRendererService {
         ctx.fillRect(x0, y, w, h);
     }
 
-    protected _drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs) {
+    protected _drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs): void {
         const dpr = this.timeline.canvasGeometry.dpr;
         const x = Math.round(
             (lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs

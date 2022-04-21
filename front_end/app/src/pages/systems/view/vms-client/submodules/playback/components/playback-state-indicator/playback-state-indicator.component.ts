@@ -44,11 +44,11 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    public onSubjectChange(s: PlaybackState) {
+    public onSubjectChange(s: PlaybackState): void {
         this.state = s;
     }
 
-    public handleLiveClick() {
+    public handleLiveClick(): void {
         if (this.playback.canPlayLive && this.enabled) {
             this.playback.playLive();
         }

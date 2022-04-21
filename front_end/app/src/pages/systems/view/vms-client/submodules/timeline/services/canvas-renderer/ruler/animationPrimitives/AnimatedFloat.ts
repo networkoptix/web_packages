@@ -47,7 +47,7 @@ export class AnimatedFloat implements IAnimated<float> {
         return this._easing;
     }
 
-    public set(v: float) {
+    public set(v: float): void {
         // if (v > 4 || v < 0) console.log('SET', v)
         this._value = this._getCurrentValue();
         this._target = v;
@@ -70,25 +70,25 @@ export class AnimatedFloat implements IAnimated<float> {
         return result;
     }
 
-    public reset(v: float) {
+    public reset(v: float): void {
         // if (v > 4 || v < 0) console.log('RESET', v)
         this._value = v;
         this._target = v;
         this._lastChange = Date.now();
     }
 
-    public abort() {
+    public abort(): void {
         this._value = this._getCurrentValue();
         this._target = this._getCurrentValue();
         this._lastChange = Date.now();
     }
 
-    public force() {
+    public force(): void {
         this._value = this._target;
         this._lastChange = Date.now();
     }
 
-    public forceShift(dt: durationMs) {
+    public forceShift(dt: durationMs): void {
         this._value += dt;
         this._target += dt;
     }

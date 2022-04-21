@@ -30,7 +30,7 @@ export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    public onSubjectChange(s: PlaybackState) {
+    public onSubjectChange(s: PlaybackState): void {
         this.state = s;
     }
 
@@ -50,18 +50,18 @@ export class PlaybackAdvControlsComponent implements OnInit, OnDestroy {
         return this.playback.canUnpause;
     }
 
-    public playLive() {
+    public playLive(): void {
         if (!this.canPlayLive) return;
         this.selection.reset();
         this.playback.playLive();
     }
 
-    public stop() {
+    public stop(): void {
         if (!this.canStop) return;
         this.playback.stop();
     }
 
-    public togglePause() {
+    public togglePause(): void {
         if (this.canPause) {
             this.selection.reset();
             this.playback.pause();

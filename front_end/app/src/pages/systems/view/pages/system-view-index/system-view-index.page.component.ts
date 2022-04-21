@@ -77,7 +77,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     // public animated: boolean = false
 
-    public handleSidebarTogglingEarClick() {
+    public handleSidebarTogglingEarClick(): void {
         this.ux.isSidebarShown = !this.ux.state.isSidebarShown;
     }
 
@@ -94,7 +94,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostListener('mousemove', ['$event'])
     @HostListener('touch', ['$event'])
     @HostListener('touchmove', ['$event'])
-    onEvent(event: Event) {
+    onEvent(event: Event): void {
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);
@@ -107,7 +107,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     protected _windowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
-    public onResize(event) {
+    public onResize(event): void {
         const widthThreshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
         const newWidth = event.target.innerWidth;
         if (newWidth <= widthThreshold && this._windowWidth > widthThreshold) {
@@ -119,11 +119,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this._windowWidth = newWidth;
     }
 
-    protected _handleMovingFromWideInterfaceToNarrow() {
+    protected _handleMovingFromWideInterfaceToNarrow(): void {
         this.ux.isSidebarShown = false;
     }
 
-    protected _handleMovingFromNarrowInterfaceToWide() {
+    protected _handleMovingFromNarrowInterfaceToWide(): void {
         this.ux.isSidebarShown = true;
     }
 
@@ -154,7 +154,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.showElementsInFSM = true;
     }
 
-    private setSystemSubscription() {
+    private setSystemSubscription(): void {
         this.systemsSubscription?.unsubscribe();
         this.systemsSubscription = this.systemsService.systemsSubject
             .pipe(
@@ -204,7 +204,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     }
 
-    protected _onUxStateChange(s: WebClientUxState) {
+    protected _onUxStateChange(s: WebClientUxState): void {
         if (s.isSidebarShown) {
             this.$self.classList.add('sidebarShown');
         } else {
@@ -233,11 +233,11 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected _onVmsSubjectChange(s: VmsState) {
+    protected _onVmsSubjectChange(s: VmsState): void {
         this._state = s;
     }
 
-    protected _setInitializationState(initialized, initializedWithError) {
+    protected _setInitializationState(initialized, initializedWithError): void {
         // this._log('_setInitializationState', initialized, initializedWithError)
         this.initialized = initialized;
         this.$self.classList[initialized ? 'add' : 'remove']('initialized');
@@ -247,7 +247,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         ]('initialization-error');
     }
 
-    protected _onRouteChange(params) {
+    protected _onRouteChange(params): void {
         // cancel pool for the previous system
         this.cancelPoll$.next('cancel');
         this.systemId = params.systemId || null;
@@ -523,7 +523,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    protected _tryToRedirectToCamera() {
+    protected _tryToRedirectToCamera(): void {
         const cid = this.vms.getLastAccessedCameraId();
         if (cid) {
             this.router.navigate([cid], {

@@ -146,13 +146,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public cameraDetailsShown: boolean = false;
 
-    public toggleCameraDetails(newValue:boolean = !this.cameraDetailsShown) {
+    public toggleCameraDetails(newValue:boolean = !this.cameraDetailsShown): void {
         this.cameraDetailsShown = newValue;
     }
 
     public readonly archiveSelectionEnabled: boolean;
 
-    protected onPlaybackChange(s: PlaybackState) {
+    protected onPlaybackChange(s: PlaybackState): void {
         let time = '';
         switch (s.mode) {
             case PLAYBACK_MODE.LIVE:
@@ -190,7 +190,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     };
 
-    public handleControlsTogglingEarClick() {
+    public handleControlsTogglingEarClick(): void {
         this.ux.isTimelineShown = !this.ux.state.isTimelineShown;
     }
 
@@ -401,7 +401,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     public getRecordsInProgress: string; // cameraId
 
-    protected _updateAvailableTransportsAndResolutions() {
+    protected _updateAvailableTransportsAndResolutions(): void {
         this.availableTransportsAndResolutions =
             this.camera ? this.camera.availableTransportsAndResolutions : {};
     }
@@ -440,7 +440,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    protected _getRecords() {
+    protected _getRecords(): void {
         this._log('_getRecords', this.id);
 
         const now = Date.now();
@@ -619,7 +619,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
-    protected _onUxStateChange(s: WebClientUxState) {
+    protected _onUxStateChange(s: WebClientUxState): void {
         this._log('UX state change');
         if (s.isTimelineShown) {
             this.$self.classList.add('controls-shown');
@@ -636,7 +636,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    protected _onRouteChange(params) {
+    protected _onRouteChange(params): void {
         this._log('ROUTE CHANGE: NEW CAMERA', this.id, '->', params.cameraId);
         this.id = params.cameraId;
         this.playback.save();
@@ -654,7 +654,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    protected _onVmsStateChange(s: VmsState) {
+    protected _onVmsStateChange(s: VmsState): void {
         this._log('VMS state change', { ...s });
         switch (s.mode) {
             case VMS_MODE.NOT_INITIALIZED:
@@ -712,7 +712,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             );
     }
 
-    protected _initSelectedCamera() {
+    protected _initSelectedCamera(): void {
         this._log('_initSelectedCamera');
         this.resetTransport();
         this.resetQuality();
@@ -766,7 +766,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public toggleFullScreen($event?) {
+    public toggleFullScreen($event?): void {
         this._log('toggleFullScreen');
         $event?.stopPropagation();
 
@@ -784,28 +784,28 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         // isFullScreen is updated by onFullScreenChange on document events
     }
 
-    public stopSettingsClickPropagation($event) {
+    public stopSettingsClickPropagation($event): void {
         $event?.stopPropagation();
     }
 
-    public toggleSettings($event?) {
+    public toggleSettings($event?): void {
         $event?.stopPropagation();
         this.settingsShown = !this.settingsShown;
     }
 
-    public hideSettings() {
+    public hideSettings(): void {
         this.settingsShown = false;
     }
 
-    public showSettings() {
+    public showSettings(): void {
         this.settingsShown = true;
     }
 
-    public resetQuality() {
+    public resetQuality(): void {
         this.selectedQuality = this.cameraQualityStorage.get(this.id) || '';
     }
 
-    public resetTransport() {
+    public resetTransport(): void {
         let transport;
 
         if (this.isChrome && this.isMobile) {
@@ -830,19 +830,19 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedTransport = transport;
     }
 
-    public onVideoDblClick(_: boolean) {
+    public onVideoDblClick(_: boolean): void {
         this.toggleFullScreen();
     }
 
     @HostListener('document:click', ['$event'])
-    public clickOutside($event) {
+    public clickOutside($event): void {
         this.hideSettings();
     }
 
     @HostListener('mousemove', ['$event'])
     @HostListener('touch', ['$event'])
     @HostListener('touchmove', ['$event'])
-    onEvent(event: Event) {
+    onEvent(event: Event): void {
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);

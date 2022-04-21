@@ -227,7 +227,7 @@ export class BirdViewTree {
     protected _treeRoot: BirdViewTreeNode;
     protected _newlyRecorded: CameraArchive = [];
 
-    protected _initTree() {
+    protected _initTree(): void {
         this._treeRoot = new BirdViewTreeNode(
             this._originalArchiveRange.start,
             this._originalArchiveRange.end,
@@ -286,11 +286,11 @@ export class BirdViewTree {
         return treeRecords;
     }
 
-    public setNewlyRecorded(ar) {
+    public setNewlyRecorded(ar): void {
         this._newlyRecorded = [...ar];
     }
 
-    public appendNewlyRecorded(ar) {
+    public appendNewlyRecorded(ar): void {
         this._newlyRecorded.push(...ar);
     }
 

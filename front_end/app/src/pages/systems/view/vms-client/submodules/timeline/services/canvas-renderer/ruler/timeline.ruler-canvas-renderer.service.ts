@@ -13,7 +13,7 @@ export class TimelineRulerCanvasRendererService {
     ) {
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D): void {
         this.topRenderer.reset();
         this.primaryRenderer.render(ctx, this.topRenderer.getInterval());
         this.topRenderer.render(ctx);

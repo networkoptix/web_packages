@@ -27,11 +27,11 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
 
     public previewLoaded = {};
 
-    public handlePreviewLoaded(cid) {
+    public handlePreviewLoaded(cid): void {
         this.previewLoaded[cid] = true;
     }
 
-    public handlePreviewError(cid) {
+    public handlePreviewError(cid): void {
         this.previewLoaded[cid] = -1;
     }
 
@@ -115,14 +115,14 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         }
     }
 
-    public changeServerVisibility(serverId: string) {
+    public changeServerVisibility(serverId: string): void {
         this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
         const systemId = this.vms.systemId;
         const key = `nx_system_${systemId}_server_${serverId}_expansion_status`;
         this.localStorage.store(key, JSON.stringify(this.isServerExpanded[serverId]));
     }
 
-    public updateShowIP(newValue: boolean) {
+    public updateShowIP(newValue: boolean): void {
         this.showIP = newValue;
     }
 

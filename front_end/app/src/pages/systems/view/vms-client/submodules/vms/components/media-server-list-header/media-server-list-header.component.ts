@@ -21,11 +21,11 @@ export class NxMediaServerListHeaderComponent implements OnInit {
     public ipVisibilityState: boolean = false;
     public token: string = '';
 
-    onFilterTokenChange(token: string) {
+    onFilterTokenChange(token: string): void {
         this.filterTokenChange.emit(this.token);
     }
 
-    onIpVisibilityStateChange(newValue: boolean) {
+    onIpVisibilityStateChange(newValue: boolean): void {
         this.ipVisibilityState = newValue;
         this.ipVisibilityStateChange.emit(this.ipVisibilityState);
         this.cookieService.set(COOKIE_NAME, newValue ? '1' : '0', 365, '/');
@@ -36,7 +36,7 @@ export class NxMediaServerListHeaderComponent implements OnInit {
         this.ipVisibilityStateChange.emit(this.ipVisibilityState);
     }
 
-    public resetSearch() {
+    public resetSearch(): void {
         this.token = '';
         this.filterTokenChange.emit(this.token);
     }

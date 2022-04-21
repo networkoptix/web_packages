@@ -61,7 +61,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    public onSubjectChange(s: TimelineTimeUnderMouseServiceStatus) {
+    public onSubjectChange(s: TimelineTimeUnderMouseServiceStatus): void {
         if (s.isMouseInside) {
             this.self.nativeElement.style.opacity = 1.0;
             let offset = s.offsetX;

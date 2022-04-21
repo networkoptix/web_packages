@@ -20,7 +20,7 @@ export class TimelineTimeUnderMouseService {
 
     protected _subject = new Subject<TimelineTimeUnderMouseServiceStatus>();
 
-    protected _emit() {
+    protected _emit(): void {
         this._subject.next({
             isMouseInside: this._isMouseInside,
             timeUnderMouse: this._timeUnderMouse,
@@ -54,39 +54,39 @@ export class TimelineTimeUnderMouseService {
     ) {
     }
 
-    public handleMouseDown() {
+    public handleMouseDown(): void {
         if (!this._pressed) {
             this._pressed = true;
             this._emit();
         }
     }
 
-    public handleMouseUp() {
+    public handleMouseUp(): void {
         if (this._pressed) {
             this._pressed = false;
             this._emit();
         }
     }
 
-    public handleMouseMove(e: MouseEvent | TouchEvent) {
+    public handleMouseMove(e: MouseEvent | TouchEvent): void {
         this._offsetX = calcOffsetX(e);
         this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
         this._emit();
     }
 
-    public handleMouseEnter(e: MouseEvent) {
+    public handleMouseEnter(e: MouseEvent): void {
         this._isMouseInside = true;
         this.handleMouseMove(e);
     }
 
-    public handleMouseLeave(e: MouseEvent) {
+    public handleMouseLeave(e: MouseEvent): void {
         this._isMouseInside = false;
         this._timeUnderMouse = -1;
         this._offsetX = -1;
         this._emit();
     }
 
-    public updateTime() {
+    public updateTime(): void {
         if (!this._isMouseInside) {
             return;
         }

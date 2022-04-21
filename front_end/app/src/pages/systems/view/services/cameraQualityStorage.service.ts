@@ -25,7 +25,7 @@ export class CameraQualityStorageService {
         ) || '';
     }
 
-    public set(cameraId: string, quality: PlaybackQuality) {
+    public set(cameraId: string, quality: PlaybackQuality): void {
         this.localStorageService.store(
             `${this.user}_quality_${cameraId}`,
             quality

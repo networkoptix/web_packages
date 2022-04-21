@@ -64,16 +64,16 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         cancelAnimationFrame(this._animationFrameRequestHandler);
     }
 
-    public onTimelineSubjectChange(state: TimelineServiceStatus) {
+    public onTimelineSubjectChange(state: TimelineServiceStatus): void {
         this.state = state;
         this._updateEnabledDisabled();
     }
 
-    public onVmsSubjectChange(state: VmsState) {
+    public onVmsSubjectChange(state: VmsState): void {
         this._updateEnabledDisabled();
     }
 
-    protected _updateEnabledDisabled() {
+    protected _updateEnabledDisabled(): void {
         const vmsState = this.vms.subject.getValue();
         this.disabled = vmsState.mode !== VMS_MODE.CAMERA_SELECTED;
         this.canZoomIn = (!this.disabled && this.state?.zoom?.canZoomIn) || false;
@@ -83,7 +83,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     protected _zoomingSign: signType = 0;
     protected _zoomingStartedTimestamp: ms;
 
-    public startZooming($event: MouseEvent, sign: signType) {
+    public startZooming($event: MouseEvent, sign: signType): void {
         if ($event.button !== 0) {
             return;
         }
@@ -91,7 +91,7 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this._zoomingStartedTimestamp = Date.now();
     }
 
-    public stopZooming() {
+    public stopZooming(): void {
         const sinceZoomingStarted = Date.now() - this._zoomingStartedTimestamp;
         const fastClickEdge: ms = 200;
         if (sinceZoomingStarted < fastClickEdge) {
@@ -101,17 +101,17 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('document:mouseup')
-    public onMouseUp() {
+    public onMouseUp(): void {
         this.stopZooming();
     }
 
-    public performZoomingStep() {
+    public performZoomingStep(): void {
         if (this._zoomingSign) {
             this.wheelZoom(this._zoomingSign);
         }
     }
 
-    public wheelZoom(delta: int, offset: float = 0.5) {
+    public wheelZoom(delta: int, offset: float = 0.5): void {
         const duration = this.timeline.visibleRange.duration;
         const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr;
         const step = 0.01;
@@ -125,11 +125,11 @@ export class ZoomControlsComponent implements OnInit, OnDestroy {
         this.timeline.zoom(durationDelta, offset);
     }
 
-    public fullZoomOut() {
+    public fullZoomOut(): void {
         this.timeline.fullZoomOut();
     }
 
-    public strongZoomIn() {
+    public strongZoomIn(): void {
         this.wheelZoom(80);
     }
 }

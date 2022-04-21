@@ -120,7 +120,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     backupCodeErrorCode: string;
 
     @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent) {
+    handleKeyboardEvent(event: KeyboardEvent): void {
         if (['Enter', 'NumpadEnter'].includes(event.code)) {
             this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
         }
@@ -158,7 +158,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     // method only used by child components to transition between child components
-    setCurrentState(state: string) {
+    setCurrentState(state: string): void {
         // when user uses link to go directly to create-account and presses back, sets them into normal login clientTypes
         if (state === 'email' && this.clientType === ClientType.create) {
             this.clientType = environment.isLocal ? ClientType.loginWebadmin : ClientType.loginCloud;
@@ -250,7 +250,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         });
     }
 
-    handleCloudConnectionError(err: any, process: Process) {
+    handleCloudConnectionError(err: any, process: Process): void {
         if (err && (
             [500, 503, 504].includes(err.status) ||
             err.message?.includes('timeout') ||
@@ -315,7 +315,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     };
 
-    handleVerificationExpiration(process) {
+    handleVerificationExpiration(process): void {
         if (this.loginEmail && this.loginPassword) {
             this.login().then(
                 ({ code, link }) => {

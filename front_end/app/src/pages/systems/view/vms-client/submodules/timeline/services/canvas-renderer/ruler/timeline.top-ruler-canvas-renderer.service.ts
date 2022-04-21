@@ -30,7 +30,7 @@ export class TimelineTopRulerCanvasRendererService {
     ) {
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    public render(ctx: CanvasRenderingContext2D): void {
         const interval = this.getInterval();
         const serifTimes = this.getSerifTimes();
         // console.log('TOP SERIFS', serifTimes, serifTimes.map(st => new Date(st)))
@@ -55,7 +55,7 @@ export class TimelineTopRulerCanvasRendererService {
         });
     }
 
-    public reset() {
+    public reset(): void {
         this._serifTimes = undefined;
         this._interval = undefined;
     }
@@ -98,7 +98,7 @@ export class TimelineTopRulerCanvasRendererService {
             : [];
     }
 
-    protected _withContext(ctx, actualDrawing: () => void) {
+    protected _withContext(ctx, actualDrawing: () => void): void {
         ctx.save();
         actualDrawing();
         ctx.restore();

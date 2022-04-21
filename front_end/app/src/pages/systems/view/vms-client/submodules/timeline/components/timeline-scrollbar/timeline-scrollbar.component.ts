@@ -116,7 +116,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public honestBarLeftPx: px = 0;
     public honestBarWidthPx: px = 0;
 
-    public onScrollBarSubjectChange(s: TimelineScrollbarAbsoluteServiceStatus) {
+    public onScrollBarSubjectChange(s: TimelineScrollbarAbsoluteServiceStatus): void {
         this.barLeftPx = s.left;
         this.barWidthPx = s.width;
 
@@ -138,7 +138,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public selectionLeftPixel: px = -1;
     public selectionWidthPixel: px = 0;
 
-    public onPlaybackSubjectChange(s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState): void {
         if (s.mode === PLAYBACK_MODE.STOPPED) {
             this.isPlaying = false;
         } else {
@@ -175,7 +175,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onSelectionSubjectChange(s: TimelineSelectionServiceStatus) {
+    public onSelectionSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.isSelected = s.isActive;
         if (s.isActive) {
             const bgw = this.backgroundView.nativeElement
@@ -192,16 +192,16 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public barDblClickHandler(e: MouseEvent | TouchEvent) {
+    public barDblClickHandler(e: MouseEvent | TouchEvent): void {
         this.scrollbarRelative.handleBarDblClick(e);
     }
 
-    public barMouseDownHandler(e: MouseEvent | TouchEvent) {
+    public barMouseDownHandler(e: MouseEvent | TouchEvent): void {
         this.scrollbarAbsolute.handleBarMouseDown(e);
     }
 
     @HostListener('document:touchstart', ['$event'])
-    public touchStartHandler(e: any) {
+    public touchStartHandler(e: any): void {
         if (!this.useTouch) {
             return;
         }
@@ -232,7 +232,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:touchend', ['$event'])
-    public touchEndHandler(e: TouchEvent) {
+    public touchEndHandler(e: TouchEvent): void {
         if (!this.useTouch) {
             return;
         }
@@ -243,7 +243,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:touchmove', ['$event'])
-    public barTouchMoveHandler(e: MouseEvent) {
+    public barTouchMoveHandler(e: MouseEvent): void {
         if (!this.useTouch) {
             return;
         }
@@ -260,7 +260,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:mouseup', ['$event'])
-    public mouseUpHandler(e: MouseEvent) {
+    public mouseUpHandler(e: MouseEvent): void {
         if (this.useTouch) {
             return;
         }
@@ -269,32 +269,32 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:mousemove', ['$event'])
-    public barDragMouseMoveHandler(e: MouseEvent) {
+    public barDragMouseMoveHandler(e: MouseEvent): void {
         if (this.useTouch) {
             return;
         }
         this.scrollbarAbsolute.handleBarDragMouseMove(e);
     }
 
-    public backgroundMouseDownHandler(e: MouseEvent) {
+    public backgroundMouseDownHandler(e: MouseEvent): void {
         this.scrollbarRelative.handleBackgroundMouseDown(e);
     }
 
-    public backgroundDblClickHandler(e: MouseEvent) {
+    public backgroundDblClickHandler(e: MouseEvent): void {
         this.scrollbarRelative.handleBackgroundDblClick(e);
     }
 
-    public buttonLeftMouseDownHandler() {
+    public buttonLeftMouseDownHandler(): void {
         this.scrollbarRelative.handleButtonLeftMouseDown();
     }
 
-    public buttonRightMouseDownHandler() {
+    public buttonRightMouseDownHandler(): void {
         this.scrollbarRelative.handleButtonRightMouseDown();
     }
 
     protected _prevMouseUpTime: number;
     protected _doubleClickDelay: number = 300; // ms
-    public buttonLeftHandleMouseUp() {
+    public buttonLeftHandleMouseUp(): void {
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.buttonLeftDblClickHandler();
@@ -302,7 +302,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public buttonRightHandleMouseUp() {
+    public buttonRightHandleMouseUp(): void {
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.buttonRightDblClickHandler();
@@ -318,11 +318,11 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public buttonLeftDblClickHandler() {
+    public buttonLeftDblClickHandler(): void {
         this.scrollbarRelative.handleButtonLeftDblClick();
     }
 
-    public buttonRightDblClickHandler() {
+    public buttonRightDblClickHandler(): void {
         this.scrollbarRelative.handleButtonRightDblClick();
     }
 

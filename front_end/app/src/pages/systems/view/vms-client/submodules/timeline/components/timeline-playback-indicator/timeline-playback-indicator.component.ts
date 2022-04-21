@@ -60,7 +60,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
     }
 
     @HostListener('click', ['$event'])
-    onClick(e) {
+    onClick(e): void {
         if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.timeline.jumpScrollTo(
                 this.playback.state.currentTime -
@@ -151,7 +151,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         return result;
     }
 
-    public onTimelineSubjectChange(s: TimelineServiceStatus) {
+    public onTimelineSubjectChange(s: TimelineServiceStatus): void {
         const ps = this.playback.state;
         if (this.visible && ps.mode === PLAYBACK_MODE.ARCHIVE) {
             this.timeMs = ps.currentTime; // prevents the weired jitter
@@ -180,7 +180,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         }
     }
 
-    public onPlaybackSubjectChange(s: PlaybackState) {
+    public onPlaybackSubjectChange(s: PlaybackState): void {
         // if (s.mode === PLAYBACK_MODE.ARCHIVE && s.started) {
         //     console.log('playback change', s.currentTime - this.timeMs, s.currentTime, new Date(s.currentTime))
         // }

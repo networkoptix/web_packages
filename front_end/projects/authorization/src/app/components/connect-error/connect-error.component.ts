@@ -43,7 +43,7 @@ export class NxAuthorizeConnectErrorComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    setupNonCloudSystem() {
+    setupNonCloudSystem(): void {
         // future TO-DO
     }
 }
