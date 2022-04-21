@@ -379,8 +379,6 @@ export class MergeModalContent {
                 this.updateSession = !ready;
                 if (ready) {
                     process.run();
-                } else {
-                    this.close({});
                 }
             });
     }

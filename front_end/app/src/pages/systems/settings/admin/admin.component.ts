@@ -371,7 +371,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.updateAndGoToSystems();
                     }
                 }
-            });
+            }).catch(_ => _);
 
         if (this.system.userManager.isMine) {
             if (!this.system.cloudStorageCapable) {
