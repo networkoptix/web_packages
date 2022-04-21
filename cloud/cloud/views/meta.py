@@ -190,7 +190,10 @@ def check_redirect(request):
 
     base = _base or _base_url
 
-    doc_id = doc_slug.split('-')[0]
+    try:
+        doc_id = int(doc_slug.split('-')[0])
+    except ValueError:
+        return
 
     if base != 'docs' or not doc_id or not (doc := Asset.objects.filter(id=doc_id).first()):
         return
