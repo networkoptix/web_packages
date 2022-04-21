@@ -783,6 +783,7 @@ export const nxConfig: IConfig = {
     metaDefaults,
     webadminRoutesLookup: [
         [/^developers\/events/g, '/api-tool/api-createevent-post'],
+        [/^developers\/changelog/g, '/api-tool/changelog'],
         [/^developers/g, '/api-tool'],
         [/^advanced/g, '/settings/advanced'],
         [/^settings\/server/g, '/settings/servers'],
