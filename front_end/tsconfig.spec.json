@@ -11,8 +11,7 @@
   },
   "files": [
     "app/test.ts",
-    "app/polyfills.ts",
-    "node_modules/@types/core-js/index.d.ts"
+    "app/polyfills.ts"
   ],
   "include": [
     "app/**/*.spec.ts",

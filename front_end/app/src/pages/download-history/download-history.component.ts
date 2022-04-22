@@ -12,7 +12,6 @@ import {
     Router
 } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import * as isArray from 'core-js/features/array/is-array';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -91,7 +90,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     private getAvailableDownloadTypes(data) {
         this.noteTypes = Object.keys(data || {}).filter(noteType => {
-            return isArray(data[noteType]) && data[noteType].length;
+            return Array.isArray(data[noteType]) && data[noteType].length;
         }).reverse();
     }
 
