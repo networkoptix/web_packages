@@ -123,7 +123,7 @@ Add Software Camera
 
 Create And Add Custom Camera User Type and User
     ${user}=    Register and activate account with random email    mark     hamill    ${BASE PASSWORD}
-    ${role id}=   Save User Role    ${system}[cloud auth]    https://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
+    ${role id}=   Save User Role    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
     #Rest Save User     ${system}[local auth]    h${QA BURBANK IP}:${system}[port]    ${user}    Custom Cameras    ${user}    mark Hamill    ${BASE PASSWORD}
     Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}    ${permissions}[viewer]
     ${id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]

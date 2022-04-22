@@ -1527,3 +1527,21 @@ Skip If Image Is
     FOR    ${item}    IN    @{unsupported images}
         Skip If    '${IMAGE}' == '${item}'    ${msg}
     END
+
+Check Page Text Language
+    ${elements} =   Get WebElements    tag:span
+    ${elements2} =    Get WebElements    tag:a
+    ${elements} =    Combine Lists   ${elements}     ${elements2}
+    FOR    ${element}    IN    @{elements}
+        ${text} =   Get Text    ${element}
+        IF    '${text}' != '${EMPTY}'
+             ${lang} =    Detect Language     ${text}
+             ${lang} =    Convert To String     ${lang}
+             ${en detected} =   Run Keyword And Return Status    Should Contain    ${lang}    lang=en
+             ${autoqa detected} =   Run Keyword And Return Status    Should Not Contain    ${text}    noptixautoqa
+             IF     ${en detected} and ${autoqa detected}
+                Capture Element Screenshot    ${element}
+                Run Keyword And Continue On Failure    Should Not Contain    ${lang}    lang=en
+             END
+        END
+    END
