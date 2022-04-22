@@ -159,8 +159,6 @@ export class CloudAccount extends BaseAccount {
     }
 
     logout(doNotRedirect = false, skipReload = false) {
-        this.account = undefined;
-
         if (this.loggingOut) {
             return;
         }
@@ -170,6 +168,7 @@ export class CloudAccount extends BaseAccount {
             .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
+                    this.account = undefined;
                     this.logoutHelper(doNotRedirect, skipReload);
                 }
             });
