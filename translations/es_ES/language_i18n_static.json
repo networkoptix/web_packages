@@ -801,7 +801,8 @@
         "View": "Vista",
         "Settings": "Ajustes",
         "Information": "Información",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Conectado",

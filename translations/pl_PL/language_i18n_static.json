@@ -801,7 +801,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Połączony",

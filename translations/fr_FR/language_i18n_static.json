@@ -801,7 +801,8 @@
         "View": "Voir",
         "Settings": "Réglages",
         "Information": "Information",
-        "Bookmarks": "Signets"
+        "Bookmarks": "Signets",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connecté",

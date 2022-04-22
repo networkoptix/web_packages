@@ -801,7 +801,8 @@
         "View": "Visa",
         "Settings": "Inställningar",
         "Information": "Information",
-        "Bookmarks": "Bokmärken"
+        "Bookmarks": "Bokmärken",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Ansluten",

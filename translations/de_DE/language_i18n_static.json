@@ -801,7 +801,8 @@
         "View": "Ansicht",
         "Settings": "Einstellungen",
         "Information": "Informationen",
-        "Bookmarks": "Lesezeichen"
+        "Bookmarks": "Lesezeichen",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Verbunden",

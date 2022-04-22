@@ -801,7 +801,8 @@
         "View": "Visualizar",
         "Settings": "Confirgurações",
         "Information": "Informações",
-        "Bookmarks": "Marcadores"
+        "Bookmarks": "Marcadores",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Conectado",

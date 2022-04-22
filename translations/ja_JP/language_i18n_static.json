@@ -801,7 +801,8 @@
         "View": "映像",
         "Settings": "設定",
         "Information": "情報",
-        "Bookmarks": "ブックマーク"
+        "Bookmarks": "ブックマーク",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "接続済み",

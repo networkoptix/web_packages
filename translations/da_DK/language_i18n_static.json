@@ -7,7 +7,7 @@
     "Privacy": "Privacy",
     "Support": "Support",
     "Terms": "Terms",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Udvikler Konsol",
     "accessRoles": {
         "Administrator": {
             "description": "Unrestricted access including the ability to share",
@@ -801,7 +801,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connected",
