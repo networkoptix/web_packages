@@ -213,6 +213,19 @@ export class NxMenusService {
         return (!environment.isLocal && systemId) ? url + segment : segment;
     }
 
+    makeSystemMenuNode() {
+        // TODO: move to cms
+        const systemNode = new MenuNode('systems', '/systems');
+        systemNode.nodes.push(new MenuNode('My Systems', '/systems'));
+        return systemNode;
+    }
+
+    makeWelcomeNode() {
+        const welcomeNode = new MenuNode('Welcome', '');
+        welcomeNode.nodes.push(new MenuNode('Welcome To Nx', ''));
+        return welcomeNode;
+    }
+
     updateActiveSystemMenu(activeSystem, isLocalAdmin?): void {
         if (!activeSystem) {
             return;

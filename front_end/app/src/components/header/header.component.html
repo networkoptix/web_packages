@@ -28,7 +28,7 @@
     <ul class="nav navbar-nav navbar-right auth-hidden mr-3">
         <li *ngIf="!environment.isLocal">
             <span>
-                <a class="btn" [href]="createUrl | unsafe"
+                <a class="btn" [href]="headerService.createUrl | unsafe"
                     [ngClass]="[
                         showSmall?'small-button' : '',
                         true?'btn-' + (headerService.createAccountButtonType$ | async) : ''
@@ -38,7 +38,7 @@
                 </a>
             </span>
             <span>
-                <a class="btn btn-default" [href]="authorizeUrl | unsafe" [ngClass]="showSmall ? 'small-button': 'login-button'">
+                <a class="btn btn-default" [href]="headerService.authorizeUrl | unsafe" [ngClass]="showSmall ? 'small-button': 'login-button'">
                     <span *ngIf="showSmall" class="glyphicon glyphicon-login"></span>
                     <span *ngIf="!showSmall" class="btn-caption" translate>Log In</span>
                 </a>

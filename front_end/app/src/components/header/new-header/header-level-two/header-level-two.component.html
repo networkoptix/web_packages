@@ -1,16 +1,33 @@
 <div class="menu-level-two">
     <div class="logo-area">
-        <div class="logo"><svg-icon class="logo-svg" [src]="CONFIG.images.dirHeader + 'logo.svg'"></svg-icon></div>
+        <div class="logo" [ngSwitch]="logoState">
+            <div *ngSwitchCase="'systems'" class="system-list">
+                <svg-icon nx-add-svg-src [svgStyle]="{'width.px': '24'}" [src]="CONFIG.icons.dir + 'system.svg'"></svg-icon>
+                Systems List
+            </div>
+            <div *ngSwitchCase="'system'" class="current-system-display">
+                <div class="arrow-btn" (click)="headerService.handleNav({ url: '/systems', new_window: false }, $event); onSystemListNav()">
+                    <svg-icon nx-add-svg-src [svgStyle]="{'width.px': '24'}" [src]="CONFIG.icons.dir + 'arrow_back.svg'"></svg-icon>
+                </div>
+                <span class="system-name" (click)="setMenuToCurrentSystem(headerService.activeSystem)">
+                    {{ headerService.activeSystem.name }}
+                </span>
+            </div>
+            <svg-icon *ngSwitchCase="'logo'"
+                      nx-add-svg-src
+                      [src]="CONFIG.images.dirHeader + 'logo.svg'">
+            </svg-icon>
+        </div>
     </div>
     <div class="menu-items">
         <div *ngFor="let node of subNodes" class="outer-menu-item">
             <div class="inner-menu-item"
-                 (click)="node.url ? headerService.handleNav(node, $event) : null"
-                 [ngClass]="{ 'active': headerService.currentLocation?.path === node.url }">
+                 (click)="node.url !== undefined ? headerService.handleNav(node, $event) : null"
+                 [ngClass]="{ 'active': headerService.currentLocation?.path === node.url || (headerService.currentLocation?.path === undefined && node.url === '')}">
                  {{ node.display_name }}
                  <svg-icon *ngIf="node.new_window" [src]="CONFIG.images.dirHeader + 'external_link.svg'"></svg-icon>
             </div>
         </div>
     </div>
-    <button translate class="create-account btn btn-primary">Create Account</button>
+    <a class="create-account btn btn-primary auth-hidden" translate [href]="headerService.createUrl | unsafe" >Create Account</a>
 </div>

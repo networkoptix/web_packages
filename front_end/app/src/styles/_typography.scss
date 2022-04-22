@@ -184,6 +184,10 @@ p {
     @include font-source($font-family-regular, $h5-font-size, $light10);
 }
 
+@mixin regular14light4 {
+    @include font-source($font-family-regular, $h5-font-size, $light4);
+}
+
 @mixin regular14brand {
     @include font-source($font-family-regular, $h5-font-size, var(--brand-core));
 }

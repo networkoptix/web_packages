@@ -112,7 +112,7 @@ html[data-theme="dark"] {
 
     --developer-menu-bg: #171C1F; //$dark5;
     --developer-menu-base-color : #879FAB; //$light13;
-    
+
     // *** arch svg ***********************
     --arch-svg-dash-stroke              : var(--brand-d6);
     --arch-svg-solid-path-arrow-fill    : #E1E7EA; //$light4;
@@ -134,7 +134,7 @@ html[data-theme="dark"] {
     --arch-svg-server-hover-fill        : #212A2F; //$dark7;
     --arch-svg-transparent-tile-stroke  : #587787; //$dark18
     // ***************************************
-    
+
     --left-menu-border-color                    : transparent;
     --left-menu-l1-bg                           : transparent;
     --left-menu-l1-bg-hover                     : #3A4D57; //$dark11;
@@ -155,9 +155,14 @@ html[data-theme="dark"] {
     --left-menu-disabled-item-color             : #3F545F; //$dark13;
     --left-menu-disabled-item-addtitional-color : #445B67; //$dark14;
 
+    // New header ************************
     --header-level-one-active-bg     : #{$dark5};
     --header-level-one-active-color  : #{$light4};
     --header-level-two-bg            : #{$dark6};
+    --header-profile-icon            : #{$light13};
+    --header-profile-bg              : #{$dark7};
+
+
     // View tab ********************************
     --view-bg                    : #171C1F; //$dark5;
     --view-search-bg             : #171C1F; //$dark5;

@@ -6,6 +6,8 @@
     margin-left: 12px;
     height: 40px;
     .menu-item {
+        height: 25px !important;
+        white-space: nowrap;
         @extend .header-button;
         margin: 8px 0px;
         border: none !important;
@@ -18,13 +20,46 @@
     }
 
     .auth-section {
+        white-space: nowrap;
         @extend .header-button;
-        margin: 8px 4px 8px auto;
+        min-height: 24px;
+        margin: 5px 4px 8px auto;
+        .user-section {
+            text-decoration: inherit;
+            color: inherit;
+            .user-svg-wrapper {
+                display: inline-flex;
+                position: relative;
+                bottom: 3px;
+                width: 24px;
+                height: 24px;
+                margin-right: 3px;
+                background: var(--header-profile-bg);
+                border-radius: 50%;
+
+                .user-svg {
+                    margin-left: 2px;
+                    .st0 {
+                        fill:  var(--header-profile-icon) !important;
+                        stroke:  var(--header-profile-icon) !important;
+                    }
+                }
+            }
+            &.logged-in {
+                margin-top: 5px;
+            }
+            .displayed-name {
+                margin-top: 1px;
+            }
+            .dropdown-arrow {
+                position: relative;
+                left: 2px;
+            }
+        }
     }
 }
 
 .header-button {
     @include typography.regular13nocolor;
     color: var(--light13);
-    height: 25px !important;
 }

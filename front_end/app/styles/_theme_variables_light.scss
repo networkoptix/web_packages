@@ -113,7 +113,7 @@
 
     --developer-menu-bg : #{$additional_light2};
     --developer-menu-base-color : #{$dark10};
-    
+
     // *** arch svg ***********************
     --arch-svg-dash-stroke              : #{$brand_l4};
     --arch-svg-solid-path-arrow-fill    : #{$dark1};
@@ -135,7 +135,7 @@
     --arch-svg-server-hover-fill        : #{$light4};
     --arch-svg-transparent-tile-stroke  : #{$light18};
     // ***************************************
-    
+
     --left-menu-border-color                    : transparent;
     --left-menu-l1-bg                           : transparent;
     --left-menu-l1-bg-hover                     : #{$additional_light3};
@@ -156,9 +156,13 @@
     --left-menu-disabled-item-color             : #{$light13};
     --left-menu-disabled-item-addtitional-color : #{$light10};
 
+    // New header ******************************
     --header-level-one-active-bg     : #{$additional_light2};
     --header-level-one-active-color  : #{$dark9};
     --header-level-two-bg            : #{$light5};
+    --header-profile-icon            : #{$light13};
+    --header-profile-bg              : #{$dark7};
+
     // View tab ********************************
     --view-bg                    : #{$additional_light2};
     --view-search-bg             : #{$additional_light2};

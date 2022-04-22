@@ -74,12 +74,10 @@ enum breakpoints {
     styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
-    authorizeUrl = '/authorize';
     CONFIG: IConfig;
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
 
-    createUrl: string;
     userEmail: string;
     canSeeInfo: boolean;
     system: NxSystem;
@@ -148,7 +146,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.LANG = languageService.translations;
         this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
-            this.headerService.nodes = this.menusService.cleanEmptyNodes(header.nodes);
+            const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+            this.headerService.setLocation(this.window.location.pathname);
+            if (this.newHeader) {
+                const firstNode = this.loginState ? this.menusService.makeSystemMenuNode() : this.menusService.makeWelcomeNode();
+                nodes.unshift(firstNode);
+            }
+            this.headerService.nodes = nodes;
+
             this.headerService.setLocation(this.window.location.pathname);
         });
         // Updates windowWidth$ behavior subject on window resize
@@ -257,9 +262,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
 
         if (!environment.production) {
-            this.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}`;
+            this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
         }
-        this.createUrl = `${this.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
+        this.headerService.createUrl = `${this.headerService.authorizeUrl}${environment.production ? '?' : '&'}client_type=create`;
     }
 
     private isActive(val: string) {

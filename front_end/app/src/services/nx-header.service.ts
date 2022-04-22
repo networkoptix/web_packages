@@ -14,7 +14,7 @@ interface MenuNodeNavProps {
     url: string;
     // eslint-disable-next-line camelcase
     new_window: boolean;
-    queryParamsHandling
+    queryParamsHandling?
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -28,6 +28,8 @@ export class NxHeaderService {
     public nodes: MenuNode[] = [];
     public currentLocation$ = new BehaviorSubject<any>({});
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
+    public authorizeUrl = '/authorize';
+    public createUrl: string;
 
     public dynamicRoutes = {};
 

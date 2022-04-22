@@ -1,12 +1,24 @@
 <div class="menu-level-one">
     <ng-container *ngFor="let node of menuNodes">
-        <button (click)="node.url ? headerService.handleNav(node, $event) : null; onNodeSelect(node)"
-                [ngClass]="{ 'active': node === selectedNode}"
+        <button (click)="node.url !== undefined ? headerService.handleNav(node, $event) : null; onNodeSelect(node)"
+                [ngClass]="{ 'active': node?.name === selectedNode?.name }"
                 class="menu-item btn btn-menu">
                 {{ node.display_name }}
         </button>
     </ng-container>
-    <button class="btn auth-section" translate>
-        LOG IN / SIGN IN
+    <button class="btn auth-section">
+        <a  *ngIf="!displayedName" [href]="headerService.authorizeUrl | unsafe" class="user-section" translate>
+            LOG IN / SIGN IN
+        </a>
+        <a  *ngIf="displayedName" class="user-section logged-in">
+            <span class="user-svg-wrapper">
+                <svg-icon nx-add-svg-src class="user-svg" [svgStyle]="{'width.px': '20'}" [src]="CONFIG.icons.dir + 'user.svg'"></svg-icon>
+            </span>
+            <span class="displayed-name">
+                {{ displayedName }}
+            </span>
+            <svg-icon nx-add-svg-src class="dropdown-arrow" [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"></svg-icon>
+        </a>
     </button>
+
 </div>
