@@ -430,7 +430,7 @@
             "removeUser": "Remove user",
             "serversDetach": "Detach server { title } from current system?",
             "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }"
+            "serversRestart": "Genstart server { title }"
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
@@ -1044,8 +1044,8 @@
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
             "systemsRemainder": "and {count} more...",
-            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> as earlier versions of %VMS_NAME% Client do not support two-factor authentication, so you will not be able to enter a verification code for your %CLOUD_NAME% account.",
-            "v5WarningExplanation": "{count, plural, =0{These systems} one{This system} other{These systems}} will be fully accessible as soon as {count, plural, =0{they are} one{it is} other{they are}} upgraded to the 5.0 version.",
+            "v5Warning": "Du har <span id=\"targetV5\">{count, plural, =0{# systemer} one{# system} other{# systemer}}</span> med softwareversion lavere end 5.0. {count, plural, =0{Disse systemer} one{Dette system} other{Disse systemer}} vil være utilgængelig via <strong>%VMS_NAME% Client</strong> , da tidligere versioner af %VMS_NAME% Client ikke understøtter tofaktorautentificering, så du vil ikke være i stand til at indtaste en bekræftelseskode til din %CLOUD_NAME% -konto.",
+            "v5WarningExplanation": "{count, plural, =0{Disse systemer} one{Dette system} other{Disse systemer}} vil være fuldt tilgængelig så snart {count, plural, =0{de er} one{det er} other{de er}} opgraderet til 5.0-versionen.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
         }
     },
