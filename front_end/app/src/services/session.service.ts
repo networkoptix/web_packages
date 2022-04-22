@@ -22,8 +22,9 @@ export class NxSessionService {
         this.session = this.localStorageService;
         this.loginStateSubject.next(this.loginState || '');
         // Listens to changes from other browser tabs.
-        this.session.observe('loginState').subscribe(_ => {
-            if (!this.window.document.hasFocus()) {
+        this.session.observe('loginState').subscribe(loginState => {
+            if (loginState !== null && !this.window.document.hasFocus()) {
+                // Don't reload on null since that state should show a session expired dialog
                 this.window.location.reload();
             }
         });

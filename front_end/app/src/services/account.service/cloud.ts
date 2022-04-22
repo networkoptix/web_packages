@@ -92,14 +92,21 @@ export class CloudAccount extends BaseAccount {
                 this.account = { ...account, isCloud: true };
                 return this.account;
             })
-            .catch(() => {
+            .catch((res) => {
+                const expiredSession = res?.error?.resultCode === 'badUsername';
                 this.account = undefined;
+
+                if (expiredSession) {
+                    // We explicitly check if account is null to determine if session has expired
+                    // We should probably refactor account since it's a little unclear that null and undefined have different behavior
+                    return null;
+                }
+
                 this.router
                     .navigate([this.CONFIG.redirect.unauthorised])
                     .catch(error => {
                         console.error(error);
                     });
-                return undefined;
             });
     }
 
@@ -208,12 +215,15 @@ export class CloudAccount extends BaseAccount {
     requireLogin(): Promise<void | Account> {
         return this.get(true)
             .then(account => {
-                if (!account || !account.is_authenticated) {
+                if (account === null) {
+                    this.logoutHelper(true, true);
+                } else if (!account?.is_authenticated) {
                     this.oauthService.redirectOauth();
                 } else if (account.is_authenticated) {
                     return account;
                 }
-            }).catch(() => {
+            }).catch((err) => {
+                console.error(err);
                 this.router.navigate([this.CONFIG.redirect.unauthorised]);
             });
     }
