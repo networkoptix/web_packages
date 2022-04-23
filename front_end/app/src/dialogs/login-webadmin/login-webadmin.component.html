@@ -1,5 +1,12 @@
+<div *ngIf="loading" id="preloader-container">
+    <nx-pre-loader type="page"></nx-pre-loader>
+</div>
+
 <form #loginForm="ngForm" name="loginForm" novalidate
-      [ngClass]="{'hide-errors': hideErrors}"
+      [ngClass]="{
+            'hide-errors': hideErrors,
+            loading: loading
+        }"
       (submit)="hideErrors = false">
     <div class="logo-header">
         <img [alt]="CONFIG.vmsName + ' logo'"
@@ -35,6 +42,7 @@
                    [ngModel]="auth.email"
                    (ngModelChange)="setEmail($event); resetForm()"
                    maxlength="255"
+                   [disabled]="loading"
                    required nxFocusMe>
         </div>
         <div class="form-group">
@@ -44,7 +52,8 @@
                    [(ngModel)]="password"
                    (ngModelChange)="resetForm()"
                    maxlength="255"
-                   required>
+                   required
+                   [disabled]="loading">
             <div class="input-error" *ngIf="wrongCredentials" translate>Wrong login or password</div>
             <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
         </div>
@@ -55,11 +64,13 @@
             customButtonClass="login-full-width"
             customClass="login-full-width"
             [form]="loginForm"
-            [process]="login">
+            [process]="login"
+            [buttonDisabled]="loading">
         </nx-process-button>
         <ng-container *ngIf="CONFIG.cloudSystemId">
             <div class="separator" translate>or</div>
             <button class="btn btn-default oauth-login"
+                [disabled]="loading"
                (click)="redirectOauthLogin()">
                 <svg-icon nx-add-svg-src
                     [svgStyle]="{ 'width.px': '24', 'height.px': '20', 'pointerEvents': 'none' }"

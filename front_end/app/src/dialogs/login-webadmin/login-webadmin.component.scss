@@ -4,6 +4,23 @@ svg-icon {
     stroke: #2B383F
 }
 
+// Needs to be outside of the modal to hide the white background
+#preloader-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+// The form needs to be in the DOM for the login process to work properly,
+// so we can't use display: none or *ngIf to hide the modal content
+.loading {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
+
 .logo-header {
     background: $additional_light1;
     height: 160px;
