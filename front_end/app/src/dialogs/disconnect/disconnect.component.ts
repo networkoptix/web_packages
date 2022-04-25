@@ -108,7 +108,7 @@ export class DisconnectModalContent {
                 options
             );
         }, (err) => {
-            if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+            if (err?.resultCode === 'userPasswordRequired' || err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                 this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;
                 return this.loginService.updateSession('disconnect')
