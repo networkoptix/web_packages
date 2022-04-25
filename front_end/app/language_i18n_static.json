@@ -658,6 +658,7 @@
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
