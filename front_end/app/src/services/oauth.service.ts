@@ -88,7 +88,7 @@ export class OauthService {
         if (environment.isLocal) {
             params.append(
                 'scope',
-                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`
+                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${this.CONFIG.cloudSystemId || '*'}`
             );
         }
         if (state) {
