@@ -874,8 +874,7 @@
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn"
+        }
     },
     "systemStatuses": {
         "activated": "đã kích hoạt",

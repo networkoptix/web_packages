@@ -874,8 +874,7 @@
             "network": "Nätverk, tillagt via OS",
             "smb": "Nätverk (smb), läggs till via VMS",
             "cloud": "Moln"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> vill överföra ägandet av detta system till dig"
+        }
     },
     "systemStatuses": {
         "activated": "aktiverad",

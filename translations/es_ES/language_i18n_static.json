@@ -874,8 +874,7 @@
             "network": "Red añadida a través del sistema operativo",
             "smb": "Red (smb), añadida a través de VMS",
             "cloud": "Nube"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        }
     },
     "systemStatuses": {
         "activated": "activado",

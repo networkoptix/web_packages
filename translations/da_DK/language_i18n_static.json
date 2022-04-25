@@ -7,7 +7,7 @@
     "Privacy": "Privacy",
     "Support": "Support",
     "Terms": "Terms",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Udvikler Konsol",
     "accessRoles": {
         "Administrator": {
             "description": "Unrestricted access including the ability to share",
@@ -874,8 +874,7 @@
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        }
     },
     "systemStatuses": {
         "activated": "activated",

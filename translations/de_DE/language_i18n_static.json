@@ -874,8 +874,7 @@
             "network": "Netzwerk, hinzugefügt über das Betriebssystem",
             "smb": "Netzwerk (smb), über VMS hinzugefügt",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> möchte den Besitz an diesem System auf Sie übertragen"
+        }
     },
     "systemStatuses": {
         "activated": "aktiviert",

@@ -874,8 +874,7 @@
             "network": "ネットワーク (OS 経由で追加)",
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> がこのシステムの所有権をあなたに譲渡しようとしています"
+        }
     },
     "systemStatuses": {
         "activated": "有効化済み",

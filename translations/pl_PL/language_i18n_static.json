@@ -874,8 +874,7 @@
             "network": "Sieć, dodana przez system operacyjny",
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        }
     },
     "systemStatuses": {
         "activated": "aktywny",

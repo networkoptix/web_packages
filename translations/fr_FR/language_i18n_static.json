@@ -7,7 +7,7 @@
     "Privacy": "Confidentialité",
     "Support": "Support",
     "Terms": "Conditions",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Console développeur",
     "accessRoles": {
         "Administrator": {
             "description": "Accès illimité, y compris la possibilité de partager",
@@ -874,8 +874,7 @@
             "network": "Réseau, ajouté via le système d'exploitation",
             "smb": "Réseau (smb), ajouté via VMS",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> souhaite vous transférer la propriété de ce système"
+        }
     },
     "systemStatuses": {
         "activated": "activé",

@@ -68,13 +68,13 @@
     },
     "account": {
         "account": "Account",
-        "key": "Key",
+        "key": "Sleutel",
         "accountSavedSuccess": "Uw account is succesvol opgeslagen",
         "accountSettings": "Accountinstellingen",
         "activationLinkSent": "Activatielink verzonden",
         "agreementAccepted": "De overeenkomst is geaccepteerd",
         "changePassword": "Wachtwoord wijzigen",
-        "security": "Security",
+        "security": "Beveiliging",
         "newPasswordLabel": "Nieuw wachtwoord",
         "passwordChangedSuccess": "Wachtwoord succesvol opgeslagen",
         "saveChanges": "Opslaan"
@@ -272,8 +272,8 @@
             "createAccount": "Creëer een nieuw account",
             "delete": "Verwijder",
             "deleteAccount": "Account Verwijderen",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Uitschakelen",
+            "enable": "Inschakelen",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Uitloggen",
             "ok": "Oké",
@@ -385,8 +385,8 @@
             "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
         },
         "message": {
-            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
+            "system2faEnabled": "Tweestapsverificatie zal nu afgedwongen worden voor dit systeem.",
+            "system2faDisabled": "Tweestapsverificatie is niet vereist voor dit systeem.",
             "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
             "storageSettingsNotSaved": "Kan opslaginstellingen niet opslaan.",
             "settingsSaved": "Instellingen opgeslagen.",
@@ -874,8 +874,7 @@
             "network": "Netwerk, toegevoegd via OS",
             "smb": "Netwerk (smb), toegevoegd door VMS",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> wil het eigendom van dit systeem aan u overdragen"
+        }
     },
     "systemStatuses": {
         "activated": "geactiveerd",
@@ -965,7 +964,7 @@
     },
     "redirects": {
         "message": "De route \"{url}\" is verplaatst naar \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "defaultMessage": "Update alle links om te verwijzen naar de nieuwe route.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }
