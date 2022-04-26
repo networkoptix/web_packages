@@ -692,7 +692,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
+    credentialsUpdateInProgress: boolean = false;
+
     updateCredentials() {
+        this.credentialsUpdateInProgress = true;
         const update = () => {
             const { cameraCredentialUpdateTimeout } = this.CONFIG;
             this.showUnauthorized = false;
@@ -717,6 +720,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     return of(err);
                 })
             ).toPromise().finally(() => {
+                this.credentialsUpdateInProgress = false;
                 const selectedCamera = this.system.cameraManager.cameras
                     .find(({ id }) => id === this.selectedCamera.id);
                 this.selectedCamera = selectedCamera;
@@ -897,6 +901,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         ) {
             this.showOffline = false;
             this.showUnauthorized = false;
+            this.credentialsUpdateInProgress = false;
             this.alerts = [];
         }
 
@@ -1008,6 +1013,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
         this.showUnauthorized = this.selectedCamera &&
             this.selectedCamera.status === 'Unauthorized';
+
+        // @ts-expect-error
+        if (this.showUnauthorized && this.route.fragment.value === 'authorize') {
+            if (!this.credentialsUpdateInProgress) {
+                this.updateCredentials();
+            }
+        }
+
         this.showOffline = this.selectedCamera &&
             this.selectedCamera.status === 'Offline';
         this.alertsLoaded = true;

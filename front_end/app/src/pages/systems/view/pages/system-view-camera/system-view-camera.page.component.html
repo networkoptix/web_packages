@@ -152,6 +152,9 @@
                             *ngIf="!camera.isOffline && camera.isUnauthorized"
                             svgFileName="placeholder_camera_unauthorized"
                             [heading]="LANG.common.cameraStates.unauthorized()"
+                            [showSettingsLink]="system.userManager.permissions.editCameras"
+                            [camera]="camera"
+                            [system]="system"
                             description=""
                         ></nx-player-placeholder>
                     </ng-template>
