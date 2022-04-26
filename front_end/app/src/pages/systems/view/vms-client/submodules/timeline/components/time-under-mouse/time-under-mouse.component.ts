@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, OnDestroy } from '@angular/core';
-import * as df from 'dateformat';
+import dateFormat from 'dateformat';
 import { Subscription } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -13,8 +13,6 @@ import type {
 import {
     TimelineTimeUnderMouseService,
 } from '../../services/timeline.time-under-mouse.service';
-
-const dateformat = df.default || df;
 
 const MARGIN = 5;
 const ARROW_WIDTH = 10;
@@ -43,10 +41,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         private timeline: TimelineService,
         public timeUnderMouse: TimelineTimeUnderMouseService
     ) {
-        const timeLineTranslations = languageService.loadTimelineTranslations();
-        if (timeLineTranslations) {
-            dateformat.i18n = timeLineTranslations;
-        }
+        languageService.loadTimelineTranslations();
         this.self.nativeElement.style.opacity = 0.0;
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
@@ -81,8 +76,8 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'ddd mmm dd yyyy';
                 const tweakedT = this.vms.tweakT(s.timeUnderMouse);
-                this.time = dateformat(tweakedT, TIME_FORMAT);
-                this.date = dateformat(tweakedT, DATE_FORMAT);
+                this.time = dateFormat(tweakedT, TIME_FORMAT);
+                this.date = dateFormat(tweakedT, DATE_FORMAT);
                 if (s.pressed) {
                     this.self.nativeElement.classList.add('pressed');
                 } else {

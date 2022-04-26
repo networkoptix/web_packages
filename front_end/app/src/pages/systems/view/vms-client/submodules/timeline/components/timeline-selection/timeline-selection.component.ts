@@ -7,7 +7,7 @@ import {
     ViewChild,
     AfterViewInit,
 } from '@angular/core';
-import * as df from 'dateformat';
+import dateFormat from 'dateformat';
 import { Subscription } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
@@ -24,8 +24,6 @@ import type {
 } from '../../services/timeline.services.types';
 import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
 import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
-
-const dateformat = df.default || df;
 
 const DATE_FORMAT_STRING = 'dd mmmm yyyy';
 const TIME_FORMAT_STRING = 'HH:MM:ss';
@@ -66,12 +64,12 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         }
         return {
             left: {
-                date: dateformat(this.selectionStatus.range.start, DATE_FORMAT_STRING),
-                time: dateformat(this.selectionStatus.range.start, TIME_FORMAT_STRING)
+                date: dateFormat(this.selectionStatus.range.start, DATE_FORMAT_STRING),
+                time: dateFormat(this.selectionStatus.range.start, TIME_FORMAT_STRING)
             },
             right: {
-                date: dateformat(this.selectionStatus.range.end, DATE_FORMAT_STRING),
-                time: dateformat(this.selectionStatus.range.end, TIME_FORMAT_STRING)
+                date: dateFormat(this.selectionStatus.range.end, DATE_FORMAT_STRING),
+                time: dateFormat(this.selectionStatus.range.end, TIME_FORMAT_STRING)
             }
         };
     }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as df from 'dateformat';
+import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -24,8 +24,6 @@ import { isAlignedByIrregularInterval } from './intervals/utils/isAlignedByIrreg
 import { getIntervalDiffDict } from './utils/getIntervalDiffDict';
 import { percentageToHex } from './utils/percentageToHex';
 
-const dateformat = df.default || df;
-
 interface RulerSerif {
     interval: IrregularLengthInterval,
     time: ms,
@@ -41,10 +39,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         protected timeline: TimelineService,
         protected vms: VideoManagementSystemService
     ) {
-        const timeLineTranslations = languageService.loadTimelineTranslations();
-        if (timeLineTranslations) {
-            dateformat.i18n = timeLineTranslations;
-        }
+        languageService.loadTimelineTranslations();
     }
 
     protected _prevIntervals: Array<IrregularLengthInterval> = [];
@@ -227,7 +222,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
             const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
-            const dateStr = dateformat(this.vms.tweakT(s.time), format);
+            const dateStr = dateFormat(this.vms.tweakT(s.time), format);
             ctx.font = `${fontSize}px ${fontFace}`;
             ctx.fillText(dateStr, x, y1 + 5);
         }

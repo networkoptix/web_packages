@@ -5,7 +5,7 @@ import {
     ElementRef,
     HostListener,
 } from '@angular/core';
-import * as df from 'dateformat';
+import dateFormat from 'dateformat';
 import { Subscription } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -22,8 +22,6 @@ import { TimelineService } from '../../services/timeline.service';
 import type {
     TimelineServiceStatus
 } from '../../services/timeline.services.types';
-
-const dateformat = df.default || df;
 
 const MARGIN = 5;
 const ARROW_WIDTH = 10;
@@ -51,10 +49,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         private vms: VideoManagementSystemService,
         public playback: PlaybackService
     ) {
-        const timeLineTranslations = languageService.loadTimelineTranslations();
-        if (timeLineTranslations) {
-            dateformat.i18n = timeLineTranslations;
-        }
+        languageService.loadTimelineTranslations();
         this.onPlaybackSubjectChange = this.onPlaybackSubjectChange.bind(this);
         this.onTimelineSubjectChange = this.onTimelineSubjectChange.bind(this);
     }
@@ -197,8 +192,8 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
                 const TIME_FORMAT = 'HH:MM:ss';
                 const DATE_FORMAT = 'dd mmmm yyyy';
                 const tweakedT = this.vms.tweakT(this.timeMs);
-                this.time = dateformat(tweakedT, TIME_FORMAT);
-                this.date = dateformat(tweakedT, DATE_FORMAT);
+                this.time = dateFormat(tweakedT, TIME_FORMAT);
+                this.date = dateFormat(tweakedT, DATE_FORMAT);
 
                 // a hack to keep the indicator in place while timeline animates a jump over the gap between records
                 // this.timeMs -= (this.timeline.targetScrollMs - this.timeline.visibleRange.start);

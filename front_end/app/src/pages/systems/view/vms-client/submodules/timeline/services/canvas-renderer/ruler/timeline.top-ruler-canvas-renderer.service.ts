@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as df from 'dateformat';
+import dateFormat from 'dateformat';
 
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { ms, px } from '@vms-client/utils/type-aliases';
@@ -17,8 +17,6 @@ import {
 } from './intervals/utils/estimateIrregularLengthIntervalPessimistically';
 import { isIntervalOdd } from './intervals/utils/isIntervalOdd';
 import { percentageToHex } from './utils/percentageToHex';
-
-const dateformat = df.default || df;
 
 @Injectable({
     providedIn: 'root'
@@ -162,7 +160,7 @@ export class TimelineTopRulerCanvasRendererService {
         const format = topRulerDateFormats[interval];
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const topString = dateformat(this.vms.tweakT(curTime), format.top);
+        const topString = dateFormat(this.vms.tweakT(curTime), format.top);
         const x = Math.round((x0 + x1) / 2);
         const y = Math.round((y0 + y1) / 2);
         const fontFace = 'Roboto, robotoregular, "Helvetica Neue", Arial, sans-serif';
@@ -176,7 +174,7 @@ export class TimelineTopRulerCanvasRendererService {
         }
 
         if (x0 > 0 && x0 < this.timeline.canvasGeometry.width) {
-            const serifString = dateformat(this.vms.tweakT(curTime), format.serif);
+            const serifString = dateFormat(this.vms.tweakT(curTime), format.serif);
             ctx.fillStyle = `${topRulerDrawingConfig.bottomLabel.baseColorHex}${percentageToHex(topRulerDrawingConfig.bottomLabel.opacity)}`;
             ctx.font = `${topRulerDrawingConfig.bottomLabel.fontSize * this.timeline.canvasGeometry.dpr}px ${fontFace}`;
             ctx.textBaseline = 'top';

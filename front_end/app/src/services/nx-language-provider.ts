@@ -2,16 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 
 import { NxSessionService } from './session.service';
 import { WINDOW } from './window-provider';
+
+const i18nOriginal = { ...i18n };
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -90,23 +93,14 @@ export class NxLanguageProviderService {
             : this.http.get('/api/utils/language')).toPromise();
     }
 
-    loadTimelineTranslations() {
-        const reduceTranslations = (names, sortList) => sortList.map(key => names[key]());
+    loadTimelineTranslations(): void {
         const timelineTranslations = this.translations?.view?.timeline;
         if (!timelineTranslations) {
-            return undefined;
+            return;
         }
-        const times = {
-            dayNames: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-            monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            timeNames: ['a', 'p', 'am', 'pm', 'A', 'P', 'AM', 'PM']
-        };
-        const translations: any = {
-            dayNames: reduceTranslations(timelineTranslations.dayNames, times.dayNames),
-            monthNames: reduceTranslations(timelineTranslations.monthNames, times.monthNames),
-            timeNames: reduceTranslations(timelineTranslations.timeNames, times.timeNames)
-        };
-        return translations;
+        Object.entries(i18nOriginal).forEach(([k, v]: [string, string[]]) => {
+            i18n[k] = v.map(s => timelineTranslations[k][s]());
+        });
     }
 
     setTranslations(lang: string, translation): void {

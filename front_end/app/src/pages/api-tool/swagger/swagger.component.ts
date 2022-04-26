@@ -423,7 +423,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     }
 
     addComponentToComponentMap(componentRef: ComponentRef<any>, element: HTMLElement) {
-        const id = uuid.v4();
+        const id = uuid();
         element.setAttribute('uuid', id);
         this.componentMap[id] = componentRef;
         return { uuid: id };
