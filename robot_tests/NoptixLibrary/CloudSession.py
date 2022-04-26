@@ -1,5 +1,6 @@
 import json
 import requests
+from robot.api import logger
 
 USERNAME = ""
 PASSWORD = ""

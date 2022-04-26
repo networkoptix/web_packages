@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除",
-            "serversDetach": "現在のシステムからサーバー { title } を切り離しますか？",
-            "serversReset": "サーバー { title } をデフォルトにリセットしますか？",
-            "serversRestart": "サーバー { title } を再起動しますか？"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
         "emailNotFound": "アカウントが存在しません",
         "failedToAccess2FA": "<p class=\"mb-0\">このシステムにアクセスするには二要素認証が必要です。</p><p> <a href=\"/account/security\">アカウント設定</a>で二要素認証を有効にすることができます。</p>",
-        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、対象のシステムが %CLOUD_NAME% から切断されている場合、対象のシステムへのアクセスが取り消された場合、または誤ったアカウントにログインしている場合に発生する可能性があります。",
+        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、対象のシステムが %CLOUD_NAME% から切断されている場合、対象のシステムへのアクセスが取り消された場合、リンクに記載されたシステムが存在しない場合、または違うアカウントにログインしている場合に発生する可能性があります。",
         "failedToAccessCamera": "このリンクからアクセスできるカメラはありません。",
         "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{systemName} への接続が失われました",
@@ -657,6 +657,7 @@
         "activateCode": "アカウント有効化",
         "activateSuccess": "アカウントが有効化されました",
         "articleTitle": "{VMS_NAME} の {ARTICLE_TITLE}",
+        "auth": "Authorization",
         "changePassword": "パスワードの変更",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "映像",
         "Settings": "設定",
         "Information": "情報",
-        "Bookmarks": "ブックマーク"
+        "Bookmarks": "ブックマーク",
+        "Monitoring": "モニタリング"
     },
     "system": {
         "connected": "接続済み",

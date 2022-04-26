@@ -34,7 +34,8 @@ export class NxMenusService {
         view: boolean,
         settings: boolean,
         information: boolean,
-        bookmarks: boolean
+        bookmarks: boolean,
+        monitoring: boolean,
     }> = {};
 
     constructor(
@@ -209,6 +210,10 @@ export class NxMenusService {
             segment = '/settings';
         }
 
+        if (endpoint.monitoring) {
+            segment = '/monitoring';
+        }
+
         return (!environment.isLocal && systemId) ? url + segment : segment;
     }
 
@@ -225,6 +230,7 @@ export class NxMenusService {
             activeSystem.isOnline ||
             activeSystem.stateOfHealth === this.CONFIG.system.status.online
         ) ? 'system.svg' : 'system_offline.svg';
+
         const hasAdminAccess = activeSystem?.accessRole
             ? this.CONFIG.accessRoles.adminAccess.includes(activeSystem.accessRole.toLowerCase())
             : isLocalAdmin || false;
@@ -251,6 +257,14 @@ export class NxMenusService {
                 this.endpoint.information || false
             );
             nodes.push(informationNode);
+
+            const monitoringNode = new MenuNode(
+                'Monitoring',
+                this.getUrl(activeSystem.id, { monitoring: true }),
+                this.LANG?.serverTabTitles.Monitoring(),
+                this.endpoint.monitoring || false
+            );
+            nodes.push(monitoringNode);
         }
 
         if (this.configService.flagsEnabled('bookmarks')) {

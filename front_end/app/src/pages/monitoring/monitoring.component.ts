@@ -1,15 +1,13 @@
 import {
-    AfterViewInit,
     Component,
 } from '@angular/core';
 import {
-    UntilDestroy,
+    UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
-
+import { NxMenuService } from '../../menu/menu.service';
+import { Content } from '../../menu/menu.types';
+import { NxAppSourceService } from '../../services/nx-app-source.service';
 import { NxSystem } from '../../services/system.service';
 import { NxSettingsService } from '../systems/settings/settings.service';
 
@@ -19,22 +17,52 @@ import { NxSettingsService } from '../systems/settings/settings.service';
     styleUrls: ['monitoring.component.scss'],
     templateUrl: 'monitoring.component.html',
 })
-export class NxMonitoringComponent implements AfterViewInit {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-
-    system: NxSystem | any;
+export class NxMonitoringComponent {
+    content: Content;
+    system: NxSystem;
 
     constructor(
-        configService: NxConfigService,
-        languageService: NxLanguageProviderService,
+        private menuService: NxMenuService,
+        private sourceService: NxAppSourceService,
         private settingsService: NxSettingsService,
     ) {
-        this.LANG = languageService.translations;
-        this.CONFIG = configService.getConfig();
-    }
+        this.content = {
+            base: '',
+            selectedSection: 'graphs',
+            selectedSubSection: '',
+            level1: [
+                {
+                    id: 'graphs',
+                    svg: 'system',
+                    label: 'Graphs',
+                    path: '',
+                }, {
+                    id: 'logs',
+                    svg: 'server',
+                    label: 'Logs',
+                    path: 'logs',
+                }
+            ]
+        };
 
-    ngAfterViewInit() {
-        this.system = this.settingsService.system;
+        this.settingsService.systemSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(system => {
+                if (system) {
+                    this.system = system;
+                    this.content.base = this.sourceService.getMonitoringMenuBase(system);
+                    this.content = { ...this.content }; // trigger onChange
+                }
+            });
+
+        this.menuService.selectedSectionSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(selection => {
+                if (this.content.selectedSection === selection) {
+                    return;
+                }
+                this.content.selectedSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
     }
 }

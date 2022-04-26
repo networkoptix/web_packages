@@ -17,9 +17,11 @@ class WebadminConan(ConanFile):
         self.version = git.get_revision()
 
     def source(self):
+        # Using default for local building fallback.
+        gitlab_url = os.getenv("DEFAULT_GIT_URL") or 'git@gitlab.ru.nxteam.dev'
         # Cannot use the `scm` attribute because the version is set dynamically.
         git = tools.Git()
-        git.clone("git@gitlab.lan.hdw.mx:dev/cloud_portal.git", self.version, shallow=True)
+        git.clone(f"{gitlab_url}:dev/cloud_portal.git", self.version, shallow=True)
 
     def build(self):
         self.run(" ".join([

@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Ви ввійдете в інший обліковий запис",
             "noClientDetected": "Встановіть %VMS_NAME% для роботи з системою",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Відключіть усі системи, якими ви володієте, від порталу %CLOUD_NAME% щоб видалити свій обліковий запис."
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Невдається видалити систему",
         "emailNotFound": "Обліковий запис не існує.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Немає доступу до системи за цим посиланням. Це може статися, коли система відключена від %CLOUD_NAME%, доступ до цієї системи відкликано, або якщо ви увійшли в неправильний обліковий запис.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "У вас немає дозволів для виконання цієї дії",
         "lostConnection": "Connection to {systemName} lost",
@@ -657,6 +657,7 @@
         "activateCode": "Активувати обліковий запис",
         "activateSuccess": "Обліковий запис активований",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Змінити пароль",
         "debug": "Відладка",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connected",

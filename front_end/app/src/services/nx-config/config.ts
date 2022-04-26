@@ -441,6 +441,9 @@ export const nxConfig: IConfig = {
         systemHealth: {
             baseUrl: '/health/'
         },
+        systemMonitoring: {
+            baseUrl: '/monitoring/'
+        },
         systemSettings: {
             baseUrl: environment.isLocal ? '/settings/' : '/systems/',
             admin: {
@@ -780,6 +783,7 @@ export const nxConfig: IConfig = {
     metaDefaults,
     webadminRoutesLookup: [
         [/^developers\/events/g, '/api-tool/api-createevent-post'],
+        [/^developers\/changelog/g, '/api-tool/changelog'],
         [/^developers/g, '/api-tool'],
         [/^advanced/g, '/settings/advanced'],
         [/^settings\/server/g, '/settings/servers'],

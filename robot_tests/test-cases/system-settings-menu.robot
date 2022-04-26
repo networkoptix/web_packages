@@ -124,6 +124,7 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
     Wait Until Settings Are Visible
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
+    Sleep    5
     ${matches}=   Get WebElements     ${LEFT MENU SEARCH MATCHES}
     FOR    ${match}    IN    @{matches}
         ${text}=    Run Keyword And Continue On Failure    Get Text    ${match}

@@ -150,6 +150,7 @@ export class NxLoginService {
         if (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
                 this.simpleDialogService.notify(this.LANG.toastMessage.noInternet(), 'warning', true);
+                this.modalService.dismissAll();
                 return Promise.resolve(false);
             }
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;

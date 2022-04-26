@@ -39,6 +39,7 @@ import { NxAuthorizeBackupCodeComponent } from './backup-code/backup-code.compon
 import { NxConfigService } from '@services/nx-config';
 import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxAccountService } from '@services/account.service';
@@ -87,6 +88,9 @@ describe('NxAuthorizeComponent', () => {
                     newPass: () => 'set a new password',
                     login: () => 'log in'
                 }
+            },
+            pageTitles: {
+                auth: () => 'Authorization'
             }
         }
     };
@@ -192,6 +196,7 @@ describe('NxAuthorizeComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
+        spyOnProperty(NxPageService.prototype, 'pageTitle', 'set').and.returnValue('Authorization');
         TestBed.configureTestingModule({
             declarations: [
                 NxAuthorizeComponent,

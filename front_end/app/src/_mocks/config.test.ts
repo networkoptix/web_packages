@@ -398,6 +398,9 @@ export function setupConfig(): IConfig {
             systemHealth: {
                 baseUrl: '/health/'
             },
+            systemMonitoring: {
+                baseUrl: '/monitoring/'
+            },
             systemSettings: {
                 baseUrl: environment.isLocal ? '/settings/' : '/systems/',
                 admin: {

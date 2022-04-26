@@ -48,14 +48,14 @@ Open Browser and go to URL
     Go To    ${url}
 
 Regular Open Browser
-    #Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
+    Set Screenshot Directory    /screenshots
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
     Set Window Size    1920    1080
     Go To    ${ENV}
 
 Open Browser With Options
-    #Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
+    Set Screenshot Directory    /screenshots
     ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
@@ -1014,7 +1014,7 @@ Get Random Available Port
     [Return]    ${port}
 
 Create Docker Server
-    [Arguments]    ${name}     ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=new    ${network}=bridge
+    [Arguments]    ${name}     ${customPort}    ${image}=${IMAGE}     ${storage string}=${EMPTY}    ${VMS}=new    ${network}=bridge
     &{server}=   Create Dictionary
     ${mac}=   Get Random MAC
     Acquire Lock   create_server_lock
@@ -1025,7 +1025,11 @@ Create Docker Server
     ELSE
         Set Local Variable    ${vms}    new
     END
-    ${port}=   Get Random Available Port
+    IF    not $customPort
+        ${port}=   Get Random Available Port
+    ELSE
+        ${port}=   Set Variable    ${customPort}
+    END
     ${full id}=   Run Keyword If    "${network}"=="host"    Execute Command    docker run -d --name=${name} --restart=always -e VMS=${vms} -e PORT=${port} --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
                   ...    ELSE    Execute Command    docker run -d --name=${name} --restart=always --mac-address=${mac} -e VMS=${vms} -p ${port}:7001 --privileged --network=${network} --cap-add=NET_ADMIN ${storage string} ${image}
     ${id}=   Evaluate    $full_id[:12]
@@ -1038,7 +1042,7 @@ Create Docker Server
     [Return]    ${server}
 
 Create Base System
-    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}    ${password}=${BASE PASSWORD}
+    [Arguments]    ${container name}    ${image}=${IMAGE}    ${network}=bridge    ${owner}=${None}    ${add users}=${True}    ${storage string}=${EMPTY}    ${password}=${BASE PASSWORD}    ${customPort}=${False}
     [Documentation]    Creates a docker server, and optionally connects to cloud, creates users, and adds storage.
     ...
     ...                Returned keys and value types:
@@ -1052,7 +1056,7 @@ Create Base System
     ...                owner: ""
     ...                port: ""
     ${local auth}=   Create List    admin    ${password}
-    ${server}=   Create Docker Server    ${container name}    image=${image}     storage string=${storage string}    network=${network}
+    ${server}=   Create Docker Server    ${container name}    ${custom port}    image=${image}     storage string=${storage string}    network=${network}    
     Sleep    5
     Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
     # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
@@ -1522,4 +1526,22 @@ Skip If Image Is
     [Arguments]    @{unsupported images}    ${msg}
     FOR    ${item}    IN    @{unsupported images}
         Skip If    '${IMAGE}' == '${item}'    ${msg}
+    END
+
+Check Page Text Language
+    ${elements} =   Get WebElements    tag:span
+    ${elements2} =    Get WebElements    tag:a
+    ${elements} =    Combine Lists   ${elements}     ${elements2}
+    FOR    ${element}    IN    @{elements}
+        ${text} =   Get Text    ${element}
+        IF    '${text}' != '${EMPTY}'
+             ${lang} =    Detect Language     ${text}
+             ${lang} =    Convert To String     ${lang}
+             ${en detected} =   Run Keyword And Return Status    Should Contain    ${lang}    lang=en
+             ${autoqa detected} =   Run Keyword And Return Status    Should Not Contain    ${text}    noptixautoqa
+             IF     ${en detected} and ${autoqa detected}
+                Capture Element Screenshot    ${element}
+                Run Keyword And Continue On Failure    Should Not Contain    ${lang}    lang=en
+             END
+        END
     END

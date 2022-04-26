@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Se iniciará sesión con una cuenta diferente",
             "noClientDetected": "Instale %VMS_NAME% para ver su sistema",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos los sistemas de los que es dueño del portal %CLOUD_NAME% para eliminar su cuenta."
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "No se puede eliminar el sistema",
         "emailNotFound": "La cuenta no existe.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "No se puede acceder al sistema a través de este enlace. Esto puede suceder cuando un sistema ha sido desconectado de %CLOUD_NAME%, el acceso a este sistema ha sido revocado, o si ha iniciado sesión en la cuenta incorrecta.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No se puede acceder a ninguna cámara a través de este enlace.",
         "forbidden": "No tiene permisos para realizar esta acción",
         "lostConnection": "Conexión a {systemName} perdida",
@@ -657,6 +657,7 @@
         "activateCode": "Activar cuenta",
         "activateSuccess": "Cuenta Activada",
         "articleTitle": "{ARTICLE_TITLE} para {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Cambiar contraseña",
         "debug": "Depurar",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "Vista",
         "Settings": "Ajustes",
         "Information": "Información",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Conectado",

@@ -233,6 +233,11 @@ export class NxDevelopersMenuComponent implements OnInit {
                 newDisplayedNodes.push(queriedNode);
             }
         }
+        for (let i = 0; i < newDisplayedNodes.length - 1; i++) {
+            if (isSeperator(newDisplayedNodes[i]) && isSeperator(newDisplayedNodes[i + 1])) {
+                newDisplayedNodes.splice(i, i);
+            }
+        }
         while (isSeperator(newDisplayedNodes[newDisplayedNodes.length - 1])) {
             newDisplayedNodes.pop();
         }

@@ -23,6 +23,8 @@ Storage Suite Setup
     @{disk} =    Create List    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}    ${EMPTY}
     Set Suite Variable    @{disk}    @{disk}
     FOR    ${n}    IN RANGE    5
+        # for this to work your QABurbank has to have a /media/nxwitness-storages/disk1 folder in root
+        # this creates 5 virtual disks and creates 2 command line strings that are added to the docker creation step later
         ${new disk} =     Create Virtual Disk    ${disk location}    disk${n}-${random}    ${disk size[${n}]}    disk${n}
         Set List Value    ${disk}    ${n}    ${new disk}
         Log    disk${n} mounted ..... | PASS |    DEBUG      console=${console}

@@ -9,5 +9,5 @@ U wordt uitgenodigd om gebruik te maken van %CLOUD_NAME%.
 U heeft toegang gekregen tot "{{message.system_name}}".
 {{/message.sharer_name}}
 
-Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
+Registreer uw account met deze link: {{config.portal_url}}/autoriseer/registreer/{{message.code}}
 

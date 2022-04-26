@@ -13,7 +13,7 @@
     <div class="modal-body">
         <form #codeForm="ngForm" name="loginForm" novalidate>
             <div class="form-group">
-                <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
+                <label for="tfaCodeInput" translate>Enter verification code from your authentication app or a backup code to continue</label>
                 <input type="text" class="form-control" #tfaCodeInputChangePassword="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
@@ -320,7 +320,14 @@
                 </p>
             </ng-template>
             <div class="form-group mt-3">
-                <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
+                <label
+                    *ngIf="type === 'verification-enable' else authOrBackup"
+                    for="tfaCodeInput"
+                    translate
+                >Enter verification code from your authentication app to continue</label>
+                <ng-template #authOrBackup>
+                    <label for="tfaCodeInput" translate>Enter verification code from your authentication app or a backup code to continue</label>
+                </ng-template>
                 <input type="text" class="form-control" #tfaCodeInputCodeForm="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
@@ -369,7 +376,7 @@
                 {{ LANG.security.twoFa.disableWarning({count: num2FaSystems}) }}
             </p>
             <div class="form-group">
-                <label for="tfaCodeInput" translate>Enter verification code from your authentication app to continue</label>
+                <label for="tfaCodeInput" translate>Enter verification code from your authentication app or a backup code to continue</label>
                 <input type="text" class="form-control" #tfaCodeInputDisable="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"

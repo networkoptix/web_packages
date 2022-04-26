@@ -612,7 +612,7 @@ export class NxAPIToolService {
             const APIType: APIDocVersion = 'deprecated';
             apiDocFull.tags = [...apiDocFull.tags, ...deprecatedAPI.tags];
             apiDocFull.paths = Object.assign(apiDocFull.paths, deprecatedAPI.paths);
-            const deprecatedMenuContent = createMenuContent(deprecatedAPI, 'LEGACY');
+            const deprecatedMenuContent = createMenuContent(deprecatedAPI, this.markdownStore?.api_information ? 'LEGACY' : '');
             addAPIInfoNodesToMenu(apiDocFull, deprecatedMenuContent, !!this.markdownStore?.api_information);
             this.APIDropdown.push({
                 value: 'deprecated',

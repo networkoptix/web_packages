@@ -39,18 +39,21 @@ Validate Check Merge Dialog
     ...    ${MERGE SYSTEMS HEADER}
     ...    ${MERGE X BUTTON}
     ...    ${MERGE NEXT BUTTON}
-    Run Keyword If    ${lonely}    Wait Until Elements Are Visible
-    ...    ${MERGE FORM SERVER URL LABEL}
-    ...    ${MERGE FORM SERVER URL INPUT}
-    ...    ${MERGE ENTER THE ADDRESS}
-    ...    ELSE    Wait Until Elements are Visible
+    IF    ${lonely}
+        Wait Until Elements Are Visible
+        ...    ${MERGE FORM SERVER URL LABEL}
+        ...    ${MERGE FORM SERVER URL INPUT}
+        ...    ${MERGE ENTER THE ADDRESS}
+    ELSE
+        Wait Until Elements are Visible
         ...    ${MERGE CURRENT SYSTEM WITH}
         ...    ${MERGE SYSTEM DROPDOWN}
+    END
 
 Validate Admin Password Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${MERGE X BUTTON}
-    ...    ${MERGE GO BACK BUTTON}
+    #...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE NEXT BUTTON}
     ...    ${MERGE ADMIN FORM LOGIN LABEL}
     ...    ${MERGE ADMIN FORM LOGIN INPUT}
@@ -67,8 +70,8 @@ Validate Choose Primary Dialog
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${MERGE SYSTEMS HEADER}
     ...    ${MERGE X BUTTON}
-    ...    ${MERGE TAKE SYSTEM NAME}
-    ...    ${MERGE GO BACK BUTTON}
+    #...    ${MERGE TAKE SYSTEM NAME}
+    #...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE NEXT BUTTON}
     Run Keyword If    ${from target}    Wait Until Elements Are Visible
         ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem" and text()="${system 1}"]//span[@class="check unchecked"]
@@ -122,7 +125,7 @@ Validate Merge
 #    I beg you, devs, please, stop changing texts
     ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
     ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
-    Run keyword and continue on failure    Check For Alert    ${s}
+    Run keyword and continue on failure    Check For Alert    ${s}    timeout=120
 
 Validate System and Server Merge
     [Arguments]    ${system}    ${server}
@@ -136,7 +139,7 @@ Choose System From Dropdown
     ...    ${input url}=${EMPTY}
     ...    ${check url}=${False}
 
-    Slow    Click Button    ${MERGE SYSTEM DROPDOWN}    timeout=0.5
+    Slow    Click Button    ${MERGE SYSTEM DROPDOWN}    timeout=1
     ${menu shown}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${MERGE SYSTEMS MENU}    timeout=10
     IF    ${menu shown} == ${False}
         Click Element    ${MERGE SYSTEM DROPDOWN ARROW}

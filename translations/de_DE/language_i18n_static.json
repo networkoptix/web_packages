@@ -7,7 +7,7 @@
     "Privacy": "Datenschutz",
     "Support": "Support",
     "Terms": "Bedingungen",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Entwickler-Konsole",
     "accessRoles": {
         "Administrator": {
             "description": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen",
@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Sie werden mit einem anderen Konto angemeldet",
             "noClientDetected": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
             "removeUser": "Nutzer entfernen",
-            "serversDetach": "Server { title } vom aktuellen System abkoppeln?",
-            "serversReset": "Server { title } auf Standardwerte zurücksetzen?",
-            "serversRestart": "Server { title } neu starten?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "System kann nicht gelöscht werden",
         "emailNotFound": "Account existiert nicht.",
         "failedToAccess2FA": "<p class=\"mb-0\">Für den Zugang zu diesem System ist eine Zwei-Faktor-Authentifizierung erforderlich.</p><p>Sie können die Zwei-Faktor-Authentifizierung in Ihren <a href=\"/account/security\">Account-Einstellungen</a> aktivieren.</p>",
-        "failedToAccessSystem": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %CLOUD_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde oder wenn Sie bei dem falschen Konto angemeldet sind.",
+        "failedToAccessSystem": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %CLOUD_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde, das System im Link nicht existiert oder wenn Sie mit dem falschen Konto angemeldet sind.",
         "failedToAccessCamera": "Über diesen Link kann auf keine Kamera zugegriffen werden.",
         "forbidden": "Sie haben keine Berechtigung diese Aktion auszuführen",
         "lostConnection": "Verbindung zu {systemName} verloren",
@@ -657,6 +657,7 @@
         "activateCode": "Account aktivieren",
         "activateSuccess": "Account aktiviert",
         "articleTitle": "{ARTICLE_TITLE} für {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Passwort ändern",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -750,8 +751,8 @@
             "publishedRibbon": "Diese Seite ist die Liveversion, die öffentlich verfügbar ist."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "notification": "Neue Version von %CLOUD_NAME% ist verfügbar",
+            "installButton": "Jetzt installieren"
         },
         "systemOffline": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
         "systemsMerging": "Dieses System ist derzeit an einem Zusammenführungsvorgang beteiligt."
@@ -801,7 +802,8 @@
         "View": "Ansicht",
         "Settings": "Einstellungen",
         "Information": "Informationen",
-        "Bookmarks": "Lesezeichen"
+        "Bookmarks": "Lesezeichen",
+        "Monitoring": "Überwachung"
     },
     "system": {
         "connected": "Verbunden",
@@ -922,7 +924,7 @@
             "IO Module": "I/O-Modul",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Ungültig"
         },
         "info": {
             "type": "Typ",

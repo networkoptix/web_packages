@@ -68,13 +68,13 @@
     },
     "account": {
         "account": "Account",
-        "key": "Key",
+        "key": "Sleutel",
         "accountSavedSuccess": "Uw account is succesvol opgeslagen",
         "accountSettings": "Accountinstellingen",
         "activationLinkSent": "Activatielink verzonden",
         "agreementAccepted": "De overeenkomst is geaccepteerd",
         "changePassword": "Wachtwoord wijzigen",
-        "security": "Security",
+        "security": "Beveiliging",
         "newPasswordLabel": "Nieuw wachtwoord",
         "passwordChangedSuccess": "Wachtwoord succesvol opgeslagen",
         "saveChanges": "Opslaan"
@@ -264,8 +264,8 @@
             "createAccount": "Creëer een nieuw account",
             "delete": "Verwijder",
             "deleteAccount": "Account Verwijderen",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Uitschakelen",
+            "enable": "Inschakelen",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Uitloggen",
             "ok": "Oké",
@@ -377,8 +377,8 @@
             "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
         },
         "message": {
-            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
+            "system2faEnabled": "Tweestapsverificatie zal nu afgedwongen worden voor dit systeem.",
+            "system2faDisabled": "Tweestapsverificatie is niet vereist voor dit systeem.",
             "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
             "storageSettingsNotSaved": "Kan opslaginstellingen niet opslaan.",
             "settingsSaved": "Instellingen opgeslagen.",
@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen",
-            "serversDetach": "Ontkoppel server { title } van het huidige systeem?",
-            "serversReset": "Server { title } resetten naar standaardwaarden?",
-            "serversRestart": "Server { title } opnieuw starten?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
         "emailNotFound": "Account bestaat niet.",
         "failedToAccess2FA": "<p class=\"mb-0\">Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem.</p><p>U kunt twee-factorauthenticatie inschakelen in uw <a href=\"/account/security\">accountinstellingen</a>.</p>",
-        "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
+        "failedToAccessSystem": "Geen enkel systeem is toegankelijk via deze link. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, de toegang tot dit systeem is ingetrokken, het systeem in de link niet bestaat of als u bent ingelogd op het verkeerde account.",
         "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
         "forbidden": "U hebt geen rechten om deze actie uit te voeren",
         "lostConnection": "Verbinding met {systemName} verloren",
@@ -657,6 +657,7 @@
         "activateCode": "Activeer account",
         "activateSuccess": "Account geactiveerd",
         "articleTitle": "{ARTICLE_TITLE} voor {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Wachtwoord wijzigen",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "Weergave",
         "Settings": "Instellingen",
         "Information": "Informatie",
-        "Bookmarks": "Bladwijzers"
+        "Bookmarks": "Bladwijzers",
+        "Monitoring": "Controle"
     },
     "system": {
         "connected": "Verbonden",
@@ -948,7 +950,7 @@
     },
     "redirects": {
         "message": "De route \"{url}\" is verplaatst naar \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "defaultMessage": "Update alle links om te verwijzen naar de nieuwe route.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }

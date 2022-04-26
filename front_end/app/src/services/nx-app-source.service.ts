@@ -23,4 +23,12 @@ export class NxAppSourceService {
             return `${this.CONFIG.menus.systemSettings.baseUrl}${system.id}${this.CONFIG.menus.systemHealth.baseUrl}`;
         }
     }
+
+    getMonitoringMenuBase(system: Partial<NxSystem>) {
+        if (this.environment.isLocal) {
+            return `${this.CONFIG.menus.systemMonitoring.baseUrl}`;
+        } else {
+            return `${this.CONFIG.menus.systemSettings.baseUrl}${system.id}${this.CONFIG.menus.systemMonitoring.baseUrl}`;
+        }
+    }
 }

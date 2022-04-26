@@ -1653,7 +1653,7 @@ def test_process_node(mocker, db):
     process_node(section, parent_enabled, sync_log,
                  force_update, position, node)
     mock_update_section.assert_called_once_with(
-        node, site, section, mock_exporter, customization, position, parent_enabled)
+        node, site, section, mock_exporter, customization, position, customization)
     mock_process_nodes.assert_called_once_with(
         nodes_list, section, customization, sync_log, force_update)
     mock_exporter.sync_article.assert_called_once_with(

@@ -3,7 +3,7 @@
       (submit)="hideErrors = false">
     <div class="modal-header">
         <h1 class="modal-title"
-            [innerText]="'dialogs.titles.serversReset' | translate:{ title: serverName }"></h1>
+            [innerHTML]="'dialogs.titles.serversReset' | translate:{ title: serverName }| safe: 'html'"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
                 (click)="activeModal.close()" *ngIf="closable">

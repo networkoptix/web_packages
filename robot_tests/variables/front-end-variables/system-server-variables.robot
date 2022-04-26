@@ -4,7 +4,7 @@ ${url}                              ${ENV}
 @{server auth}                      admin    ${password}
 
 ${SERVERS LINK}                     //nx-menu//a[@id="servers"]
-${SERVER NAME}                      //header//h2
+${SERVER NAME}                      //header//nx-text-editable
 ${IP}                               //header//p[contains(text(),"${IP TEXT}")]
 ${OS}                               //header//p[contains(text(),"${OS TEXT}")]
 ${VERSION}                          //header//p[contains(text(),"${VERSION TEXT}")]

@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
 import { IConfig, NxConfigService } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
@@ -64,6 +65,8 @@ export class UpdateWebadminSessionComponent implements OnInit {
                 this.activeModal.close();
                 this.toastService.notify(`${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`, this.CONFIG.toast.danger, true);
             }
+        }).catch(() => {
+            this.isCloud = !environment.isLocal;
         });
 
         const showWrongCredentialsError = () => {

@@ -421,12 +421,17 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
+    private cleanServerName(name) {
+        return NxUtilsService.htmlToEntity(name);
+    }
+
     restartServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs
-            .restartServer(this.system, id, name)
+            .restartServer(this.system, id, this.cleanServerName(name))
             .then(res => {
                 this.system.isAvailable = false;
+                this.system.storageManager.update();
                 this.setStatus(res);
                 this.system.infoSubject
                     .pipe(
@@ -458,7 +463,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             : currentServerIndex - 1;
         const nextServerId = this.system.servers[nextServerIndex].id;
         return this.dialogs
-            .detachServer(this.system, id, name)
+            .detachServer(this.system, id, this.cleanServerName(name))
             .then(detach => {
                 if (detach === 'success') {
                     this.uriService
@@ -477,7 +482,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     resetServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs
-            .resetServer(this.system, id, name)
+            .resetServer(this.system, id, this.cleanServerName(name))
             // will take some time to reset and then restart the server
             .then(() => this.setStatus('resetting'))
             .catch(() => {

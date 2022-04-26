@@ -719,6 +719,7 @@ export interface PageTitles {
     activateCode:           any;
     activateSuccess:        any;
     articleTitle:           any;
+    auth:                   any;
     changePassword:         any;
     debug:                  any;
     default:                any;
@@ -860,6 +861,7 @@ export interface ServerTabTitles {
     Settings:    any;
     Information: any;
     Bookmarks:   any;
+    Monitoring:  any;
 }
 
 export interface Servers {
@@ -1887,6 +1889,7 @@ const typeMap: any = {
         { json: "activateCode", js: "activateCode", typ: "any" },
         { json: "activateSuccess", js: "activateSuccess", typ: "any" },
         { json: "articleTitle", js: "articleTitle", typ: "any" },
+        { json: "auth", js: "auth", typ: "any" },
         { json: "changePassword", js: "changePassword", typ: "any" },
         { json: "debug", js: "debug", typ: "any" },
         { json: "default", js: "default", typ: "any" },
@@ -2012,6 +2015,7 @@ const typeMap: any = {
         { json: "Settings", js: "Settings", typ: "any" },
         { json: "Information", js: "Information", typ: "any" },
         { json: "Bookmarks", js: "Bookmarks", typ: "any" },
+        { json: "Monitoring", js: "Monitoring", typ: "any" },
     ], false),
     "Servers": o([
         { json: "analyticsDataPolicyError", js: "analyticsDataPolicyError", typ: "any" },

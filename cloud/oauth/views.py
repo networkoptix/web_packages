@@ -337,7 +337,8 @@ def token(request):
     elif response_type == Auth.RESPONSE_TYPE.token:
         if grant_type == Auth.GRANT_TYPE.authorization_code:
             require_params(request, ("code",))
-            return api_success(Auth.get_access_token(code, ip=ip))
+            is_mobile = get_param(request, "client_type") == "mobile"
+            return api_success(Auth.get_access_token(code, is_mobile=is_mobile, ip=ip))
         elif grant_type == Auth.GRANT_TYPE.refresh_token:
             require_params(request, ("refresh_token",))
             return api_success(Auth.get_refresh_token(refresh_token, ip=ip, scope=scope))

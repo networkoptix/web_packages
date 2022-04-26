@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "您将使用其他帐户登录",
             "noClientDetected": "安装%VMS_NAME%来查看您的系统",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "请经由%CLOUD_NAME%断开您为所有者的全部系统，以删除您的帐户。"
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "不能删除系统",
         "emailNotFound": "帐户不存在.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "此连结无法连接至任何系统。可能当系统断开 %CLOUD_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "您没有权限执行此操作",
         "lostConnection": "Connection to {systemName} lost",
@@ -657,6 +657,7 @@
         "activateCode": "激活帐户",
         "activateSuccess": "帐户已激活",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "更改密码",
         "debug": "调试",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connected",

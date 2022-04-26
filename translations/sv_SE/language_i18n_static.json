@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare",
-            "serversDetach": "Koppla bort server { title } från nuvarande system?",
-            "serversReset": "Återställ servern { title } till standard?",
-            "serversRestart": "Starta om server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan inte ta bort System",
         "emailNotFound": "Kontot existerar inte.",
         "failedToAccess2FA": "<p class=\"mb-0\">Tvåfaktorsautentisering krävs för att komma åt detta system.</p><p>Du kan aktivera tvåfaktorsautentisering i dina <a href=\"/account/security\">kontoinställningar</a>.</p>",
-        "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %CLOUD_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
+        "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats bort från %CLOUD_NAME%, åtkomst till detta system har återkallats, systemet i länken inte existerar eller om du är inloggad på fel konto.",
         "failedToAccessCamera": "Ingen kamera kan nås via den här länken.",
         "forbidden": "Du har inte behörighet att utföra denna åtgärd",
         "lostConnection": "Anslutning till {systemName} förlorade",
@@ -657,6 +657,7 @@
         "activateCode": "Aktivera konto",
         "activateSuccess": "Kontot aktiverat",
         "articleTitle": "{ARTICLE_TITLE} för {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Ändra lösenord",
         "debug": "Debugläge",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "Visa",
         "Settings": "Inställningar",
         "Information": "Information",
-        "Bookmarks": "Bokmärken"
+        "Bookmarks": "Bokmärken",
+        "Monitoring": "Övervakning"
     },
     "system": {
         "connected": "Ansluten",

@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Zostaniesz zalogowany przy użyciu innego konta",
             "noClientDetected": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
@@ -559,7 +559,7 @@
         "cantUnshareWithMeSystemPrefix": "Nie można usunąć systemu",
         "emailNotFound": "Konto nie istnieje.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Nie można uzyskać dostępu do systemu przez ten link. Może się to zdarzyć, gdy system zostanie odłączony od %CLOUD_NAME%, dostęp do tego systemu został odwołany lub jeśli jesteś zalogowany na nieprawidłowe konto.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "Nie można uzyskać dostępu do kamer poprzez ten link.",
         "forbidden": "Nie masz uprawnień do wykonania tej operacji",
         "lostConnection": "Utracono połączenie z {systemName}",
@@ -657,6 +657,7 @@
         "activateCode": "Aktywuj konto",
         "activateSuccess": "Konto aktywowano",
         "articleTitle": "{ARTICLE_TITLE} dla {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Zmień hasło",
         "debug": "Debugowanie",
         "default": "%CLOUD_NAME%",
@@ -801,7 +802,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Połączony",

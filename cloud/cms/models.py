@@ -527,20 +527,22 @@ class AssetType(models.Model):
         if name[0].islower():
             return getattr(AssetType.ASSET_TYPES, name, AssetType.ASSET_TYPES.cloud_portal)
 
-        for index, _name in AssetType.ASSET_TYPES:
-            if _name == name:
-                return index
-        return 0
+        return next((index for index, _name in AssetType.ASSET_TYPES if _name == name), 0)
+
+    @staticmethod
+    def get_cache_key(asset_type):
+        return f'ASSET_TYPE-{asset_type}-CUSTOM_FIELDS-{settings.VERSION}'
 
     @classmethod
     def get_custom_fields_by_type(cls, type):
         try:
-            fields = cache.get(f'ASSET_TYPE-{type}-CUSTOM_FIELDS')
+            cache_key = AssetType.get_cache_key(type)
+            fields = cache.get(cache_key)
             if fields is None:
                 asset_type = cls.get_model_by_type(type)
                 fields = (asset_type.custom_field_overrides or dict()).get(
                     'fields', {})
-                cache.set(f'ASSET_TYPE-{type}-CUSTOM_FIELDS', fields)
+                cache.set(cache_key, fields)
             return fields
         except (ConnectionError, OperationalError, ProgrammingError):
             return {}
@@ -551,7 +553,7 @@ class AssetType(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        cache.delete(f'ASSET_TYPE-{self.type}-CUSTOM_FIELDS')
+        cache.delete(AssetType.get_cache_key(self.type))
 
 
 class AssetManager(models.Manager):

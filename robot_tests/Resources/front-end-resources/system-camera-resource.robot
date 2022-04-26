@@ -123,7 +123,7 @@ Add Software Camera
 
 Create And Add Custom Camera User Type and User
     ${user}=    Register and activate account with random email    mark     hamill    ${BASE PASSWORD}
-    ${role id}=   Save User Role    ${system}[cloud auth]    https://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
+    ${role id}=   Save User Role    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    Custom Cameras    GlobalEditCamerasPermission|GlobalAccessAllMediaPermission
     #Rest Save User     ${system}[local auth]    h${QA BURBANK IP}:${system}[port]    ${user}    Custom Cameras    ${user}    mark Hamill    ${BASE PASSWORD}
     Share    ${system}[cloud auth]    ${system}[cloud id]    viewer    ${user}    ${permissions}[viewer]
     ${id}=   Get Cloud User Id By Email    ${system}[cloud auth]    ${user}    ${system}[cloud id]
@@ -197,11 +197,11 @@ Camera Suite Setup
     #Add Software Camera    ${system}[port]    ${camera port3}    online
     #Sleep    30
     
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    QAbur777$    D8-D4-3C-60-F0-D3    http://192.168.0.27     manufacturer=Sony    #SNC-XM636
-    Add Camera    https://${QA BURBANK IP}:${system2}[port]    admin    QAbur777$    00-16-6C-7F-65-67    http://192.168.0.206     manufacturer=Hanwha_Sunapi    #SND-6084
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-A1-03-EA    http://192.168.0.201    manufacturer=Sony    #SNC-CH120
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        54-42-49-40-31-68    http://192.168.0.208    manufacturer=Sony    #SNC-DH120T
-    Add Camera    https://${QA BURBANK IP}:${system}[port]    admin    admin        78-84-3C-0F-82-76    http://192.168.0.209    manufacturer=Sony    #SNC-CH280 not connected
+    Add Camera    https://${QA BURBANK IP}:${system}[port]     admin    QAbur777$    D8-D4-3C-60-F0-D3    http://192.168.0.27     ${system}[local auth]    manufacturer=Sony        #SNC-XM636
+    Add Camera    https://${QA BURBANK IP}:${system2}[port]    admin    QAbur777$    00-16-6C-7F-65-67    http://192.168.0.206    ${system}[local auth]    manufacturer=Hanwha_Sunapi        #SND-6084
+    Add Camera    https://${QA BURBANK IP}:${system}[port]     admin    admin        54-42-49-A1-03-EA    http://192.168.0.201    ${system}[local auth]    manufacturer=Sony        #SNC-CH120
+    Add Camera    https://${QA BURBANK IP}:${system}[port]     admin    admin        54-42-49-40-31-68    http://192.168.0.208    ${system}[local auth]    manufacturer=Sony        #SNC-DH120T
+    Add Camera    https://${QA BURBANK IP}:${system}[port]     admin    admin        78-84-3C-0F-82-76    http://192.168.0.209    ${system}[local auth]    manufacturer=Sony        #SNC-CH280 not connected
     Sleep    50
     ${camera id}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    SNC-XM636    id
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${camera id}    cameraName    good cam

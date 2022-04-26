@@ -121,7 +121,9 @@ export class NxSystemsListComponent implements OnInit {
                 });
 
                 if (this.location.path().startsWith(this.base)) {
-                    if (this.systems.length === 1) {
+                    // Even we can open offline system for viewing sometimes connection to the system cannot be
+                    // established, and we'll get into a loop. It's safer not to open the system.
+                    if (this.systems.length === 1 && this.systems[0].stateOfHealth !== 'offline') {
                         this.openSystem(this.systems[0]);
                     }
 

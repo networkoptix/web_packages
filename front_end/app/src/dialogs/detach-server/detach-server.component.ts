@@ -82,8 +82,6 @@ export class DetachServerModalContent {
                                 this.needsUpdate = !ready;
                                 if (ready) {
                                     this.detachServer.run();
-                                } else {
-                                    this.close();
                                 }
                             });
                     } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {

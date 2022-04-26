@@ -22,6 +22,7 @@ import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
@@ -189,6 +190,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
+        private pageService: NxPageService,
         private router: Router,
         private elem: ElementRef,
         private localStorageService: LocalStorageService,
@@ -199,18 +201,30 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    private verifyRedirectUrl(systemId) {
+    private verifyRedirectUrlHelper(systemId) {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
         const redirectPort = new URL(this.initialData.redirect_uri).port;
         return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
             .pipe(
                 untilDestroyed(this),
-                catchError(() => of(false)),
                 map((servers: any) => {
                     return servers?.some(({ port, remoteAddresses }) => redirectPort === port.toString() && remoteAddresses
                         .some((address) => this.initialData.redirect_uri.includes(address))
                     );
-                }));
+                }),
+                catchError(() => of(false)));
+    }
+
+    private checkRedirectUrl() {
+        const { scope } = this.initialData;
+        let verifiedCheck = of(true);
+        if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
+            const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
+            if (findId?.groups.systemId) {
+                verifiedCheck = this.verifyRedirectUrlHelper(findId.groups.systemId);
+            }
+        }
+        return verifiedCheck.toPromise();
     }
 
     // method only used by child components to transition between child components
@@ -223,6 +237,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.pageService.pageTitle = this.LANG.pageTitles.auth();
         // should save email to local storage on login?
         this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter.nodes;
         this.initProcesses();
@@ -285,23 +300,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else if (this.clientType.includes('Password')) { // confirmPassword clientTypes
                 this.loginEmail = email;
                 this.emailLocked = true;
-                this.currentState = AuthorizeState.password;
+                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.password : AuthorizeState.notSecure;
             } else {
-                const { scope } = this.initialData;
-                let verifiedCheck = of(true);
-                if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
-                    const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
-                    if (findId?.groups.systemId) {
-                        verifiedCheck = this.verifyRedirectUrl(findId.groups.systemId);
-                    }
+                if (email) {
+                    this.loginEmail = email;
+                    this.checkEmailProcess.run();
                 }
-                verifiedCheck.subscribe((verified) => {
-                    if (email) {
-                        this.loginEmail = email;
-                        this.checkEmailProcess.run();
-                    }
-                    this.currentState = verified ? AuthorizeState.email : AuthorizeState.notSecure;
-                });
+                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
             }
         });
     }
@@ -440,7 +445,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             err => {
                 if (err?.resultCode) {
                     if (['notAuthorized', 'forbidden'].includes(err.resultCode)) {
-                        this.passwordErrorCode = 'wrongPassword';
+                        this.passwordErrorCode = (environment.isLocal && err.resultCode === 'forbidden')
+                            ? 'accountNotAccessSystem' : 'wrongPassword';
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
                     }
@@ -526,7 +532,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 if (res.resultCode === 'alreadyExists') {
                     this.createErrorCode = ['email', 'alreadyExists'];
                 } else if (res.resultCode === 'portalError') {
-                    // how to handle this? errorText: 'User is not in portal'
+                    // errorText: 'User is not in portal'
+                    this.createErrorCode = ['email', 'portalError'];
                 } else {
                     // if we support code in the future, so that account can be activated upon registration
                     // then res.activated === true
