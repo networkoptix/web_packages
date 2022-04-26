@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Iniciareu la sessió amb un altre compte",
             "noClientDetected": "Instal·leu %VMS_NAME% per veure el vostre sistema",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Desconnecteu tots els sistemes dels quals sou propietari del portal %CLOUD_NAME% per eliminar el vostre compte."
@@ -657,6 +657,7 @@
         "activateCode": "Activa el compte",
         "activateSuccess": "Compte activat",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Canvia la contrasenya",
         "debug": "Depuració",
         "default": "%CLOUD_NAME%",

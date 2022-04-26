@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "%CLOUD_NAME% 포털에서 귀하가 소유 한 모든 시스템을 연결 해제하여 계정을 삭제하십시오."
@@ -657,6 +657,7 @@
         "activateCode": "계정 활성화",
         "activateSuccess": "계정 활성화 됨",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "암호 변경",
         "debug": "디버그",
         "default": "%CLOUD_NAME%",

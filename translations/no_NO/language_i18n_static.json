@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
@@ -657,6 +657,7 @@
         "activateCode": "Aktiver konto",
         "activateSuccess": "Konto aktivert",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Bytt passord",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",

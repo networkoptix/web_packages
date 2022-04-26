@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen",
-            "serversDetach": "Ontkoppel server { title } van het huidige systeem?",
-            "serversReset": "Server { title } resetten naar standaardwaarden?",
-            "serversRestart": "Server { title } opnieuw starten?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -657,6 +657,7 @@
         "activateCode": "Activeer account",
         "activateSuccess": "Account geactiveerd",
         "articleTitle": "{ARTICLE_TITLE} voor {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Wachtwoord wijzigen",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",

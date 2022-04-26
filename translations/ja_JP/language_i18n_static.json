@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除",
-            "serversDetach": "現在のシステムからサーバー { title } を切り離しますか？",
-            "serversReset": "サーバー { title } をデフォルトにリセットしますか？",
-            "serversRestart": "サーバー { title } を再起動しますか？"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -657,6 +657,7 @@
         "activateCode": "アカウント有効化",
         "activateSuccess": "アカウントが有効化されました",
         "articleTitle": "{VMS_NAME} の {ARTICLE_TITLE}",
+        "auth": "Authorization",
         "changePassword": "パスワードの変更",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",

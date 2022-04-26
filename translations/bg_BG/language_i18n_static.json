@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "You will be logged in with a different account",
             "noClientDetected": "Install %VMS_NAME% to view your System",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
@@ -657,6 +657,7 @@
         "activateCode": "Activate account",
         "activateSuccess": "Account activated",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",

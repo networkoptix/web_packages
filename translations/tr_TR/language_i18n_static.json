@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Farklı bir hesapla giriş yapacaksınız",
             "noClientDetected": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Hesabınızı silmek için sahibi olduğunuz tüm sistemlerin %CLOUD_NAME% portalından bağlantısını kesin."
@@ -657,6 +657,7 @@
         "activateCode": "Hesabı aktif et",
         "activateSuccess": "Hesap aktif edildi",
         "articleTitle": "{ARTICLE_TITLE} için {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Şifre değiştir",
         "debug": "Hata ayıklama",
         "default": "%CLOUD_NAME%",

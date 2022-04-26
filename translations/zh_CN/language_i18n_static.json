@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "您将使用其他帐户登录",
             "noClientDetected": "安装%VMS_NAME%来查看您的系统",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "请经由%CLOUD_NAME%断开您为所有者的全部系统，以删除您的帐户。"
@@ -657,6 +657,7 @@
         "activateCode": "激活帐户",
         "activateSuccess": "帐户已激活",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "更改密码",
         "debug": "调试",
         "default": "%CLOUD_NAME%",

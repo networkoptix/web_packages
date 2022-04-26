@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
             "removeUser": "Supprimer l'utilisateur",
-            "serversDetach": "Détacher le serveur { title } du système actuel ?",
-            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
-            "serversRestart": "Redémarrer le serveur { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -657,6 +657,7 @@
         "activateCode": "Activer compte",
         "activateSuccess": "Compte activé",
         "articleTitle": "{ARTICLE_TITLE} pour {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Changer mot de passe",
         "debug": "Débogage",
         "default": "%CLOUD_NAME%",

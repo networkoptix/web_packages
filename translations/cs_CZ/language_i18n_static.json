@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Budete přihlášeni pomocí jiného účtu",
             "noClientDetected": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Chcete-li smazat svůj účet, odpojte od systému %CLOUD_NAME% všechny systémy, které vlastníte."
@@ -657,6 +657,7 @@
         "activateCode": "Aktivovat účet",
         "activateSuccess": "Účet aktivován",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Změnit heslo",
         "debug": "Ladění",
         "default": "%CLOUD_NAME%",
