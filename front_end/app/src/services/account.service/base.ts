@@ -104,7 +104,7 @@ export abstract class BaseAccount implements OnDestroy {
                     return this.dialogs.expiredSession()
                         .then((res) => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
-                    this.get()
+                    this.get(true)
                         .then((account) => {
                             // prevent stale loginState
                             if (account) {
