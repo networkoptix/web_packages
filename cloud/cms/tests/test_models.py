@@ -1,6 +1,6 @@
 import pytest
 from collections import Counter
-from random import randint
+from random import randint, choice
 from uuid import uuid4
 
 from django.db.models import Count
@@ -1867,12 +1867,12 @@ class TestMaintenanceSchedulingAndCompletion:
             assert portal_notification.build == updated_build
             assert portal_notification.build_raw == updated_raw_build
 
-class TestOpenAPIJSON:
+class TestReadOnlyAPI:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.version = str(uuid4())
         self.name = str(uuid4())
-        self.model = baker.prepare('OpenAPIJSON', version=self.version, name=self.name)
+        self.model = baker.prepare(ReadOnlyAPI, version=self.version, name=self.name)
 
     def test_str(self):
         assert str(self.model) == f"{self.name} - {self.version}"
@@ -1888,19 +1888,67 @@ class TestOpenAPIJSON:
         assert version_validator in version.validators
         assert version.max_length == 13
 
-    def test_content(self):
-        content = self.model._meta.get_field('content')
-        assert content.help_text == "API JSON"
-        assert content.default == {}
-
     def test_type(self):
         type = self.model._meta.get_field('type')
-        assert type.choices == OpenAPIJSON.JSON_TYPES
+        assert type.choices == ReadOnlyAPI.API_TYPES
 
     def test_enabled(self):
         enabled = self.model._meta.get_field('enabled')
         assert enabled.default == True
 
+
+class TestReadOnlyAPIFile:
+    @pytest.fixture(autouse=True)
+    def setup(self, db):
+        self.readonly_api_name = str(uuid4())
+        self.readonly_api = baker.make(ReadOnlyAPI, name=self.readonly_api_name)
+        self.file_count = 2
+        self.readonly_api_files = baker.make(ReadOnlyAPIFile, _quantity=self.file_count, readonly_api=self.readonly_api)
+
+    def test_content(self):
+        content = self.readonly_api_files[0]._meta.get_field('content')
+        assert content.help_text == "File contents"
+
+    def test_filename(self):
+        filename = self.readonly_api_files[0]._meta.get_field('filename')
+        assert filename.max_length == 46
+
+    def test_type(self):
+        type = self.readonly_api_files[0]._meta.get_field('type')
+        assert type.choices == ReadOnlyAPIFile.FILE_TYPES
+
+    def test_readonly_api_has_files(self):
+        assert len(ReadOnlyAPIFile.objects.filter(readonly_api=self.readonly_api)) == self.file_count
+
+    def make_model_with_invalid_json(self, file_type):
+        invalid_json = str(uuid4())
+        return baker.prepare(ReadOnlyAPIFile, content=invalid_json, type=file_type)
+
+    def test_clean_raises_validation_error(self):
+        json_types = [ReadOnlyAPIFile.FILE_TYPES.main, ReadOnlyAPIFile.FILE_TYPES.legacy, ReadOnlyAPIFile.FILE_TYPES.deprecated]
+        for type in json_types:
+            readonlyfile = self.make_model_with_invalid_json(type)
+
+            with pytest.raises(ValidationError):
+                readonlyfile.clean()
+
+    def test_clean_does_not_raise_validation_error(self):
+        non_json_types = [ReadOnlyAPIFile.FILE_TYPES.preamble_markdown, ReadOnlyAPIFile.FILE_TYPES.changelog_markdown]
+        for type in non_json_types:
+            readonlyfile = self.make_model_with_invalid_json(type)
+
+            try:
+                readonlyfile.clean()
+            except ValidationError:
+                pytest.fail('Unexpected Validation error')
+
+    def test_validate_unique(self):
+        file_type = randint(0, len(ReadOnlyAPIFile.FILE_TYPES) - 1)
+        first_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)
+        first_readonly.save()
+        second_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)
+        with pytest.raises(ValidationError):
+            second_readonly.validate_unique(self)
 
 class TestDataStructure:
     @pytest.fixture(autouse=True)

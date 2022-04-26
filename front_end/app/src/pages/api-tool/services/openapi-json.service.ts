@@ -12,7 +12,7 @@ import { findMenuNode } from '@utils/nx';
 import { addAPIInfoNodesToMenu, addSeperatedAPIMenu, createMenuContent, mergeAPIDocs, prepareSwaggerAPIDoc } from '../api-file-utils';
 import type { APIDoc, APIInfo } from '../api-tool-types';
 
-import { APIData, Store, EmitInfo, APIType, ServerInfo, ReadonlyAPI, Markdown } from './api-tool-service-types';
+import { APIData, Store, EmitInfo, APIType, ServerInfo, ReadOnlyAPIStore, Markdown } from './api-tool-service-types';
 import { NxAPIToolSystemService } from './api-tool-system.service';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
@@ -164,7 +164,7 @@ export class NxOpenAPIJSONService {
         this.setMenuNodes(API.menus[type]);
     }
 
-    setReadonlyAPI = (readonlyAPI: ReadonlyAPI) => {
+    setReadonlyAPI = (readonlyAPI: ReadOnlyAPIStore) => {
         this.isReadOnly = true;
         this.currentAPIDoc = readonlyAPI.api.content;
         this.setMenuNodes(readonlyAPI.menu);

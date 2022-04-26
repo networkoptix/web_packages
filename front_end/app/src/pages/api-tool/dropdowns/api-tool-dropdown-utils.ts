@@ -1,5 +1,5 @@
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type { OpenAPIJSON } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { ReadOnlyAPI } from '@services/nx-cloud-api/nx-cloud-api.types';
 
 export const makeSystemName = system => {
     const name = system.info?.name || system.name || 'System';
@@ -8,7 +8,7 @@ export const makeSystemName = system => {
     return name + versionString;
 };
 
-export const makeReadonlyAPIName = (api: OpenAPIJSON) => {
+export const makeReadonlyAPIName = (api: ReadOnlyAPI) => {
     const name = api.name;
     const version = api.version ? ' v. ' + api.version : '';
 

@@ -1525,6 +1525,12 @@ class CustomClientAdmin(admin.ModelAdmin):
 class FlagAdmin(WaffleFlagAdmin):
     pass
 
-@admin.register(OpenAPIJSON)
-class OpenAPIJSONAdmin(CMSAdmin):
-    pass
+class ReadOnlyAPIFileInline(admin.TabularInline):
+    model = ReadOnlyAPIFile
+
+
+@admin.register(ReadOnlyAPI)
+class ReadOnlyAPIAdmin(CMSAdmin):
+    inlines = [ReadOnlyAPIFileInline]
+    inlines = [ReadOnlyAPIFileInline]
+

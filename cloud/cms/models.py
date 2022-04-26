@@ -3122,21 +3122,43 @@ class MaintenanceCompletion(models.Model):
 
 version_validator = RegexValidator(r"^(\d)\.(\d){1,2}\.(\d){1,2}\.(\d){5}$", "Version should be in a valid format. ex: 5.12.11.11111")
 
-class OpenAPIJSON(models.Model):
+class ReadOnlyAPI(models.Model):
     class Meta:
-        verbose_name = "OpenAPI JSON"
+        verbose_name = "Readonly API"
 
-    JSON_TYPES = Choices((0, "VMS", "VMS"))
+    API_TYPES = Choices((0, "VMS", "VMS"))
 
     name = models.CharField(help_text="API display name", max_length=36)
     version = models.CharField(help_text="API version", max_length=13, validators=[version_validator])
-    content = JSONField(help_text="API JSON", default={})
     type = models.IntegerField(
-        choices=JSON_TYPES, default=JSON_TYPES.VMS)
+       choices=API_TYPES, default=API_TYPES.VMS)
     enabled = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.name} - {self.version}"
+
+class ReadOnlyAPIFile(models.Model):
+    FILE_TYPES = Choices((0, "main", "Main JSON"), (1, "legacy", "Legacy JSON"), (2, "deprecated", "Deprecated JSON"), (3, "preamble_markdown", "Preamble Markdown File"), (4, "changelog_markdown", "Changelog Markdown File"))
+
+    readonly_api = models.ForeignKey(ReadOnlyAPI, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=46)
+    type = models.IntegerField(
+        choices=FILE_TYPES, default=FILE_TYPES.main)
+    content = models.TextField(blank=True, help_text="File contents")
+
+    def clean(self):
+        if self.type not in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
+            try:
+                json.loads(self.content)
+            except JSONDecodeError:
+                raise ValidationError({'content': 'Content is not valid JSON'})
+
+    def validate_unique(self, exclude=None):
+        existing_file = ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id)
+        if existing_file:
+            raise ValidationError('This file type already exists for this Readonly API')
+        super(ReadOnlyAPIFile, self).validate_unique(exclude=exclude)
+
 
 
 class Flag(AbstractUserFlag):

@@ -5,7 +5,7 @@ Serializers for CMS views.
 from django.conf import settings
 from rest_framework import serializers
 
-from cms.models import OpenAPIJSON, PortalNotification
+from cms.models import ReadOnlyAPI, ReadOnlyAPIFile, PortalNotification
 
 from .asset_cms import *
 from .cms_structs import *
@@ -20,12 +20,24 @@ class SanitizeHTMLSerializer(serializers.Serializer):
     html = serializers.CharField()
 
 
-class OpenAPIJSONSerializer(serializers.ModelSerializer):
+class ReadOnlyAPIFileSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='get_type_display')
-    content = serializers.JSONField()
+    class Meta:
+        model = ReadOnlyAPIFile
+        fields = ('filename', 'content', 'type')
+
+class ReadOnlyAPIDetailSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(source='get_type_display')
+    files = ReadOnlyAPIFileSerializer(source='readonlyapifile_set', many=True, read_only=True)
 
     class Meta:
-        model = OpenAPIJSON
+        model = ReadOnlyAPI
+        fields = ('__all__')
+
+class ReadOnlyAPIListSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(source='get_type_display')
+    class Meta:
+        model = ReadOnlyAPI
         fields = ('__all__')
 
 

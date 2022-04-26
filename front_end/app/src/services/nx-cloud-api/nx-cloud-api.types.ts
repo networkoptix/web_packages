@@ -194,15 +194,22 @@ export interface Downloads {
     releaseUrl: string
 }
 
-type OpenAPIJSONType = 'VMS';
+type ReadOnlyAPIType = 'VMS';
 
-export interface OpenAPIJSON {
+export interface ReadOnlyAPI {
     id: number,
-    type: OpenAPIJSONType,
+    enabled: boolean,
+    type: ReadOnlyAPIType,
     name: string,
-    version: string,
-    content: APIDoc,
-    enabled: boolean
+    version: string
+}
+
+export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
+    files: [{
+        filename: string,
+        type: string,
+        content: APIDoc | string
+    }]
 }
 
 interface Installers {

@@ -1,4 +1,4 @@
-import type { OpenAPIJSON } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { ReadOnlyAPI } from '@services/nx-cloud-api/nx-cloud-api.types';
 
 import type { MenuNodeWithParent } from '../../../components/developers-menu/developers-menu-types';
 import type { NxSystemServer } from '../../../services/system.service/system-types';
@@ -27,8 +27,12 @@ export interface ServerInfo {
     markdown: Markdown
 }
 
-export interface ReadonlyAPI {
-    api: OpenAPIJSON,
+export interface ReadOnlyAPIInfoWithJSON extends ReadOnlyAPI {
+    content: APIDoc
+}
+
+export interface ReadOnlyAPIStore {
+    api: ReadOnlyAPIInfoWithJSON,
     menu: MenuNodeWithParent[]
 }
 

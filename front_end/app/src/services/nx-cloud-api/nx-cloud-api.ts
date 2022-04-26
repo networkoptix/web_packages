@@ -262,8 +262,13 @@ export class NxCloudApiService {
     }
 
     @staffSWBypass
-    getOpenAPIJSONs() {
-        return this.http.get<{ data: t.OpenAPIJSON[] }>(this.CONFIG.apiBase + '/cms/openapi_jsons');
+    getReadOnlyAPIs() {
+        return this.http.get<{ data: t.ReadOnlyAPI[] }>(this.CONFIG.apiBase + '/cms/readonly_apis');
+    }
+
+    @staffSWBypass
+    getReadOnlyAPI(id: number) {
+        return this.http.get<t.ReadOnlyAPIDetail>(this.CONFIG.apiBase + `/cms/readonly_apis/${id}`);
     }
 
     // not used, except in debug
