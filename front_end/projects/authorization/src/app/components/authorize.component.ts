@@ -306,7 +306,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.loginEmail = email;
                     this.checkEmailProcess.run();
                 }
-                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
+                if (this.clientType === ClientType.connect) {
+                    this.currentState = AuthorizeState.notSecure;
+                } else {
+                    this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
+                }
             }
         });
     }
