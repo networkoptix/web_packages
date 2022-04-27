@@ -35,7 +35,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe(translation => {
-            this.LANG = translation as LanguageI18NStaticTypes;
+            this.LANG = translation;
         });
     }
 

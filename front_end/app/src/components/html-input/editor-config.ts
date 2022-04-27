@@ -149,7 +149,7 @@ export const DEFAULT_EDITOR_CONFIG = {
             return url;
         }
 
-        const { settings, documentBaseURI } = this as any; // Callback gets attached to JE instance
+        const { settings, documentBaseURI } = this; // Callback gets attached to JE instance
         // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
         if (!settings.convert_urls || (node && node.nodeName === 'LINK') || url.startsWith('file:')) {
             return url;

@@ -235,7 +235,7 @@ export class EmailNotificationsComponent {
 
         this.selectedSystem$.pipe(
             filter(systemId => !!systemId),
-            switchMap(({ value: systemId }) => this.cloudApi.users(systemId as string)),
+            switchMap(({ value: systemId }) => this.cloudApi.users(systemId)),
             shareReplay(),
             map(this.usersToCheckboxes),
             untilDestroyed(this)

@@ -279,7 +279,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     updateBreadcrumbSizes = wrapper => this.breadcrumbWidth$.next(
-        <number[]>Array.from(
+        Array.from(
             wrapper.children
         ).map((
             element: HTMLElement

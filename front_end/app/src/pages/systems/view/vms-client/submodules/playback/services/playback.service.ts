@@ -477,7 +477,7 @@ export class PlaybackService implements OnDestroy {
             this._state.mode === PLAYBACK_MODE.ARCHIVE &&
             !this._state.paused
         ) {
-            const state = this._state as ArchivePlaybackState;
+            const state = this._state;
 
             if (!this.vms.selectedCamera.isThereRecord(state.currentTime)) {
                 const nextChunk = this.vms.selectedCamera.getNextRecord(
@@ -489,7 +489,7 @@ export class PlaybackService implements OnDestroy {
                     const was = this._state.currentTime;
                     const nextChunkStart = nextChunk.start;
                     const diff = nextChunkStart -
-                        (this._state as ArchivePlaybackState).currentTime;
+                        (this._state).currentTime;
                     this._state.currentTime = nextChunkStart;
                     this._state.startTime += diff;
                     this._log(

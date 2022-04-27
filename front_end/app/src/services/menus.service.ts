@@ -105,7 +105,7 @@ export class NxMenusService {
                     filteredMenu.nodes = filteredMenu.nodes.map(this.translateNode());
                     return filteredMenu;
                 })
-            ) as Observable<MenuStructure>;
+            );
     };
 
     filterMenu = (menu: MenuStructure, auth: Auth) => {

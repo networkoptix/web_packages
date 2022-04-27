@@ -205,6 +205,7 @@ module.exports = {
                     builtinGlobals: false
                 }]),
                 ...tsExtension('no-throw-literal'),
+                '@typescript-eslint/no-unnecessary-type-assertion': 'error',
                 ...tsExtension('no-use-before-define', ['error', {
                     functions: true,
                     classes: true,

@@ -743,8 +743,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     getCanvasSize() {
         const wrapperWidth = this.width$.value;
         const maxCanvasHeightInPixels = 480;
-        const rotation = <number> this.selectedRotation.value || 0;
-        const rotated = <number>rotation % 180;
+        const rotation = this.selectedRotation.value || 0;
+        const rotated = rotation % 180;
         const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
         const RowsToRoundPixelsByMultiple = rotated ? 44 : 32;
         const defaultAspectRatio = 1.77778;

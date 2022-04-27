@@ -61,7 +61,6 @@ export function alignTimeStamp(
             break;
 
         default:
-            d = <durationMs>d;
             const tzoMs = date.getTimezoneOffset() * 60 * 1000;
             const result = (Math.floor((t - tzoMs) / d) + incIfRight) * d + tzoMs;
             return result;
