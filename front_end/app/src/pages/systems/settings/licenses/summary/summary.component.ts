@@ -76,7 +76,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         }
     }
 
-    setLicenses(response) {
+    setLicenses(response): void {
         this.licenses = Object.keys(response)
             .filter(licence => licence !== '') // don't calculate invalid licences
             .map(licence => {

@@ -173,7 +173,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
             : key;
     }
 
-    settingsToBeDisplayedOrUpdated = settings => {
+    settingsToBeDisplayedOrUpdated = (settings): void => {
         Object.entries(settings).reduce((systemSettings, [key, value]) => {
             // CLOUD-6350: Refactor advanced global settings page
             if (this.CONFIG.settingsConfig[key]?.hiddenInAdvanced) {

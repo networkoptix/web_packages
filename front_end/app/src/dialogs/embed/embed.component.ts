@@ -103,7 +103,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
             '</iframe>';
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

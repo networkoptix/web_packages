@@ -96,7 +96,7 @@ export class MotionMaskState {
         }
     }
 
-    initSensitivityButtons = () => {
+    initSensitivityButtons = (): void => {
         this.selectionZones.pipe(takeUntil(this.unsub$)).subscribe(zones => {
             if (zones.length && this.sensitivityButtons$.value === false) {
                 this.sensitivityButtons$.next(!!zones.length);

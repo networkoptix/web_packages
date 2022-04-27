@@ -310,7 +310,7 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
         this._prevMouseUpTime = now;
     }
 
-    public barHandleMouseUp(e: MouseEvent | TouchEvent) { // this UX is a bit doubtful
+    public barHandleMouseUp(e: MouseEvent | TouchEvent): void { // this UX is a bit doubtful
         const now = Date.now();
         if (now - this._prevMouseUpTime < this._doubleClickDelay) {
             this.barDblClickHandler(e);

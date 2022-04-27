@@ -628,7 +628,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     // Process for apply service
-    initUpdateProcess() {
+    initUpdateProcess(): void {
         this.saveSettings = this.processService.createProcess(() => {
             if (!this.safeToUpdateRecordingSettings) {
                 this.applyService.setWarn(this.LANG.common.recordingSettingsWarning());
@@ -820,11 +820,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionMask = maskString;
     }
 
-    toggleMotionEnabled = () => {
+    toggleMotionEnabled = (): void => {
         this.motionEnabled = !this.motionEnabled;
     };
 
-    disableMotion = () => {
+    disableMotion = (): void => {
         this.motionEnabled = false;
         this.recordingModes = this.recordingModes.map(({ name, id }) => {
             const enabled = id === RecordingType.ALWAYS;
@@ -834,7 +834,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.updateMotionWarning();
     };
 
-    enableMotion = (updateModes = false) => {
+    enableMotion = (updateModes = false): void => {
         this.motionEnabled = true;
         if (updateModes) {
             this.recordingModes = this.recordingModes.map(({ name, id }) => {

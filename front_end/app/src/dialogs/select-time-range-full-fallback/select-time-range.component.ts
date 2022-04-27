@@ -97,7 +97,7 @@ export class SelectTimeRangeModalContent {
         this.end = this._dateDictFromTimeStamp(this.selection.range.end);
     }
 
-    close = (msg: boolean | {}) => {
+    close = (msg: boolean | {}): void => {
         this.dialogRef.close(msg);
     };
 }

@@ -54,7 +54,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         console.log('leave');
     }
 
-    fileDropped = files => {
+    fileDropped = (files): void => {
         const fileEntry = files[0].fileEntry;
         const fileReader = new FileReader();
         let otherName;

@@ -170,7 +170,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         );
     }
 
-    protected onFullScreenChange = e => {
+    protected onFullScreenChange = (e): void => {
         const fse = fullscreen.getElement();
         this._log('fullscreenchange', e, fse);
         this.fullscreenMode = !!fse;
@@ -530,7 +530,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     protected _newlyRecordedIntervalHandle;
 
-    public startPollingForNewlyRecordedChunks() {
+    public startPollingForNewlyRecordedChunks(): void {
         timer(0, 10 * 1000).pipe(takeUntil(this.unsub$)).subscribe(() => {
             const since = this.vms.selectedCamera.archiveRange.end;
             const now = Date.now();

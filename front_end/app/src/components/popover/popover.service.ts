@@ -127,7 +127,7 @@ export class NxPopoverService {
         viewContainerRef: ViewContainerRef,
         config: Partial<PopoverConfig<any>>,
         popoverRef: PopoverRef<any>,
-    ) {
+    ): void {
         // rendering a provided template dynamically
         // if we need to render a component - here is the place to add it
         popover.attachTemplate(

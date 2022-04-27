@@ -246,7 +246,7 @@ export class AddStorageModalContent {
         return this.storageForm.get(field);
     }
 
-    preSubmit = () => {
+    preSubmit = (): void => {
         this.urlChecked = true;
         this.passwordChecked = true;
     };
@@ -255,7 +255,7 @@ export class AddStorageModalContent {
         this.alreadyCheckedAndExists = false;
     }
 
-    close = (msg?: string) => {
+    close = (msg?: string): void => {
         this.storageForm.reset();
         this.dialogRef.close(msg);
     };

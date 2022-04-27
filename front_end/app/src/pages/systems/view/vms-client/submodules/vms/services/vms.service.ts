@@ -175,7 +175,7 @@ export class VideoManagementSystemService {
         systemId: string,
         mediaServers: Array<IMediaServer>,
         updateCamerasOnly = false
-    ) {
+    ): void {
         this._log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this._systemId = systemId;
         // @ts-expect-error

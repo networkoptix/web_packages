@@ -188,7 +188,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.applyService.resetFormWatchers();
     }
 
-    private initProcesses() {
+    private initProcesses(): void {
         this.editUser = this.processService.createProcess(async () => {
             if (this.shouldChangePassword) {
                 // console.log('rejected saving the form until password has changed')
@@ -266,7 +266,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
     }
 
-    protected _calcNextUserId() {
+    protected _calcNextUserId(): void {
         const currentUserIndex = this.system.users.findIndex(user => {
             return user.id === this.selectedUser.id;
         });

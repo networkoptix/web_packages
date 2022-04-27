@@ -118,7 +118,7 @@ export class NxOverlayModalComponent implements OnInit {
         this.setupObservers();
     }
 
-    setupObservers() {
+    setupObservers(): void {
         this.refresh$.pipe(
             // Whenever refresh emits this switches to a new interval observable.
             switchMap(res => {

@@ -98,7 +98,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
         this.updateFilteredList(this.token);
     }
 
-    protected _resetServersVisibility() {
+    protected _resetServersVisibility(): void {
         if (this._mediaservers) {
             this.isServerExpanded = this._mediaservers.reduce(
                 (acc, ms) => {

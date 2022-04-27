@@ -118,7 +118,7 @@ export class NxBootstrapProvider {
         this.CONFIG.viewsDir = 'static/lang_' + data.language + '/views/';
     }
 
-    setSettings(data) {
+    setSettings(data): void {
         if (this.environment.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
             const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;

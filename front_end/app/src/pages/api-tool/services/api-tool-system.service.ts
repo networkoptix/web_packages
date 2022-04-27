@@ -199,7 +199,7 @@ export class NxAPIToolSystemService {
         });
     }
 
-    getServersInfo() {
+    getServersInfo(): void {
         this.serversLoading$.next(true);
         this.serverSubscription?.unsubscribe();
         this.serverSubscription = this.currentSystem.infoSubject
@@ -360,13 +360,13 @@ export class NxAPIToolSystemService {
         });
     }
 
-    markSystemOutdated = () => {
+    markSystemOutdated = (): void => {
         this.loading$.next(false);
         this.serversLoading$.next(false);
         this.outDatedSystem$.next(true);
     };
 
-    showError = () => {
+    showError = (): void => {
         this.loadingFailure$.next(true);
         this.loadingErrorType = environment.isLocal ? 'SYSTEM_FAILED_TO_LOAD_API_TOOL' : 'NO_SYSTEM_FOUND_API_TOOL';
         this.serverSubscription?.unsubscribe();
@@ -381,7 +381,7 @@ export class NxAPIToolSystemService {
         this.uri.updateURI(this.uri.getURL(), queryParams);
     };
 
-    initializeAPITool = () => {
+    initializeAPITool = (): void => {
         const initialSystems = this.systemsService.systems || [];
         let systemsSubjectSubscription: Subscription;
         if (!initialSystems.length) {
@@ -468,7 +468,7 @@ export class NxAPIToolSystemService {
         this.localStorage.store(this.makeLSKey(this.currentSystemId, type), cacheObject);
     };
 
-    private disableManualSystemChanging = () => {
+    private disableManualSystemChanging = (): void => {
         this.systemChangeLockout = true;
         setTimeout(() => {
             this.systemChangeLockout = false;

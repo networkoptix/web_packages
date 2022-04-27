@@ -40,7 +40,7 @@ export class WebsocketComponent implements OnInit {
             .subscribe(this.handleWebsocketData);
     }
 
-    private handleWebsocketData = socketData => {
+    private handleWebsocketData = (socketData): void => {
         const { action, data } = socketData;
         if (action === 'connected') {
             this.sendGroupAction('systems');

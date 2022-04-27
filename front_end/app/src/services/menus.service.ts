@@ -52,7 +52,7 @@ export class NxMenusService {
             .subscribe(this.updateMenu);
     }
 
-    updateMenu = lang => {
+    updateMenu = (lang): void => {
         this.languageChanged$.next('changed');
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
             (newMenu, [name, { title, description, nodes }]) => {

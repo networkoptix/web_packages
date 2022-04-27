@@ -29,7 +29,7 @@ export class NxIntegrationsComponent implements OnInit {
     integrationsShortDescription = '';
     integrations;
 
-    @HostListener('window:resize') onResize() {
+    @HostListener('window:resize') onResize(): void {
         this.currentWindowWidth = window.innerWidth;
     }
 

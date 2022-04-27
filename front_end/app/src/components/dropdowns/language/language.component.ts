@@ -68,7 +68,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         return false; // return false so event will not bubble to HREF
     }
 
-    setLanguage() {
+    setLanguage(): void {
         if (this.activeLanguage?.language !== this.langCode) {
             this.activeLanguage = this.languages.find(lang => {
                 return (lang.language === this.langCode);

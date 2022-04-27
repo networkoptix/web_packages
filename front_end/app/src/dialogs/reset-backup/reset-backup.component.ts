@@ -46,7 +46,7 @@ export class ResetBackupModalContent {
         });
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

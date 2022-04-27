@@ -97,7 +97,7 @@ export class TimelinePlaybackIndicatorComponent implements OnInit, OnDestroy {
         return this._svgArrowPoints;
     }
 
-    protected _updateSvgArrowPoints() {
+    protected _updateSvgArrowPoints(): void {
         // if (this.edgeCaseClasses['left-most'] || this.edgeCaseClasses['right-most']) {
         //   return ''
         // }

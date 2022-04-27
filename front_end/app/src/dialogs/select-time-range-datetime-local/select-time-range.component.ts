@@ -54,7 +54,7 @@ export class SelectTimeRangeModalContent {
         }
     };
 
-    close = (action: boolean | {}) => {
+    close = (action: boolean | {}): void => {
         this.dialogRef.close(action);
     };
 

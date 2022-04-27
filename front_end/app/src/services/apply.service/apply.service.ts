@@ -174,7 +174,7 @@ export class NxApplyService {
         submitFn?: () => any,
         nonSystem = false,
         onlyShowSectionWatchers = false
-    ) {
+    ): void {
         // restore discardFunction in case previous page used form watcher
         // this should go away once we convert all components to use form watcher
         this.discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
@@ -229,7 +229,7 @@ export class NxApplyService {
     initPageFormsWatcher(
         component: ViewContainerRef,
         nonSystem = false
-    ) {
+    ): void {
         this.nonSystem$.next(nonSystem);
         this.component = component;
         this.forms = {};
@@ -576,7 +576,7 @@ export class NxApplyService {
         });
     }
 
-    removeWatchers<Owner>(owner?: Owner) {
+    removeWatchers<Owner>(owner?: Owner): void {
         this.watchers = owner ? this.watchers.filter(watcher => watcher.owner !== owner) : [];
         this.updatedWatchers$.next('update');
     }
@@ -644,7 +644,7 @@ export class NxApplyService {
      * @param watchers
      * @param owner
      */
-    public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any) {
+    public addWatchers(watchers: (Watcher<any> | SectionWatcher)[], owner?: any): void {
         this.updatedWatchers$.next('update');
         const watchersFilterOutCurrentOwner = (
             owner
@@ -690,7 +690,7 @@ export class NxApplyService {
         discardFunction,
         submitFunction?,
         owner?
-    ) {
+    ): void {
         this.addWatchers([...this.watchers, ...watchers], owner);
         this.extendApplyFunction(applyFunction);
         this.extendDiscardFunction(discardFunction);
@@ -699,7 +699,7 @@ export class NxApplyService {
         }
     }
 
-    private extendApplyFunction(applyFunction: Process) {
+    private extendApplyFunction(applyFunction: Process): void {
         const { name } = applyFunction.settings;
         if (name) {
             this.applyFunctions = this.applyFunctions.filter((aF: Process) => {

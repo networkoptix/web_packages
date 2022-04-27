@@ -120,7 +120,7 @@ export class IntegrationService implements OnDestroy {
         }
     }
 
-    private formatScreenshots(section) {
+    private formatScreenshots(section): void {
         if (section) {
             section.screenshots = Object.keys(section).filter(element => {
                 return element.match(/screenshot[\d]+/i) && section[element];

@@ -164,14 +164,14 @@ export class NxOpenAPIJSONService {
         this.setMenuNodes(API.menus[type]);
     }
 
-    setReadonlyAPI = (readonlyAPI: ReadOnlyAPIStore) => {
+    setReadonlyAPI = (readonlyAPI: ReadOnlyAPIStore): void => {
         this.isReadOnly = true;
         this.currentAPIDoc = readonlyAPI.api.content;
         this.setMenuNodes(readonlyAPI.menu);
         addAPIInfoNodesToMenu(this.currentAPIDoc, readonlyAPI.menu);
     };
 
-    setMenuNodes = (menu: MenuNodeWithParent[]) => {
+    setMenuNodes = (menu: MenuNodeWithParent[]): void => {
         this.menuNodes = menu;
         this.activeNode = this.menuNodes[0];
         this.navigateToMenuNodeFromURL();
@@ -204,11 +204,11 @@ export class NxOpenAPIJSONService {
      *
      *  Required so that swagger displays the correct info.
      */
-    setAPIInfo = (info: APIInfo) => {
+    setAPIInfo = (info: APIInfo): void => {
         this.currentAPIDoc.info = info;
     };
 
-    setAPIType = (serverID, type) => {
+    setAPIType = (serverID, type): void => {
         this.currentType = type;
         const storedAPI = this.APIStore[serverID];
         const menu = storedAPI.menus[type];

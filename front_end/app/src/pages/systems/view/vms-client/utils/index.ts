@@ -18,14 +18,14 @@ class YourClass {
 export function LoggerDecorator(prefix: string = '', disable: boolean = false) {
     return function <T extends { new(...args: any[]): {} }>(constructor: T) {
         return class extends constructor {
-            protected _log(..._args: any[]) {
+            protected _log(..._args: any[]): void {
                 if (isDevMode() && !disable) {
                     // eslint-disable-next-line no-useless-call
                     console.log.apply(console, [prefix, ...arguments]);
                 }
             }
 
-            protected _warn(..._args: any[]) {
+            protected _warn(..._args: any[]): void {
                 if (isDevMode() && !disable) {
                     // eslint-disable-next-line no-useless-call
                     console.warn.apply(console, [prefix, ...arguments]);

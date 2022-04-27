@@ -109,7 +109,7 @@ export class NxAboutComponent {
         return true;
     };
 
-    private updatePageMeta = () => {
+    private updatePageMeta = (): void => {
         this.menusService.getMenu(this.menuName).pipe(
             tap(menu => {
                 this.pageService.pageTitle = menu.title;
@@ -160,7 +160,7 @@ export class NxAboutComponent {
         }
     };
 
-    private fetchUpdatedDocs = () => {
+    private fetchUpdatedDocs = (): void => {
         const { state } = this.route.snapshot.queryParams;
 
         this.cloudApi.getDocumentation(

@@ -75,7 +75,7 @@ export class DownloadAsyncModalContent implements ModalContent {
         console.log(this);
     }
 
-    close = (result?: string) => {
+    close = (result?: string): void => {
         this.dialogRef.close(result);
     };
 }

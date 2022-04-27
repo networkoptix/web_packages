@@ -186,7 +186,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     }
 
     // Using fetch api because angular http request is canceled when page is unloading.
-    private removeUnverified2faKey = () => {
+    private removeUnverified2faKey = (): void => {
         const options = {
             method: 'delete',
             headers: {
@@ -500,7 +500,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
         return this.accountService.updateSessionWith2fa(this.tfaCode);
     }
 
-    close = (action?: string) => {
+    close = (action?: string): void => {
         if (this.listenFor2faActivation) {
             this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
         }
@@ -510,7 +510,7 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
 
     /* Needs to be an arrow function to access this
     when passed to <nx-cancel-button> as [discardFn] */
-    closeWizard = (action?: string) => {
+    closeWizard = (action?: string): void => {
         if (this.listenFor2faActivation) {
             this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
         }

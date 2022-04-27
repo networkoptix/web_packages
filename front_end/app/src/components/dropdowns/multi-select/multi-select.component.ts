@@ -99,7 +99,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         return false;
     }
 
-    applyLocalFilter(value) {
+    applyLocalFilter(value): void {
         this.filter = value;
 
         this.items = this.itemsOrig.filter((item: any) => {
@@ -122,7 +122,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.items = this.items.map((obj: any) => ({ ...obj }));
     }
 
-    updateLabel() {
+    updateLabel(): void {
         switch (this.innerValue && this.innerValue.length) {
             case 1: {
                 this.textSelected = this.items.find((item: any) => {

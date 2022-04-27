@@ -61,7 +61,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
     public render(
         ctx: CanvasRenderingContext2D,
         intervalToSkip: IrregularLengthInterval | false = false
-    ) {
+    ): void {
         this._withContext(ctx, () => {
             const serifs = this._getSerifs().filter(s => s.weight > 0);
             if (intervalToSkip) {

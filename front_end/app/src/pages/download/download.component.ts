@@ -141,7 +141,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getDownloads() {
+    private getDownloads(): void {
         this.sub = this.route.params.subscribe(params => {
             this.platform = params.platform.toLowerCase();
 

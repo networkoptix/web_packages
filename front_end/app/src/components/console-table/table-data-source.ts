@@ -121,7 +121,7 @@ export class TableDataSource extends DataSource<any> {
         return this.data$;
     }
 
-    disconnect() {}
+    disconnect(): void {}
 
     updateBaseData(data): void {
         this.#baseData$.next(data);

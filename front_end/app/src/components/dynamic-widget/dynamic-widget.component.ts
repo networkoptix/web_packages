@@ -69,7 +69,7 @@ export class NxDynamicWidgetComponent {
         this.componentInstance.update();
     }
 
-    saveSettings = async (editMode = false) => {
+    saveSettings = async (editMode = false): Promise<void> => {
         this.syncChanges.emit();
         this.card.editMode = editMode;
     };

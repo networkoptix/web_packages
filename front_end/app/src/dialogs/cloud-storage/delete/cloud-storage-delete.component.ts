@@ -103,7 +103,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
         });
     }
 
-    close = (msg?: boolean) => {
+    close = (msg?: boolean): void => {
         this.dialogRef.close(msg);
     };
 }

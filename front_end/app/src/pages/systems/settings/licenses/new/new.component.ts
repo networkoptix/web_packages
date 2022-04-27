@@ -55,7 +55,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     @ViewChild('errorDiv') errorDiv: HTMLDivElement;
     @ViewChild('errorDivMirror') errorDivMirror: HTMLDivElement;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.activateKey = this.processService.createProcess(() => {
             this.hideErrors = false;
             if (!this.system.isOnline) {
@@ -230,7 +230,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         this.selectedServer = server;
     }
 
-    displayErrors = () => {
+    displayErrors = (): void => {
         this.hideErrors = false;
     };
 

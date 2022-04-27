@@ -672,7 +672,7 @@ export class NxCloudApiService {
         }));
     }
 
-    #show404 = () => {
+    #show404 = (): void => {
         this.router
             .navigate([this.CONFIG.redirect.page404], {
                 replaceUrl: true

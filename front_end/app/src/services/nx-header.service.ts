@@ -111,7 +111,7 @@ export class NxHeaderService {
         editBaseUrl,
         contexts: ContextManifest[],
         url?
-    ) {
+    ): void {
         const { id, name } = asset;
         const editUrl = `${editBaseUrl}/${id}`;
         for (const { name: contextName } of contexts) {

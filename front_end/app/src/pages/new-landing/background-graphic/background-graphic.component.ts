@@ -77,7 +77,7 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
         return 0.25 * (this.layerSize(defaultWidth, layer) / (defaultWidth));
     };
 
-    recalculateScale = () => {
+    recalculateScale = (): void => {
         for (let i = 0; i < this.layers.length; i++) {
             let currLayer: number;
             if (i !== this.layers.length - 1) {

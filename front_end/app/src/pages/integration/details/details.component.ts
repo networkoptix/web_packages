@@ -68,7 +68,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.LANG = language.translations;
     }
 
-    setUpRouteSubscription() {
+    setUpRouteSubscription(): void {
         this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
             .pipe(map(results => ({ params: results[0], query: results[1] })))
             .subscribe(results => {

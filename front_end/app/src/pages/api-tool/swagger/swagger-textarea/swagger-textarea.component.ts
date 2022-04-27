@@ -110,7 +110,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         });
     }
 
-    insertLineBreaks = () => {
+    insertLineBreaks = (): void => {
         const lines = this.customTextareaRef.nativeElement.querySelectorAll('div.line');
         for (const line of lines) {
             if (!line.innerText && !line.innerHTML.includes('<br>')) {
@@ -123,7 +123,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
       * Focus the swagger-textarea's focus position to the right position
       * This is neccessary because the position is lost after styling elements are inserted by highlightLine
     */
-    setTextareaFocusPosition = (element: HTMLElement) => {
+    setTextareaFocusPosition = (element: HTMLElement): void => {
         const selection = this.document.getSelection();
         const range = this.document.createRange();
         const focusPositionElement = this.document.querySelector('.focus-position');
@@ -136,7 +136,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         focusPositionElement.remove();
     };
 
-    setTextareaText = () => {
+    setTextareaText = (): void => {
         const element = this.customTextareaRef.nativeElement;
         let textContent = element.textContent;
         textContent = textContent.replace(/\s+/g, ''); // remove all spaces

@@ -156,8 +156,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {};
-    private onChangeCallback = (_: SearchFilter) => {};
+    private onTouchedCallback = (): void => {};
+    private onChangeCallback = (_: SearchFilter): void => {};
 
     // Set touched on blur
     onBlur(): void {

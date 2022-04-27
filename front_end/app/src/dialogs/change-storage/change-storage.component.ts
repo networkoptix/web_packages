@@ -92,11 +92,11 @@ export class ChangeStorageModalContent {
         }
     }
 
-    dismiss = () => {
+    dismiss = (): void => {
         this.close('cancel');
     };
 
-    close = (msg?: string) => {
+    close = (msg?: string): void => {
         this.dialogRef.close(msg);
     };
 }

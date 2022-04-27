@@ -76,7 +76,7 @@ export class PlayerNativeComponent implements OnInit, OnDestroy, AfterViewInit, 
     public ngOnInit(): void {
     }
 
-    videoErrorEventHandler = (event: any) => {
+    videoErrorEventHandler = (event: any): void => {
         if (
             this.videoView?.nativeElement.error?.code ===
             MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED

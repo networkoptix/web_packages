@@ -131,7 +131,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     public handleDurationDoubleClick(
         e: MouseEvent,
         recalibrate: boolean = false
-    ) {
+    ): void {
         const margin = this.timeline.domWidthToDuration(EAR_WIDTH);
         this.timeline.visibleRange = new TimeRange(
             this.selection.range.start - margin,
@@ -147,7 +147,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         dialog.then(this._onTimeSetDialogDone);
     }
 
-    public _onTimeSetDialogDone = (result: boolean | ssRange) => {
+    public _onTimeSetDialogDone = (result: boolean | ssRange): void => {
         // eslint-disable-next-line @typescript-eslint/dot-notation
         if (result['start']) {
             this.selection.range = result as TimeRange;

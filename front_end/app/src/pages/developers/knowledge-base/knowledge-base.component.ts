@@ -189,7 +189,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.searchQuery$.next({ query: query || '' });
     }
 
-    handleClick = (click: ClickEvent) => {
+    handleClick = (click: ClickEvent): void => {
         if (click.clearSearch) {
             const prefetchLookup = {
                 state: click.node?.draft ? 'draft' : click.node?.pending ? 'pending' : null,
@@ -203,7 +203,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
     };
 
-    clearSearch = () => {
+    clearSearch = (): void => {
         this.searchLoading = false;
         this.searchResults$.next([]);
         this.searchMode = false;
@@ -225,7 +225,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(updated);
     }
 
-    private updateSearchResults = results => {
+    private updateSearchResults = (results): void => {
         this.searchResults$.next([
             ...this.searchResults$.value,
             ...this.parseResults(results)
@@ -372,7 +372,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         );
     }
 
-    private acceptedReviewRedirect = () => {
+    private acceptedReviewRedirect = (): void => {
         const url = this.uriService.getURL();
         this.router.navigateByUrl(
             '/', { skipLocationChange: true }
@@ -482,7 +482,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             setTimeout(this.addCustomScripts);
         };
 
-    private addCustomScripts = () => {
+    private addCustomScripts = (): void => {
         Array.from(this.scriptDiv?.nativeElement?.children || []).forEach(child => {
             this.renderer2.removeChild(this.scriptDiv.nativeElement, child);
         });
@@ -517,7 +517,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         contentHTML: any,
         blocks: any,
         script: any
-    ) {
+    ): void {
         this.search = { ...this.search };
         this.pageService.pageTitle = originalTitle;
         this.pageService.pageDescription = shortDescription;
@@ -585,7 +585,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     private updateSelectedMenu(
         snapshot: ActivatedRouteSnapshot,
         isContentType: boolean
-    ) {
+    ): void {
         const menuName = this.CONFIG
             .docMenuMap[this.kbService.basePath]
             ?.[this.kbService.kbName];
@@ -615,7 +615,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    private updateAssetIdsForMenu = menu => {
+    private updateAssetIdsForMenu = (menu): void => {
         if (!this.kbService.assetIds.length) {
             const getAllIds = (nodes: MenuNode[]) => {
                 nodes.forEach(node => {

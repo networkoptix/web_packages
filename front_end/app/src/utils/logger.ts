@@ -107,7 +107,7 @@ export class NxLogger<T> {
 
     // Helpers
 
-    #prettyPrint = ({ logged, trace }, logLevel, identifier) => {
+    #prettyPrint = ({ logged, trace }, logLevel, identifier): void => {
         const logBackground = {
             error: 'red',
             info: 'green',

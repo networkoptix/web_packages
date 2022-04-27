@@ -29,7 +29,7 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
         pickFrom(this.dialogData, ['applyFunc', 'discardFunc', 'form'], this);
     }
 
-    apply = () => {
+    apply = (): void => {
         if (this.form) {
             this.form.form.markAllAsTouched();
         }
@@ -40,7 +40,7 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
         });
     };
 
-    close = (msg: string = 'canceled') => {
+    close = (msg: string = 'canceled'): void => {
         this.dialogRef.close(msg);
     };
 

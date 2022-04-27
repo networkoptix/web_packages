@@ -104,13 +104,13 @@ export class UpdateWebadminSessionComponent implements OnInit {
         }, settings, successHandler, errorHandler);
     }
 
-    resetForm() {}
+    resetForm(): void {}
 
     setLogin(login): void {
         this.auth.login = login;
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

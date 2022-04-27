@@ -285,7 +285,7 @@ export class AppComponent {
             });
     }
 
-    headerResize(size: { width: number, height: number }) {
+    headerResize(size: { width: number, height: number }): void {
         if (this.headerHeight !== size.height) {
             this.appStateService.headerContainerHeight$.next(size.height);
             this.headerHeight = size.height;
@@ -293,7 +293,7 @@ export class AppComponent {
     }
 
     @HostListener('window:popstate')
-    windowListener() {
+    windowListener(): void {
         if (this.applyService.locked) {
             window.history.go(1);
             this.applyService.showDialog().catch(() => {

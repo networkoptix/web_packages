@@ -145,7 +145,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     }
 
     // Other instance methods
-    close = (msg?: string) => {
+    close = (msg?: string): void => {
         this.dialogRef.close(msg);
     };
 

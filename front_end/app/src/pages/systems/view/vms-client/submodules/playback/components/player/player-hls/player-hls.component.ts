@@ -73,7 +73,7 @@ export class PlayerHlsComponent implements OnInit, OnDestroy, AfterViewInit, OnC
     public ngOnInit(): void {
     }
 
-    videoErrorEventHandler = (event: any) => {
+    videoErrorEventHandler = (event: any): void => {
         if (event.fatal && event.type === 'networkError') {
             // manifestLoadTimeOut ... etc. hls.js already tried to recover - nothing else can be done.
             this.playback.setError(this.LANG.common.cameraStates.errorLoading());

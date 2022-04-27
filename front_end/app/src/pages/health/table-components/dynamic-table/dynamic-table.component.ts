@@ -247,7 +247,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    private setActiveEntity(activeEntity) {
+    private setActiveEntity(activeEntity): void {
         if (activeEntity) {
             this.selectedEntity = this._elements.find(elem => {
                 return this.healthLayoutService.activeEntity === elem ||

@@ -182,7 +182,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             : ['get', 'trace', 'post', 'delete', 'options', 'head', 'patch']; // below 5.0
     };
 
-    private handlePotentialRTSPRoute = request => {
+    private handlePotentialRTSPRoute = (request): void => {
         const urlPath = new URL(request.url).pathname.slice(1);
         const isRTSP = isUUID(urlPath) || // The only route that starts with uuid is an RTSP route.
                       (!this.APIToolSystemService.isRestAPI() && request.method === 'TRACE'); // Only one TRACE request exists in below 5.0 APIs, and it is RTSP
@@ -195,7 +195,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private handleOldSession = () => {
+    private handleOldSession = (): void => {
         this.loginService.currentSystem = this.APIToolSystemService.currentSystem;
         this.loginService.updateSession('renewWeb')
             .then(ready => {
@@ -211,12 +211,12 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             });
     };
 
-    private handleRTSPRequest = request => {
+    private handleRTSPRequest = (request): void => {
         // replace http with rtsp (for display only, does not actually send an rtsp request)
         request.url = 'rtsp' + request.url.slice(5);
     };
 
-    private authenticateRequest = request => {
+    private authenticateRequest = (request): void => {
         const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections[this.APIToolSystemService.currentServerId].generateHeaders();
         if (headers) {
             // 5.0 and up
@@ -229,7 +229,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private setAuthParam = request => {
+    private setAuthParam = (request): void => {
         const systemMediaServerConnections = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections;
         const serverID = this.APIToolSystemService.currentServerId;
         const Url = new URL(request.url);
@@ -255,7 +255,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     });
 
-    private addCustomChanges = () => {
+    private addCustomChanges = (): void => {
         this.customComponentsRendering = true;
 
         setTimeout(() => {
@@ -274,7 +274,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }, 0);
     };
 
-    private addSpinner = singleAPIRoute => {
+    private addSpinner = (singleAPIRoute): void => {
         const opblocks = this.document.querySelectorAll('.opblock-summary');
         for (const opblock of opblocks as any) {
             if (opblock.nextElementSibling.tagName !== 'NX-SWAGGER-SPINNER') {
@@ -287,7 +287,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private addButtonEventListeners = () => {
+    private addButtonEventListeners = (): void => {
         // Clicking on execute or try-it-out/cancel button triggers a rerender
         const buttons = this.document.querySelectorAll('.try-out__btn, .opblock-control__btn');
         for (const button of buttons) {
@@ -303,14 +303,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private changeRequestBodyText = () => {
+    private changeRequestBodyText = (): void => {
         const requestBody: HTMLElement = this.document.querySelector('.opblock-title.parameter__name');
         if (requestBody) {
             requestBody.innerText = 'Body';
         }
     };
 
-    private modifyCodeBlocksAndTextareas = () => {
+    private modifyCodeBlocksAndTextareas = (): void => {
         const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
         for (const element of elements) {
             if (element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' && !(element.classList.contains('with-line-counter'))) {
@@ -331,14 +331,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private removeInputPlaceholders = () => {
+    private removeInputPlaceholders = (): void => {
         const inputs = this.document.querySelectorAll('input');
         for (const input of inputs) {
             input.removeAttribute('placeholder');
         }
     };
 
-    private modifyTitlesInResponse = () => {
+    private modifyTitlesInResponse = (): void => {
         const visibleResponseSections = this.document.querySelectorAll('.btn-group');
         for (const visibleResponseSection of visibleResponseSections) {
             const responsesWrapper = visibleResponseSection.nextElementSibling;
@@ -389,7 +389,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     /** Moves the example response and schema outside of the response table, also adds a label.  */
-    private moveExampleResponse = () => {
+    private moveExampleResponse = (): void => {
         const responses = this.document.querySelector('.responses-inner:not(.with-label)');
         if (responses) {
             const exampleResponse = responses.querySelector('.model-example');
@@ -403,7 +403,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private addTabItemEventListener = () => {
+    private addTabItemEventListener = (): void => {
         const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
         for (const tabItem of tabItems) {
             tabItem.classList.add('tagged-tabitem');
@@ -429,18 +429,18 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         return { uuid: id };
     }
 
-    triggerComponentDestroyFromElement = (element: Element) => {
+    triggerComponentDestroyFromElement = (element: Element): void => {
         const uuid = element.getAttribute('uuid');
         this.componentMap[uuid].destroy();
     };
 
-    addCopyToClipBoardButton = (parent: HTMLElement) => {
+    addCopyToClipBoardButton = (parent: HTMLElement): void => {
         const clipboardElement = this.generateComponent(NxCopyToClipboardComponent).element;
 
         parent.insertAdjacentElement('afterend', clipboardElement);
     };
 
-    addLineCounter = (parent: HTMLElement) => {
+    addLineCounter = (parent: HTMLElement): void => {
         const el = parent.firstElementChild?.tagName === 'CODE' ? parent.firstElementChild : parent;
         const lines = el.innerHTML.split('\n').map(div => `<div class='line'>${div}</div>`);
         if (lines.length > 1) { // Don't show line counters if only one line
@@ -467,7 +467,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private addLabelToRequest = () => {
+    private addLabelToRequest = (): void => {
         const requestModelExample = this.document.querySelector('.opblock-description-wrapper .model-example:not(.with-label)');
         if (requestModelExample) {
             const label = this.generateRequestTypeLabel();
@@ -476,7 +476,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    private insertCustomDropdown = () => {
+    private insertCustomDropdown = (): void => {
         const selects = this.document.body.querySelectorAll<HTMLSelectElement>('select:not(.custom-dropdown):not(.content-type)');
 
         for (const select of selects) {

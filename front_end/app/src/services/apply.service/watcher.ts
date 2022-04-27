@@ -44,7 +44,7 @@ export class Watcher<T extends any, Owner = any> {
     }
 
     // Resets the value of the watcher to the first value that was not undefined.
-    reset = () => {
+    reset = (): void => {
         this.valueSubject.next(this.originalValue);
     };
 
@@ -98,11 +98,11 @@ export class SectionWatcher {
         return this.watchers.some(watcher => watcher.changed);
     }
 
-    private updateHash = () => {
+    private updateHash = (): void => {
         this.valueSubject.next(this.value);
     };
 
-    reset = () => {
+    reset = (): void => {
         this.watchers.forEach(watcher => watcher.reset());
     };
 }
@@ -138,18 +138,18 @@ export class FormWatcher {
         this.identity = Symbol(identifier);
     }
 
-    hardReset = () => {
+    hardReset = (): void => {
         const { value } = this.valueSubject;
         Object.assign(this.originalValue, value);
         this.form.reset(value);
     };
 
-    reset = () => {
+    reset = (): void => {
         this.valueSubject.next(this.originalValue);
         this.form.reset(this.originalValue);
     };
 
-    saved = () => {
+    saved = (): void => {
         this.originalValue = this.value;
         this.changed = false;
         this.reset();

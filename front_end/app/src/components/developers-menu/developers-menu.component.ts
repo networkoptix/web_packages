@@ -64,7 +64,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         this.CONFIG = configService.getConfig();
     }
 
-    updateActive = (activeAssetId, activeAssetState) => {
+    updateActive = (activeAssetId, activeAssetState): void => {
         this.activeRouteNodes = [];
         const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
             if (updateUrl) {
@@ -170,7 +170,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         this.onClick.emit({ node, clearSearch });
     }
 
-    openNodeAndParents = (node: MenuNodeWithParent) => {
+    openNodeAndParents = (node: MenuNodeWithParent): void => {
         this.openNodes.push(node.name || node.display_name);
         let loopProtector = 0;
         while (node.parentNode && loopProtector < 10) {

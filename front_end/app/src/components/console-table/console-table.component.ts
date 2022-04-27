@@ -193,7 +193,7 @@ export class NxConsoleTableComponent {
 
     updatePerPageParam = this.#paramUpdaterFactory('perPage');
 
-    updateSearchParam = ({ query } = { query: '' }) => {
+    updateSearchParam = ({ query } = { query: '' }): void => {
         this.#paramUpdaterFactory('search')(query);
     };
 
@@ -201,7 +201,7 @@ export class NxConsoleTableComponent {
         this.update$.next('update');
     }
 
-    updatePageState = ({ page, search, perPage = 0 }) => {
+    updatePageState = ({ page, search, perPage = 0 }): void => {
         this.selectedData?.updateState({ page: Math.min(parseInt(page), this.selectedData.numberOfPages$.value), search, perPage: perPage || this.selectedManifest.perPage });
     };
 
@@ -239,7 +239,7 @@ export class NxConsoleTableComponent {
     asyncErrors = {};
     cancelHandlers = {};
 
-    handleAsync = async asyncSettings => {
+    handleAsync = async (asyncSettings): Promise<void> => {
         const apiLookup: Partial<Record<ModalType, ConsoleSection>> = {
             [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS
         };

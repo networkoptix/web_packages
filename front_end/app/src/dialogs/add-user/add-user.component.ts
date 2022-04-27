@@ -67,7 +67,7 @@ export class AddUserModalContent {
         return (typeof description === 'function') ? description() : description;
     }
 
-    preSubmit = () => {
+    preSubmit = (): void => {
         this.hideErrors = false;
     };
 
@@ -126,7 +126,7 @@ export class AddUserModalContent {
         });
     }
 
-    close = (msg?: string) => {
+    close = (msg?: string): void => {
         this.dialogRef.close(msg);
     };
 }

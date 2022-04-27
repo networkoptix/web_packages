@@ -225,18 +225,18 @@ export class EditModalContent {
             }, err => { console.error(err); });
     }
 
-    close = (result?: { id: string; action: string }) => {
+    close = (result?: { id: string; action: string }): void => {
         this.dialogRef.close(result);
     };
 
-    clearError = field => {
+    clearError = (field): void => {
         if (field in this.errors) {
             delete this.errors[field];
         }
         this.processDisabled = !!Object.keys(this.errors).length;
     };
 
-    updateDropdown = (fieldName: string, item: DropdownItem<string>) => {
+    updateDropdown = (fieldName: string, item: DropdownItem<string>): void => {
         this.values[fieldName] = item.value;
     };
 }

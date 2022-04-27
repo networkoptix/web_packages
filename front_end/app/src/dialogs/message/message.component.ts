@@ -88,11 +88,11 @@ export class MessageModalContent implements OnInit {
         });
     }
 
-    close = (msg: string | boolean = false) => {
+    close = (msg: string | boolean = false): void => {
         this.dialogRef.close(msg);
     };
 
-    initForm() {
+    initForm(): void {
         this.placeholder = '';
         if (this.messageType === this.CONFIG.dialogs.message.type.ipvd_page) {
             this.placeholder = this.LANG.dialogs.message.placeholders.feedback?.();

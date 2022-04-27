@@ -163,7 +163,7 @@ export class CurrentStorageState {
         isBackup, isOnline, isWritable, usedForWriting
     }) => isBackup === !main && isOnline && isWritable && usedForWriting;
 
-    #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }) => {
+    #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }): void => {
         this.#metadataStorageId = cleanId(metadataStorageId || '');
         this.#hasAnalyticsData = hasAnalyticsData;
         this.#hasPlugins = hasPlugins;

@@ -129,7 +129,7 @@ export class StorageState extends BaseManager {
      * Only addresses and should only be used for this edge case where
      *   previous offline server was loaded and update tick also occurred
      */
-    reinitializeForOfflineToOnlineServer() {
+    reinitializeForOfflineToOnlineServer(): void {
         this.#storageInfoStateManager = new StateManager(this.#getStorageInfoHandler, this.#updateOn(UpdateTriggers.INFO));
         this.#storageStatsStateManager = new StateManager(this.#getStorageStatsHandler, this.#updateOn(UpdateTriggers.STATS));
         this.#storageMetricsStateManager = new StateManager(this.#getStorageMetricsHandler, this.#updateOn(UpdateTriggers.METRICS));

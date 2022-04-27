@@ -283,7 +283,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         return of(true);
     }
 
-    colorHeaderGroups(metric) {
+    colorHeaderGroups(metric): void {
         let counter = 0;
         metric.values = metric.values.map(group => {
             if (group.id !== '_') {
@@ -340,7 +340,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         return alarms[0];
     }
 
-    createResourceList() {
+    createResourceList(): void {
         this.healthService.resourceNames = {};
         Object.values(this.healthService.values).forEach(metric => {
             Object.entries(metric).forEach(([resourceId, entity]) => {
@@ -447,7 +447,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         }
     }
 
-    initializeAlarms() {
+    initializeAlarms(): void {
         Object.keys(this.healthService.alertsCount).forEach(type => {
             this.healthService.alertsCount[type] = 0;
         });

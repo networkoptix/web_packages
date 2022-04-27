@@ -159,7 +159,7 @@ export class ConnectCloudModalContent implements OnInit {
         }, settings, successHandler, errorHandler);
     }
 
-    cancel = () => {
+    cancel = (): void => {
         let close = Promise.resolve({});
         if (this.cloudTokens) {
             close = this.oauthService.logoutTokens(
@@ -171,7 +171,7 @@ export class ConnectCloudModalContent implements OnInit {
         close.finally(() => this.close(true));
     };
 
-    close = (msg?: boolean) => {
+    close = (msg?: boolean): void => {
         this.dialogRef.close(msg);
     };
 }

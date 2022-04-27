@@ -80,7 +80,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         console.log(info);
     }
 
-    changeHeaderButton = (visbility: IntersectionStatus) => {
+    changeHeaderButton = (visbility: IntersectionStatus): void => {
         if (visbility === 'Visible') {
             if (this.headerService.createAccountButtonType === 'primary') {
                 this.headerService.createAccountButtonType = 'default';

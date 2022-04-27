@@ -39,7 +39,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
 
-    private setupDefaults() {
+    private setupDefaults(): void {
         this.trialLicense = this.CONFIG.trialLicenseKey || '';
         this.haveTrialLicense = true; // hide it initially until we get info about existing licenses
 

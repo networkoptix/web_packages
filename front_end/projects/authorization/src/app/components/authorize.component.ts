@@ -152,7 +152,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 catchError(() => of(false)),
                 map((servers: any) => {
                     return servers?.some(({ port, remoteAddresses }) => redirectPort === port.toString() && remoteAddresses
-                        .some((address) => this.initialData.redirect_uri.includes(address))
+                        .some(address => this.initialData.redirect_uri.includes(address))
                     );
                 }));
     }
@@ -329,7 +329,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     }
 
-    initProcesses() {
+    initProcesses(): void {
         // 3 seconds was creating too many false positives
         // 60 seconds should cover most cases unless we discover different edge cases we need to address
         const timeoutMs = 60000;
@@ -551,7 +551,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
     };
 
-    checkIfActivated = async () => {
+    checkIfActivated = async (): Promise<void> => {
         const { active } = await this.cloudService.checkIfEmailExistsInCloud(this.loginEmail);
         if (active) {
             this.activated$.next(true);
@@ -576,9 +576,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             });
     };
 
-    redirect = (route?: string) => {
+    redirect = (route?: string): void => {
         this.window.location.href = route || this.initialData.redirect_uri || '/';
-    }
+    };
 
     ngOnDestroy(): void {}
 }

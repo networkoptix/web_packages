@@ -69,10 +69,10 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    public onTouchedCallback = () => {
+    public onTouchedCallback = (): void => {
     };
 
-    private onChangeCallback = (_: any) => {
+    private onChangeCallback = (_: any): void => {
     };
 
     // validates the form, returns null when valid else the validation object

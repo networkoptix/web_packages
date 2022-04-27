@@ -61,7 +61,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     };
 
     // the method set in registerOnChange to emit changes back to the form
-    private propagateChange = (_: any) => {
+    private propagateChange = (_: any): void => {
     };
 
     // validates the form, returns null when valid else the validation object

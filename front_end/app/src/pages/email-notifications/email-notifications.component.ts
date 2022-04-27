@@ -184,7 +184,7 @@ export class EmailNotificationsComponent {
         accountFullName: label, accountEmail: id
     }) => ({ label, id, value: id === this.accountService.email }));
 
-    handleFileDrop = files => {
+    handleFileDrop = (files): void => {
         files.forEach(({ fileEntry }) => {
             let filename;
             let mimetype;

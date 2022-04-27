@@ -21,7 +21,7 @@ export class Client2faWarningModalContent {
         this.LANG = language.translations;
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

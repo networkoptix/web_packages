@@ -49,10 +49,10 @@ export class NxEditableHeading implements OnInit, OnChanges {
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    private onTouchedCallback = (): void => {
     };
 
-    private onChangeCallback = (_: any) => {
+    private onChangeCallback = (_: any): void => {
     };
 
     constructor(configService: NxConfigService) {

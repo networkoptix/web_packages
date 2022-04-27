@@ -30,13 +30,13 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
 
     constructor(private APIToolService: NxAPIToolSystemService) { }
 
-    onSelect = (option: SingleDropdownOption) => {
+    onSelect = (option: SingleDropdownOption): void => {
         this.APIToolService.preventNextChangeDetection = true;
         this.swaggerSelect.value = option.value;
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
-    onMultiSelect = (e: any) => {
+    onMultiSelect = (e: any): void => {
         this.APIToolService.preventNextChangeDetection = true;
         this.selectedOptions = [...e];
         for (const option of this.swaggerSelect.options) {

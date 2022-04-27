@@ -466,7 +466,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     // TODO: Need to refine return value
-    protected startAccountPoll() {
+    protected startAccountPoll(): void {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
             catchError(ex => {

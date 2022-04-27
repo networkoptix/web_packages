@@ -317,7 +317,7 @@ export class NxSystemAPI {
         systemId: string,
         serverId: string,
         unauthorizedCallback: (params: IParams) => Promise<any>
-    ) {
+    ): void {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;
         this.systemId = systemId;
@@ -594,7 +594,7 @@ export class NxSystemAPI {
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string
-    ) {
+    ): void {
         throw Error(this.forbiddenMsg);
     }
 
@@ -1324,7 +1324,7 @@ export class NxSystemAPI {
         });
     }
 
-    getServerInfo(serverId: string) {
+    getServerInfo(serverId: string): void {
         throw Error(this.notImplementedMsg);
     }
 

@@ -75,10 +75,10 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    private onTouchedCallback = (): void => {
     };
 
-    private onChangeCallback = (_: any) => {
+    private onChangeCallback = (_: any): void => {
     };
 
     // validates the form, returns null when valid else the validation object

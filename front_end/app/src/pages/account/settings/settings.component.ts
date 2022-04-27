@@ -139,7 +139,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         this.langCode = langCode;
     }
 
-    isUserASystemOwner() {
+    isUserASystemOwner(): void {
         this.systemsService.systemsSubject.subscribe((systems: any[]) => {
             this.isSystemOwner = systems.some(system => {
                 return system.accessRole === 'owner';
@@ -147,7 +147,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    displayErrors = () => {
+    displayErrors = (): void => {
         this.hideErrors = false;
     };
 

@@ -11,11 +11,11 @@ export class NgrxDemoGroupListComponent {
   @Output() nameChangeRequested = new EventEmitter<{ groupId: string, newName: string }>();
   @Output() parentIdChangeRequested = new EventEmitter<{ groupId: string, newParentId: string }>();
 
-  public requestNameChange(groupId: string, event) {
+  public requestNameChange(groupId: string, event): void {
       this.nameChangeRequested.emit({ groupId, newName: event.target.value });
   }
 
-  public requestParentIdChange(groupId: string, event) {
+  public requestParentIdChange(groupId: string, event): void {
       this.parentIdChangeRequested.emit({ groupId, newParentId: event.target.value });
   }
 }

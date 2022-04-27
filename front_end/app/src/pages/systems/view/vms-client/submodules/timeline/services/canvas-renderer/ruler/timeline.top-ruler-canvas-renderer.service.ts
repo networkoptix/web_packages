@@ -108,7 +108,7 @@ export class TimelineTopRulerCanvasRendererService {
         curTime: ms,
         prevTime: ms,
         nextTime: ms
-    ) {
+    ): void {
         let x0: px = this.timeline.timeToCanvasOffsetX(curTime);
 
         const xNext: px = nextTime
@@ -151,7 +151,7 @@ export class TimelineTopRulerCanvasRendererService {
         y0: px,
         y1: px,
         y2: px
-    ) {
+    ): void {
         ctx.strokeStyle = `${topRulerDrawingConfig.serif.baseColorHex}${percentageToHex(topRulerDrawingConfig.serif.opacity)}`;
         ctx.beginPath();
         ctx.moveTo(x0, y0);

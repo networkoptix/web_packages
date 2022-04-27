@@ -99,7 +99,7 @@ export class RemoveSystemModalContent {
         }, err => console.error(err));
     }
 
-    close = (withResult?: boolean) => {
+    close = (withResult?: boolean): void => {
         this.dialogRef.close(withResult);
     };
 }

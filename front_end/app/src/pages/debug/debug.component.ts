@@ -111,7 +111,7 @@ export class NxDebugComponent {
         }
     }
 
-    private init() {
+    private init(): void {
         this.systemsService.systemsSubject
             .subscribe((systems: NxSystemWithUserInfo[]) => {
                 this.systems = systems;

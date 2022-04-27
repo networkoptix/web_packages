@@ -81,7 +81,7 @@ export class SelectTimeRangeModalContent {
         return new Date().getTimezoneOffset() * 60 * 1000;
     }
 
-    close = (msg: boolean | {}) => {
+    close = (msg: boolean | {}): void => {
         this.dialogRef.close(msg);
     };
 }

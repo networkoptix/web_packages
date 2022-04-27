@@ -190,7 +190,7 @@ export class Process {
         return this.errorHelper(error);
     };
 
-    public onComplete = () => {
+    public onComplete = (): void => {
         this.processing = false;
         this.finished = true;
     };

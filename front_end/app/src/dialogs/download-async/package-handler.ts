@@ -29,7 +29,7 @@ export class PackageHandler {
 
     #START = 0.15;
 
-    cancelProcess = () => {
+    cancelProcess = (): void => {
         this.#done$.next('canceled');
     };
 

@@ -30,7 +30,7 @@ export class NxSystemsListWidgetComponent extends FirstPartyWidget {
         return Object.entries(this.card.config.systems || {}).map(([key, { show }]: [string, any]) => show ?? true ? key : null).filter(val => val);
     }
 
-    updateSystems(availableSystems) {
+    updateSystems(availableSystems): void {
         for (const systemId in this.card.config.systems) {
             this.card.config.systems[systemId].available = false;
         }

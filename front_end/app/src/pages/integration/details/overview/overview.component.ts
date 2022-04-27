@@ -49,6 +49,6 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    onSubmit() {
+    onSubmit(): void {
     }
 }

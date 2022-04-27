@@ -129,7 +129,7 @@ export class DisconnectModalContent {
         });
     }
 
-    close = (msg?: boolean) => {
+    close = (msg?: boolean): void => {
         this.dialogRef.close(msg);
     };
 

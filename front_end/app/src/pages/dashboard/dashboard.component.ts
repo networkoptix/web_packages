@@ -255,7 +255,7 @@ export class NxDashboardComponent implements DashboardGroup {
     /**
      * Retrieves existing dashboard from cloud
      */
-    getPersistedConfig = async () => {
+    getPersistedConfig = async (): Promise<void> => {
         const { widgetUrl, dashboardUrl, devServer = this.cookieService.get('devServer') } = this.route.snapshot.queryParams;
         const downloadedDashboard = await this.updateDashboard(dashboardUrl);
         const currentDashboard = DashboardGroup.validateDashboard(
@@ -287,7 +287,7 @@ export class NxDashboardComponent implements DashboardGroup {
         }
     };
 
-    updateSelectedDashboard = (dashboardId, dashboardToAddIfNotExisting?: DashboardConfiguration) => {
+    updateSelectedDashboard = (dashboardId, dashboardToAddIfNotExisting?: DashboardConfiguration): void => {
         if (!this.menu.find(({ id }) => id === dashboardId) && dashboardToAddIfNotExisting) {
             this.menu.push(dashboardToAddIfNotExisting);
         }

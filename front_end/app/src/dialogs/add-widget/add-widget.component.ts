@@ -85,7 +85,7 @@ export class AddWidgetModalContent {
         this.LANG = language.translations;
     }
 
-    downloadWidget = async (widgetUrl, isDevServer = false) => {
+    downloadWidget = async (widgetUrl, isDevServer = false): Promise<void> => {
         // To handle cors issue when developing locally
         widgetUrl = this.environment.isLocal ? widgetUrl : last(widgetUrl.split(this.environment.cloudHost));
         const devSource = `${widgetUrl}/widget.html`;
@@ -132,7 +132,7 @@ export class AddWidgetModalContent {
         );
     }
 
-    close = (msg?: WidgetCard) => {
+    close = (msg?: WidgetCard): void => {
         this.dialogRef.close(msg);
     };
 }

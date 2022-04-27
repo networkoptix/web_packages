@@ -125,7 +125,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.updateArchivesPresent();
     }
 
-    private updateArchivesPresent() {
+    private updateArchivesPresent(): void {
         this.system.getCameraHistoryItems().toPromise().then(response => {
             this.archivesPresent = {};
             this.archivesPresent = response.reduce((acc, server) => {

@@ -302,7 +302,7 @@ export class LoginWebadminModalContent implements OnInit {
             });
     }
 
-    close = msg => {
+    close = (msg): void => {
         this.dialogRef.close(msg);
     };
 }

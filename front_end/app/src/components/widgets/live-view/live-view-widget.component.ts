@@ -138,11 +138,11 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
         this.card.config.selectedCamera = camera.value;
     }
 
-    refreshCameras = () => {
+    refreshCameras = (): void => {
         this.updater$.next('update');
     };
 
-    updateContainerSize = size => {
+    updateContainerSize = (size): void => {
         this.size = size;
     };
 

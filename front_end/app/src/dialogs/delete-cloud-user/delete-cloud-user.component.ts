@@ -65,7 +65,7 @@ export class DeleteCloudUserModalContent {
             });
     }
 
-    close = (msg: string | boolean = false) => {
+    close = (msg: string | boolean = false): void => {
         this.dialogRef.close(msg);
     };
 

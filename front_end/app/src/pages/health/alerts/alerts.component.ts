@@ -268,7 +268,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.countAlerts();
     }
 
-    addFilterAlarms() {
+    addFilterAlarms(): void {
         const alertItems = [
             { value: '0', name: 'All Alerts' },
             { value: 'warning', name: 'Only Warnings' },
@@ -359,7 +359,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.alertsCount = Object.values(this.alerts).length;
     }
 
-    processAlerts() {
+    processAlerts(): void {
         /*
          * 1.Reduce converts array of alerts into object
          * [{metric: name, _ :{icon: alarmLevel}}] => { resourceType: {alarmLevel: count} }

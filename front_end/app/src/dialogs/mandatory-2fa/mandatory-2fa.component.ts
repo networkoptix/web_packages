@@ -100,7 +100,7 @@ export class Mandatory2faModalContent {
             });
     }
 
-    close = (msg?: string) => {
+    close = (msg?: string): void => {
         this.dialogRef.close(msg);
     };
 

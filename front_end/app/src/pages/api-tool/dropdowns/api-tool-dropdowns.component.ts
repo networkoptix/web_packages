@@ -177,7 +177,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         this.openAPIJSONService.setAPIType(this.server.value, type.value);
     }
 
-    resetDropdowns = () => {
+    resetDropdowns = (): void => {
         this.servers = [];
         this.server = undefined;
         this.types = [];

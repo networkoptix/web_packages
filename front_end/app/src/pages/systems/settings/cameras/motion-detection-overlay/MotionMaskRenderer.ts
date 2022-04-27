@@ -72,7 +72,7 @@ export class MotionMaskRenderer {
     public initCanvas = (
         canvas: ElementRef<HTMLCanvasElement>,
         selectionCanvas: ElementRef<HTMLCanvasElement>
-    ) => {
+    ): void => {
         const canvasWidth = canvas.nativeElement.width / 2;
         const canvasHeight = canvas.nativeElement.height / 2;
         this.cellWidth = canvasWidth / this.columns;
@@ -328,7 +328,7 @@ export class MotionMaskRenderer {
     /**
      * Adds fill color for each cell
      */
-    private fillZones = (maskZones: Area[]) => {
+    private fillZones = (maskZones: Area[]): void => {
         const selectedFill = '#33333377';
         maskZones.forEach(
             ({ sensitivity, x, y, width, height }) => {
@@ -361,7 +361,7 @@ export class MotionMaskRenderer {
         renderInstructions = this.maskRenderInstructions,
         onlySelection = false,
         shadow = false
-    ) => {
+    ): void => {
         const instruction = () => {
             ctx.lineWidth = 1;
         };
@@ -482,7 +482,7 @@ export class MotionMaskRenderer {
     /**
      * Add numbers to the top left most cell in a zone
      */
-    private addNumbers = (maskZones: Area[]) => {
+    private addNumbers = (maskZones: Area[]): void => {
         const {
             findStartZones
         } = this.motionMask;
@@ -523,7 +523,7 @@ export class MotionMaskRenderer {
         y : number;
         width : number;
         height : number;
-    }) => {
+    }): void => {
         const { x, y, width, height } = {
             x: cursor.x * this.cellWidth,
             y: cursor.y * this.cellHeight,
@@ -540,7 +540,7 @@ export class MotionMaskRenderer {
     /**
      * Triggered on each state change
      */
-    private updateRenderMask = (maskZones: Area[]) => {
+    private updateRenderMask = (maskZones: Area[]): void => {
         this.maskRenderInstructions.push(() => this.ctx.clearRect(
             0,
             0,
@@ -562,7 +562,7 @@ export class MotionMaskRenderer {
     private renderMask = () =>
         this.maskRenderInstructions.forEach(instruction => instruction());
 
-    private updateSelection = selectionZones => {
+    private updateSelection = (selectionZones): void => {
         this.selectionRenderInstructions.push(() =>
             this.selectionCtx.clearRect(0, 0, this.width, this.height)
         );

@@ -298,7 +298,7 @@ export class BirdViewTree {
         node: BirdViewTreeNode,
         part: 'left' | 'right',
         minGapMs: ms
-    ) => {
+    ): void => {
         // console.log('_zoomingRequiredCallback', node.depth, minGapMs, part, node.startMs, node.endMs)
         const { records, perfect } = part === 'left'
             ? this._spareArchiveDetails(node.startMs, node.centerMs, minGapMs)

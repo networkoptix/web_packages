@@ -47,7 +47,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     ngOnDestroy(): void {
     }
 
-    ngOnChanges(changes: NgChanges<BaseDropdown>) {}
+    ngOnChanges(changes: NgChanges<BaseDropdown>): void {}
 
     trackItem(index, item) {
         return item ? item.value : undefined;

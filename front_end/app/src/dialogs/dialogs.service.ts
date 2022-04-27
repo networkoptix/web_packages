@@ -221,7 +221,7 @@ export class NxDialogsService {
     }
 
     // Not used at this moment
-    public downloadAsync(modalContent: ModalContent) {
+    public downloadAsync(modalContent: ModalContent): void {
         // const options: IParams = {
         //     windowClass: 'modal-holder',
         //     backdrop: 'static'

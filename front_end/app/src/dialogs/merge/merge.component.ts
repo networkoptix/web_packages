@@ -400,7 +400,7 @@ export class MergeModalContent {
             });
     }
 
-    initProcesses() {
+    initProcesses(): void {
         this.checkMergeabilityFunction = () => {
             this.checkIfExistingSystem(this.machine.state.template.serverUrlInputValue);
             if (this.targetSystem.value === this.otherSystem) {

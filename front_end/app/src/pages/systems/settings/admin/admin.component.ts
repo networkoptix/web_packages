@@ -289,7 +289,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.applyService.resetFormWatchers();
     }
 
-    initProcesses() {
+    initProcesses(): void {
         this.systemNameProcess = this.processService.createProcess(() => {
             if (/^\s+$/.test(this.systemName)) {
                 return Promise.resolve();
@@ -419,7 +419,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateAndGoToSystems = () => {
+    updateAndGoToSystems = (): void => {
         // this.userDisconnectSystem = true;
         this.systemsService
             .forceUpdateSystems(this.accountService.email)

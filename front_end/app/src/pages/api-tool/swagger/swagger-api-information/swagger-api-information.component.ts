@@ -19,7 +19,7 @@ export class NxSwaggerAPIInformationComponent {
         }
     }
 
-    modifyTable() {
+    modifyTable(): void {
         const table = this.markdown.element.nativeElement.querySelector('table');
         if (table) {
             table.innerHTML = '<thead><tr><th>It was</th><th>It Is</th></tr></thead>' + table.innerHTML;

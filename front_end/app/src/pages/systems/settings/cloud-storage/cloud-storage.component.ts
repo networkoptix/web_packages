@@ -298,7 +298,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     // Handler methods for actions
 
-    private initEnableCloudStorageProcess() {
+    private initEnableCloudStorageProcess(): void {
         this.enableCloudStorage = this.processService.createProcess(() => {
             // Uncomment these lines and add condition in if statement if we add account limits.
             // const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
@@ -366,7 +366,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     // Callback for disabled or moved storage
 
-    private handleCloudStorageDisabled = () => {
+    private handleCloudStorageDisabled = (): void => {
         this.cloudStorageSystemEnabled = false;
     };
 }

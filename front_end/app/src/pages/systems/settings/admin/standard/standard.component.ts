@@ -432,7 +432,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             );
         });
 
-    toggleAlexaEnabled = () => {
+    toggleAlexaEnabled = (): void => {
         const {
             enabled,
             // selectedSystem,

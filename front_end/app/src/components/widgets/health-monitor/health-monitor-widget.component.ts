@@ -186,7 +186,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
 
     resourceHeading = '(All Resources)';
 
-    updateResourceHeading = () => {
+    updateResourceHeading = (): void => {
         const values = Object.values(this.card.config.resources).filter(({ value }) => value);
         const all = Object.keys(this.card.config.resources).length === values.length;
         const otherHeading = values.reduce((
@@ -195,7 +195,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         this.resourceHeading = `(${all ? 'All Resources' : otherHeading})`;
     };
 
-    handleShowAction = ({ id = '', resourceId = '', key = '', name = '', ...element } = {}) => {
+    handleShowAction = ({ id = '', resourceId = '', key = '', name = '', ...element } = {}): void => {
         console.log(element);
         const queryParams = id ? { id } : {};
         const childRoute = resourceId || key;
@@ -242,7 +242,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
         this.refreshData();
     };
 
-    refreshData = () => {
+    refreshData = (): void => {
         this.healthMonitorAge = 0;
         this.loading = Date.now();
         this.updater$.next('update');

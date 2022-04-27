@@ -66,5 +66,5 @@ export class NxHTMLComponent implements ControlValueAccessor {
         this.#onChangeCallback = fn;
     }
 
-    registerOnTouched() {}
+    registerOnTouched(): void {}
 }

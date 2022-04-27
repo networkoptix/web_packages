@@ -199,7 +199,7 @@ export class NxSystemLicensesComponent implements OnInit {
         }
     }
 
-    private getLicenses() {
+    private getLicenses(): void {
         this.system.getLicenses()
             .then(({ licenses: result }) => {
                 if (result.length) {

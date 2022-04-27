@@ -63,7 +63,7 @@ export class RemoveUserModalContent {
         });
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

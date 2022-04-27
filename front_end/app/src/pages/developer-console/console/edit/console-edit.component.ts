@@ -172,11 +172,11 @@ export class NxDevConsoleEditComponent {
         }
     }
 
-    onDownloadClick = () => {
+    onDownloadClick = (): void => {
         this.downloadClick = true;
     };
 
-    discard = () => {
+    discard = (): void => {
         this.consoleService.targetState = { id: this.asset.id, download: false };
         const [_, params = ''] = this.router.url.split('?');
         this.router.navigateByUrl(
