@@ -26,21 +26,34 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     ) {
     }
 
-    public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler): Observable<HttpEvent<any>> {
+    public intercept(
+        httpRequest: HttpRequest<unknown>,
+        handler: HttpHandler
+    ): Observable<HttpEvent<unknown>> {
         if (!environment.isLocal || httpRequest.headers.get('X-Server-Guid')) {
             return handler.handle(httpRequest);
         }
         return handler.handle(httpRequest)
             .pipe(
                 tap(
-                    res => this.checkIfSystemAvailable(res),
-                    err => this.checkIfSystemAvailable(err)
+                    (res: HttpResponse<unknown>) => {
+                        this.checkIfSystemAvailable(res);
+                    },
+                    (err: HttpErrorResponse) => {
+                        this.checkIfSystemAvailable(err);
+                    }
                 )
             );
     }
 
     // appState.systemAvailable for webadmin, overlay-modal.component
-    checkIfSystemAvailable(res: any) {
+    checkIfSystemAvailable(res: HttpResponse<unknown> | HttpErrorResponse): void {
+        // res might be just { type: number } and not full response
+        if (res.url && new URL(res.url).pathname.startsWith('/static')) {
+            // Don't check on request for static resource
+            return;
+        }
+
         // replace OR as "0 || undefined" makes offline status "false"
         const status = res.status !== undefined ? res.status : res.type !== undefined ? res.type : 0;
 
@@ -58,7 +71,11 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             this.isDialogActive = true;
             return this.dialogService.expiredSession()
                 .then(() => this.window.location.reload());
-        } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false && this.appState.lastErrorStatus$.value !== undefined) {
+        } else if (
+            res instanceof HttpResponse &&
+            this.appState.systemAvailable$.value === false &&
+            this.appState.lastErrorStatus$.value !== undefined
+        ) {
             this.appState.systemAvailable$.next(true);
 
             // lastErrorStatus$ could be "0" (because of res.type) ...
