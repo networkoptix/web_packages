@@ -15,7 +15,7 @@
         },
         "Advanced Viewer": {
             "description": "ライブ表示、アーカイブ表示、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "Custom": {
             "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
@@ -35,7 +35,7 @@
         },
         "advancedViewer": {
             "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "cloudAdmin": {
             "description": "システムを構成し共有することができます",
