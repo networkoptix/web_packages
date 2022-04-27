@@ -826,15 +826,47 @@ else:
 
 VERSION = os.getenv('VERSION', '0')
 
+# upload app shared settings
+UPLOAD_BUCKET = conf.get('upload_bucket', f'{AWS_STORAGE_BUCKET_NAME}-uploads')
+UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'
+
 # Testing
 # import boto3
+# import sys
+# from botocore import exceptions
 # AWS_STORAGE_BUCKET_NAME = 'custom-local-bucket-name-here'
-# s3 = boto3.session.Session().client("s3")
-# try:
-#     s3.head_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
-# except s3.exceptions.ClientError:
-#     s3.create_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
 
-# upload app shared settings
-UPLOAD_BUCKET = f'{AWS_STORAGE_BUCKET_NAME}-uploads'
-UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'
+# CORS_CONFIG = {
+#     'CORSRules': [
+#         {
+#             "AllowedOrigins": ["*"],
+#             "AllowedMethods": ["GET", "PUT"],
+#             "MaxAgeSeconds": 21600,
+#             "AllowedHeaders": [
+#                 "Authorization",
+#                 "x-amz-date",
+#                 "x-amz-content-sha256",
+#                 "content-type"
+#             ],
+#             "ExposeHeaders": ["ETag"]
+#         },
+#         {
+#             "AllowedOrigins": ["*"],
+#             "AllowedMethods": ["GET"],
+#             "MaxAgeSeconds": 21600
+#         }
+#     ]
+# }
+
+# try:
+#     s3 = boto3.session.Session().client("s3")
+#     # Check if upload bucket exists
+#     s3.head_bucket(Bucket=UPLOAD_BUCKET)
+#     raise exceptions.ClientError({}, 'test')
+# except exceptions.NoCredentialsError:
+#     # Prevent pipeline failure
+#     pass
+# except exceptions.ClientError:
+#     # Create upload bucket if doesn't exist
+#     s3.create_bucket(Bucket=UPLOAD_BUCKET)
+#     s3.put_bucket_cors(Bucket=UPLOAD_BUCKET, CORSConfiguration=CORS_CONFIG)

@@ -1,6 +1,7 @@
 from time import sleep
 import sys
 import boto3
+import logging
 from botocore import exceptions
 from uuid import uuid4
 from django.http import Http404
@@ -16,8 +17,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from cloud.helpers.exceptions import require_params, api_success
 from cms.models import Asset, DataStructure, ExternalFile, rename_file
 
-UPLOAD_BUCKET = settings.UPLOAD_BUCKET or f'{settings.AWS_STORAGE_BUCKET_NAME}-uploads'
-UPLOAD_SEPARATOR = settings.UPLOAD_SEPARATOR or '--CHUNKED--UPLOAD--SEPARATOR--'
+
+logger = logging.getLogger(__name__)
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -29,43 +30,19 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
 upload_auth_permissions = authentication_classes(
     (CsrfExemptSessionAuthentication, BasicAuthentication))
 
-CORS_CONFIG = {
-    'CORSRules': [
-        {
-            "AllowedOrigins": ["*"],
-            "AllowedMethods": ["GET", "PUT"],
-            "MaxAgeSeconds": 3000,
-            "AllowedHeaders": [
-                "Authorization",
-                "x-amz-date",
-                "x-amz-content-sha256",
-                "content-type"
-            ],
-            "ExposeHeaders": ["ETag"]
-        },
-        {
-            "AllowedOrigins": ["*"],
-            "AllowedMethods": ["GET"],
-            "MaxAgeSeconds": 3000
-        }
-    ]
-}
-
 
 if "pytest" not in sys.modules:
     # Don't connect to S3 within unit tests
     try:
         s3 = boto3.session.Session().client("s3")
         # Check if upload bucket exists
-        s3.head_bucket(Bucket=UPLOAD_BUCKET)
-        raise exceptions.ClientError({}, 'test')
+        s3.head_bucket(Bucket=settings.UPLOAD_BUCKET)
     except exceptions.NoCredentialsError:
         # Prevent pipeline failure
         pass
     except exceptions.ClientError:
         # Create upload bucket if doesn't exist
-        s3.create_bucket(Bucket=UPLOAD_BUCKET)
-        s3.put_bucket_cors(Bucket=UPLOAD_BUCKET, CORSConfiguration=CORS_CONFIG)
+        logger.warning(f'Missing {settings.UPLOAD_BUCKET} bucket for chunked uploads')
 
 
 def get_param(request, key):
@@ -76,7 +53,7 @@ def generate_presigned(key, upload_id, part_number):
     return s3.generate_presigned_url(
         ClientMethod='upload_part',
         Params={
-            'Bucket': UPLOAD_BUCKET,
+            'Bucket': settings.UPLOAD_BUCKET,
             'Key': key,
             'UploadId': upload_id,
             'PartNumber': int(part_number),
@@ -107,8 +84,8 @@ def create_multipart_upload(request):
     require_params(request, ('filename', 'type'))
 
     multipart_upload = s3.create_multipart_upload(
-        Bucket=UPLOAD_BUCKET,
-        Key=f'{uuid4()}{UPLOAD_SEPARATOR}{get_param(request, "filename")}',
+        Bucket=settings.UPLOAD_BUCKET,
+        Key=f'{uuid4()}{settings.UPLOAD_SEPARATOR}{get_param(request, "filename")}',
         Expires=60*60,
         ContentType=get_param(request, "type"))
 
@@ -123,7 +100,7 @@ def complete_multipart_upload(request, upload_id):
 
     try:
         res = s3.complete_multipart_upload(
-            Bucket=UPLOAD_BUCKET,
+            Bucket=settings.UPLOAD_BUCKET,
             Key=key,
             UploadId=upload_id,
             MultipartUpload={'Parts': get_param(request, 'parts')})
@@ -143,8 +120,8 @@ def move_completed_upload(request):
     key = get_param(request, 'key')
 
     target_bucket = settings.AWS_STORAGE_BUCKET_NAME
-    filename = key.split(UPLOAD_SEPARATOR)[-1]
-    source = {'Bucket': UPLOAD_BUCKET, 'Key': key}
+    filename = key.split(settings.UPLOAD_SEPARATOR)[-1]
+    source = {'Bucket': settings.UPLOAD_BUCKET, 'Key': key}
     temp_copy = {**source, 'Key': str(uuid4())}
 
     # Temporary copy is needed because of the way S3 calculated MD5 for is different on multipart uploads from actual MD5
@@ -180,8 +157,8 @@ def get_upload_parameters(request):
     require_params(request, ('filename', 'type'))
 
     res = s3.generate_presigned_post(
-        Key=f'{uuid4()}{UPLOAD_SEPARATOR}{get_param(request, "filename")}',
-        Bucket=UPLOAD_BUCKET,
+        Key=f'{uuid4()}{settings.UPLOAD_SEPARATOR}{get_param(request, "filename")}',
+        Bucket=settings.UPLOAD_BUCKET,
         ExpiresIn=60*60,
         Fields={'success_action_status': '201', 'content-type': get_param(request, 'type')})
 
@@ -215,7 +192,7 @@ def sign_partial_upload(request, upload_id=None, part_number=None):
 
 def abort_upload(upload_id, key):
     s3.abort_multipart_upload(
-        Bucket=UPLOAD_BUCKET,
+        Bucket=settings.UPLOAD_BUCKET,
         Key=key,
         UploadId=upload_id)
 
@@ -223,7 +200,7 @@ def abort_upload(upload_id, key):
 
 
 def get_uploaded_parts(upload_id, key):
-    res = s3.list_parts(Bucket=UPLOAD_BUCKET, Key=key, UploadId=upload_id)
+    res = s3.list_parts(Bucket=settings.UPLOAD_BUCKET, Key=key, UploadId=upload_id)
 
     return api_success(res['Parts'] if 'Parts' in res else [])
 
