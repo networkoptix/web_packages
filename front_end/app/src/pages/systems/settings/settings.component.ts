@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import {
     Component,
     Input,
@@ -148,6 +148,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
+        private location: Location,
         private accountService: NxAccountService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
@@ -375,6 +376,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         .then(
                                             () => {},
                                             () => {
+                                                this.location.replaceState('/systems');
                                                 return this.oauthService.redirectOauth(
                                                     'system2faAuth',
                                                     account.email,
