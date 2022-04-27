@@ -15,7 +15,7 @@
         },
         "Advanced Viewer": {
             "description": "ライブ表示、アーカイブ表示、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "Custom": {
             "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
@@ -35,7 +35,7 @@
         },
         "advancedViewer": {
             "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "cloudAdmin": {
             "description": "システムを構成し共有することができます",
@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -657,7 +657,7 @@
         "activateCode": "アカウント有効化",
         "activateSuccess": "アカウントが有効化されました",
         "articleTitle": "{VMS_NAME} の {ARTICLE_TITLE}",
-        "auth": "Authorization",
+        "auth": "認証",
         "changePassword": "パスワードの変更",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",

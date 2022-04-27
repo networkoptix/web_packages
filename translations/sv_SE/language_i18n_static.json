@@ -429,9 +429,9 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Starta om servern&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -657,7 +657,7 @@
         "activateCode": "Aktivera konto",
         "activateSuccess": "Kontot aktiverat",
         "articleTitle": "{ARTICLE_TITLE} för {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Tillstånd",
         "changePassword": "Ändra lösenord",
         "debug": "Debugläge",
         "default": "%CLOUD_NAME%",
