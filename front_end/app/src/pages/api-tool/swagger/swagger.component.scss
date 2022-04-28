@@ -879,6 +879,13 @@ nx-swagger-markdown + div#swagger-ui {
 	@include typography.regular14light10;
 }
 
+.swagger-ui .opblock-section-request-body .parameter__name.required:after{
+	content   : "*";
+	font-size : 15px;
+	margin-top: 1px;
+	color     : rgba(255, 0, 0, .6)
+}
+
 .swagger-ui .parameter__name.required:after {
 	content   : "";
 	color     : rgba(255, 0, 0, .6)
