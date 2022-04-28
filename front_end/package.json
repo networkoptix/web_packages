@@ -97,7 +97,7 @@
     "ng2-trim-directive": "2.3.4",
     "ngx-clipboard": "14.0.2",
     "ngx-cookie-service": "3.0.4",
-    "ngx-device-detector": "1.4.2",
+    "ngx-device-detector": "1.4.6",
     "ngx-file-drop": "8.0.8",
     "ngx-markdown": "^11.0.0",
     "ngx-mask": "11.1.4",

@@ -77,7 +77,7 @@ require('./scripts/vendor/protocolcheck');
 export class AppComponent {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
-    isInIframe: boolean;
+    // isInIframe: boolean;
     newSystem: boolean;
     loading: boolean;
     reauthorizing: boolean;
@@ -123,14 +123,20 @@ export class AppComponent {
         }
 
         /* No real need to update often unless some browser have major upgrade
-         * and we don't want to support previous releases
+         * and we don't want to support previous releases.
+         * https://networkoptix.atlassian.net/wiki/spaces/SD/pages/771031360/Supported+OS+and+versions
          *
-         * IE and Edge are here just for reference
-         * Angular will not make it through here as they are not supported at all ... see index.html
+         * IE is here just for reference
+         * Angular will not make it through here as IE and early Edge (UA string 'Edge')
+         * are not supported at all ... see index.html
+         *
+         * Device detector will report mobile Edge as 'ms-edge' (actual UA string 'EdgA|EdgiOS')
+         * and desktop Edge as 'ms-edge-chromium'(UA string 'Edg')
+         * TODO: Need to check it once device detector is upgraded to match Angular version
          */
         this.browserBlacklist = {
             ie: 9999,
-            'ms-edge': 9999,
+            'ms-edge': 84,
             'ms-edge-chromium': 84,
             safari: 12,
             chrome: 76,
