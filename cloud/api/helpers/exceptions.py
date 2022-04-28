@@ -270,8 +270,9 @@ def validate_mediaserver_response(func):
                 raise vms_error(response.text, error_code=ErrorCodes.unknown_error)
 
             validate_error(response_data)
-            raise vms_error(response_data['errorText'], error_code=response_data['resultCode'],
-                                               error_data=response_data)
+            raise vms_error(response_data['errorText'],
+                            error_code=response_data['resultCode'],
+                            error_data=response_data)
         # everything is OK - return server's response
         return response_data
 
@@ -317,15 +318,16 @@ def validate_response(func):
             validate_error(response_data)
             raise response_errors[response.status_code](response_data['errorText'],
                                                         error_code=response_data['resultCode'],
-                                                        error_data=response_data["resultCode"])
+                                                        error_data=response_data)
 
         # Check error_code status - raise APILogicException
         if (result_code := isinstance(response_data, dict) and response_data.get('resultCode', False)) and result_code != ErrorCodes.ok.value:
             validate_error(response_data)
             if result_code in logic_errors:
                 raise logic_errors[result_code](response_data['errorText'],
-                                                                error_code=result_code)
-            raise APILogicException(response_data['errorText'], result_code)
+                                                error_code=result_code,
+                                                error_data=response_data)
+            raise APILogicException(response_data['errorText'], result_code, error_data=response_data)
 
         # everything is OK - return server's response
         return response_data
