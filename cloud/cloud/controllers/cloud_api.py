@@ -4,8 +4,6 @@ from functools import wraps
 import random
 import string
 import logging
-import re
-import ast
 
 import requests
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
@@ -23,6 +21,8 @@ CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
 CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
 CLOUD_2FA_URL = f"{CLOUD_DB_URL}/account/self/2fa"
+
+MOBILE_CLIENT_TOKEN_LIFETIME_S = "15778800"  # 6 Months
 
 INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
                           ErrorCodes.not_authorized.value,
@@ -904,7 +904,7 @@ class Auth(object):
 
     @staticmethod
     @validate_response
-    def get_access_token(code, ip=None):
+    def get_access_token(code, is_mobile=False, ip=None):
         headers = {
             "X-Forwarded-For": ip
         }
@@ -913,6 +913,10 @@ class Auth(object):
             "response_type": Auth.RESPONSE_TYPE.token,
             "code": code
         }
+
+        if is_mobile:
+            params['refresh_token_lifetime'] = MOBILE_CLIENT_TOKEN_LIFETIME_S
+
         return post_wrapper(f"{CLOUD_DB_URL}/oauth2/token", json=params, headers=headers)
 
     @staticmethod
