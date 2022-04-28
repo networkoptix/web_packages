@@ -230,7 +230,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         ) {
                             this.system = system;
                         }
-                        this.settingsService.footerSubject.next(true);
+                        this.settingsService.footer = true;
                         this.updateSettings(this.currentlyMerging);
                         this.syncMergeAlerts();
 

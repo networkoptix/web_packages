@@ -6,9 +6,9 @@ import { NxSystem } from '@services/system.service';
 @Injectable({
     providedIn: 'root'
 })
-export class NxSettingsService {
-    footerSubject = new BehaviorSubject<boolean>(false);
+export class NxMonitoringService {
     systemSubject = new BehaviorSubject<NxSystem>(undefined);
+    selectedServerIdSubject = new BehaviorSubject<string>('');
 
     constructor() {}
 
@@ -21,11 +21,11 @@ export class NxSettingsService {
         this.systemSubject.next(system);
     }
 
-    get footer(): boolean {
-        return this.footerSubject.getValue();
+    get selectedServerId(): string {
+        return this.selectedServerIdSubject.getValue();
     }
 
-    set footer(value: boolean) {
-        this.footerSubject.next(value);
+    set selectedServerId(value: string) {
+        this.selectedServerIdSubject.next(value);
     }
 }

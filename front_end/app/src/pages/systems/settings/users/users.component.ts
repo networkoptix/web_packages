@@ -310,7 +310,7 @@ export class NxSystemUsersComponent implements OnInit {
                 ? 'Owner'
                 : user.role.name;
 
-            this.settingsService.footerSubject.next(true);
+            this.settingsService.footer = true;
 
             setTimeout(() => {
                 this.userEnabledFormWatcher = this.applyService

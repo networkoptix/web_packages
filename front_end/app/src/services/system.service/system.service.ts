@@ -51,7 +51,7 @@ export class NxSystemService {
         serverId?: string,
         skipPoll?: boolean,
         skipSettingSystem?: boolean
-    ) {
+    ): NxSystem {
         const id = systemId || serverId;
         const cloudSystemInfo: any =
             (this.systemsService.systems || []).find((system) => system.id === id);
@@ -101,7 +101,7 @@ export class NxSystemService {
         return this.system;
     }
 
-    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = '') {
+    createLocalSystem(mediaServer: NxSystemRestAPI, userId: string, userEmail = ''): NxSystem {
         if (this.system === undefined) {
             this.system = new NxSystem(
                 this.CONFIG,

@@ -5,7 +5,9 @@ import {
     SimpleChanges
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { timer } from 'rxjs';
+import { curveBasis } from 'd3-shape';
+import { Subject, timer } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -14,7 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service';
 
 /* USAGE
- <monitoring-graph [system]="system"></monitoring-graph>
+ <monitoring-graph [system]="system" [selectedServerId]="selectedServerId"></monitoring-graph>
 */
 
 @UntilDestroy()
@@ -26,9 +28,12 @@ import { NxSystem } from '@services/system.service';
 
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
+    @Input() selectedServerId: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    private destroy$ = new Subject();
 
     view = undefined; // fitContainer
     multi: {
@@ -49,6 +54,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     xAxisLabel: string = '';
     yAxisLabel: string = '';
     timeline: boolean = false;
+    curve = curveBasis;
 
     colorScheme = {
         domain: [
@@ -93,42 +99,43 @@ export class NxMonitoringGraphComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.system.currentValue) {
+        if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
+            this.destroy$.next();
+            this.multi = [];
             this.getStats();
         }
     }
 
     private getStats() {
-        timer(0, 1000).pipe(
-            untilDestroyed(this)
-        ).subscribe(() => {
-            this.system.mediaserver.getStatistics()
-                .pipe(untilDestroyed(this))
-                .subscribe(response => {
-                    response.reply && response.reply.statistics.forEach(data => {
-                        const seriesData = this.multi.find(series => series.name === data.description);
-                        if (!seriesData) {
-                            const series = Array.from({ length: 50 }, (_, i) => { return { name: i + 1, value: 0 }; });
-                            this.multi.push({
-                                name: data.description,
-                                series: series
-                            });
-                            this.multi[this.multi.length - 1].series.push({
-                                name: response.reply.uptimeMs,
-                                value: Math.round(data.value * 100)
-                            });
-                            this.multi[this.multi.length - 1].series.shift();
-                        } else {
-                            seriesData.series.push({
-                                name: response.reply.uptimeMs,
-                                value: Math.round(data.value * 100)
-                            });
-                            seriesData.series.shift();
-                        }
-                    });
-
-                    this.multi = [...this.multi];
+        timer(0, 1000)
+            .pipe(
+                untilDestroyed(this),
+                takeUntil(this.destroy$),
+                switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
+            ).subscribe((response) => {
+                response.reply && response.reply.statistics.forEach(data => {
+                    const seriesData = this.multi.find(series => series.name === data.description);
+                    if (!seriesData) {
+                        const series = Array.from({ length: 50 }, (_, i) => { return { name: i + 1, value: 0 }; });
+                        this.multi.push({
+                            name: data.description,
+                            series: series
+                        });
+                        this.multi[this.multi.length - 1].series.push({
+                            name: response.reply.uptimeMs,
+                            value: Math.round(data.value * 100)
+                        });
+                        this.multi[this.multi.length - 1].series.shift();
+                    } else {
+                        seriesData.series.push({
+                            name: response.reply.uptimeMs,
+                            value: Math.round(data.value * 100)
+                        });
+                        seriesData.series.shift();
+                    }
                 });
-        });
+
+                this.multi = [...this.multi];
+            });
     }
 }

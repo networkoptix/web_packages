@@ -9,8 +9,6 @@ import { WINDOW } from '@services/window-provider';
 
 import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
 
-type LoggerDropdownItem = DropdownItem<string>;
-
 @UntilDestroy()
 @Component({
     selector: 'logger',
@@ -21,6 +19,7 @@ export class NxLoggerComponent implements OnChanges {
     readonly iframeHeight = 500;
 
     @Input() system: NxSystem;
+    @Input() selectedServerId: string;
 
     selectedLogLevel: DropdownItem<string>;
     logLevels: DropdownItem<string>[] = [];
@@ -62,7 +61,7 @@ export class NxLoggerComponent implements OnChanges {
             if (!environment.isLocal) {
                 this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
             }
-            this.system.mediaserver.logLevel()
+            this.system.serverManager.logLevel(this.selectedServerId)
                 .pipe(untilDestroyed(this))
                 .subscribe(res => {
                     this.logLevels = Object.keys(res.reply).map(level => ({

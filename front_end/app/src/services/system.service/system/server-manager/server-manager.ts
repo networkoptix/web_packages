@@ -139,7 +139,7 @@ export class ServerManager {
     }
 
     logLevel(serverId: string) {
-        return this.mediaserverConnections[serverId].logLevel().toPromise();
+        return this.mediaserverConnections[serverId].logLevel();
     }
 
     setLogLevels(serverId: string, loggers: IParams) {
@@ -231,6 +231,10 @@ export class ServerManager {
 
     getServerStats(serverId, useCache = false) {
         return this.mediaserverConnections[serverId].getServerStats(useCache);
+    }
+
+    getStatistics(serverId: string) {
+        return this.mediaserverConnections[serverId].getStatistics();
     }
 
     parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string; }) {

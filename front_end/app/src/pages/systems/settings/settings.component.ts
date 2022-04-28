@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';

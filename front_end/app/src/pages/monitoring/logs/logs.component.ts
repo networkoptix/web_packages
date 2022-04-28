@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { NxAccountService } from '@services/account.service';
+import { NxMonitoringService } from '@pages/monitoring/monitoring.service';
 import { NxSystem } from '@services/system.service';
-import { NxSystemService } from '@services/system.service/system.service';
 import { NxMenuService } from '@src/menu/menu.service';
 
-import { NxSettingsService } from '../../systems/settings/settings.service';
-
+@UntilDestroy()
 @Component({
     selector: 'logs',
     templateUrl: 'logs.component.html',
@@ -14,11 +13,10 @@ import { NxSettingsService } from '../../systems/settings/settings.service';
 })
 export class LogsComponent implements OnInit {
     system: NxSystem;
+    selectedServerId: string;
 
     constructor(
-        private accountService: NxAccountService,
-        private settingsService: NxSettingsService,
-        private systemService: NxSystemService,
+        private monitoringService: NxMonitoringService,
         private menuService: NxMenuService,
     ) {}
 
@@ -26,24 +24,17 @@ export class LogsComponent implements OnInit {
         this.menuService.section = 'logs';
         this.menuService.detail = '';
 
-        this.accountService.get().then(account => {
-            if (!account) {
-                return;
-            }
+        this.monitoringService.systemSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(system => {
+                this.system = system;
+                this.selectedServerId = this.monitoringService.selectedServerId;
+            });
 
-            this.system = this.settingsService.system;
-
-            if (!this.system) {
-                const system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi,
-                    account.id,
-                    account.email
-                );
-                system.update().then(() => {
-                    this.system = system;
-                    this.settingsService.system = system;
-                });
-            }
-        });
+        this.monitoringService.selectedServerIdSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(serverId => {
+                this.selectedServerId = serverId;
+            });
     }
 }

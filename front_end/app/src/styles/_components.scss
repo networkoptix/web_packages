@@ -196,4 +196,9 @@ landing-display-component {
         float  : none !important;
         height : 500px;
     }
+    
+    .chart-legend .legend-labels {
+        background-color : $additional_light1;
+        border: 1px solid $light4;
+    }
 }

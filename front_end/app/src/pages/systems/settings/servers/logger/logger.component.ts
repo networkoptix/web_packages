@@ -140,8 +140,8 @@ export class NxServerLoggerComponent implements OnChanges {
     }
 
     init = () => {
-        this.system
-            .logLevel(this.serverId)
+        this.system.serverManager
+            .logLevel(this.serverId).toPromise()
             .then(response => {
                 this.settingsToBeDisplayedOrUpdated(response.reply);
                 this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
