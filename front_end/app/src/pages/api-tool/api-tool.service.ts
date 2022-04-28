@@ -254,7 +254,7 @@ export class NxAPIToolService {
                 }
                 this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
             });
-        } else if (cachedSystem) {
+        } else if (cachedSystem && cachedSystem.isOnline) {
             this.system = cachedSystem;
             this.selectedSystem = { value: this.system.id, name: this.makeSystemName(this.system), disabled: false, icon: this.CONFIG.icons.dirTextButtons + 'storage_cloud.svg' };
         } else {
