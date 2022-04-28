@@ -440,9 +440,9 @@
             "loggedFromOtherAccount": "Budete přihlášeni pomocí jiného účtu",
             "noClientDetected": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Chcete-li smazat svůj účet, odpojte od systému %CLOUD_NAME% všechny systémy, které vlastníte."
@@ -570,7 +570,7 @@
         "cantUnshareWithMeSystemPrefix": "Systém nelze smazat",
         "emailNotFound": "Účet neexistuje.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "Tento odkaz nemá přístup k žádnému systému. K tomu může dojít, když byl systém odpojen od %CLOUD_NAME%, přístup k tomuto systému byl zrušen nebo pokud jste přihlášeni k nesprávnému účtu.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "K provedení této akce nemáte oprávnění",
         "lostConnection": "Connection to {systemName} lost",
@@ -668,6 +668,7 @@
         "activateCode": "Aktivovat účet",
         "activateSuccess": "Účet aktivován",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Změnit heslo",
         "debug": "Ladění",
         "default": "%CLOUD_NAME%",
@@ -811,7 +812,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connected",

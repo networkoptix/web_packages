@@ -194,7 +194,7 @@ Force Tags        system
     Verify on Servers Page
     ${loc}=   Get Location
     ${split}=   Split String    ${loc}    separator=/servers/
-    @{auth}=    Create List    ${admin}    ${password}
+    @{auth}=    Create List    ${server 2}[local users][cloudAdmin][email]    ${password}
     ${resp}=   Run Keyword If    '''${mode}'''=='''cloud'''    Change server port via API    ${auth}    https://${server 1}[sysId].relay.vmsproxy.hdw.mx    7777    ${split[1]}
     ...    ELSE    Change server port via API    ${auth}    https://${QA BURBANK IP}:${server 1}[port]    7777    ${split[1]}
     ${status is correct}=   Evaluate    $resp.status_code in {401, 403}

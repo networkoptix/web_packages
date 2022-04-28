@@ -427,7 +427,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
                 },
                 notAuthorized: invalidCredentialHandler,
-                wrongOldPassword: invalidCredentialHandler
+                wrongOldPassword: invalidCredentialHandler,
+                badRequest: invalidCredentialHandler,
             }
         }, res => {
             this.close(res);

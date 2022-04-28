@@ -111,16 +111,14 @@ export class DisconnectModalContent {
                 options
             );
         }, err => {
-            if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
+            if (err?.resultCode === 'userPasswordRequired' || err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                 this.needsUpdate = true;
                 this.loginService.currentSystem = this.system;
-                this.loginService.updateSession('disconnect')
+                return this.loginService.updateSession('disconnect')
                     .then(ready => {
                         this.needsUpdate = !ready;
                         if (ready) {
                             this.disconnect.run();
-                        } else {
-                            this.close();
                         }
                     });
             } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {

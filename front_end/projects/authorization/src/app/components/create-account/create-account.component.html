@@ -39,6 +39,7 @@
                     <p *ngIf="createAccountEmail.errors.required" class="error-label mt-2 mb-0" translate>Required</p>
                     <p *ngIf="createAccountEmail.errors.pattern" class="error-label mt-2 mb-0" translate>Invalid email</p>
                     <p *ngIf="createAccountEmail.errors.alreadyExists" class="error-label mt-2 mb-0" translate>Account already exists</p>
+                    <p *ngIf="createAccountEmail.errors.portalError" class="error-label mt-2 mb-0">{{LANG.common.generalError}}</p>
                 </ng-container>
             </div>
         </div>

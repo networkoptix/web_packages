@@ -855,6 +855,72 @@ nx-swagger-markdown + div#swagger-ui {
 	}
 }
 
+.swagger-ui .opblock-body table.parameters tbody tr:nth-child(even) {
+		background-color: $additional_light1;
+}
+
+.swagger-ui .opblock-body table:not(.parameters, .live-responses-table):not(.model) td {
+	height         : 48px;
+	vertical-align : middle;
+}
+
+.swagger-ui .parameter__name {
+	margin-right : initial;
+	@include typography.bold16dark9;
+}
+
+.swagger-ui .opblock-section.opblock-section-request-body {
+	margin-top: 15px;
+}
+
+.swagger-ui .parameter__name.required {
+	font-weight : initial;
+}
+
+
+.swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameters-col_name .prop-format, .swagger-ui .parameter__deprecated {
+	@include typography.regular14light10;
+}
+
+.swagger-ui .opblock-section-request-body .parameter__name.required:after{
+	content   : "*";
+	font-size : 15px;
+	margin-top: 1px;
+	color     : rgba(255, 0, 0, .6)
+}
+
+.swagger-ui .parameter__name.required:after {
+	content   : "";
+	color     : rgba(255, 0, 0, .6)
+}
+
+.swagger-ui .parameter__name.required span {
+	content   : "";
+	color     : rgba(255, 0, 0, .6)
+}
+
+.swagger-ui .table-container {
+	padding : 0px 16px 8px 16px;
+}
+
+.swagger-ui table.model tr.description {
+	color: $additional_dark1;
+}
+
+.swagger-ui .responses-table {
+	table-layout: fixed;
+	width: 100%
+}
+
+.swagger-ui .response-col_links {
+	display: none;
+}
+
+.swagger-ui .markdown p, .swagger-ui .markdown pre, .swagger-ui .renderedMarkdown p, .swagger-ui .renderedMarkdown pre {
+	margin     : 0 auto 1em auto;
+	word-break : break-word;
+}
+
 .code-block-common {
 	border-radius: 2px;
 	font-size: rem(12px) !important;

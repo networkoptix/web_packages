@@ -440,9 +440,9 @@
             "loggedFromOtherAccount": "คุณจะเข้าสู่ระบบด้วยบัญชีอื่น",
             "noClientDetected": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server { title } from current system?",
-            "serversReset": "Reset server { title } to defaults?",
-            "serversRestart": "Restart server { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "ยกเลิกการเชื่อมต่อระบบทั้งหมดที่คุณเป็นเจ้าของจากพอร์ทัล %CLOUD_NAME% เพื่อลบบัญชีของคุณ"
@@ -570,7 +570,7 @@
         "cantUnshareWithMeSystemPrefix": "ไม่สามารถลบระบบได้",
         "emailNotFound": "ไม่มีบัญชีนี้อยู่",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "ลิงค์นี้ไม่สามารถเข้าถึงระบบได้ สิ่งนี้อาจเกิดขึ้นเมื่อระบบถูกตัดการเชื่อมต่อจาก %CLOUD_NAME%การเข้าถึงระบบนี้ถูกเพิกถอนหรือหากคุณเข้าสู่บัญชีที่ไม่ถูกต้อง",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
         "lostConnection": "Connection to {systemName} lost",
@@ -668,6 +668,7 @@
         "activateCode": "เปิดใช้งานบัญชี",
         "activateSuccess": "บัญชีใช้งานอยู่",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "เปลี่ยนรหัสผ่าน",
         "debug": "การ​แก้ไข​จุด​บกพร่อง",
         "default": "%CLOUD_NAME%",
@@ -811,7 +812,8 @@
         "View": "View",
         "Settings": "Settings",
         "Information": "Information",
-        "Bookmarks": "Bookmarks"
+        "Bookmarks": "Bookmarks",
+        "Monitoring": "Monitoring"
     },
     "system": {
         "connected": "Connected",

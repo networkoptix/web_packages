@@ -14,6 +14,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
+from api.account_backend import BearerAuthentication
 from cloud.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
 from cloud.helpers.exceptions import (
     api_success, APINotAuthorisedException, APILogicException, clean_passwords
@@ -169,7 +170,7 @@ def push_notification(request):
 class DeviceSubscriptionListView(RetrieveAPIView):
     serializer_class = DeviceSubscriptionsSerializer
     authentication_classes = (
-        CloudAccountBasicAuthentication, CloudSessionAuthentication)
+        BearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -184,7 +185,7 @@ class DeviceSubscriptionListView(RetrieveAPIView):
 
 class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
     authentication_classes = (
-        CloudAccountBasicAuthentication, CloudSessionAuthentication)
+        BearerAuthentication, CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
 

@@ -154,7 +154,8 @@ export class NxHeaderService {
             (environment.isLocal && (
                 url.startsWith('/view') ||
                 url.startsWith('/health') ||
-                url.startsWith('/bookmarks')
+                url.startsWith('/bookmarks') ||
+                url.startsWith('/monitoring')
             ))
         ) {
             bestMatch.isSystem = true;
@@ -164,6 +165,8 @@ export class NxHeaderService {
             const viewUrl = environment.isLocal ? '/view' : systemUrl + '/view';
             const healthUrl = environment.isLocal ? '/health' : systemUrl + '/health';
             const bookmarkUrl = environment.isLocal ? '/bookmarks' : systemUrl + '/bookmarks';
+            const monitoringUrl = environment.isLocal ? '/monitoring' : systemUrl + '/monitoring';
+
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };
                 bestMatch.path = viewUrl;
@@ -173,6 +176,9 @@ export class NxHeaderService {
             } else if (url.startsWith(bookmarkUrl)) {
                 this.menusService.endpoint = { bookmarks: true };
                 bestMatch.path = bookmarkUrl;
+            } else if (url.startsWith(monitoringUrl)) {
+                this.menusService.endpoint = { monitoring: true };
+                bestMatch.path = monitoringUrl;
             } else if (url.startsWith(systemUrl)) {
                 this.menusService.endpoint = { settings: true };
                 bestMatch.path = systemUrl;

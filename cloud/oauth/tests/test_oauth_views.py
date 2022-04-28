@@ -226,7 +226,7 @@ class TestOauthViews:
 
         assert response.status_code == 200
         mock_get_access_token.assert_called_once_with(
-            data['code'], ip=self.mock_ip)
+            data['code'], is_mobile=False, ip=self.mock_ip)
 
     def test_token_valid_password(self, mock_get_ip, mocker):
         mock_code = str(uuid4())

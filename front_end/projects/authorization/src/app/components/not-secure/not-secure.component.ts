@@ -46,4 +46,8 @@ export class NxAuthorizeNotSecureComponent {
             this.redirectUrl = htmlToEntity(this.redirectUrl);
         }
     }
+
+    next() {
+        this.setCurrentState.emit(this.loginEmail ? 'password' : 'email');
+    }
 }

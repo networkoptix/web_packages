@@ -440,9 +440,9 @@
             "loggedFromOtherAccount": "U wordt met een ander account ingelogd",
             "noClientDetected": "Installeer %VMS_NAME% om uw systeem te bekijken",
             "removeUser": "Gebruiker verwijderen",
-            "serversDetach": "Ontkoppel server { title } van het huidige systeem?",
-            "serversReset": "Server { title } resetten naar standaardwaarden?",
-            "serversRestart": "Server { title } opnieuw starten?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -570,7 +570,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
         "emailNotFound": "Account bestaat niet.",
         "failedToAccess2FA": "<p class=\"mb-0\">Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem.</p><p>U kunt twee-factorauthenticatie inschakelen in uw <a href=\"/account/security\">accountinstellingen</a>.</p>",
-        "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
+        "failedToAccessSystem": "Geen enkel systeem is toegankelijk via deze link. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, de toegang tot dit systeem is ingetrokken, het systeem in de link niet bestaat of als u bent ingelogd op het verkeerde account.",
         "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
         "forbidden": "U hebt geen rechten om deze actie uit te voeren",
         "lostConnection": "Verbinding met {systemName} verloren",
@@ -668,6 +668,7 @@
         "activateCode": "Activeer account",
         "activateSuccess": "Account geactiveerd",
         "articleTitle": "{ARTICLE_TITLE} voor {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Wachtwoord wijzigen",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -811,7 +812,8 @@
         "View": "Weergave",
         "Settings": "Instellingen",
         "Information": "Informatie",
-        "Bookmarks": "Bladwijzers"
+        "Bookmarks": "Bladwijzers",
+        "Monitoring": "Controle"
     },
     "system": {
         "connected": "Verbonden",

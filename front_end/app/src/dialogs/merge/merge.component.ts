@@ -102,6 +102,7 @@ export class MergeModalContent {
     readonly systemOfflineUrl: string = 'systemOfflineUrl';
     readonly targetSystemBoundToCloud: string = 'targetSystemBoundToCloud';
     readonly unknownError: string = 'unknownError';
+    readonly wrongLogin: string = 'Wrong username or password.';
 
     machine: StateMachine;
 
@@ -389,13 +390,11 @@ export class MergeModalContent {
     private handleOldSession(process): void {
         this.updateSession = true;
         this.loginService.currentSystem = this.system;
-        this.loginService.updateSession('passwordMerge')
+        this.loginService.updateSession('merge')
             .then(ready => {
                 this.updateSession = !ready;
                 if (ready) {
                     process.run();
-                } else {
-                    this.close({});
                 }
             });
     }
@@ -502,7 +501,11 @@ export class MergeModalContent {
                         this.machine.state.template.passwordValue
                     ).toPromise();
                 }
-            }, { ignoreError: true },
+            },
+            {
+                ignoreError: true,
+                errorCodes: { [this.wrongLogin]: 'potentialErrorString' }
+            },
             res => {
                 if (!res) {
                     return;
@@ -535,6 +538,15 @@ export class MergeModalContent {
                     });
                 }
             }, err => {
+                if (err.errorString === this.wrongLogin) {
+                    this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
+                    this.updateShow(this.confirmPasswordError, {
+                        passwordErrorText: this.passwordWrong,
+                        passwordValue: ''
+                    });
+                    this.adminPasswordInput.nativeElement.focus();
+                    return;
+                }
                 if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     return this.handleOldSession(this.checkPasswordProcess);
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
@@ -585,7 +597,8 @@ export class MergeModalContent {
                     wrongPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong, passwordValue: '' });
                         this.confirmMergeInput.nativeElement.focus();
-                    }
+                    },
+                    [this.wrongLogin]: 'potentialErrorString'
                 },
                 ignoreError: true
             })
@@ -618,7 +631,7 @@ export class MergeModalContent {
                             : this.CONFIG.system.status.slave
                     });
                 // wrong cloud password
-                } else if (res.errorString === 'Wrong username or password.') {
+                } else if (res.errorString === this.wrongLogin) {
                     this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
                     this.confirmMergeInput.nativeElement.focus();
@@ -632,6 +645,12 @@ export class MergeModalContent {
                     this.handleMergeError(res);
                 }
             }, error => {
+                if (error.errorString === this.wrongLogin) {
+                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
+                    this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                    this.confirmMergeInput.nativeElement.focus();
+                    return;
+                }
                 if (error.errorId === this.CONFIG.servers.errors.oldSessionErrorId || error.resultCode === 'vmsRequestFailure') {
                     return this.handleOldSession(this.mergingProcess);
                 } else if (error.status === 403 || error.errorId === this.CONFIG.servers.errors.unauthorized) {

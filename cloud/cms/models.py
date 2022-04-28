@@ -442,6 +442,7 @@ class Customization(models.Model):
         )
         ordering = ['name']
     name = models.CharField(max_length=255, unique=True)
+    enabled = models.BooleanField(default=True)
     default_language = models.ForeignKey(
         Language, related_name='default_in_%(class)s', on_delete=models.CASCADE)
     languages = models.ManyToManyField(Language)
@@ -549,6 +550,16 @@ class AssetType(models.Model):
 
     @classmethod
     def get_custom_fields_by_type(cls, type):
+        manage_py = any('manage.py' in arg for arg in sys.argv)
+        run_server = 'runserver' in sys.argv
+        running_manage_command = manage_py and not run_server
+
+        if settings.MIGRATING or running_manage_command:
+            # Short circuit when migrating or a manage.py command that isn't running a dev server
+            # Several manage.py commands run when an instance is deployed
+            # These could potentially call this method which would update the cache with stale data
+            return {}
+
         try:
             cache_key = AssetType.get_cache_key(type)
             fields = cache.get(cache_key)

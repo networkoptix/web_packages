@@ -174,7 +174,7 @@ class Importer:
                 tag = match_obj[1]
                 url = match_obj[2]
                 return f'{tag}src="{url}"'
-                
+
             return f'{match_obj[1]}src="{{image_import:{file_id}}}"'
 
         return _sub_image_sources
@@ -381,7 +381,7 @@ class ZendeskMapper(ZendeskBase):
         if is_article:
             article_params['labels'] = ','.join(
                 str(ZendeskArticleLabel.objects.get_or_create(site=self.site, name=label)[0].id) for label in item.label_names)
-    
+
         return {
             k: v for k, v in
             {
@@ -1022,8 +1022,8 @@ def update_zd_section(node: MenuNode, site: ZendeskSite, parent_zd: ZendeskCateg
         zd_section.parent_section = parent_zd
     zd_section.save()
 
-    if zd_section.sync and parent_enabled:
-        exporter.sync_section(zd_section, delete=not enabled)
+    if zd_section.sync:
+        exporter.sync_section(zd_section, delete=not enabled or not parent_enabled)
 
     return zd_section
 
@@ -1157,13 +1157,12 @@ def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, posi
     site = parent_zd.site
     customization = site.customization
     exporter = Exporter(customization_name=site.customization.name)
-    enabled = next(
+    enabled = parent_enabled and next(
         (cust for cust in node.enabled_customizations if cust.id == customization.id), False)
-    nodes_list = getattr(node, 'nodes_list', node.nodes.all())
     zd_section = None
-    if nodes_list:
+    if nodes_list := getattr(node, 'nodes_list', node.nodes.all()):
         zd_section = update_zd_section(
-            node, site, parent_zd, exporter, customization, position, parent_enabled)
+            node, site, parent_zd, exporter, customization, position, enabled)
         process_nodes(nodes_list, zd_section, enabled,
                       zendesk_sync_log, force_update)
     if node.asset:
@@ -1174,12 +1173,11 @@ def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, posi
         process_asset(zd_section, parent_enabled,
                       zendesk_sync_log, force_update, position, node)
     else:
-        node_article = node.zendeskarticle_set.filter(position=0).first()
-        if node_article:
+        if node_article := node.zendeskarticle_set.filter(position=0).first():
             exporter.sync_article(node_article, delete=True,
                                   sync_log=zendesk_sync_log)
         zd_section = node.zendesksection_set.first()
-        if zd_section and not nodes_list:
+        if zd_section and not nodes_list or not enabled:
             exporter.sync_section(zd_section, delete=True)
 
 

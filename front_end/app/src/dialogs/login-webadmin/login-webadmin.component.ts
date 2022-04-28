@@ -64,6 +64,8 @@ export class LoginWebadminModalContent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    loading: boolean = true;
+
     locationService: Location;
     auth: { email: string };
     login: Process;
@@ -158,6 +160,8 @@ export class LoginWebadminModalContent implements OnInit {
             url.hash = hash + (paramString ? '?' + paramString : '');
             this.window.location.href = url.toString();
             this.oauthLogin(code);
+        } else {
+            this.loading = false;
         }
 
         // remove any leftovers  *****************************
@@ -298,6 +302,8 @@ export class LoginWebadminModalContent implements OnInit {
                 this.account2faRequired = res.error === 'second_factor_required';
                 if (!this.accountNotOnSystem && !this.account2faRequired) {
                     this.window.location.reload();
+                } else {
+                    this.loading = false;
                 }
             });
     }

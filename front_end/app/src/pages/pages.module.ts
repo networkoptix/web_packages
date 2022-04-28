@@ -9,6 +9,8 @@ import { AuthGuard } from '@guards/authGuard';
 import { BookmarksGuard } from '@guards/bookmarksGuard';
 import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
+import { SystemGuard } from '@guards/systemGuard';
+import { TwofaGuard } from '@guards/twofaGuard';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -54,6 +56,11 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId/bookmarks',
         loadChildren: () => import('./systems/bookmarks/bookmarks.module').then(m => m.BookmarksModule),
         canActivate: [BookmarksGuard]
+    },
+    {
+        path: 'systems/:systemId/monitoring',
+        loadChildren: () => import('./monitoring/monitoring.module').then(m => m.NxMonitoringModule),
+        canActivate: [AuthGuard, SystemGuard, TwofaGuard]
     },
     {
         path: 'integrations/:id',

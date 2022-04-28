@@ -440,9 +440,9 @@
             "loggedFromOtherAccount": "Sie werden mit einem anderen Konto angemeldet",
             "noClientDetected": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
             "removeUser": "Nutzer entfernen",
-            "serversDetach": "Server { title } vom aktuellen System abkoppeln?",
-            "serversReset": "Server { title } auf Standardwerte zurücksetzen?",
-            "serversRestart": "Server { title } neu starten?"
+            "serversDetach": "Server&nbsp;<strong>{ title }</strong>&nbsp;vom aktuellen System abkoppeln?",
+            "serversReset": "Server&nbsp;<strong>{ title }</strong>&nbsp;auf Standardwerte zurücksetzen?",
+            "serversRestart": "Server &nbsp;<strong>{ title }</strong> neu starten?"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -570,7 +570,7 @@
         "cantUnshareWithMeSystemPrefix": "System kann nicht gelöscht werden",
         "emailNotFound": "Account existiert nicht.",
         "failedToAccess2FA": "<p class=\"mb-0\">Für den Zugang zu diesem System ist eine Zwei-Faktor-Authentifizierung erforderlich.</p><p>Sie können die Zwei-Faktor-Authentifizierung in Ihren <a href=\"/account/security\">Account-Einstellungen</a> aktivieren.</p>",
-        "failedToAccessSystem": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %CLOUD_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde oder wenn Sie bei dem falschen Konto angemeldet sind.",
+        "failedToAccessSystem": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %CLOUD_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde, das System im Link nicht existiert oder wenn Sie mit dem falschen Konto angemeldet sind.",
         "failedToAccessCamera": "Über diesen Link kann auf keine Kamera zugegriffen werden.",
         "forbidden": "Sie haben keine Berechtigung diese Aktion auszuführen",
         "lostConnection": "Verbindung zu {systemName} verloren",
@@ -668,6 +668,7 @@
         "activateCode": "Account aktivieren",
         "activateSuccess": "Account aktiviert",
         "articleTitle": "{ARTICLE_TITLE} für {VMS_NAME}",
+        "auth": "Autorisierung",
         "changePassword": "Passwort ändern",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -811,7 +812,8 @@
         "View": "Ansicht",
         "Settings": "Einstellungen",
         "Information": "Informationen",
-        "Bookmarks": "Lesezeichen"
+        "Bookmarks": "Lesezeichen",
+        "Monitoring": "Überwachung"
     },
     "system": {
         "connected": "Verbunden",

@@ -662,7 +662,8 @@ admin.site.register(Language, LanguageAdmin)
 
 
 class CustomizationAdmin(CMSAdmin):
-    list_display = ('name', 'parent', 'trust_parent')
+    list_display = ('name', 'parent', 'trust_parent', 'enabled')
+    list_filter = ('enabled',)
     form = CustomizationForm
     ordering = ['-pk']
 

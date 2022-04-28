@@ -440,9 +440,9 @@
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
             "removeUser": "Supprimer l'utilisateur",
-            "serversDetach": "Détacher le serveur { title } du système actuel ?",
-            "serversReset": "Réinitialiser le serveur { title } aux valeurs par défaut ?",
-            "serversRestart": "Redémarrer le serveur { title }?"
+            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
+            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -570,7 +570,7 @@
         "cantUnshareWithMeSystemPrefix": "Impossible de supprimer le système",
         "emailNotFound": "Compte n’existe pas.",
         "failedToAccess2FA": "<p class=\"mb-0\">L'authentification à deux facteurs est requise pour accéder à ce système.</p><p>Vous pouvez activer l'authentification à deux facteurs dans vos <a href=\"/account/security\">paramètres de compte</a>.</p>",
-        "failedToAccessSystem": "Aucun système ne peut être accédé par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué, ou si vous êtes connecté au compte incorrect.",
+        "failedToAccessSystem": "Aucun système n'est accessible par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %CLOUD_NAME%, l'accès à ce système a été révoqué, le système dans le lien n'existe pas ou si vous êtes connecté au mauvais compte.",
         "failedToAccessCamera": "Aucune caméra ne peut être accédée par ce lien.",
         "forbidden": "Vous n’avez pas l'autorisation nécessaire pour effectuer cette action",
         "lostConnection": "Connexion à {systemName} perdue",
@@ -668,6 +668,7 @@
         "activateCode": "Activer compte",
         "activateSuccess": "Compte activé",
         "articleTitle": "{ARTICLE_TITLE} pour {VMS_NAME}",
+        "auth": "Authorization",
         "changePassword": "Changer mot de passe",
         "debug": "Débogage",
         "default": "%CLOUD_NAME%",
@@ -811,7 +812,8 @@
         "View": "Voir",
         "Settings": "Réglages",
         "Information": "Information",
-        "Bookmarks": "Signets"
+        "Bookmarks": "Signets",
+        "Monitoring": "Surveillance"
     },
     "system": {
         "connected": "Connecté",

@@ -70,28 +70,45 @@ def replaceMatches(lang):
             # open lang DEV translation file and turn into json dict
             with codecs.open("../translations/" + lang + "/language_i18n.json", encoding="utf-8") as dev_translations:
                 dev_translations_json = json.load(dev_translations)
-                # replace any translation in QA that doesn't match the DEV translation
-                en_US_values = list(us_variables_json.values())
-                en_US_keys = list(us_variables_json.keys())
-                dev_values = list(dev_translations_json.values())
-                dev_keys = list(dev_translations_json.keys())
-                dev_untranslated = {}
-                for x in en_US_values:
-                    for y in dev_keys:
-                        if x == y:
-                            x = en_US_values.index(x)
-                            y = dev_keys.index(y)
-                            # if a dev translation is not already in QA, make sure its not in english and replace whats in qa
-                            if dev_values[y] not in translation_variables_json.values():
-                                detected_langs = str(Translator().detect(dev_values[y]))
-                                if "lang=en" in detected_langs:
-                                    # if dev has it in english, write to a file
-                                    dev_untranslated.update(
-                                        {en_US_keys[x]: {dev_values[y]: translation_variables_json[en_US_keys[x]]}})
-                                else:
-                                    # if in lang, substite QA for Dev
-                                    translation_variables_json.update({en_US_keys[x]: dev_values[y]})
-                with codecs.open("test_results/" + lang + "_untranslated_in_dev.json", mode="w",
-                                 encoding="utf-8") as outfile:
-                    json.dump(dev_untranslated, outfile, ensure_ascii=False, indent=2)
-                    return translation_variables_json
+                # open dev static translations files and add them to dev dict
+                with codecs.open("../front_end/app/language_i18n_static.json", encoding="utf-8") as dev_static_keys:
+                    dev_static_keys_json = json.load(dev_static_keys)
+                    with codecs.open("../translations/" + lang + "/language_i18n_static.json", encoding="utf-8") as dev_static_values:
+                        dev_static_values_json = json.load(dev_static_values)
+                        list_dev_keys = list(NestedDictValues(dev_static_keys_json))
+                        list_dev_values = list(NestedDictValues(dev_static_values_json))
+                        for a in range(len(list_dev_keys)):
+                            dev_translations_json.update({list_dev_keys[a]: list_dev_values[a]})
+                        # replace any translation in QA that doesn't match the DEV translation
+                        en_US_values = list(us_variables_json.values())
+                        en_US_keys = list(us_variables_json.keys())
+                        dev_values = list(dev_translations_json.values())
+                        dev_keys = list(dev_translations_json.keys())
+                        dev_untranslated = {}
+                        for x in en_US_values:
+                            for y in dev_keys:
+                                if x == y:
+                                    x = en_US_values.index(x)
+                                    y = dev_keys.index(y)
+                                    # if a dev translation is not already in QA, make sure its not in english and replace whats in qa
+                                    if dev_values[y] not in translation_variables_json.values():
+                                        detected_langs = str(Translator().detect(dev_values[y]))
+                                        if "lang=en" in detected_langs:
+                                            # if dev has it in english, write to a file
+                                            dev_untranslated.update(
+                                                {en_US_keys[x]: {dev_values[y]: translation_variables_json[en_US_keys[x]]}})
+                                        else:
+                                            # if in lang, substitute QA for Dev
+                                            translation_variables_json.update({en_US_keys[x]: dev_values[y]})
+                        with codecs.open("test_results/" + lang + "_untranslated_in_dev.json", mode="w",
+                                         encoding="utf-8") as outfile:
+                            json.dump(dev_untranslated, outfile, ensure_ascii=False, indent=2)
+                            return translation_variables_json
+
+def NestedDictValues(d):
+    for v in d.values():
+        if isinstance(v, dict):
+            yield from NestedDictValues(v)
+        else:
+            if isinstance(v, str):
+                yield v

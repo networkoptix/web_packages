@@ -66,7 +66,9 @@ export class Nx404Component {
 
         if (redirectUrl) {
             const options = {
-                classname: this.CONFIG.toast.info
+                autohide: true,
+                classname: this.CONFIG.toast.info,
+                delay: this.CONFIG.longAlertTimeout
             };
 
             // translatedLink would contain links from cloud portal

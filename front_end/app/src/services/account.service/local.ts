@@ -115,6 +115,7 @@ export class LocalAccount extends BaseAccount {
             .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
+                    this.account = undefined;
                     this.logoutHelper(doNotRedirect, skipReload);
                 }
             });

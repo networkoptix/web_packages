@@ -22,7 +22,7 @@
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div>
-            <button class="btn text-button" type="button" (click)="setCurrentState.emit('email')">
+            <button class="btn text-button" type="button" (click)="next()">
                 <span translate>Accept the risks and continue</span>
                 <svg-icon nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_right.svg'"

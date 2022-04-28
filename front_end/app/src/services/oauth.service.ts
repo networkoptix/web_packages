@@ -72,6 +72,7 @@ export class OauthService {
             login: environment.isLocal ? 'loginWebadmin' : 'loginCloud',
             disconnect: 'passwordDisconnect',
             detach: 'passwordDetach',
+            merge: 'passwordMerge',
             renew: 'renewWeb',
             reset: 'passwordReset',
             restart: 'passwordRestart',
@@ -88,7 +89,7 @@ export class OauthService {
         if (environment.isLocal) {
             params.append(
                 'scope',
-                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=*`
+                `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')} cloudSystemId=${this.CONFIG.cloudSystemId || '*'}`
             );
         }
         if (state) {

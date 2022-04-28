@@ -105,7 +105,7 @@ export abstract class BaseAccount implements OnDestroy {
                     return this.dialogs.expiredSession()
                         .then(res => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
-                    this.get()
+                    this.get(true)
                         .then(account => {
                             // prevent stale loginState
                             if (account) {
@@ -138,7 +138,7 @@ export abstract class BaseAccount implements OnDestroy {
                 return this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
             }
             this.dialogs.notify(this.LANG.toastMessage.loggingIn(), 'success', false);
-            this.loginTokens(this.tokens).then(() => {});
+            this.loginTokens(this.tokens).then(() => { });
         });
     }
 
@@ -257,7 +257,7 @@ export abstract class BaseAccount implements OnDestroy {
         return this.cloudApi.verify(password);
     }
 
-    update2fa(password, mfaCode, action = 'toggle') {
+    update2fa(password, mfaCode, action: 'activate' | 'deactivate' | 'toggle' = 'toggle') {
         return this.cloudApi.update2fa(password, mfaCode, action);
     }
 
@@ -469,8 +469,9 @@ export abstract class BaseAccount implements OnDestroy {
     protected startAccountPoll(): void {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError(ex => {
-                this.logoutHelper(false);
+            catchError(res => {
+                const expiredSession = res?.error?.resultCode === 'badUsername';
+                this.logoutHelper(expiredSession, expiredSession);
                 return of(undefined);
             })
         ).subscribe((account: Account) => {

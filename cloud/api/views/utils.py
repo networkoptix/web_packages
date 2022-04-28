@@ -15,7 +15,7 @@ from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScop
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from rest_framework import status
+from rest_framework import serializers, status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from waffle import flag_is_active, switch_is_active, sample_is_active
@@ -23,7 +23,7 @@ from waffle import flag_is_active, switch_is_active, sample_is_active
 from cloud.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
-from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
+from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType
 from cms.feature_flags import *
 
@@ -459,3 +459,27 @@ def cloud_capabilities(request):
     capabilities = get_cloud_capabilities_from_cache()
 
     return Response(capabilities)
+
+
+CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the {settings.SUPERUSER_DOMAIN} domain'
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns list of customizations.",
+                     responses={
+                         '200': serializers.ListSerializer(child=serializers.CharField()),
+                         '401': openapi.Schema(type=openapi.TYPE_OBJECT, properties={
+                             'details': openapi.Schema(type=openapi.TYPE_STRING, default='Authentication credentials were not provided.')}),
+                         '403': openapi.Schema(type=openapi.TYPE_OBJECT, properties={
+                             'resultCode': openapi.Schema(type=openapi.TYPE_STRING, default='notAuthorized'),
+                             'errorText': openapi.Schema(type=openapi.TYPE_STRING, default=CUSTOMIZATIONS_STAFF_ONLY),
+                             'errorData': openapi.Schema(type=openapi.TYPE_STRING)})
+                    })
+@api_view(['GET'])
+@permission_classes((IsAuthenticatedOrTokenHasScope,))
+@handle_exceptions
+def get_customizations(request):
+    if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):
+        raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
+
+    return Response(Customization.objects.filter(enabled=True).values_list('name', flat=True))

@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http';
-import { AfterViewInit, Component, Inject, Input } from '@angular/core';
+import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -10,15 +11,17 @@ import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
 
 type LoggerDropdownItem = DropdownItem<string>;
 
+@UntilDestroy()
 @Component({
     selector: 'logger',
     templateUrl: './logger.component.html',
 })
-export class NxLoggerComponent implements AfterViewInit {
+export class NxLoggerComponent implements OnChanges {
     private readonly relayUrl: string;
     readonly iframeHeight = 500;
 
     @Input() system: NxSystem;
+    @Input() selectedServerId: string;
 
     selectedLogLevel: LoggerDropdownItem;
     logLevels: LoggerDropdownItem[] = [];
@@ -55,17 +58,21 @@ export class NxLoggerComponent implements AfterViewInit {
             .then(handleLogResponse, ({ error }) => handleLogResponse(error));
     }
 
-    async ngAfterViewInit(): Promise<void> {
-        if (!environment.isLocal) {
-            this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
+    async ngOnChanges(changes: SimpleChanges): Promise<void> {
+        if (changes.system.currentValue) {
+            if (!environment.isLocal) {
+                this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
+            }
+            this.system.serverManager.logLevel(this.selectedServerId)
+                .pipe(untilDestroyed(this))
+                .subscribe(res => {
+                    this.logLevels = Object.keys(res.reply).map(level => ({
+                        name: level,
+                        value: level,
+                    }));
+                    this.selectedLogLevel = { name: 'MAIN', value: 'MAIN' };
+                    this.getLogs(this.selectedLogLevel);
+                });
         }
-        this.system.mediaserver.logLevel().subscribe(res => {
-            this.logLevels = Object.keys(res.reply).map(level => ({
-                name: level,
-                value: level,
-            }));
-            this.selectedLogLevel = { name: 'MAIN', value: 'MAIN' };
-            this.getLogs(this.selectedLogLevel);
-        });
     }
 }

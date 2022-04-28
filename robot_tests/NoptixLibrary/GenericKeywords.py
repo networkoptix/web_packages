@@ -28,6 +28,7 @@ from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
+from googletrans import Translator
 
 @library
 class GenericKeywords(object):
@@ -705,3 +706,8 @@ class GenericKeywords(object):
         for user in users:
             if user['email']==email:
                 ServerAPI.remove_user(self, auth, serverUrl, user['id'])
+
+    @keyword
+    def detect_language(self, text):
+        detected_langs = str(Translator().detect(text))
+        return detected_langs

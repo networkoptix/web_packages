@@ -523,6 +523,7 @@ export interface Menus {
     account: Account;
     systemHealth: SystemHealth;
     systemSettings: SystemSettings;
+    systemMonitoring: SystemMonitoring;
 }
 
 export interface Account {
@@ -539,6 +540,10 @@ export interface Path {
 }
 
 export interface SystemHealth {
+    baseUrl: string;
+}
+
+export interface SystemMonitoring {
     baseUrl: string;
 }
 

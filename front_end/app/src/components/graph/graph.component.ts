@@ -1,10 +1,13 @@
 import {
     Component,
-    OnInit,
-    Input
+    Input,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { timer } from 'rxjs';
+import { curveBasis } from 'd3-shape';
+import { Subject, timer } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -13,7 +16,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 
 /* USAGE
- <monitoring-graph [system]="system"></monitoring-graph>
+ <monitoring-graph [system]="system" [selectedServerId]="selectedServerId"></monitoring-graph>
 */
 
 @UntilDestroy()
@@ -23,9 +26,14 @@ import { NxSystem } from '@services/system.service/system';
     styleUrls: ['graph.component.scss']
 })
 
-export class NxMonitoringGraphComponent implements OnInit {
+export class NxMonitoringGraphComponent implements OnChanges {
+    @Input() system: NxSystem;
+    @Input() selectedServerId: string;
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    private destroy$ = new Subject();
 
     view = undefined; // fitContainer
     multi: {
@@ -46,6 +54,7 @@ export class NxMonitoringGraphComponent implements OnInit {
     xAxisLabel: string = '';
     yAxisLabel: string = '';
     timeline: boolean = false;
+    curve = curveBasis;
 
     colorScheme = {
         domain: [
@@ -72,8 +81,6 @@ export class NxMonitoringGraphComponent implements OnInit {
         ]
     };
 
-    @Input() system: NxSystem;
-
     private setupDefaults(): void {
         // leave "view" undefined to "fitContent"
         // this.view = [700, 500];
@@ -91,11 +98,21 @@ export class NxMonitoringGraphComponent implements OnInit {
         this.multi = [];
     }
 
-    ngOnInit(): void {
-        timer(0, 1000).pipe(
-            untilDestroyed(this)
-        ).subscribe(() => {
-            this.system.mediaserver.getStatistics().subscribe(response => {
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
+            this.destroy$.next();
+            this.multi = [];
+            this.getStats();
+        }
+    }
+
+    private getStats() {
+        timer(0, 1000)
+            .pipe(
+                untilDestroyed(this),
+                takeUntil(this.destroy$),
+                switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
+            ).subscribe((response) => {
                 response.reply && response.reply.statistics.forEach(data => {
                     const seriesData = this.multi.find(series => series.name === data.description);
                     if (!seriesData) {
@@ -120,6 +137,5 @@ export class NxMonitoringGraphComponent implements OnInit {
 
                 this.multi = [...this.multi];
             });
-        });
     }
 }

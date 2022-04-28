@@ -42,8 +42,8 @@ ${NO IMAGE PLACEHOLDER}                      //nx-health-image//div[contains(tex
 ${CAMERA ERROR BAR}                          //nx-alert-block/div[@class="card simple-error"]
 ${CAMERA ERROR ICON}                         ${CAMERA ERROR BAR}//svg-icon[@data-src="/static/images/icons/error.svg"]
 ${CAMERA ERROR TEXT}                         ${CAMERA ERROR BAR}//div[@class="warning-margin"]/span
-${LICENSE REQUIRED WARNING}                  //nx-switch[@id="recording"]/following-sibling::div[contains(text(),"${PROFESSIONAL LICENSE REQUIRED TEXT}")]
-${ONE LICENSE WILL BE USED WARNING}          //nx-switch[@id="recording"]/following-sibling::div[contains(text(),"${ONE LICENSE WILL BE USED TEXT}")]
+${LICENSE REQUIRED WARNING}                  //*[contains(text(),"${PROFESSIONAL LICENSE REQUIRED TEXT}")]
+${ONE LICENSE WILL BE USED WARNING}          //*[contains(text(),"${ONE LICENSE WILL BE USED TEXT}")]
 ${MOTION DETECTION DISABLED WARNING}         //nx-section//span[contains(@class,"input-error") and contains(text(),"${MOTION DETECTION DISABLED TEXT}")]
 ${MOTION SENSITIVITY IMAGE}                  //nx-block//div[contains(@class,"preview-wrapper")]//nx-health-image//img
 ${RECORDING MODE ERROR}                      ${RECORD MOTION LOW QUALITY RADIO BUTTON}/../../../span[contains(text(),"${SELECT RECORDING MODE TEXT}")]

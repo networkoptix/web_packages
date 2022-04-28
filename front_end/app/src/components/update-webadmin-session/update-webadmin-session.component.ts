@@ -12,6 +12,7 @@ import type { NgForm } from '@angular/forms';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DialogRef } from '@dialogs/dialog-ref';
 import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -74,6 +75,8 @@ export class UpdateWebadminSessionComponent implements OnInit {
                 this.close();
                 this.toastService.notify(`${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`, this.CONFIG.toast.danger, true);
             }
+        }).catch(() => {
+            this.isCloud = !environment.isLocal;
         });
 
         const showWrongCredentialsError = () => {
