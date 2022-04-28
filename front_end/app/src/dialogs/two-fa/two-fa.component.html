@@ -320,7 +320,14 @@
                 </p>
             </ng-template>
             <div class="form-group mt-3">
-                <label for="tfaCodeInput" translate>Enter a verification code from your authentication app or a backup code to continue</label>
+                <label
+                    *ngIf="type === 'verification-enable' else authOrBackup"
+                    for="tfaCodeInput"
+                    translate
+                >Enter a verification code from your authentication app to continue</label>
+                <ng-template #authOrBackup>
+                    <label for="tfaCodeInput" translate>Enter a verification code from your authentication app or a backup code to continue</label>
+                </ng-template>
                 <input type="text" class="form-control" #tfaCodeInputCodeForm="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
