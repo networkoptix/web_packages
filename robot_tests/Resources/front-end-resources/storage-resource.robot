@@ -57,7 +57,7 @@ Storage Suite Setup
     Sleep    5
     Log    trial license activated .....| PASS |    DEBUG      console=${console}
     Add Analytics stub plugin   ${server 1['name']}
-    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${camera manufacturer}
+    ${results} =    Add Camera    https://${QA BURBANK IP}:${server 1['port']}    ${camera user}    ${camera password}    ${camera}    ${camera url}    ${server 1}[local auth]    ${camera manufacturer}
     Log    ${results}
     Log    camera added ..... | PASS |    DEBUG      console=${console}
     Sleep    15
