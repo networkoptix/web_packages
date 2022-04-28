@@ -429,8 +429,8 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversDetach": "現在のシステムからサーバー&nbsp;<strong>{ title }</strong>&nbsp;を切断しますか？",
+            "serversReset": "サーバー&nbsp;<strong>{ title }</strong>&nbsp;をデフォルトにリセットしますか？",
             "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {

@@ -1,6 +1,6 @@
-New message
+Ny meddelelse
 
-Type: {{message.type}}
+Type:{{message.type}}
 Data: {{{message.data}}}
 
-There is no specific template for this type of message
+Der er ingen specifik skabelon for denne type besked
