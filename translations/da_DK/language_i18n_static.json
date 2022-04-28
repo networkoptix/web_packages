@@ -67,14 +67,14 @@
         }
     },
     "account": {
-        "account": "Account",
-        "key": "Key",
+        "account": "Konto",
+        "key": "Nøgle",
         "accountSavedSuccess": "Your account is successfully saved",
         "accountSettings": "Account Settings",
         "activationLinkSent": "Activation Link Sent",
         "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
-        "security": "Security",
+        "security": "Sikkerhed",
         "newPasswordLabel": "New password",
         "passwordChangedSuccess": "Password successfully saved",
         "saveChanges": "Save"
@@ -86,14 +86,14 @@
         "setNewPasswordLabel": "New password"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
-        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
-        "connectSubheader": "To access it from anywhere and enable additional features",
-        "expiredSubheader": "Please, log in again",
-        "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "loginCloudHeader": "Log ind på %CLOUD_NAME%",
+        "connectHeader": "Forbind System til %CLOUD_NAME%",
+        "expiredHeader": "Din session er udløbet",
+        "loginSystemSubheader": "Med din %CLOUD_NAME% -konto",
+        "connectSubheader": "For at få adgang til det hvor som helst og aktivere yderligere funktioner",
+        "expiredSubheader": "Log venligst ind igen",
+        "connectAdditional": "Denne konto vil få ejeradgangsniveau",
+        "createText": "Opret konto",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
         "toAccountSubheader": "To",
@@ -761,8 +761,8 @@
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "notification": "Ny version af %CLOUD_NAME% er tilgængelig",
+            "installButton": "Installér nu"
         },
         "systemOffline": "System is offline. Some settings may not be available.",
         "systemsMerging": "This system is currently involved in a merge operation."
@@ -938,7 +938,7 @@
             "IO Module": "I/O modul",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Ugyldig"
         },
         "info": {
             "type": "Type",
