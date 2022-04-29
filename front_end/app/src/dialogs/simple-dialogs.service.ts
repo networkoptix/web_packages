@@ -1,5 +1,4 @@
-import { ComponentType, Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { Overlay } from '@angular/cdk/overlay';
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -7,8 +6,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
-import { defaultConfig, DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { defaultConfig } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -18,7 +18,7 @@ import { NxToastService } from './toast.service';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
-export class NxSimpleDialogsService {
+export class NxSimpleDialogsService extends DialogBase {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     location: Location;
@@ -30,12 +30,13 @@ export class NxSimpleDialogsService {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         location: Location,
+        overlay: Overlay,
+        injector: Injector,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
-        private overlay: Overlay,
-        private injector: Injector,
         @Inject(DOCUMENT) private document: Document,
     ) {
+        super(overlay, injector);
         this.CONFIG = configService.getConfig();
         this.location = location;
 
@@ -60,37 +61,6 @@ export class NxSimpleDialogsService {
         };
 
         return this.toastService.show(message, options);
-    }
-
-    private open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
-        const positionStrategy = this.overlay
-            .position()
-            .global()
-            .centerHorizontally()
-            .centerVertically();
-
-        const overlayRef = this.overlay.create({
-            positionStrategy,
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
-            width: config.width,
-        });
-
-        // Create dialogRef to return
-        const dialogRef = new DialogRef(overlayRef);
-        const injector = Injector.create({
-            parent: this.injector,
-            providers: [
-                { provide: DialogRef, useValue: dialogRef },
-                { provide: DIALOG_DATA, useValue: config.data },
-            ]
-        });
-
-        const portal = new ComponentPortal(component, null, injector);
-        overlayRef.attach(portal);
-
-        return dialogRef;
     }
 
     public confirm(

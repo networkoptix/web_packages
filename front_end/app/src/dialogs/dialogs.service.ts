@@ -1,5 +1,4 @@
-import { Overlay, ComponentType } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { Overlay } from '@angular/cdk/overlay';
 import { DOCUMENT, Location } from '@angular/common';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -33,13 +32,9 @@ import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.componen
 import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
+import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
-import {
-    DIALOG_DATA,
-    DIALOG_SIZE,
-    defaultConfig,
-    DialogRef
-} from './dialog-ref';
+import { DIALOG_SIZE, defaultConfig } from './dialog-ref';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
 // import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { EditModalContent } from './edit/edit.component';
@@ -73,7 +68,7 @@ interface IParams<Value = any> {
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
-export class NxDialogsService {
+export class NxDialogsService extends DialogBase {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     location: Location;
@@ -85,12 +80,13 @@ export class NxDialogsService {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         location: Location,
-        @Inject(DOCUMENT) private document: Document,
+        injector: Injector,
+        overlay: Overlay,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
-        private overlay: Overlay,
-        private injector: Injector,
+        @Inject(DOCUMENT) private document: Document,
     ) {
+        super(overlay, injector);
         this.CONFIG = configService.getConfig();
         this.location = location;
 
@@ -299,37 +295,6 @@ export class NxDialogsService {
 
         return this.open(ConnectCloudModalContent, dialogConfig)
             .afterClosed();
-    }
-
-    open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
-        const positionStrategy = this.overlay
-            .position()
-            .global()
-            .centerHorizontally()
-            .centerVertically();
-
-        const overlayRef = this.overlay.create({
-            positionStrategy,
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
-            width: config.width,
-        });
-
-        // Create dialogRef to return
-        const dialogRef = new DialogRef(overlayRef);
-        const injector = Injector.create({
-            parent: this.injector,
-            providers: [
-                { provide: DialogRef, useValue: dialogRef },
-                { provide: DIALOG_DATA, useValue: config.data },
-            ]
-        });
-
-        const portal = new ComponentPortal(component, null, injector);
-        overlayRef.attach(portal);
-
-        return dialogRef;
     }
 
     public addUser(system: NxSystem) {

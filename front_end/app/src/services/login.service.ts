@@ -1,5 +1,4 @@
-import { ComponentType, Overlay } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
@@ -9,8 +8,9 @@ import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
-import { defaultConfig, DIALOG_DATA, DIALOG_SIZE, DialogRef } from '@dialogs/dialog-ref';
+import { defaultConfig, DIALOG_SIZE } from '@dialogs/dialog-ref';
 import {
     LoginWebadminModalContent
 } from '@dialogs/login-webadmin/login-webadmin.component';
@@ -27,7 +27,7 @@ import type{ NxSystem } from './system.service/system';
 @Injectable({
     providedIn: 'root'
 })
-export class NxLoginService {
+export class NxLoginService extends DialogBase {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -40,16 +40,16 @@ export class NxLoginService {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        overlay: Overlay,
+        injector: Injector,
         private http: HttpClient,
         private location: Location,
         private router: Router,
         private storage: LocalStorageService,
         private simpleDialogService: NxSimpleDialogsService,
         private bootstrapProvider: NxBootstrapProvider,
-        private overlay: Overlay,
-        private injector: Injector,
-        private dialog: DialogRef,
     ) {
+        super(overlay, injector);
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
     }
@@ -60,37 +60,6 @@ export class NxLoginService {
 
     set currentSystem(system) {
         this._currentSystem = system;
-    }
-
-    private open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
-        const positionStrategy = this.overlay
-            .position()
-            .global()
-            .centerHorizontally()
-            .centerVertically();
-
-        const overlayRef = this.overlay.create({
-            positionStrategy,
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
-            width: config.width,
-        });
-
-        // Create dialogRef to return
-        const dialogRef = new DialogRef(overlayRef);
-        const injector = Injector.create({
-            parent: this.injector,
-            providers: [
-                { provide: DialogRef, useValue: dialogRef },
-                { provide: DIALOG_DATA, useValue: config.data },
-            ]
-        });
-
-        const portal = new ComponentPortal(component, null, injector);
-        overlayRef.attach(portal);
-
-        return dialogRef;
     }
 
     private handleCode(code): Promise<boolean> {
@@ -164,22 +133,6 @@ export class NxLoginService {
                 this.closeResult = 'Dismissed';
                 return reason;
             });
-
-        // return this.createModal(LoginWebadminModalContent, options, params)
-        //     // handle how the dialog was closed
-        //     // required if we need to have dismissible dialog otherwise
-        //     // will raise a JS error ( Uncaught [in promise] )
-        //     .then((result) => {
-        //         this.closeResult = `Closed with: ${result}`;
-        //
-        //         if (redirectClose && result === 'canceled') {
-        //             return this.router.navigate([this.CONFIG.redirect.unauthorised]);
-        //         }
-        //         return result;
-        //     }, (reason) => {
-        //         this.closeResult = 'Dismissed';
-        //         return reason;
-        //     });
     }
 
     cancelCodeSubscription(): void {
@@ -190,7 +143,9 @@ export class NxLoginService {
         if (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
                 this.simpleDialogService.notify(this.LANG.toastMessage.noInternet(), 'warning', true);
-                this.dialog.close('closed all dialogs');
+                // Close dialog if any
+                this.dismissDialog();
+
                 return Promise.resolve(false);
             }
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;

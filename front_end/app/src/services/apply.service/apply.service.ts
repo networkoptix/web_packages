@@ -1,5 +1,4 @@
-import { Overlay, ComponentType } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
+import { Overlay } from '@angular/cdk/overlay';
 import {
     ComponentFactoryResolver,
     ComponentRef,
@@ -27,8 +26,9 @@ import {
 
 import { NxApplyComponent } from '@components/apply/apply.component';
 import { ApplyModalContent } from '@dialogs/apply/apply.component';
+import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
-import { DIALOG_DATA, defaultConfig, DialogRef } from '@dialogs/dialog-ref';
+import { defaultConfig } from '@dialogs/dialog-ref';
 
 import { NxProcessService } from '../process.service';
 import { Process } from '../process.service/process';
@@ -50,7 +50,7 @@ type ExtNgForm = {
     providedIn: 'root'
 })
 /**
- * Make sure the route has the ApplyGuard in the canDeactivate part. Other wise navigation will
+ * Make sure the route has the ApplyGuard in the canDeactivate part. Otherwise, navigation will
  * not be blocked when changes are made to the page.
  * How to use the service:
  * >
@@ -71,7 +71,7 @@ type ExtNgForm = {
  * dataWatcher.value = 'new string'; // NxApplyComponent becomes visible.
  * @class
  */
-export class NxApplyService {
+export class NxApplyService extends DialogBase {
     public applyComponentRef: ComponentRef<NxApplyComponent>;
     private applyComponentInstance: NxApplyComponent;
     private applyFunctions: Process[] = [];
@@ -91,11 +91,13 @@ export class NxApplyService {
     isOnline$ = new BehaviorSubject(true);
 
     constructor(
+        overlay: Overlay,
+        injector: Injector,
         private factoryResolver: ComponentFactoryResolver,
         private processService: NxProcessService,
-        private overlay: Overlay,
-        private injector: Injector,
-    ) {}
+    ) {
+        super(overlay, injector);
+    }
 
     get locked() {
         return !!this.applyComponentInstance?.show;
@@ -132,7 +134,7 @@ export class NxApplyService {
     }
 
     /**
-     * This iterates through the applyFunctions which is an Process[], it calls them in series until one fails.
+     * This iterates through the applyFunctions which is a Process[], it calls them in series until one fails.
      *
      * The this.applyFunctions.reduce starts with a resolved promise, calls .then on the promise then returns the next promise.
      *
@@ -156,8 +158,8 @@ export class NxApplyService {
     /**
      * Creates the NxApplyComponent for the current page and sets the watchers.
      * @param component The target component where the NxApplyComponent is to be created.
-     * @param saveFunction The process that is suppose to run when save is pressed.
-     * @param discardFunction The process that is suppose to run when discard is pressed.
+     * @param saveFunction The process that is supposed to run when save is pressed.
+     * @param discardFunction The process that is supposed to run when discard is pressed.
      * @param watchers An array of watchers which will trigger the NxApplyComponent to show
      *     if a value on the page has been changed.
      * @param {NgForm=} form Optional form to pass to the process-button
@@ -370,7 +372,7 @@ export class NxApplyService {
                         // cover a case with dynamic fields in form represented as array
                         // filter out ddMultiSelect as selected items are represented as
                         // an array (same as dynamic form fields)
-                        // I don't want to over complicate the logic -> so if we ever have a need
+                        // I don't want to overcomplicate the logic -> so if we ever have a need
                         // to use ddMultiSelect in dynamic form we'll need to refactor this -- TT
                         Object.keys(change)
                             .filter(key => key !== 'ddMultiSelect')
@@ -477,37 +479,6 @@ export class NxApplyService {
         return sectionWatcher;
     };
 
-    open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
-        const positionStrategy = this.overlay
-            .position()
-            .global()
-            .centerHorizontally()
-            .centerVertically();
-
-        const overlayRef = this.overlay.create({
-            positionStrategy,
-            hasBackdrop: config.hasBackdrop,
-            backdropClass: config.backdropClass,
-            panelClass: config.panelClass,
-            width: config.width,
-        });
-
-        // Create dialogRef to return
-        const dialogRef = new DialogRef(overlayRef);
-        const injector = Injector.create({
-            parent: this.injector,
-            providers: [
-                { provide: DialogRef, useValue: dialogRef },
-                { provide: DIALOG_DATA, useValue: config.data },
-            ]
-        });
-
-        const portal = new ComponentPortal(component, null, injector);
-        overlayRef.attach(portal);
-
-        return dialogRef;
-    }
-
     applyDialog(
         applyFunc: Process,
         discardFunc: () => void,
@@ -539,7 +510,7 @@ export class NxApplyService {
 
     // The ApplyGuard will call show dialog. For an example look at the settings.module.ts.
     showDialog(): Promise<boolean> {
-        // If the apply dialog is active block all other attempts to open it.
+        // If apply dialog is active block all other attempts to open it.
         if (this.popupActive) {
             return Promise.resolve(false);
         }
@@ -634,10 +605,10 @@ export class NxApplyService {
     }
 
     /**
-     * Whats happening here
+     * What's happening here
      * 1) For each watcher create a new observable that only fires when the observable
      *     has a distinct change and the new value is not undefined.
-     * 2) Clone and join all of the new observables into one observable.
+     * 2) Clone and join all the new observables into one observable.
      * 3) Skip watchers.length to avoid firing when the initial values are set for the watchers.
      * 4) If any of the watchers are changed show the NxApplyComponent and block navigation
      *     until the user saves or discards the changes.
