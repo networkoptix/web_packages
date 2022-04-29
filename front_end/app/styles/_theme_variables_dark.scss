@@ -349,6 +349,12 @@ html[data-theme="dark"] {
 
     --table-alt-row-bg: #171C1F; //$dark5;
     --table-row-hover-bg : #35464F; //$dark11;
+    
+    --promo-tile-bg : #{$dark4};
+    --promo-tile-h4-color : #{$light10};
+    --promo-tile-img-1-path : url("/static/images/promo/landing_promo_dark_1.svg");
+    --promo-tile-img-2-path : url("/static/images/promo/landing_promo_dark_2.svg");
+    --promo-tile-img-3-path : url("/static/images/promo/landing_promo_dark_3.svg");
 
     --card-shadow : none;
     --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;

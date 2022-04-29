@@ -294,15 +294,28 @@
             }
           },
           {
-            "label": "Left block icon",
-            "name": "static/images/promo/landing_promo_1.png",
+            "label": "Left block icon (light theme)",
+            "name": "static/images/promo/landing_promo_1.svg",
             "value": "",
             "description": "Header icon",
             "type": "image",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "png",
+              "format": "svg",
+              "height_ge": 128
+            }
+          },
+          {
+            "label": "Left block icon (dark theme)",
+            "name": "static/images/promo/landing_promo_dark_1.svg",
+            "value": "",
+            "description": "Header icon",
+            "type": "image",
+            "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "svg",
               "height_ge": 128
             }
           },
@@ -347,8 +360,8 @@
             }
           },
           {
-            "label": "Middle block icon",
-            "name": "static/images/promo/landing_promo_2.png",
+            "label": "Middle block icon (light theme)",
+            "name": "static/images/promo/landing_promo_2.svg",
             "value": "",
             "description": "Header icon",
             "type": "image",
@@ -356,6 +369,19 @@
             "meta": {
               "background": "light",
               "format": "png",
+              "height_ge": 128
+            }
+          },
+          {
+            "label": "Middle block icon (dark theme)",
+            "name": "static/images/promo/landing_promo_dark_2.svg",
+            "value": "",
+            "description": "Header icon",
+            "type": "image",
+            "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "svg",
               "height_ge": 128
             }
           },
@@ -400,15 +426,28 @@
             }
           },
           {
-            "label": "Right block icon",
-            "name": "static/images/promo/landing_promo_3.png",
+            "label": "Right block icon (light theme)",
+            "name": "static/images/promo/landing_promo_3.svg",
             "value": "",
             "description": "Header icon",
             "type": "image",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "png",
+              "format": "svg",
+              "height_ge": 128
+            }
+          },
+          {
+            "label": "Right block icon (dark theme)",
+            "name": "static/images/promo/landing_promo_dark_3.svg",
+            "value": "",
+            "description": "Header icon",
+            "type": "image",
+            "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "svg",
               "height_ge": 128
             }
           },

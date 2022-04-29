@@ -351,6 +351,12 @@
     --table-alt-row-bg : #{$additional_light1};
     --table-row-hover-bg : rgba(var(--brand_core--rgb), .1);
 
+    --promo-tile-bg : #{$light3};
+    --promo-tile-h4-color : #{$dark9};
+    --promo-tile-img-1-path : url("/static/images/promo/landing_promo_1.svg");
+    --promo-tile-img-2-path : url("/static/images/promo/landing_promo_2.svg");
+    --promo-tile-img-3-path : url("/static/images/promo/landing_promo_3.svg");
+    
     --card-shadow: 0 2px 5px 0 #{$light4};
     --card-active-shadow: 0 2px 5px 0 #{$light10};
     --card-header-bg : #{$additional_light1};

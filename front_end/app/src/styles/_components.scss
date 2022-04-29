@@ -115,9 +115,11 @@
 
     .promo-block {
         @extend .card;
+        border : none;
         text-align : center;
         padding    : 0;
         margin     : 0 8px 16px;
+        background : var(--promo-tile-bg);
 
         @include media-breakpoint-up(sm) {
             flex : 0 0 calc(100% / 3 - 16px);
@@ -126,17 +128,31 @@
         h2 {
             @extend .card--header;
             @include typography.medium18nocolor;
+            border-bottom   : none;
             line-height     : unset;
-            padding-top     : 103px;
-            padding-bottom  : 35px;
-            background      : var(--card-header-bg) no-repeat 50% 20px;
+            padding-top     : 124px;
+            padding-bottom  : 0;
+            background      : no-repeat 50% 20px;
             background-size : auto 64px;
         }
 
-        @for $i from 1 through 9 {
-            &:nth-of-type(#{$i}) h2 {
-                background-image : url("/static/images/promo/landing_promo_#{$i}.png");
-            }
+        // fancy but not useful ...keeping it for reference
+        //@for $i from 1 through 9 {
+        //    &:nth-of-type(#{$i}) h2 {
+        //        background-image : url("/static/images/promo/landing_promo_#{$i}.svg");
+        //    }
+        //}
+    
+        &:nth-of-type(1) h2 {
+            background-image : var(--promo-tile-img-1-path);
+        }
+    
+        &:nth-of-type(2) h2 {
+            background-image : var(--promo-tile-img-2-path);
+        }
+    
+        &:nth-of-type(3) h2 {
+            background-image : var(--promo-tile-img-3-path);
         }
 
         h2, h4 {
@@ -145,6 +161,7 @@
 
         h4 {
             @include typography.regular14nocolor;
+            color : var(--promo-tile-h4-color) !important;
             margin      : 20px 16px;
             line-height : 1.4;
         }
