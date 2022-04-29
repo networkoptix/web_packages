@@ -33,7 +33,7 @@
         @include bootstrap.media-breakpoint-down(sm){
             margin-top: 6px;
         }
-    
+
         & .bullet-item {
             @extend .bullet-point-text;
             padding-right: 36px;
@@ -61,7 +61,7 @@
             margin-top: 28px;
             padding-right: 15px;
         }
-    
+
         & .bullet-item {
             @extend .bullet-point-text;
             margin-top: 12px;
@@ -111,11 +111,11 @@
         margin-top: -40px;
 
         & .brand-path {
-            fill: $brand-core;
+            fill: var(--brand-core);
         }
 
         & .brand-path-O {
-            stroke: $brand-core;
+            stroke: var(--brand-core);
         }
     }
 }
