@@ -5,10 +5,11 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { AuthGuard } from '@guards/authGuard';
+import { SystemGuard } from '@guards/systemGuard';
+import { TwofaGuard } from '@guards/twofaGuard';
 
 import { MenuModule } from '../../menu/menu.module';
-import { AuthGuard, SystemGuard } from '../../routeGuards';
-import { TwofaGuard } from '../../routeGuards/twofaGuard';
 
 import { GraphsComponent } from './graphs/graphs.component';
 import { LogsComponent } from './logs/logs.component';

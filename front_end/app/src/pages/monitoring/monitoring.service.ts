@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { NxSystem } from '@services/system.service';
+import { NxSystem } from '@services/system.service/system';
 
 @Injectable({
     providedIn: 'root'

@@ -2,7 +2,6 @@ import {
     Component,
     Input,
     OnChanges,
-    SimpleChanges
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { curveBasis } from 'd3-shape';
@@ -14,6 +13,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
+import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
  <monitoring-graph [system]="system" [selectedServerId]="selectedServerId"></monitoring-graph>
@@ -98,7 +98,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
         this.multi = [];
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
+    ngOnChanges(changes: NgChanges<{ system: NxSystem, selectedServerId: string }>): void {
         if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
             this.destroy$.next();
             this.multi = [];
@@ -112,7 +112,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
                 switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
-            ).subscribe((response) => {
+            ).subscribe(response => {
                 response.reply && response.reply.statistics.forEach(data => {
                     const seriesData = this.multi.find(series => series.name === data.description);
                     if (!seriesData) {

@@ -1,11 +1,12 @@
 import { HttpParams } from '@angular/common/http';
-import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
+import { NgChanges } from '@utils/ng-changes';
 
 import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
 
@@ -58,14 +59,13 @@ export class NxLoggerComponent implements OnChanges {
             .then(handleLogResponse, ({ error }) => handleLogResponse(error));
     }
 
-    async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    async ngOnChanges(changes: NgChanges<{ system: NxSystem, selectedServerId: string }>): Promise<void> {
         if (changes.system.currentValue) {
             if (!environment.isLocal) {
                 this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;
             }
             this.system.serverManager.logLevel(this.selectedServerId)
-                .pipe(untilDestroyed(this))
-                .subscribe(res => {
+                .then(res => {
                     this.logLevels = Object.keys(res.reply).map(level => ({
                         name: level,
                         value: level,

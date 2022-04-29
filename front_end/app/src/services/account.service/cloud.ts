@@ -92,7 +92,7 @@ export class CloudAccount extends BaseAccount {
                 this.account = { ...account, isCloud: true };
                 return this.account;
             })
-            .catch((res) => {
+            .catch(res => {
                 const expiredSession = res?.error?.resultCode === 'badUsername';
                 this.account = undefined;
 
@@ -223,7 +223,7 @@ export class CloudAccount extends BaseAccount {
                 } else if (account.is_authenticated) {
                     return account;
                 }
-            }).catch((err) => {
+            }).catch(err => {
                 console.error(err);
                 this.router.navigate([this.CONFIG.redirect.unauthorised]);
             });

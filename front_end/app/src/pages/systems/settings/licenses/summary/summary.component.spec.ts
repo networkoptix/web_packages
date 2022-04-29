@@ -169,7 +169,7 @@ describe('Licenses (Summary)', () => {
             ];
 
             fixture.detectChanges();
-            settingsService.systemSubject.next(partialToFull(setupTest41System()));
+            settingsService.systemSubject.next(setupTest41System());
         }));
 
         it('should render legacy info', inject([NxSettingsService], (settingsService: NxSettingsService) => {
@@ -197,7 +197,7 @@ describe('Licenses (Summary)', () => {
             ];
 
             fixture.detectChanges();
-            settingsService.systemSubject.next(partialToFull(setupTest50System()));
+            settingsService.systemSubject.next(setupTest50System());
         }));
 
         it('should render REST call info', fakeAsync(inject([NxSettingsService], (settingsService: NxSettingsService) => {

@@ -1,10 +1,13 @@
 import {
     Component,
     Input,
-    OnChanges,
+    OnChanges, ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
@@ -12,7 +15,7 @@ import type {
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxApplyService } from '@services/apply.service';
-import { Watcher } from '@services/apply.service/watcher';
+import { FormWatcher, Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -43,16 +46,20 @@ export class NxServerLoggerComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() serverId: string;
 
+    @ViewChild('logLevelsForm') logLevelsForm: NgForm;
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     showLoggers: boolean = false;
     saveLoggers: Process;
     loading: boolean = false;
+    formWatcher: FormWatcher;
 
     loggerWatcher = new Watcher<boolean>(false);
     systemLoggers: Logger[] = [];
     readonly loggerOptions: LoggerOption[];
+    cancelPrevious$ = new Subject<any>();
 
     constructor(
         configService: NxConfigService,
@@ -120,7 +127,7 @@ export class NxServerLoggerComponent implements OnChanges {
 
     init = () => {
         this.system.serverManager
-            .logLevel(this.serverId).toPromise()
+            .logLevel(this.serverId)
             .then((response: LogLevel) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply);
                 this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
@@ -133,6 +140,40 @@ export class NxServerLoggerComponent implements OnChanges {
             logger.value = logger.originalValue;
         });
         this.loggerWatcher.reset();
+    };
+
+    settingsToBeDisplayedOrUpdated = loggers => {
+        this.formWatcher = new FormWatcher(this.logLevelsForm);
+        const reset = () => {
+            Object.keys(loggers).forEach(key => {
+                const value = loggers[key];
+                const { name, help } = this.loggerOptions.filter(level => {
+                    return level.value === value;
+                })[0];
+
+                this.systemLoggers[key] = {};
+                this.systemLoggers[key].key = key;
+                this.systemLoggers[key].name = name;
+                this.systemLoggers[key].help = help;
+                this.systemLoggers[key].value = value;
+                this.systemLoggers[key].originalValue = value;
+            });
+            this.formWatcher.reset();
+            this.loggerWatcher.reset();
+        };
+        reset();
+        this.cancelPrevious$.next('cancel');
+        this.formWatcher.valueSubject.pipe(
+            takeUntil(this.cancelPrevious$),
+            debounceTime(10)
+        ).subscribe(_ => {
+            this.loggerWatcher.value = this.formWatcher.changed;
+        });
+        this.applyService.addWatchersAndFunctionsFromChild(
+            [this.loggerWatcher],
+            this.saveLoggers,
+            reset
+        );
     };
 
     initializeLoggerLevels = (loggers: LogLevelReply): void => {

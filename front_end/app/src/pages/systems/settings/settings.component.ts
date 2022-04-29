@@ -15,7 +15,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, Subscription } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -385,27 +385,27 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     true
                 );
 
-                                if (
-                                    system?.system2faEnabled &&
+                if (
+                    system?.system2faEnabled &&
                                     !this.account?.sessionVerified
-                                ) {
-                                    this.system.mediaserver
-                                        .getMediaServers(false)
-                                        .toPromise()
-                                        .then(
-                                            () => {},
-                                            () => {
-                                                this.location.replaceState('/systems');
-                                                return this.oauthService.redirectOauth(
-                                                    'system2faAuth',
-                                                    this.account.email,
-                                                    undefined,
-                                                    (this.system.mediaserver as NxSystemRestAPI)
-                                                        .accessToken
-                                                );
-                                            }
-                                        );
-                                }
+                ) {
+                    this.system.mediaserver
+                        .getMediaServers(false)
+                        .toPromise()
+                        .then(
+                            () => {},
+                            () => {
+                                this.location.replaceState('/systems');
+                                return this.oauthService.redirectOauth(
+                                    'system2faAuth',
+                                    this.account.email,
+                                    undefined,
+                                    (this.system.mediaserver as NxSystemRestAPI)
+                                        .accessToken
+                                );
+                            }
+                        );
+                }
 
                 this.system.show404 = false;
                 this.gettingSystem.run().catch(() => {

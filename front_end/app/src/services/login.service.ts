@@ -48,6 +48,7 @@ export class NxLoginService {
         private bootstrapProvider: NxBootstrapProvider,
         private overlay: Overlay,
         private injector: Injector,
+        private dialog: DialogRef,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -189,7 +190,7 @@ export class NxLoginService {
         if (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
                 this.simpleDialogService.notify(this.LANG.toastMessage.noInternet(), 'warning', true);
-                this.modalService.dismissAll();
+                this.dialog.close('closed all dialogs');
                 return Promise.resolve(false);
             }
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${state ? '?state=' + state : ''}`;

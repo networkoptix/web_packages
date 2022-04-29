@@ -33,7 +33,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { NxMenuService } from '@src/menu/menu.service';
-import { cleanId } from '@utils/general';
+import { cleanId, htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { DropdownStorage } from './server-standard.component.types';
@@ -408,14 +408,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             });
     }
 
-    private cleanServerName(name) {
-        return NxUtilsService.htmlToEntity(name);
-    }
-
     restartServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         return this.dialogs
-            .restartServer(this.system, id, this.cleanServerName(name))
+            .restartServer(this.system, id, htmlToEntity(name))
             .then((res: string) => {
                 this.system.isAvailable = false;
                 this.system.storageManager.update();
@@ -450,7 +446,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             : currentServerIndex - 1;
         const nextServerId = this.system.servers[nextServerIndex].id;
         return this.dialogs
-            .detachServer(this.system, id, this.cleanServerName(name))
+            .detachServer(this.system, id, htmlToEntity(name))
             .then(detach => {
                 if (detach === 'success') {
                     this.uriService
@@ -469,7 +465,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     resetServer(): Promise<void> {
         const { id, name } = this.selectedServer;
         return this.dialogs
-            .resetServer(this.system, id, this.cleanServerName(name))
+            .resetServer(this.system, id, htmlToEntity(name))
             // will take some time to reset and then restart the server
             .then(() => this.setStatus('resetting'))
             .catch(() => {

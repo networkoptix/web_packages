@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMonitoringService } from '@pages/monitoring/monitoring.service';
-import { NxSystem } from '@services/system.service';
+import { NxSystem } from '@services/system.service/system';
 import { NxMenuService } from '@src/menu/menu.service';
 
 @UntilDestroy()

@@ -6,22 +6,18 @@ import {
     UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
 
-import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import { Account } from '@services/account.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
+import { NxSystem } from '@services/system.service/system';
+import { NxSystemService } from '@services/system.service/system.service';
+import { NxMenuService } from '@src/menu/menu.service';
 
-import { NxSystem } from '@services/system.service/system.types';
-import { NxSystemService } from '@serivces/system.service/system';
+import { Content } from '../../menu/menu.types';
 
 import { NxMonitoringService } from './monitoring.service';
-import { Content } from '../../menu/menu.types';
-import { NxSettingsService } from '../systems/settings/settings.service';
 
 @UntilDestroy()
 @Component({
@@ -76,7 +72,7 @@ export class NxMonitoringComponent implements OnInit {
             });
     }
 
-    ngOnInit () {
+    ngOnInit() {
         this.route.params
             .pipe(untilDestroyed(this))
             .subscribe(params => {
@@ -85,7 +81,7 @@ export class NxMonitoringComponent implements OnInit {
             });
     }
 
-    init () {
+    init() {
         this.accountService.get().then(account => {
             if (!account) {
                 return;
@@ -138,7 +134,7 @@ export class NxMonitoringComponent implements OnInit {
         });
     }
 
-    changeSelectedServer (item) {
+    changeSelectedServer(item) {
         this.selectedServer = item;
         this.monitoringService.selectedServerId = item.value;
     }
