@@ -14,7 +14,7 @@
     border-radius   : $border-radius-base !important;
     font-weight     : inherit !important;
     padding         : 0 1rem !important;
-    border          : none !important;
+    border          : none;
     display         : flex !important;
     align-items     : center !important;
     transition      : none !important;
@@ -115,7 +115,6 @@ button, .btn {
 .btn.btn-primary {
     color            : var(--btn-primary-color) !important;
     background-color : var(--btn-primary-bg) !important;
-    border-color     : transparent !important;
     box-shadow       : var(--btn-primary-shadow);
 
     &:hover:not([disabled]):not(.disabled) {

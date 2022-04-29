@@ -4,7 +4,7 @@
              (nxClickElsewhere)="headerService.show$ = false"
              [ngClass]="{'show': headerService.showSubject | async, 'hide-title': !hideArrow}">
 
-            <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+            <button class="inset btn btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
                     (click)="headerService.show$ = !headerService.show$"
                     type="button" id="systemsDropdown" data-toggle="dropdown">
 
