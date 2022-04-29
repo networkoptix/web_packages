@@ -531,11 +531,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.post(`/rest/v1/servers/${serverId || 'this'}/detach`);
     }
 
-    disconnectFromCloud() {
+    disconnectFromCloud(): Promise<void> {
         return this.post('/rest/v1/system/cloudUnbind', { password: '' }).toPromise()
             .then(() => {
                 if (this.isSessionOauth) {
-                    return this.clearTokens();
+                    this.clearTokens();
                 }
             });
     }

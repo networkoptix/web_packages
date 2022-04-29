@@ -15,8 +15,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemAPIService } from '@services/system-api.service';
-import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { pickFrom } from '@utils/general';
@@ -44,7 +43,6 @@ export class DisconnectModalContent {
     // };
 
     // hideErrors = true;
-    mediaServerApi: Partial<NxSystemAPI | NxSystemRestAPI>;
 
     // @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
@@ -131,10 +129,14 @@ export class DisconnectModalContent {
         this.dialogRef.close(msg);
     };
 
-    private disconnectLocal() {
-        this.mediaServerApi = this.systemApiService
-            .createConnection(undefined, undefined, undefined, () => of(''));
-
-        return (this.mediaServerApi as NxSystemRestAPI).disconnectFromCloud();
+    private disconnectLocal(): Promise<void> {
+        return this.systemApiService
+            .createConnection<NxSystemRestAPI>(
+                undefined,
+                undefined,
+                undefined,
+                () => of('')
+            )
+            .disconnectFromCloud();
     }
 }

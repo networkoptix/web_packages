@@ -5,12 +5,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
-
 import { NxLoginService } from '../login.service';
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxBootstrapProvider } from '../nx-bootstrap-provider';
 import { NxCloudApiService } from '../nx-cloud-api';
+import { NxConfigService } from '../nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../nx-language-provider';
 import { OauthService } from '../oauth.service';
 import { NxPollService } from '../poll.service';

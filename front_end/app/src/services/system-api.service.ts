@@ -34,12 +34,13 @@ export class NxSystemAPIService {
         this.systemConnections = {};
     }
 
-    createConnection(user: string,
+    createConnection<S extends NxSystemAPI | NxSystemRestAPI = NxSystemAPI | NxSystemRestAPI>(
+        user: string,
         systemId: string,
         serverId: string,
         unauthorizedCallback: (...params: any) => any,
         useRest = false
-    ) {
+    ): S {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {
         //     return this.systemConnections[sysServe];
@@ -53,19 +54,35 @@ export class NxSystemAPIService {
         //     );
         //     this.systemConnections[sysServe]
         // }
-        return new (useRest || environment.isLocal ? NxSystemRestAPI : NxSystemAPI)(
-            this.http,
-            this.CONFIG,
-            this.location,
-            user,
-            systemId,
-            serverId,
-            unauthorizedCallback,
-            this.cacheService,
-            this.cookieService,
-            this.healthService,
-            this.appState,
-            this.injector
-        );
+        if (useRest || environment.isLocal) {
+            return new NxSystemRestAPI(
+                this.http,
+                this.CONFIG,
+                this.location,
+                user,
+                systemId,
+                serverId,
+                unauthorizedCallback,
+                this.cacheService,
+                this.cookieService,
+                this.healthService,
+                this.appState,
+                this.injector
+            ) as S;
+        } else {
+            return new NxSystemAPI(
+                this.http,
+                this.CONFIG,
+                this.location,
+                user,
+                systemId,
+                serverId,
+                unauthorizedCallback,
+                this.cacheService,
+                this.cookieService,
+                this.healthService,
+                this.appState,
+            ) as S;
+        }
     }
 }

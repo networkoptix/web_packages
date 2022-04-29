@@ -15,6 +15,7 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
+import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -55,7 +56,9 @@ export abstract class BaseAccount implements OnDestroy {
     // Declare services that cause circular dependencies here instead of injecting in constructor
     dialogs: NxSimpleDialogsService;
     protected applyService: NxApplyService;
-    public mediaServerApi: any;
+
+    // Only in LocalAccount but added here for TS convenience
+    mediaServerApi: NxSystemRestAPI;
 
     // Abstract methods implemented by cloud and local versions
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;

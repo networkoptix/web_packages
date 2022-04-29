@@ -3,7 +3,6 @@ import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
-import { Account } from '@services/account.service/account';
 import { NxLoginService } from '@services/login.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -19,6 +18,7 @@ import { NxSystemAPIService } from '../system-api.service';
 import { NxUriService } from '../uri.service';
 import { WINDOW } from '../window-provider';
 
+import { Account } from './account';
 import { BaseAccount } from './base';
 
 @Injectable()

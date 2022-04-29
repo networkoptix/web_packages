@@ -211,6 +211,12 @@ export class LoginWebadminModalContent implements OnInit {
             accountBlocked: showAccountBlockedError
         };
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError();
+        /* FIXME: Type error for WebAdmin, LocalAccount.login()
+        returns an Observable which makes the first argument () => Observable,
+        but NxProcessService.createProcess() expects Observable
+        or () => PromiseLike */
+        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+        // @ts-ignore
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
