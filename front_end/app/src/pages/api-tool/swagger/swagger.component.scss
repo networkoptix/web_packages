@@ -687,7 +687,7 @@ nx-swagger-markdown + div#swagger-ui {
 	&.execute {
 		margin: 12px 0 11px 16px;
 		width: 215px;
-		background-color: $blue1 !important;
+		background-color: var(--brand-core) !important;
 		color           : $light1 !important;
 	}
 
