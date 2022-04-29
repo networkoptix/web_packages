@@ -35,10 +35,6 @@ describe('Licenses (Summary)', () => {
 
     let systemSpy: jasmine.SpyObj<NxSystem>;
 
-    function partialToFull<NxSystem>(x: Partial<NxSystem>): NxSystem {
-        return x as NxSystem;
-    }
-
     function executeSharedTests() {
         expect(Object.keys(component.licenses).length).toBeTruthy();
         fixture.detectChanges();

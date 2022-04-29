@@ -59,7 +59,7 @@ export class NxLoggerComponent implements OnChanges {
             .then(handleLogResponse, ({ error }) => handleLogResponse(error));
     }
 
-    async ngOnChanges(changes: NgChanges<{ system: NxSystem, selectedServerId: string }>): Promise<void> {
+    async ngOnChanges(changes: NgChanges<NxLoggerComponent>): Promise<void> {
         if (changes.system.currentValue) {
             if (!environment.isLocal) {
                 this.systemRequires2fa = (await this.system.getInfoFromCloudDb().toPromise())[0]?.system2faEnabled;

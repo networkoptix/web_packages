@@ -98,7 +98,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
         this.multi = [];
     }
 
-    ngOnChanges(changes: NgChanges<{ system: NxSystem, selectedServerId: string }>): void {
+    ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): void {
         if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
             this.destroy$.next();
             this.multi = [];
