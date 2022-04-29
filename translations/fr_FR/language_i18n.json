@@ -176,6 +176,7 @@
     "Enter \"Public User\" credentials:": "Saisissez les informations d'identification de «l'utilisateur public»:",
     "Enter Backup Code": "Entrez le code de sauvegarde",
     "Enter a verification code from your authentication app or a backup code to continue": "Enter a verification code from your authentication app or a backup code to continue",
+    "Enter a verification code from your authentication app to continue": "Enter a verification code from your authentication app to continue",
     "Enter email": "Entrez votre adresse e-mail",
     "Enter license key": "Entrer une clé de licence",
     "Enter login": "Entrez le nom d'utilisateur",
