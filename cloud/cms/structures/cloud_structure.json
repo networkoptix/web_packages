@@ -298,12 +298,11 @@
             "name": "static/images/promo/landing_promo_1.svg",
             "value": "",
             "description": "Header icon",
-            "type": "image",
+            "type": "file",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "svg",
-              "height_ge": 128
+              "format": "svg"
             }
           },
           {
@@ -311,12 +310,11 @@
             "name": "static/images/promo/landing_promo_dark_1.svg",
             "value": "",
             "description": "Header icon",
-            "type": "image",
+            "type": "file",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "svg",
-              "height_ge": 128
+              "format": "svg"
             }
           },
           {
@@ -364,12 +362,11 @@
             "name": "static/images/promo/landing_promo_2.svg",
             "value": "",
             "description": "Header icon",
-            "type": "image",
+            "type": "file",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "png",
-              "height_ge": 128
+              "format": "svg"
             }
           },
           {
@@ -377,12 +374,11 @@
             "name": "static/images/promo/landing_promo_dark_2.svg",
             "value": "",
             "description": "Header icon",
-            "type": "image",
+            "type": "file",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "svg",
-              "height_ge": 128
+              "format": "svg"
             }
           },
           {
@@ -430,12 +426,11 @@
             "name": "static/images/promo/landing_promo_3.svg",
             "value": "",
             "description": "Header icon",
-            "type": "image",
+            "type": "file",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "svg",
-              "height_ge": 128
+              "format": "svg"
             }
           },
           {
@@ -443,12 +438,11 @@
             "name": "static/images/promo/landing_promo_dark_3.svg",
             "value": "",
             "description": "Header icon",
-            "type": "image",
+            "type": "file",
             "optional": true,
             "meta": {
               "background": "light",
-              "format": "svg",
-              "height_ge": 128
+              "format": "svg"
             }
           },
           {
