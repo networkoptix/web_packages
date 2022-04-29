@@ -181,6 +181,7 @@
     "Enter \"Public User\" credentials:": "Geben Sie die Zugangsdaten für den \"Öffentlichen Benutzer\" ein:",
     "Enter Backup Code": "Backup-Code eingeben",
     "Enter a verification code from your authentication app or a backup code to continue": "Enter a verification code from your authentication app or a backup code to continue",
+    "Enter a verification code from your authentication app to continue": "Enter a verification code from your authentication app to continue",
     "Enter email": "Email eingeben",
     "Enter license key": "Lizenzschlüssel eingeben",
     "Enter login": "Login eingeben",

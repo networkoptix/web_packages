@@ -7,7 +7,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
-    "Developers Console": "Ontwikkelaars Console",
+    "Developers Console": "Developers Console",
     "accessRoles": {
         "Administrator": {
             "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen",
@@ -570,7 +570,7 @@
         "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
         "emailNotFound": "Dit account bestaat niet.",
         "failedToAccess2FA": "<p class=\"mb-0\">Tweestapsverificatie is vereist voor toegang tot dit systeem.</p><p>U kunt tweestapsverificatie inschakelen in uw <a href=\"/account/security\">account instellingen</a>.</p>",
-        "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem is losgekoppeld van %CLOUD_NAME%, toegang tot dit systeem is ingetrokken of als u bent ingelogd op het verkeerde account.",
+        "failedToAccessSystem": "Er kan geen systeem via deze link worden geopend. Dit kan gebeuren wanneer een systeem van %CLOUD_NAME% is losgekoppeld, toegang tot dit systeem is verwijderd, het systeem in de link bestaat niet, of als je bent ingelogd op het verkeerde account.",
         "failedToAccessCamera": "Geen enkele camera is toegankelijk via deze link.",
         "forbidden": "U hebt geen rechten om deze actie uit te voeren",
         "lostConnection": "Verbinding met {systemName} verbroken",
@@ -762,8 +762,8 @@
             "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
         },
         "newVersionAvailable": {
-            "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
-            "installButton": "Nu installeren"
+            "notification": "New version of %CLOUD_NAME% is available",
+            "installButton": "Install Now"
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "systemsMerging": "Dit systeem wordt momenteel samengevoegd met een ander systeem."
@@ -876,8 +876,7 @@
             "network": "Netwerk, toegevoegd via OS",
             "smb": "Netwerk (smb), toegevoegd via VMS",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> wil het eigendom van dit systeem aan u overdragen"
+        }
     },
     "systemStatuses": {
         "activated": "geactiveerd",
@@ -941,7 +940,7 @@
             "IO Module": "I/O module",
             "Bridge": "Recorder",
             "NVR": "NVR",
-            "Invalid": "Ongeldig"
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Type",

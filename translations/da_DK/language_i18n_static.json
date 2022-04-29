@@ -876,8 +876,7 @@
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> ønsker at overføre ejerskabet af dette system til dig"
+        }
     },
     "systemStatuses": {
         "activated": "activated",
