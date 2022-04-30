@@ -157,6 +157,7 @@ module.exports = {
                 }],
                 '@typescript-eslint/explicit-module-boundary-types': 'error',
                 '@typescript-eslint/no-empty-function': 'off',
+                '@typescript-eslint/no-empty-interface': 'off',
                 '@typescript-eslint/no-explicit-any': 'error',
                 '@typescript-eslint/no-inferrable-types': 'off',
                 '@typescript-eslint/no-non-null-assertion': 'error',
