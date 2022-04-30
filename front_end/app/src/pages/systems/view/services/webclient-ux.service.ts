@@ -13,8 +13,6 @@ const webClientUxInitialState: WebClientUxState = {
     providedIn: 'root'
 })
 export class WebClientUxService {
-    constructor() {}
-
     protected _subject = new BehaviorSubject<WebClientUxState>({
         ...webClientUxInitialState
     });

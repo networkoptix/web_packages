@@ -44,9 +44,6 @@ export class NxCarouselComponent implements OnInit {
     images: any = [];
     caption: string;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
         this.caption = '';
         this.imageCount = this.screenshots.length;

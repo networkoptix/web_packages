@@ -37,8 +37,6 @@ export class NxAlertBlockComponent implements OnInit {
 
     isNotDefaultType = false;
 
-    constructor() {}
-
     ngOnInit(): void {
         this.isNotDefaultType = ['error', 'warning', 'info'].includes(this.type);
     }

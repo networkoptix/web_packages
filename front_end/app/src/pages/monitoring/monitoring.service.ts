@@ -10,8 +10,6 @@ export class NxMonitoringService {
     systemSubject = new BehaviorSubject<NxSystem>(undefined);
     selectedServerIdSubject = new BehaviorSubject<string>('');
 
-    constructor() {}
-
     get system(): NxSystem {
         return this.systemSubject.getValue();
     }

@@ -12,8 +12,6 @@ export class NxConsoleService {
     targetState$ = this.#targetStateSubject$.pipe(filter(val => val !== undefined));
     unsavedAssets = {};
 
-    constructor() { }
-
     set targetState(value: TargetState) {
         this.#targetStateSubject$.next(value);
     }

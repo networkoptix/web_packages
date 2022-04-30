@@ -12,5 +12,6 @@ module.exports = {
     rules: {
         ...exportRule('only-export-injectable'),
         ...exportRule('explicit-input-output-types'),
+        ...exportRule('no-useless-constructor'),
     }
 };

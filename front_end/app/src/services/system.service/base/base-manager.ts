@@ -18,6 +18,4 @@ export class BaseManager {
     set serverId(id) {
         this.#serverId$.next(id);
     }
-
-    constructor() {}
 }

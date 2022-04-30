@@ -35,7 +35,7 @@ module.exports = {
         function reportNode(node) {
             context.report({
                 node,
-                message: 'Files with injectables should only export the injectable',
+                message: 'Files with injectables should only export the injectable.',
             });
         }
 

@@ -48,8 +48,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     private hasPlayed = false;
     protected transport = '';
 
-    constructor() {}
-
     initPlayer(): void {
         let videoJsAutoRetry = 0;
         let stallTimer;

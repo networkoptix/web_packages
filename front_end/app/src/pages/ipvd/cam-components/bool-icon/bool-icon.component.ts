@@ -20,9 +20,6 @@ export class BoolIconComponent implements OnInit {
 
     public additional: string;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
     }
 

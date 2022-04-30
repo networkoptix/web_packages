@@ -10,7 +10,4 @@ export class ClipComponent {
     @Input() posterUrl: string;
 
     loadingError = false;
-
-    constructor() {
-    }
 }

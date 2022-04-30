@@ -15,9 +15,6 @@ export class NxPreLoaderComponent implements OnInit {
     @Input() type: string;
     @Input() minHeight: number;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
         this.type = this.type || '';
     }

@@ -74,7 +74,6 @@ module.exports = {
             classes: true,
             variables: true,
         }],
-        'no-useless-constructor': 'off', // TODO: Restore
         'no-useless-escape': 'off',
         'prefer-promise-reject-errors': 'off',
         'prefer-regex-literals': 'off',
@@ -119,6 +118,8 @@ module.exports = {
             },
             plugins: ['nx', '@typescript-eslint', 'ngrx'],
             rules: {
+                'no-useless-constructor': 'off',
+                'nx/no-useless-constructor': 'error',
                 'nx/only-export-injectable': 'error',
             }
         },

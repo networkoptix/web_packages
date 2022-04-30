@@ -23,8 +23,6 @@ import { concatMap, takeUntil } from 'rxjs/operators';
  */
 export class NxPollService {
     unsub$ = new Subject();
-    constructor() {
-    }
 
     ngOnDestroy(): void {
         this.unsub$.next('done');

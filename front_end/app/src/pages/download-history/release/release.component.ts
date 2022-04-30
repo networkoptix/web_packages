@@ -17,9 +17,6 @@ export class ReleaseComponent implements OnInit {
     @Input() LANG: LanguageI18NStaticTypes;
     @Input() linkbase;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
     }
 }

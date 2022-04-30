@@ -25,9 +25,6 @@ export class NxToast implements OnChanges {
     destroy$ = new Subject();
     isTemplate: boolean;
 
-    constructor() {
-    }
-
     ngOnChanges(changes: NgChanges<NxToast>): void {
         if (changes.toast.currentValue) {
             this.isTemplate = this.toast.textOrTpl instanceof TemplateRef;

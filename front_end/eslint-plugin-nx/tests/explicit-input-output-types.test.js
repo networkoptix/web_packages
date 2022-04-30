@@ -2,13 +2,11 @@ const { RuleTester } = require('@typescript-eslint/utils/dist/ts-eslint');
 
 const rule = require('../rules/explicit-input-output-types');
 
+const { classWrapper } = require('./utils');
+
 const ruleTester = new RuleTester({
     parser: require.resolve('@typescript-eslint/parser'),
 });
-
-function classWrapper(content, className = 'MyClass') {
-    return `class ${className} { ${content} }`;
-}
 
 ruleTester.run('explicit-input-output-types', rule, {
     valid: [
@@ -39,7 +37,7 @@ ruleTester.run('explicit-input-output-types', rule, {
         {
             code: classWrapper('@Input() invalidI2 = false;'),
             errors: [{
-                message: 'Missing Input type',
+                message: 'Missing Input type.',
                 suggestions: [{
                     desc: 'Infer type from default value',
                     output: classWrapper('@Input() invalidI2: boolean = false;')
@@ -49,7 +47,7 @@ ruleTester.run('explicit-input-output-types', rule, {
         {
             code: classWrapper('@Input() invalidI3 = 3;'),
             errors: [{
-                message: 'Missing Input type',
+                message: 'Missing Input type.',
                 suggestions: [{
                     desc: 'Infer type from default value',
                     output: classWrapper('@Input() invalidI3: number = 3;')
@@ -59,7 +57,7 @@ ruleTester.run('explicit-input-output-types', rule, {
         {
             code: classWrapper('@Input() invalidI4 = \'foo\';'),
             errors: [{
-                message: 'Missing Input type',
+                message: 'Missing Input type.',
                 suggestions: [{
                     desc: 'Infer type from default value',
                     output: classWrapper('@Input() invalidI4: string = \'foo\';')

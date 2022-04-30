@@ -21,6 +21,10 @@ module.exports = {
     },
     create: function (context) {
         return {
+            /**
+             * @param {import('@typescript-eslint/utils')
+             * .TSESTree.PropertyDefinition} node
+             */
             'PropertyDefinition[decorators]': function (node) {
                 const isInput = node.decorators.some(d =>
                     d.expression.callee.name === 'Input'
@@ -32,7 +36,7 @@ module.exports = {
                         if (primitives.includes(valueType)) {
                             context.report({
                                 node,
-                                message: 'Missing Input type',
+                                message: 'Missing Input type.',
                                 suggest: [{
                                     desc: 'Infer type from default value',
                                     fix: function (fixer) {
@@ -46,13 +50,13 @@ module.exports = {
                         } else {
                             context.report({
                                 node,
-                                message: 'Missing Input type',
+                                message: 'Missing Input type.',
                             });
                         }
                     } else {
                         context.report({
                             node,
-                            message: 'Missing Input type',
+                            message: 'Missing Input type.',
                         });
                     }
                     return;
@@ -69,7 +73,7 @@ module.exports = {
                         if (!value.typeParameters) {
                             context.report({
                                 node,
-                                message: 'Missing Output generic',
+                                message: 'Missing Output generic.',
                             });
                         }
                     } else if (!typeAnnotation.typeAnnotation.typeParameters) {
@@ -78,7 +82,7 @@ module.exports = {
                         // including here for consistency
                         context.report({
                             node,
-                            message: 'Missing Output generic',
+                            message: 'Missing Output generic.',
                         });
                     }
                 }

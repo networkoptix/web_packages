@@ -11,10 +11,6 @@ export class NxCameraDetailsComponent {
     @Input() camera: ICamera;
     @Output() close = new EventEmitter<void>();
 
-    constructor(
-    ) {
-    }
-
     public emitClose(): void {
         this.close.emit();
     }

@@ -9,9 +9,6 @@ export class HighlightedStringComponent {
     @Input() string: string;
     @Input() token: string;
 
-    constructor() {
-    }
-
     get tokenMatches() {
         return this.token && this.matchPosition !== -1;
     }

@@ -47,9 +47,6 @@ export class NxLayoutRightComponent {
     @Input('toggle') toggle;
     private _toggle: string;
 
-    constructor() {
-    }
-
     ngOnChanges(changes: NgChanges<NxLayoutRightComponent>): void {
         if (changes.toggle) {
             this._toggle = changes.toggle.currentValue;
