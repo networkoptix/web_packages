@@ -246,20 +246,6 @@ export class NxBootstrapProvider {
             this.CONFIG.docMenuMap = data?.docMenuMap;
             this.CONFIG.licenseTypes = data?.licenseTypes;
 
-            if (data?.menus) {
-                const authorizeFooterNodes = data.menus.footer.nodes.reduce((res, item) => {
-                    if (['Privacy', 'Terms'].includes(item.name) || item.name.includes('About')) {
-                        if (item.name === 'Privacy') {
-                            item.name = 'Privacy Policy';
-                        }
-                        res.push(item);
-                    }
-                    return res;
-                }, []);
-                const authorizeFooter = JSON.parse(JSON.stringify(data.menus.footer));
-                authorizeFooter.nodes = authorizeFooterNodes;
-                data.menus.authorizeFooter = authorizeFooter;
-            }
             this.CONFIG.dynamicMenus = data?.menus;
 
             Object.assign(this.CONFIG.featureFlags, featureFlags);

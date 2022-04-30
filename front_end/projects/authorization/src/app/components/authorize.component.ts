@@ -106,6 +106,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     content: any = {};
     footerItems: { name: string, url: string }[];
+    companyLink: string;
+    companyName: string;
 
     // shared
     currentState: AuthorizeState;
@@ -238,8 +240,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.auth();
-        // should save email to local storage on login?
-        this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter.nodes;
+        this.footerItems = this.CONFIG.dynamicMenus.footer.nodes;
+        this.companyLink = this.CONFIG.company.links.website;
+        this.companyName = this.CONFIG.company.name;
         this.initProcesses();
 
         this.action = this.route.snapshot?.data?.action;
@@ -257,11 +260,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
 
-            this.windowLargeEnough = this.window.innerWidth > 560 && this.window.innerHeight > 720 && this.viewType === 'web';
+            this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= 355;
             fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
                 const { innerHeight, innerWidth } = event.target;
-                this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
+                this.windowLargeEnough = innerWidth > 1024 && innerHeight > 768 && this.viewType === 'web';
                 this.windowSmallEnough = innerWidth <= 355;
             });
 
