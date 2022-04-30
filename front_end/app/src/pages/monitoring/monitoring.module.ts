@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UpgradeModule } from '@angular/upgrade/static';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
@@ -37,7 +36,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         CommonModule,
-        UpgradeModule,
         TranslateModule,
         ComponentsModule,
         RouterModule.forChild(appRoutes),

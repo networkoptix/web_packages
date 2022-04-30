@@ -75,7 +75,6 @@
     "@angular/platform-browser-dynamic": "12.2.16",
     "@angular/router": "12.2.16",
     "@angular/service-worker": "12.2.16",
-    "@angular/upgrade": "12.2.16",
     "@ngneat/until-destroy": "8.0.3",
     "@ngrx/store": "13.0.2",
     "@ngx-translate/core": "13.0.0",

@@ -744,7 +744,7 @@
         }
     },
     "/cloud_helper/": {
-        "@ampproject/remapping@2.1.2": {
+        "@ampproject/remapping@2.2.0": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/ampproject/remapping",
             "publisher": "Justin Ridgewell",
@@ -768,7 +768,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/code-frame",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/code-frame/LICENSE"
         },
-        "@babel/compat-data@7.17.7": {
+        "@babel/compat-data@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -776,7 +776,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/compat-data",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/compat-data/LICENSE"
         },
-        "@babel/core@7.17.9": {
+        "@babel/core@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -792,7 +792,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/eslint-parser",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/eslint-parser/LICENSE"
         },
-        "@babel/generator@7.17.9": {
+        "@babel/generator@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -800,7 +800,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/generator",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/generator/LICENSE"
         },
-        "@babel/helper-compilation-targets@7.17.7": {
+        "@babel/helper-compilation-targets@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -896,7 +896,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/highlight",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/highlight/LICENSE"
         },
-        "@babel/parser@7.17.9": {
+        "@babel/parser@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -912,7 +912,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/template",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/template/LICENSE"
         },
-        "@babel/traverse@7.17.9": {
+        "@babel/traverse@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -920,7 +920,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/traverse",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/traverse/LICENSE"
         },
-        "@babel/types@7.17.0": {
+        "@babel/types@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -949,6 +949,14 @@
             "path": "cloud_portal/cloud_helper/node_modules/@humanwhocodes/object-schema",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@humanwhocodes/object-schema/LICENSE"
         },
+        "@jridgewell/gen-mapping@0.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/jridgewell/gen-mapping",
+            "publisher": "Justin Ridgewell",
+            "email": "justin@ridgewell.name",
+            "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/gen-mapping",
+            "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/gen-mapping/LICENSE"
+        },
         "@jridgewell/resolve-uri@3.0.6": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/resolve-uri",
@@ -956,6 +964,14 @@
             "email": "justin@ridgewell.name",
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/resolve-uri",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/resolve-uri/LICENSE"
+        },
+        "@jridgewell/set-array@1.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/jridgewell/set-array",
+            "publisher": "Justin Ridgewell",
+            "email": "justin@ridgewell.name",
+            "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/set-array",
+            "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/set-array/LICENSE"
         },
         "@jridgewell/sourcemap-codec@1.4.11": {
             "licenses": "MIT",
@@ -1049,7 +1065,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/minimist",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/minimist/LICENSE"
         },
-        "@types/node@17.0.27": {
+        "@types/node@17.0.30": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/node",
@@ -1115,7 +1131,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/acorn-walk",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/acorn-walk/LICENSE"
         },
-        "acorn@8.7.0": {
+        "acorn@8.7.1": {
             "licenses": "MIT",
             "repository": "https://github.com/acornjs/acorn",
             "path": "cloud_portal/cloud_helper/node_modules/acorn",
@@ -1377,7 +1393,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/camelcase",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001332": {
+        "caniuse-lite@1.0.30001334": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -1739,7 +1755,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.119": {
+        "electron-to-chromium@1.4.128": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -1945,7 +1961,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-prettier",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-plugin-prettier/LICENSE.md"
         },
-        "eslint-plugin-react-hooks@4.4.0": {
+        "eslint-plugin-react-hooks@4.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/facebook/react",
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks",
@@ -3293,7 +3309,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/natural-compare",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/natural-compare/README.md"
         },
-        "node-releases@2.0.3": {
+        "node-releases@2.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/chicoxyzzy/node-releases",
             "publisher": "Sergey Rubanov",
@@ -3969,14 +3985,6 @@
             "path": "cloud_portal/cloud_helper/node_modules/slice-ansi",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/slice-ansi/license"
         },
-        "source-map@0.5.7": {
-            "licenses": "BSD-3-Clause",
-            "repository": "https://github.com/mozilla/source-map",
-            "publisher": "Nick Fitzgerald",
-            "email": "nfitzgerald@mozilla.com",
-            "path": "cloud_portal/cloud_helper/node_modules/source-map",
-            "licenseFile": "cloud_portal/cloud_helper/node_modules/source-map/LICENSE"
-        },
         "spdx-correct@3.1.1": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/jslicense/spdx-correct.js",
@@ -4251,7 +4259,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/type-fest",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/type-fest/license"
         },
-        "typescript@4.6.3": {
+        "typescript@4.6.4": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/Microsoft/TypeScript",
             "publisher": "Microsoft Corp.",
@@ -5723,7 +5731,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/camelcase",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001332": {
+        "caniuse-lite@1.0.30001334": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -6371,7 +6379,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.119": {
+        "electron-to-chromium@1.4.128": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -6624,7 +6632,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/expand-brackets",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/expand-brackets/LICENSE"
         },
-        "express@4.18.0": {
+        "express@4.18.1": {
             "licenses": "MIT",
             "repository": "https://github.com/expressjs/express",
             "publisher": "TJ Holowaychuk",
@@ -10464,13 +10472,6 @@
             "path": "cloud_portal/front_end/node_modules/@angular/service-worker",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/service-worker/README.md"
         },
-        "@angular/upgrade@12.2.16": {
-            "licenses": "MIT",
-            "repository": "https://github.com/angular/angular",
-            "publisher": "angular",
-            "path": "cloud_portal/front_end/node_modules/@angular/upgrade",
-            "licenseFile": "cloud_portal/front_end/node_modules/@angular/upgrade/README.md"
-        },
         "@assemblyscript/loader@0.10.1": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/AssemblyScript/assemblyscript",
@@ -11804,6 +11805,13 @@
             "path": "cloud_portal/front_end/node_modules/@ngx-translate/core",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngx-translate/core/README.md"
         },
+        "@ngx-translate/http-loader@6.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ngx-translate/http-loader",
+            "publisher": "Olivier Combe",
+            "path": "cloud_portal/front_end/node_modules/@ngx-translate/http-loader",
+            "licenseFile": "cloud_portal/front_end/node_modules/@ngx-translate/http-loader/README.md"
+        },
         "@nodelib/fs.scandir@2.1.5": {
             "licenses": "MIT",
             "repository": "https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir",
@@ -11985,7 +11993,7 @@
             "path": "cloud_portal/front_end/node_modules/@socket.io/base64-arraybuffer",
             "licenseFile": "cloud_portal/front_end/node_modules/@socket.io/base64-arraybuffer/LICENSE"
         },
-        "@swimlane/ngx-charts@16.0.0": {
+        "@swimlane/ngx-charts@17.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/swimlane/ngx-charts",
             "publisher": "Swimlane",
@@ -14324,7 +14332,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-array",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-array/LICENSE"
         },
-        "d3-brush@1.1.6": {
+        "d3-brush@2.1.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-brush",
             "publisher": "Mike Bostock",
@@ -14332,7 +14340,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-brush",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-brush/LICENSE"
         },
-        "d3-color@1.4.1": {
+        "d3-color@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-color",
             "publisher": "Mike Bostock",
@@ -14340,7 +14348,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-color",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-color/LICENSE"
         },
-        "d3-dispatch@1.0.6": {
+        "d3-dispatch@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-dispatch",
             "publisher": "Mike Bostock",
@@ -14348,7 +14356,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-dispatch",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-dispatch/LICENSE"
         },
-        "d3-drag@1.2.5": {
+        "d3-drag@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-drag",
             "publisher": "Mike Bostock",
@@ -14356,7 +14364,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-drag",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-drag/LICENSE"
         },
-        "d3-ease@1.0.7": {
+        "d3-ease@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-ease",
             "publisher": "Mike Bostock",
@@ -14364,7 +14372,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-ease",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-ease/LICENSE"
         },
-        "d3-format@1.4.5": {
+        "d3-format@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-format",
             "publisher": "Mike Bostock",
@@ -14372,7 +14380,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-format",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-format/LICENSE"
         },
-        "d3-hierarchy@1.1.9": {
+        "d3-hierarchy@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-hierarchy",
             "publisher": "Mike Bostock",
@@ -14380,7 +14388,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-hierarchy",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-hierarchy/LICENSE"
         },
-        "d3-interpolate@1.4.0": {
+        "d3-interpolate@2.0.1": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-interpolate",
             "publisher": "Mike Bostock",
@@ -14388,7 +14396,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-interpolate",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-interpolate/LICENSE"
         },
-        "d3-path@1.0.9": {
+        "d3-path@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-path",
             "publisher": "Mike Bostock",
@@ -14404,7 +14412,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-scale",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-scale/LICENSE"
         },
-        "d3-selection@1.4.2": {
+        "d3-selection@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-selection",
             "publisher": "Mike Bostock",
@@ -14412,7 +14420,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-selection",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-selection/LICENSE"
         },
-        "d3-shape@1.3.7": {
+        "d3-shape@2.1.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-shape",
             "publisher": "Mike Bostock",
@@ -14420,7 +14428,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-shape",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-shape/LICENSE"
         },
-        "d3-time-format@2.3.0": {
+        "d3-time-format@3.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-time-format",
             "publisher": "Mike Bostock",
@@ -14436,7 +14444,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-time",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-time/LICENSE"
         },
-        "d3-timer@1.0.10": {
+        "d3-timer@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-timer",
             "publisher": "Mike Bostock",
@@ -14444,7 +14452,7 @@
             "path": "cloud_portal/front_end/node_modules/d3-timer",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-timer/LICENSE"
         },
-        "d3-transition@1.3.2": {
+        "d3-transition@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-transition",
             "publisher": "Mike Bostock",
@@ -18313,7 +18321,7 @@
             "path": "cloud_portal/front_end/node_modules/ngx-cookie-service",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-cookie-service/README.md"
         },
-        "ngx-device-detector@1.4.2": {
+        "ngx-device-detector@1.4.6": {
             "licenses": "MIT",
             "repository": "https://github.com/KoderLabs/ngx-device-detector",
             "publisher": "Muhammad Ahsan Ayaz",
