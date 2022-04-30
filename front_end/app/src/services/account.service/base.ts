@@ -394,11 +394,21 @@ export abstract class BaseAccount implements OnDestroy {
                 });
         }
 
+        const logoutTokens = (tokens, reload = false) => {
+            return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
+                this.clearCodeFromUri();
+                if (reload) {
+                    this.window.location.reload();
+                }
+            });
+        };
+
         try {
             const tokens: any = await this.cloudApi.getTokensFromCloud(code).toPromise();
             const tokenInfo: any = await this.cloudApi.getTokenInfo(tokens.access_token).toPromise();
             this.appStateService.ready = true;
             if (tokenInfo.username === account.email) {
+                await logoutTokens(tokens);
                 return false;
             }
 
@@ -412,10 +422,7 @@ export abstract class BaseAccount implements OnDestroy {
                 this.stopAccountPoll();
                 return this.loginTokens(tokens);
             }
-            return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
-                this.clearCodeFromUri();
-                this.window.location.reload();
-            });
+            return logoutTokens(tokens, true);
         } catch (e) {
             return this.handleCodeError(e).then(() => this.requireLogin());
         } finally {
@@ -425,11 +432,11 @@ export abstract class BaseAccount implements OnDestroy {
 
     public async handleAuthKeyLogin(auth: string) {
         const account: Account = await this.get();
+        if (!account || !account.is_authenticated) {
+            return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
+        }
         try {
             const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
-            if (!account || !account.is_authenticated) {
-                return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
-            }
             if (result.email === account.email) {
                 return;
             }
@@ -443,6 +450,7 @@ export abstract class BaseAccount implements OnDestroy {
 
             if (response === true) {
                 return this.cloudApi.logout().finally(() => {
+                    this.loggingOut = true;
                     this.stopAccountPoll();
                     this.account = undefined;
                     this.storageService.clear(); // Clear session
