@@ -14,6 +14,7 @@ ${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//form//input[@name='regis
 ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//form//nx-password-input//input[@id='createAccountPassword']
 ${REGISTER LOG IN BUTTON}             ${REGISTER FORM}//button/span[text()="${LOG IN BUTTON TEXT}"]/..
 ${REGISTER BACK BUTTON}               ${REGISTER FORM}//button/span[text()="${BACK TEXT}"]/..
+${REGISTER NOT ACTIVATED}             //nx-authorize-component//form[@name="emailForm"]//p[text()="${ACCOUNT NOT ACTIVATED}"]
 
 ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//nx-checkbox[@name="termsAndConditions"]
 ${TERMS AND CONDITIONS CHECKBOX REAL}       ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//input[@id='termsAndConditions']
