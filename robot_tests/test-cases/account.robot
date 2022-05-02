@@ -343,7 +343,7 @@ Force Tags        account
 
 18. Should open account page in anonymous state
     [tags]    anonymous
-    Run keyword and continue on failure    Open page anonymously    ${url}/account    Authorization
+    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${REGISTER TITLE TEXT}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
