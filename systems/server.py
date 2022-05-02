@@ -450,6 +450,11 @@ async def ws():
     return await websocket.close(400, 'Missing cookies')
 
 
+@app.route('/health')
+def server_health():
+    return 'OK', 200
+
+
 if __name__ == "__main__":
     @app.route('/')
     async def index():
