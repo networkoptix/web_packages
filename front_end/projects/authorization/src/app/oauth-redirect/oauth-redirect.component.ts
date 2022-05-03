@@ -51,7 +51,6 @@ export class NxOAuthRedirectComponent implements OnInit {
     ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.default?.();
 
-        // @ts-expect-error
         if (this.window.nativeClient) {
             this.route.queryParams.subscribe(async (params: any) => {
                 this.initialData = cloneDeep(params);
@@ -62,10 +61,8 @@ export class NxOAuthRedirectComponent implements OnInit {
                     this.state = 'sendingCode';
                     this.localStorageService.clear('client_type');
                     if (client_type === 'system2faAuth') {
-                        // @ts-expect-error
                         nativeClient.twoFaVerified(code);
                     } else {
-                        // @ts-expect-error
                         nativeClient.setCode(code);
                     }
                     setTimeout(() => { this.state = undefined; }, 3000);

@@ -301,15 +301,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.errorDialog$.value && this.errorDialog$.next(false);
         // undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
-        // @ts-expect-error
         if (link?.includes('redirect-oauth') || (this.window.nativeClient && !link)) {
             const { client_id, client_type, access_code, access_token } = this.initialData;
-            // @ts-expect-error
             if (this.window.nativeClient &&
                 [ClientType.renewDesktop, ClientType.renewWeb].includes(this.clientType) &&
                 (access_code || access_token || code)
             ) {
-                // @ts-expect-error
                 nativeClient.twoFaVerified(access_code || code || access_token);
             } else {
                 this.router.navigate(['redirect-oauth'], {
