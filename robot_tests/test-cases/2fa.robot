@@ -39,6 +39,8 @@ Force Tags        Threaded
 4. Log in by existing user
     [Tags]    C94717
     Log In    ${login user}    ${password}
+    #Assigning random value to 2fa key value
+    Set Test Variable    ${2fa key value}        MUYDIYZQGE4GKZDC
     Turn off 2fa Functionality
     Log Out
     Log In    ${login user}    ${password}
@@ -112,15 +114,15 @@ Force Tags        Threaded
 
 10. 2fa api call login with totp token
     ${2fa key value}=    Toggle 2fa On API    ${login user}    ${password}
-    Set Global Variable    ${2FA KEY VALUE}    ${2fa key value}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    Set Test Variable    ${2fa key value}    ${2fa key value}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Api Log In    email=${login user}    password=${password}    verification_code=${totp}
 
 11. 2fa api call login with backout code
     ${2fa key value}=    Toggle 2fa On API    ${login user}    ${password}
-    Set Global Variable    ${2FA KEY VALUE}    ${2fa key value}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    Set Test Variable    ${2fa key value}    ${2fa key value}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Generate 2fa Backup Codes API    email=${login user}    password=${password}    verification_code=${totp}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     ${backup code}=    Get 2fa Backup Codes API    email=${login user}    password=${password}    verification_code=${totp}
     Api Log In    email=${login user}    password=${password}    backup_code=${backup code}

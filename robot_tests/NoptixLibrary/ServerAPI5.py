@@ -235,7 +235,8 @@ class ServerAPI5(ServerAPI):
             body = {"port": newPort}
             r = s.post(f'{serverUrl}/api/configure', json=body, verify=False)
             return r
-
+            
+    @keyword
     def save_user_role(self, auth, serverUrl, name, permissions):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
