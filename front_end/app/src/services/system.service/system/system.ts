@@ -79,6 +79,7 @@ export class NxSystem extends System {
     useRest: boolean;
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
+    updatePromise: Promise<any>;
     usersPromise: Promise<void>;
     systemPoll: Subscription | Observable<string | NxSystem>;
     licensesModifiedSubject = new BehaviorSubject<string>('');
@@ -396,8 +397,8 @@ export class NxSystem extends System {
     }
 
     update = (): Promise<any> => {
-        return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false, true)
+        if (!this.updatePromise) {
+            this.updatePromise = this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
@@ -413,13 +414,15 @@ export class NxSystem extends System {
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })
                 .finally(() => {
+                    this.updatePromise = undefined;
                     // TODO: re-do ribbonService to handle multiple pages better
                     const { url } = this.router;
                     if (this.isAvailable && url.includes('systems') && !url.includes('health')) {
                         this.ribbonService.hide();
                     }
                 });
-        })).toPromise();
+        }
+        return this.updatePromise;
     };
 
     updateOrGetSystemSettings(updateParams = {}) {
