@@ -18,7 +18,7 @@ import { NxUriCacheService } from './uri-cache.service';
 })
 export class NxSystemAPIService {
     CONFIG: IConfig;
-    systemConnections: { [serverId: string]: NxSystemAPI };
+    // systemConnections: { [serverId: string]: NxSystemAPI };
 
     constructor(
         configService: NxConfigService,
@@ -31,7 +31,7 @@ export class NxSystemAPIService {
         protected injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
-        this.systemConnections = {};
+        // this.systemConnections = {};
     }
 
     createConnection<S extends NxSystemAPI | NxSystemRestAPI = NxSystemAPI | NxSystemRestAPI>(

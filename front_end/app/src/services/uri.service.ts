@@ -1,4 +1,4 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -24,7 +24,6 @@ export class NxUriService {
         private router: Router,
         private route: ActivatedRoute,
         @Inject(WINDOW) private window: Window,
-        @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.CONFIG = configService.config;
     }

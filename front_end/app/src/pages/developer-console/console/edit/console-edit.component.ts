@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ConfigType, ConsoleSection } from '@components/console-table/console-table.component.types';
-import { NxToastService } from '@dialogs/toast.service';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -48,7 +47,6 @@ export class NxDevConsoleEditComponent {
         private route: ActivatedRoute,
         private router: Router,
         private processService: NxProcessService,
-        private toastService: NxToastService,
         private cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private consoleService: NxConsoleService,

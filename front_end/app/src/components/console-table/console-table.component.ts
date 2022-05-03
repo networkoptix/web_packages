@@ -40,7 +40,6 @@ import {
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -91,7 +90,6 @@ export class NxConsoleTableComponent {
         private headerService: NxHeaderService,
         private menusService: NxMenusService,
         private toastService: NxToastService,
-        private uriService: NxUriService,
         private consoleService: NxConsoleService,
         @Inject(WINDOW) private window: Window
     ) {

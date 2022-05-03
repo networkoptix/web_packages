@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
@@ -13,7 +13,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { WINDOW } from '@services/window-provider';
 
 @Component({
     selector: 'content-component',
@@ -31,7 +30,6 @@ export class NxContentComponent implements OnInit {
     private articleParam: string;
     private state: string;
     private id: string;
-    private langCode: string;
     private staticContent;
 
     private agreement: boolean;
@@ -48,7 +46,6 @@ export class NxContentComponent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        @Inject(WINDOW) private window: Window,
         private route: ActivatedRoute,
         private http: HttpClient,
         private pageService: NxPageService,
@@ -59,7 +56,6 @@ export class NxContentComponent implements OnInit {
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();
-        this.langCode = languageService.currentLang;
         this.LANG = languageService.translations;
     }
 

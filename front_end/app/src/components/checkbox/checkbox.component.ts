@@ -63,9 +63,6 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     public value: any;
     public state: string;
 
-    private touched: boolean;
-    private invalid: boolean;
-
     private cbxStates = {
         false: 'unchecked',
         true: 'checked',
@@ -89,13 +86,9 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
             }
         };
 
-        this.touched = c.touched;
-
         if (this.required && !c.value) {
-            this.invalid = true;
             return err;
         } else {
-            this.invalid = false;
             return null; // valid
         }
     }

@@ -1,10 +1,8 @@
-import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     Component,
     ElementRef,
     HostListener,
-    Inject,
     OnDestroy,
     OnInit,
     TemplateRef,
@@ -82,7 +80,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         private systemsService: NxSystemsService,
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;

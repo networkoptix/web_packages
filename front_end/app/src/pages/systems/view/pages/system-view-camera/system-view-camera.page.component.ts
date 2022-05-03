@@ -36,7 +36,6 @@ import { VideoManagementSystemService } from '@vms-client/submodules/vms/service
 import { LoggerDecorator } from '@vms-client/utils';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
-import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxAccountService } from '../../../../../services/account.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSettingsService } from '../../../settings/settings.service';
@@ -120,7 +119,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected cameraQualityStorage: CameraQualityStorageService,
         protected cameraTransportStorage: CameraTransportStorageService,
         private settingsService: NxSettingsService,
-        private dialogs: NxDialogsService,
         @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();

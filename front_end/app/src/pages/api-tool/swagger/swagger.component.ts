@@ -24,7 +24,6 @@ import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { WINDOW } from '@services/window-provider';
 import { isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -81,8 +80,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 private componentFactoryResolver: ComponentFactoryResolver,
                 private toastService: NxToastService,
                 languageService: NxLanguageProviderService,
-                @Inject(DOCUMENT) private document: Document,
-                @Inject(WINDOW) private window: Window) {
+                @Inject(DOCUMENT) private document: Document) {
         this.LANG = languageService.translations;
         this.CONFIG = this.configService.getConfig();
     }

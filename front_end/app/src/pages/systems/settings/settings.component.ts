@@ -1,10 +1,9 @@
-import { DOCUMENT, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import {
     Component,
     Input,
     OnDestroy,
     OnInit,
-    Inject,
 } from '@angular/core';
 import {
     ActivatedRoute,
@@ -182,8 +181,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
         private oauthService: OauthService,
-        @Inject(DOCUMENT) private document: Document,
-        private cookieService: CookieService
+        private cookieService: CookieService,
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();

@@ -1,6 +1,6 @@
 import { Overlay } from '@angular/cdk/overlay';
-import { DOCUMENT, Location } from '@angular/common';
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Location } from '@angular/common';
+import { Injectable, Injector } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
@@ -34,7 +34,6 @@ export class NxSimpleDialogsService extends DialogBase {
         injector: Injector,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         super(overlay, injector);
         this.CONFIG = configService.getConfig();

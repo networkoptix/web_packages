@@ -8,7 +8,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
-import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxLanguageProviderService } from '../nx-language-provider';
 import { NxPollService } from '../poll.service';
@@ -33,7 +32,6 @@ export class NxSystemService {
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
         private systemsService: NxSystemsService,
-        private appState: NxAppStateService,
         private router: Router,
         private ribbonService: NxRibbonService
     ) {
@@ -118,7 +116,6 @@ export class NxSystemService {
                 '',
                 userId,
                 true,
-                this.appState
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;

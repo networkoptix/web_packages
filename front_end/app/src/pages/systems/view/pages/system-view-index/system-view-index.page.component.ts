@@ -29,7 +29,6 @@ import type { ms } from '@vms-client/utils/type-aliases';
 
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 import { NxRibbonService } from '../../../../../components/ribbon/ribbon.service';
-import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { IConfig } from '../../../../../services/nx-config/config-types';
 import { NxConfigService } from '../../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -140,7 +139,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         protected timeline: TimelineService,
         protected ux: WebClientUxService,
         private deviceService: DeviceDetectorService,
-        private dialogs: NxDialogsService,
         private ribbonService: NxRibbonService,
         private settingsService: NxSettingsService
     ) {

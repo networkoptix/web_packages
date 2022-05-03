@@ -2,7 +2,6 @@ import {
     Component, Input, ViewChild,
     ChangeDetectorRef, ElementRef, Inject
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -125,7 +124,6 @@ export class MergeModalContent {
         private simpleDialogService: NxSimpleDialogsService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
-        private translate: TranslateService,
         private ribbonService: NxRibbonService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,

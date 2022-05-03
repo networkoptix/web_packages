@@ -18,7 +18,7 @@ export class NxCookieBannerComponent implements OnInit {
     cookieBannerReviewed: boolean;
 
     constructor(
-        private config: NxConfigService,
+        config: NxConfigService,
         private localStorage: LocalStorageService,
         private accountService: NxAccountService
     ) {

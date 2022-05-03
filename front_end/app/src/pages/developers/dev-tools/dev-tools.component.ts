@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { takeWhile } from 'rxjs/operators';
 
-import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -32,7 +31,6 @@ export class NxDevToolsComponent implements OnInit {
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
-        private accountService: NxAccountService,
         private route: ActivatedRoute,
         @Inject(WINDOW) private window: Window
     ) {

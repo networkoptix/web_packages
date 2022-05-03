@@ -68,7 +68,6 @@ export class TimelineScrollbarComponent implements AfterViewInit, OnDestroy {
     public showHonestBar: boolean = false;
 
     constructor(
-        private self: ElementRef,
         protected timeline: TimelineService,
         protected scrollbarAbsolute: TimelineScrollbarAbsoluteService,
         protected scrollbarRelative: TimelineScrollbarRelativeService,

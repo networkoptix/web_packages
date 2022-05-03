@@ -40,8 +40,6 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
 
     @Output() onSwitch = new EventEmitter<boolean>();
 
-    private _invalid: boolean;
-    private _touched: boolean;
     componentId: string;
 
     _value: boolean = false;
@@ -62,13 +60,9 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
             }
         };
 
-        this._touched = c.touched;
-
         if (this.required && !c.value) {
-            this._invalid = true;
             return err;
         } else {
-            this._invalid = false;
             return null; // valid
         }
     }

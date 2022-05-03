@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { Subscription } from 'rxjs';
@@ -54,7 +53,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private accountService: NxAccountService,
-                private router: Router
     ) {
         this.setupDefaults(configService);
     }

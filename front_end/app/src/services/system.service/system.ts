@@ -14,7 +14,6 @@ import { environment } from '@environments/environment';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 
-import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';
 import { NxPollService } from '../poll.service';
 import { NxSystemAPIService } from '../system-api.service';
@@ -176,7 +175,6 @@ export class NxSystem extends System {
         serverId?: string,
         userId?: string,
         useRest?: boolean,
-        private appState?: NxAppStateService
     ) {
         super();
 

@@ -22,7 +22,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import { NxUtilsService } from '@services/utils.service/utils.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { bitsToString } from '@utils/bits-to-string';
 import { wrapWithPercent } from '@utils/general';
@@ -97,7 +96,6 @@ export class NxCloudStorageComponent implements OnInit {
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string,
         private dialogService: NxDialogsService,
-        private utilsService: NxUtilsService,
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
@@ -92,7 +92,6 @@ export class NxCloudApiService {
         private cacheService: NxUriCacheService,
         private router: Router,
         private nxSwCacheService: NxSwCacheService,
-        private injector: Injector,
         private consoleService: NxConsoleService,
         private oauthService: OauthService
     ) {

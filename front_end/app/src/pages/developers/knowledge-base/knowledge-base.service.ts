@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
@@ -40,7 +39,6 @@ export class NxKnowledgebaseService {
         configService: NxConfigService,
         private menusService: NxMenusService,
         private accountService: NxAccountService,
-        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
         this.accountService.get().then(account => {

@@ -129,9 +129,9 @@ export class NxApplyService extends DialogBase {
         }
     }
 
-    private touched(): void {
-        this.locked = true;
-    }
+    // private touched(): void {
+    //     this.locked = true;
+    // }
 
     /**
      * This iterates through the applyFunctions which is a Process[], it calls them in series until one fails.

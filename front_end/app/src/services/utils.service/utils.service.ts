@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
@@ -8,8 +8,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class NxUtilsService {
     constructor(
         private deviceService: DeviceDetectorService,
-        @Inject(LOCALE_ID) private locale: string,
-        @Inject(DOCUMENT) private document: Document
+        @Inject(DOCUMENT) private document: Document,
     ) {
     }
 

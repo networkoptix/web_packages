@@ -20,8 +20,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 
-import { NxSettingsService } from '../../settings.service';
-
 interface SystemSetting {
     key: string,
     value: any
@@ -55,7 +53,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private applyService: NxApplyService,
-        private settingsService: NxSettingsService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {

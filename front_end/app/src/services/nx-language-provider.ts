@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -34,8 +33,7 @@ export class NxLanguageProviderService {
         private storageService: LocalStorageService,
         private cacheService: NxUriCacheService,
         private swCacheService: NxSwCacheService,
-        private router: Router,
-        @Inject(WINDOW) private window: Window
+        @Inject(WINDOW) private window: Window,
     ) {
         if (environment.isLocal) {
             // Fixes circular dependency with local-system-status-interceptor.
