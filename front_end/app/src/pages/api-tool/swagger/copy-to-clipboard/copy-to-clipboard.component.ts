@@ -39,7 +39,7 @@ export class NxCopyToClipboardComponent {
             });
     }
 
-    copyToClipboard = (event: PointerEvent): void => {
+    copyToClipboard = (event: MouseEvent): void => {
         const el = event.target as Element;
         const parent = el.closest('.highlight-code, nx-swagger-textarea, li');
         const code = parent.querySelector('.microlight, .text-area, pre');

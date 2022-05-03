@@ -21,6 +21,11 @@ interface SystemDropdownItem extends DropdownItem<string> {
     disabled: boolean;
 }
 
+interface HealthMonitorResource {
+    value: string,
+    name: string
+}
+
 const getLeafNodes = (node, result = []) => {
     const isArray = Array.isArray(node);
     const isObject = node instanceof Object;
@@ -79,6 +84,7 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
     static manifestLookup = {};
 
     static systems$ = new BehaviorSubject<NxSystemWithUserInfo[]>([]);
+    HealthMonitorResource: HealthMonitorResource;
     system: NxSystem;
     healthMonitorAge = 0;
     updatingIn = 0;

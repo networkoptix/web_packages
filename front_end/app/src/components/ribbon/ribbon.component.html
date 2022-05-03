@@ -4,14 +4,14 @@
         <div class="action">
             <ng-container *ngFor="let action of actions">
                 <ng-container *ngIf="action.type === 'link'">
-                    <a *ngIf="!action.external" [routerLink]="$any(action.value)" target="_blank">{{action.text}}</a>
+                    <a *ngIf="!action.external" [routerLink]="action.value" target="_blank">{{action.text}}</a>
                     <a *ngIf="action.external" [href]="action.value" target="_blank">{{action.text}}</a>
                 </ng-container>
                 <nx-process-button *ngIf="action.type === 'process-button'"
                                    [buttonText]="action.text"
                                    [actionType]="'default'"
                                    [customClass]="'small-button'"
-                                   [process]="$any(action.value)"></nx-process-button>
+                                   [process]="action.value"></nx-process-button>
             </ng-container>
         </div>
     </div>

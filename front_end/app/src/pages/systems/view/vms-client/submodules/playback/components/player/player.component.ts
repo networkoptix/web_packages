@@ -38,6 +38,11 @@ export class PlayerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     LANG: LanguageI18NStaticTypes;
 
+    // Coercing playback state to ArchivePlaybackState
+    // Was previously being cast as any in template
+    // Currently not type safe for types other than ArchivePlaybackState and should be fixed
+    PlaybackStateTemp: ArchivePlaybackState;
+
     @Output() videoDblClick = new EventEmitter<boolean>();
 
     protected playbackSubscription: Subscription;

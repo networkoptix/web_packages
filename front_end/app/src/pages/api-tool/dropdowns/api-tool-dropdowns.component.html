@@ -24,7 +24,7 @@
         [type]="'api-tool'"
         [items]="types"
         [selected]="type"
-        (onSelected)="onTypeChange($any($event))"
+        (onSelected)="onTypeChange($event)"
         [stillLoading]="APIToolSystemService.loading$ | async"
         [ngClass]="environment.isLocal? 'mb-3' : 'mt-2'">
     </nx-select>

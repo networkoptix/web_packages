@@ -6,12 +6,12 @@
         <cdk-step>
             <div class="h-100 overflow-auto">
                 <h4>Select Systems</h4>
-                <ng-container *ngFor="let system of card.config.systems | keyvalue">
-                    <div *ngIf="card.config.systems[$any(system.key)].available" class="d-flex mb-1">
-                        <nx-checkbox [componentId]="$any(system.key)" [(ngModel)]="card.config.systems[$any(system.key)].show">
+                <ng-container *ngFor="let system of card.config.systems | as : {systemId: NxSystem} | keyvalue">
+                    <div *ngIf="card.config.systems[system.key].available" class="d-flex mb-1">
+                        <nx-checkbox [componentId]="system.key" [(ngModel)]="card.config.systems[system.key].show">
                         </nx-checkbox>
-                        <label class="mb-0" [for]="$any(system.key)">
-                            <span>{{card.config.systems[$any(system.key)].name}}</span>
+                        <label class="mb-0" [for]="system.key">
+                            <span>{{card.config.systems[system.key].name}}</span>
                         </label>
                     </div>
                 </ng-container>

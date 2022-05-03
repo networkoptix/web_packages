@@ -19,10 +19,10 @@
         <cdk-step>
             <div class="h-100 overflow-auto">
                 <h4>Select Resources to Show</h4>
-                <div *ngFor="let resource of card.config.resources | keyvalue" class="d-flex mb-1">
-                    <nx-checkbox [componentId]="$any(resource.key)" [(ngModel)]="$any(resource.value).value"></nx-checkbox>
+                <div *ngFor="let resource of card.config.resources | as : {resourceName: HealthMonitorResource} | keyvalue" class="d-flex mb-1">
+                    <nx-checkbox [componentId]="resource.key" [(ngModel)]="resource.value.value"></nx-checkbox>
                     <label class="mb-0" [for]="resource.key">
-                        <span>{{$any(resource.value).name}}</span>
+                        <span>{{resource.value.name}}</span>
                     </label>
                 </div>
             </div>
@@ -52,12 +52,12 @@
 </ng-template>
 
 <ng-template #alertCounts let-source="source">
-    <div *ngFor="let level of source | keyvalue" class="d-flex justify-content-between">
+    <div *ngFor="let level of source | as : {key: 'value'} | keyvalue" class="d-flex justify-content-between">
         <ng-template #noAlerts>
             <span>No Alerts</span>
         </ng-template>
         <ng-container *ngIf="level.key !== 'undefined'; else noAlerts">
-            <span>{{LEVEL_LOOKUP[$any(level.key)] || level.key}}</span>
+            <span>{{LEVEL_LOOKUP[level.key] || level.key}}</span>
             <span>{{level.value}}</span>
         </ng-container>
     </div>

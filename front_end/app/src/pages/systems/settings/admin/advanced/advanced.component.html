@@ -2,7 +2,7 @@
     <header>
         <h4 translate>Advanced System Settings</h4>
     </header>
-    <nx-section *ngIf="$any(systemSettings | keyvalue)?.length > 0">
+    <nx-section *ngIf="(systemSettings | keyvalue)?.length > 0">
         <form class="form form-horizontal" role="form" name="advancedSystemSettingsForm" id="advancedSystemSettingsForm"
               #advancedSystemSettingsForm="ngForm" novalidate>
 

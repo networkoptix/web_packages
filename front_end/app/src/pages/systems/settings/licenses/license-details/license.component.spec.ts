@@ -17,6 +17,7 @@ import {
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxLicenseDetailComponent } from './license.component';
 
@@ -40,6 +41,7 @@ describe('Licenses (Details)', () => {
             imports: [
                 CommonModule,
                 FormsModule,
+                PipesModule,
                 TranslateModule.forRoot()
             ],
             providers: [

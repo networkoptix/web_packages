@@ -36,10 +36,10 @@
                 <cdk-step>
                     <div class="h-100" >
                         <h4>Selected Asset Types</h4>
-                        <div *ngFor="let assetType of card.config.assetTypes | keyvalue" class="d-flex mb-1">
-                            <nx-checkbox [componentId]="$any(assetType.key)" [(ngModel)]="$any(assetType.value).value"></nx-checkbox>
+                        <div *ngFor="let assetType of card.config.assetTypes | as: {key: AssetTypeInterface} | keyvalue" class="d-flex mb-1">
+                            <nx-checkbox [componentId]="assetType.key" [(ngModel)]="assetType.value.value"></nx-checkbox>
                             <label class="mb-0" [for]="assetType.key">
-                                <span>{{$any(assetType.value).name}}</span>
+                                <span>{{assetType.value.name}}</span>
                             </label>
                         </div>
                     </div>

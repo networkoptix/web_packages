@@ -23,16 +23,16 @@
     >
         <nx-pre-loader></nx-pre-loader>
     </div>
-    <player-js *ngIf="playback.subject | async as playbackState"
+    <player-js *ngIf="playback.subject | async | as: PlaybackStateTemp as playbackState"
         (click)="handleClick($event)"
         (videoEnded)="videoEnded($event)"
         (videoError)="videoErrorEventHandler($event)"
         (bufferingChange)="onBufferingChange($event)"
         [mode]="playbackState.mode"
-        [paused]="$any(playbackState).paused"
-        [posterUrl]="$any(playbackState).posterUrl"
+        [paused]="playbackState.paused"
+        [posterUrl]="playbackState.posterUrl"
         [rotation]="rotateDeg"
-        [sourceUrl]="$any(playbackState).sourceUrl"
+        [sourceUrl]="playbackState.sourceUrl"
     >
     </player-js>
 </ng-template>

@@ -1,11 +1,20 @@
 import type { Process } from '@services/process.service/process';
 
-export interface RibbonAction {
-    type: 'link' | 'process-button',
+interface RibbonProcessAction {
+    type: 'process-button',
     text: string,
-    value: string | Process,
+    value: Process,
     external?: boolean
 }
+
+interface RibbonLinkAction {
+  type: 'link',
+  text: string,
+  value: string,
+  external?: boolean
+}
+
+export type RibbonAction = RibbonProcessAction | RibbonLinkAction;
 
 export interface RibbonActionInput extends Omit<RibbonAction, 'text'> {
   text: string | Function;

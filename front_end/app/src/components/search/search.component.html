@@ -42,7 +42,7 @@
                     <span
                         class="filter-label"
                         [innerHTML]="filtersSelected"
-                        [dir]="$any('auto')"
+                        [dir]="'auto' | as : Direction"
                     ></span>
                     <span class="close-button" (click)="resetFilters()">
                         <span class="glyphicon tag-close-icon"></span>

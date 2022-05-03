@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PipesModule } from '@src/pipes/pipes.module';
+
 import { ComponentsModule } from '../../../../../../components/components.module';
 
 import { components } from './components';
@@ -12,7 +14,8 @@ import { components } from './components';
     imports: [
         CommonModule,
         ComponentsModule,
-        TranslateModule
+        TranslateModule,
+        PipesModule
     ],
     providers: [] // services,
 })

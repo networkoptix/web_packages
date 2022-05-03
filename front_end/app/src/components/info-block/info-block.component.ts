@@ -27,6 +27,7 @@ export class NxInfoBlockComponent implements OnInit {
 
     CONFIG: IConfig;
     singleColumn: boolean;
+    InfoBlockType: (InfoBlockColumns | InfoBlockSections)[];
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.config;

@@ -1,4 +1,5 @@
 // import { Location } from '@angular/common';
+import { Direction } from '@angular/cdk/bidi';
 import {
     Component,
     OnInit,
@@ -84,6 +85,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     public localFilter: SearchFilter = { query: '' };
 
     CONFIG: IConfig;
+    Direction: Direction;
     LANG: LanguageI18NStaticTypes;
 
     private debounceShortTime: number;

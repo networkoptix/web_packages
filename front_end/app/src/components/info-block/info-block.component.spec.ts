@@ -11,6 +11,7 @@ import { MockProvider } from 'ng-mocks';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxInfoBlockComponent } from './info-block.component';
 import { InfoBlockLine, InfoBlockSection } from './info-block.component.types';
@@ -24,6 +25,7 @@ describe('NxInfoBlockComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed
             .configureTestingModule({
+                imports: [PipesModule],
                 declarations: [NxInfoBlockComponent],
                 providers: [
                     MockProvider(NxLanguageProviderService),

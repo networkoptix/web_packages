@@ -34,7 +34,7 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
         MediaServerListComponent
     ],
     providers: [
-    // VideoManagementSystemService,
+        // VideoManagementSystemService,
     ]
 })
 export class VmsClientVmsModule {

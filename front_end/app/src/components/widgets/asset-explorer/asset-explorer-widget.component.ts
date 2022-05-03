@@ -10,6 +10,12 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { FirstPartyWidget } from '../helper-classes';
 
+interface AssetTypeInterface {
+    name: string,
+    id: string,
+    value: boolean
+}
+
 @UntilDestroy()
 @Component({
     selector: 'nx-asset-explorer-widget',
@@ -36,6 +42,8 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
         showAdmin: true,
         showPreviews: true
     };
+
+    AssetTypeInterface: AssetTypeInterface;
 
     ACTION_ICONS = {
         preview: '🖥️',

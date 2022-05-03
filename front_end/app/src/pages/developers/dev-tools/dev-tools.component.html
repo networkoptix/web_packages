@@ -8,7 +8,7 @@
 </ng-template>
 
 <ng-template #toolBlock let-tool="tool" let-last="last">
-    <div class="card hoverable tool-card card-type-4 " (click)="headerService.handleNav($any({url: tool.url, new_window: tool.newWindow}), $event)">
+    <div class="card hoverable tool-card card-type-4 " (click)="headerService.handleNav({url: tool.url, new_window: tool.newWindow}, $event)">
         <header>
             <!-- Not sure what default icon should be used if there isn't one defined in the cms -->
             <svg-icon *ngIf="tool.icon" nx-add-svg-src [src]="CONFIG.images.dirDevelopersDevtools + tool.icon"></svg-icon>
