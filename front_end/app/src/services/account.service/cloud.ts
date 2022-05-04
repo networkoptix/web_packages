@@ -214,16 +214,18 @@ export class CloudAccount extends BaseAccount {
     requireLogin(): Promise<void | Account> {
         return this.get(true)
             .then(account => {
-                if (account === null) {
+                if (account === undefined) {
+                    this.router.navigate([this.CONFIG.redirect.unauthorised]).catch(_ => {});
+                } else if (account === null) {
                     this.logoutHelper(true, true);
-                } else if (!account?.is_authenticated) {
+                } else if (!account.is_authenticated) {
                     this.oauthService.redirectOauth();
                 } else if (account.is_authenticated) {
                     return account;
                 }
             }).catch((err) => {
                 console.error(err);
-                this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                this.router.navigate([this.CONFIG.redirect.unauthorised]).catch(_ => {});
             });
     }
 }

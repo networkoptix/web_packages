@@ -42,7 +42,6 @@ export abstract class BaseAccount implements OnDestroy {
     protected loggingOut: boolean;
     protected requestingLogin: any;
     protected loginDialogActive: boolean;
-    protected loginWithAuthKeyInProgress: boolean;
     protected localStorage: any;
     protected tokens: any;
 
@@ -94,7 +93,6 @@ export abstract class BaseAccount implements OnDestroy {
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;
-        this.loginWithAuthKeyInProgress = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
@@ -201,7 +199,6 @@ export abstract class BaseAccount implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    // TODO: @Chris require login add check for !this.loginWithAuthKeyInProgress
     redirectAuthorised() {
         this.get()
             .then((account: Account) => {
@@ -290,8 +287,6 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     loginWithAuthKey(authKey: string): Promise<boolean> {
-        this.loginWithAuthKeyInProgress = true;
-
         const auth = atob(decodeURIComponent(authKey)).split(':');
         const tempLogin = auth[0];
         const tempPassword = auth[1];
@@ -308,8 +303,6 @@ export abstract class BaseAccount implements OnDestroy {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
                     });
-            }).finally(() => {
-                this.loginWithAuthKeyInProgress = false;
             });
     }
 
@@ -454,8 +447,10 @@ export abstract class BaseAccount implements OnDestroy {
                     this.stopAccountPoll();
                     this.account = undefined;
                     this.storageService.clear(); // Clear session
-                    return this.loginWithAuthKey(auth).then(() => {
-                        return this.document.location.reload();
+                    setTimeout(() => {
+                        this.loginWithAuthKey(auth).then(() => {
+                            return this.document.location.reload();
+                        });
                     });
                 });
             } else {
