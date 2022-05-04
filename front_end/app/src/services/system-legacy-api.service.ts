@@ -891,18 +891,18 @@ export class NxSystemAPI {
         return this.post('/api/activateLicense', { licenseKey: key }, params);
     }
 
-    logLevel(logId?: string, name?: string, value?: string) {
-        const params: { id: string; name: string; value: string } = {
-            id: logId,
-            name,
-            value
-        };
+    logLevel(
+        logId?: string,
+        name?: string,
+        value?: string
+    ): Observable<t.LogLevel> {
+        const params = { id: logId, name, value };
         Object.keys(params).forEach(key => {
             if (params[key] === undefined) {
                 delete params[key];
             }
         });
-        return this.get<t.LogLevel>('/api/logLevel', params);
+        return this.get('/api/logLevel', params);
     }
 
     /* End of Server settings */
