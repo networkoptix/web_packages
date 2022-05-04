@@ -13,7 +13,7 @@ import { forUnitTest, NxDevConsoleMenuComponent } from './console-menu.component
 
 const {
     NxConfigService,
-    NxHeaderService,
+    NxMenusService,
     ConsoleMode
 } = forUnitTest;
 
@@ -29,9 +29,10 @@ describe('NxDevConsoleMenuComponent', () => {
         url: uuid(),
         icon: uuid()
     }));
-    const headerMock = {
-        currentLocation: { parentNode: { nodes: [] } },
-        setLocation: () => { }
+    const menusMock = {
+        getMenu: () => ({
+            subscribe: () => { }
+        })
     };
 
     beforeEach(waitForAsync(() => {
@@ -49,7 +50,7 @@ describe('NxDevConsoleMenuComponent', () => {
                 ],
                 providers: [
                     { provide: NxConfigService, useValue: configMock },
-                    { provide: NxHeaderService, useValue: headerMock }
+                    { provide: NxMenusService, useValue: menusMock }
                 ]
             })
             .compileComponents();

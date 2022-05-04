@@ -1,9 +1,12 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { ConsoleMode } from '@pages/developer-console/console/console.component.types';
+import { NxMenusService } from '@services/menus.service';
 import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxHeaderService } from '@services/nx-header.service';
 
 export interface ConsoleMenuNode {
     title: string,
@@ -11,6 +14,7 @@ export interface ConsoleMenuNode {
     icon?: string
 }
 
+@UntilDestroy()
 @Component({
     selector: 'console-menu',
     templateUrl: 'console-menu.component.html',
@@ -23,14 +27,15 @@ export class NxDevConsoleMenuComponent {
     @Input() sectionParam: ConsoleSection;
 
     CONFIG: IConfig;
-    TYPES = ConsoleMode
+    TYPES = ConsoleMode;
 
     showAdditionalLinks = false;
     loading = true;
+    cancel$ = new Subject();
 
     constructor(
         configService: NxConfigService,
-        private headerService: NxHeaderService
+        private menusService: NxMenusService
     ) {
         this.CONFIG = configService.config;
     }
@@ -45,24 +50,30 @@ export class NxDevConsoleMenuComponent {
         const {
             menu: { currentValue: menu }
         } = changes;
+        this.cancel$.next('cancel');
 
-        const { parentNode } = this.headerService.currentLocation;
-        for (const section in this.CONFIG.manifest) {
-            const sectionConfig = this.menu.find(({ url }) => url === section);
-            if (sectionConfig) {
-                const cmsTitle = parentNode.nodes.find(({ url }) =>
-                    (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`
-                )?.name;
-                sectionConfig.title = cmsTitle || sectionConfig.title;
+        this.menusService.getMenu('configuration').pipe(
+            takeUntil(this.cancel$),
+            untilDestroyed(this)
+        ).subscribe(config => {
+            const consoleCmsConfig = (config?.nodes || []).find(({ url }) => url === this.base);
+            for (const section in this.CONFIG.manifest) {
+                const sectionConfig = this.menu.find(({ url }) => url === section);
+                if (sectionConfig) {
+                    const cmsTitle = consoleCmsConfig.nodes.find(({ url }) =>
+                        (url.startsWith('/') ? url : '/' + url) === `${this.base}/${sectionConfig.url}`
+                    )?.name;
+                    sectionConfig.title = cmsTitle || sectionConfig.title;
+                }
             }
-        }
 
-        this.loading = !menu.length;
+            this.loading = !menu.length;
+        });
     }
 }
 
 export const forUnitTest = {
-    NxHeaderService,
+    NxMenusService,
     NxConfigService,
     ConsoleMode
 };
