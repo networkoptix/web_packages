@@ -141,6 +141,7 @@ Suite Teardown    Run Keyword and Ignore Error    View Suite Teardown
     Verify Camera Name and Quality Appear on Camera Page    expected quality=High    expected camera name=${camera name1}
     Wait Until Element Is Visible    ${SERVER LIST MENU}//a[contains(@href,"${camera id4}")]//span
     Click Element    ${SERVER LIST MENU}//a[contains(@href,"${camera id4}")]//span
+    Sleep    1
     Verify Camera Name and Quality Appear on Camera Page    expected quality=Low    expected camera name=${camera name4}
     Click element    ${VIEW SETTINGS TOGGLER}
     Element Should Not Be Visible    ${VIEW SETTINGS QUALITY HIGH}
@@ -153,6 +154,7 @@ Suite Teardown    Run Keyword and Ignore Error    View Suite Teardown
 9. Switch between previous/next pages
     [Tags]    C84235
     Click Element    ${SERVER LIST MENU}//a[contains(@href,"${camera id4}")]//span
+    Sleep    1
     Check if Camera is Live
     ${camera 2 location}=    Get Location
     Go Back
@@ -181,7 +183,7 @@ Suite Teardown    Run Keyword and Ignore Error    View Suite Teardown
     FOR    ${i}    IN RANGE    0    2
         Close Window
         Switch Window    ${title_var}[${i}]
-        Wait Until Element Is Visible    ${SETTINGS HEADER TAB}
+        Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     END
     Set Window Size    1920    1080
     

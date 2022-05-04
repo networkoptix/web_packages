@@ -317,7 +317,7 @@ class ServerAPI5(ServerAPI):
             return r.json()
     
     @keyword
-    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth):
+    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth=['admin','QAbur777$']):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
