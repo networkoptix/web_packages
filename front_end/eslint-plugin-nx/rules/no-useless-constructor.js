@@ -20,6 +20,10 @@ module.exports = {
     meta: {
         type: 'problem',
         schema: [],
+        messages: {
+            useless: 'Useless constructor.',
+            removeUseless: 'Remove useless constructor',
+        },
         // fixable: true,
         hasSuggestions: true,
     },
@@ -45,9 +49,9 @@ module.exports = {
                 if (!node.value.params.length && !node.value.body.body.length) {
                     context.report({
                         node,
-                        message: 'Useless constructor.',
+                        messageId: 'useless',
                         suggest: [{
-                            desc: 'Remove useless constructor',
+                            messageId: 'removeUseless',
                             fix: function (fixer) {
                                 return fixer.remove(node);
                             },

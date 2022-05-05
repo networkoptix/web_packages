@@ -37,9 +37,9 @@ ruleTester.run('explicit-input-output-types', rule, {
         {
             code: classWrapper('@Input() invalidI2 = false;'),
             errors: [{
-                message: 'Missing Input type.',
+                messageId: 'missingInput',
                 suggestions: [{
-                    desc: 'Infer type from default value',
+                    messageId: 'inferType',
                     output: classWrapper('@Input() invalidI2: boolean = false;')
                 }]
             }]
@@ -47,9 +47,9 @@ ruleTester.run('explicit-input-output-types', rule, {
         {
             code: classWrapper('@Input() invalidI3 = 3;'),
             errors: [{
-                message: 'Missing Input type.',
+                messageId: 'missingInput',
                 suggestions: [{
-                    desc: 'Infer type from default value',
+                    messageId: 'inferType',
                     output: classWrapper('@Input() invalidI3: number = 3;')
                 }]
             }]
@@ -57,9 +57,9 @@ ruleTester.run('explicit-input-output-types', rule, {
         {
             code: classWrapper('@Input() invalidI4 = \'foo\';'),
             errors: [{
-                message: 'Missing Input type.',
+                messageId: 'missingInput',
                 suggestions: [{
-                    desc: 'Infer type from default value',
+                    messageId: 'inferType',
                     output: classWrapper('@Input() invalidI4: string = \'foo\';')
                 }]
             }]

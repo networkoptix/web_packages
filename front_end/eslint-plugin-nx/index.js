@@ -13,5 +13,6 @@ module.exports = {
         ...exportRule('only-export-injectable'),
         ...exportRule('explicit-input-output-types'),
         ...exportRule('no-useless-constructor'),
+        ...exportRule('no-untyped-init'),
     }
 };

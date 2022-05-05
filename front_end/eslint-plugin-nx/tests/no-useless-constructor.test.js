@@ -24,9 +24,9 @@ ruleTester.run('no-useless-constructor', rule, {
         {
             code: classWrapper('constructor() {}'),
             errors: [{
-                message: 'Useless constructor.',
+                messageId: 'useless',
                 suggestions: [{
-                    desc: 'Remove useless constructor',
+                    messageId: 'removeUseless',
                     output: classWrapper('')
                 }]
             }],

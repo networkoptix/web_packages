@@ -12,7 +12,7 @@
 'use strict';
 
 // ----------------------------------------------------------------------------
-// Rule Definition
+// Helpers
 // ----------------------------------------------------------------------------
 
 const injectableDecorators = [
@@ -21,6 +21,10 @@ const injectableDecorators = [
     'Pipe',
     'Directive',
 ];
+
+// ----------------------------------------------------------------------------
+// Rule Definition
+// ----------------------------------------------------------------------------
 
 /** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
 module.exports = {

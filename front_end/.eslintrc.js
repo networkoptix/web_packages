@@ -143,6 +143,7 @@ module.exports = {
             ],
             rules: {
                 'nx/explicit-input-output-types': 'error',
+                'nx/no-untyped-init': 'error',
 
                 '@typescript-eslint/ban-types': ['error', {
                     extendDefaults: true,

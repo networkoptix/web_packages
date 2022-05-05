@@ -7,10 +7,14 @@
 'use strict';
 
 // ----------------------------------------------------------------------------
-// Rule Definition
+// Helpers
 // ----------------------------------------------------------------------------
 
 const primitives = ['boolean', 'number', 'string'];
+
+// ----------------------------------------------------------------------------
+// Rule Definition
+// ----------------------------------------------------------------------------
 
 /** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
 module.exports = {
@@ -18,6 +22,11 @@ module.exports = {
         type: 'problem',
         schema: [], // no options
         hasSuggestions: true,
+        messages: {
+            missingInput: 'Missing Input type.',
+            inferType: 'Infer type from default value',
+            missingOutput: 'Missing Output generic.',
+        }
     },
     create: function (context) {
         return {
@@ -36,9 +45,9 @@ module.exports = {
                         if (primitives.includes(valueType)) {
                             context.report({
                                 node,
-                                message: 'Missing Input type.',
+                                messageId: 'missingInput',
                                 suggest: [{
-                                    desc: 'Infer type from default value',
+                                    messageId: 'inferType',
                                     fix: function (fixer) {
                                         return fixer.insertTextAfter(
                                             node.key,
@@ -50,13 +59,13 @@ module.exports = {
                         } else {
                             context.report({
                                 node,
-                                message: 'Missing Input type.',
+                                messageId: 'missingInput',
                             });
                         }
                     } else {
                         context.report({
                             node,
-                            message: 'Missing Input type.',
+                            messageId: 'missingInput',
                         });
                     }
                     return;
@@ -73,7 +82,7 @@ module.exports = {
                         if (!value.typeParameters) {
                             context.report({
                                 node,
-                                message: 'Missing Output generic.',
+                                messageId: 'missingOutput',
                             });
                         }
                     } else if (!typeAnnotation.typeAnnotation.typeParameters) {
@@ -82,7 +91,7 @@ module.exports = {
                         // including here for consistency
                         context.report({
                             node,
-                            message: 'Missing Output generic.',
+                            messageId: 'missingOutput',
                         });
                     }
                 }
