@@ -81,17 +81,21 @@ Force Tags
     Click Button    ${RESET NEXT BUTTON}
     Check For Alert    ${CANNOT SAVE PASSWORD}:${SPACE}${CODE USED/INCORRECT}
 
-8. Should make not-activated user active by restoring password
+8. Non-activated user cannot get to password entry page to restore password
     [Tags]    email    C41871
-    Skip    May not be supporting this anymore
-#    ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
-#    Go To    ${url}/register
-#    Register    mark    hamill    ${email}    ${password}
-#    Validate Register Email Received    ${email}
-#    Send "Restore Password" Email    ${email}
-#    Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
-#    Click Link    ${RESET SUCCESS LOG IN LINK}
-#    Log In    ${email}    ${ALT PASSWORD}    button=None
+    ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
+    Go To    ${url}/register
+    Register    mark    hamill    ${email}    ${password}
+    Go To    ${url}/authorize
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
+    Sleep    1
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    1
+    Click Button    ${LOG IN NEXT BUTTON}
+    Wait Until Element Has Style    ${EMAIL INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${ERROR COLOR}
+    Wait Until Element Is Visible    ${REGISTER NOT ACTIVATED}
+
 
 9. Should allow logged in user visit restore password page
     [Tags]    email

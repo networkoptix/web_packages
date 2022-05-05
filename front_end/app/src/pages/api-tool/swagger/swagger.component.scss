@@ -657,6 +657,10 @@
 			color           : var(--swagger-btn-execute-color) !important;
 		}
 
+		&.execute:hover:not([disabled]):not(.disabled) {
+			background-color: var(--brand-d2) !important;
+		}
+
 		&.cancel {
 			@include typography.medium14nocolor;
 			color : var(--btn-default-color);

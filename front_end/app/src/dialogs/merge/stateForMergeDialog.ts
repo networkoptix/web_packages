@@ -9,6 +9,7 @@ export const State: {
     }
 } = Object.assign({
     thisSystemHasOutdatedServerError: { show: {}, showUpdates: {}, template: {}, errorText: {} },
+    connectAnotherSystemToCloud: { show: {}, showUpdates: {}, template: {}, errorText: {} },
     checkMerge: {
         show: {
             systemDropdown: true,

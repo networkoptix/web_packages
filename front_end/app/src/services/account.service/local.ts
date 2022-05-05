@@ -103,17 +103,15 @@ export class LocalAccount extends BaseAccount {
     }
 
     logout(doNotRedirect = false, skipReload = false): void {
-        this.account = undefined;
-
-        if (this.loggingOut) {
+        if (this.sessionService.isLoggingOut) {
             return;
         }
-
+        this.sessionService.isLoggingOut = true;
         this.applyService
             .canMove()
             .then((allowed: boolean) => {
+                this.sessionService.isLoggingOut = allowed;
                 if (allowed) {
-                    this.loggingOut = true;
                     this.account = undefined;
                     this.logoutHelper(doNotRedirect, skipReload);
                 }

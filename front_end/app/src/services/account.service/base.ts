@@ -41,10 +41,8 @@ export abstract class BaseAccount implements OnDestroy {
     protected LANG: LanguageI18NStaticTypes;
     protected location: Location;
     accountSubject = new BehaviorSubject<Account>(undefined);
-    protected loggingOut: boolean;
     protected requestingLogin: any;
     protected loginDialogActive: boolean;
-    protected loginWithAuthKeyInProgress: boolean;
     protected localStorage: any;
     protected tokens: any;
 
@@ -96,15 +94,13 @@ export abstract class BaseAccount implements OnDestroy {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe(lang => { this.LANG = lang; });
         this.location = locationService;
-        this.loggingOut = false;
         this.loginDialogActive = false;
-        this.loginWithAuthKeyInProgress = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
             .pipe(debounceTime(500), distinctUntilChanged())
             .subscribe(loginState => {
-                if (!this.loggingOut && loginState === null) {
+                if (!this.sessionService.isLoggingOut && loginState === null) {
                     return this.dialogs.expiredSession()
                         .then(res => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
@@ -205,7 +201,6 @@ export abstract class BaseAccount implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    // TODO: @Chris require login add check for !this.loginWithAuthKeyInProgress
     redirectAuthorised(): void {
         this.get()
             .then((account: Account) => {
@@ -294,8 +289,6 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     loginWithAuthKey(authKey: string): Promise<boolean> {
-        this.loginWithAuthKeyInProgress = true;
-
         const auth = atob(decodeURIComponent(authKey)).split(':');
         const tempLogin = auth[0];
         const tempPassword = auth[1];
@@ -312,8 +305,6 @@ export abstract class BaseAccount implements OnDestroy {
                         // @ts-expect-error: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
                     });
-            }).finally(() => {
-                this.loginWithAuthKeyInProgress = false;
             });
     }
 
@@ -398,11 +389,21 @@ export abstract class BaseAccount implements OnDestroy {
                 });
         }
 
+        const logoutTokens = (tokens, reload = false) => {
+            return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
+                this.clearCodeFromUri();
+                if (reload) {
+                    this.window.location.reload();
+                }
+            });
+        };
+
         try {
             const tokens: any = await this.cloudApi.getTokensFromCloud(code).toPromise();
             const tokenInfo: any = await this.cloudApi.getTokenInfo(tokens.access_token).toPromise();
             this.appStateService.ready = true;
             if (tokenInfo.username === account.email) {
+                await logoutTokens(tokens);
                 return false;
             }
 
@@ -416,10 +417,7 @@ export abstract class BaseAccount implements OnDestroy {
                 this.stopAccountPoll();
                 return this.loginTokens(tokens);
             }
-            return this.cloudApi.logoutTokens(tokens.access_token, tokens.refresh_token).then(() => {
-                this.clearCodeFromUri();
-                this.window.location.reload();
-            });
+            return logoutTokens(tokens, true);
         } catch (e) {
             return this.handleCodeError(e).then(() => this.requireLogin());
         } finally {
@@ -429,11 +427,11 @@ export abstract class BaseAccount implements OnDestroy {
 
     public async handleAuthKeyLogin(auth: string) {
         const account: Account = await this.get();
+        if (!account || !account.is_authenticated) {
+            return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
+        }
         try {
             const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
-            if (!account || !account.is_authenticated) {
-                return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
-            }
             if (result.email === account.email) {
                 return;
             }
@@ -446,12 +444,15 @@ export abstract class BaseAccount implements OnDestroy {
                     'long-cancel-button');
 
             if (response === true) {
+                this.sessionService.isLoggingOut = true;
                 return this.cloudApi.logout().finally(() => {
                     this.stopAccountPoll();
                     this.account = undefined;
                     this.storageService.clear(); // Clear session
-                    return this.loginWithAuthKey(auth).then(() => {
-                        return this.document.location.reload();
+                    setTimeout(() => {
+                        this.loginWithAuthKey(auth).then(() => {
+                            return this.document.location.reload();
+                        });
                     });
                 });
             } else {

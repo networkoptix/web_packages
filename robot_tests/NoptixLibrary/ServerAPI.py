@@ -306,7 +306,7 @@ class ServerAPI:
         r = requests.get(f'{serverUrl}/api/systemSettings?systemName={newName}', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
 
     @keyword
-    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth):
+    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth=['admin','QAbur777$']):
         body = {
             "cameraId": cameraId,
             f"{attribute}": value

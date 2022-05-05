@@ -77,7 +77,7 @@ export class NxMonitoringComponent implements OnInit {
             .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.systemId = params.systemId;
-                this.systemId && this.init();
+                this.init();
             });
     }
 
@@ -102,9 +102,9 @@ export class NxMonitoringComponent implements OnInit {
                 system = this.systemService.createSystem(account.email, this.systemId);
             }
 
-            this.systemOnline = system.isOnline;
-            if (this.systemOnline) {
-                system.update().then(() => {
+            system.update().then(() => {
+                this.systemOnline = system.isOnline;
+                if (this.systemOnline) {
                     system.serverManager.servers.forEach(server => {
                         this.availServers.push({
                             value: server.id,
@@ -129,8 +129,8 @@ export class NxMonitoringComponent implements OnInit {
 
                     this.content.base = this.sourceService.getMonitoringMenuBase(system);
                     this.content = { ...this.content }; // trigger onChange
-                });
-            }
+                }
+            });
         });
     }
 

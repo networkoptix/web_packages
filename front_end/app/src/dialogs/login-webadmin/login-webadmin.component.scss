@@ -21,26 +21,6 @@ svg-icon {
     overflow: hidden;
 }
 
-.logo-header {
-    background: var(--auth-header-bg);
-    height: 160px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    
-    img {
-        height: 80px;
-    }
-    
-    @media screen and (max-height: $collapse-webadmin-window-width), (max-width: $collapse-webadmin-window-width) {
-        height: 80px;
-        img {
-            height: 40px;
-        }
-    }
-}
-
 .error-block {
     min-height: 40px;
     padding: 10px 16px;

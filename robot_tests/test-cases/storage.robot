@@ -624,6 +624,14 @@ ${drives}    5
 
 28. Add external storage: Wrong login or password
     [Tags]    C81589    external
+    # In order for the SMB external test cases to work you must have installed samba on your linux box and cofnigured it properly:
+    # sudo apt-get install samba -y
+    # sudo nano /etc/samba/smb.conf
+    # Add the below text to the bottom of the .conf file:
+#    [networkdisk]
+#        path = /home/qaburbank/networkdisk
+#        valid users = qaburbank
+#        read only = no
     Verify on Servers Page
     
     Log    Step 1

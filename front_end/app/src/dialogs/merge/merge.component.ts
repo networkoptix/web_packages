@@ -175,9 +175,13 @@ export class MergeModalContent {
                 })
             );
             if (this.systems.length === 0 && this.peerSystems.length === 0) {
-                this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
-                this.secondarySystem = this.targetSystem;
-                this.updateShow('noOtherSystemServerUrl');
+                if (environment.isLocal) {
+                    this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
+                    this.secondarySystem = this.targetSystem;
+                    this.updateShow('noOtherSystemServerUrl');
+                } else {
+                    this.machine.transition('connectAnotherSystemToCloud');
+                }
             } else {
                 if (this.systems.length) {
                     this.processedSystems.push(
@@ -187,11 +191,15 @@ export class MergeModalContent {
                 }
                 if (this.peerSystems.length) {
                     this.processedSystems.push(
-                        ...this.makeSelectorList(this.peerSystems),
-                        { name: 'horizontal' } as SystemDropdownItem
+                        ...this.makeSelectorList(this.peerSystems)
                     );
                 }
-                this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() });
+                if (environment.isLocal) {
+                    this.processedSystems.push(
+                        { name: 'horizontal' },
+                        { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() }
+                    );
+                }
                 if (targetSystem) {
                     this.systemsService.forceUpdateSystems();
                     const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {

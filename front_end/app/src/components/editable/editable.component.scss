@@ -10,19 +10,19 @@
         overflow      : hidden !important;
         text-overflow : ellipsis !important;
         border        : 1px solid transparent; // avoid text jump
-        
+
         &:hover {
             background    : var(--input-bg);
             border-radius : 2px;
             padding-left  : 4px;
             margin-left   : -4px;
         }
-        
+
         &[disabled="true"] {
             pointer-events : none;
         }
     }
-    
+
     &-edit {
         position      : relative;
         border-radius : 2px;
@@ -36,7 +36,7 @@
         white-space   : nowrap !important;
         outline       : none;
     }
-    
+
     &-error {
         border : 1px solid var(--input-error-border-color);
     }

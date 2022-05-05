@@ -684,6 +684,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get('/rest/v1/devices/*/bookmarks', params);
     }
 
+    getBookmarkTags(limit:number = 100) {
+        return this.get('/rest/v1/devices/*/bookmarks/*/tags', { limit });
+    }
+
     getDevices(params = {}) {
         return this.get('/rest/v1/devices', params);
     }

@@ -15,6 +15,17 @@
         <button class="btn btn-primary m-0" (click)="close()" translate>OK</button>
     </div>
 </form>
+
+<form *ngIf="machine.currentState === 'connectAnotherSystemToCloud'">
+    <div class="modal-body">
+        <p>{{LANG.dialogs.merge.ownerCanMergeText()}}.</p>
+        <p [innerHTML]="'dialogs.merge.connectAnotherSystemToCloud' | translate"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
+    </div>
+</form>
+
 <form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
     <div [ngStyle]="{ display: updateSession ? 'none': 'unset'}">
         <div class="modal-body">
@@ -43,7 +54,7 @@
                     name="serverUrl"
                     id="serverUrl"
                     type="url"
-                    [readonly]="checking"
+                    [readonly]="checking || !environment.isLocal"
                     placeholder="host:port"
                     (ngModelChange)="serverUrlChange(serverUrlInput)"
                     [ngModel]="machine.state.template.serverUrlInputValue"

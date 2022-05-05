@@ -9,7 +9,7 @@
     body {
         min-width: 160px !important;
     }
-    
+
     .cloud-header-st0 {
         stroke: var(--svg-path-light-color);
     }
@@ -158,7 +158,7 @@
                 @include typography.regular14dark9lh16;
                 color : var(--auth-subheader-color) !important;
                 margin-top: 20px;
-                
+
                 .for-account {
                     margin-left: 8px;
                     border-radius: 25px;
@@ -275,11 +275,11 @@
             &.main-w {
                 background-color: var(--auth-body-bg);
                 color: var(--body-text-color);
-                
+
                 input {
                     color: var(--input-color);
                     background-color: var(--input-bg);
-                    
+
                     &:focus {
                         border: 1px solid var(--brand-core);
                     }
@@ -368,7 +368,7 @@
                     color: $light4 !important;
                     background-color: $dark4 !important;
                     border : 1px solid $dark1 !important;
-                    
+
                     &:focus {
                         background-color: $dark3;
                         border: 1px solid $dark1;
@@ -487,7 +487,7 @@
                                 stroke : var(--btn-text-color);
                             }
                         }
-                        
+
                         &:hover {
                             color: var(--btn-text-hover-color);
                             svg {
@@ -496,7 +496,7 @@
                                 }
                             }
                         }
-                        
+
                         &:active {
                             color: var(--btn-text-active-color);
                             svg {
@@ -529,31 +529,51 @@
     .auth-footer {
         z-index: 2;
         display: flex;
+        flex-direction: column;
         justify-content: center;
-        min-width: 580px;
-        width: 100%;
+        align-items: center;
+        min-width: 900px;
         margin: 75px 16px 0 16px;
         padding: 12px 0;
         border-top: 1px solid var(--border-color);
 
-        &.footer-d {
-            border-top: 1px solid $dark11;
-        }
+        &-links {
+            display: flex;
+            justify-content: center;
+            width: 100%;
 
-        a {
-            text-decoration: none;
-            @include typography.regular12light16;
-            &:hover {
-                color: $dark15 !important;
+            &.footer-d {
+                border-top: 1px solid $dark11;
+            }
+
+            a {
+                text-decoration: none;
+                @include typography.regular12light16;
+                &:hover {
+                    color: $dark15 !important;
+                }
+            }
+            .dot {
+                margin: auto 10px;
+                width: 3px;
+                height: 3px;
+                border-radius: 50%;
+                background: $light16;
             }
         }
+        .copyright {
+            color: $light10;
+            padding: 12px 0 0 0;
+            text-decoration: none;
 
-        .dot {
-            margin: auto 10px;
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            background: $light16;
+            &:hover, &:focus {
+                color: $light13;
+            }
+
+            &:active {
+                color: $light10;
+            }
         }
     }
 }
+

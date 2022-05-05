@@ -808,7 +808,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content = { ...this.content };
     }
 
-    getCameraStatusIcon({ id, status, scheduleEnabled }: ICamera): string {
+    getCameraStatusIcon ({ id, status, scheduleEnabled, parentId }: ICamera): string {
+        const parentServer = this.system.servers.find(s => s.id === parentId);
+        if (parentServer?.status === 'Offline') {
+            return this.CONFIG.menus.systemSettings.cameras.statusIcons.offline;
+        }
         if (scheduleEnabled && !(status === 'Recording')) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
         }

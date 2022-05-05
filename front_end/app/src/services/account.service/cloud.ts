@@ -158,18 +158,16 @@ export class CloudAccount extends BaseAccount {
         });
     }
 
-    logout(doNotRedirect = false, skipReload = false): void {
-        this.account = undefined;
-
-        if (this.loggingOut) {
+    logout(doNotRedirect = false, skipReload = false) {
+        if (this.sessionService.isLoggingOut) {
             return;
         }
-
+        this.sessionService.isLoggingOut = true;
         this.applyService
             .canMove()
             .then((allowed: boolean) => {
+                this.sessionService.isLoggingOut = allowed;
                 if (allowed) {
-                    this.loggingOut = true;
                     this.account = undefined;
                     this.logoutHelper(doNotRedirect, skipReload);
                 }
@@ -216,16 +214,18 @@ export class CloudAccount extends BaseAccount {
     requireLogin(): Promise<void | Account> {
         return this.get(true)
             .then(account => {
-                if (account === null) {
+                if (account === undefined) {
+                    this.router.navigate([this.CONFIG.redirect.unauthorised]).catch(_ => {});
+                } else if (account === null) {
                     this.logoutHelper(true, true);
-                } else if (!account?.is_authenticated) {
+                } else if (!account.is_authenticated) {
                     this.oauthService.redirectOauth();
                 } else if (account.is_authenticated) {
                     return account;
                 }
             }).catch(err => {
                 console.error(err);
-                this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                this.router.navigate([this.CONFIG.redirect.unauthorised]).catch(_ => {});
             });
     }
 }

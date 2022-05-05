@@ -127,10 +127,11 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
     Sleep    5
     ${matches}=   Get WebElements     ${LEFT MENU SEARCH MATCHES}
     FOR    ${match}    IN    @{matches}
-        ${text}=    Run Keyword And Continue On Failure    Get Text    ${match}
-            IF    '${text}' != 'None' and '${text}' != '${EMPTY}'
-                Should Contain    ${text}    ${simple criteria}
-            END
+        ${text}=   Run Keyword And Continue On Failure    Get Text    ${match}
+        ${text}=   Convert To Lower Case    ${text}
+        IF    '${text}' != 'None' and '${text}' != '${EMPTY}'
+            Should Contain    ${text}    ${simple criteria}
+        END
     END
 
 16. Should perform search with 'AND' criteria

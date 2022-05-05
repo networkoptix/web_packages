@@ -49,6 +49,7 @@ ${2FA SECURITY PAGE CANCEL BTN}             //nx-account-security-component//nx-
 ${2FA SETTINGS MODAL HEADER}                //two-fa-modal-content//h1[text()="${2FA SETTINGS MODAL HEADER TEXT}"]
 ${2FA SETTINGS MODAL DESCRIPTION UNCHECK}   //two-fa-modal-content//p[text()="${2FA SETTINGS MODAL DESCRIPTION TEXT2}"]
 ${2FA SETTINGS MODAL DESCRIPTION CHECK}     //two-fa-modal-content//p[text()="${2FA SETTINGS MODAL DESCRIPTION TEXT1}"]
-${2FA SETTINGS MODAL INSTRUCTIONS}          //two-fa-modal-content//label[text()="${2FA SETTINGS MODAL INSTRUCTIONS TEXT}"]
+${2FA SETTINGS MODAL ON INSTRUCTIONS}       //two-fa-modal-content//label[text()="${2FA SETTINGS MODAL INST ON TEXT}"]
+${2FA SETTINGS MODAL OFF INSTRUCTIONS}      //two-fa-modal-content//label[text()="${2FA SETTINGS MODAL INST OFF TEXT}"]
 ${2FA SETTINGS MODAL APPLY BTN}             //two-fa-modal-content//nx-process-button//child::div
 ${2FA SETTINGS MODAL CANCEL BTN}            //two-fa-modal-content//button[(@type="reset") or contains(text(),"${CANCEL BUTTON TEXT}")]

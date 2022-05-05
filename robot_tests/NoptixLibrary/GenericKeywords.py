@@ -167,7 +167,7 @@ class GenericKeywords(object):
         while time.time() < timeout:
             try:
                 value = self.get_element_style(locator, styleAttribute)
-                logger.debug(value)
+                logger.debug(f"value of get element style: {value}")
                 if value == expected:
                     return
             except Exception as e:

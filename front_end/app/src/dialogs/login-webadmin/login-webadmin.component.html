@@ -8,15 +8,10 @@
             loading: loading
         }"
       (submit)="hideErrors = false">
-    <div class="logo-header">
-        <img [alt]="CONFIG.vmsName + ' logo'"
-            [src]="CONFIG.images.dir + 'welcome_page_logo@2x.png'"
-            [srcset]="CONFIG.images.dir + 'welcome_page_logo.png, ' + CONFIG.images.dir + 'welcome_page_logo@2x.png 2x'">
-        </div>
     <div class="modal-body">
         <div
             *ngIf="accountNotOnSystem || account2faRequired"
-            class="error-block"
+            class="error-block mb-2"
         >
             <svg-icon
                 nx-add-svg-src
