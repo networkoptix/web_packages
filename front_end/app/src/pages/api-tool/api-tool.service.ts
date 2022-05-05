@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Navigation, NavigationEnd, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
@@ -138,6 +138,13 @@ export class NxAPIToolService {
         } else {
             this.getSystem();
         }
+
+        this.router.events.pipe(untilDestroyed(this), filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+            const urlWithoutQueryParams = event.url.split('?')[0];
+            if (this.activeNode && urlWithoutQueryParams !== this.activeNode.url) {
+                this.navigateToNodeBasedOnURLPath();
+            }
+        });
     }
 
     set menuNodes(content: MenuNodeWithParent[]) {
@@ -153,11 +160,7 @@ export class NxAPIToolService {
     }
 
     set selectedAPI(version: APIDropdownItem) {
-        const queryParams = this.getQueryParams();
-        queryParams.version = version?.name?.toLowerCase() || '';
-        this.queryParams = queryParams;
-        this.uri.updateURI(this.uri.getURL(), queryParams);
-        this._selectedAPI = version;
+        this.changeAPIVersion(version, this.uri.getURL());
     }
 
     get selectedAPI() {
@@ -212,6 +215,14 @@ export class NxAPIToolService {
             this.setAPIInfo();
         }
         this.activeNode = click.node;
+    }
+
+    changeAPIVersion(version: APIDropdownItem, url: string) {
+        const queryParams = this.getQueryParams();
+        queryParams.version = version?.name?.toLowerCase() || '';
+        this.queryParams = queryParams;
+        this.uri.updateURI(url, queryParams);
+        this._selectedAPI = version;
     }
 
     setAPIInfo = () => {

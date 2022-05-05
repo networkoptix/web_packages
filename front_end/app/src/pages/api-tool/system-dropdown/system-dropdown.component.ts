@@ -6,7 +6,6 @@ import { NxUtilsService } from '@services/utils.service';
 
 import type { APIDropdownItem, SystemDropdownItem } from '../api-tool-types';
 import { NxAPIToolService } from '../api-tool.service';
-
 @Component({
     selector: 'nx-system-dropdown',
     templateUrl: './system-dropdown.component.html',
@@ -41,9 +40,10 @@ export class NxSystemDropdownComponent {
     }
 
     onAPIVersionChange(api: APIDropdownItem) {
-        this.APIToolService.selectedAPI = api;
+        const firstNode = this.APIToolService.menuNodes?.find(node => true);
+        this.APIToolService.changeAPIVersion(api, firstNode?.url);
         this.APIToolService.setAPIInfo();
         this.APIToolService.menuNodes = api.menu;
-        this.APIToolService.activeNode = this.APIToolService.menuNodes?.find(node => true);
+        this.APIToolService.activeNode = firstNode;
     }
 }
