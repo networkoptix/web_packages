@@ -22,13 +22,13 @@
 </div>
 
 <div class="feed" *ngIf="list && list.length">
-    <div *ngFor="let bookmark of list" class="bookmark-card">
+    <div *ngFor="let bookmark of list" class="bookmark-card" (nxOnIntersect)="bookmark.isVisible = $event === 'Visible'" [intersectionThreshold]="0.1">
         <header>
             <span class="name">{{bookmark.name}}</span>
-            <span class="date">{{bookmark.startTimeMs | date:'medium':'UTC'}}</span>
+            <span class="date">{{bookmark.startTimeMs | date:'medium'}}</span>
         </header>
         <main>
-            <clip class="video" [sourceUrl]="bookmark.src" [posterUrl]="bookmark.thumbnail"></clip>
+            <clip class="video" [sourceUrl]="bookmark.src" [posterUrl]="bookmark.isVisible ? bookmark.thumbnail : ''"></clip>
         </main>
         <footer class="tags-compact">
             <ng-container *ngFor="let tag of bookmark.tagsFormatted">

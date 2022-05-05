@@ -1,8 +1,15 @@
 @use '../../../../styles/typography';
 @use '../../../../../styles/theme_variables' as theme_vars;
 
-.feed .bookmark-card {
+:host {
+    --cards-per-row: 4;
+    --card-width: max(calc(100vw / (var(--cards-per-row) + 1)), 250px); // calculates the width required for each card.
+    --video-height: calc(var(--card-width) * 9 / 16); // calculates the height required for each card to have a 16:9 aspect ratio.
     width: 100%;
+}
+
+.feed .bookmark-card {
+    width: var(--card-width);
     background-color: var(--light1);
     border-radius: 10px;
     margin-bottom: 20px;
@@ -19,15 +26,11 @@
         }
     }
     main {
-        height: 400px;
-        width: 700px;
+        height: var(--video-height);
+        width: var(--card-width);
         display: flex;
         align-items: center;
         justify-content: center;
-        img {
-            object-fit: contain;
-            width: 100%;
-        }
     }
     footer {
         padding: 20px 20px 10px 20px;
@@ -40,8 +43,12 @@
     }
 }
 
-.bookmark-card:last-of-type {
-    margin-bottom: 0 !important;
+.feed {
+    display: grid;
+    gap: 1rem;
+    margin: 1rem;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(var(--card-width), 1fr));
 }
 
 .preload-div {

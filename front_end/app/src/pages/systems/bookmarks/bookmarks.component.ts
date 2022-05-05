@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, of } from 'rxjs';
-import { delay, switchMap } from 'rxjs/operators';
+import { combineLatest, of, Subject } from 'rxjs';
+import { debounceTime, delay, filter, switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { SearchTag, SearchFilter } from '@components/search/search.component';
@@ -47,6 +47,11 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         this.filterModel.tags = [];
     }
 
+    // Added to help with merge into develop.
+    private deepCopy(obj) {
+        return NxUtilsService.deepCopy(obj);
+    }
+
     constructor(
         configService: NxConfigService,
         private bookmarkService: BookmarkService,
@@ -72,6 +77,8 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                 this.filterModel.query = params.search || '';
             });
 
+        const readySubject = new Subject<boolean>();
+
         combineLatest([
             this.route.params,
             this.accountService.get()
@@ -83,15 +90,16 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                         this.account.email,
                         params.systemId
                     );
-                    return of(true);
+                    return of(this.setTags());
                 }),
                 delay(500),
-                switchMap(() => this.bookmarkService.getBookmarks()),
+                switchMap(() => this.bookmarkService.getBookmarks(undefined, 10)),
                 untilDestroyed(this)
             ).subscribe((bookmarks: Bookmark[]) => {
                 this.restEndpointUsed = true;
                 if (bookmarks) {
                     this.setBookmarks(bookmarks);
+                    readySubject.next(true);
                 } else {
                     this.elements = undefined;
                 }
@@ -103,32 +111,41 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
                     this.pageService.show404();
                 }
             });
+
+        let lastSearch;
+        readySubject.pipe(
+            switchMap(() => this.route.queryParams),
+            filter(({ search }) => search !== lastSearch),
+            debounceTime(500),
+            switchMap(({ search }) => {
+                lastSearch = search;
+                return this.bookmarkService.getBookmarks(search, search ? 100 : 10);
+            }),
+            untilDestroyed(this)
+        ).subscribe((bookmarks: Bookmark[]) => {
+            this.setBookmarks(bookmarks);
+        });
     }
 
     setBookmarks(bookmarks: Bookmark[]): void {
-        this.allElements = bookmarks.sort((a, b) =>
+        this.allElements = bookmarks.map((bookmark: Bookmark) => {
+            bookmark.tagsFormatted = bookmark.tags.map((tag: string) => ({ type: 'default', label: tag }));
+            return bookmark;
+        }).sort((a, b) =>
             +b.creationTimeMs - +a.creationTimeMs
         );
-        this.setTags();
         this.setFilter();
     }
 
-    setTags(): void {
-        const uniqueTags = new Set();
-        this.allElements.forEach((bookmark: Bookmark) => {
-            bookmark.tagsFormatted = [];
-            bookmark.tags.forEach((tag: string) => {
-                uniqueTags.add(tag);
-                bookmark.tagsFormatted.push({ type: 'default', label: tag });
-            });
-        });
-        this.filterModel.tags = Array.from(uniqueTags).map(
+    async setTags(): Promise<void> {
+        const tags = await this.bookmarkService.getBookmarkTags().toPromise();
+        this.filterModel.tags = Object.keys(tags).map(
             (tag: string): SearchTag =>  {
                 return { id: tag, label: tag, value: false };
             }
         );
 
-        this.filterModel = NxUtilsService.deepCopy(this.filterModel);
+        this.filterModel = this.deepCopy(this.filterModel);
     }
 
     setFilter(): void {
@@ -150,7 +167,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
             });
         };
 
-        this.elements = this.allElements.map((obj: Bookmark) => ({ ...obj }));
+        this.elements = this.deepCopy(this.allElements);
         if (this.filterModel.query !== '') {
             const query = this.filterModel.query.toLowerCase();
             this.elements = this.elements.filter((item: Bookmark) =>
@@ -165,7 +182,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
 
             if (selectedTags.length) {
                 this.elements = this.elements.filter((item: Bookmark) => {
-                    return selectedTags.some((tagLabel: string) => {
+                    return selectedTags.every((tagLabel: string) => {
                         return item.tags.includes(tagLabel);
                     });
                 });
@@ -174,7 +191,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     }
 
     modelChanged(searchModel: SearchFilter): void {
-        this.filterModel = NxUtilsService.deepCopy(searchModel);
+        this.filterModel = this.deepCopy(searchModel);
         this.setFilter();
     }
 }
