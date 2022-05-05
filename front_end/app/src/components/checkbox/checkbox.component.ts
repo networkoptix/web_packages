@@ -13,7 +13,8 @@ import {
     ControlValueAccessor,
     NG_VALIDATORS,
     FormControl,
-    Validator
+    Validator,
+    ValidationErrors,
 } from '@angular/forms';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
@@ -58,28 +59,24 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() labelText: string;
     @Input() ariaText: string = '';
     @Input() color: string;
-    @Output() onClick = new EventEmitter<string>();
+    @Output() onClick = new EventEmitter<boolean>();
 
-    public value: any;
-    public state: string;
+    public value: boolean;
+    public state: 'unchecked' | 'checked';
 
     private cbxStates = {
         false: 'unchecked',
         true: 'checked',
-        disabled: 'disabled',
-        undefined: 'tristate'
+        // undefined: 'tristate'
     };
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => {
-    };
-
-    private onChangeCallback = (_: any): void => {
-    };
+    private onTouchedCallback = (): void => {};
+    private onChangeCallback = (_: boolean): void => {};
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: FormControl) {
+    public validate(c: FormControl): ValidationErrors | null {
         const err = {
             requiredError: {
                 required: true
@@ -97,7 +94,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         setTimeout(() => {
             // set state after model was updated
             if (this.checked !== undefined) {
-                this.value = this.checked;
+                this.value = this.checked as boolean;
             }
             this.setState();
         });
@@ -105,19 +102,21 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
 
     ngOnChanges(changes: NgChanges<NxCheckboxComponent>): void {
         if (changes.checked) {
-            this.value = changes.checked.currentValue;
-            this.state = this.cbxStates[this.value];
+            this.value = changes.checked.currentValue as boolean;
+            this.state = this.cbxStates[String(this.value)];
         }
     }
 
     /**
      * Write a new (model) value to the element.
      */
-    writeValue(value: any): void {
-        if (value !== null && !this.disabled ||
-            this.disabled && !value) {
+    writeValue(value: boolean): void {
+        if (
+            value !== null && !this.disabled ||
+            this.disabled && !value
+        ) {
             this.value = value;
-            this.state = this.cbxStates[this.value];
+            this.state = this.cbxStates[String(this.value)];
         }
     }
 
@@ -125,7 +124,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
      * Set the function to be called
      * when the control receives a change event.
      */
-    registerOnChange(fn): void {
+    registerOnChange(fn: (_: boolean) => void): void {
         this.onChangeCallback = fn;
     }
 
@@ -133,12 +132,12 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: any): void {
+    registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
     private setState(): void {
-        this.state = this.cbxStates[this.value];
+        this.state = this.cbxStates[String(this.value)];
 
         // update the form
         this.onChangeCallback(this.value);
@@ -146,7 +145,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
         this.onClick.emit(this.value);
     }
 
-    changeState(event): void {
+    changeState(_event: MouseEvent): void {
         if (this.disabled) {
             return;
         }
@@ -157,7 +156,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     }
 
     // Non input elements doesn't have onBlur ... keeping this just for reference
-    onBlur(): void {
-        this.onTouchedCallback();
-    }
+    // onBlur(): void {
+    //     this.onTouchedCallback();
+    // }
 }

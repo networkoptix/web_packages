@@ -36,8 +36,7 @@ describe('NxCheckboxComponent', () => {
         expect(component['cbxStates']).toEqual({
             false: 'unchecked',
             true: 'checked',
-            disabled: 'disabled',
-            undefined: 'tristate'
+            // undefined: 'tristate'
         });
     });
 

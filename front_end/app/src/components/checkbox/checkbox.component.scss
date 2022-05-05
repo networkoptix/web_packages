@@ -52,11 +52,11 @@
         svg polyline.box {
             stroke : $hover;
         }
-    
+
         svg polyline.tick {
             stroke : $checkHoverColor;
         }
-    
+
         & ~ .labelText {
             color : $hover;
         }
@@ -67,7 +67,7 @@
         svg polyline.box {
             stroke : $checked !important;
         }
-    
+
         & ~ .labelText {
             color : $checked !important;
         }
@@ -78,7 +78,7 @@
         svg polyline.box {
             stroke : $checkedHover !important;
         }
-    
+
         svg polyline.tick {
             stroke : $checkHoverColor !important;
         }
@@ -153,7 +153,7 @@ nx-checkbox {
                 var(--brand-core),
             );
         }
-        
+
         &:not(.desktop) {
             @include checkboxSvgStateColors(
                 var(--checkbox-hover-color),
@@ -197,7 +197,7 @@ nx-checkbox {
                 polyline.tick {
                     display : block;
                 }
-    
+
                 polyline.tick {
                     stroke  : var(--checkbox-check-color);
                 }
@@ -205,24 +205,22 @@ nx-checkbox {
                 polygon.box {
                     display : none;
                 }
-                
-                
+
+
             }
         }
 
-        &.tristate {
-            svg {
-                polyline.box,
-                line.tristate {
-                    display : block;
-                }
+        // &.tristate {
+        //     svg {
+        //         polyline.box,
+        //         line.tristate {
+        //             display : block;
+        //         }
 
-                polyline.tick {
-                    display : none;
-                }
-            }
-        }
+        //         polyline.tick {
+        //             display : none;
+        //         }
+        //     }
+        // }
     }
 }
-
-
