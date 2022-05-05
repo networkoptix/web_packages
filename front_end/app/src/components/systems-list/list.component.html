@@ -31,6 +31,7 @@
                                     [innerHTML]="(getSystemOwnerName(system, userEmail) | unsafe | highlight:search.value)"></span>
                                 <div class="system-list-bottom-bar">
                                     <nx-tag style="display: block; margin-top: 24px;"
+                                        [clickable]="false"
                                         type="{{CONFIG.system.status[system.stateOfHealth]?.style || CONFIG.system.status.default.style}}"
                                         *ngIf="canShowTag(system)">
                                         <ng-container>{{LANG.systemStatuses[system.stateOfHealth]() ||
