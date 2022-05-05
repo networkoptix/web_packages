@@ -39,7 +39,6 @@ export abstract class BaseAccount implements OnDestroy {
     protected LANG: LanguageI18NStaticTypes;
     protected location: Location;
     accountSubject = new BehaviorSubject<Account>(undefined);
-    protected loggingOut: boolean;
     protected requestingLogin: any;
     protected loginDialogActive: boolean;
     protected localStorage: any;
@@ -91,14 +90,13 @@ export abstract class BaseAccount implements OnDestroy {
         this.CONFIG = configService.getConfig();
         languageService.translateSubject.subscribe((lang) => { this.LANG = lang; });
         this.location = locationService;
-        this.loggingOut = false;
         this.loginDialogActive = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
             .pipe(debounceTime(500), distinctUntilChanged())
             .subscribe((loginState) => {
-                if (!this.loggingOut && loginState === null) {
+                if (!this.sessionService.isLoggingOut && loginState === null) {
                     return this.dialogs.expiredSession()
                         .then((res) => this.logout(res));
                 } else if (loginState !== '' && !environment.isLocal) {
@@ -442,8 +440,8 @@ export abstract class BaseAccount implements OnDestroy {
                     'long-cancel-button');
 
             if (response === true) {
+                this.sessionService.isLoggingOut = true;
                 return this.cloudApi.logout().finally(() => {
-                    this.loggingOut = true;
                     this.stopAccountPoll();
                     this.account = undefined;
                     this.storageService.clear(); // Clear session
