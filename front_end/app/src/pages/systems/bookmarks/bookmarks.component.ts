@@ -134,7 +134,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
     async setTags(): void {
         const tags = await this.bookmarkService.getBookmarkTags().toPromise();
         this.filterModel.tags = Object.keys(tags).map(
-            (tag: string): SearchTag =>  {
+            (tag: string): SearchTag => {
                 return { id: tag, label: tag, value: false };
             }
         );

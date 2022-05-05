@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxHeaderService } from '@services/nx-header.service';
+import { NxMenusService } from '@services/menus.service';
 
 import { NxDevConsoleMenuComponent } from './console-menu.component';
 

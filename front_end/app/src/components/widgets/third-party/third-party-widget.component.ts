@@ -128,13 +128,13 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         this.card.size = this.card.sizes[this.card.sizes.length - 2];
         this.card.config.useSourceUrl = false;
         this.saveSettings();
-    }
+    };
 
     switchUploadSource = () => {
         this.card.config.useSourceUrl = !this.card.config.useSourceUrl;
         this.card.config.sourceUrl = '';
         this.card.title = NxThirdPartyWidgetComponent.NAME;
-    }
+    };
 
     constructor(
         configService: NxConfigService,

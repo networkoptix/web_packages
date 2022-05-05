@@ -63,9 +63,9 @@ export class NxDevConsoleComponent {
             }),
             untilDestroyed(this)
         ).subscribe(({ sectionParam, mode, id }) => {
-            const sections = Object.values(
-                this.CONFIG.manifest
-            );
+            // const sections = Object.values(
+            //     this.CONFIG.manifest
+            // );
             const developers = '/developers';
             this.sectionParam = sectionParam;
             this.selectedMode = mode;

@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { MockProvider, MockModule, MockComponent, MockDirective } from 'ng-mocks';
-import { BehaviorSubject, of } from 'rxjs';
+import { of } from 'rxjs';
 
 import {
     NxAccountSettingsDropdown
@@ -105,7 +105,7 @@ describe('NxHeaderComponent', () => {
                 MockComponent(NxNavDropdownComponent),
                 MockComponent(NxAccountSettingsDropdown),
                 MockComponent(NxHeaderLanguageDropdown),
-                MockDirective(NxUnsafePipe)
+                NxUnsafePipe
             ],
             imports: [
                 MockModule(CommonModule),
@@ -127,6 +127,7 @@ describe('NxHeaderComponent', () => {
                 { provide: NxHeaderService, useValue: headerMock },
                 { provide: NxMenusService, useValue: menuMock },
                 { provide: WINDOW, useValue: window },
+                MockProvider(TranslateService)
             ]
         }).compileComponents()
             .then(() => {

@@ -68,7 +68,9 @@ class ErrorCodes(Enum):
             return logging.WARNING
         return logging.ERROR
 
-info_level_errors = (ErrorCodes.account_activated,
+
+info_level_errors = (
+                ErrorCodes.account_activated,
                 ErrorCodes.account_exists,
                 ErrorCodes.account_not_activated,
                 ErrorCodes.bad_username,
@@ -78,7 +80,8 @@ info_level_errors = (ErrorCodes.account_activated,
                 ErrorCodes.wrong_old_password,
                 ErrorCodes.wrong_password)
 
-warning_level_errors = (ErrorCodes.account_blocked,
+warning_level_errors = (
+                ErrorCodes.account_blocked,
                 ErrorCodes.cloud_invalid_response,
                 ErrorCodes.forbidden,
                 ErrorCodes.invalid_nonce,
@@ -86,6 +89,7 @@ warning_level_errors = (ErrorCodes.account_blocked,
                 ErrorCodes.wrong_parameters,
                 ErrorCodes.unsupported_media_type,
                 ErrorCodes.credentials_removed_permanently)
+
 
 def create_response_with_cookies(data, status_code, cookies, additional_headers=None):
     from rest_framework.response import Response
@@ -317,15 +321,16 @@ def validate_response(func):
             validate_error(response_data)
             raise response_errors[response.status_code](response_data['errorText'],
                                                         error_code=response_data['resultCode'],
-                                                        error_data=response_data["resultCode"])
+                                                        error_data=response_data)
 
         # Check error_code status - raise APILogicException
         if (result_code := isinstance(response_data, dict) and response_data.get('resultCode', False)) and result_code != ErrorCodes.ok.value:
             validate_error(response_data)
             if result_code in logic_errors:
                 raise logic_errors[result_code](response_data['errorText'],
-                                                                error_code=result_code)
-            raise APILogicException(response_data['errorText'], result_code)
+                                                error_code=result_code,
+                                                error_data=response_data)
+            raise APILogicException(response_data['errorText'], result_code, error_data=response_data)
 
         # everything is OK - return server's response
         return response_data

@@ -196,7 +196,7 @@ export class MergeModalContent {
                 }
                 if (environment.isLocal) {
                     this.processedSystems.push(
-                        { name: 'horizontal' },
+                        { name: 'horizontal', value: undefined },
                         { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() }
                     );
                 }

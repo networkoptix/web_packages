@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -20,6 +21,7 @@ export class ServerManager {
 
     servers: NxSystemServer[] = [];
     moduleInfo: ModuleInfo;
+    serverSubscription: Observable<any>;
 
     constructor(
         public mediaserver: NxSystemAPI | NxSystemRestAPI,
@@ -74,20 +76,22 @@ export class ServerManager {
 
     getForceServers(useCache: boolean, servers?: NxSystemServer[]) {
         if (!servers) {
-            const serverSubscription = this.mediaserver.getMediaServers(useCache);
-            serverSubscription.subscribe((res: any) => {
-                if (!res) {
-                    return Promise.reject(new Error(`Request to server has failed ${res}`));
-                }
+            if (!this.serverSubscription) {
+                this.serverSubscription = this.mediaserver.getMediaServers(useCache);
+                this.serverSubscription.subscribe((res: any) => {
+                    if (!res) {
+                        return Promise.reject(new Error(`Request to server has failed ${res}`));
+                    }
 
-                this.servers = res.sort(
-                    paramSortFunc((server: any) => server.name)
-                );
-                return this.servers;
-            });
-            return serverSubscription;
+                    this.servers = res.sort(
+                        paramSortFunc((server: any) => server.name)
+                    );
+                    return this.servers;
+                });
+            }
+            return this.serverSubscription;
         } else {
-            this.servers = servers.sort(paramSortFunc(server => server.name));
+            this.servers = servers.sort(paramSortFunc((server: any) => server.name));
         }
     }
 

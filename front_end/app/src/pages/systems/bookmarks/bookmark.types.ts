@@ -11,4 +11,5 @@ export interface Bookmark {
     src?: string;
     thumbnail?: string;
     tagsFormatted?: { type: string, label: string }[];
+    isVisible: boolean;
 }
