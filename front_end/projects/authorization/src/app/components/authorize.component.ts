@@ -22,10 +22,10 @@ import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { Title } from '@angular/platform-browser';
 
 require('what-input');
 
@@ -192,9 +192,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
-        private pageService: NxPageService,
         private router: Router,
         private elem: ElementRef,
+        private title: Title,
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
         @Inject(WINDOW) public window: Window
@@ -239,7 +239,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.auth();
+        this.title.setTitle(this.LANG.pageTitles.auth());
         this.footerItems = this.CONFIG.dynamicMenus.footer.nodes;
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;

@@ -8,7 +8,9 @@ import {
 } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
 import { BehaviorSubject, of } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -174,7 +176,8 @@ describe('NxHeaderComponent', () => {
                 // { provide: Router, useValue: routerMock },
                 { provide: NxHeaderService, useValue: headerMock },
                 { provide: NxMenusService, useValue: menuMock },
-                { provide: WINDOW, useValue: window }
+                { provide: WINDOW, useValue: window },
+                MockProvider(TranslateService)
             ]
         }).compileComponents()
             .then(() => {

@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 
 import { NxConfigService, IConfig } from './nx-config';
+import { NxHeaderService } from './nx-header.service';
 import { WINDOW } from './window-provider';
 
 interface MetaLookup {
@@ -23,13 +25,15 @@ export class NxPageService {
     LANG: LanguageI18NStaticTypes;
 
     updater$ = new Subject();
-    metaLookup: MetaLookup = {}
+    metaLookup: MetaLookup = {};
 
     constructor(
         configService: NxConfigService,
         private title: Title,
         private meta: Meta,
         private router: Router,
+        headerService: NxHeaderService,
+        translate: TranslateService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -37,15 +41,22 @@ export class NxPageService {
             untilDestroyed(this),
             debounceTime(50)
         ).subscribe(_ => {
-            const meta = this.metaLookup[this.router.url];
-            Object.entries(meta || {}).forEach(([name, content]) => {
+            const meta = this.metaLookup[this.router.url] || {};
+            Object.entries(meta).forEach(([name, content]) => {
                 const property = `og:${name}`;
                 this.meta.updateTag({ name, property, content });
                 if (name === 'title') {
                     this.title.setTitle(content);
                 }
             });
+
+            if (!meta.title && !headerService?.currentLocation?.isSystem) {
+                this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.CONFIG.cloudName);
+            }
         });
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        )?.subscribe(this.updater$);
     }
 
     getRoot() {

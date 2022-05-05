@@ -196,7 +196,6 @@ describe('NxAuthorizeComponent', () => {
     };
 
     beforeEach(waitForAsync(() => {
-        spyOnProperty(NxPageService.prototype, 'pageTitle', 'set').and.returnValue('Authorization');
         TestBed.configureTestingModule({
             declarations: [
                 NxAuthorizeComponent,
