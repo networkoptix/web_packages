@@ -691,6 +691,10 @@ nx-swagger-markdown + div#swagger-ui {
 		color           : $light1 !important;
 	}
 
+	&.execute:hover:not([disabled]):not(.disabled) {
+		background-color: var(--brand-d2) !important;
+	}
+
 	&.cancel {
 		@include typography.medium14dark9;
 	}
