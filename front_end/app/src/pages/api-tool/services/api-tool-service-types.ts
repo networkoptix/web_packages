@@ -33,7 +33,10 @@ export interface ReadOnlyAPIInfoWithJSON extends ReadOnlyAPI {
 
 export interface ReadOnlyAPIStore {
     api: ReadOnlyAPIInfoWithJSON,
-    menu: MenuNodeWithParent[]
+    menus: {
+        [type: string]: MenuNodeWithParent[]
+    }
+    markdown?: Markdown
 }
 
 export interface APIData {
@@ -57,3 +60,14 @@ export interface APIToolCacheObject {
     json: APIDoc,
     markdown?: Markdown
 }
+
+export type APITypes = {
+    main: {
+        type: 'main',
+        displayName: 'Current API'
+    },
+    deprecated: {
+        type: 'deprecated',
+        displayName: 'Deprecated API'
+    }
+};

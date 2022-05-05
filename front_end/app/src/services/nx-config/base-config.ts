@@ -206,6 +206,15 @@ export interface APIDocURL {
 
 export interface APIToolSettings {
     manualSystemChangeCooldown: number
+    apiTypes: {
+        main: APIType,
+        deprecated: APIType
+    }
+}
+
+interface APIType {
+    type: string,
+    displayName: string
 }
 
 export interface AccessRoles {

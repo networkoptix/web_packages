@@ -148,7 +148,7 @@ export class NxAPIToolSystemService {
         }
 
         const cachedSystem = this.systemService.getCurrentSystem();
-        if (cachedSystem) {
+        if (cachedSystem && cachedSystem.isOnline) {
             this.currentSystem = cachedSystem;
             return;
         }
@@ -160,11 +160,9 @@ export class NxAPIToolSystemService {
             this.currentSystem = await this.systemService.createSystem('', onlineSystem.id);
             return;
         }
-
-        if (!environment.isLocal && this.readonlyAPIService.setReadonlyAPI()) { // Get any readonlyAPI
+        if (!environment.isLocal && await this.readonlyAPIService.setReadonlyAPI()) { // Get any readonlyAPI
             return;
         }
-
         this.showError();
     }
 

@@ -188,13 +188,15 @@ const generateMenuNodesFromEndpoints = (API: APIDoc, parentMenuNodes: MenuNodeWi
 };
 
 export const addAPIInfoNodesToMenu = (API: APIDoc, menuNodes: MenuNodeWithParent[], restAPIInfo: boolean = false) => {
-    if (restAPIInfo) {
-        menuNodes.unshift(new MenuNode('APIChangelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'));
-        menuNodes.unshift(new MenuNode('APIPreamble', appendBaseAPIToolRoute('main'), 'API Information'));
-        return;
-    }
+    if (!menuNodes.length || (menuNodes && !['APIInformation', 'APIPreamble'].includes(menuNodes[0].name))) {
+        if (restAPIInfo) {
+            menuNodes.unshift(new MenuNode('APIChangelog', appendBaseAPIToolRoute('changelog'), 'API Changelog'));
+            menuNodes.unshift(new MenuNode('APIPreamble', appendBaseAPIToolRoute('main'), 'API Information'));
+            return;
+        }
 
-    if (API?.info?.description) {
-        menuNodes.unshift(new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'));
+        if (API?.info?.description) {
+            menuNodes.unshift(new MenuNode('APIInformation', appendBaseAPIToolRoute('main'), 'API Information'));
+        }
     }
 };

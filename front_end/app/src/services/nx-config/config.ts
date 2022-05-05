@@ -40,7 +40,17 @@ export const nxConfig: IConfig = {
         deprecated: '/swagger-ui/openapi_deprecated.json'
     },
     apiTool: {
-        manualSystemChangeCooldown: 5000
+        manualSystemChangeCooldown: 5000,
+        apiTypes: {
+            main: {
+                type: 'main',
+                displayName: 'Current API'
+            },
+            deprecated: {
+                type: 'deprecated',
+                displayName: 'Deprecated API'
+            }
+        }
     },
     cameraCredentialUpdateTimeout: 1500,
     cameraSettings: {

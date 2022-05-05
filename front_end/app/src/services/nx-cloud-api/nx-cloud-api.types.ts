@@ -207,7 +207,7 @@ export interface ReadOnlyAPI {
 export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
     files: [{
         filename: string,
-        type: string,
+        type: 'Main JSON' | 'Legacy JSON' | 'Deprecated JSON' | 'Preamble Markdown File' | 'Changelog Markdown File'
         content: APIDoc | string
     }]
 }

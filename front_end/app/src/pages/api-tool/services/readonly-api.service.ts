@@ -5,16 +5,20 @@ import { BehaviorSubject, Subject } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ReadOnlyAPI } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { APIDocType, FeatureFlagStrings } from '@services/nx-config/base-config';
+import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
-import { createMenuContent, prepareSwaggerAPIDoc, removeProprietaryEndpoints } from '../api-file-utils';
+import { addAPIInfoNodesToMenu, addSeperatedAPIMenu, createMenuContent, mergeAPIDocs, prepareSwaggerAPIDoc, removeProprietaryEndpoints } from '../api-file-utils';
+import { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, Store, ReadOnlyAPIStore } from './api-tool-service-types';
+import type { EmitInfo, Store, ReadOnlyAPIStore, Markdown } from './api-tool-service-types';
 
 @UntilDestroy()
 @Injectable()
 export class NxReadonlyAPIService {
+    CONFIG: IConfig;
     isEnabled = true;
     currentReadonlyAPI$ = new BehaviorSubject<ReadOnlyAPIStore>(null);
     readonlyAPIEmitter$ = new Subject<EmitInfo<ReadOnlyAPI>>();
@@ -23,6 +27,7 @@ export class NxReadonlyAPIService {
     }
 
     readonlyAPIStore: Store<ReadOnlyAPIStore> = {};
+    readonlyAPIIDs: number[] = []; // Used only to get the first readonlyAPI if none is specified
 
     get currentReadonlyAPI() { return this.currentReadonlyAPI$.value; }
     set currentReadonlyAPI(api: ReadOnlyAPIStore) { this.currentReadonlyAPI$.next(api); }
@@ -33,7 +38,8 @@ export class NxReadonlyAPIService {
         private configService: NxConfigService,
         private api: NxCloudApiService,
                 private _route: ActivatedRoute) {
-        this.isEnabled = this.configService.flagsEnabled('readonlyAPIs');
+        this.CONFIG = this.configService.getConfig();
+        this.isEnabled = this.configService.flagsEnabled(FeatureFlagStrings.readonlyAPIs);
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.queryParams = params;
         });
@@ -44,6 +50,7 @@ export class NxReadonlyAPIService {
 
         const readonlyAPIs = await this.api.getReadOnlyAPIs().toPromise();
         for (const API of readonlyAPIs.data) {
+            this.readonlyAPIIDs.push(API.id);
             this.emitReadOnlyAPI(API, !API.enabled);
         }
     }
@@ -55,32 +62,89 @@ export class NxReadonlyAPIService {
             this.currentReadonlyAPI = this.readonlyAPIStore[id];
             return true;
         }
-
         const readonlyAPI = await this.api.getReadOnlyAPI(id).toPromise();
         if (readonlyAPI) {
-            let openapiJSON = readonlyAPI.files.find(item => item.type === 'Main JSON')?.content as any;
-            if (openapiJSON) {
-                try {
-                    openapiJSON = JSON.parse(openapiJSON);
-                    removeProprietaryEndpoints(openapiJSON);
-                    prepareSwaggerAPIDoc(openapiJSON, 'main');
-                } catch (error) { // Invalid format, don't add to dropdown
-                    console.log(error);
-                    return false;
+            let openapiJSON, legacyJSON, deprecatedJSON, APIPreamble, APIChangelog;
+            for (const file of readonlyAPI.files) {
+                switch (file.type) {
+                    case 'Main JSON':
+                        openapiJSON = file.content;
+                        break;
+                    case 'Legacy JSON':
+                        legacyJSON = file.content;
+                        break;
+                    case 'Deprecated JSON':
+                        deprecatedJSON = file.content;
+                        break;
+                    case 'Preamble Markdown File':
+                        APIPreamble = file.content;
+                        break;
+                    case 'Changelog Markdown File':
+                        APIChangelog = file.content;
+                        break;
+                    default:
+                        break;
                 }
-            } else {
-                return false;
             }
-            const menu = createMenuContent(openapiJSON);
-            const apiStoreObject = { ...readonlyAPI, content: openapiJSON };
-            this.readonlyAPIStore[readonlyAPI.id] = {
-                api: apiStoreObject,
-                menu
-            };
-            this.currentReadonlyAPI = this.readonlyAPIStore[readonlyAPI.id];
-            return true;
+            const preparedReadOnlyAPI = this.prepareReadonlyAPI(openapiJSON, legacyJSON, deprecatedJSON, !!(APIPreamble && APIChangelog));
+            let markdown: Markdown;
+            if (APIPreamble && APIChangelog) {
+                markdown = {
+                    APIPreamble,
+                    APIChangelog
+                };
+            }
+            if (preparedReadOnlyAPI) {
+                const apiStoreObject = { ...readonlyAPI, content: preparedReadOnlyAPI.json };
+                this.readonlyAPIStore[readonlyAPI.id] = {
+                    api: apiStoreObject,
+                    menus: preparedReadOnlyAPI.menus,
+                    markdown
+                };
+                this.currentReadonlyAPI = this.readonlyAPIStore[readonlyAPI.id];
+                return true;
+            }
         }
         return false;
+    }
+
+    prepareReadonlyAPI(main: string, legacy: string, deprecated: string, hasMarkdown: boolean) {
+        const apiTypes = this.CONFIG.apiTool.apiTypes;
+        let mainJSON: APIDoc;
+        const menus = {};
+        try {
+            mainJSON = JSON.parse(main);
+            removeProprietaryEndpoints(mainJSON);
+            prepareSwaggerAPIDoc(mainJSON, 'main');
+        } catch (error) { // Invalid format, don't add to dropdown
+            console.error(error);
+            return false;
+        }
+        const mainMenu = createMenuContent(mainJSON);
+        if (legacy) {
+            try {
+                const legacyJSON = JSON.parse(legacy);
+                prepareSwaggerAPIDoc(legacyJSON, 'legacy');
+                mergeAPIDocs(mainJSON, legacyJSON);
+                addSeperatedAPIMenu(legacyJSON, mainMenu, 'LEGACY');
+            } catch (error) {
+                // Dont handle legacy JSON
+            }
+        }
+        addAPIInfoNodesToMenu(mainJSON, mainMenu, hasMarkdown);
+        menus[apiTypes.main.type] = mainMenu;
+        if (deprecated) {
+            const deprecatedJSON: APIDoc = JSON.parse(deprecated);
+            prepareSwaggerAPIDoc(deprecatedJSON, apiTypes.deprecated.type as APIDocType);
+            mergeAPIDocs(mainJSON, deprecatedJSON);
+            const deprecatedMenu = createMenuContent(deprecatedJSON, hasMarkdown ? 'LEGACY' : '');
+            addAPIInfoNodesToMenu(deprecatedJSON, deprecatedMenu, hasMarkdown);
+            menus[apiTypes.deprecated.type] = deprecatedMenu;
+        }
+        return {
+            json: mainJSON,
+            menus
+        };
     }
 
     async getReadonlyAPIByQueryParams() {
@@ -101,18 +165,16 @@ export class NxReadonlyAPIService {
         return false;
     }
 
-    setReadonlyAPI(id: number = null) {
-        if (!this.isEnabled) return;
+    async setReadonlyAPI(id: number = null) {
+        if (!this.isEnabled) return false;
 
         if (id) {
-            this.currentReadonlyAPI = this.readonlyAPIStore[id];
-            return true;
+            return this.getReadonlyAPI(id);
         }
-        const firstReadonlyAPIKey = Object.keys(this.readonlyAPIStore)[0];
+        const firstReadonlyAPIKey = this.readonlyAPIIDs[0];
         if (firstReadonlyAPIKey) {
             // Set to any readonlyAPI
-            this.currentReadonlyAPI = this.readonlyAPIStore[parseInt(firstReadonlyAPIKey)];
-            return true;
+            return this.getReadonlyAPI(firstReadonlyAPIKey);
         }
 
         return false;

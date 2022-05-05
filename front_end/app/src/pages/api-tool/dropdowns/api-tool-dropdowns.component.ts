@@ -53,7 +53,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
         private configService: NxConfigService,
         public APIToolSystemService: NxAPIToolSystemService,
         private openAPIJSONService: NxOpenAPIJSONService,
-        private readonlyAPIService: NxReadonlyAPIService
+        public readonlyAPIService: NxReadonlyAPIService
     ) {
         this.CONFIG = this.configService.getConfig();
     }
@@ -148,13 +148,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
             this.resetDropdowns();
         });
 
-        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(readonlyAPI => !!readonlyAPI)).subscribe(() => {
-            this.resetDropdowns();
-            this.types.push({ // currently readonlyAPIs only show one type
-                value: 'main',
-                name: 'Current Version',
-                disabled: false
-            });
+        this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(readonlyAPI => !!readonlyAPI)).subscribe(readonlyAPI => {
             this.type = this.types[0];
             this.openAPIJSONService.currentType = 'main';
         });
@@ -165,6 +159,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
             this.APIToolSystemService.manualSystemChange = true;
             this.APIToolSystemService.currentSystemId = system.value;
         } else {
+            this.resetDropdowns();
             this.readonlyAPIService.setReadonlyAPI(parseInt(system.value));
         }
     }
@@ -174,7 +169,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
     }
 
     onTypeChange(type: TypeDropdownItem): void {
-        this.openAPIJSONService.setAPIType(this.server.value, type.value);
+        this.openAPIJSONService.setAPIType(this.server?.value, type.value);
     }
 
     resetDropdowns = (): void => {
