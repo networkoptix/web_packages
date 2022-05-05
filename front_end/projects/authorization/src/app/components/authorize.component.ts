@@ -239,7 +239,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.title.setTitle(this.LANG.pageTitles.auth());
+        this.title.setTitle(`${this.LANG.pageTitles.auth()} - ${this.CONFIG.cloudName}`);
         this.footerItems = this.CONFIG.dynamicMenus.footer.nodes;
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
