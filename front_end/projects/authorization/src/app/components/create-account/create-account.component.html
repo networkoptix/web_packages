@@ -119,9 +119,9 @@
                 </nx-checkbox>
                 <label class="mb-0" for="termsAndConditions">
                     <span class="mr-1" translate>I agree to the</span>
-                    <a [href]="footerItems[1].url" target="_blank" (click)="externalLinkForDesktop(footerItems[1].url)" translate>Terms and Conditions</a>
+                    <a [href]="termsUrl" target="_blank" (click)="externalLinkForDesktop(termsUrl)" translate>Terms and Conditions</a>
                     <span class="mx-1" translate>and</span>
-                    <a [href]="footerItems[2].url" target="_blank" (click)="externalLinkForDesktop(footerItems[2].url)" translate>Privacy policy</a>
+                    <a [href]="privacyUrl" target="_blank" (click)="externalLinkForDesktop(privacyUrl)" translate>Privacy policy</a>
                 </label>
             </div>
             <p *ngIf="termsConditions.touched && !termsAndConditions" class="error-label mt-2 mb-0" translate>Required</p>

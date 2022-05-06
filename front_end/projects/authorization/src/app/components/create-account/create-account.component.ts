@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
     Component,
     EventEmitter,
@@ -57,6 +58,8 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     createFirstName: string;
     createLastName: string;
     createPassword: string;
+    termsUrl: string;
+    privacyUrl: string;
 
     @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
@@ -100,6 +103,16 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
         if (changes.errorCode) {
             const eC = changes.errorCode.currentValue;
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });
+        }
+        if (changes.footerItems) {
+            changes.footerItems.currentValue.forEach((item: { name_raw: string, url: string }) => {
+                if (item.name_raw === 'Terms') {
+                    this.termsUrl = item.url;
+                }
+                if (item.name_raw === 'Privacy') {
+                    this.privacyUrl = item.url;
+                }
+            });
         }
     }
 

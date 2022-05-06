@@ -69,7 +69,6 @@ import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
 import { NxDynamicWidgetComponent } from './dynamic-widget/dynamic-widget.component';
 import { NxEditableHeading } from './editable/heading/editable-heading.component';
 import { NxExternalVideoComponent } from './external-video/external-video.component';
-import { NxFooterComponent } from './footer/footer.component';
 import { NxHeaderComponent } from './header/header.component';
 import { NxHeaderMainButtonComponent } from './header/main-button/main-button.component';
 import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
@@ -147,7 +146,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
-        NxFooterComponent,
         NxLandingDisplayComponent,
         NxNumericComponent,
         NxClientButtonComponent,
@@ -200,7 +198,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
-        NxFooterComponent,
         NxLandingDisplayComponent,
         NxNumericComponent,
         NxClientButtonComponent,
@@ -258,7 +255,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
-        NxFooterComponent,
         NxLandingDisplayComponent,
         NxNumericComponent,
         NxClientButtonComponent,

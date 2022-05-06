@@ -123,13 +123,7 @@
         </div>
     </div>
     <div *ngIf="windowLargeEnough" class="auth-footer">
-        <div class="auth-footer-links">
-            <ng-container *ngFor="let footerItem of footerItems; let last = last">
-                <a [href]="footerItem.url" target="_blank">{{footerItem.name}}</a>
-                <span *ngIf="!last" class="dot"></span>
-            </ng-container>
-        </div>
-        <a [href]="companyLink" target="_blank" class="copyright">&copy;&nbsp;{{ companyName }}</a>
+        <nx-footer [center]="true"></nx-footer>
     </div>
 </div>
 <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

@@ -43,6 +43,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
 import { WINDOW } from '@services/window-provider';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -195,6 +196,15 @@ describe('NxAuthorizeComponent', () => {
         isMobile: () => false
     };
 
+    const menuMock = {
+        getMenu: (type: string) => {
+            if (type === 'footer') {
+                return of(nxConfig.dynamicMenus.footer);
+            }
+        },
+        cleanEmptyNodes: () => {}
+    };
+
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -232,7 +242,8 @@ describe('NxAuthorizeComponent', () => {
                 { provide: ElementRef, useValue: {} },
                 { provide: LocalStorageService, useValue: localStorageMock },
                 { provide: DeviceDetectorService, useValue: deviceServiceMock },
-                { provide: WINDOW, useValue: window }
+                { provide: WINDOW, useValue: window },
+                { provide: NxMenusService, useValue: menuMock }
             ]
         }).compileComponents()
             .then(() => {
@@ -251,23 +262,18 @@ describe('NxAuthorizeComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should have 3 footer items when large', () => {
+    it('should have footer when large', () => {
         fixture.detectChanges();
         component.windowLargeEnough = true;
         fixture.detectChanges();
-        expect(component.footerItems.length).toBe(3);
-        const links = el.nativeElement.querySelectorAll('a');
-        expect(links.length).toBe(4);
-        expect(links[0].innerHTML).toBe('About %CLOUD_NAME% Cloud');
-        expect(links[1].innerHTML).toBe('Terms');
-        expect(links[2].innerHTML).toBe('Privacy Policy');
+        const footer = el.nativeElement.querySelectorAll('.auth-footer');
+        expect(footer.length).toBe(1);
     });
 
     it('should have no footer when window is smaller', () => {
         fixture.detectChanges();
-        expect(component.footerItems.length).toBe(3);
-        const links = el.nativeElement.querySelectorAll('a');
-        expect(links.length).toBe(0);
+        const footer = el.nativeElement.querySelectorAll('.auth-footer');
+        expect(footer.length).toBe(0);
     });
 
     it('should set up default states', () => {
