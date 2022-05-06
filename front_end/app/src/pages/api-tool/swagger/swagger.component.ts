@@ -4,6 +4,7 @@ import {
     ComponentRef,
     ElementRef,
     Inject, Input, OnChanges, OnInit, Renderer2,
+    Type,
     ViewChild,
     ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
@@ -355,7 +356,10 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addCustomTextareas(): void {
-        const textareas = this.document.body.querySelectorAll('textarea:not(.custom-textarea):not([readonly])');
+        const textareas = this.document.body
+            .querySelectorAll<HTMLTextAreaElement>(
+                'textarea:not(.custom-textarea):not([readonly])'
+            );
         for (const textarea of textareas) {
             const sibling = textarea.previousElementSibling;
             if (sibling?.tagName === 'NX-SWAGGER-TEXTAREA') {
@@ -413,9 +417,11 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
     };
 
-    generateComponent(componentClass: any) {
+    generateComponent<C>(
+        componentClass: Type<C>
+    ): { componentRef: ComponentRef<C>, element: HTMLElement } {
         const factory = this.componentFactoryResolver.resolveComponentFactory(componentClass);
-        const componentRef: ComponentRef<any> = this.VCR.createComponent(factory);
+        const componentRef = this.VCR.createComponent(factory);
         const element = componentRef.location.nativeElement as HTMLElement;
         return { componentRef, element };
     }
