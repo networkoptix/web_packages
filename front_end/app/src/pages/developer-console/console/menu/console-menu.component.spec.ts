@@ -8,9 +8,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { v4 as uuid } from 'uuid';
 
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
+import { NxMenusService } from '@services/menus.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxMenusService } from '@services/menus.service';
 
 import { NxDevConsoleMenuComponent } from './console-menu.component';
 

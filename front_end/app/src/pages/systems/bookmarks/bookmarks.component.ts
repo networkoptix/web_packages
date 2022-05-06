@@ -131,7 +131,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
         this.setFilter();
     }
 
-    async setTags(): void {
+    async setTags(): Promise<void> {
         const tags = await this.bookmarkService.getBookmarkTags().toPromise();
         this.filterModel.tags = Object.keys(tags).map(
             (tag: string): SearchTag => {
@@ -161,7 +161,7 @@ export class NxBookmarksComponent implements OnInit, OnDestroy {
             });
         };
 
-        this.elements = this.deepCopy(this.allElements);
+        this.elements = cloneDeep(this.allElements);
         if (this.filterModel.query !== '') {
             const query = this.filterModel.query.toLowerCase();
             this.elements = this.elements.filter((item: Bookmark) =>

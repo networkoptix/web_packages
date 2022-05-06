@@ -9,7 +9,7 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockProvider, MockModule, MockComponent, MockDirective } from 'ng-mocks';
+import { MockProvider, MockModule, MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import {
