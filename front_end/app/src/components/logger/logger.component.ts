@@ -1,6 +1,8 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -20,6 +22,8 @@ export class NxLoggerComponent implements OnChanges {
 
     @Input() system: NxSystem;
     @Input() selectedServerId: string;
+    @Input() noFrame = false;
+    @Input() refreshInterval = 0;
 
     selectedLogLevel: DropdownItem<string>;
     logLevels: DropdownItem<string>[] = [];
@@ -27,6 +31,7 @@ export class NxLoggerComponent implements OnChanges {
     logData: string;
 
     systemRequires2fa = false;
+    cancel$ = new Subject()
 
     constructor(
         config: NxConfigService,
@@ -35,6 +40,7 @@ export class NxLoggerComponent implements OnChanges {
     }
 
     async getLogs(logger: DropdownItem<string>) {
+        this.cancel$.next('cancel');
         let params = new HttpParams({ fromObject: { name: logger.value, lines: '1000' } });
         const { host, protocol } = this.window.location;
         let loggerHost = host;
@@ -52,8 +58,17 @@ export class NxLoggerComponent implements OnChanges {
         const handleLogResponse = (logData: string) => {
             this.logData = logData;
         };
-        this.system.mediaserver.logUrl({ name: logger.value, lines: 1000 })
+        const update = () => this.system.mediaserver.logUrl({ name: logger.value, lines: 1000 })
             .then(handleLogResponse, ({ error }) => handleLogResponse(error));
+
+        if (this.refreshInterval) {
+            timer(0, this.refreshInterval).pipe(
+                takeUntil(this.cancel$),
+                untilDestroyed(this)
+            ).subscribe(update);
+        } else {
+            update();
+        }
     }
 
     async ngOnChanges(changes: SimpleChanges): Promise<void> {

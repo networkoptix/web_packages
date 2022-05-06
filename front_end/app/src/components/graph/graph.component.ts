@@ -7,7 +7,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { curveBasis } from 'd3-shape';
 import { Subject, timer } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { concatMap, switchMap, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -29,6 +29,8 @@ import { NxSystem } from '@services/system.service';
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() selectedServerId: string;
+    @Input() noFrame = false;
+    @Input() refreshInterval = 1000;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -107,11 +109,11 @@ export class NxMonitoringGraphComponent implements OnChanges {
     }
 
     private getStats() {
-        timer(0, 1000)
+        timer(0, this.refreshInterval)
             .pipe(
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
-                switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
+                concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
             ).subscribe((response) => {
                 response.reply && response.reply.statistics.forEach(data => {
                     const seriesData = this.multi.find(series => series.name === data.description);
