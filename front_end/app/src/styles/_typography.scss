@@ -274,6 +274,10 @@ p {
     @include font-source($font-family-medium, $font-size-ssm, $light1);
 }
 
+@mixin medium11nocolor {
+    @include font-source($font-family-medium, $font-size-ssm);
+}
+
 @mixin medium12dark9 {
     @include font-source($font-family-medium, $font-size-sm, $dark9);
 }

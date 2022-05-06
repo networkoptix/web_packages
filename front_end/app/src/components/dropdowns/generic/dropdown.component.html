@@ -2,7 +2,7 @@
     class="dropdown {{ dropdownType }}"
     [ngClass]="{
         'dropdown-show': show,
-        'display-only': items.length === 1 || stillLoading
+        'display-only': items?.length === 1 || stillLoading
     }"
     (nxClickElsewhere)="show = false"
 >

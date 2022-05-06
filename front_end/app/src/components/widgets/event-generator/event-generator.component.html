@@ -1,0 +1,122 @@
+<ng-template #editMode>
+    <ng-template #saveButton>
+        <button class="btn btn-primary" (click)="saveSettings()">Save Settings</button>
+    </ng-template>
+    <div class="edit-wrapper">
+        <nx-stepper [saveButton]="saveButton">
+            <cdk-step>
+                <div class="h-100">
+                    <h4>Select to system</h4>
+                    <nx-select
+                            [items]="systemsDropdownItems$ | async"
+                            [selected]="selectedSystem"
+                            [stillLoading]="!selectedSystem"
+                            (onSelected)="updateSystem($event)"
+                    ></nx-select>
+                </div>
+            </cdk-step>
+        </nx-stepper>
+    </div>
+</ng-template>
+
+<ng-template #preloader>
+    <nx-pre-loader [minHeight]="64"></nx-pre-loader>
+</ng-template>
+
+<div class="container h-100 overflow-auto" *ngIf="card.config.selectedSystem && !card.editMode; else editMode">
+    <div *ngIf="system?.info.name else preloader">
+        <h1 class="px-2" [innerHtml]="'System&nbsp;<strong>{systemName}</strong>' | translate: { systemName: system.info.name}"></h1>
+
+        <hr />
+
+        <div class="pb-3 px-2" [innerHtml]="'Sends a generic event to the system&nbsp;<strong>{systemName}</strong>' |
+            translate: { systemName: system.info.name}"></div>
+
+        <form #gegForm="ngForm" name="gegForm"
+              class="form" novalidate>
+            <div class="d-block w-100 mw-100">
+                <div class="form-group mb-2 container row m-0">
+                    <label for="source" class="control-label m-0 pb-1" translate>Source</label>
+                    <div class="container row p-0 m-0">
+                        <div class="col-11 p-0">
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="geg.source"
+                                   (ngModelChange)="clear()"
+                                   name="source" id="source" #source="ngModel"
+                                   pattern="\S+.*"
+                                   maxlength="255"
+                                   nxFocusMe>
+                        </div>
+                        <div class="col-1 p-0 d-flex justify-content-center align-items-center">
+                            <svg-icon
+                                nx-add-svg-src
+                                [nxTooltip]="'Contains the name of the device or system creating an event' | translate"
+                                [src]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+                            ></svg-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2 container row m-0">
+                    <label for="caption" class="control-label m-0 pb-1" translate>Caption</label>
+                    <div class="container row p-0 m-0">
+                        <div class="col-11 p-0">
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="geg.caption"
+                                   (ngModelChange)="clear()"
+                                   name="caption" id="caption" #caption="ngModel"
+                                   pattern="\S+.*"
+                                   maxlength="255">
+                        </div>
+                        <div class="col-1 p-0 d-flex justify-content-center align-items-center">
+                            <svg-icon
+                                    nx-add-svg-src
+                                    [nxTooltip]="'Contains a short description of an event' | translate"
+                                    [src]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+                            ></svg-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-2 container row m-0">
+                    <label for="description" class="control-label m-0 pb-1" translate>Description</label>
+                    <div class="container row p-0 m-0">
+                        <div class="col-11 p-0">
+                            <input type="text" class="form-control"
+                                   [(ngModel)]="geg.description"
+                                   (ngModelChange)="clear()"
+                                   name="description" id="description" #description="ngModel"
+                                   pattern="\S+.*"
+                                   maxlength="255">
+                        </div>
+                        <div class="col-1 p-0 d-flex justify-content-center align-items-center">
+                            <svg-icon
+                                    nx-add-svg-src
+                                    [nxTooltip]="'Contains a long description of an event' | translate"
+                                    [src]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
+                            ></svg-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group container row py-3 m-0">
+                    <div class="col-4 p-0">
+                        <nx-process-button
+                            [process]="createEvent"
+                            [buttonText]="'Execute' | translate"
+                        ></nx-process-button>
+                    </div>
+                    <div class="col-8 px-3 d-flex align-items-center">
+                        <span class="input-error d-inline-block" *ngIf="errorParams"
+                              translate>At least one of the fields need to be fulled out</span>
+                    </div>
+                </div>
+
+                <div class="response container row py-3 m-0">
+                    <span translate>Response</span>
+                    <pre [innerHtml]="response"></pre>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

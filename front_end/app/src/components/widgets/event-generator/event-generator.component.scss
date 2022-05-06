@@ -1,0 +1,39 @@
+@use "../../../styles/typography";
+
+:host {
+    .edit-wrapper {
+        height  : 100%;
+        padding : 1rem;
+    }
+    
+    .form-group {
+        svg-icon svg {
+            width : 20px;
+            
+            .st0 {
+                stroke : none;
+            }
+        }
+    }
+    
+    .response {
+        position : relative;
+        
+        span {
+            @include typography.medium11nocolor;
+            color          : var(--body-text-color);
+            text-transform : uppercase;
+            position       : absolute;
+            left           : 12px;
+            top            : 16px;
+        }
+        
+        pre {
+            width            : 100%;
+            margin           : 0;
+            padding          : 1.5rem 1rem 1rem;
+            background-color : var(--body-bg);
+            border           : 1px solid var(--border-color);
+        }
+    }
+}

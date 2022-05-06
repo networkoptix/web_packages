@@ -91,6 +91,7 @@ import { NxSwitchComponent } from './switch/switch.component';
 import { NxSystemsListComponent } from './systems-list/list.component';
 import { NxAssetExplorerWidgetComponent } from './widgets/asset-explorer/asset-explorer-widget.component';
 import { NxBookmarksWidgetComponent } from './widgets/bookmarks/bookmarks-widget.component';
+import { NxEventGeneratorWidgetComponent } from './widgets/event-generator/event-generator.component';
 import { NxHealthMonitorWidgetComponent } from './widgets/health-monitor/health-monitor-widget.component';
 import { NxLiveViewWidgetComponent } from './widgets/live-view/live-view-widget.component';
 import { NxSystemsListWidgetComponent } from './widgets/systems-list/systems-list-widget.component';
@@ -175,6 +176,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListComponent,
         NxNoSystemsComponent,
         NxSystemsListWidgetComponent,
+        NxEventGeneratorWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
         NxLoggerComponent,
@@ -221,6 +223,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListComponent,
         NxNoSystemsComponent,
         NxSystemsListWidgetComponent,
+        NxEventGeneratorWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
         NxLoggerComponent,
@@ -280,6 +283,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSystemsListComponent,
         NxNoSystemsComponent,
         NxSystemsListWidgetComponent,
+        NxEventGeneratorWidgetComponent,
         NxTextEditableComponent,
         NxStepperComponent,
         NxLoggerComponent,

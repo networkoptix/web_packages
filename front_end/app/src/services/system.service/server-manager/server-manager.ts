@@ -4,6 +4,7 @@ import { tap } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import type { APIDocType } from '@services/nx-config/base-config';
 import { LogLevel } from '@services/system-api.types';
+import * as t from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
@@ -247,6 +248,10 @@ export class ServerManager {
 
     getStatistics(serverId: string) {
         return this.mediaserverConnections[serverId].getStatistics();
+    }
+
+    createEvent(params: t.EventParams) {
+        return this.mediaserver.createEvent(params);
     }
 
     parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string; }) {

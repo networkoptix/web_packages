@@ -758,4 +758,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
         }
         return `${url}${url.includes('?') ? '&' : '?'}${params}`;
     }
+
+    createEvent(params: t.EventParams) {
+        return this.post('/api/createEvent', params).toPromise();
+    }
 }
