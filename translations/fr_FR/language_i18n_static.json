@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Échec de la fusion des systèmes <strong>{primarySystem}</strong> et <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connectez le système que vous voulez fusionner avec celui-ci à <strong>%CLOUD_NAME%</strong> ou fusionnez localement en utilisant <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Le système sélectionné et le système actuel sont connectés à %CLOUD_NAME% et ont des propriétaires différents. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
             "duplicateServers": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
             "enterSystemAddressTitle": "Entrez l'adresse de n'importe quel serveur dans le système que vous voulez fusionner avec celui-ci.",

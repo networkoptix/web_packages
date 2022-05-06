@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "所選系統和當前系統都連接到 %CLOUD_NAME% 但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
             "duplicateServers": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

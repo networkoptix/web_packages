@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Как выбранная, так и текущая система подключены к %CLOUD_NAME% и имеют разных владельцев. Облачные системы могут быть объединены, только если учетные записи владельцев совпадают.",
             "duplicateServers": "<p class=\"mb-2\">Похоже, что сервер перечисляет себя как в выбранной, так и в текущей системе.</p><p>Удалите автономные и несовместимые серверы из каждой системы и повторите попытку.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

@@ -338,6 +338,7 @@
             "cloud": "클라우드",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "선택한 시스템과 현재 시스템이 모두 %CLOUD_NAME% 연결되어 있고 다른 소유자가 있습니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
             "duplicateServers": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

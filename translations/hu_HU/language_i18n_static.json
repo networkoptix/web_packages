@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Mind a kiválasztott, mind a jelenlegi rendszer %CLOUD_NAME% csatlakoztatva van, és különböznek a tulajdonosok. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "duplicateServers": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

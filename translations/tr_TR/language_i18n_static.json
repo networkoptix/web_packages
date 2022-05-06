@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Hem seçilen hem de mevcut sistem %CLOUD_NAME% bağlı ve farklı sahiplere sahip. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
             "duplicateServers": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

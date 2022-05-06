@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "El sistema seleccionat i l'actual estan connectats a %CLOUD_NAME% i tenen propietaris diferents. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
             "duplicateServers": "<p class=\"mb-2\">Sembla que un servidor s'enumera tant al sistema seleccionat com al sistema actual.</p><p>Elimineu els servidors desconnectats i incompatibles de cada sistema i torneu-ho a intentar.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

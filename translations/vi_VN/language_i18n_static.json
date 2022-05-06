@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Cả hệ thống được chọn và hệ thống hiện tại được kết nối với %CLOUD_NAME% và có chủ sở hữu khác nhau. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
             "duplicateServers": "<p class=\"mb-2\">Một máy chủ dường như được liệt kê chính nó dưới cả hệ thống được chọn và hệ thống hiện tại.</p><p>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi hệ thống và thử lại.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",

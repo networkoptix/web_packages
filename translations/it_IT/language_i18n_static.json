@@ -338,6 +338,7 @@
             "cloud": "Cloud",
             "commonText": "Impossibile unire i sistemi <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Sia il sistema selezionato che quello attuale sono collegati a %CLOUD_NAME% e hanno proprietari diversi. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
             "duplicateServers": "<p class=\"mb-2\">Un server sembra elencare se stesso sia nel sistema selezionato che in quello corrente.</p><p>Rimuovere i server offline ed incompatibili da ciascun sistema e riprovare.</p>",
             "enterSystemAddressTitle": "Immettere l'indirizzo di qualsiasi server nel sistema che si desidera unire a questo.",
