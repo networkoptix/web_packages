@@ -330,6 +330,7 @@
             "cloud": "Nuvem",
             "commonText": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Conecte o sistema que deseja mesclar com este para <strong>%CLOUD_NAME%</strong> ou mesclar localmente usando <strong>%VMS_NAME%</strong> Cliente.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Tanto o sistema selecionado quanto o atual estão conectados a %CLOUD_NAME% e têm proprietários diferentes. Os sistemas em nuvem podem ser mesclados apenas se a conta do proprietário for a mesma.",
             "duplicateServers": "<p class=\"mb-2\">Um servidor parece estar se listando no sistema selecionado e no sistema atual.</p><p>Remova os servidores off-line e incompatíveis de cada sistema e tente novamente.</p>",
             "enterSystemAddressTitle": "Digite o endereço de qualquer servidor no sistema que deseja mesclar com este.",

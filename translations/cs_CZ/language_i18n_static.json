@@ -330,6 +330,7 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Vybraný i aktuální systém jsou připojeny k %CLOUD_NAME% a mají různé vlastníky. Cloudové systémy mohou být sloučeny pouze v případě, že vlastnický účet je stejný.",
             "duplicateServers": "<p class=\"mb-2\">Zdá se, že server je zařazen jak do vybraného, tak do aktuálního systému.</p><p>Odstraňte offline a nekompatibilní servery ze všech systému a zkuste to znovu.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
