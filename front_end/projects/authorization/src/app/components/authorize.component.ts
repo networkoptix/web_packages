@@ -603,6 +603,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.loginPostExternalProcess = this.processService.createProcess(() => {
+            this.loginCode = undefined;
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });
