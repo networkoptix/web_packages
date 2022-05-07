@@ -7,7 +7,7 @@
     "Privacy": "Privacidade",
     "Support": "Suporte",
     "Terms": "Termos",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Console do desenvolvedor",
     "accessRoles": {
         "Administrator": {
             "description": "Acesso irrestrito, incluindo a capacidade de compartilhar",
@@ -338,7 +338,7 @@
             "cloud": "Nuvem",
             "commonText": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Conecte o sistema que deseja mesclar com este para <strong>%CLOUD_NAME%</strong> ou mesclar localmente usando <strong>%VMS_NAME%</strong> Cliente.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>%CLOUD_NAME%</strong> usando a mesma conta, ou mesclar localmente usando <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Tanto o sistema selecionado quanto o atual estão conectados a %CLOUD_NAME% e têm proprietários diferentes. Os sistemas em nuvem podem ser mesclados apenas se a conta do proprietário for a mesma.",
             "duplicateServers": "<p class=\"mb-2\">Um servidor parece estar se listando no sistema selecionado e no sistema atual.</p><p>Remova os servidores off-line e incompatíveis de cada sistema e tente novamente.</p>",
             "enterSystemAddressTitle": "Digite o endereço de qualquer servidor no sistema que deseja mesclar com este.",
@@ -441,9 +441,9 @@
             "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
             "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
             "removeUser": "Remover usuário",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "Desanexar servidor&nbsp;<strong>{ title }</strong>&nbsp;do sistema atual?",
+            "serversReset": "Redefinir o servidor&nbsp;<strong>{ title }</strong>&nbsp;para os padrões?",
+            "serversRestart": "Reinicie o servidor&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do %CLOUD_NAME% para excluir sua conta."
@@ -571,7 +571,7 @@
         "cantUnshareWithMeSystemPrefix": "Não é possível excluir sistema",
         "emailNotFound": "Conta não existe.",
         "failedToAccess2FA": "<p class=\"mb-0\">autenticação de dois fatores é necessária para acessar este sistema.</p><p>Você pode habilitar a autenticação de dois fatores em suas <a href=\"/account/security\">configurações de conta</a>.</p>",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "Nenhum sistema pode ser acessado por este link. Isso pode acontecer quando um sistema foi desconectado de %CLOUD_NAME%, o acesso a este sistema foi revogado, o sistema no link não existe ou se você estiver conectado à conta incorreta.",
         "failedToAccessCamera": "Nenhuma câmera pode ser acessada por este link.",
         "forbidden": "Você não tem permissão para realizar esta ação",
         "lostConnection": "Conexão com {systemName} perdida",
@@ -669,7 +669,7 @@
         "activateCode": "Ativar conta",
         "activateSuccess": "Conta ativada",
         "articleTitle": "{ARTICLE_TITLE} por {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Autorização",
         "changePassword": "Mudar Senha",
         "debug": "Depurar",
         "default": "%CLOUD_NAME%",
@@ -814,7 +814,7 @@
         "Settings": "Confirgurações",
         "Information": "Informações",
         "Bookmarks": "Marcadores",
-        "Monitoring": "Monitoring"
+        "Monitoring": "Monitoramento"
     },
     "system": {
         "connected": "Conectado",
@@ -941,7 +941,7 @@
             "IO Module": "Módulo IO",
             "Bridge": "Ponte",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Inválido"
         },
         "info": {
             "type": "Tipo",
