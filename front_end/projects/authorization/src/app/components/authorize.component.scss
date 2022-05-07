@@ -1,6 +1,6 @@
-@use '../../../../../app/src/styles/typography';
-@use '../../../../../app/src/styles/mixins';
-@use '../../../../../app/styles/theme_variables' as *;
+@use "../../../../../app/src/styles/typography";
+@use "../../../../../app/src/styles/mixins";
+@use "../../../../../app/styles/theme_variables" as *;
 
 
 @media only screen and (max-width: 355px)  {
@@ -112,7 +112,9 @@
         min-width: 320px;
         max-width: 480px;
         width: 100%;
-        height: 480px;
+        min-height: 320px;
+        max-height: 480px;
+        height : 100vh;
 
         &.window-w {
             border: 1px solid $light4;
