@@ -330,7 +330,7 @@
             "cloud": "Moln",
             "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> eller slå samman lokalt med <strong>%VMS_NAME%</strong> klienten.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Anslut System som du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> med samma konto, eller slå samman lokalt med <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",
