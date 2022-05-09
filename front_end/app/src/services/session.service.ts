@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { ReplaySubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { NxSwCacheService } from './sw-cache.service';
 import { WINDOW } from './window-provider';
@@ -10,10 +10,10 @@ import { WINDOW } from './window-provider';
 })
 export class NxSessionService {
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI']
-    loginStateSubject = new ReplaySubject<string>(0);
-    language$ = new ReplaySubject<string>(0);
+    email$: BehaviorSubject<string>;
+    loginStateSubject: BehaviorSubject<string>;
+    language$: BehaviorSubject<string>;
     private session: LocalStorageService;
-    private _isLoggingOut: boolean;
 
     constructor(
         private localStorageService: LocalStorageService,
@@ -21,42 +21,39 @@ export class NxSessionService {
         @Inject(WINDOW) private window: Window
     ) {
         this.session = this.localStorageService;
-        this.loginStateSubject.next(this.loginState || '');
+
+        this.email$ = new BehaviorSubject<string>(this.session.retrieve('email'));
+        this.loginStateSubject = new BehaviorSubject<string>(this.loginState || '');
+        this.language$ = new BehaviorSubject<string>(this.session.retrieve('language'));
+
         // Listens to changes from other browser tabs.
-        this.session.observe('loginState').subscribe(loginState => {
+        this.session.observe('loginState').subscribe(() => {
             if (!this.window.document.hasFocus()) {
                 // Don't reload on null since that state should show a session expired dialog
                 this.window.location.reload();
             }
         });
-
-        // If the app is reloaded value of _isLoggingOut will be undefined.
-        // If another tab changes the value in the store it will get set to that value.
-        // Currently, that the only time this happens is when it's set to true when logging in with authKey.
-        this.session.observe('isLoggingOut').subscribe(isLoggingOut => {
-            this._isLoggingOut = isLoggingOut;
-        });
     }
 
     invalidateSession() {
-        this.session.store('loginState', null);
+        this.loginState = null;
         this.session.store('loginRegister', false);
-        this.loginStateSubject.next(this.loginState);
         this.cloudUserCaches.forEach((cacheName) => {
             this.nxCache.clearByName(cacheName).catch((error) => console.error(error));
         });
     }
 
     get email() {
-        return this.session.retrieve('email') || '';
+        return this.email$?.getValue();
     }
 
     set email(email: string) {
         this.session.store('email', email);
+        this.email$.next(email);
     }
 
     get language() {
-        return this.session.retrieve('language');
+        return this.language$?.getValue();
     }
 
     set language(lang: string) {
@@ -71,13 +68,5 @@ export class NxSessionService {
     set loginState(email: string) {
         this.session.store('loginState', email);
         this.loginStateSubject.next(email);
-    }
-
-    get isLoggingOut(): boolean {
-        return this._isLoggingOut;
-    }
-
-    set isLoggingOut(loggingOut) {
-        this.session.store('isLoggingOut', loggingOut);
     }
 }

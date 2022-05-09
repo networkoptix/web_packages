@@ -158,22 +158,6 @@ export class CloudAccount extends BaseAccount {
         });
     }
 
-    logout(doNotRedirect = false, skipReload = false) {
-        if (this.sessionService.isLoggingOut) {
-            return;
-        }
-        this.sessionService.isLoggingOut = true;
-        this.applyService
-            .canMove()
-            .then((allowed: boolean) => {
-                this.sessionService.isLoggingOut = allowed;
-                if (allowed) {
-                    this.account = undefined;
-                    this.logoutHelper(doNotRedirect, skipReload);
-                }
-            });
-    }
-
     logoutHelper(doNotRedirect = false, skipReload = false) {
         this.cloudApi
             .logout()
