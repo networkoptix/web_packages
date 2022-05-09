@@ -1,25 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 400 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
-    <title>Cloud/Placeholders/Activated</title>
-    <desc>Created with Sketch.</desc>
-    <g id="Cloud/Placeholders/Activated" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M200.210945,0 C223.998796,0 246.029451,6.81472057 264.053249,18.4064259 L340.298507,18.4079602 C373.270731,18.4079602 400,45.1372289 400,78.1094527 C400,105.592218 381.43002,128.737731 356.153219,135.682834 C343.894564,159.839143 316.90112,176.616915 285.572139,176.616915 C281.10045,176.616915 276.717087,176.275105 272.452289,175.618815 C253.092881,190.808798 227.836903,200 200.210945,200 C172.629834,200 147.411015,190.838615 128.061088,175.692115 C123.948832,176.300277 119.72677,176.616915 115.422886,176.616915 C84.225182,176.616915 57.3267576,159.979456 44.995953,135.985537 C19.1352066,129.435956 3.41650556e-15,106.007338 0,78.1094527 C-4.03793284e-15,45.1372289 26.7292687,18.4079602 59.7014925,18.4079602 L136.368642,18.4064259 C154.39244,6.81472057 176.423094,0 200.210945,0 Z" id="Combined-Shape" fill="#2EA2DB"
-              class="brand_element_cloud"></path>
-        <g id="Group-3" transform="translate(128.000000, 22.000000)" stroke="#212A2F" stroke-width="2">
-            <rect id="Rectangle" fill="#E1E7EA" x="1" y="48" width="141" height="86" rx="2"></rect>
-            <path d="M-1.17184583,-1 L144.135796,-1 L71.9900436,50.2235571 L-1.17184583,-1 Z" id="Path-27" fill="#FFFFFF" stroke-linejoin="round" transform="translate(71.500000, 24.500000) scale(1, -1) translate(-71.500000, -24.500000) "></path>
-            <path d="M-1.17184583,50 L144.135796,50 L71.9900436,101.223557 L-1.17184583,50 Z" id="Path-27" fill="#A1B7C1" stroke-linejoin="round"></path>
-        </g>
-        <path d="M140,21 L140,81.4863776 L199.001954,123.771111 L257,82.4843666 L257,21 L140,21 Z" id="Rectangle" stroke="#1F2A30" stroke-width="2" fill="#FFFFFF"></path>
-        <path d="M130.345831,111.685393 C129.770669,111.317928 129.42261,110.682525 129.42261,110 C129.42261,108.895431 130.31804,108 131.42261,108 L267.617412,108 C268.295418,108 268.927257,108.343498 269.295918,108.912517 C269.896518,109.839531 269.631908,111.077906 268.704894,111.678506 L200.003784,156.189085 L130.345831,111.685393 Z" id="Path-27" stroke="#212A2F" stroke-width="2" fill="#FFFFFF" transform="translate(199.500000, 132.000000) scale(1, -1) translate(-199.500000, -132.000000) "></path>
-        <circle id="Oval" stroke="#212A2F" stroke-width="2" fill="#F5F7F9" cx="199" cy="142" r="37"></circle>
-        <polygon id="Path-7" fill="#212A2F" fill-rule="nonzero" points="181.059871 138.818961 176.940129 143.181039 197.449171 162.55069 221.446521 128.736241 216.553479 125.263759 196.550829 153.44931"></polygon>
-        <rect id="Rectangle" stroke="#212A2F" stroke-width="2" fill="#2EA2DB" x="159" y="31" width="80" height="4"></rect>
-        <rect id="Rectangle" fill="#1C2A31" x="158" y="46" width="30" height="3"></rect>
-        <rect id="Rectangle" fill="#1C2A31" x="158" y="58" width="64" height="3"></rect>
-        <rect id="Rectangle" fill="#1C2A31" x="158" y="65" width="64" height="3"></rect>
-        <rect id="Rectangle" fill="#1C2A31" x="158" y="72" width="64" height="3"></rect>
-        <rect id="Rectangle" fill="#1C2A31" x="158" y="79" width="64" height="3"></rect>
-    </g>
+<svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M268 70H131C129.895 70 129 70.8954 129 72V154C129 155.105 129.895 156 131 156H268C269.105 156 270 155.105 270 154V72C270 70.8954 269.105 70 268 70Z" fill="#E1E7EA" stroke="#212A2F" stroke-width="2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M126.828 72H272.136L199.99 20.7764L126.828 72Z" fill="#E1E7EA" stroke="#212A2F" stroke-width="2" stroke-linejoin="round"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M126.828 72H272.136L199.99 123.224L126.828 72Z" fill="#A1B7C1" stroke="#212A2F" stroke-width="2" stroke-linejoin="round"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M140 21V81.4864L199.002 123.771L257 82.4844V21H140Z" fill="#E1E7EA" stroke="#1F2A30" stroke-width="2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M130.346 152.315C129.771 152.682 129.423 153.317 129.423 154C129.423 155.105 130.318 156 131.423 156H267.617C268.295 156 268.927 155.657 269.296 155.087C269.897 154.16 269.632 152.922 268.705 152.321L200.004 107.811L130.346 152.315Z" fill="#E1E7EA" stroke="#212A2F" stroke-width="2"/>
+<path d="M199 179C219.435 179 236 162.435 236 142C236 121.565 219.435 105 199 105C178.565 105 162 121.565 162 142C162 162.435 178.565 179 199 179Z" fill="#E1E7EA" stroke="#212A2F" stroke-width="2"/>
+<path d="M181.06 138.819L176.94 143.181L197.449 162.551L221.447 128.736L216.554 125.264L196.551 153.449L181.06 138.819Z" fill="#212A2F"/>
+<path class="brand_element" d="M239 31H159V35H239V31Z" fill="#2592C3" stroke="#212A2F" stroke-width="2"/>
+<path d="M188 46H158V49H188V46Z" fill="#1C2A31"/>
+<path d="M222 58H158V61H222V58Z" fill="#1C2A31"/>
+<path d="M222 65H158V68H222V65Z" fill="#1C2A31"/>
+<path d="M222 72H158V75H222V72Z" fill="#1C2A31"/>
+<path d="M222 79H158V82H222V79Z" fill="#1C2A31"/>
 </svg>

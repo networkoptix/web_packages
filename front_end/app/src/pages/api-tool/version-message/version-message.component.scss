@@ -10,8 +10,8 @@
 .system-message {
     &-warning {
         @extend .system-message;
-        border-color: $warning-message-border;
-        background-color: $warning-message-bg;
+        border-color: var(--ribbon-alert-border);
+        background-color: var(--ribbon-alert-bg);
     }
 
     &-error {

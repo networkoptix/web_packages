@@ -2,11 +2,11 @@
 @use "../../../styles/theme_variables_common" as *;
 
 .ribbon {
-    @include typography.regular13light1;
-    background-color : var(--brand-d1);
+    @include typography.regular13nocolor;
+    color: var(--ribbon-color);
+    background-color : var(--ribbon-bg);
     line-height      : 1rem;
-    //border-top       : 1px solid $brand_d2;
-    border-bottom    : 1px solid var(--brand-d2);
+    border-bottom    : 1px solid var(--ribbon-border);
     padding          : .5rem 1rem;
     display          : flex;
     align-items      : center;
@@ -30,7 +30,8 @@
         text-align : right;
 
         a {
-            @include typography.regular13light1;
+            @include typography.regular13nocolor;
+            color : var(--ribbon-color);
             text-decoration : underline;
 
             &:hover {
@@ -45,14 +46,14 @@
 }
 
 .alert-ribbon {
-    border-bottom: 1px solid $warning-message-border;
-    background-color: $warning-message-bg !important;
+    border-bottom: 1px solid var(--ribbon-alert-border);
+    background-color: var(--ribbon-alert-bg) !important;
 
     .message {
-        color: $dark9;
+        color: var(--ribbon-alert-color);
         text-align: center;
         .larger {
-            @include typography.regular18dark9;
+            @include typography.regular18nocolor;
         }
     }
 

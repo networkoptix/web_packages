@@ -11,6 +11,14 @@
     --header-border-color        : #{$light4};
     --header-webadm-bg           : #{$dark14};
     --header-webadm-border-color : transparent;
+    
+    --ribbon-bg     : #{$brand_d1};
+    --ribbon-border : #{$brand_d2};
+    --ribbon-color  : #{$light1};
+    
+    --ribbon-alert-bg : #{$yellow_l2};
+    --ribbon-alert-border : #{$yellow_l1};
+    --ribbon-alert-color : #{$dark9};
 
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
