@@ -29,6 +29,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
 
     // options
     @Input() center: boolean;
+    @Input() oauth = false;
     classes: string[] = [];
     private footerSubscription: Subscription;
 

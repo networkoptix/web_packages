@@ -50,7 +50,7 @@ export class NxPageService {
                 }
             });
 
-            if (!meta.title && !headerService?.currentLocation?.isSystem) {
+            if (!meta.title && !headerService?.currentLocation?.isSystem && headerService.currentLocation.childNode) {
                 this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.CONFIG.cloudName);
             }
         });
