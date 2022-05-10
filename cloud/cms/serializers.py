@@ -130,6 +130,7 @@ class ArticleSerializer(serializers.Serializer):
     title = serializers.CharField()
     body = serializers.CharField(allow_blank=True)
 
+
 class EmailOrUrlValidator:
     def __init__(self, message=None):
         if message is not None:
@@ -174,7 +175,8 @@ class CustomClientSerializer(serializers.ModelSerializer):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            custom_fields = {} if settings.MIGRATING else AssetType.get_custom_fields_by_type(AssetType.ASSET_TYPES.vms)
+            custom_fields = AssetType.get_custom_fields_by_type(
+                AssetType.ASSET_TYPES.vms)
 
             self.custom_fields = {
                 key: value for key, value in custom_fields.items()
@@ -299,12 +301,15 @@ class PackageDownloadIdSerializer(serializers.Serializer):
 class SanitizeHTMLSerializer(serializers.Serializer):
     html = serializers.CharField()
 
+
 class OpenAPIJSONSerializer(serializers.ModelSerializer):
     type = serializers.CharField(source='get_type_display')
     content = serializers.JSONField()
+
     class Meta:
         model = OpenAPIJSON
         fields = ('__all__')
+
 
 class AssetDataRecordSerializer(serializers.Serializer):
     def __init__(self, *args, **kwargs):

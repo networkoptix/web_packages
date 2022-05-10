@@ -22,10 +22,10 @@ import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService, IConfig } from '@services/nx-config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxPageService } from '@services/page.service';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxUtilsService } from '@services/utils.service';
 import { WINDOW } from '@services/window-provider';
+import { Title } from '@angular/platform-browser';
 
 require('what-input');
 
@@ -106,6 +106,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     content: any = {};
     footerItems: { name: string, url: string }[];
+    companyLink: string;
+    companyName: string;
 
     // shared
     currentState: AuthorizeState;
@@ -190,9 +192,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
-        private pageService: NxPageService,
         private router: Router,
         private elem: ElementRef,
+        private title: Title,
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
         @Inject(WINDOW) public window: Window
@@ -237,9 +239,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.auth();
-        // should save email to local storage on login?
-        this.footerItems = this.CONFIG.dynamicMenus.authorizeFooter.nodes;
+        this.title.setTitle(`${this.LANG.pageTitles.auth()} - ${this.CONFIG.cloudName}`);
+        this.footerItems = this.CONFIG.dynamicMenus.footer.nodes;
+        this.companyLink = this.CONFIG.company.links.website;
+        this.companyName = this.CONFIG.company.name;
         this.initProcesses();
 
         this.action = this.route.snapshot?.data?.action;
@@ -257,11 +260,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
 
-            this.windowLargeEnough = this.window.innerWidth > 560 && this.window.innerHeight > 720 && this.viewType === 'web';
+            this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= 355;
             fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
                 const { innerHeight, innerWidth } = event.target;
-                this.windowLargeEnough = innerWidth > 560 && innerHeight > 720 && this.viewType === 'web';
+                this.windowLargeEnough = innerWidth > 1024 && innerHeight > 768 && this.viewType === 'web';
                 this.windowSmallEnough = innerWidth <= 355;
             });
 
@@ -306,7 +309,11 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     this.loginEmail = email;
                     this.checkEmailProcess.run();
                 }
-                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
+                if (this.clientType === ClientType.connect) {
+                    this.currentState = AuthorizeState.notSecure;
+                } else {
+                    this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
+                }
             }
         });
     }
@@ -445,8 +452,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             err => {
                 if (err?.resultCode) {
                     if (['notAuthorized', 'forbidden'].includes(err.resultCode)) {
-                        this.passwordErrorCode = (environment.isLocal && err.resultCode === 'forbidden')
-                            ? 'accountNotAccessSystem' : 'wrongPassword';
+                        this.passwordErrorCode =  err?.errorData?.error !== 'access_denied'
+                            ? 'wrongPassword' : 'accountNotAccessSystem';
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
                     }
@@ -596,6 +603,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.loginPostExternalProcess = this.processService.createProcess(() => {
+            this.loginCode = undefined;
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });

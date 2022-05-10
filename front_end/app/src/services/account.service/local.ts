@@ -103,22 +103,6 @@ export class LocalAccount extends BaseAccount {
             );
     }
 
-    logout(doNotRedirect = false, skipReload = false) {
-        if (this.loggingOut) {
-            return;
-        }
-
-        this.applyService
-            .canMove()
-            .then((allowed: boolean) => {
-                if (allowed) {
-                    this.loggingOut = true;
-                    this.account = undefined;
-                    this.logoutHelper(doNotRedirect, skipReload);
-                }
-            });
-    }
-
     logoutHelper(doNotRedirect = false, skipReload = false) {
         this.mediaServerApi
             .logout()

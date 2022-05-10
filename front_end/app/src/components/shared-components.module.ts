@@ -2,6 +2,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -14,6 +15,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxCheckboxComponent } from './checkbox/checkbox.component';
 import { NxEmailComponent } from './email-input/email.component';
+import { NxFooterComponent } from './footer/footer.component';
 import {
     NxPasswordTagValidationComponent
 } from './password-input-tag-validation/password-tag-validation.component';
@@ -36,6 +38,7 @@ import { NxTagComponent } from './tag/tag.component';
     imports: [
         PortalModule,
         CommonModule,
+        RouterModule,
         TranslateModule,
         FormsModule,
         NgbModule,
@@ -46,6 +49,7 @@ import { NxTagComponent } from './tag/tag.component';
     declarations: [
         NxCheckboxComponent,
         NxEmailComponent,
+        NxFooterComponent,
         NxPasswordComponent,
         NxPasswordTagValidationComponent,
         NxPasswordValidationComponent,
@@ -62,6 +66,7 @@ import { NxTagComponent } from './tag/tag.component';
     providers: [
         NxCheckboxComponent,
         NxEmailComponent,
+        NxFooterComponent,
         NxPasswordComponent,
         NxPasswordTagValidationComponent,
         NxPasswordValidationComponent,
@@ -77,6 +82,7 @@ import { NxTagComponent } from './tag/tag.component';
     exports: [
         NxCheckboxComponent,
         NxEmailComponent,
+        NxFooterComponent,
         NxPasswordComponent,
         NxPasswordTagValidationComponent,
         NxPasswordValidationComponent,

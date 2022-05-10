@@ -54,6 +54,7 @@ export interface Bookmark {
     src?: string;
     thumbnail?: string;
     tagsFormatted?: { type: string, label: string }[];
+    isVisible: boolean;
 }
 
 @Injectable({
@@ -78,8 +79,23 @@ export class BookmarkService implements OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    getBookmarks() {
-        return this.system.mediaserver.getBookmarks()
+    getBookmarks(text?: string, limit?: number) {
+        const params = {
+            limit,
+            text,
+            order: 'desc',
+            column: 'creationTime',
+            deviceId: '*',
+            _keepDefault: 'true',
+            _orderBy: 'creationTimeMs'
+        };
+        if (!limit) {
+            params.limit = 100;
+        }
+        if (!text) {
+            delete params.text;
+        }
+        return this.system.mediaserver.getBookmarks(params)
             .pipe(
                 map((bookmarks: Bookmark[]) => bookmarks.map((bookmark: Bookmark) => ({
                     ...bookmark,
@@ -92,9 +108,14 @@ export class BookmarkService implements OnDestroy {
                     }),
                     thumbnail: this.system.serverManager.getPreviewUrl(
                         bookmark.deviceId, bookmark.startTimeMs, 700, 400, 0
-                    )
+                    ),
+                    isVisible: false
                 })))
             );
+    }
+
+    getBookmarkTags() {
+        return this.system.mediaserver.getBookmarkTags();
     }
 
     ngOnDestroy() {}

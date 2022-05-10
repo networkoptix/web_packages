@@ -1,23 +1,28 @@
-<nx-block class="d-block">
+<ng-template #chart>
+    <ngx-charts-line-chart
+    [view]="view"
+    [curve]="curve"
+    [animations]="animations"
+    [scheme]="colorScheme"
+    [legend]="legend"
+    [legendTitle]="legendTitle"
+    [legendPosition]="legendPosition"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [showGridLines]="true"
+    [xAxis]="xAxis"
+    [yAxis]="yAxis"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [timeline]="timeline"
+    [results]="multi"
+>
+</ngx-charts-line-chart>
+</ng-template>
+
+<nx-block *ngIf="!noFrame; else chart" class="d-block">
     <header><h4 translate>System Monitoring</h4></header>
     <nx-section>
-        <ngx-charts-line-chart
-                [view]="view"
-                [animations]="animations"
-                [scheme]="colorScheme"
-                [legend]="legend"
-                [legendTitle]="legendTitle"
-                [legendPosition]="legendPosition"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [showGridLines]="true"
-                [xAxis]="xAxis"
-                [yAxis]="yAxis"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [timeline]="timeline"
-                [results]="multi"
-        >
-        </ngx-charts-line-chart>
+        <ng-container *ngTemplateOutlet="chart"></ng-container>
     </nx-section>
 </nx-block>

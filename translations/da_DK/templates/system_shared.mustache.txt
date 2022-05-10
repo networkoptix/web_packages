@@ -1,11 +1,11 @@
-Hello, {{message.userFullName}}
+Hej, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) has shared access to video management system "{{message.system_name}}" with you.
+{{message.sharer_name}} ({{message.sharer_email}}) har delt adgang til videostyringssystem "{{message.system_name}}" med dig.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You have been granted access to video management system "{{message.system_name}}".
+Du er blevet tildelt adgang til videostyringssystem "{{message.system_name}}".
 {{/message.sharer_name}}
 
-View in %CLOUD_NAME% Portal: {{config.portal_url}}/systems/{{message.system_id}}
+Vis i %CLOUD_NAME% Portal: {{config.portal_url}}/systemer/{{message.system_id}}

@@ -73,12 +73,12 @@ export class NxDevConsoleComponent {
                 : developers;
 
             // Remove invalid dev console sections from header in case they get added for some reason
-            const { parentNode } = this.headerService.currentLocation;
-            parentNode.nodes = parentNode.nodes.filter(({ url }) =>
-                sections.find(({ url: sectionUrl }) =>
-                    (url.startsWith('/') ? url : '/' + url) === `${developers}/${sectionUrl}`
-                )
-            );
+            // const { parentNode } = this.headerService.currentLocation;
+            // parentNode.nodes = parentNode.nodes.filter(({ url }) =>
+            //     sections.find(({ url: sectionUrl }) =>
+            //         (url.startsWith('/') ? url : '/' + url) === `${developers}/${sectionUrl}`
+            //     )
+            // );
         });
     }
 

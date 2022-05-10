@@ -11,10 +11,10 @@ Setup
     ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${login user}    ${user}
     ${rand}=   Generate Random String
-    ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${login user}    add users=${False}
+    ${system}=   Create Base System    2fa-${rand}    image=${IMAGE}    owner=${login user}    add users=${False}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Set Suite Variable    ${system}    ${system}
-    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    system_admin_local_${rand}    image=${IMAGE}
+    ${local system}=   Run Keyword If   '''${mode}'''=='''webadmin'''    Create Base System    2fa_local_${rand}    image=${IMAGE}
     Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    6
@@ -28,7 +28,7 @@ Restart
     Delete Base System    ${system}
 
 2fa Test Teardown
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Toggle 2fa Off Api    ${login user}    ${password}    verification_code=${totp}
 
 Turn on 2fa Functionality
@@ -63,7 +63,7 @@ Turn on 2fa Functionality
     ${random one time backup code}=    Get Text    //two-fa-modal-content//span[text()="${random integer}"]/..
     ${random one time backup code}=    Get Substring    ${random one time backup code}    1
     Click Element    ${2FA OK BTN}
-    Set Global Variable    ${2FA KEY VALUE}    ${key}
+    Set Test Variable    ${2fa key value}        ${key}
     [return]    ${random one time backup code}
 
 Turn off 2fa Functionality
@@ -82,7 +82,7 @@ Turn off 2fa Functionality
     Click Element    ${2FA SWITCH}
     Wait Until Element Is Visible    ${2FA TOTP FIELD}
     Disable two factor authentication form validations
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Input Text    ${2FA TOTP FIELD}    ${totp}
     Click Element    ${2FA DISABLE MODAL BTN}
     Wait Until Element Is Visible    ${2FA SWITCH DISABLED}
@@ -112,7 +112,7 @@ Scan QR and decode to key
 
 Generate totp wait for a minute and try to login
     [arguments]    ${email}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
     2fa log in verification code form validations    ${email}
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}
@@ -145,12 +145,13 @@ Check or uncheck 2fa ask for verification checkbox
     Element Should Be Visible    ${2FA SETTINGS MODAL HEADER}
     IF    ${checked}
         Element Should Be Visible    ${2FA SETTINGS MODAL DESCRIPTION CHECK}
+        Element Should Be Visible    ${2FA SETTINGS MODAL OFF INSTRUCTIONS}
     ELSE
         Element Should Be Visible    ${2FA SETTINGS MODAL DESCRIPTION UNCHECK}
+        Element Should Be Visible    ${2FA SETTINGS MODAL ON INSTRUCTIONS}
     END
-    Element Should Be Visible    ${2FA SETTINGS MODAL INSTRUCTIONS}
     Element Should Be Visible    ${2FA SETTINGS MODAL APPLY BTN}
     Element Should Be Visible    ${2FA SETTINGS MODAL CANCEL BTN}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Input Text    ${2FA TOTP FIELD}    ${totp}
     Click Element    ${2FA SETTINGS MODAL APPLY BTN}

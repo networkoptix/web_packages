@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import {
     Component,
     Input,
@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon';
@@ -148,6 +148,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
+        private location: Location,
         private accountService: NxAccountService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
@@ -375,6 +376,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         .then(
                                             () => {},
                                             () => {
+                                                this.location.replaceState('/systems');
                                                 return this.oauthService.redirectOauth(
                                                     'system2faAuth',
                                                     account.email,
@@ -765,7 +767,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content = { ...this.content };
     }
 
-    getCameraStatusIcon({ id, status, scheduleEnabled }) {
+    getCameraStatusIcon ({ id, status, scheduleEnabled, parentId }) {
+        const parentServer = this.system.servers.find(s => s.id === parentId);
+        if (parentServer?.status === 'Offline') {
+            return this.CONFIG.menus.systemSettings.cameras.statusIcons.offline;
+        }
         if (scheduleEnabled && !(status === 'Recording')) {
             return this.CONFIG.menus.systemSettings.cameras.statusIcons.scheduled;
         }

@@ -1,5 +1,5 @@
 MODULES=(cloud_portal cloud_portal_nginx)
-DOCKER_REGISTRY=${DOCKER_REGISTRY:-"009544449203.dkr.ecr.us-east-1.amazonaws.com"}
+DOCKER_REGISTRY=${DOCKER_REGISTRY:-"009544449203.dkr.ecr.eu-central-1.amazonaws.com"}
 
 case $(uname -s) in
     Linux)

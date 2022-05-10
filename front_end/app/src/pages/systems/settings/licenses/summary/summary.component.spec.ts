@@ -35,6 +35,10 @@ describe('Licenses (Summary)', () => {
 
     let systemSpy: jasmine.SpyObj<NxSystem>;
 
+    function partialToFull<NxSystem>(x: Partial<NxSystem>): NxSystem {
+        return x as NxSystem;
+    }
+
     beforeEach(waitForAsync(() => {
         const spySystem = jasmine.createSpyObj('NxSystem', ['getLicenseSummaries']);
 
@@ -129,7 +133,7 @@ describe('Licenses (Summary)', () => {
             ];
 
             fixture.detectChanges();
-            settingsService.systemSubject.next(setupTest41System());
+            settingsService.systemSubject.next(partialToFull(setupTest41System()));
         }));
 
         it('should render legacy info', inject([NxSettingsService], (settingsService: NxSettingsService) => {
@@ -157,7 +161,7 @@ describe('Licenses (Summary)', () => {
             ];
 
             fixture.detectChanges();
-            settingsService.systemSubject.next(setupTest50System());
+            settingsService.systemSubject.next(partialToFull(setupTest50System()));
         }));
 
         it('should render REST call info', fakeAsync(inject([NxSettingsService], (settingsService: NxSettingsService) => {

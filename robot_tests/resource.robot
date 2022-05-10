@@ -48,14 +48,14 @@ Open Browser and go to URL
     Go To    ${url}
 
 Regular Open Browser
-    Set Screenshot Directory    /screenshots
+    Set Screenshot Directory    screenshots
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
     Set Window Size    1920    1080
     Go To    ${ENV}
 
 Open Browser With Options
-    Set Screenshot Directory    /screenshots
+    Set Screenshot Directory    screenshots
     ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
@@ -1420,7 +1420,7 @@ Log in to user and system
 # 2fa-resource
 Generate totp and login
     [arguments]    ${email}
-    ${totp}=    Get 2fa Verification Code    ${2FA KEY VALUE}
+    ${totp}=    Get 2fa Verification Code    ${2fa key value}
     Wait Until Element Is Visible    ${2FA AUTH CODE FIELD}
     2fa log in verification code form validations    ${email}
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${2FA AUTH CODE FIELD}    ${totp}

@@ -1,35 +1,35 @@
 {
   "activate_account": {
-    "emailSubject": "Activate your account"
+    "emailSubject": "Aktivér din konto"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Du er blevet inviteret til %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Salgsforespørgsel for {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Teknisk forespørgsel for {{{message.asset}}}"
   },
   "integration_feedback": {
     "emailSubject": "Feedback for {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "Kameraside Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} har en ny version at gennemgå"
   },
   "restore_password": {
-    "emailSubject": "Reset your password"
+    "emailSubject": "Nulstil din adgangskode"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} inviterer dig til %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videosystem {{{message.system_name}}} blev delt med dig{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
+    "emailSubject": "Videosystem {{{message.system_name}}} blev delt med dig"
   }
 }

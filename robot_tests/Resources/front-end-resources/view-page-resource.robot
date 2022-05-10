@@ -109,5 +109,5 @@ Verify Camera Name and Quality Appear on Camera Page
 
 
 Check if Camera is Live
-    Wait Until Element Is Not Visible    ${VIEW CAMERA LOADING}
-    Wait Until Element Is Visible   ${VIEW CAMERA IS LIVE INDICATOR}    timeout=80    error=camera is not Live
+    Wait Until Element Is Not Visible    ${VIEW CAMERA LOADING}    timeout=90
+    Wait Until Element Is Visible   ${VIEW CAMERA IS LIVE INDICATOR}    timeout=90    error=camera is not Live

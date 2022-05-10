@@ -330,6 +330,7 @@
             "cloud": "Cloud",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Verbinden Sie das System, das Sie mit diesem zusammenführen möchten, mit <strong>%CLOUD_NAME%</strong> oder führen Sie es lokal mit dem <strong>%VMS_NAME%</strong>-Client zusammen.",
+            "connectAnotherSystemToCloud": "Verbinden Sie das System, das Sie mit diesem zusammenführen möchten, mit <strong>%CLOUD_NAME%</strong> unter Verwendung desselben Kontos, oder führen Sie es lokal mit dem <strong>%VMS_NAME%</strong>-Client zusammen.",
             "differentOwners": "Sowohl das ausgewählte als auch das aktuelle System sind mit %CLOUD_NAME% verbunden und haben unterschiedliche Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
@@ -429,9 +430,9 @@
             "loggedFromOtherAccount": "Sie werden mit einem anderen Konto angemeldet",
             "noClientDetected": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
             "removeUser": "Nutzer entfernen",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "Server&nbsp;<strong>{ title }</strong>&nbsp;vom aktuellen System abkoppeln?",
+            "serversReset": "Server&nbsp;<strong>{ title }</strong>&nbsp;auf Standardwerte zurücksetzen?",
+            "serversRestart": "Server &nbsp;<strong>{ title }</strong> neu starten?"
         },
         "tooltips": {
             "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
@@ -657,7 +658,7 @@
         "activateCode": "Account aktivieren",
         "activateSuccess": "Account aktiviert",
         "articleTitle": "{ARTICLE_TITLE} für {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Autorisierung",
         "changePassword": "Passwort ändern",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",

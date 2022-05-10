@@ -476,7 +476,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 filter(data => data !== undefined)
             )
             .subscribe(system => {
-                this.settingsService.footerSubject.next(true);
+                this.settingsService.footer = true;
                 if (system && (!this.system || !environment.isLocal)) {
                     this.system = system;
                     (

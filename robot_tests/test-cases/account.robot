@@ -61,8 +61,7 @@ Force Tags        account
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
-    Open Browser With Options
-    Go To    ${url}/account
+    Open Browser and go to URL    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
     sleep    2
@@ -83,8 +82,7 @@ Force Tags        account
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
-    Open Browser With Options 
-    Go To    ${url}/account
+    Open Browser and go to URL   ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
@@ -345,7 +343,7 @@ Force Tags        account
 
 18. Should open account page in anonymous state
     [tags]    anonymous
-    Run keyword and continue on failure    Open page anonymously    ${url}/account    Authorization
+    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${REGISTER TITLE TEXT}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 

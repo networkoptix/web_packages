@@ -29,6 +29,8 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
     static sharedState$;
 
     static BASE_CONFIG = {
+        useSourceUrl: false,
+        sourceUrl: '',
         source: '',
         editSource: ''
     }
@@ -44,6 +46,8 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
                 this.card.config.source = `<pre id="plain-text-editable" contenteditable>${innerText}</pre>`;
                 this.saveSettings();
             });
+        } else if (this.card.config.sourceUrl) {
+            frame.src = this.card.config.sourceUrl;
         }
     }
 
@@ -116,6 +120,19 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         });
     }
 
+    useSourceUrl = () => {
+        this.card.sizes = NxThirdPartyWidgetComponent.SIZES.map(({ name, ...config }) => ({ name: `${this.card.title} (${name})`, ...config }));
+        this.card.size = this.card.sizes[this.card.sizes.length - 2];
+        this.card.config.useSourceUrl = false;
+        this.saveSettings();
+    }
+
+    switchUploadSource = () => {
+        this.card.config.useSourceUrl = !this.card.config.useSourceUrl;
+        this.card.config.sourceUrl = '';
+        this.card.title = NxThirdPartyWidgetComponent.NAME;
+    }
+
     constructor(
         configService: NxConfigService,
         cd: ChangeDetectorRef,
@@ -123,6 +140,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
     ) {
         super(cd);
         this.CONFIG = configService.config;
+
         NxThirdPartyWidgetComponent.sharedState$ ||= interval(1000).pipe(
             map(time => `Shared state from cloud portal: ${time}`),
             shareReplay(1)

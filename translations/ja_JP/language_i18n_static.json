@@ -15,7 +15,7 @@
         },
         "Advanced Viewer": {
             "description": "ライブ表示、アーカイブ表示、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "Custom": {
             "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
@@ -35,7 +35,7 @@
         },
         "advancedViewer": {
             "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
-            "label": "拡張ビューアー"
+            "label": "上位ビューアー"
         },
         "cloudAdmin": {
             "description": "システムを構成し共有することができます",
@@ -330,6 +330,7 @@
             "cloud": "クラウド",
             "commonText": "システム <strong>{primarySystem}</strong> および <strong>{secondarySystem}</strong>を統合できませんでした。",
             "connectToCloud": "統合したいサーバーを <strong>%CLOUD_NAME%</strong> に接続するか、 <strong>%VMS_NAME%</strong> クライアントを使用してローカルで統合してください。",
+            "connectAnotherSystemToCloud": "統合したいシステムを、同じアカウントで <strong>%CLOUD_NAME%</strong> に接続するか、<strong>%VMS_NAME%</strong> クライアントを使用してローカルで統合してください。",
             "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、オーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "統合先システム内の任意のサーバーのアドレスを入力してください。",
@@ -429,9 +430,9 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "現在のシステムからサーバー&nbsp;<strong>{ title }</strong>&nbsp;を切断しますか？",
+            "serversReset": "サーバー&nbsp;<strong>{ title }</strong>&nbsp;をデフォルトにリセットしますか？",
+            "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
             "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
@@ -657,7 +658,7 @@
         "activateCode": "アカウント有効化",
         "activateSuccess": "アカウントが有効化されました",
         "articleTitle": "{VMS_NAME} の {ARTICLE_TITLE}",
-        "auth": "Authorization",
+        "auth": "認証",
         "changePassword": "パスワードの変更",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",

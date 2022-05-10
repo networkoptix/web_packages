@@ -1,9 +1,7 @@
-<nx-player-placeholder
-    *ngIf="loadingError"
-    svgFileName="placeholder_camera_offline"
-    [heading]="''"
-    [description]="''">
-</nx-player-placeholder>
-<video [ngClass]="{ 'd-none': loadingError}" [poster]="posterUrl" [src]="sourceUrl" (error)="loadingError=true"
-       playsinline muted controls>
+<video [ngClass]="{ 'd-none': posterLoadingError && false}"
+       [src]="sourceUrl"
+       [poster]="posterLoadingError ? internalPoster: posterUrl"
+       (error)="handler($event)"
+       (loadeddata)="handler($event)"
+       preload="none" playsinline controls>
 </video>

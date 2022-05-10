@@ -330,6 +330,7 @@
             "cloud": "Moln",
             "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> eller slå samman lokalt med <strong>%VMS_NAME%</strong> klienten.",
+            "connectAnotherSystemToCloud": "Anslut System som du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> med samma konto, eller slå samman lokalt med <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",
@@ -429,9 +430,9 @@
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong> from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong> to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "Koppla från servern&nbsp;<strong>{ title }</strong>&nbsp;från nuvarande system?",
+            "serversReset": "Återställa server&nbsp;<strong>{ title }</strong>&nbsp;till standardvärden?",
+            "serversRestart": "Starta om servern&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
@@ -657,7 +658,7 @@
         "activateCode": "Aktivera konto",
         "activateSuccess": "Kontot aktiverat",
         "articleTitle": "{ARTICLE_TITLE} för {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Tillstånd",
         "changePassword": "Ändra lösenord",
         "debug": "Debugläge",
         "default": "%CLOUD_NAME%",

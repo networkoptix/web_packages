@@ -391,6 +391,7 @@ class CloudPortalAPI(object):
         }
         r = requests.post(f"{serverUrl}/api/saveCloudSystemCredentials", auth=HTTPBasicAuth(auth[0], auth[1]),
                           json=body, verify=False)
+        assert r.status_code==200
         return r.json()
 
     @keyword
@@ -486,7 +487,7 @@ class CloudPortalAPI(object):
             secretKey = splitString[1]
             api2fa = Cloud2fa()
             totp = api2fa.get_2fa_verification_code(secretKey)
-            body = {"action": "toggle", "totp": totp}
+            body = {"action": "toggle", "mfaCode": totp}
             securityRes = s.post(f'{self.env}/api/account/security', data=body)
             assert securityRes.status_code == 200, 'Toggle 2fa on failed'
             return secretKey
@@ -494,7 +495,7 @@ class CloudPortalAPI(object):
     @keyword
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
         with CloudSession(self.env, email, password, backup_code, verification_code) as s:
-            body = {"action": "deactivate", "totp": verification_code}
+            body = {"action": "deactivate", "mfaCode": verification_code}
             securityRes = s.post(f'{self.env}/api/account/security', data=body)
 
     @keyword

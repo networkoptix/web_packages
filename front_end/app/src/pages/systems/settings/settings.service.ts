@@ -1,30 +1,31 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
+import { NxSystem } from '@services/system.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class NxSettingsService implements OnDestroy {
-    footerSubject = new BehaviorSubject(false);
-    systemSubject = new BehaviorSubject<any>(false);
-    selectedSectionSubject = new BehaviorSubject([]);
+export class NxSettingsService {
+    footerSubject = new BehaviorSubject<boolean>(false);
+    systemSubject = new BehaviorSubject<NxSystem>(undefined);
 
     constructor() {}
 
-    get system() {
+    get system(): NxSystem {
         return this.systemSubject.getValue();
     }
 
-    set system(system) {
+    set system(system: NxSystem) {
         this.system && system?.id !== this.system?.id && this.system?.stopPoll();
         this.systemSubject.next(system);
     }
 
-    setSection(section) {
-        this.selectedSectionSubject.next(section);
+    get footer(): boolean {
+        return this.footerSubject.getValue();
     }
 
-    ngOnDestroy() {
-        this.systemSubject.unsubscribe();
+    set footer(value: boolean) {
+        this.footerSubject.next(value);
     }
 }

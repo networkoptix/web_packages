@@ -107,7 +107,7 @@ export class NxConsoleTableComponent {
             combineLatest([
                 this.update$.pipe(switchMap(this.cloudApi.getSubAPI(this.sectionParam).list)),
                 this.cloudApi.getSubAPI(this.sectionParam).getManifest(),
-                this.menusService.getMenu('header').pipe(
+                this.menusService.getMenu('configuration').pipe(
                     map(({ nodes }) => NxHeaderService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
                     switchMap(assetId => assetId ? this.cloudApi.getDocAsset(assetId) : Promise.resolve(null as DocAsset))
                 )

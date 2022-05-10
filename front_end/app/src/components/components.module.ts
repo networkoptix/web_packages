@@ -69,7 +69,6 @@ import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
 import { NxDynamicWidgetComponent } from './dynamic-widget/dynamic-widget.component';
 import { NxEditableHeading } from './editable/heading/editable-heading.component';
 import { NxExternalVideoComponent } from './external-video/external-video.component';
-import { NxFooterComponent } from './footer/footer.component';
 import { NxHeaderComponent } from './header/header.component';
 import { NxHeaderMainButtonComponent } from './header/main-button/main-button.component';
 import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
@@ -95,6 +94,8 @@ import { NxAssetExplorerWidgetComponent } from './widgets/asset-explorer/asset-e
 import { NxBookmarksWidgetComponent } from './widgets/bookmarks/bookmarks-widget.component';
 import { NxHealthMonitorWidgetComponent } from './widgets/health-monitor/health-monitor-widget.component';
 import { NxLiveViewWidgetComponent } from './widgets/live-view/live-view-widget.component';
+import { NxServerLoggerWidgetComponent } from './widgets/server-logger/server-logger-widget.component';
+import { NxServerMonitorWidgetComponent } from './widgets/server-monitor/server-monitor-widget.component';
 import { NxSystemsListWidgetComponent } from './widgets/systems-list/systems-list-widget.component';
 import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-widget.component';
 
@@ -147,7 +148,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
-        NxFooterComponent,
         NxLandingDisplayComponent,
         NxNumericComponent,
         NxClientButtonComponent,
@@ -186,6 +186,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxLoggerComponent,
         NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
+        NxServerMonitorWidgetComponent,
+        NxServerLoggerWidgetComponent,
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -200,7 +202,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
-        NxFooterComponent,
         NxLandingDisplayComponent,
         NxNumericComponent,
         NxClientButtonComponent,
@@ -233,6 +234,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxLoggerComponent,
         NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
+        NxServerMonitorWidgetComponent,
+        NxServerLoggerWidgetComponent,
     ],
     exports: [
         QuicklinkModule,
@@ -258,7 +261,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxSearchComponent,
         NxHeaderComponent,
         NxHeaderMainButtonComponent,
-        NxFooterComponent,
         NxLandingDisplayComponent,
         NxNumericComponent,
         NxClientButtonComponent,
@@ -299,6 +301,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         TextFieldModule,
         NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
+        NxServerMonitorWidgetComponent,
+        NxServerLoggerWidgetComponent,
     ]
 })
 export class ComponentsModule {

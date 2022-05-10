@@ -87,7 +87,7 @@ ngMocks.defaultMock(NxAppStateService, () => ({
 }));
 
 ngMocks.defaultMock(NxSessionService, () => ({
-    loginStateSubject: new ReplaySubject<string>(0)
+    loginStateSubject: new BehaviorSubject<string>(undefined)
 }));
 
 ngMocks.defaultMock(TranslateService, () => ({

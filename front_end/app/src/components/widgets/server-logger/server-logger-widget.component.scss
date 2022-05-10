@@ -1,0 +1,17 @@
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+
+.logger-wrapper {
+    overflow-y: auto;
+    padding: 8px;
+    height: 100%;
+    user-select: none;
+    display: flex;
+}
+
+logger, nx-pre-loader {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}

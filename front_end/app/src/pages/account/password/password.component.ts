@@ -86,7 +86,8 @@ export class NxAccountPasswordComponent implements OnInit {
         }, {
             errorCodes: {
                 notAuthorized: this.LANG.errorCodes.oldPasswordMistmatch?.(),
-                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.()
+                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch?.(),
+                badRequest: this.LANG.errorCodes.oldPasswordMistmatch(),
             },
             errorPrefix: this.LANG.errorCodes.cantChangePasswordPrefix?.(),
             ignoreUnauthorized: true

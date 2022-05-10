@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 
+import { NxConfigService } from '@services/nx-config';
+
 @Component({
     selector: 'clip',
     templateUrl: 'clip.component.html',
@@ -9,8 +11,23 @@ export class ClipComponent {
     @Input() sourceUrl: string;
     @Input() posterUrl: string;
 
-    loadingError = false;
+    readonly internalPoster: string;
+    posterLoadingError = false;
 
-    constructor() {
+    constructor(config: NxConfigService) {
+        this.internalPoster = config.getConfig()?.icons.dirNonStandardView + 'placeholder_camera_offline.svg';
+    }
+
+    handler(e) {
+        switch (e.type) {
+            case 'error':
+                this.posterLoadingError = true;
+                break;
+            case 'loadeddata':
+                this.posterLoadingError = false;
+                break;
+            default:
+                break;
+        }
     }
 }

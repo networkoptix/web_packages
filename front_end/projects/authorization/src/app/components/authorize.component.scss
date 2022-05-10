@@ -495,33 +495,8 @@
     }
 
     .auth-footer {
-        z-index: 2;
-        display: flex;
-        justify-content: center;
-        min-width: 580px;
-        width: 100%;
-        margin: 75px 16px 0 16px;
-        padding: 12px 0;
-        border-top: 1px solid $light4;
-
-        &.footer-d {
-            border-top: 1px solid $dark11;
-        }
-
-        a {
-            text-decoration: none;
-            @include typography.regular12light16;
-            &:hover {
-                color: $dark15 !important;
-            }
-        }
-
-        .dot {
-            margin: auto 10px;
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            background: $light16;
-        }
+        min-width: 900px;
+        margin-top: 75px;
     }
 }
+

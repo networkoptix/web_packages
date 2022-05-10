@@ -687,8 +687,12 @@ nx-swagger-markdown + div#swagger-ui {
 	&.execute {
 		margin: 12px 0 11px 16px;
 		width: 215px;
-		background-color: $blue1 !important;
+		background-color: var(--brand-core) !important;
 		color           : $light1 !important;
+	}
+
+	&.execute:hover:not([disabled]):not(.disabled) {
+		background-color: var(--brand-d2) !important;
 	}
 
 	&.cancel {
@@ -877,6 +881,13 @@ nx-swagger-markdown + div#swagger-ui {
 
 .swagger-ui .parameter__extension, .swagger-ui .parameter__in, .swagger-ui .parameter__type, .swagger-ui .parameters-col_name .prop-format, .swagger-ui .parameter__deprecated {
 	@include typography.regular14light10;
+}
+
+.swagger-ui .opblock-section-request-body .parameter__name.required:after{
+	content   : "*";
+	font-size : 15px;
+	margin-top: 1px;
+	color     : rgba(255, 0, 0, .6)
 }
 
 .swagger-ui .parameter__name.required:after {
