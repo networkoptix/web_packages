@@ -97,7 +97,7 @@
 <!-- Menu for render -->
 <header *ngIf="viewHeader" (nxClickElsewhere)="headerService.show$ = false">
 
-    <nx-new-header *ngIf="newHeader" [nodes]="headerService.nodes" ></nx-new-header>
+    <nx-new-header *ngIf="newHeader" [nodes]="headerService.nodes" [width]="windowWidth$ | async"></nx-new-header>
     <nav  *ngIf="!newHeader" class="navbar navbar-default nav-override">
         <div class="container-fluid flex-no-wrap">
             <div class="app-header-left">

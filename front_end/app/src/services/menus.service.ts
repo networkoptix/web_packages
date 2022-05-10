@@ -226,8 +226,8 @@ export class NxMenusService {
     }
 
     makeWelcomeNode() {
-        const welcomeNode = new MenuNode('Welcome', '');
-        welcomeNode.nodes.push(new MenuNode('Welcome To Nx', ''));
+        const welcomeNode = new MenuNode('Welcome', 'content/about');
+        welcomeNode.nodes.push(new MenuNode('Welcome To Nx', 'content/about'));
         return welcomeNode;
     }
 

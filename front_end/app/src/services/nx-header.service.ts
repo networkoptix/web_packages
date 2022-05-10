@@ -223,7 +223,7 @@ export class NxHeaderService {
                             target.parentNode = parentNode;
                             target.childNode = node;
                             if (removeFirstBreadcrumb) {
-                                node.breadcrumbs.pop();
+                                node.breadcrumbs?.pop();
                             }
                             target.breadcrumbs = node.breadcrumbs;
                             if (nodeUrl === url) {

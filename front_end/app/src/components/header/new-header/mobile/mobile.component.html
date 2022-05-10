@@ -1,0 +1,47 @@
+<div class="mobile-header">
+    <ng-container *ngTemplateOutlet="headerLeftIcon"></ng-container>
+    <nx-header-logo-area class="logo" [isMobile]="true"></nx-header-logo-area>
+    <svg-icon
+        class="menu-button"
+        nx-add-svg-src
+        [src]="CONFIG.icons.dirHeader + 'menu.svg'"
+        [svgStyle]="{'width.px': '32', 'height.px': '32'}">
+    </svg-icon>
+</div>
+
+
+<ng-template #headerLeftIcon [ngSwitch]="iconState">
+    <a *ngSwitchCase="'createAccount'" [href]="headerService.createUrl | unsafe">
+        <svg-icon
+            class="user-section"
+            nx-add-svg-src
+            [src]="CONFIG.icons.dirHeader + 'add_user.svg'"
+            [svgStyle]="{'width.px': '34', 'height.px': '34'}">
+        </svg-icon>
+    </a>
+    <svg-icon
+        *ngSwitchCase="'profile'"
+        class="user-section"
+        nx-add-svg-src
+        [src]="CONFIG.icons.dirHeader + 'user.svg'"
+        [svgStyle]="{'width.px': '34', 'height.px': '34'}">
+    </svg-icon>
+        <svg-icon
+            *ngSwitchCase="'returnToSystems'"
+            (click)="headerService.handleNav({ url: '/systems', new_window: false }, $event)"
+            class="user-section"
+            nx-add-svg-src
+            [src]="CONFIG.icons.dirHeader + 'return_to_systems.svg'"
+            [svgStyle]="{'width.px': '34', 'height.px': '34'}">
+        </svg-icon>
+    <span class="none" *ngSwitchCase="'none'"></span>
+</ng-template>
+
+<ng-template #profileButton>
+    <svg-icon
+        class="user-section"
+        nx-add-svg-src
+        [src]="CONFIG.icons.dirHeader + 'user.svg'"
+        [svgStyle]="{'width.px': '34', 'height.px': '34'}">
+    </svg-icon>
+</ng-template>

@@ -72,6 +72,8 @@ import { NxHeaderMainButtonComponent } from './header/main-button/main-button.co
 import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
 import { NxHeaderLevelOneComponent } from './header/new-header/header-level-one/header-level-one.component';
 import { NxHeaderLevelTwoComponent } from './header/new-header/header-level-two/header-level-two.component';
+import { NxHeaderLogoAreaComponent } from './header/new-header/logo-area/logo-area.component';
+import { NxHeaderMobileComponent } from './header/new-header/mobile/mobile.component';
 import { NxNewHeaderComponent } from './header/new-header/new-header.component';
 import { NxTabsComponent } from './header/tabs/tabs.component';
 import { NxInfoBlockComponent } from './info-block/info-block.component';
@@ -185,6 +187,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxHeaderLevelOneComponent,
         NxHeaderLevelTwoComponent,
         NxNewHeaderComponent,
+        NxHeaderMobileComponent,
+        NxHeaderLogoAreaComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },

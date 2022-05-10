@@ -1,0 +1,58 @@
+@use "../../../../styles/typography";
+@use "../../../../../styles/theme_variables_common" as *;
+
+
+.logo-wrapper {
+    width: 256px;
+    .logo {
+        @include typography.regular20nocolor;
+        color: var(--light4) !important;
+        border-right: 1px solid var(--dark11);
+        height: 26px;
+        margin: 15px 0px;
+        svg-icon {
+            display: flex;
+            justify-content: center;
+        }
+
+        .system-list {
+            display: flex;
+            justify-content: center;
+            svg-icon .system-icon {
+                fill: var(--light4) !important;
+            }
+        }
+
+        .current-system-display {
+            display: flex;
+            .system-name {
+                margin: 0 auto 4px auto;
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+            .arrow-btn {
+                padding-top: 16px;
+                margin-top: -15px;
+                background-color: var(--dark7);
+                height: 58px;
+                width: 48px;
+                &:hover {
+                    cursor: pointer;
+                }
+                svg-icon .arrow {
+                    stroke: var(--light4) !important;
+                }
+            }
+        }
+    }
+}
+
+.logo-mobile.logo-wrapper {
+    margin: 6px auto;
+    width: auto;
+    .logo {
+        margin: 0px auto;
+        border-right: none;
+    }
+}

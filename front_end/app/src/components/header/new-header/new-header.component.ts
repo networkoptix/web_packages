@@ -21,14 +21,16 @@ export class NxNewHeaderComponent implements OnChanges {
     @Input() nodes: MenuNode[];
     @Input() systems: NxSystem[];
     @Input() loginState: boolean;
+    @Input() width: number;
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
     displayedName: string;
+    isMobile: boolean = false;
 
-    constructor(private headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router) {
+    constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this), first()).subscribe((event: NavigationEnd) => {
             if (event.url === '/') {
-                this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, '');
+                this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
                 return;
             }
             this.headerService.setLocation(event.url);
@@ -69,6 +71,10 @@ export class NxNewHeaderComponent implements OnChanges {
         if (changes.nodes?.currentValue?.length) {
             this.displayedNodes = changes.nodes.currentValue;
             this.selectedNode = this.findNodeBasedOnURL(changes.nodes.currentValue, this.headerService.currentLocation?.path);
+        }
+
+        if (changes.width?.currentValue) {
+            this.isMobile = changes.width.currentValue < 576;
         }
     }
 }

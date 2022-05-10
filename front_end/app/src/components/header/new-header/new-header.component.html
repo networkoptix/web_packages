@@ -1,4 +1,15 @@
-<nx-header-level-one [menuNodes]="displayedNodes" [selectedNode]="selectedNode" (nodeSelect)="handleNodeSelect($event)" [displayedName]="displayedName">
-</nx-header-level-one>
-<nx-header-level-two [subNodes]="selectedNode?.nodes" (systemNav)="navigateToSystemsList()">
-</nx-header-level-two>
+<ng-container *ngIf="!isMobile">
+    <nx-header-level-one
+        [menuNodes]="displayedNodes"
+        [selectedNode]="selectedNode"
+        (nodeSelect)="handleNodeSelect($any($event))"
+        [displayedName]="displayedName">
+    </nx-header-level-one>
+    <nx-header-level-two
+        [subNodes]="selectedNode?.nodes"
+        (systemNav)="navigateToSystemsList()">
+    </nx-header-level-two>
+</ng-container>
+
+<nx-header-mobile *ngIf="isMobile" [loggedIn]="!!displayedName">
+</nx-header-mobile>
