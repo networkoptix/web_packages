@@ -48,7 +48,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() selectedServer: NxSystemServer;
     @Input() isOffline: boolean;
-    @Output() loaded = new EventEmitter(false);
+    @Output() loaded = new EventEmitter<boolean>(false);
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

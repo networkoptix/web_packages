@@ -134,6 +134,7 @@ module.exports = {
                 'app/src/dialogs/system-group-settings/**/*.ts',
                 'app/src/menu/**/*.ts',
                 'app/src/pages/systems/groups/**/*.ts',
+                'app/src/pages/systems/settings/servers/**/*.ts',
                 'app/src/pipes/**/*.ts',
                 'app/src/store/**/*.ts',
             ],

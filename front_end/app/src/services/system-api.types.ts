@@ -730,3 +730,8 @@ export interface ResourceParam {
     name: string;
     resourceId?: string;
 }
+
+export type RebuildArchiveResponse = NormalResponse<{
+    state: string;
+    totalProgress: number;
+}>;

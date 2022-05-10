@@ -760,7 +760,10 @@ export class NxSystemAPI {
         );
     }
 
-    rebuildArchive(type: number, action?: string) {
+    rebuildArchive(
+        type: number,
+        action?: string
+    ): Observable<t.RebuildArchiveResponse> {
         let url = `/api/rebuildArchive?mainPool=${type}`;
         if (action) {
             url += `&action=${action}`;

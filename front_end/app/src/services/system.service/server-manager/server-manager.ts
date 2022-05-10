@@ -3,14 +3,14 @@ import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import type { APIDocType } from '@services/nx-config/base-config';
-import { LogLevel } from '@services/system-api.types';
+import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.types';
 import * as t from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
-import { ResourceParam } from '../../system-api.types';
+import type { ResourceParam } from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo, IParams } from '../system-types';
@@ -212,7 +212,11 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].getStorageAnalytics();
     }
 
-    rebuildArchive(serverId: string, type: number, action?: string) {
+    rebuildArchive(
+        serverId: string,
+        type: number,
+        action?: string
+    ): Observable<RebuildArchiveResponse> {
         return this.mediaserverConnections[serverId].rebuildArchive(type, action);
     }
 

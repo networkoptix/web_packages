@@ -1,3 +1,7 @@
+import type { Observable } from 'rxjs';
+
+import type { RebuildArchiveResponse } from '@services/system-api.types';
+
 import { NxSystem } from '../system';
 
 import { StorageState } from './storage-state';
@@ -42,7 +46,11 @@ import { StorageState } from './storage-state';
 export class StorageManager extends StorageState {
     // Public storage methods
 
-    rebuildArchive(serverId: string, type: number, action?: string) {
+    rebuildArchive(
+        serverId: string,
+        type: number,
+        action?: string
+    ): Observable<RebuildArchiveResponse> {
         return this.serverManager.rebuildArchive(serverId, type, action);
     }
 

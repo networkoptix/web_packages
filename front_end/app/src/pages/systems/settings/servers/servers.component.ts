@@ -18,6 +18,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
@@ -38,18 +39,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
-    serverIdFromParams;
-    selectedServer;
-    serverId$ = new BehaviorSubject('');
+    serverIdFromParams: string;
+    selectedServer: NxSystemServer;
+    serverId$ = new BehaviorSubject<string>('');
 
     advanced: boolean;
-    isOffline = false;
-    serverLoaded = false;
-    storagesOutdated = false;
-
-    private setupDefaults(): void {
-        this.menuService.section = 'servers';
-    }
+    isOffline: boolean = false;
+    serverLoaded: boolean = false;
+    storagesOutdated: boolean = false;
 
     constructor(
         configService: NxConfigService,
@@ -65,37 +62,38 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
-        this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.route.params.pipe(
-            untilDestroyed(this)
-        ).subscribe(({ serverId }) => {
-            if (!serverId) {
-                return;
-            }
+        this.menuService.section = 'servers';
 
-            this.serverIdFromParams = serverId
-                .replace('%7B', '{')
-                .replace('%7D', '}');
+        this.route.params
+            .pipe(untilDestroyed(this))
+            .subscribe(({ serverId }: { serverId: string }) => {
+                if (!serverId) {
+                    return;
+                }
 
-            if (this.serverIdFromParams.includes('?')) {
-                this.serverIdFromParams = this.serverIdFromParams.substring(
-                    0,
-                    this.serverIdFromParams.indexOf('?')
-                );
-            }
+                this.serverIdFromParams = serverId
+                    .replace('%7B', '{')
+                    .replace('%7D', '}');
 
-            this.menuService.detail = this.serverIdFromParams;
+                if (this.serverIdFromParams.includes('?')) {
+                    this.serverIdFromParams = this.serverIdFromParams.substring(
+                        0,
+                        this.serverIdFromParams.indexOf('?')
+                    );
+                }
 
-            this.setServer(true);
+                this.menuService.detail = this.serverIdFromParams;
 
-            // remove when storages update with normal 30 second poll
-            timer(60000).subscribe(() => {
-                this.storagesOutdated = true;
+                this.setServer(true);
+
+                // remove when storages update with normal 30 second poll
+                timer(60000).subscribe(() => {
+                    this.storagesOutdated = true;
+                });
             });
-        });
 
         this.route.queryParams
             .pipe(untilDestroyed(this))
@@ -171,18 +169,21 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             });
     }
 
-    setServer(initWatcher = true): void {
+    setServer(initWatcher: boolean = true): void {
         if (initWatcher) {
             this.applyService.initPageWatcher(this.applyContainerRef);
         }
-        if (this.system && this.system.servers && this.system.servers.length > 0) {
-            let server;
+        if (
+            this.system?.serverManager?.servers &&
+            this.system.serverManager.servers.length > 0
+        ) {
+            let server: NxSystemServer;
             if (this.serverIdFromParams) {
-                server = this.system.serverManager.servers.find((server: any) => {
-                    return server.id === `{${this.serverIdFromParams}}`;
-                });
+                server = this.system.serverManager.servers.find(server =>
+                    server.id === `{${this.serverIdFromParams}}`
+                );
             }
-            if (typeof server === 'undefined') {
+            if (server === undefined) {
                 if (
                     this.system.serverManager.servers.length > 0 ||
                     this.environment.isLocal && this.location.path() === '/settings/servers'
@@ -205,7 +206,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
             server.osName = server.osInfo
                 ? JSON.parse(server.osInfo).platform
-                : this.LANG.common.unknown?.();
+                : this.LANG.common.unknown();
             if (!server.ip) {
                 setServerIpAndPort(server);
             }

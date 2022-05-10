@@ -75,7 +75,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         this.LANG = languageService.translations;
     }
 
-    showLegend(template: TemplateRef<any>, target: HTMLElement): void {
+    showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
             return;
         }

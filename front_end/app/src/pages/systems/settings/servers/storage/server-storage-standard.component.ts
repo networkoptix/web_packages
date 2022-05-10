@@ -16,6 +16,7 @@ import {
     timer,
     Subscription,
     Observable,
+    throwError,
 } from 'rxjs';
 import {
     map,
@@ -46,7 +47,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { ChangedIdReturned } from '@services/system-api.types';
+import type {
+    ChangedIdReturned,
+    RebuildArchiveResponse
+} from '@services/system-api.types';
 import {
     STORAGE_STATUS,
     Storage,
@@ -136,7 +140,7 @@ export class NxSystemStorageComponent implements OnInit {
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        @Inject(ViewContainerRef) viewContainerRef,
+        @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
         private dialogs: NxDialogsService,
         private toastService: NxToastService,
         private processService: NxProcessService,
@@ -398,7 +402,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
     };
 
-    setDefaultBackupSettings = async () => {
+    setDefaultBackupSettings = async (): Promise<void> => {
         if (this.system.useRest) {
             const cameras: Record<string, string>[] = this.system.cameraManager.cameras.map(
                 ({ id }) => ({
@@ -647,7 +651,7 @@ export class NxSystemStorageComponent implements OnInit {
 
     handleModeUpdate = (): Promise<string> => {
         this.forceShowBackupBlock = false;
-        const updating = [];
+        const updating: string[] = [];
         for (const id in this.modeWatchers) {
             const store = this.currentStorageState.locations.find(
                 ({ storageId }) => storageId === cleanId(id)
@@ -818,7 +822,7 @@ export class NxSystemStorageComponent implements OnInit {
         return defer(() => this.system.storageManager
             .rebuildArchive(this.serverId, type, action)
             .pipe(
-                map((res: any) => {
+                map((res: RebuildArchiveResponse) => {
                     if (res.reply && res.reply.state === 'RebuildState_None') {
                         type ? this.percentMainDone = 1 : this.percentBackupDone = 1;
                         return res;
@@ -835,7 +839,7 @@ export class NxSystemStorageComponent implements OnInit {
                         this.reindexingBackup = true;
                         this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
                     }
-                    throw res;
+                    throwError(res);
                 })
             )
         ).pipe(
@@ -843,7 +847,7 @@ export class NxSystemStorageComponent implements OnInit {
             takeUntil(this.stopReindex$.pipe(filter(stopping => stopping === type))),
             untilDestroyed(this)
         ).subscribe(
-            (res: any) => {
+            (res: RebuildArchiveResponse) => {
                 if (res.reply.state === 'RebuildState_None') {
                     this[`percent${type ? 'Main' : 'Backup'}Done`] = 0;
                     message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Success`]();
