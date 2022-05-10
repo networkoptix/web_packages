@@ -4,6 +4,9 @@ import { FormGroup } from '@angular/forms';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
+import type {
+    MultiSelectItem
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -45,8 +48,8 @@ export class FormApplyExampleComponent {
     show2: boolean;
     blah: string;
 
-    items: any[];
-    itemsSelected: any;
+    items: MultiSelectItem[];
+    itemsSelected: string[];
 
     itemsDDSingle: DropdownItem<string>[];
     langCode: string = 'en_US';
@@ -157,7 +160,7 @@ export class FormApplyExampleComponent {
         // }, 5000);
     }
 
-    ddModelChanged(result: []): void {
+    ddModelChanged(result: string[]): void {
         // ensure 'change' will be triggered
         this.itemsSelected = [...result];
     }

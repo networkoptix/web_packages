@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
+import type {
+    MultiSelectItem
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxMenuService } from '@src/menu/menu.service';
 
 @Component({
@@ -11,8 +14,8 @@ import { NxMenuService } from '@src/menu/menu.service';
     styleUrls: ['multi-select.component.scss']
 })
 export class MultiSelectComponent {
-    items: any[];
-    itemsSelected: any;
+    items: MultiSelectItem[];
+    itemsSelected: string[];
     mode: DropdownItem<string>[];
     modeSelected: DropdownItem<string>;
     ddWidth: number;
@@ -59,7 +62,7 @@ export class MultiSelectComponent {
         this.ddWidth = Math.round(btn.getBoundingClientRect().width + 100);
     }
 
-    modelChanged(result: any): void {
+    modelChanged(result: string[]): void {
         // ensure 'change' will be triggered
         this.itemsSelected = [...result];
     }

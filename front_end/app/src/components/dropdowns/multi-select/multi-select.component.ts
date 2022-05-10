@@ -44,31 +44,28 @@ import type { MultiSelectItem } from './multi-select.component.types';
 })
 
 export class NxMultiSelectDropdown extends BaseDropdown {
-    @Input() id: string;
+    @Input() id: string = 'multiselect';
     @Input('items') itemsOrig: MultiSelectItem[];
     @IBool() @Input() canSelectAll: CoercedBoolInput;
     @IBool() @Input() canSearch: CoercedBoolInput;
 
     public items: MultiSelectItem[] = [];
-    public filter: string;
-    public textSelected: any = {};
+    public filter: string = '';
+    public textSelected: string;
 
-    private innerValue;
+    private innerValue: MultiSelectItem['id'][] = [];
 
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService
     ) {
         super(languageService, configService);
-        this.filter = '';
     }
 
-    ngOnInit(): void {
-        this.id = this.id || 'multiSelect';
-    }
+    ngOnInit(): void {}
 
-    clearSelected() {
-        this.items.forEach((item: any) => {
+    clearSelected(event: MouseEvent): void {
+        this.items.forEach(item => {
             item.selected = false;
             const index = this.innerValue.indexOf(item.id);
             if (index > -1) {
@@ -77,14 +74,13 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         });
 
         // ensure 'change' will be triggered as checkboxes didn't fire click event
-        this.items = this.items.map((obj: any) => ({ ...obj }));
+        this.items = this.items.map(obj => ({ ...obj }));
         this.updateModel();
 
-        // break anchor nav event
-        return false;
+        event.preventDefault();
     }
 
-    change(evt, item: any) {
+    change(item: MultiSelectItem): void {
         const index = this.innerValue.indexOf(item.id);
         if (index > -1) {
             this.innerValue.splice(index, 1);
@@ -94,43 +90,36 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
         item.selected = this.innerValue.includes(item.id);
         this.updateModel();
-
-        // break anchor nav event
-        return false;
     }
 
-    applyLocalFilter(value): void {
+    applyLocalFilter(value: string): void {
         this.filter = value;
 
-        this.items = this.itemsOrig.filter((item: any) => {
-            return item.id.toLowerCase().includes(value.toLowerCase());
-        });
+        this.items = this.itemsOrig.filter(item =>
+            item.id.toLowerCase().includes(value.toLowerCase())
+        );
     }
 
-    trackItem(index, item: any) {
+    trackItem(_index: number, item: MultiSelectItem): string | undefined {
         return item ? item.id : undefined;
     }
 
     updateItems(): void {
-        this.items.forEach((item: any) => {
-            item.selected = (this.innerValue !== undefined)
-                ? this.innerValue.includes(item.id)
-                : false;
+        this.items.forEach(item => {
+            item.selected = this.innerValue.includes(item.id);
         });
 
         // ensure 'change' will be triggered
-        this.items = this.items.map((obj: any) => ({ ...obj }));
+        this.items = this.items.map(obj => ({ ...obj }));
     }
 
     updateLabel(): void {
-        switch (this.innerValue && this.innerValue.length) {
+        switch (this.innerValue.length) {
             case 1: {
-                this.textSelected = this.items.find((item: any) => {
-                    return (item.label?.name || item.id) === this.innerValue[0];
-                });
-                // Aggregated MSelect items vs. simple list
-                this.textSelected =
-                    this.textSelected.label.name || this.textSelected.label;
+                const selectedItem = this.items.find(item =>
+                    item.id === this.innerValue[0]
+                );
+                this.textSelected = selectedItem.label;
                 break;
             }
             case 0:
@@ -153,9 +142,9 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.onChangeCallback(this.innerValue);
     }
 
-    ngOnChanges(changes: NgChanges<NxMultiSelectDropdown>): void {
-        if (changes.itemsOrig) {
-            this.items = changes.itemsOrig.currentValue.map(obj => ({ ...obj }));
+    ngOnChanges({ itemsOrig }: NgChanges<NxMultiSelectDropdown>): void {
+        if (itemsOrig) {
+            this.items = itemsOrig.currentValue.map(obj => ({ ...obj }));
             this.updateItems();
         }
     }
@@ -163,7 +152,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     /**
      * Overwrite
      */
-    writeValue(value: any): void {
+    writeValue(value: string[]): void {
         if (value !== null) {
             this.innerValue = value;
             this.updateLabel();

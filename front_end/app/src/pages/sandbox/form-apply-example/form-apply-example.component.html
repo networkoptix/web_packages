@@ -10,11 +10,12 @@
             </div>
             <div class="form-group">
                 <div class="col-6 p-0 pb-3">
-                    <nx-multi-select name="ddMultiSelect"
-                                     [items]="items"
-                                     [ngModel]="itemsSelected"
-                                     (ngModelChange)="ddModelChanged($event)"
-                                     canSelectAll>
+                    <nx-multi-select
+                        name="ddMultiSelect"
+                        [items]="items"
+                        [ngModel]="itemsSelected"
+                        (ngModelChange)="ddModelChanged($event)"
+                        canSelectAll>
                     </nx-multi-select>
                 </div>
                 <div class="col-6 p-0 pb-3">

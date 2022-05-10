@@ -3,15 +3,12 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
+import type {
+    MultiSelectItem
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system.service';
 
 type SingleDropdownOption = DropdownItem<string>;
-interface MultiDropdownOption extends DropdownItem<string> {
-    name: string,
-    value: string,
-    label: string,
-    id: string
-}
 
 @Component({
     selector: 'nx-swagger-dropdown',
@@ -19,14 +16,14 @@ interface MultiDropdownOption extends DropdownItem<string> {
     styleUrls: ['./swagger-dropdown.component.scss']
 })
 export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
-    @Input() swaggerSelect;
+    @Input() swaggerSelect: HTMLSelectElement;
     singleDropdownOptions: SingleDropdownOption[] = [];
-    multiDropdownOptions: MultiDropdownOption[] = [];
+    multiDropdownOptions: MultiSelectItem[] = [];
     isDisabled = true;
     disabledMutationObserver: MutationObserver;
 
     isMultiSelect = false;
-    selectedOptions = []; // For multiselect only
+    selectedOptions: string[] = []; // For multiselect only
 
     constructor(private APIToolService: NxAPIToolSystemService) { }
 
@@ -36,28 +33,22 @@ export class NxSwaggerDropdownComponent implements OnInit, OnDestroy {
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
-    onMultiSelect = (e: any): void => {
+    onMultiSelect = (options: string[]): void => {
         this.APIToolService.preventNextChangeDetection = true;
-        this.selectedOptions = [...e];
+        this.selectedOptions = [...options];
         for (const option of this.swaggerSelect.options) {
-            if (this.selectedOptions.includes(option.value)) {
-                option.selected = true;
-            } else {
-                option.selected = false;
-            }
+            option.selected = this.selectedOptions.includes(option.value);
         }
 
         this.swaggerSelect.dispatchEvent(new Event('change', { bubbles: true }));
     };
 
     ngOnInit(): void {
-        const options: NodeListOf<HTMLOptionElement> = this.swaggerSelect.querySelectorAll('option');
+        const options = this.swaggerSelect.querySelectorAll('option');
         for (const option of options) {
             if (this.isMultiSelect) {
                 if (option.innerText !== '--') {
                     this.multiDropdownOptions.push({
-                        name: option.innerText,
-                        value: option.value,
                         label: option.innerText,
                         id: option.value
                     });
