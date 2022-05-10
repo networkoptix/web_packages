@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h1 class="modal-title" translate>Delete existing drive contents</h1>
+    <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="activeModal.close()"
+    >
+        <span class="close-content"><span class="close-icon"></span></span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <nx-alert-block
+        type="error"
+        [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+        [line1]="'You are attempting to reserve more space than there is free space available. This will delete existing drive contents!' | translate"
+        [line2]="'Are you sure you want to continue?' | translate"
+    ></nx-alert-block>
+    <label>
+        <nx-checkbox [required]="true" [(ngModel)]="accepted"></nx-checkbox>
+        <span translate>Yes, delete existing drive contents</span>
+    </label>
+</div>
+<div class="modal-footer">
+    <nx-process-button
+        [process]="acceptOverwrite"
+        actionType="danger"
+        [buttonText]="'Confirm' | translate"
+        [buttonDisabled]="!accepted"
+    ></nx-process-button>
+    <nx-cancel-button [discardFn]="activeModal.close"></nx-cancel-button>
+</div>

@@ -36,6 +36,7 @@ import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
+import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
@@ -96,6 +97,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         SelectTimeRangeModalContent,
         TransferOwnershipModalContent,
         Client2faWarningModalContent,
+        ReserveSpaceWarningModalContent,
     ],
     providers: [
         NxDialogsService,
