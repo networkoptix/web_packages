@@ -1080,10 +1080,10 @@
     },
     "storage": {
         "reindexingDone": {
-            "mainSuccess": "Main storage reindexing completed",
-            "backupSuccess": "Backup storage reindexing completed",
-            "mainFailed": "Main storage reindexing failed",
-            "backupFailed": "Backup storage reindexing failed"
+            "mainSuccess": "Lập lại chỉ mục bộ nhớ chính đã hoàn tất",
+            "backupSuccess": "Lập lại chỉ mục Sao lưu đã hoàn tất",
+            "mainFailed": "Lập lại chỉ mục bộ nhớ chính không thành công",
+            "backupFailed": "Lập lại chỉ mục Sao lưu không thành công"
         },
         "modes": {
             "main": "Main",
