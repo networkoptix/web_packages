@@ -43,6 +43,7 @@ import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
+import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
@@ -668,5 +669,16 @@ export class NxDialogsService {
         const params: IParams = {};
 
         return this.createModal(Client2faWarningModalContent, options, params);
+    }
+
+    public reserveSpaceWarning(): Promise<string | void> {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {};
+
+        return this.createModal(ReserveSpaceWarningModalContent, options, params);
     }
 }
