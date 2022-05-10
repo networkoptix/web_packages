@@ -2,9 +2,19 @@ FROM python:3.8.7-alpine3.12
 
 ARG CACHE_DATE
 COPY stage/requirements.txt /app/requirements.txt
+COPY pip.conf /root/.config/pip/pip.conf
 
 RUN set -ex \
-    apt update \
+    apk update \
+    && apk update \
+    && apk add --no-cache \
+        libcrypto1.1 \
+        libffi \
+        libgcc \
+        libssl1.1 \
+        libstdc++ \
+        musl \
+        yaml \
     && pip install --prefer-binary -r /app/requirements.txt
 
 ENV C_FORCE_ROOT true
