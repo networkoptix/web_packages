@@ -73,7 +73,7 @@ class SWITCHES(metaclass=_FlagType):
     system_groups = ('System Groups', 'systemGroups')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
     cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer')
-
+    new_header = ('New Header', 'newHeader')
 
 class SAMPLES(metaclass=_FlagType):
     pass
