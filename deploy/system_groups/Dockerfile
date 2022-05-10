@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.8.7-alpine3.12
 
 ARG CACHE_DATE
 COPY stage/requirements.txt /app/requirements.txt
