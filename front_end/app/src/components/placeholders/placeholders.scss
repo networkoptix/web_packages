@@ -197,6 +197,24 @@ $preloader_small_circle_distance : 8px;
             fill : var(--placehoder-cloud-color);
             opacity: var(--placehoder-cloud-opacity);
         }
+        .svg_light {
+            fill : var(--placeholder-light-color)
+        }
+        .svg_light2 {
+            fill : var(--placeholder-light2-color)
+        }
+        .svg_light_stroke {
+            stroke : var(--placeholder-light-color)
+        }
+        .svg_accent {
+            fill : var(--placeholder-accent-color)
+        }
+        .svg_accent-stroke {
+            stroke : var(--placeholder-accent-color)
+        }
+        .svg_accent2 {
+            fill : var(--placeholder-accent2-color)
+        }
         .brand_element {
             fill : var(--brand-core);
         }

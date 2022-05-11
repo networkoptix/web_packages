@@ -102,7 +102,11 @@ html[data-theme="dark"] {
     --label-color          : #E1E7EA; //light4;
 
     --placehoder-cloud-color   : #171C1F; //$dark5
-    --placehoder-cloud-opacity : 1;
+    --placehoder-cloud-opacity : 0;
+    --placeholder-light-color : #E1E7EA; //$light4;
+    --placeholder-light2-color : #{$light5};
+    --placeholder-accent-color : #{$light6};
+    --placeholder-accent2-color : #{$light12};
     --placehoder-title-color   : #E1E7EA; //$light4;
     --placehoder-body-color    : #A5B7C0; //light10;
 
