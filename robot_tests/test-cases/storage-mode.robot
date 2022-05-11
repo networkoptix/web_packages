@@ -7,7 +7,7 @@ Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
-${QA BURBANK IP}     10.1.5.239
+#${QA BURBANK IP}     10.1.5.239
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
