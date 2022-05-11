@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
+import { Subscription } from 'rxjs';
 
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';

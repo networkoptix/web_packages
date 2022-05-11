@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs/internal/Subject';
+import { Subject } from 'rxjs';
 
 import staticLang from '../../language_i18n_static.json';
 

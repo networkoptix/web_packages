@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';

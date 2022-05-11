@@ -24,7 +24,6 @@
               "qrcode",
               "@firebase/util",
               "@firebase/component",
-              "rxjs/internal/scheduler/animationFrame",
               "dateformat",
               "@videojs/xhr",
               "videojs-vtt.js",

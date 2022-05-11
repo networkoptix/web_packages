@@ -6,9 +6,9 @@ import {
     fromEvent,
     Observable,
     Subject,
-    EMPTY
+    EMPTY,
+    animationFrameScheduler,
 } from 'rxjs';
-import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 import {
     switchMap,
     pairwise,
@@ -175,7 +175,7 @@ export class MotionMaskRenderer {
         ).subscribe(shiftCtrlSubject$);
         const mouseState$ = new BehaviorSubject({ x: 0, y: 0 });
         mouseMove$.pipe(
-            throttleTime(0, animationFrame),
+            throttleTime(0, animationFrameScheduler),
             map(findEventCoords),
             distinctUntilChanged(
                 ({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y
