@@ -404,6 +404,7 @@ export class NxSystem extends System {
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
+                .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true))
                 .catch((error) => {
                     if (error?.offline) {
                         this.isOnline = false;
