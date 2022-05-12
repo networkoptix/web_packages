@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "已增加外部存儲空間",
     "SMB TOOLTIP TEXT": "網絡（smb），已透過VMS新增",
     "NO STORAGE FOUND TEXT": "找不到存儲空間",
-    "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.239/networkdisk is already used by another server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "不建議將同一個錄影位置用於不同伺服器上.",
     "ADD THIS STORAGE ANYWAY TEXT": "仍要新增此儲存裝置?",
     "BACK TEXT": "返回",

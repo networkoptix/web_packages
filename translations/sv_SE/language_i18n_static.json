@@ -1,6 +1,7 @@
 {
     "language": "sv_SE",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "For developers": "För utvecklare",
     "Integrations (β)": "Integrationer (β)",
@@ -8,6 +9,29 @@
     "Support": "Support",
     "Terms": "Villkor",
     "Developers Console": "Utvecklarkonsol",
+    "alarmTypes": {
+        "Servers": "Servrar",
+        "Cameras": "Kameror",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Offline",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Server",
+        "cameras": "Kameror",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Obegränsad tillgång, inklusive möjligheten att dela",
@@ -640,6 +664,7 @@
     "ipvdFeedback": {
         "request": "Vänligen <span id=\"request\">skicka in en begäran</span> för ytterligare frågor/bekymmer angående enheter som stöds."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Topp {value} efter volym:",
     "ipvdDisclaimer": "Denna lista är begränsad till enheter som finns på {vmsName} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {companyName}. Ingen personlig information samlas in och varje användare förblir helt anonym.",
     "menu": {
@@ -648,8 +673,20 @@
             "systemAdministration": "Systemadministration",
             "general": "Allmänt",
             "licenses": "Licenser",
-            "users": "Användare"
+            "users": "Användare",
+            "servers": "Servrar",
+            "alerts": "Alerts",
+            "systems": "System",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Typ",
+        "server": "Server",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "Om",
@@ -907,6 +944,56 @@
         "webAdminCloudCredentialError": "Logga in med %CLOUD_NAME% för att komma åt detta system som molnanvändare",
         "twoFaRequired": "Tvåfaktorsautentisering har aktiverats för det här kontot. Vänligen ange din verifieringskod i popup-fönstret.",
         "loggingIn": "Loggar in. Vänligen vänta."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Info",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Servrar",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Användare",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "Status",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "OS",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath-rapport för system {systemName}"

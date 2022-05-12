@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "Almacenamiento externo añadido",
     "SMB TOOLTIP TEXT": "Red (smb), añadida a través de VMS",
     "NO STORAGE FOUND TEXT": "No se encontró almacenamiento",
-    "STORAGE PATH ALREADY USED TEXT": "Otro servidor ya utiliza la ruta de almacenamiento //10.1.5.239/networkdisk.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "No se recomienda utilizar una ubicación de grabación para diferentes servidores.",
     "ADD THIS STORAGE ANYWAY TEXT": "¿Añadir este almacenamiento de todos modos?",
     "BACK TEXT": "Anterior",

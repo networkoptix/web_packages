@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "External storage added",
     "SMB TOOLTIP TEXT": "Network (smb), added through VMS",
     "NO STORAGE FOUND TEXT": "No storage found",
-    "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.239/networkdisk is already used by another server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Farklı sunucular için tek bir kayıt konumu kullanılması önerilmez.",
     "ADD THIS STORAGE ANYWAY TEXT": "Bu depolama yinede eklensin mi?",
     "BACK TEXT": "Geri",

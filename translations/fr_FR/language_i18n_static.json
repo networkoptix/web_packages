@@ -1,6 +1,7 @@
 {
     "language": "fr_FR",
     "About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "Télécharger %VMS_NAME%",
     "For developers": "Pour développeurs",
     "Integrations (β)": "Intégrations (β)",
@@ -8,6 +9,29 @@
     "Support": "Support",
     "Terms": "Conditions",
     "Developers Console": "Console développeur",
+    "alarmTypes": {
+        "Servers": "Serveurs",
+        "Cameras": "Caméras",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Hors ligne",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Serveur",
+        "cameras": "Caméras",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Accès illimité, y compris la possibilité de partager",
@@ -330,7 +354,7 @@
             "cloud": "Cloud",
             "commonText": "Échec de la fusion des systèmes <strong>{primarySystem}</strong> et <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connectez le système que vous voulez fusionner avec celui-ci à <strong>%CLOUD_NAME%</strong> ou fusionnez localement en utilisant <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "Connectez le système que vous voulez fusionner avec celui-ci à <strong>%CLOUD_NAME%</strong> en utilisant le même compte, ou fusionnez localement en utilisant <strong>%VMS_NAME%</strong> Client.",
             "differentOwners": "Le système sélectionné et le système actuel sont connectés à %CLOUD_NAME% et ont des propriétaires différents. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
             "duplicateServers": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
             "enterSystemAddressTitle": "Entrez l'adresse de n'importe quel serveur dans le système que vous voulez fusionner avec celui-ci.",
@@ -430,9 +454,9 @@
             "loggedFromOtherAccount": "Vous serez connecté avec un autre compte",
             "noClientDetected": "Installez %VMS_NAME% pour visionner votre système",
             "removeUser": "Supprimer l'utilisateur",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversDetach": "Détacher le serveur&nbsp;<strong>{ title }</strong>&nbsp;du système actuel ?",
+            "serversReset": "Réinitialiser le serveur&nbsp;<strong>{ title }</strong>&nbsp;par défaut ?",
+            "serversRestart": "Redémarrer le serveur&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
@@ -640,6 +664,7 @@
     "ipvdFeedback": {
         "request": "Veuillez <span id=\"request\">soumettre une demande</span> pour des questions/préoccupations supplémentaires concernant les appareils pris en charge."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} par volume :",
     "ipvdDisclaimer": "Cette liste est limitée aux périphériques trouvés sur {vmsName} où les utilisateurs ont autorisé la notification automatique des spécifications de l'appareil à {companyName}. Aucune information personnelle n'est collectée et chaque utilisateur reste complètement anonyme.",
     "menu": {
@@ -648,8 +673,20 @@
             "systemAdministration": "Administration Système",
             "general": "Général",
             "licenses": "Licences",
-            "users": "Utilisateurs"
+            "users": "Utilisateurs",
+            "servers": "Serveurs",
+            "alerts": "Alerts",
+            "systems": "Système",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Type",
+        "server": "Serveur",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "À Propos",
@@ -658,7 +695,7 @@
         "activateCode": "Activer compte",
         "activateSuccess": "Compte activé",
         "articleTitle": "{ARTICLE_TITLE} pour {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Autorisation",
         "changePassword": "Changer mot de passe",
         "debug": "Débogage",
         "default": "%CLOUD_NAME%",
@@ -907,6 +944,56 @@
         "webAdminCloudCredentialError": "Connectez-vous avec %CLOUD_NAME% pour accéder à ce système en tant qu'utilisateur du cloud",
         "twoFaRequired": "L'authentification à deux facteurs a été activée pour ce compte. Veuillez entrer votre code de vérification dans la fenêtre contextuelle.",
         "loggingIn": "Connexion en cours. Veuillez patienter."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Info",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Serveurs",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Utilisateurs",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "État",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "OS",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Rapport de santé pour le système {systemName}"

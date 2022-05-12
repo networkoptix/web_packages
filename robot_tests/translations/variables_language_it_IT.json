@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "Memoria esterna aggiunta",
     "SMB TOOLTIP TEXT": "Rete (smb), aggiunta tramite VMS",
     "NO STORAGE FOUND TEXT": "Nessuno spazio di archiviazione trovato",
-    "STORAGE PATH ALREADY USED TEXT": "Il percorso di archiviazione //10.1.5.239/networkdisk è già utilizzato da un altro server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Non è consigliabile utilizzare una posizione di registrazione per diversi server.",
     "ADD THIS STORAGE ANYWAY TEXT": "Aggiungi questo spazio comunque?",
     "BACK TEXT": "Indietro",

@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "İndir %VMS_NAME%",
     "For developers": "Geliştiriciler İçin",
     "Integrations (β)": "Entegrasyonlar (β)",
@@ -8,6 +9,29 @@
     "Support": "Destek",
     "Terms": "Şartlar",
     "Developers Console": "Developers Console",
+    "alarmTypes": {
+        "Servers": "Sunucular",
+        "Cameras": "Kameralar",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Çevrimdışı",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Sunucu",
+        "cameras": "Kameralar",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Sınırsız erişim, paylaşma imkanı dahil",
@@ -640,6 +664,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -648,8 +673,20 @@
             "systemAdministration": "Sistem Yönetimi",
             "general": "Genel",
             "licenses": "Lisanslar",
-            "users": "Kullanıcılar"
+            "users": "Kullanıcılar",
+            "servers": "Sunucular",
+            "alerts": "Alerts",
+            "systems": "Sistem",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Tür",
+        "server": "Sunucu",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "Hakkında",
@@ -907,6 +944,56 @@
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Bu hesap için iki faktörlü kimlik doğrulama etkinleştirildi. Lütfen açılır pencereye doğrulama kodunuzu girin.",
         "loggingIn": "Oturum açılıyor. Lütfen bekleyin."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Bilgi",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Sunucular",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Kullanıcılar",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "Durum",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "OS",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"

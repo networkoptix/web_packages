@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "Extern lagring har lagts till",
     "SMB TOOLTIP TEXT": "Nätverk (smb), läggs till via VMS",
     "NO STORAGE FOUND TEXT": "Ingen lagring hittades",
-    "STORAGE PATH ALREADY USED TEXT": "Lagringssökväg //10.1.5.239/networkdisk används redan av en annan server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Det rekommenderas inte att använda samma inspelningsplats för olika servrar.",
     "ADD THIS STORAGE ANYWAY TEXT": "Lägg till den här lagringen ändå?",
     "BACK TEXT": "Tillbaka",
