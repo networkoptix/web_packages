@@ -16,9 +16,9 @@ class TwoFactorPermissionsMixin:
             return [AllowAny()]
         return super().get_permissions()
 
-    def get_user_from_code(self, code):
+    def get_user_from_code(self, code, session_access_token=None):
         try:
-            token = Auth.validate_token(code)
+            token = Auth.validate_token(code, session_access_token=session_access_token)
             return token.get("username", "")
         # If the request fails the worst case is we don't add 2fa to the user's session.
         except APINotAuthorisedException:
@@ -57,7 +57,8 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_2fa_code(data["verification_code"], data["code"])
-        email = self.get_user_from_code(data["code"])
+        email = self.get_user_from_code(data["code"],
+                                        session_access_token=request.session.get("access_token"))
 
         if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
@@ -84,7 +85,8 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_backup_code(data["verification_code"], data["code"])
-        email = self.get_user_from_code(data["code"])
+        email = self.get_user_from_code(data["code"],
+                                        session_access_token=request.session.get("access_token"))
 
         if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
