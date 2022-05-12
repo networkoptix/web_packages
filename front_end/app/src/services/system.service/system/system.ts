@@ -1,11 +1,10 @@
 import { Router } from '@angular/router';
 import {
     BehaviorSubject,
-    of,
     Subscription,
     Observable
 } from 'rxjs';
-import { flatMap, switchMap, tap } from 'rxjs/operators';
+import { auditTime, switchMap, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -298,7 +297,7 @@ export class NxSystem extends System {
                     this.isOnline = true;
                     this.cloudStorageCapable = false;
 
-                    this.getUsers(true)
+                    this.getUsers(true, suppressUpdate)
                         .then(() => {
                             this.userManager.ownerEmail = this.info.ownerAccountEmail;
                             this.userManager.accessRole = this.info.accessRole;
@@ -372,7 +371,10 @@ export class NxSystem extends System {
         if (this.subscriberCount === 0) {
             if (environment.isLocal || this.mediaserver?.authGet || (<NxSystemRestAPI> this.mediaserver).accessToken) {
                 this.subscriberCount++;
-                this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => { });
+                this.activeSubscription = this.systemPoll instanceof Observable &&
+                    this.systemPoll.pipe(auditTime(1000)).subscribe(() => {
+                        this.systemInfo = this;
+                    });
             } else {
                 setTimeout(() => this.startPoll(systemId), 1000);
             }
@@ -402,8 +404,6 @@ export class NxSystem extends System {
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
                 .then(() => this.cameraManager.getCameras())
-                .then(() => this.getUsers(true))
-                .then(() => this.filterCamerasFromUserPermissions())
                 .catch((error) => {
                     if (error?.offline) {
                         this.isOnline = false;
@@ -834,7 +834,7 @@ export class NxSystem extends System {
      * TODO: This method needs to be refactored and moved into userManager.
      * @deprecated Not really deprecated yet but should be soon.
      */
-    getUsers(reload?): Promise<void> {
+    getUsers(reload?: boolean, suppressUpdate = false): Promise<void> {
         if (!this.usersPromise || reload) {
             let usersPromise: Promise<any>;
             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
@@ -862,7 +862,9 @@ export class NxSystem extends System {
             this.usersPromise = usersPromise.then(() => {
                 this.userManager.checkPermissions();
                 // If system is reported to be online - try to get actual users list
-                this.systemInfo = this;
+                if (!suppressUpdate) {
+                    this.systemInfo = this;
+                }
             }); // Handling promise to satisfy the linter.
         }
         return this.usersPromise;

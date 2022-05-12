@@ -45,8 +45,6 @@ export class NxSystemLicensesComponent implements OnInit {
             .subscribe((system) => {
                 this.system = system;
 
-                this.getLicenses();
-
                 this.resetLicense$.next(true);
                 this.system.licensesModifiedSubject
                     .pipe(takeUntil(this.resetLicense$))
