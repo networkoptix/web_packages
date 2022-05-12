@@ -237,8 +237,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.syncMergeAlerts();
 
                         this.enableEdit = this.system.isOnline &&
-                            this.system.userManager.permissions.isAdmin &&
+                            (this.environment.isLocal
+                                ? this.system.userManager.permissions.isAdmin
+                                : this.system.userManager.isMine) &&
                             !this.settings.renameDisabled;
+                        // TODO: Restore cloud admin rename permissions
+                        // See CB-1596
 
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
