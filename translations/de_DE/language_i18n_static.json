@@ -1,7 +1,7 @@
 {
     "language": "de_DE",
     "About %CLOUD_NAME%": "Über %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Alle Server",
     "Download %VMS_NAME%": "%VMS_NAME% herunterladen",
     "For developers": "Für Entwickler",
     "Integrations (β)": "Integrationen (β)",
@@ -12,25 +12,25 @@
     "alarmTypes": {
         "Servers": "Server",
         "Cameras": "Kameras",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Speicherorte",
+        "Network Interfaces": "Netzwerkschnittstellen"
     },
     "alarmLevels": {
         "offline": "Offline",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Fehler",
+        "warning": "Warnungen"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Alle Alarme",
+        "warning": "Nur Warnungen",
+        "error": "Nur Fehler"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Alle Gerätetypen",
         "servers": "Server",
         "cameras": "Kameras",
-        "storages": "Storages",
-        "networkInterfaces": "Interface"
+        "storages": "Speicher",
+        "networkInterfaces": "Schnittstelle"
     },
     "accessRoles": {
         "Administrator": {
@@ -664,7 +664,7 @@
     "ipvdFeedback": {
         "request": "Bitte <span id=\"request\">senden Sie eine Anfrage</span> für weitere Fragen/Bedenken bezüglich unterstützter Geräte."
     },
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
+    "alertsCount": "{count, plural, =0{# Alarme} one{# Alarm} other{# Alarme}}",
     "ipvdTopXByVolume": "Top {value} nach Volumen:",
     "ipvdDisclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {vmsName} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {companyName} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",
     "menu": {
@@ -675,18 +675,18 @@
             "licenses": "Lizenzen",
             "users": "Benutzer",
             "servers": "Server",
-            "alerts": "Alerts",
+            "alerts": "Alarme",
             "systems": "System",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "storages": "Speicherorte",
+            "networkInterfaces": "Netzwerkschnittstellen",
+            "graphs": "Graphen",
             "logs": "Logs"
         }
     },
     "tableHeaders": {
         "type": "Typ",
         "server": "Server",
-        "alert": "Alert"
+        "alert": "Alarm"
     },
     "pageTitles": {
         "about": "Über",
@@ -948,51 +948,51 @@
     "healthMonitor": {
         "groups": {
             "info": "Info",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Verfügbarkeit",
+            "load": "Laden",
+            "activity": "Aktivität"
         },
         "keys": {
             "name": "Name",
             "servers": "Server",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "cameras": "Kamerakanäle",
+            "storages": "Speicherorte",
             "users": "Benutzer",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Systemversion",
+            "cloudSystemId": "Cloud-System-ID",
             "status": "Status",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
+            "offlineEvents": "Ereignisse: Server Offline (24h)",
+            "uptimeS": "Laufzeit",
             "cpuUsageP": "CPU %",
             "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "ramUsageB": "RAM-Auslastung",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
-            "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "serverRamUsageB": "RAM (VMS-Server)",
+            "serverRamUsageP": "RAM (VMS-Server) %",
+            "threads": "Server-Threads",
+            "decodingThreads": "Threads dekodieren",
+            "decodingSpeed3s": "Dekodierungsgeschwindigkeit",
+            "encodingThreads": "Threads codieren",
+            "encodingSpeed3s": "Kodierungsgeschwindigkeit",
+            "primaryStreams": "Ausgehende primäre Streams",
+            "secondaryStreams": "Ausgehende sekundäre Streams",
+            "incomingConnections": "Eingehende Verbindungen",
+            "outgoingConnections": "Ausgehende Verbindungen",
+            "logLevel": "Logging-Level",
+            "publicIp": "Öffentliche IP",
             "os": "OS",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "Betriebssystemzeit",
+            "vmsTime": "VMS-Zeit",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Kerne",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "guidConflict": "Server-GUID-Konflikt",
+            "vmsTimeChanged24h": "Ereignisse: Zeit geändert (24h)",
+            "transactionsPerSecond1m": "Transaktion/en",
+            "actionsTriggered1m": "Regel Aktivierung/en",
+            "apiCalls1m": "API-Aufruf/e",
+            "thumbnails1m": "Vorschaubild/er",
+            "activePlugins": "Liste der aktiven Plugins"
         }
     },
     "headerLabels": {
