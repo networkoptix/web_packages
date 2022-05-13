@@ -1,112 +1,103 @@
 import { AnimatedFloat } from './AnimatedFloat';
 
-const sleep = t => new Promise(resolve => {
-    setTimeout(resolve, t);
-});
-
 describe('AnimatedFloat', () => {
-    let n;
+    let animFloat: AnimatedFloat;
+
+    let dateNow: number;
     const TEST_INITIAL_VALUE = 100.0;
 
     beforeEach(() => {
-        n = new AnimatedFloat(TEST_INITIAL_VALUE);
+        animFloat = new AnimatedFloat(TEST_INITIAL_VALUE);
+        dateNow = 5000;
+        spyOn(Date, 'now').and.callFake(() => dateNow);
     });
 
-    it('can be instantiated and has initial value right after that', () => {
-        expect(typeof AnimatedFloat).toEqual('function');
-        expect(n.get()).toEqual(TEST_INITIAL_VALUE);
+    it('has initial value', () => {
+        expect(animFloat.get()).toEqual(TEST_INITIAL_VALUE);
     });
 
     it('has correct defaults', () => {
-        n = new AnimatedFloat();
+        animFloat = new AnimatedFloat();
 
-        expect(n.get()).toEqual(AnimatedFloat.DEFAULT_VALUE);
-        expect(AnimatedFloat.DEFAULT_VALUE).toBeCloseTo(0.0);
-        expect(n.value).toEqual(AnimatedFloat.DEFAULT_VALUE);
-        expect(AnimatedFloat.DEFAULT_VALUE).toBeCloseTo(0.0);
+        expect(animFloat.get()).toEqual(AnimatedFloat.DEFAULT_VALUE);
+        expect(animFloat.value).toEqual(AnimatedFloat.DEFAULT_VALUE);
 
-        expect(n.animationDuration).toEqual(AnimatedFloat.DEFAULT_ANIMATION_DURATION);
-        expect(AnimatedFloat.DEFAULT_ANIMATION_DURATION).toBeCloseTo(200.0);
+        expect(animFloat.animationDuration).toEqual(AnimatedFloat.DEFAULT_ANIMATION_DURATION);
 
-        expect(n.easing).toEqual(AnimatedFloat.DEFAULT_EASING);
-        expect(AnimatedFloat.DEFAULT_EASING).toEqual('ease-in-out-sine');
+        expect(animFloat.easing).toEqual(AnimatedFloat.DEFAULT_EASING);
 
-        expect(n.lastChange).toBeCloseTo(0.0);
+        expect(animFloat.lastChange).toEqual(0);
     });
 
-    it('actually animates and respects animation duration parameter', async () => {
-        n.animationDuration = 20;
-        n.set(200.0);
-        expect(n.value).toBeGreaterThanOrEqual(100);
-        expect(n.value).toBeLessThan(110);
-        expect(n.target).toBeCloseTo(200.0);
-        const samples = [];
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        expect(samples[0]).toBeGreaterThanOrEqual(100);
-        expect(samples[0]).toBeLessThan(110);
-        expect(samples[samples.length - 1]).toBeCloseTo(200.0);
-        expect(samples[0] < samples[1]).toBeTrue();
-        expect(samples[1] < samples[2]).toBeTrue();
-        expect(samples[2] <= samples[3]).toBeTrue();
+    it('actually animates and respects animation duration parameter', () => {
+        animFloat.animationDuration = 20;
+        animFloat.set(200.0);
+        expect(animFloat.value).toBeCloseTo(100.0);
+        expect(animFloat.target).toBeCloseTo(200.0);
+        const samples: number[] = [];
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        expect(samples[0]).toBeCloseTo(100.0);
+        expect(samples[0]).toBeLessThan(samples[1]);
+        expect(samples[1]).toBeLessThan(samples[2]);
+        expect(samples[2]).toBeCloseTo(200.0);
+        expect(samples[3]).toBeCloseTo(200.0);
     });
 
-    it('can abort animation', async () => {
-        n.animationDuration = 20;
-        n.set(200.0);
-        await sleep(10);
-        n.abort();
-        await sleep(30);
-        expect(n.get()).toBeLessThan(200.0);
+    it('can abort animation', () => {
+        animFloat.animationDuration = 20;
+        animFloat.set(200.0);
+        dateNow += 10;
+        animFloat.abort();
+        dateNow += 30;
+        expect(animFloat.get()).toBeCloseTo(175.0);
     });
 
-    it('can force animation', async () => {
-        n.animationDuration = 20;
-        n.set(200.0);
-        await sleep(10);
-        n.force();
-        expect(n.get()).toBeCloseTo(200.0);
+    it('can force animation', () => {
+        animFloat.animationDuration = 20;
+        animFloat.set(200.0);
+        dateNow += 10;
+        animFloat.force();
+        expect(animFloat.get()).toBeCloseTo(200.0);
     });
 
-    it('can be shifted in progress', async () => {
-        n.animationDuration = 20;
-        n.set(200.0);
-        n.forceShift(1000);
-        expect(n.value).toBeGreaterThanOrEqual(1100);
-        expect(n.value).toBeLessThan(1110);
-        expect(n.target).toBeCloseTo(1200.0);
-        const samples = [];
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        expect(samples[0]).toBeGreaterThanOrEqual(1100);
-        expect(samples[0]).toBeLessThan(1110);
-        expect(samples[samples.length - 1]).toBeCloseTo(1200.0);
-        expect(samples[0] < samples[1]).toBeTrue();
-        expect(samples[1] < samples[2]).toBeTrue();
-        expect(samples[2] <= samples[3]).toBeTrue();
+    it('can be shifted in progress', () => {
+        animFloat.animationDuration = 20;
+        animFloat.set(200.0);
+        animFloat.forceShift(1000);
+        expect(animFloat.value).toBeCloseTo(1100.0);
+        expect(animFloat.target).toBeCloseTo(1200.0);
+        const samples: number[] = [];
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        expect(samples[0]).toBeCloseTo(1100);
+        expect(samples[0]).toBeLessThan(samples[1]);
+        expect(samples[1]).toBeLessThan(samples[2]);
+        expect(samples[2]).toBeCloseTo(1200.0);
+        expect(samples[3]).toBeCloseTo(1200.0);
     });
 
-    it('returns floats during the whole animation process', async () => {
-        n.animationDuration = 20;
-        n.set(200.123);
-        const samples = [];
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
-        await sleep(10);
-        samples.push(n.get());
+    it('returns floats during the whole animation process', () => {
+        animFloat.animationDuration = 20;
+        animFloat.set(200.123);
+        const samples: number[] = [];
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
+        dateNow += 10;
+        samples.push(animFloat.get());
         expect(samples.filter(v => v !== Math.round(v)).length).toBeGreaterThan(2);
     });
 });
