@@ -54,6 +54,11 @@ export class NxProcessButtonComponent implements OnInit {
         if (this.actionType) {
             this.buttonClass = 'btn-' + this.actionType;
         }
+
+        if (this.svg) {
+            this.svg.height = this.svg.height || '24';
+            this.svg.width = this.svg.width || '24';
+        }
     }
 
     touchForm(): void {

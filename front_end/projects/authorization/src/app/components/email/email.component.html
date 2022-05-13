@@ -69,7 +69,7 @@
     </form>
     <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
         <div class="left">
-            <button 
+            <button
                 *ngIf="
                     ['loginToCloud', 'loginToWebadmin', 'connectSystemToCloud', 'renewSessionWeb'].includes(clientType)
                     && !isMobile
@@ -95,7 +95,7 @@
                 [clickFn]="sendEmail"
                 [form]="emailForm"
                 [process]="emailProcess"
-                [svg]="{ src: 'arrow_right', height: '20', width: '20', color: 'light1' }">
+                [svg]="{ src: 'arrow_right', height: '20', width: '20' }">
             </nx-process-button>
         </div>
     </footer>

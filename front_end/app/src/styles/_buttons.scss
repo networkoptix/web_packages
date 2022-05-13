@@ -58,6 +58,11 @@ button, .btn {
     box-shadow       : var(--btn-default-shadow);
     font-family      : $font-family-medium;
     
+    &.svg-icon svg-icon svg .st0 {
+        fill   : var(--btn-default-color);
+        stroke : none;
+    }
+    
     &.has-icon {
         position     : relative;
         padding-left : 36px !important;
@@ -136,6 +141,11 @@ button, .btn {
     
     &.disabledInProgress {
         opacity: 1;
+    }
+    
+    &.svg-icon svg-icon svg .st0 {
+        fill   : var(--btn-primary-color);
+        stroke : var(--btn-primary-color);
     }
 }
 

@@ -81,7 +81,7 @@
                 [form]="checkMergeForm"
                 actionType="primary"
                 [buttonDisabled]="!systemsLoaded"
-                [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
+                [svg]="{ src: 'arrow_right' }"
                 buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
     </div>
@@ -130,7 +130,7 @@
                 [process]="checkPasswordProcess"
                 [form]="adminPasswordForm"
                 actionType="primary"
-                [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
+                [svg]="{ src: 'arrow_right' }"
                 buttonText="{{ 'Next' | translate}}"></nx-process-button>
         </div>
     </div>
@@ -189,7 +189,7 @@
         <button class="btn btn-primary svg-icon next-button" type="button" (click)="machine.transition('confirmMerge')">
             <ng-container>{{ 'Next' | translate }}</ng-container>
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"
-                class="white-svg ml-2" [applyClass]="true"></svg-icon>
+                class="ml-2" [applyClass]="true"></svg-icon>
         </button>
     </div>
 </form>
