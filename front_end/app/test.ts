@@ -26,6 +26,7 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
+import { WINDOW } from '@services/window-provider';
 
 // HELPERS ******************************************
 nxConfig.company.name = 'Nx Cloud';
@@ -119,6 +120,8 @@ ngMocks.defaultMock(NxSettingsService, () => ({
 ngMocks.defaultMock(NxSystemsService, () => ({
     systemsSubject: of([]),
 }));
+
+ngMocks.defaultMock(WINDOW, () => window);
 
 declare const require: {
   context(path: string, deep?: boolean, filter?: RegExp): {

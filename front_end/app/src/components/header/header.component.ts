@@ -157,8 +157,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.setLocation(this.window.location.pathname);
         });
         // Updates windowWidth$ behavior subject on window resize
-        this.resizeSubscription = fromEvent(this.window, 'resize').pipe(
-            map((event: any) => event.target.innerWidth as number),
+        this.resizeSubscription = fromEvent<FocusEvent>(this.window, 'resize').pipe(
+            map(event => (event.target as Window).innerWidth),
             startWith(this.window.innerWidth)
         ).subscribe(width => this.windowWidth$.next(width));
 

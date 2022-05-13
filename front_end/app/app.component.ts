@@ -281,13 +281,11 @@ export class AppComponent {
                 }
             });
 
-        fromEvent(window, 'resize')
+        fromEvent<FocusEvent>(this.window, 'resize')
             .pipe(debounceTime(100))
-            .subscribe((event: FocusEvent) => {
-                this.scrollMechanicsService.setWindowSize(
-                    (event.target as Window).innerHeight,
-                    (event.target as Window).innerWidth
-                );
+            .subscribe(event => {
+                const { innerHeight, innerWidth } = event.target as Window;
+                this.scrollMechanicsService.setWindowSize(innerHeight, innerWidth);
             });
     }
 

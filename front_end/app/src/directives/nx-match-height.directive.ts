@@ -3,11 +3,14 @@ import {
     Directive,
     ElementRef,
     Input,
-    OnDestroy
+    OnDestroy,
+    Inject
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+
+import { WINDOW } from '@services/window-provider';
 
 // Allows you to make all children with a certain class of the parent component have the same height dyamically
 // Attach to parent, and then specify a class to look for in the children with classToMatch input.
@@ -22,12 +25,15 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
 
     initialLoadInterval: ReturnType<typeof setInterval>;
 
-    resizeObservable$ = fromEvent(window, 'resize');
-
-    constructor(private el: ElementRef) {
-        this.resizeObservable$.pipe(untilDestroyed(this), debounceTime(160)).subscribe(() => {
-            this.matchHeight(this.el.nativeElement, this.classToMatch);
-        });
+    constructor(
+        private el: ElementRef,
+        @Inject(WINDOW) private window: Window,
+    ) {
+        fromEvent<FocusEvent>(this.window, 'resize')
+            .pipe(untilDestroyed(this), debounceTime(160))
+            .subscribe(() => {
+                this.matchHeight(this.el.nativeElement, this.classToMatch);
+            });
     }
 
     ngAfterViewInit(): void {

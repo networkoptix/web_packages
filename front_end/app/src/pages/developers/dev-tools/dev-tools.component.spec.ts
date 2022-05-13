@@ -8,7 +8,7 @@ import {
 } from '@angular/core/testing';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { MockDirective } from 'ng-mocks';
+import { MockDirective, MockProvider } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
@@ -63,7 +63,7 @@ describe('NxDevToolsComponent', () => {
                     new HelperMockProvider(NxHeaderService, {}),
                     new HelperMockProvider(NxAccountService, {}),
                     new HelperMockProvider(ActivatedRoute, mockRoute),
-                    new HelperMockProvider(WINDOW, {})
+                    MockProvider(WINDOW),
                 ]
             }).compileComponents()
                 .then(() => {

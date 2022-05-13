@@ -409,11 +409,13 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
         for (const tabItem of tabItems) {
             tabItem.classList.add('tagged-tabitem');
-            fromEvent(tabItem, 'click').pipe(untilDestroyed(this)).subscribe(() => {
-                setTimeout(() => {
-                    this.modifyCodeBlocksAndTextareas();
-                }, 0);
-            });
+            fromEvent<MouseEvent>(tabItem, 'click')
+                .pipe(untilDestroyed(this))
+                .subscribe(() => {
+                    setTimeout(() => {
+                        this.modifyCodeBlocksAndTextareas();
+                    }, 0);
+                });
         }
     };
 

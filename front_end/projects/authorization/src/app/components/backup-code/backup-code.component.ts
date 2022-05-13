@@ -40,7 +40,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     @Output() codeChange = new EventEmitter<string>();
     @Input() checkBackupCodeProcess: Process;
     @Input() errorCode: string;
-    @Input() window: any;
+    @Input() window: Window;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendCode: any;
@@ -74,9 +74,11 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
             this.codeChange.emit(this.code);
         };
 
-        fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe(() => {
-            this.needLargerFooter = this.backToAuthSpan.nativeElement.offsetHeight > 32;
-        });
+        fromEvent<FocusEvent>(this.window, 'resize')
+            .pipe(debounceTime(100))
+            .subscribe(() => {
+                this.needLargerFooter = this.backToAuthSpan.nativeElement.offsetHeight > 32;
+            });
     }
 
     ngOnChanges(changes: NgChanges<NxAuthorizeBackupCodeComponent>): void {

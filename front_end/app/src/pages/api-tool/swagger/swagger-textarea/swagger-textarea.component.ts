@@ -46,52 +46,56 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         }
         highlightAllCode(element);
 
-        fromEvent(element, 'input').pipe(untilDestroyed(this)).subscribe((event: any) => {
-            this.APIToolService.preventNextChangeDetection = true;
-            const textareaEmpty = !element.textContent.length;
-            if (textareaEmpty) {
-                if (element.childNodes.length > 0) {
-                    for (const child of element.childNodes) {
+        fromEvent<InputEvent>(element, 'input')
+            .pipe(untilDestroyed(this))
+            .subscribe(event => {
+                this.APIToolService.preventNextChangeDetection = true;
+                const textareaEmpty = !element.textContent.length;
+                if (textareaEmpty) {
+                    if (element.childNodes.length > 0) {
+                        for (const child of element.childNodes) {
+                            child.remove();
+                        }
+                    }
+                    // If you type something while the content-editable div is empty, add a line counter
+                    element.innerHTML = '<div class="line"><br></div>';
+                } else {
+                    const node = this.document.createElement('span');
+                    node.innerText = focusPositionMarker;
+                    const originalSelection = this.document.getSelection();
+                    // Insert a marker to focus on after highlight
+                    originalSelection.getRangeAt(0).insertNode(node);
+                    const line = findLine(originalSelection.anchorNode);
+                    if (line) {
+                    // always exists unless the textarea is empty
+                        highlightLine(line);
+                    }
+                    if (event.inputType !== 'insertParagraph') { // not enter key
+                        this.setTextareaFocusPosition(element);
+                    }
+                    this.insertLineBreaks();
+                }
+                this.setTextareaText();
+            });
+
+        fromEvent<ClipboardEvent>(element, 'paste')
+            .pipe(untilDestroyed(this))
+            .subscribe(event => {
+                this.APIToolService.preventNextChangeDetection = true;
+
+                event.preventDefault();
+                this.document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
+                const element = this.customTextareaRef.nativeElement;
+
+                for (const child of element.childNodes) {
+                    if (!child.textContent.length) {
                         child.remove();
                     }
                 }
-                // If you type something while the content-editable div is empty, add a line counter
-                element.innerHTML = '<div class="line"><br></div>';
-            } else {
-                const node = this.document.createElement('span');
-                node.innerText = focusPositionMarker;
-                const originalSelection = this.document.getSelection();
-                // Insert a marker to focus on after highlight
-                originalSelection.getRangeAt(0).insertNode(node);
-                const line = findLine(originalSelection.anchorNode);
-                if (line) {
-                    // always exists unless the textarea is empty
-                    highlightLine(line);
-                }
-                if (event.inputType !== 'insertParagraph') { // not enter key
-                    this.setTextareaFocusPosition(element);
-                }
-                this.insertLineBreaks();
-            }
-            this.setTextareaText();
-        });
 
-        fromEvent(element, 'paste').pipe(untilDestroyed(this)).subscribe((event: any) => {
-            this.APIToolService.preventNextChangeDetection = true;
-
-            event.preventDefault();
-            this.document.execCommand('inserttext', false, event.clipboardData.getData('text/plain'));
-            const element = this.customTextareaRef.nativeElement;
-
-            for (const child of element.childNodes) {
-                if (!child.textContent.length) {
-                    child.remove();
-                }
-            }
-
-            this.setTextareaText();
-            highlightAllCode(element);
-        });
+                this.setTextareaText();
+                highlightAllCode(element);
+            });
 
         this.attributeMutationObserver = new MutationObserver(mutations => {
             mutations.forEach(mutation => {

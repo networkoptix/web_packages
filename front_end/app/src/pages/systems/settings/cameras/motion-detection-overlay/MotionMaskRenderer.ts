@@ -4,7 +4,6 @@ import {
     Subscription,
     merge,
     fromEvent,
-    Observable,
     Subject,
     EMPTY,
     animationFrameScheduler,
@@ -111,7 +110,7 @@ export class MotionMaskRenderer {
         // Initialize base observables from events ... unless we're on mobile device (CLOUD-6752)
         const track = (eventName: string) => this.isMobile
             ? EMPTY
-            : <Observable<MouseEvent>>fromEvent(canvas, eventName);
+            : fromEvent<MouseEvent>(canvas, eventName);
         const [
             mouseDown$,
             mouseUp$,
@@ -122,7 +121,7 @@ export class MotionMaskRenderer {
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
             event => this.isMobile
                 ? EMPTY
-                : <Observable<KeyboardEvent>>fromEvent(window, event)
+                : fromEvent<KeyboardEvent>(window, event)
         );
 
         // Utility functions

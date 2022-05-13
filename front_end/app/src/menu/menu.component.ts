@@ -168,11 +168,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 }
             });
 
-        fromEvent<FocusEvent>(window, 'resize')
+        fromEvent<FocusEvent>(this.window, 'resize')
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerHeight),
-                startWith(window.innerHeight)
+                startWith(this.window.innerHeight)
             ).subscribe(height => {
                 this.totalWindowHeight = height;
                 if (this.ribbonShown) {

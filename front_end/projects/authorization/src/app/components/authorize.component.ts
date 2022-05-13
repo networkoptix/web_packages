@@ -9,6 +9,7 @@ import {
     OnInit,
     ViewEncapsulation,
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
@@ -26,7 +27,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
-import { Title } from '@angular/platform-browser';
 
 import {
     AuthorizeParams,
@@ -206,11 +206,15 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
             this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= 355;
-            fromEvent(this.window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
-                const { innerHeight, innerWidth } = event.target;
-                this.windowLargeEnough = innerWidth > 1024 && innerHeight > 768 && this.viewType === 'web';
-                this.windowSmallEnough = innerWidth <= 355;
-            });
+            fromEvent<FocusEvent>(this.window, 'resize')
+                .pipe(debounceTime(100))
+                .subscribe(event => {
+                    const { innerHeight, innerWidth } = event.target as Window;
+                    this.windowLargeEnough = innerWidth > 1024 &&
+                        innerHeight > 768 &&
+                        this.viewType === 'web';
+                    this.windowSmallEnough = innerWidth <= 355;
+                });
 
             if ([ClientType.loginCloud, ClientType.create].includes(this.clientType)) {
                 this.initialData.client_id = 'cloud';
@@ -393,7 +397,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             err => {
                 if (err?.resultCode) {
                     if (['notAuthorized', 'forbidden'].includes(err.resultCode)) {
-                        this.passwordErrorCode =  err?.errorData?.error !== 'access_denied'
+                        this.passwordErrorCode = err?.errorData?.error !== 'access_denied'
                             ? 'wrongPassword' : 'accountNotAccessSystem';
                     } else if (err.resultCode === 'accountBlocked') {
                         this.passwordErrorCode = 'lockedOut';
