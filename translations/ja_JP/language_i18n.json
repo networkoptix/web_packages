@@ -440,7 +440,7 @@
     "Source": "ソース",
     "Source Url": "ソースURL",
     "Start": "開始",
-    "Storage Locations": "ストレージの場所",
+    "Storage Locations": "保存先",
     "Storage path is already added to this server": "このストレージパスは既にこのサーバーに追加されています",
     "Storages outdated. Reload page to update.": "ストレージ情報が古くなっています。ページを再読み込みして更新してください。",
     "Subject": "件名",
