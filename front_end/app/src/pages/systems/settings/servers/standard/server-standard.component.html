@@ -157,7 +157,8 @@
                             [stillLoading]="checkingForDataAnalytics || storagesLoading"
                             [items]="dropdownStorages"
                             [selected]="selectedStorage"
-                            (onSelected)="changeAnalyticsStorage($event)"></nx-select>
+                            (onSelected)="changeAnalyticsStorage($event)"
+                        ></nx-select>
                         <ng-container *ngIf="systemStorageChosen">
                             <span></span>
                             <div class="error-label">
