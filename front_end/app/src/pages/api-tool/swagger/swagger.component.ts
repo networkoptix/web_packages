@@ -167,7 +167,7 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private authenticateRequest = (request) => {
-        const headers = this.APIToolService.system.serverManager.mediaserverConnections[this.APIToolService.selectedServer.value].generateHeaders();
+        const headers = this.APIToolService.system.serverManager.mediaserver.generateHeaders();
         if (headers) {
             // 5.0 and up
             for (const key of headers.keys()) {
@@ -180,12 +180,9 @@ export class NxSwaggerComponent implements OnChanges {
     }
 
     private setAuthParam = (request) => {
-        const systemMediaServerConnections = this.APIToolService.system.serverManager.mediaserverConnections;
-        const serverID = this.APIToolService.selectedServer.value;
-
         const Url = new URL(request.url);
         const authParamType = request.method === 'GET' ? 'authGet' : 'authPost';
-        const authParam = systemMediaServerConnections[serverID][authParamType];
+        const authParam =  this.APIToolService.system.serverManager.mediaserver[authParamType];
         const potentialAmpersand = Url.search ? '&' : '';
         Url.search += potentialAmpersand + 'auth=' + authParam;
         request.url = Url.toString();

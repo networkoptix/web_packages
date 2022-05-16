@@ -1167,9 +1167,9 @@ export class NxSystem extends System {
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    getServerApiDoc(serverId: string) {
+    getServerApiDoc() {
         return this.serverManager
-            .getApiDoc(serverId)
+            .getApiDoc()
             .catch(err => Promise.reject(err));
     };
 

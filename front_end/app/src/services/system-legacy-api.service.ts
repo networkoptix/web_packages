@@ -413,11 +413,17 @@ export class NxSystemAPI {
     }
 
     getApiDoc(type: APIDocVersion) {
-        // return this.get<JSON>('/static/api.json'); // current API
-        // mock response
         if (type === 'main') {
             return this.get<JSON>('/static/openapi_legacy.json').toPromise();
         }
+    }
+
+    public getApiPreamble() {
+        throw (this.notImplementedMsg);
+    }
+
+    public getApiChangelog() {
+        throw (this.notImplementedMsg);
     }
 
     login(
