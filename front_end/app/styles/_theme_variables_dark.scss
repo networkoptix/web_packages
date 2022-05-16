@@ -10,11 +10,11 @@ html[data-theme="dark"] {
     --header-border-color        : transparent;
     --header-webadm-bg           : #212A2F; //$dark7;
     --header-webadm-border-color : transparent;
-    
+
     --ribbon-bg     : #{$brand_d3};
     --ribbon-border : #{$brand_d4};
     --ribbon-color  : #{$light4};
-    
+
     --ribbon-alert-bg : #{$yellow_d2};
     --ribbon-alert-border : #{$yellow_d1};
     --ribbon-alert-color : #E1E7EA; //$light4;
@@ -249,7 +249,7 @@ html[data-theme="dark"] {
     --btn-arrow-hover-color    : #F5F7F8; //$light2;
     --btn-arrow-selected-bg    : #2B383F; //$dark9;
     --btn-arrow-selected-color : #D7DFE3; //$light5;
-    
+
     --btn-default-bg                : #3A4D57; //$dark12;
     --btn-default-color             : #F5F7F8; //$light2;
     --btn-default-shadow            : none;
@@ -348,10 +348,12 @@ html[data-theme="dark"] {
     --swagger-btn-value-number-color : #{$green_d2};
     --swagger-textarea-color : #{$light10};
     --swagger-required-color : #{$red_main};
-    --swagger-input-disabled: #{$light2};
+    --swagger-input-disabled: #{$dark11};
+    --swagger-input-disabled-border: #{$dark13};
+    --swagger-table-header-color: #{$light4};
     --api-tool-section-header: #{$dark1};
-    --media-type-bg: #{$light2};
-    --media-type-border: #{$light4};
+    --media-type-bg: #{$dark11};
+    --media-type-border: #{$light13};
 
     --footer-color : rgba(var(--light10--rgb), .65);
 
@@ -361,7 +363,7 @@ html[data-theme="dark"] {
 
     --table-alt-row-bg: #171C1F; //$dark5;
     --table-row-hover-bg : #35464F; //$dark11;
-    
+
     --promo-tile-bg : #{$dark4};
     --promo-tile-h4-color : #{$light10};
     --promo-tile-img-1-path : url("/static/images/promo/landing_promo_dark_1.svg");

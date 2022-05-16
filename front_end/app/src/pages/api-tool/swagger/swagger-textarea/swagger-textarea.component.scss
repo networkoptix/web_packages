@@ -11,7 +11,7 @@
     }
     .text-area {
         pointer-events: none;
-        background-color: $light2;
+        background-color: var(--input-bg);
     }
 }
 
@@ -30,5 +30,5 @@
    &:focus {
        outline: none;
    }
-   
+
 }

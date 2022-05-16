@@ -16,7 +16,8 @@ markdown {
         font-weight: 500;
     }
     p {
-        @include typography.regular14dark9;
+        @include typography.regular14nocolor;
+        color: var(--body-text-color);
 		margin-bottom: 18px;
         line-height: 1.7;
     }
@@ -26,8 +27,9 @@ markdown {
         thead {
             tr {
                 th {
-                    border: 1px solid #EBEFF1;
-                    @include typography.medium14dark1;
+                    border: 1px solid var(--border-color);
+                    @include typography.medium14nocolor;
+                    color: var(--swagger-table-header-color);
                     padding-left: 20px;
                 }
             }
@@ -53,7 +55,7 @@ markdown {
                     content: " ";
                     display: block;
                     height: 20px;
-                    border-right: 1px solid $light4;
+                    border-right: 1px solid var(--border-color);
                     width: 100%;
                 }
             }

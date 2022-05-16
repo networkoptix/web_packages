@@ -56,6 +56,7 @@
 	color       : var(--body-text-color);
 
 	.opblock-body {
+		background-color: var(--alt-body-bg);
 		padding-top     : 2px;
 		padding-bottom  : 18px;
 		.opblock-section-header {
@@ -75,7 +76,7 @@
 				width: 25%;
 				min-width: 25%;
 				@include typography.medium14nocolor;
-				color : var(--body-text-color);
+				color : var(--body-text-color) !important;
 			}
 		}
 
@@ -256,12 +257,12 @@
 		background: none;
 	}
 
-	.filter-container, .opblock-tag, .information-container.wrapper, .opblock-loading-animation, .copy-to-clipboard,
+	.filter-container, .opblock-tag, .information-container.wrapper, .copy-to-clipboard,
 	.scheme-container, .response-control-media-type__accept-message, .response-controls, .response-col_links, .responses-header, select {
 		display: none;
 	}
 
-	.opblock-body .opblock-description-wrapper:nth-of-type(1), .hidden, textarea {
+	.opblock-body .opblock-description-wrapper:nth-of-type(1), .hidden, .opblock-loading-animation, textarea {
 		display: none !important;
 	}
 
@@ -297,7 +298,7 @@
 		font-size        : rem(13px);
 		line-height      : 1.428571429;
 		color            : var(--input-color);
-		background-color : var(--input-bg);
+		background-color : var(--input-bg) !important;
 		background-image : none;
 		border           : 1px solid var(--input-border-color);
 		border-radius    : 2px;
@@ -308,6 +309,7 @@
 			color: #fff;
 		}
 		&:disabled{
+			border-color: var(--swagger-input-disabled-border);
 			background-color: var(--swagger-input-disabled);
 
 			&::placeholder {
@@ -459,7 +461,7 @@
 	.parameter__name {
 		margin-right : initial;
 		@include typography.bold16nocolor;
-		color : var(--body-text-color);
+		color : var(--body-text-color) !important;
 		&.required {
 			font-weight : initial;
 			&:after, span {
@@ -499,7 +501,7 @@
 		border-collapse : collapse;
 		&:not(.model) {
 			width           : 100%;
-			border          : 1px solid var(--border-color);
+			border          : 1px solid var(--border-color) !important;
 		}
 
 		&.model tr.description {
@@ -521,6 +523,10 @@
 
 		tbody tr td:first-of-type {
 			min-width : 6em;
+		}
+
+		tbody td .renderedMarkdown {
+			color: var(--body-text-color);
 		}
 	}
 
@@ -809,7 +815,8 @@ nx-swagger-markdown + div#swagger-ui {
 
 .swagger-container table thead tr {
 	th, td {
-		@include typography.medium14dark10;
+		@include typography.medium14nocolor;
+		color: var(--body-text-color) !important;
 		padding       : 6px 8px 6px 24px;
 		text-align    : left;
 		font-weight	  : 500;
@@ -820,16 +827,16 @@ nx-swagger-markdown + div#swagger-ui {
 }
 
 .swagger-container table:not(.model) tbody tr td {
-	@include typography.regular14dark9;
+	@include typography.regular14nocolor;
 	padding        : 8px 16px !important;
 	padding        : 14px 8px 14px 24px;
 	vertical-align : top;
-	border         : 1px solid $light3;
+	border         : 1px solid var(--border-color);
 	height         : 100px;
 	&.response-col_status{
 		text-transform: uppercase;
 		@include typography.medium13nocolor;
-		color : var(--body-text-color);
+		color : var(--body-text-color) !important;
 	}
 }
 
@@ -852,7 +859,7 @@ nx-swagger-markdown + div#swagger-ui {
 .swagger-ui .opblock-body table.parameters, nx-swagger-markdown .changes-table table {
 	thead{
 		display: table-header-group !important;
-		background-color: var(--card-header-bg);
+	background-color: var(--card-header-bg);
 		tr th:first-of-type {
 			border-right: 1px solid var(--border-color);
 		}
@@ -860,25 +867,12 @@ nx-swagger-markdown + div#swagger-ui {
 }
 
 .swagger-ui .opblock-body table.parameters tbody tr:nth-child(even) {
-		background-color: $additional_light1;
+		background-color: var(--table-alt-row-bg);
 }
 
 .swagger-ui .opblock-body table:not(.parameters, .live-responses-table):not(.model) td {
 	height         : 48px;
 	vertical-align : middle;
-}
-
-.swagger-ui .parameter__name {
-	margin-right : initial;
-	@include typography.bold16dark9;
-}
-
-.swagger-ui .opblock-section.opblock-section-request-body {
-	margin-top: 15px;
-}
-
-.swagger-ui .parameter__name.required {
-	font-weight : initial;
 }
 
 
