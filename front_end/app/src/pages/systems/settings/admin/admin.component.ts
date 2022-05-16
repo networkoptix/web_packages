@@ -403,10 +403,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     .disconnect(this.accountService, this.system)
                     .then(result => {
                         if (result) {
-                            if (NxConfigService.isLocal && this.system.currentUser?.isCloud) {
+                            if (this.environment.isLocal && this.system.currentUser?.isCloud) {
                                 this.accountService.logout();
                             } else {
-                                if (NxConfigService.isLocal) {
+                                if (this.environment.isLocal) {
                                     // give the user chance to read the toaster
                                     setTimeout(() => this.window.location.reload(), 2000);
                                 } else {

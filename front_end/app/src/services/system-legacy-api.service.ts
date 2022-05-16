@@ -20,7 +20,6 @@ import { Account } from './account.service/account';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
-import { NxConfigService } from './nx-config/nx-config.service';
 import * as t from './system-api.types';
 import { User } from './system-api.types';
 import type {
@@ -605,7 +604,7 @@ export class NxSystemAPI {
     }
 
     checkLocalIfNew(reload = true) {
-        return NxConfigService.isLocal
+        return environment.isLocal
             ? Promise.resolve({})
             : this.getModuleInfo().toPromise();
     }

@@ -14,16 +14,13 @@ import { IConfig } from './config-types';
 export class NxConfigService {
     config: IConfig;
 
-    constructor(
-        private http: HttpClient
-    ) {
+    constructor(private http: HttpClient) {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
         // previewPath: '',
         // ***************************************************************
 
         this.config = nxConfig;
-        this.config.isLocal = environment.isLocal;
     }
 
     get cloudHost() {
@@ -65,10 +62,6 @@ export class NxConfigService {
         });
     }
 
-    static get isLocal() {
-        return nxConfig.isLocal;
-    }
-
     static get isDarkTheme() {
         return nxConfig.isDarkTheme;
     }
@@ -76,10 +69,4 @@ export class NxConfigService {
     static set isDarkTheme(res: boolean) {
         nxConfig.isDarkTheme = res;
     }
-
-    static resolveLocalOrCloud = <Local, Cloud>(local: Local, cloud: Cloud) => {
-        return NxConfigService.isLocal ? local : cloud;
-    };
-
-    public resolveLocalOrCloud = NxConfigService.resolveLocalOrCloud;
 }

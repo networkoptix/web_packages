@@ -150,7 +150,7 @@ export class NxUriService {
         const otherParams = Object.entries(_otherParams);
 
         // const routesConfig = this.router.config.filter(route => {
-        //     if (NxConfigService.isLocal) {
+        //     if (environment.isLocal) {
         //         return route.path === 'settings';
         //     } else {
         //         return route.path === 'systems/:systemId';

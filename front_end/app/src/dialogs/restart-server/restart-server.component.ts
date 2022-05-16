@@ -13,6 +13,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
+import { environment } from '@environments/environment';
 import { NxApplyService } from '@services/apply.service';
 import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -150,7 +151,7 @@ export class RestartServerModalContent {
                             }
                         }),
                         mergeMap(() => {
-                            if (NxConfigService.isLocal) {
+                            if (environment.isLocal) {
                                 // give the user chance to read the toaster
                                 setTimeout(() => window.location.reload(), 2000);
                                 throw Error('re-login on restart');

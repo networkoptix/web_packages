@@ -41,7 +41,7 @@ export class NxBootstrapProvider {
     }
 
     private checkLocalIfNew(reload = true) {
-        return NxConfigService.isLocal
+        return this.environment.isLocal
             ? this.http.get('/api/moduleInformation', {}).toPromise()
             : Promise.resolve({});
     }
