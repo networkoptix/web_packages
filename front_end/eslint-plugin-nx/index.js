@@ -1,18 +1,19 @@
-/**
- * @fileoverview Plugin for custom ESLint rules
- */
+const fs = require('fs');
+const path = require('path');
 
-function exportRule(ruleName, fileName) {
-    return {
-        [ruleName]: require(`./rules/${fileName || ruleName}`)
-    };
-}
+const ignore = [
+    'rule-template.js',
+    'utils.js',
+];
 
 module.exports = {
-    rules: {
-        ...exportRule('only-export-injectable'),
-        ...exportRule('explicit-input-output-types'),
-        ...exportRule('no-useless-constructor'),
-        ...exportRule('no-untyped-init'),
-    }
+    rules: fs.readdirSync(path.join(__dirname, 'rules'))
+        .reduce((rules, file) => {
+            if (ignore.includes(file)) {
+                return rules;
+            }
+            const { name } = path.parse(file);
+            rules[name] = require(`./rules/${name}`);
+            return rules;
+        }, {})
 };

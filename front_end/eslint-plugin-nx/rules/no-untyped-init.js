@@ -1,6 +1,6 @@
 /**
  * @fileoverview Require types for properties/variables without initial values
- * or with initial values of empty array or empty object.
+ * or where types cannot be inferred from initial values.
  *
  * This rule should be cut down or removed once the noImplicitAny option is
  * enabled in tsconfig.json.
@@ -9,6 +9,8 @@
  */
 
 'use strict';
+
+const { isUntyped } = require('./utils');
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -36,22 +38,11 @@ module.exports = {
     },
     create: function (context) {
         function reportNode(node, expression, messageId) {
-            if (expression === null) {
+            if (expression === null || isUntyped(expression)) {
                 context.report({
                     node,
                     messageId,
                 });
-            } else {
-                const isEmptyArray = expression.type === 'ArrayExpression' &&
-                    !expression.elements.length;
-                const isEmptyObject = expression.type === 'ObjectExpression' &&
-                    !expression.properties.length;
-                if (isEmptyArray || isEmptyObject) {
-                    context.report({
-                        node,
-                        messageId,
-                    });
-                }
             }
         }
 
@@ -63,7 +54,7 @@ module.exports = {
                 }
 
                 /* Inputs and outputs are handled
-                by explicit-input-output-types rule */
+                by explicit-angular-boundary-types rule */
                 const isInputOrOutput = decorators && decorators.some(d =>
                     d.expression.callee.name === 'Input' ||
                     d.expression.callee.name === 'Output'

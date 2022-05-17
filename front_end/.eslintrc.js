@@ -143,8 +143,9 @@ module.exports = {
                 'plugin:@typescript-eslint/recommended',
             ],
             rules: {
-                'nx/explicit-input-output-types': 'error',
+                'nx/explicit-angular-boundary-types': 'error',
                 'nx/no-untyped-init': 'error',
+                'nx/no-untyped-subject': 'error',
 
                 '@typescript-eslint/ban-types': ['error', {
                     extendDefaults: true,

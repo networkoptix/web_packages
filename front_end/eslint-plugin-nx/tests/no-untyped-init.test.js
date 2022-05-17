@@ -30,6 +30,14 @@ ruleTester.run('no-untyped-init', rule, {
             errors: [{ messageId: 'untypedProp' }]
         },
         {
+            code: classWrapper('foo = undefined;'),
+            errors: [{ messageId: 'untypedProp' }]
+        },
+        {
+            code: classWrapper('foo = null;'),
+            errors: [{ messageId: 'untypedProp' }]
+        },
+        {
             code: classWrapper('foo = [];'),
             errors: [{ messageId: 'untypedProp' }]
         },
@@ -38,7 +46,21 @@ ruleTester.run('no-untyped-init', rule, {
             errors: [{ messageId: 'untypedProp' }]
         },
         { code: 'let foo;', errors: [{ messageId: 'untypedDeclaration' }] },
-        { code: 'let foo = [];', errors: [{ messageId: 'untypedDeclaration' }] },
-        { code: 'let foo = {};', errors: [{ messageId: 'untypedDeclaration' }] },
+        {
+            code: 'let foo = undefined;',
+            errors: [{ messageId: 'untypedDeclaration' }]
+        },
+        {
+            code: 'let foo = null;',
+            errors: [{ messageId: 'untypedDeclaration' }]
+        },
+        {
+            code: 'let foo = [];',
+            errors: [{ messageId: 'untypedDeclaration' }]
+        },
+        {
+            code: 'let foo = {};',
+            errors: [{ messageId: 'untypedDeclaration' }]
+        },
     ],
 });

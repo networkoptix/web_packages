@@ -1,6 +1,6 @@
 const { RuleTester } = require('@typescript-eslint/utils/dist/ts-eslint');
 
-const rule = require('../rules/explicit-input-output-types');
+const rule = require('../rules/explicit-angular-boundary-types');
 
 const { classWrapper } = require('./utils');
 
@@ -8,7 +8,7 @@ const ruleTester = new RuleTester({
     parser: require.resolve('@typescript-eslint/parser'),
 });
 
-ruleTester.run('explicit-input-output-types', rule, {
+ruleTester.run('explicit-angular-boundary-types', rule, {
     valid: [
         { code: classWrapper('@Input() validI1: number;') },
         { code: classWrapper('@Input() validI2: number = 3;') },
