@@ -180,7 +180,8 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        if (['Enter', 'NumpadEnter'].includes(event.code)) {
+        // Mobile Chrome doesn't use "code" ... maybe some others -- TT
+        if (['Enter', 'NumpadEnter'].includes(event.code || event.key)) {
             this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
         }
     }
