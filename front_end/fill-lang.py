@@ -15,6 +15,7 @@ def filter_extracted_static(json_elem):
         "merge.warning",
         "common.account",
         "system.MERGE_FINISHES",
+        "alertsCount",
         "ipvdDisclaimer",
         "ipvdTopXByVolume",
         "servers.autoRefresh",

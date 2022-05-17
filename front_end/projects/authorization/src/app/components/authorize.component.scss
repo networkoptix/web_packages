@@ -458,17 +458,21 @@
                 &.footer-m {
                     border-top: 1px solid $dark4;
                     display: flex;
+                    
                     button.btn.text-button {
                         color: $light16;
+                        height : auto !important;
                         svg .st0 {
                             stroke: $light16;
                         }
+                        
                         &:hover {
                             color: $light14;
                             svg .st0 {
                                 stroke: $light14;
                             }
                         }
+                        
                         &:active {
                             color: $light16;
                             svg .st0 {

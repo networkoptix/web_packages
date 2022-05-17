@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "Scarica %VMS_NAME%",
     "For developers": "Per gli sviluppatori",
     "Integrations (β)": "Integrazioni (β)",
@@ -8,6 +9,29 @@
     "Support": "Supporto",
     "Terms": "Termini di servizio",
     "Developers Console": "Developers Console",
+    "alarmTypes": {
+        "Servers": "Server",
+        "Cameras": "Telecamere",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Offiline",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Server",
+        "cameras": "Telecamere",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Accesso illimitato inclusa la possibilità di condividere",
@@ -640,6 +664,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {{value}} per volume:",
     "ipvdDisclaimer": "Questo elenco è limitato ai dispositivi trovati su {vmsName} cui gli utenti hanno consentito la segnalazione automatica delle specifiche del dispositivo a {companyName}. Non vengono raccolte informazioni personali e ogni utente rimane completamente anonimo.",
     "menu": {
@@ -648,8 +673,20 @@
             "systemAdministration": "Amministratore di sistema",
             "general": "Generale",
             "licenses": "Licenze",
-            "users": "Utenti"
+            "users": "Utenti",
+            "servers": "Server",
+            "alerts": "Alerts",
+            "systems": "Sistema",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Tipo",
+        "server": "Server",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "Informazioni su",
@@ -907,6 +944,56 @@
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
         "loggingIn": "Logging in. Please wait."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "Informazioni",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Server",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Utenti",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "Stato",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "Sistema operativo",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "Report di salute per il sistema {systemName}"

@@ -457,26 +457,25 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             account.id,
                             account.email
                         );
-                        this.system.update().then(() => {
-                            this.systems = [this.system];
-                            this.system.isAvailable = true;
-                            this.system.isOnline = true;
-                            setTimeout(() => {
-                                this.pageService.pageTitle =
-                                    this.system.info.systemName || this.system.info.name;
-                            });
 
-                            if (this.systemInfoSubscription) {
-                                this.systemInfoSubscription.unsubscribe();
-                            }
-                            this.systemInfoSubscription =
-                                this.system.infoSubject
-                                    .subscribe(() => {
-                                        this.systemReady();
-                                        this.updateAlert();
-                                        this.updateMenu(this.system);
-                                    });
+                        this.systems = [this.system];
+                        this.system.isAvailable = true;
+                        this.system.isOnline = true;
+                        setTimeout(() => {
+                            this.pageService.pageTitle =
+                                this.system.info.systemName || this.system.info.name;
                         });
+
+                        if (this.systemInfoSubscription) {
+                            this.systemInfoSubscription.unsubscribe();
+                        }
+                        this.systemInfoSubscription =
+                            this.system.infoSubject
+                                .subscribe(() => {
+                                    this.systemReady();
+                                    this.updateAlert();
+                                    this.updateMenu(this.system);
+                                });
                     }
                 }
             });
@@ -694,7 +693,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode = {
                     id: this.CONFIG.menus.systemSettings.servers.id,
                     svg: this.CONFIG.menus.systemSettings.servers.icon,
-                    label: this.LANG.servers.servers(),
+                    label: this.LANG.menu.titles.servers(),
                     path: this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);

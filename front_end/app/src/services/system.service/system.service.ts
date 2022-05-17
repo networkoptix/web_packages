@@ -121,7 +121,6 @@ export class NxSystemService {
             );
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
-            this.system.update().catch(() => {});
         }
 
         if (this.system.subscriberCount === 0) {

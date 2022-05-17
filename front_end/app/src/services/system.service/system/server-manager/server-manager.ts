@@ -73,7 +73,7 @@ export class ServerManager {
 
     getForceServers(useCache, servers?) {
         if (!servers) {
-            if (!this.serverSubscription) {
+            if (!this.serverSubscription || !useCache) {
                 this.serverSubscription = this.mediaserver.getMediaServers(useCache);
                 this.serverSubscription.subscribe((res: any) => {
                     if (!res) {

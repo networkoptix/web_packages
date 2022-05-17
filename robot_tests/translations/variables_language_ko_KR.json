@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "외부 저장소 추가",
     "SMB TOOLTIP TEXT": "VMS를 통해 추가된 네트워크(smb)",
     "NO STORAGE FOUND TEXT": "스토리지를 찾을 수 없음",
-    "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.239/networkdisk is already used by another server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "It's not recommended to use one recording location for different servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "그래도 스토리지를 추가하실건지요?",
     "BACK TEXT": "뒤로",

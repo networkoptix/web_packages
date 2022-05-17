@@ -7,7 +7,7 @@ Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
 *** Variables ***
-${QA BURBANK IP}     10.1.5.239
+#${QA BURBANK IP}     10.1.5.34
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
@@ -632,6 +632,10 @@ ${drives}    5
 #        path = /home/qaburbank/networkdisk
 #        valid users = qaburbank
 #        read only = no
+    # you will also need to add the qaburbank user to samba:
+    # sudo smbpasswd -a quburbank
+    # New SMB password: QABurbank777$
+
     Verify on Servers Page
     
     Log    Step 1

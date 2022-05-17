@@ -46,7 +46,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (
+        if (changes.licensesLegacyInfo.previousValue &&
             changes.licensesLegacyInfo?.currentValue &&
             !NxUtilsService.isEqual(
                 changes.licensesLegacyInfo.currentValue,

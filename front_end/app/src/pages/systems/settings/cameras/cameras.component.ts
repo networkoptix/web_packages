@@ -8,7 +8,6 @@ import {
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-    Subject,
     Subscription,
     BehaviorSubject,
     from,
@@ -89,7 +88,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
-    unsub$: Subject<boolean> = new Subject();
     public reload$ = new BehaviorSubject(0);
     width$ = new BehaviorSubject(0);
 
@@ -440,7 +438,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.isMobile = this.utilsService.isMobile() || this.utilsService.isTablet();
 
-        this.router.events.subscribe(route => {
+        this.router.events.pipe(untilDestroyed(this)).subscribe(route => {
             if (route instanceof NavigationStart) {
                 // remove unnecessary system update (ex. health monitor will trigger system update)
                 // and orphan metrics request in cameraSubscription
@@ -473,34 +471,24 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.settingsSubscription = this.settingsService.systemSubject
             .pipe(
                 untilDestroyed(this),
-                filter(data => data !== undefined)
+                filter(data => data !== undefined && data.id !== this.system?.id)
             )
             .subscribe(system => {
                 this.settingsService.footer = true;
                 if (system && (!this.system || !environment.isLocal)) {
                     this.system = system;
-                    (
-                        environment.isLocal
-                            ? this.system.update()
-                            : Promise.resolve()
-                    ).then(
-                        () => system.isAvailable
-                            ? this.system.getInfoAndPermissions(false).catch(() => Promise.resolve())
-                            : Promise.resolve()
-                    ).then(() => {
-                        if (!this.system.isOnline || !this.system.isAvailable) {
-                            this.alertsLoaded = true;
-                            this.canSeeInfo = false;
-                        } else {
-                            this.canSeeInfo = this.system.canViewInfo();
-                            if (this.canSeeInfo) {
-                                this.fullInfoPath = this.uriService.getSystemSettingsRoute({
-                                    systemId: this.system.id,
-                                    childRoute: ChildRoutes.HEALTH
-                                }) + this.CONFIG.menus.systemSettings.cameras.path;
-                            }
+                    if (!this.system.isOnline || !this.system.isAvailable) {
+                        this.alertsLoaded = true;
+                        this.canSeeInfo = false;
+                    } else {
+                        this.canSeeInfo = this.system.canViewInfo();
+                        if (this.canSeeInfo) {
+                            this.fullInfoPath = this.uriService.getSystemSettingsRoute({
+                                systemId: this.system.id,
+                                childRoute: ChildRoutes.HEALTH
+                            }) + this.CONFIG.menus.systemSettings.cameras.path;
                         }
-                    });
+                    }
                 } else {
                     this.showPreloader = false;
                     this.alertsLoaded = true;
@@ -595,7 +583,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.unsub$.next(true);
     }
 
     // Update menu options after language is loaded
@@ -914,8 +901,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             if (cameraIndex === -1) {
                 cameraIndex = 0;
-                const systemId = this.system.id;
-                const urlSystem = systemId ? `/${systemId}` : '';
                 this.parsedCameraId =
                     cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
                 this.uriService

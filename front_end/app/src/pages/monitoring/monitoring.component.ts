@@ -12,8 +12,11 @@ import { NxAppSourceService } from '@services/nx-app-source.service';
 import { NxSystem, NxSystemService } from '@services/system.service';
 
 import { environment } from '../../../environments/environment';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 import { NxMenuService } from '../../menu/menu.service';
 import { Content } from '../../menu/menu.types';
+import { IConfig, NxConfigService } from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 import { NxMonitoringService } from './monitoring.service';
 
@@ -24,6 +27,9 @@ import { NxMonitoringService } from './monitoring.service';
     templateUrl: 'monitoring.component.html',
 })
 export class NxMonitoringComponent implements OnInit {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     content: Content;
     system: NxSystem;
     account: Account;
@@ -33,6 +39,8 @@ export class NxMonitoringComponent implements OnInit {
     systemId: string;
 
     constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
         private menuService: NxMenuService,
         private sourceService: NxAppSourceService,
@@ -40,21 +48,24 @@ export class NxMonitoringComponent implements OnInit {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
+        this.LANG = languageService.translations;
+        this.CONFIG = configService.getConfig();
+
         this.content = {
             base: '',
             selectedSection: 'graphs',
             selectedSubSection: '',
             level1: [
                 {
-                    id: 'graphs',
-                    svg: 'system',
-                    label: 'Graphs',
-                    path: '',
+                    id: this.CONFIG.menus.systemMonitoring.graphs.id,
+                    svg: this.CONFIG.menus.systemMonitoring.graphs.icon,
+                    label: this.LANG.menu.titles.graphs(),
+                    path: this.CONFIG.menus.systemMonitoring.graphs.path,
                 }, {
-                    id: 'logs',
-                    svg: 'server',
-                    label: 'Logs',
-                    path: 'logs',
+                    id: this.CONFIG.menus.systemMonitoring.logs.id,
+                    svg: this.CONFIG.menus.systemMonitoring.logs.icon,
+                    label: this.LANG.menu.titles.logs(),
+                    path: this.CONFIG.menus.systemMonitoring.logs.path,
                 }
             ]
         };

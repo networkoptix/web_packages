@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
     "For developers": "開發人員使用",
     "Integrations (β)": "整合（β）",
@@ -8,6 +9,29 @@
     "Support": "支援",
     "Terms": "條款",
     "Developers Console": "開發者工具",
+    "alarmTypes": {
+        "Servers": "伺服器",
+        "Cameras": "攝影機",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "離線",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "伺服器",
+        "cameras": "攝影機",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "不受限的權限包括共用的能力",
@@ -640,6 +664,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -648,8 +673,20 @@
             "systemAdministration": "系統管理",
             "general": "一般",
             "licenses": "授權",
-            "users": "使用者"
+            "users": "使用者",
+            "servers": "伺服器",
+            "alerts": "Alerts",
+            "systems": "系統",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "型態",
+        "server": "伺服器",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "關於",
@@ -907,6 +944,56 @@
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
         "loggingIn": "Logging in. Please wait."
+    },
+    "healthMonitor": {
+        "groups": {
+            "info": "資訊",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "伺服器",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "使用者",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "狀態",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "作業系統",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
     },
     "headerLabels": {
         "healthReportForSystem": "系統資源報告瀏覽器{systemName}"

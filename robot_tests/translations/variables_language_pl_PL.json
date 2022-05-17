@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "Dodano archiwum zewnętrzne",
     "SMB TOOLTIP TEXT": "Sieć (smb), dodana przez VMS",
     "NO STORAGE FOUND TEXT": "Nie znaleziono archiwum",
-    "STORAGE PATH ALREADY USED TEXT": "Storage path //10.1.5.239/networkdisk is already used by another server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Nie zaleca się używać wspólnego archiwum dla różnych serwerów.",
     "ADD THIS STORAGE ANYWAY TEXT": "Czy mimo to dodać to archiwum?",
     "BACK TEXT": "Wstecz",

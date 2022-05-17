@@ -508,7 +508,7 @@
     "EXTERNAL STORAGE ADDED TEXT": "Externe opslag toegevoegd",
     "SMB TOOLTIP TEXT": "Netwerk (smb), toegevoegd door VMS",
     "NO STORAGE FOUND TEXT": "Geen opslag gevonden",
-    "STORAGE PATH ALREADY USED TEXT": "Opslagpad //10.1.5.239/networkDisk wordt al gebruikt door een andere server.",
+    "STORAGE PATH ALREADY USED TEXT": "is already used by another server.",
     "NOT RECOMMENDED DIFFERENT SERVERS TEXT": "Het is niet aanbevolen om één opnamelocatie te gebruiken voor verschillende servers.",
     "ADD THIS STORAGE ANYWAY TEXT": "Deze opslag toch toevoegen?",
     "BACK TEXT": "Terug",
