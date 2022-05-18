@@ -1,6 +1,6 @@
 <div class="menu-level-one">
     <ng-container *ngFor="let node of menuNodes">
-        <button (click)="node.url ? headerService.handleNav(node, $event) : null; onNodeSelect(node)"
+        <button (click)="handleNavigation(node, $event); onNodeSelect(node)"
                 [ngClass]="{ 'active': node?.name === selectedNode?.name }"
                 class="menu-item btn btn-menu">
                 {{ node.display_name }}

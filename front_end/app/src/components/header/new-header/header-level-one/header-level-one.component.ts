@@ -24,4 +24,11 @@ export class NxHeaderLevelOneComponent {
     onNodeSelect(event: MenuNode): void {
         this.nodeSelect.emit(event);
     }
+
+    handleNavigation(node: MenuNode, event: MouseEvent) {
+        const firstNodeWithURL = node.nodes.find(subNode => (subNode.url && !subNode.new_window));
+        if (firstNodeWithURL) {
+            this.headerService.handleNav(firstNodeWithURL, event);
+        }
+    }
 }
