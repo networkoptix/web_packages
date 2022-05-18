@@ -30,7 +30,7 @@ import type { ICamera, ITask } from './camera-manager/camera-manager-types';
 import { ServerManager } from './server-manager/server-manager';
 import { StorageManager } from './storage-manager/storage-manager';
 import { System } from './system-types';
-import type { IParams, NxSystemWithUserInfo, ServerTimeInfo } from './system-types';
+import type { NxSystemWithUserInfo, ServerTimeInfo } from './system-types';
 import { UserManager } from './user-manager/user-manager';
 import type {
     NxSystemUser,
@@ -1065,17 +1065,6 @@ export class NxSystem extends System {
     /**
      * @deprecated Method should be refrenced from serverManager instead of directly from system.
      */
-    getModuleInfo(serverId?: string) {
-        return this.serverManager.getModuleInfo(serverId);
-    }
-
-    getModuleInfoUsingUrl(url: string) {
-        return this.serverManager.getModuleInfoUsingUrl(url);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
     renameServer(serverId: string, serverName: string) {
         return this.serverManager.renameServer(serverId, serverName)
             .then(() => this.update())
@@ -1134,20 +1123,6 @@ export class NxSystem extends System {
         return this.serverManager
             .getApiDoc(serverId)
             .catch(err => Promise.reject(err));
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    logLevel(serverId: string) {
-        return this.serverManager.logLevel(serverId);
-    }
-
-    /**
-     * @deprecated Method should be refrenced from serverManager instead of directly from system.
-     */
-    setLogLevels(serverId: string, loggers: IParams[]) {
-        return this.serverManager.setLogLevels(serverId, loggers);
     }
 
     /**

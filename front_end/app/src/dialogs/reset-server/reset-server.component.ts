@@ -17,10 +17,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import {
-    ModuleInformationReply,
-    NormalResponse
-} from '@services/system-api.types';
+import { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { cleanId, pickFrom } from '@utils/general';
@@ -123,7 +120,7 @@ export class ResetServerModalContent {
                     return;
                 }
 
-                let moduleInfo: NormalResponse<ModuleInformationReply>;
+                let moduleInfo: ModuleInformation;
                 try {
                     moduleInfo = await this.system.serverManager.getModuleInfo(this.serverId).toPromise();
                 } catch (err) {
@@ -140,7 +137,7 @@ export class ResetServerModalContent {
                     .then(() => {
                         const serverSubscription = this.system.serverManager.getModuleInfo(this.serverId)
                             .pipe(
-                                map((res: any) => {
+                                map(res => {
                                     if (res.reply.id !== this.serverId) {
                                         throw Error('server id should be the same');
                                     }

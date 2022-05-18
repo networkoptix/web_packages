@@ -199,6 +199,7 @@ export interface ModuleInformationReply {
     type: string,
     version: string
 }
+export type ModuleInformation = NormalResponse<ModuleInformationReply>;
 
 export interface LogLevelReply {
     EC2_TRAN: string,

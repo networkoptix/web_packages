@@ -839,14 +839,12 @@ export class NxSystemAPI {
             .catch(err => Promise.reject(err));
     }
 
-    getModuleInfo() {
-        return this.get<t.NormalResponse<t.ModuleInformationReply>>(
-            '/api/moduleInformation'
-        );
+    getModuleInfo(): Observable<t.ModuleInformation> {
+        return this.get('/api/moduleInformation');
     }
 
-    getModuleInfoUsingUrl(url: string) {
-        return this.http.get<t.NormalResponse<t.ModuleInformationReply>>(
+    getModuleInfoUsingUrl(url: string): Observable<t.ModuleInformation> {
+        return this.http.get<t.ModuleInformation>(
             `${url}/api/moduleInformation`
         );
     }
@@ -1080,10 +1078,11 @@ export class NxSystemAPI {
     /* Formatting urls */
     previewUrl(
         cameraId: string,
-        time?: number,
+        time?: number | string,
         width?: number,
         height?: number,
-        rotate?: number
+        rotate?: number,
+        _auth?: string // For compatibility with rest api signature
     ) {
         const data: {
             cameraId: string;

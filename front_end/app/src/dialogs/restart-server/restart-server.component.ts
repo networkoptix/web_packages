@@ -120,7 +120,7 @@ export class RestartServerModalContent {
                 let serverOnlineChecked = 0;
                 const serverSubscription = this.system.serverManager.getForceServers(false)
                     .pipe(
-                        map((res: any) => {
+                        map(res => {
                             if (res) {
                                 // maps server status into serverObj
                                 const serverObj: { id?: string } = {};

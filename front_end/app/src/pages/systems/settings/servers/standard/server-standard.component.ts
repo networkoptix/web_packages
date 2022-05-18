@@ -27,7 +27,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { GetMediaServers } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
@@ -393,7 +392,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     console.error(err);
                     return of(false);
                 }))
-            .subscribe((result: GetMediaServers[] | false) => {
+            .subscribe((result: NxSystemServer[] | false) => {
                 if (result) {
                     const isOnline = result.find(server =>
                         server.id === this.selectedServer.id

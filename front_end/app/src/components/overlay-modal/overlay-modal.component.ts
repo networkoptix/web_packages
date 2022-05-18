@@ -18,16 +18,10 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import type { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
+import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
-
-interface Server {
-    name: string,
-    ip: string,
-    id: string,
-    url: string,
-    status: string
-}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -39,7 +33,7 @@ export class NxOverlayModalComponent implements OnInit {
     system: NxSystem;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    servers: Partial<Server>[] = [];
+    servers: NxSystemServer[] = [];
 
     currentRoute: string = '';
     serverId: string;
@@ -131,7 +125,7 @@ export class NxOverlayModalComponent implements OnInit {
 
             if (!this.oneCheckAtATime && untilRefresh < 1) {
                 this.checkIfOnline()
-                    .then((res: any) => {
+                    .then(res => {
                         this.oneCheckAtATime = false;
                         // restarts the interval after checkIfOnline
                         if (!res.reply && this.nextInterval <= 60) {
@@ -181,8 +175,7 @@ export class NxOverlayModalComponent implements OnInit {
     getServers(): void {
         this.system.serverManager.getServers().toPromise()
             .then(res => {
-                this.servers = (<Server[]>(res as unknown) || [])
-                    .filter(({ id }) => id !== this.serverId);
+                this.servers = (res || []).filter(({ id }) => id !== this.serverId);
             })
             .catch(err => console.error(err));
     }
@@ -195,7 +188,7 @@ export class NxOverlayModalComponent implements OnInit {
         this.refresh$.next('refresh');
     }
 
-    checkIfOnline() {
+    checkIfOnline(): Promise<ModuleInformation> {
         this.oneCheckAtATime = true;
         return this.system.mediaserver.getModuleInfo().toPromise();
     }

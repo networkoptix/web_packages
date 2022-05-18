@@ -21,14 +21,10 @@ import type { LogLevel, LogLevelReply } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 
+import type { Logger } from './logger.component.types';
+
 interface LoggerOption extends DropdownItem<string> {
     help: string;
-}
-
-interface Logger {
-    key: string;
-    value: string;
-    originalValue: string;
 }
 
 @Component({

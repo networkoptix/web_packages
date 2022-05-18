@@ -506,11 +506,11 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.get<APIDoc>(this.CONFIG.apiDocURL[type]).toPromise();
     }
 
-    getApiChangelog() {
+    getApiChangelog(): Promise<string> {
         return this.http.get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' }).toPromise();
     }
 
-    getApiPreamble() {
+    getApiPreamble(): Promise<string> {
         return this.http.get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' }).toPromise();
     }
 
@@ -701,7 +701,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     previewUrl(
         cameraId: string,
-        time?: number,
+        time?: number | string,
         width?: number,
         height?: number,
         rotate?: number,

@@ -15,6 +15,7 @@ import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 
 import { NxOverlayModalComponent } from './overlay-modal.component';
@@ -47,7 +48,7 @@ describe('NxOverlayModalComponent', () => {
             name: 'serverTHREEname',
             ip: 'serverTHREEip'
         }
-    ];
+    ] as NxSystemServer[];
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
