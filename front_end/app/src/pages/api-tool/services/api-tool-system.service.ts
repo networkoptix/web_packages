@@ -293,12 +293,14 @@ export class NxAPIToolSystemService {
         this.emitServer(server, json, false, '', markdown);
     }
 
-    getLocalSystem(): void {
-        this.accountService.get().then(account => {
+    async getLocalSystem(): Promise<void> {
+        this.accountService.get().then(async account => {
             if (!account) {
                 this.router.navigate(['/']);
             }
-            this.currentSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+            const localSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+            await localSystem.update().catch(() => {});
+            this.currentSystem = localSystem;
         });
     }
 
