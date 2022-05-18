@@ -8,7 +8,7 @@ import {
     combineLatest,
     Observable
 } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
@@ -39,17 +39,24 @@ export class NxMenusService {
     }> = {};
 
     constructor(
+        languageService: NxLanguageProviderService,
         public configService: NxConfigService,
-        private languageService: NxLanguageProviderService,
         private translate: TranslateService,
         private sessionService: NxSessionService,
         private http: HttpClient
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.translations;
-        this.languageService.translateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(this.updateMenu);
+
+        languageService.translateSubject.asObservable()
+            .pipe(
+                filter(lang => lang !== null),
+                distinctUntilChanged(),
+                untilDestroyed(this)
+            )
+            .subscribe((lang) => {
+                this.LANG = languageService.translations;
+                this.updateMenu(lang);
+            });
     }
 
     updateMenu = (lang) => {
