@@ -1,14 +1,14 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Wszystkie serwery",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "For developers": "Dla programistów",
     "Integrations (β)": "Integracje (β)",
     "Privacy": "Prywatność",
     "Support": "Wsparcie",
     "Terms": "Warunki",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Konsola deweloperska",
     "alarmTypes": {
         "Servers": "Serwery",
         "Cameras": "Kamery",
@@ -17,20 +17,20 @@
     },
     "alarmLevels": {
         "offline": "Offline",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Błędy",
+        "warning": "Ostrzeżenia"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Wszystkie powiadomienia",
+        "warning": "Tylko ostrzeżenia",
+        "error": "Tylko błędy"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Wszystkie typy urządzeń",
         "servers": "Serwer",
         "cameras": "Kamery",
         "storages": "Storages",
-        "networkInterfaces": "Interface"
+        "networkInterfaces": "Wygląd"
     },
     "accessRoles": {
         "Administrator": {
@@ -675,18 +675,18 @@
             "licenses": "Licencje",
             "users": "Użytkownicy",
             "servers": "Serwery",
-            "alerts": "Alerts",
+            "alerts": "Powiadomienia",
             "systems": "System",
             "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
-            "logs": "Logs"
+            "networkInterfaces": "Interfejsy sieciowe",
+            "graphs": "Wykresy",
+            "logs": "Logi"
         }
     },
     "tableHeaders": {
         "type": "Rodzaj",
         "server": "Serwer",
-        "alert": "Alert"
+        "alert": "Powiadomienie"
     },
     "pageTitles": {
         "about": "Informacje",
@@ -695,7 +695,7 @@
         "activateCode": "Aktywuj konto",
         "activateSuccess": "Konto aktywowano",
         "articleTitle": "{ARTICLE_TITLE} dla {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Autoryzacja",
         "changePassword": "Zmień hasło",
         "debug": "Debugowanie",
         "default": "%CLOUD_NAME%",
@@ -790,7 +790,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "installButton": "Zainstaluj teraz"
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."
@@ -948,14 +948,14 @@
     "healthMonitor": {
         "groups": {
             "info": "Info",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Dostępność",
+            "load": "Załaduj",
+            "activity": "Aktywność"
         },
         "keys": {
             "name": "Name",
             "servers": "Serwery",
-            "cameras": "Camera channels",
+            "cameras": "Kanały kamery",
             "storages": "Storage locations",
             "users": "Użytkownicy",
             "version": "System version",
@@ -964,27 +964,27 @@
             "offlineEvents": "Events: Server Offline (24h)",
             "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "serverCpuUsageP": "CPU (serwer VMS) %",
+            "ramUsageB": "Użycie RAM",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
-            "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
+            "serverRamUsageB": "RAM (serwer VMS)",
+            "serverRamUsageP": "RAM (serwer VMS) %",
+            "threads": "Wątki serwera",
+            "decodingThreads": "Dekodowanie wątków",
+            "decodingSpeed3s": "Prędkość dekodowania",
+            "encodingThreads": "Kodowanie wątków",
+            "encodingSpeed3s": "Prędkość kodowania",
             "primaryStreams": "Outgoing Primary streams",
             "secondaryStreams": "Outgoing Secondary streams",
             "incomingConnections": "Incoming connections",
             "outgoingConnections": "Outgoing connections",
             "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "publicIp": "Publiczny adres IP",
             "os": "OS",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "Czas systemu operacyjnego",
+            "vmsTime": "Czas VMS",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Rdzenie",
             "ramB": "RAM",
             "guidConflict": "Server GUID conflict",
             "vmsTimeChanged24h": "Events: Time Changed (24h)",

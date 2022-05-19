@@ -53,9 +53,9 @@ Force Tags        system    advanced_settings    cloud    webadmin
     Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE    timeout=60
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
     IF    '${IMAGE}'=='5.0_test'
-        Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
+        Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
     ELSE
-        Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
+        Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
     END
     IF    '${mode}' == 'cloud'
         Go To    ${ENV}/systems/${system}[cloud id]${ADVANCED SETTINGS}

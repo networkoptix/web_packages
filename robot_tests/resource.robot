@@ -1249,7 +1249,8 @@ Delete All Text
     ${length}=   Evaluate    ${length} + 1
     Click Element    ${input}
     FOR    ${n}    IN RANGE    ${length}
-        Press Keys    None     BACKSPACE 
+        Press Keys    None    ARROW_RIGHT
+        Press Keys    None     BACKSPACE
     END
     Run Keyword If    ${replaceText}    Press Keys    None   ${replaceWith}
 
