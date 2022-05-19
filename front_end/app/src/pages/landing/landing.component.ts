@@ -35,12 +35,11 @@ export class NxLandingComponent implements OnInit {
     }
 
     constructor(private configService: NxConfigService,
-                private dialogs: NxDialogsService,
-                private accountService: NxAccountService,
-                private pageService: NxPageService,
-                private language: NxLanguageProviderService,
-                @Inject(WINDOW) private window: Window,
-                private router: Router
+        private accountService: NxAccountService,
+        private pageService: NxPageService,
+        private language: NxLanguageProviderService,
+        @Inject(WINDOW) private window: Window,
+        private router: Router
     ) {
         this.setupDefaults(this.configService);
         this.startUrl = this.router.url;
@@ -55,7 +54,7 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        this.pageService.pageTitle = this.LANG.productName();
         this.pageService.pageDescription = this.CONFIG.landing.description;
         if (this.startUrl === '/logout') {
             this.accountService.logout();
@@ -79,7 +78,7 @@ export class NxLandingComponent implements OnInit {
                         }
                     }
                 }).catch(() => {
-                    this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+                    this.pageService.pageTitle = this.LANG.productName();
                     this.pageService.pageDescription = this.CONFIG.landing.description;
                     this.loaded = true;
                 });

@@ -140,7 +140,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     private setNameAndTitle() {
         this.systemName = this.system.info.systemName || this.system.info.name;
-        this.pageService.pageTitle = this.systemName;
+        if (!this.CONFIG.isLocal) {
+            this.pageService.pageTitle = this.systemName;
+        }
 
         setTimeout(() => {
             this.systemNameFormWatcher = this.applyService.createFormWatcher(

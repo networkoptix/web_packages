@@ -9,9 +9,10 @@
     "Support": "Support",
     "Terms": "Terms",
     "Developers Console": "Developers Console",
+    "productName": "",
     "alarmTypes": {
-        "Servers":"Servers",
-        "Cameras":"Cameras",
+        "Servers": "Servers",
+        "Cameras": "Cameras",
         "Storage Locations": "Storage Locations",
         "Network Interfaces": "Network Interfaces"
     },
@@ -381,7 +382,6 @@
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
                 "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
-
             },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -717,6 +717,7 @@
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "Security",
@@ -1197,6 +1198,24 @@
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

@@ -173,7 +173,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.system?.();
+        if (!this.CONFIG.isLocal) {
+            this.pageService.pageTitle = this.LANG.pageTitles.system?.();
+        }
         this.init();
     }
 
@@ -461,10 +463,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.systems = [this.system];
                         this.system.isAvailable = true;
                         this.system.isOnline = true;
-                        setTimeout(() => {
-                            this.pageService.pageTitle =
-                                this.system.info.systemName || this.system.info.name;
-                        });
+                        if (!this.CONFIG.isLocal) {
+                            setTimeout(() => {
+                                this.pageService.pageTitle =
+                                    this.system.info.systemName || this.system.info.name;
+                            });
+                        }
 
                         if (this.systemInfoSubscription) {
                             this.systemInfoSubscription.unsubscribe();

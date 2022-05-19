@@ -176,7 +176,7 @@ export class NxContentComponent implements OnInit {
                 const content = parser.parseFromString(result, 'text/html');
                 this.pageService.pageTitle =
                     content.querySelector('h1')?.innerText ||
-                    this.LANG.pageTitles.default();
+                    this.LANG.productName();
                 this.loaded = true;
                 /* If content was successfully compiled from static files,
                     add to staticContent so we don't do an API call each time we switch pages */

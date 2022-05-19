@@ -18,6 +18,7 @@ export interface LanguageI18NStaticTypes {
     Support:               any;
     Terms:                 any;
     "Developers Console":  any;
+    productName:           any;
     alarmTypes:            AlarmTypes;
     alarmLevels:           AlarmLevels;
     alertFilters:          AlertFilters;
@@ -66,6 +67,7 @@ export interface LanguageI18NStaticTypes {
     security:              Security;
     storage:               Storage;
     metaDefaults:          MetaDefaults;
+    metaDefaultsWebadmin:  MetaDefaultsWebadmin;
     maintenance:           Maintenance;
     view:                  View;
 }
@@ -791,17 +793,30 @@ export interface MenuTitles {
 }
 
 export interface MetaDefaults {
-    default:         Default;
+    default:         MetaDefaultsDefault;
     "/systems":      Docs;
     "/integrations": Docs;
     "/docs":         Docs;
     "/ipvd":         Docs;
 }
 
-export interface Default {
+export interface MetaDefaultsDefault {
     site_name:   any;
     title:       any;
     description: any;
+}
+
+export interface MetaDefaultsWebadmin {
+    default:       MetaDefaultsWebadminDefault;
+    "/settings":   Docs;
+    "/view":       Docs;
+    "/health":     Docs;
+    "/monitoring": Docs;
+}
+
+export interface MetaDefaultsWebadminDefault {
+    site_name: any;
+    title:     any;
 }
 
 export interface PageDescriptions {
@@ -838,6 +853,7 @@ export interface PageTitles {
     systemShare:            any;
     systems:                any;
     template:               any;
+    templateWebadmin:       any;
     view:                   any;
     apiTool:                any;
     security:               any;
@@ -1356,6 +1372,7 @@ const typeMap: any = {
         { json: "Support", js: "Support", typ: "any" },
         { json: "Terms", js: "Terms", typ: "any" },
         { json: "Developers Console", js: "Developers Console", typ: "any" },
+        { json: "productName", js: "productName", typ: "any" },
         { json: "alarmTypes", js: "alarmTypes", typ: r("AlarmTypes") },
         { json: "alarmLevels", js: "alarmLevels", typ: r("AlarmLevels") },
         { json: "alertFilters", js: "alertFilters", typ: r("AlertFilters") },
@@ -1404,6 +1421,7 @@ const typeMap: any = {
         { json: "security", js: "security", typ: r("Security") },
         { json: "storage", js: "storage", typ: r("Storage") },
         { json: "metaDefaults", js: "metaDefaults", typ: r("MetaDefaults") },
+        { json: "metaDefaultsWebadmin", js: "metaDefaultsWebadmin", typ: r("MetaDefaultsWebadmin") },
         { json: "maintenance", js: "maintenance", typ: r("Maintenance") },
         { json: "view", js: "view", typ: r("View") },
     ], false),
@@ -2061,16 +2079,27 @@ const typeMap: any = {
         { json: "logs", js: "logs", typ: "any" },
     ], false),
     "MetaDefaults": o([
-        { json: "default", js: "default", typ: r("Default") },
+        { json: "default", js: "default", typ: r("MetaDefaultsDefault") },
         { json: "/systems", js: "/systems", typ: r("Docs") },
         { json: "/integrations", js: "/integrations", typ: r("Docs") },
         { json: "/docs", js: "/docs", typ: r("Docs") },
         { json: "/ipvd", js: "/ipvd", typ: r("Docs") },
     ], false),
-    "Default": o([
+    "MetaDefaultsDefault": o([
         { json: "site_name", js: "site_name", typ: "any" },
         { json: "title", js: "title", typ: "any" },
         { json: "description", js: "description", typ: "any" },
+    ], false),
+    "MetaDefaultsWebadmin": o([
+        { json: "default", js: "default", typ: r("MetaDefaultsWebadminDefault") },
+        { json: "/settings", js: "/settings", typ: r("Docs") },
+        { json: "/view", js: "/view", typ: r("Docs") },
+        { json: "/health", js: "/health", typ: r("Docs") },
+        { json: "/monitoring", js: "/monitoring", typ: r("Docs") },
+    ], false),
+    "MetaDefaultsWebadminDefault": o([
+        { json: "site_name", js: "site_name", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
@@ -2105,6 +2134,7 @@ const typeMap: any = {
         { json: "systemShare", js: "systemShare", typ: "any" },
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },
+        { json: "templateWebadmin", js: "templateWebadmin", typ: "any" },
         { json: "view", js: "view", typ: "any" },
         { json: "apiTool", js: "apiTool", typ: "any" },
         { json: "security", js: "security", typ: "any" },
