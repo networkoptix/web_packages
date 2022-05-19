@@ -7,7 +7,7 @@
     "Privacy": "Prywatność",
     "Support": "Wsparcie",
     "Terms": "Warunki",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Konsola deweloperska",
     "accessRoles": {
         "Administrator": {
             "description": "Nieograniczony dostęp, w tym możliwość udostępniania",
@@ -669,7 +669,7 @@
         "activateCode": "Aktywuj konto",
         "activateSuccess": "Konto aktywowano",
         "articleTitle": "{ARTICLE_TITLE} dla {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Autoryzacja",
         "changePassword": "Zmień hasło",
         "debug": "Debugowanie",
         "default": "%CLOUD_NAME%",
@@ -764,7 +764,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "installButton": "Zainstaluj teraz"
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."
