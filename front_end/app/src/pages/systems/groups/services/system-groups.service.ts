@@ -29,7 +29,7 @@ export class NxSystemGroupsService {
         });
     }
 
-    private _isValidSystemGroupsObject(obj) {
+    private _isValidSystemGroupsObject(obj: GroupsState): boolean {
         // return is<GroupState>(obj), see https://github.com/woutervh-/typescript-is
         return obj &&
             typeof (obj?.systemGroups) === 'object' &&

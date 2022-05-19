@@ -440,7 +440,7 @@ export class NxSystemStorageComponent implements OnInit {
             const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
                 if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
                     let retries = 5;
-                    const update = () => {
+                    const update = (): Promise<ChangedIdReturned | void> => {
                         if (retries < 5) {
                             console.error(`save retry attempt ${5 - retries} for ${camera.id} camera `);
                         }
@@ -454,7 +454,7 @@ export class NxSystemStorageComponent implements OnInit {
                     cameras.push(update);
                 }
                 return cameras;
-            }, [] as (() => Promise<ChangedIdReturned>)[]);
+            }, [] as (() => Promise<ChangedIdReturned | void>)[]);
             if (cameraSettingsToSave.length) {
                 await of(...cameraSettingsToSave).pipe(
                     bufferCount(30),
@@ -637,7 +637,7 @@ export class NxSystemStorageComponent implements OnInit {
             }
         }
 
-        const hasArchive = id => !!this.currentStorageState.locations
+        const hasArchive = (id: string): boolean => !!this.currentStorageState.locations
             .find(({ storageId }) => id === `{${storageId}}`)
             ?.vmsSpace;
         const showWarn = Object.entries(this.modeWatchers)

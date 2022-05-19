@@ -158,6 +158,10 @@ module.exports = {
                         }
                     },
                 }],
+                '@typescript-eslint/explicit-function-return-type': [
+                    'error',
+                    { allowExpressions: true }
+                ],
                 '@typescript-eslint/explicit-module-boundary-types': 'error',
                 '@typescript-eslint/no-empty-function': 'off',
                 '@typescript-eslint/no-empty-interface': 'off',

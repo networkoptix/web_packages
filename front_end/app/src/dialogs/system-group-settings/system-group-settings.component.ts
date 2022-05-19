@@ -26,14 +26,14 @@ export class SystemGroupSettingsModalContent implements OnInit {
     ) {
     }
 
-    private _importGroups(code: string) {
-        return this.systemGroupsService.import(code);
+    private _importGroups(code: string): void {
+        this.systemGroupsService.import(code);
     }
 
     ngOnInit(): void {
         this.code = this.systemGroupsService.export();
-        const successHandler = group => {
-            return this.dialogRef.close(group);
+        const successHandler = (): void => {
+            this.dialogRef.close();
         };
         this.systemGroupSettingsProcess = this.processService.createProcess(() => {
             this._importGroups(this.code);
