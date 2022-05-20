@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "적용",
     "CANCEL CHANGES BUTTON TEXT": "취소",
     "APPLY CHANGES QUESTION TEXT": "이 페이지를 떠나기 전에 변경 사항을 적용 하시겠습니까?",
-    "THIS LINK IS BROKEN TEXT": "이 링크로 시스템에 액세스 할 수 없습니다. 시스템이 %PRODUCT_NAME%에서 연결이 끊어 졌거나이 시스템에 대한 액세스가 취소되었거나 잘못된 계정으로 로그인 한 경우에 발생할 수 있습니다.",
+    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT": "페이지를 찾을 수 없음",
     "GO TO MAIN PAGE TEXT": "메인 페이지로 이동",
     "OPEN NX WITNESS BUTTON TEXT": "%VMS_NAME% 열기",

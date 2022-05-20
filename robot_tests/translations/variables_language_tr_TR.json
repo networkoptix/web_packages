@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "Uygula",
     "CANCEL CHANGES BUTTON TEXT": "Vazgeç",
     "APPLY CHANGES QUESTION TEXT": "Bu sayfadan ayrılmadan önce değişiklik uygulansın mı?",
-    "THIS LINK IS BROKEN TEXT": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %PRODUCT_NAME% bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
+    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT": "Sayfa bulunamadı",
     "GO TO MAIN PAGE TEXT": "Ana sayfaya git",
     "OPEN NX WITNESS BUTTON TEXT": "Aç %VMS_NAME%",

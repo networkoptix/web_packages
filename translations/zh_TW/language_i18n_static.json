@@ -9,6 +9,7 @@
     "Support": "支援",
     "Terms": "條款",
     "Developers Console": "開發者工具",
+    "productName": "",
     "alarmTypes": {
         "Servers": "伺服器",
         "Cameras": "攝影機",
@@ -716,6 +717,7 @@
         "systemShare": "共用系統",
         "systems": "系統",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "查看攝影機",
         "apiTool": "API testing tool",
         "security": "Security",
@@ -1196,6 +1198,24 @@
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

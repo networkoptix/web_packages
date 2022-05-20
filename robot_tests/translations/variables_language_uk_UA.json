@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "Застосувати",
     "CANCEL CHANGES BUTTON TEXT": "Скасувати",
     "APPLY CHANGES QUESTION TEXT": "Застосувати зміни перед тим, як залишити цю сторінку?",
-    "THIS LINK IS BROKEN TEXT": "Немає доступу до системи за цим посиланням. Це може статися, коли система відключена від %PRODUCT_NAME%, доступ до цієї системи відкликано, або якщо ви увійшли в неправильний обліковий запис.",
+    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT": "Сторінку не знайдено",
     "GO TO MAIN PAGE TEXT": "Перейти на головну сторінку",
     "OPEN NX WITNESS BUTTON TEXT": "Відкрити %VMS_NAME%",

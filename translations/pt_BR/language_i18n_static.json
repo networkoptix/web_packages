@@ -9,6 +9,7 @@
     "Support": "Suporte",
     "Terms": "Termos",
     "Developers Console": "Console do desenvolvedor",
+    "productName": "",
     "alarmTypes": {
         "Servers": "Servidores",
         "Cameras": "Câmeras",
@@ -716,6 +717,7 @@
         "systemShare": "Compartilhar Sistema",
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Visualizar câmaras",
         "apiTool": "Ferramenta de teste de API",
         "security": "Segurança",
@@ -1196,6 +1198,24 @@
         },
         "/ipvd": {
             "title": "Dispositivos Suportados - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

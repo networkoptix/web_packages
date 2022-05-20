@@ -9,6 +9,7 @@
     "Support": "Техническая поддержка",
     "Terms": "Условия использования",
     "Developers Console": "Developers Console",
+    "productName": "",
     "alarmTypes": {
         "Servers": "Серверы",
         "Cameras": "Камеры",
@@ -716,6 +717,7 @@
         "systemShare": "Общий доступ",
         "systems": "Системы",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Просмотр камер",
         "apiTool": "API testing tool",
         "security": "Security",
@@ -1196,6 +1198,24 @@
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

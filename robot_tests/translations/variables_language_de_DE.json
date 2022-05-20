@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "Anwenden",
     "CANCEL CHANGES BUTTON TEXT": "Abbrechen",
     "APPLY CHANGES QUESTION TEXT": "Änderungen vor dem Verlassen dieser Seite anwenden?",
-    "THIS LINK IS BROKEN TEXT": "Über diesen Link kann auf kein System zugegriffen werden. Dies kann passieren, wenn ein System von %PRODUCT_NAME% getrennt wurde, der Zugriff auf dieses System widerrufen wurde oder wenn Sie bei dem falschen Konto angemeldet sind.",
+    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT": "Seite nicht gefunden",
     "GO TO MAIN PAGE TEXT": "Zur Hauptseite",
     "OPEN NX WITNESS BUTTON TEXT": "Öffnen Sie %VMS_NAME%",

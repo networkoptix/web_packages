@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "应用",
     "CANCEL CHANGES BUTTON TEXT": "取消",
     "APPLY CHANGES QUESTION TEXT": "离开此页面前确定储存更改?",
-    "THIS LINK IS BROKEN TEXT": "此连结无法连接至任何系统。可能当系统断开 %PRODUCT_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
+    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT": "找不到页面",
     "GO TO MAIN PAGE TEXT": "转到主页",
     "OPEN NX WITNESS BUTTON TEXT": "打开 %VMS_NAME%",

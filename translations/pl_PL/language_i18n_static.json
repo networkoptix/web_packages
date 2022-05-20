@@ -9,11 +9,12 @@
     "Support": "Wsparcie",
     "Terms": "Warunki",
     "Developers Console": "Konsola deweloperska",
+    "productName": "",
     "alarmTypes": {
         "Servers": "Serwery",
         "Cameras": "Kamery",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Lokalizacje archiwum",
+        "Network Interfaces": "Interfejsy sieciowe"
     },
     "alarmLevels": {
         "offline": "Offline",
@@ -29,7 +30,7 @@
         "All Device Types": "Wszystkie typy urządzeń",
         "servers": "Serwer",
         "cameras": "Kamery",
-        "storages": "Storages",
+        "storages": "Archiwum",
         "networkInterfaces": "Wygląd"
     },
     "accessRoles": {
@@ -456,7 +457,7 @@
             "removeUser": "Remove user",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversRestart": "Zrestartować serwer &nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
@@ -677,7 +678,7 @@
             "servers": "Serwery",
             "alerts": "Powiadomienia",
             "systems": "System",
-            "storages": "Storage Locations",
+            "storages": "Lokalizacje archiwum",
             "networkInterfaces": "Interfejsy sieciowe",
             "graphs": "Wykresy",
             "logs": "Logi"
@@ -716,6 +717,7 @@
         "systemShare": "Udostępnij system",
         "systems": "Systemy",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Podgląd kamer",
         "apiTool": "Narzędzie testowania API",
         "security": "Security",
@@ -956,12 +958,12 @@
             "name": "Name",
             "servers": "Serwery",
             "cameras": "Kanały kamery",
-            "storages": "Storage locations",
+            "storages": "Lokalizacje archiwum",
             "users": "Użytkownicy",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Wersja systemu",
+            "cloudSystemId": "ID systemu w chmurze",
             "status": "Status",
-            "offlineEvents": "Events: Server Offline (24h)",
+            "offlineEvents": "Zdarzenia: Serwer offline (24h)",
             "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
             "serverCpuUsageP": "CPU (serwer VMS) %",
@@ -974,8 +976,8 @@
             "decodingSpeed3s": "Prędkość dekodowania",
             "encodingThreads": "Kodowanie wątków",
             "encodingSpeed3s": "Prędkość kodowania",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
+            "primaryStreams": "Wychodzące strumienie podstawowe",
+            "secondaryStreams": "Wychodzące strumienie dodatkowe",
             "incomingConnections": "Incoming connections",
             "outgoingConnections": "Outgoing connections",
             "logLevel": "Logging level",
@@ -992,7 +994,7 @@
             "actionsTriggered1m": "Rules Activations/s",
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "activePlugins": "Lista aktywnych wtyczek"
         }
     },
     "headerLabels": {
@@ -1196,6 +1198,24 @@
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

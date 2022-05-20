@@ -9,6 +9,7 @@
     "Support": "Support",
     "Terms": "Villkor",
     "Developers Console": "Utvecklarkonsol",
+    "productName": "",
     "alarmTypes": {
         "Servers": "Servrar",
         "Cameras": "Kameror",
@@ -716,6 +717,7 @@
         "systemShare": "Dela system",
         "systems": "System",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Visa kameror",
         "apiTool": "API-testverktyg",
         "security": "Säkerhet",
@@ -1196,6 +1198,24 @@
         },
         "/ipvd": {
             "title": "Enheter som stöds - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

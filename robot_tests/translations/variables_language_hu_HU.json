@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "Alkalmaz",
     "CANCEL CHANGES BUTTON TEXT": "Mégse",
     "APPLY CHANGES QUESTION TEXT": "Alkalmazza a módosításokat, mielőtt elhagyja ezt az oldalt?",
-    "THIS LINK IS BROKEN TEXT": "Ez a link nem érhető el rendszerrel. Ez akkor fordulhat elő, ha a rendszert lekapcsolják a %PRODUCT_NAME%, visszavonják a rendszerhez való hozzáférést, vagy ha helytelen fiókba jelentkezett be.",
+    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT": "Az oldal nem található",
     "GO TO MAIN PAGE TEXT": "Ugrás a főoldalra",
     "OPEN NX WITNESS BUTTON TEXT": "%VMS_NAME% Megnyitása",
