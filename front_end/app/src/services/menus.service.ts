@@ -66,7 +66,8 @@ export class NxMenusService {
     }
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
-        let menu = { ...this.menusStructure?.[name.toLowerCase()] } ?? {} as MenuStructure;
+        let menu = { ...this.menusStructure?.[name.toLowerCase()] } as  MenuStructure;
+        // Update to also make request if no menu
 
         if (environment.isLocal) {
             if (menu?.title === undefined) {
@@ -90,7 +91,7 @@ export class NxMenusService {
 
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$])
             .pipe(
-                switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache
+                switchMap(([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> => ignoreCache || !menu
                     ? this.http.get<MenuStructure>(this.CONFIG.apiBase + `/menus/${encodeURI(name)}`).pipe(
                         map((menu): [string, MenuStructure] => [login, menu])
                     )

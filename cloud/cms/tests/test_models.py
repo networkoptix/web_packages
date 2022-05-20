@@ -214,7 +214,7 @@ class TestModelFunctions:
         for node in range(nodes_count):
             node = baker.make(MenuNode, name=f'{menu_name} - node {node}', enabled=[self.customization], available=[
                        self.customization], authentication=MenuNode.AUTH_CHOICES.logged_in, parent_menu=menu)
-        MENU_CACHE[customization] = Menu.generate_menus(customization)
+        MENU_CACHE[customization] = Menu.generate_menus(customization, menu_names=[menu_name])
         return customization, menu_name, menu_type, nodes_count
 
     def map_menu_helper(self, menu_name, base_url, menu_url):
@@ -462,7 +462,7 @@ class TestMenuMethods:
         )
         generated_menu = Menu.generate_menu(kb_menu.name)
         assert generated_menu == mocker.sentinel.generated_menu
-        prefetch_mock.assert_called_with(kb_menu.name.lower())
+        prefetch_mock.assert_called_with([kb_menu.name.lower()])
         gen_mock.assert_called_with(['prefetched_menu'], default_customization, include_not_accepted=True)
 
     def test_generate_menus(self, mocker, other_customization, default_customization):
@@ -488,7 +488,7 @@ class TestMenuMethods:
         max_depth = qs.aggregate(models.Max('depth'))['depth__max']
         mocker.patch.object(Menu, 'objects', qs)
         prefetch_object_mock = mocker.patch.object(Menu, 'get_prefetch_objects', return_value='nodes')
-        prefetched = Menu.get_prefetched_menus()
+        prefetched = Menu.get_prefetched_menus([kb_menu.name, struct_menu.name])
         assert prefetched == list(qs.filter(enabled=True))
         prefetch_object_mock.assert_called_with(max_depth=max_depth, depth=1)
 
@@ -740,7 +740,7 @@ class TestMenuNodeMethods:
             nodes[0].save()
             nodes[1].asset = docs[1]
             nodes[1].save()
-            prefetched_menu = Menu.get_prefetched_menus(menu_name='auto_menu')[0]
+            prefetched_menu = Menu.get_prefetched_menus(menu_names=['auto_menu'])[0]
             prefetched_menu.nodes_list[0].nodes_list = []
             prefetched_menu.nodes_list[1].nodes_list = []
 

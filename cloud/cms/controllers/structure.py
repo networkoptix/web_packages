@@ -195,7 +195,7 @@ def read_menu_structure(filename):
                     last_node = menu_obj.nodes.order_by('id').last()
                     node_obj = MenuNode(parent_menu=menu_obj, is_global=True, order=last_node.order + 1 if last_node else 0)
                 process_node(node_obj, node_structure)
-    Menu.cache_all_customizations()
+    Menu.clear_all_customizations_cache()
 
 
 def process_data_structure_type(data_structure, name, value):
@@ -372,7 +372,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                             Split up the structure name and use it as keys.
                             1. Remove the % from the start and end.
                             2. Split the string by . to get all of the keys.
-                            
+
                             Ex: %mobile.ios.bundleIdentifier% -> ['mobile', 'ios', 'bundleIdentifier']
                             1. %mobile.ios.bundleIdentifier% -> mobile.ios.bundleIdentifier
                             2. mobile.ios.bundleIdentifier -> ['mobile', 'ios', 'bundleIdentifier']

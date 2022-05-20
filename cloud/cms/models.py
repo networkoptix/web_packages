@@ -331,10 +331,11 @@ def cached_doc_menu_map(customization_name, refresh=False):
 
 def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
     menu_customization = MENU_CACHE[customization_name]
+    menu_missing = menu_customization and name and menu_customization.get(name.lower(), False)
     if menu_customization is None:
-        menu_customization = Menu.generate_menus(customization_name)
+        menus_to_generate = [name] if menu_missing else [*Menu.REQUIRED_MENUS, name]
+        menu_customization = Menu.generate_menus(customization_name, menus_to_generate)
         MENU_CACHE[customization_name] = menu_customization
-        cached_doc_menu_map(customization_name, refresh=True)
     for menu_name, menu in menu_customization.items():
         check_user_menu_permissions(menu['nodes'], user)
 
@@ -1944,6 +1945,7 @@ class Menu(models.Model):
     enabled = models.BooleanField(default=True)
 
     LOGS_TO_SHOW = 10
+    REQUIRED_MENUS = ['header', 'footer', 'configuration']
 
     def __str__(self):
         if self.name:
@@ -2017,14 +2019,14 @@ class Menu(models.Model):
         menu_name = menu_name.lower()
         customization = Customization.objects.filter(
             name=customization_name).first()
-        menus = cls.get_prefetched_menus(menu_name)
+        menus = cls.get_prefetched_menus([menu_name])
         _, structures = cls.generate_menus_for_customization(
             menus, customization, include_not_accepted=True)
         return structures.get(menu_name)
 
     @classmethod
-    def generate_menus(cls, customization_name=None):
-        menus = cls.get_prefetched_menus()
+    def generate_menus(cls, customization_name=None, menu_names=None):
+        menus = cls.get_prefetched_menus(menu_names)
 
         if customization_name:
             customizations = Customization.objects.filter(
@@ -2047,11 +2049,12 @@ class Menu(models.Model):
         return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
 
     @classmethod
-    def get_prefetched_menus(cls, menu_name=None, only_enabled=True):
+    def get_prefetched_menus(cls, menu_names=None, only_enabled=True):
+        menu_names = menu_names or Menu.REQUIRED_MENUS
         menus = cls.objects.all()
         if only_enabled:
             menus = menus.filter(enabled=True)
-        menu_query = menus.filter(name=menu_name) if menu_name else menus
+        menu_query = menus.filter(name__in=menu_names)
         max_depth = menu_query.aggregate(
             models.Max('depth'))['depth__max']
         if max_depth is None:
@@ -2091,6 +2094,12 @@ class Menu(models.Model):
         for customization, structure in structures.items():
             MENU_CACHE[customization] = structure
 
+    @staticmethod
+    def clear_all_customizations_cache():
+        for customization in Customization.objects.all().values_list('name', flat=True):
+            doc_cache_key = f'{customization}-doc-dir'
+            MENU_CACHE[customization] = MENU_CACHE[doc_cache_key] = None
+
     def to_dict(self):
         assets = set()
 
@@ -2124,8 +2133,7 @@ class Menu(models.Model):
                 nodes.append(node_dict)
             return nodes
 
-        menu = next(menu for menu in Menu.get_prefetched_menus(only_enabled=False)
-                    if menu.id == self.id)
+        menu = Menu.get_prefetched_menus(only_enabled=False, menu_names=[self.name])[0]
 
         return {
             'name': menu.name,
@@ -2233,7 +2241,7 @@ class Menu(models.Model):
 
         all_nodes = []
         prefetched_menu = self.get_prefetched_menus(
-            menu_name=self.name, only_enabled=False)[0]
+            menu_names=[self.name], only_enabled=False)[0]
         if hasattr(prefetched_menu, 'nodes_list'):
             append_nodes(prefetched_menu.nodes_list)
         return all_nodes
