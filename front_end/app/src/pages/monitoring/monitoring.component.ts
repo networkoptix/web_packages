@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import {
     UntilDestroy, untilDestroyed,
 } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { Account, NxAccountService } from '@services/account.service';
@@ -37,6 +39,8 @@ export class NxMonitoringComponent implements OnInit {
     selectedServer: DropdownItem<string>;
     systemOnline: boolean = true;
     systemId: string;
+
+    private destroy$ = new Subject();
 
     constructor(
         configService: NxConfigService,
@@ -81,6 +85,37 @@ export class NxMonitoringComponent implements OnInit {
             });
     }
 
+    private updateMonitor(system) {
+        this.availServers = [];
+        // this.selectedServer = undefined;
+
+        system.serverManager.servers.forEach(server => {
+            this.availServers.push({
+                value: server.id,
+                name: server.name,
+                disabled: server.status !== 'Online'
+            });
+
+            if (!this.selectedServer) {
+                this.selectedServer = { value: server.id, name: server.name, disabled: false };
+                this.monitoringService.selectedServerId = server.id;
+            }
+
+            if (
+                this.selectedServer.value === server.id &&
+                this.selectedServer.disabled !== (server.status !== 'Online')
+            ) {
+                this.selectedServer.disabled = (server.status !== 'Online');
+                this.monitoringService.selectedServerId =
+                        this.selectedServer.disabled
+                            ? undefined
+                            : server.id; // trigger onChange
+            }
+        });
+
+        this.monitoringService.system = system;
+    }
+
     ngOnInit () {
         this.route.params
             .pipe(untilDestroyed(this))
@@ -96,8 +131,7 @@ export class NxMonitoringComponent implements OnInit {
                 return;
             }
 
-            this.availServers = [];
-            this.selectedServer = undefined;
+            this.destroy$.next();
             this.system = undefined;
             this.monitoringService.system = undefined;
             this.monitoringService.selectedServerId = undefined;
@@ -114,26 +148,17 @@ export class NxMonitoringComponent implements OnInit {
             system.update().then(() => {
                 this.systemOnline = system.isOnline;
                 if (this.systemOnline) {
-                    system.serverManager.servers.forEach(server => {
-                        this.availServers.push({
-                            value: server.id,
-                            name: server.name,
-                            disabled: server.status !== 'Online'
-                        });
-
-                        if (
-                            server.status === 'Online' &&
-                            (!this.selectedServer || !Object.keys(this.selectedServer).length)
-                        ) {
-                            this.selectedServer = { value: server.id, name: server.name, disabled: false };
-                            this.monitoringService.selectedServerId = server.id;
-                        }
-                    });
-
                     system.serverManager.initSystemMediaServers()
                         .then(() => {
                             this.system = system;
-                            this.monitoringService.system = this.system;
+                            this.system.infoSubject
+                                .pipe(
+                                    untilDestroyed(this),
+                                    takeUntil(this.destroy$)
+                                )
+                                .subscribe(() => {
+                                    this.updateMonitor(this.system);
+                                });
                         });
 
                     this.content.base = this.sourceService.getMonitoringMenuBase(system);

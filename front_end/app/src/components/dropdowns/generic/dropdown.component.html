@@ -1,7 +1,6 @@
 <div class="dropdown {{dropdownType}}"
     [ngClass]="{'dropdown-show': show, 'display-only': stillLoading }"
     (nxClickElsewhere)="show = false">
-
     <button class="btn btn-dropdown-toggle dropdown-toggle"
             #dropdownButtonFocus
             (click)="show = !show"
@@ -12,7 +11,11 @@
         <ng-container *ngIf="_selectedItem?.icon && !stillLoading">
             <ng-container *ngTemplateOutlet="dropdownItemSVG;context{item:_selectedItem, marginLeft: '4' }"></ng-container>
         </ng-container>
-        <span *ngIf="!stillLoading" [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge }" [innerHTML]="allowHTML ? (_selectedItem && _selectedItem.name) : (_selectedItem && _selectedItem.name | unsafe)"></span>
+        <span
+            *ngIf="!stillLoading"
+            [ngClass]="{ 'ellipsis-mr': merge || ellipsisMargin, ellipsis: !merge, 'disabled': _selectedItem?.disabled }"
+            [innerHTML]="allowHTML ? (_selectedItem && _selectedItem.name) : (_selectedItem && _selectedItem.name | unsafe)"
+        ></span>
         <div class="arrow-flip">
             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
         </div>

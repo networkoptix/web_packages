@@ -19,6 +19,7 @@ export interface LanguageI18NStaticTypes {
     Terms:                 any;
     "Developers Console":  any;
     productName:           any;
+    monitoring:            Monitoring;
     alarmTypes:            AlarmTypes;
     alarmLevels:           AlarmLevels;
     alertFilters:          AlertFilters;
@@ -806,6 +807,10 @@ export interface MetaDefaultsDefault {
     description: any;
 }
 
+export interface Monitoring {
+    unavailable: any;
+}
+
 export interface MetaDefaultsWebadmin {
     default:       MetaDefaultsWebadminDefault;
     "/settings":   Docs;
@@ -1373,6 +1378,7 @@ const typeMap: any = {
         { json: "Terms", js: "Terms", typ: "any" },
         { json: "Developers Console", js: "Developers Console", typ: "any" },
         { json: "productName", js: "productName", typ: "any" },
+        { json: "monitoring", js: "monitoring", typ: r("Monitoring") },
         { json: "alarmTypes", js: "alarmTypes", typ: r("AlarmTypes") },
         { json: "alarmLevels", js: "alarmLevels", typ: r("AlarmLevels") },
         { json: "alertFilters", js: "alertFilters", typ: r("AlertFilters") },
@@ -2089,6 +2095,9 @@ const typeMap: any = {
         { json: "site_name", js: "site_name", typ: "any" },
         { json: "title", js: "title", typ: "any" },
         { json: "description", js: "description", typ: "any" },
+    ], false),
+    "Monitoring": o([
+        { json: "unavailable", js: "unavailable", typ: "any" },
     ], false),
     "MetaDefaultsWebadmin": o([
         { json: "default", js: "default", typ: r("MetaDefaultsWebadminDefault") },

@@ -103,17 +103,20 @@ export class NxMonitoringGraphComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
             this.destroy$.next();
-            this.multi = [];
-            this.getStats();
+
+            if (this.system && this.selectedServerId) {
+                this.multi = [];
+                this.getStats();
+            }
         }
     }
 
     private getStats() {
         timer(0, this.refreshInterval)
             .pipe(
+                concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
-                concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
             ).subscribe((response) => {
                 response.reply && response.reply.statistics.forEach(data => {
                     const seriesData = this.multi.find(series => series.name === data.description);

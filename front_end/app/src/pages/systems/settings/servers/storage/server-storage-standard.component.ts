@@ -224,7 +224,7 @@ export class NxSystemStorageComponent implements OnInit {
                 this.setupWatchers();
                 this.loading = false;
                 this.waitingForStorages = false;
-                if (this.currentStorageState.reindexing) {
+                if (this.currentStorageState?.reindexing) {
                     this.currentStorageState.reindexing.forEach(mode => {
                         this.reindexing(TARGET_STORAGE[mode.toUpperCase()]);
                     });

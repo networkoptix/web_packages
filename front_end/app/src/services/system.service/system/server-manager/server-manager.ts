@@ -241,6 +241,10 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].getStatistics();
     }
 
+    getLogs(serverId: string, params) {
+        return this.mediaserverConnections[serverId].logUrl(params);
+    }
+
     parseLicense({ key, licenseBlock }: { key: string; licenseBlock: string; }) {
         const parsedBlock: any = licenseBlock.split('\n').reduce((parsed, current) => {
             const [curKey, curVal] = current.split('=');

@@ -1,7 +1,8 @@
 <nx-pre-loader type="page" *ngIf="!system; else logs"></nx-pre-loader>
 
 <ng-template #logs>
-    <div class="container">
-        <logger [system]="system" [selectedServerId]="selectedServerId"></logger>
-    </div>
+    <logger
+        [system]="system"
+        [selectedServerId]="selectedServerId"
+    ></logger>
 </ng-template>
