@@ -27,7 +27,8 @@
             <nx-cancel-button [process]="disconnect" [discardFn]="activeModal.close"></nx-cancel-button>
         </div>
     </div>
-    <nx-update-webadmin-session *ngIf="system.useRest && needsUpdate"
+    <nx-update-webadmin-session *ngIf="needsUpdate"
+                                [bypassOauth]="true"
                                 (loginSuccess)="needsUpdate = false; disconnect.run()"
                                 [noConnectionMsg]="'Failed to disconnect system from %CLOUD_NAME%.' | translate"
                                 processAction="danger"

@@ -147,7 +147,7 @@ export class NxLoginService {
     }
 
     async updateSession(state?: string) {
-        if (this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
+        if (state === 'disconnect' || this._currentSystem.useRest && this._currentSystem.mediaserver.isSessionOauth) {
             if (!(await this.pingCloud())) {
                 this.simpleDialogService.notify(this.LANG.toastMessage.noInternet(), 'warning', true);
                 this.modalService.dismissAll();
