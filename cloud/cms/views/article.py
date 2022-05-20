@@ -111,7 +111,7 @@ def get_article(request, url_param, **kwargs):
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_asset_global_contexts(
-                language, cloud_portal, global_contexts, article.version_id(),
+                language, cloud_portal, global_contexts, cloud_portal.version_id(),
                 article_dict, global_contexts_dict=global_contexts_dict)
 
             ARTICLE_CACHE.set_cached_item(article_dict)

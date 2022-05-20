@@ -11,7 +11,7 @@ RELEASE_NOTES = AssetType.ASSET_TYPES.release_notes
 
 
 def make_release_notes_json(assets, language, user=None,
-                           show_pending=False, show_drafts=False): 
+                           show_pending=False, show_drafts=False):
     if not assets:
         return []
     contexts, data_structures = get_contexts_and_datastructures_of_asset_type(RELEASE_NOTES)
@@ -38,12 +38,12 @@ def make_release_notes_json(assets, language, user=None,
                                                                   asset, current_version):
                     if context_dict or "PYTEST_CURRENT_TEST" in os.environ:
                         asset_dict[context.name] = context_dict
-                
+
                 if not asset_dict:
                     continue
 
                 process_asset_global_contexts(
-                    language, cloud_portal, global_contexts, current_version, asset_dict)
+                    language, cloud_portal, global_contexts, cloud_portal.version_id(), asset_dict)
                 asset_dict = {
                     **asset_dict,
                     **generate_asset_dictionary(show_pending, show_drafts,

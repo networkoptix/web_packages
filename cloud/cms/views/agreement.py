@@ -119,7 +119,7 @@ def get_agreement(request):
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             context_processor = ContextProcessor(
-                asset=cloud_portal, preview=False, version_id=agreement.version_id(), global_contexts=global_contexts,
+                asset=cloud_portal, preview=False, version_id=cloud_portal.version_id(), global_contexts=global_contexts,
                 global_contexts_dict=global_contexts_dict
             )
             context_processor.process_global_contexts(content=agreement_dict, language=language)
