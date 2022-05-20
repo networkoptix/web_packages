@@ -10,7 +10,7 @@
 
 'use strict';
 
-const { isUntyped } = require('./utils');
+const { isUntypedValue } = require('./utils');
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -38,7 +38,7 @@ module.exports = {
     },
     create: function (context) {
         function reportNode(node, expression, messageId) {
-            if (expression === null || isUntyped(expression)) {
+            if (expression === null || isUntypedValue(expression)) {
                 context.report({
                     node,
                     messageId,

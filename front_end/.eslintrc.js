@@ -154,6 +154,7 @@ module.exports = {
             ],
             rules: {
                 'nx/explicit-angular-boundary-types': 'error',
+                'nx/no-untyped-arg': 'error',
                 'nx/no-untyped-init': 'error',
                 'nx/no-untyped-subject': 'error',
 

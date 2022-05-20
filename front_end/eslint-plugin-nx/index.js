@@ -8,10 +8,8 @@ const ignore = [
 
 module.exports = {
     rules: fs.readdirSync(path.join(__dirname, 'rules'))
+        .filter(file => !ignore.includes(file))
         .reduce((rules, file) => {
-            if (ignore.includes(file)) {
-                return rules;
-            }
             const { name } = path.parse(file);
             rules[name] = require(`./rules/${name}`);
             return rules;

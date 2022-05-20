@@ -7,7 +7,7 @@
 
 'use strict';
 
-const { isUntyped } = require('./utils');
+const { isUntypedValue } = require('./utils');
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -42,7 +42,7 @@ module.exports = {
                 ) {
                     if (
                         !value.arguments.length ||
-                        isUntyped(value.arguments[0])
+                        isUntypedValue(value.arguments[0])
                     ) {
                         context.report({
                             node,

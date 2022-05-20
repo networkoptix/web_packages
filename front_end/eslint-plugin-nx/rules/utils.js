@@ -2,7 +2,7 @@
  * @param {import('@typescript-eslint/utils').TSESTree.Expression} expression
  * @returns {boolean} Whether a type cannot be inferred from an initial value
  */
-function isUntyped(expression) {
+function isUntypedValue(expression) {
     const isNull = expression.value === null;
     const isUndefined = expression.type === 'Identifier' &&
         expression.name === 'undefined';
@@ -15,5 +15,5 @@ function isUntyped(expression) {
 }
 
 module.exports = {
-    isUntyped,
+    isUntypedValue,
 };
