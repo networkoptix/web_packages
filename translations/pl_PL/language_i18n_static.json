@@ -443,7 +443,7 @@
             "removeUser": "Remove user",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversRestart": "Zrestartować serwer &nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Aby usunąć swoje konto w portalu %CLOUD_NAME%, odłącz w nim wszystkie systemy, których jesteś właścicielem."
