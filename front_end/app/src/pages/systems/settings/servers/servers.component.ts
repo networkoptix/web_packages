@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -34,15 +34,18 @@ import { NxSettingsService } from '../settings.service';
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
+
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     serverIdFromParams;
     selectedServer;
+    storageTimer: Subscription;
     serverId$ = new BehaviorSubject('')
 
     advanced: boolean;
     isOffline = false;
+    isServerOffline = false;
     serverLoaded = false;
     storagesOutdated = false;
 
@@ -88,13 +91,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             }
 
             this.menuService.detail = this.serverIdFromParams;
+            if (this.storageTimer) {
+                this.storageTimer.unsubscribe();
+                this.storageTimer = undefined;
+            }
 
             this.setServer(true);
-
-            // remove when storages update with normal 30 second poll
-            timer(60000).subscribe(() => {
-                this.storagesOutdated = true;
-            });
         });
 
         this.route.queryParams
@@ -211,6 +213,15 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 NxUtilsService.formatURL(server);
             }
             this.selectedServer = server;
+            this.isServerOffline = (server.status === 'Offline');
+
+            if (!this.isServerOffline && !this.storageTimer) {
+                // remove when storages update with normal 30 second poll
+                this.storageTimer = timer(60000).subscribe(() => {
+                    this.storagesOutdated = true;
+                });
+            }
+
             this.menuService.detail = this.selectedServer.id;
             if (this.selectedServer.id !== this.serverId$.value) {
                 this.serverId$.next(this.selectedServer.id);
