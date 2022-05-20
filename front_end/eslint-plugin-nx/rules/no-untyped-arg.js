@@ -57,11 +57,13 @@ module.exports = {
 
             if (
                 parent.type.startsWith('Expression') ||
-                parent.type.endsWith('Expression')
+                parent.type.endsWith('Expression') ||
+                parent.type === 'Property'
             ) {
                 return;
             }
-            /* Don't require for callbacks and other expressions */
+            /* Don't require for callbacks and other expressions,
+            or for object properties */
 
             params.forEach(param => {
                 if (param.type === 'Identifier' && !param.typeAnnotation) {

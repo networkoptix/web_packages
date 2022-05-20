@@ -14,6 +14,7 @@ ruleTester.run('no-untyped-arg', rule, {
         { code: 'export const foo = bar => {}' },
         { code: classWrapper('foo(bar) {}') },
         { code: classWrapper('public foo = (bar) => {};') },
+        { code: '{ foo: bar => {} }' },
         { code: '[].forEach(bar => {})' },
         { code: 'baz(function () {}, () => {})' },
         { code: 'function foo(bar: number) {}' },
