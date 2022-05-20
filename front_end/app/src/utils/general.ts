@@ -106,6 +106,10 @@ export function paramSortFunc<Param>(
 }
 
 /* Object */
+export function isObject(obj) {
+    return (!!obj) && (obj.constructor === Object);
+}
+
 export function mapValuesToStrings(
     obj: Record<string, unknown>
 ): Record<string, string> {

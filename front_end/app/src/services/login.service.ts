@@ -152,9 +152,10 @@ export class NxLoginService extends DialogBase {
             window.open(authorizeUrl, '_blank').focus();
             return this.storage.observe(this.CONFIG.oauthStore.code)
                 .pipe(
-                    takeUntil(this.done$),
                     take(1),
-                    switchMap(code => this.handleCode(code))).toPromise();
+                    switchMap(code => this.handleCode(code)),
+                    takeUntil(this.done$),
+                ).toPromise();
         }
         return Promise.resolve(false);
     }

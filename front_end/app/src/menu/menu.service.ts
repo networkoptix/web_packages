@@ -78,10 +78,10 @@ export class NxMenuService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.selectedSectionSubject.unsubscribe();
-        this.selectedSubSectionSubject.unsubscribe();
-        this.selectedDetailsSection.unsubscribe();
-        this.contentSubject.unsubscribe();
+        this.selectedSectionSubject.complete();
+        this.selectedSubSectionSubject.complete();
+        this.selectedDetailsSection.complete();
+        this.contentSubject.complete();
     }
 
     getItemBy(id: string): SanitizedLevel3Item | undefined {

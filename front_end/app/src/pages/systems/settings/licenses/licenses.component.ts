@@ -61,14 +61,14 @@ export class NxSystemLicensesComponent implements OnInit {
                 this.resetSystem$.next(true);
                 this.system.infoSubject
                     .pipe(
-                        untilDestroyed(this),
-                        takeUntil(this.resetSystem$),
                         map(system => {
                             if (!system.servers || system.servers.length === 0) {
                                 throw new Error();
                             }
                         }),
-                        retryWhen(err => err.pipe(delay(1000)))
+                        retryWhen(err => err.pipe(delay(1000))),
+                        untilDestroyed(this),
+                        takeUntil(this.resetSystem$),
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
@@ -206,8 +206,6 @@ export class NxSystemLicensesComponent implements OnInit {
                     this.resetSystemInfo$.next(true);
                     this.system.infoSubject
                         .pipe(
-                            untilDestroyed(this),
-                            takeUntil(this.resetSystemInfo$),
                             map(system => {
                                 if (
                                     !system.servers ||
@@ -216,7 +214,9 @@ export class NxSystemLicensesComponent implements OnInit {
                                     throw new Error();
                                 }
                             }),
-                            retryWhen(err => err.pipe(delay(1000)))
+                            retryWhen(err => err.pipe(delay(1000))),
+                            untilDestroyed(this),
+                            takeUntil(this.resetSystemInfo$),
                         )
                         .subscribe(() => {
                             if (this.system.currentServerNotBusy) {

@@ -14,7 +14,6 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
-import { isArray } from 'rxjs/internal-compatibility';
 import { delay } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -343,7 +342,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.filterModel.multiselects
                 .forEach(select => {
                     if (this.params[select.id]) {
-                        select.selected = isArray(this.params[select.id])
+                        select.selected = Array.isArray(this.params[select.id])
                             ? this.params[select.id]
                             : this.params[select.id].split(',');
                     } else {

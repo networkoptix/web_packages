@@ -91,7 +91,7 @@ export class StorageState extends BaseManager {
     refresh$ = new Subject<boolean>();
 
     /**
-     * The storageState$ contains an instance of the CurrentStorageState which has a locations property with an array of Storage.
+     * The storageState$ contains an instance of the CurrentStorageState which has locations property with an array of Storage.
      * The remaining properties on the CurrentStorage state are for properties that apply to the storages as a whole and not an individual storage.
      * The individual storages should be updated from methods on the StorageState class.
      * This way edge cases can be checked before calling the appropriate update method on the individual Storage.
@@ -104,7 +104,6 @@ export class StorageState extends BaseManager {
             this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
         ]
     ).pipe(
-        takeUntil(this.refresh$),
         filter((res: any) => res[2]),
         map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
         map(cur => {
@@ -118,7 +117,8 @@ export class StorageState extends BaseManager {
             }
             this.storageState = cur;
             return cur;
-        })
+        }),
+        takeUntil(this.refresh$),
     );
 
     statsUpdated$ = new Subject<any>();
@@ -146,7 +146,6 @@ export class StorageState extends BaseManager {
                 this.#storageAnalyticsStateManager.state$.pipe(fallback({ hasAnalyticsData: false, hasPlugins: false, metadataStorageId: '' }))
             ]
         ).pipe(
-            takeUntil(this.refresh$),
             filter((res: any) => res[2]),
             map((res: any) => currentStorageStateFactory(res, this.serverId, this.serverManager)),
             map(cur => {
@@ -160,7 +159,8 @@ export class StorageState extends BaseManager {
                 }
                 this.storageState = cur;
                 return cur;
-            })
+            }),
+            takeUntil(this.refresh$),
         );
         this.storageState$.subscribe(NxLogger.logCustom({
             logIdentifier: 'Storage State',

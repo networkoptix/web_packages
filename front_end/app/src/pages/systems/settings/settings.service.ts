@@ -22,6 +22,6 @@ export class NxSettingsService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.systemSubject.unsubscribe();
+        this.systemSubject.complete();
     }
 }

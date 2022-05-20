@@ -51,8 +51,8 @@ export class NxDevConsoleMenuComponent {
         this.cancel$.next('cancel');
 
         this.menusService.getMenu('configuration').pipe(
+            untilDestroyed(this),
             takeUntil(this.cancel$),
-            untilDestroyed(this)
         ).subscribe(config => {
             const consoleCmsConfig = (config?.nodes || []).find(({ url }) => url === this.base);
             for (const section in this.CONFIG.manifest) {

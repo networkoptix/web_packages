@@ -26,7 +26,7 @@ export class IntegrationService implements OnDestroy {
     pluginsSubject = new BehaviorSubject(undefined);
     pluginSubject = new BehaviorSubject({});
     haveCustomBuild: boolean;
-    private integrationSubject: Subscription;
+    private integrationSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -38,7 +38,7 @@ export class IntegrationService implements OnDestroy {
         this.accountService.get().then(account => {
             this.account = account;
         }).then(_ => {
-            this.integrationSubject = this.getIntegrations(this.account && this.account.is_staff)
+            this.integrationSubscription = this.getIntegrations(this.account && this.account.is_staff)
                 .subscribe(result => {
                     const plugins = result?.data || [];
 
@@ -206,7 +206,7 @@ export class IntegrationService implements OnDestroy {
             plugin.downloadFiles = [];
 
             for (const platformName in downloadPlatforms) {
-                // If there is no file url or its the name for an additional field skip
+                // If there is no file url, or it's the name for an additional field skip
                 if (typeof downloadPlatforms[platformName] !== 'string' ||
                     !downloadPlatforms[platformName] ||
                     platformName.match(/-file-[\d]+-name/) ||
@@ -279,7 +279,7 @@ export class IntegrationService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.integrationSubject.unsubscribe();
-        this.pluginsSubject.unsubscribe();
+        this.integrationSubscription.unsubscribe();
+        this.pluginsSubject.complete();
     }
 }

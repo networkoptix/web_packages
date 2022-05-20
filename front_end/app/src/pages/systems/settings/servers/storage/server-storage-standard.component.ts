@@ -844,8 +844,8 @@ export class NxSystemStorageComponent implements OnInit {
             )
         ).pipe(
             retryWhen(errors => errors.pipe(delay(1000))),
+            untilDestroyed(this),
             takeUntil(this.stopReindex$.pipe(filter(stopping => stopping === type))),
-            untilDestroyed(this)
         ).subscribe(
             (res: RebuildArchiveResponse) => {
                 if (res.reply.state === 'RebuildState_None') {

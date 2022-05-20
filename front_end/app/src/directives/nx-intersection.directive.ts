@@ -74,7 +74,7 @@ const fromIntersectionObserver = (
         return {
             unsubscribe() {
                 intersectionObserver.disconnect();
-                subject$.unsubscribe();
+                subject$.complete();
             }
         };
     });

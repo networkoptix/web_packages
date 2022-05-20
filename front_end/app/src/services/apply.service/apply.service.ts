@@ -15,7 +15,6 @@ import {
     Subject,
     Subscription,
 } from 'rxjs';
-import { isArray, isObject } from 'rxjs/internal-compatibility';
 import {
     combineLatest,
     distinctUntilChanged,
@@ -29,6 +28,7 @@ import { ApplyModalContent } from '@dialogs/apply/apply.component';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig } from '@dialogs/dialog-ref';
+import { isObject } from '@utils/general';
 
 import { NxProcessService } from '../process.service';
 import { Process } from '../process.service/process';
@@ -359,8 +359,9 @@ export class NxApplyService extends DialogBase {
 
             extNgForm.subscr = extNgForm.form.valueChanges
                 .pipe(
+                    untilDestroyed(this),
                     takeUntil(this.resetForms$),
-                    untilDestroyed(this))
+                )
                 .subscribe(change => {
                     // Init phase ... in some cases form doesn't provide initial controls
                     // but valueChanges triggers on every control init
@@ -377,7 +378,7 @@ export class NxApplyService extends DialogBase {
                         Object.keys(change)
                             .filter(key => key !== 'ddMultiSelect')
                             .forEach(key => {
-                                if (isArray(change[key])) {
+                                if (Array.isArray(change[key])) {
                                     if (change[key].length !== extNgForm.originalForm[key].length) {
                                         extNgForm.originalForm[key] = cloneDeep(change[key]);
                                     }

@@ -109,9 +109,9 @@ export class NxMonitoringGraphComponent implements OnChanges {
     private getStats() {
         timer(0, 1000)
             .pipe(
+                switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
-                switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
             ).subscribe(response => {
                 response.reply && response.reply.statistics.forEach(data => {
                     const seriesData = this.multi.find(series => series.name === data.description);

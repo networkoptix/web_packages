@@ -159,9 +159,13 @@ export class NxDevelopersMenuComponent implements OnInit {
 
     prefetchAsset(assetId, state, version): void {
         if (assetId) {
-            timer(this.CONFIG.featureFlags.kbInstantSearch ? 50 : 250).pipe(takeUntil(this.mouseLeave$), untilDestroyed(this)).subscribe(() => {
-                this.handlePrefetch.emit({ assetId, state, version });
-            });
+            timer(this.CONFIG.featureFlags.kbInstantSearch ? 50 : 250)
+                .pipe(
+                    untilDestroyed(this),
+                    takeUntil(this.mouseLeave$),
+                ).subscribe(() => {
+                    this.handlePrefetch.emit({ assetId, state, version });
+                });
         }
     }
 

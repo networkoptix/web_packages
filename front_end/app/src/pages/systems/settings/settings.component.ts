@@ -310,12 +310,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }, {
             errorCodes: {
                 forbidden: () => {
-                    // Special handling for not having an access to the system
+                    // Special handling for not having access to the system
                     this.systemNoAccess = true;
                     return false;
                 },
                 notFound: () => {
-                    // Special handling for not having an access to the system
+                    // Special handling for not having access to the system
                     this.systemNoAccess = true;
                     return false;
                 }
@@ -467,8 +467,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.connection$.next(true);
                 this.system.connectionSubject
                     .pipe(
+                        filter((connectionLost: boolean) => connectionLost),
                         takeUntil(this.connection$),
-                        filter((connectionLost: boolean) => connectionLost))
+                    )
                     .subscribe(_ => {
                         this.connectionLost();
                     });
