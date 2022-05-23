@@ -47,7 +47,7 @@ export class NxPageService {
             Object.entries(this.metaProperties).forEach(([name, content]) => {
                 const property = `og:${name}`;
                 this.meta.updateTag({ name, property, content });
-                if (name === 'title') {
+                if (name === 'title' && !this.router.url.startsWith('/authorize')) {
                     this.title.setTitle(content);
                 }
             });
@@ -131,6 +131,9 @@ export class NxPageService {
     }
 
     public set pageTitle(title: any) {
+        if (this.router.url === '/authorize') {
+            return;
+        }
         const txt = (typeof title === 'function') ? title() : title;
         if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.productName) {
             this.updateLookups('title', this.LANG.pageTitles[this.templateKey]({ title: txt }));
