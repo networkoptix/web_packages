@@ -155,7 +155,7 @@
     "APPLY CHANGES BUTTON TEXT": "Verkställ",
     "CANCEL CHANGES BUTTON TEXT": "Avbryt",
     "APPLY CHANGES QUESTION TEXT": "Tillämpa ändringar innan du lämnar den här sidan?",
-    "THIS LINK IS BROKEN TEXT": "No system can be accessed by this link. This may happen when a system has been disconnected from Nx Cloud, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
+    "THIS LINK IS BROKEN TEXT": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats bort från Nx Cloud, åtkomst till detta system har återkallats, systemet i länken finns inte, eller om du är inloggad på det felaktiga kontot.",
     "PAGE NOT FOUND TEXT": "Det gick inte att hitta sidan",
     "GO TO MAIN PAGE TEXT": "Gå till huvudsidan",
     "OPEN NX WITNESS BUTTON TEXT": "Öppna %VMS_NAME%",
