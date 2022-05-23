@@ -19,7 +19,8 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService, Process } from '@services/process.service';
 import { NxSystem } from '@services/system.service';
 import {
-    CurrentStorageState
+    CurrentStorageState,
+    STORAGE_STATUS
 } from '@services/system.service/system/storage-manager/storage';
 
 @UntilDestroy({ checkProperties: true })
@@ -73,8 +74,12 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
     }
 
+    isInacessible(storage): boolean {
+        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE);
+    }
+
     clamp(input, storage) {
-        const max = storage.totalSpace[storage.reservedSpace.uom];
+        const max = storage.maxReserve[storage.reservedSpace.uom];
         const current = storage.reservedSpace.unitsInCurrentUom;
         const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
         const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
@@ -241,18 +246,18 @@ export const toParams = (serverId) =>
 export const mapStorages = (storages) => storages.map(({
     freeSpace: free,
     reservedSpace: reserved,
-    totalSpace: total,
+    totalSpace,
+    vmsSpace,
     usedForWriting: ufw,
     ...storage
 }) => {
-    const totalSpace = new BitConverter(total);
     const reservedSpace = new BitConverter(reserved);
     const freeSpace = new BitConverter(free);
     const remainingSpace = new FreeSpace(
         new BitConverter(freeSpace.bits - reservedSpace._bits.originalValue),
         reservedSpace
     );
-    const maxReserve = new BitConverter(freeSpace.bits + reservedSpace.bits);
+    const maxReserve = new BitConverter(freeSpace.bits + vmsSpace);
     const isUsedForWriting = new Watcher<boolean>();
     isUsedForWriting.value = ufw;
     return {
