@@ -111,7 +111,7 @@ class SubscriptionSerializer(serializers.Serializer):
                 return ['all']
 
             try:
-                systems = System.list(self.context['request'], email=request_data['username'], password=request_data['password'])
+                systems = System.list(self.context['request'], email=request_data.get('username'), password=request_data.get('password'))
                 systems = [system['id'] for system in systems['systems']]
 
                 for system in value[:]:
@@ -292,7 +292,7 @@ class SystemEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemEmail
         fields = ('systemId', 'subject', 'messageHtml', 'messageText', 'targets', 'attachments', 'messageId')
-    
+
     def create(self, customization=settings.CUSTOMIZATION):
         self.is_valid(True)
         return SystemEmail(**self.validated_data, customization=customization)
