@@ -807,10 +807,6 @@ export interface MetaDefaultsDefault {
     description: any;
 }
 
-export interface Monitoring {
-    unavailable: any;
-}
-
 export interface MetaDefaultsWebadmin {
     default:       MetaDefaultsWebadminDefault;
     "/settings":   Docs;
@@ -822,6 +818,10 @@ export interface MetaDefaultsWebadmin {
 export interface MetaDefaultsWebadminDefault {
     site_name: any;
     title:     any;
+}
+
+export interface Monitoring {
+    unavailable: any;
 }
 
 export interface PageDescriptions {
@@ -2096,9 +2096,6 @@ const typeMap: any = {
         { json: "title", js: "title", typ: "any" },
         { json: "description", js: "description", typ: "any" },
     ], false),
-    "Monitoring": o([
-        { json: "unavailable", js: "unavailable", typ: "any" },
-    ], false),
     "MetaDefaultsWebadmin": o([
         { json: "default", js: "default", typ: r("MetaDefaultsWebadminDefault") },
         { json: "/settings", js: "/settings", typ: r("Docs") },
@@ -2109,6 +2106,9 @@ const typeMap: any = {
     "MetaDefaultsWebadminDefault": o([
         { json: "site_name", js: "site_name", typ: "any" },
         { json: "title", js: "title", typ: "any" },
+    ], false),
+    "Monitoring": o([
+        { json: "unavailable", js: "unavailable", typ: "any" },
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
