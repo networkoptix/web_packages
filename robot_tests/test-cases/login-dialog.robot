@@ -257,7 +257,6 @@ Force Tags        Threaded
 
 22. User is logged out of browser after a password change in another browser
     [tags]    C41837
-    Skip    Due to "Failed to establish a new connection: [Errno 61] Connection refused')"
     Log In    ${login user}    ${password}
     Open Browser and go to URL    ${url}
     Switch Browser    1
