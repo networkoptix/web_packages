@@ -71,13 +71,13 @@ urlpatterns = [
     url(r'^maintenance/health$',                     common.maintenance_health),
 
     url(r'feedback/?$',                              send.send_event),
+    url(r'^custom-properties/(?P<endpoint>.+?)/(?P<username>.+?)$',
+        account.AccountCustomPropertyView.as_view()),
+    url(r'^custom-properties/(?P<endpoint>.+?)$',
+        account.AccountCustomPropertyView.as_view()),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^robot/get_code$', robot.get_code),
-        url(r'^custom-properties/(?P<endpoint>.+?)/(?P<username>.+?)$',
-            account.AccountCustomPropertyView.as_view()),
-        url(r'^custom-properties/(?P<endpoint>.+?)$',
-            account.AccountCustomPropertyView.as_view()),
+        url(r'^robot/get_code$', robot.get_code)
     ]
