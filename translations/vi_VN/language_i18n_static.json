@@ -960,7 +960,7 @@
         },
         "messages": {
             "required": "{number} more required",
-            "activated": "Mã bản quyền được kích hoạt",
+            "activated": "Khóa giấy phép đã được kích hoạt",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Giấy phép dùng thử kích hoạt. Bắt đầu từ hôm nay, bạn có thể ghi lại tới 4 camera trong 30 ngày."
         }
