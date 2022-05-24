@@ -18,8 +18,8 @@ class BaseCache(object):
 
     Setting global_clear on init marks that cache to be cleared on clear_global cache.
     """
- 
-    global_clear_cache_keys = {'documentation', 'agreement', 'article', 'integrations', 'menus', 'release_notes'}
+
+    global_clear_cache_keys = {'documentation', 'agreement', 'article', 'integrations', 'menus', 'release_notes', 'readonly_apis'}
     cache_key = ''
     lookup_key = ''
 
@@ -38,7 +38,7 @@ class BaseCache(object):
             caches[cache_key].clear()
 
     def get_cached_item(self):
-        """Checks cache for doc using the lookup_key attribute. 
+        """Checks cache for doc using the lookup_key attribute.
 
         Returns:
             doc: returns cached doc or None if not in cache

@@ -1,5 +1,9 @@
+from uuid import uuid4
+from util.base_cache import BaseCache
 from cms.serializers import ReadOnlyAPIDetailSerializer, ReadOnlyAPIListSerializer
 
+from django.urls import reverse
+from django.shortcuts import redirect
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -9,6 +13,10 @@ from drf_yasg.utils import swagger_auto_schema
 
 from cloud.helpers.exceptions import api_success
 from cms.models import ReadOnlyAPI
+
+READONLY_API_CACHE = BaseCache(cache_key='readonly_apis')
+READONLY_EXPIRES = 60 * 60 * 24 * 365 # 1 Year
+READONLY_CACHE_HEADER = {'Cache-Control': f'max-age={READONLY_EXPIRES}'}
 
 id_route_param = openapi.Parameter("json_id", openapi.IN_PATH,
                                           description="The readonlyAPIs id.",
@@ -30,20 +38,30 @@ INVALID_API_TYPE = "This readonlyAPI type does not exist."
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_readonly_api(request, api_id=None):
-
+    request_version = request.GET.get('version')
     if not api_id:
         return api_success(API_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
 
     api_id = int(api_id)
 
-    try:
-        api = ReadOnlyAPI.objects.get(id=api_id)
-    except ReadOnlyAPI.DoesNotExist:
-        return api_success(API_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
+    READONLY_API_CACHE.lookup_key = 'readonlyapi-' + str(api_id)
+    api_cache = READONLY_API_CACHE.get_cached_item() or {}
+    if not api_cache:
+        try:
+            api = ReadOnlyAPI.objects.get(id=api_id)
+        except ReadOnlyAPI.DoesNotExist:
+            return api_success(API_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)
+        cache_version = str(uuid4())
+        READONLY_API_CACHE.set_cached_item({ 'data': api, 'version': cache_version })
+        return redirect(f'{reverse("get_readonly_api", args=(api_id,))}?version={cache_version}')
 
+    cache_version = api_cache['version']
+    if request_version != cache_version:
+        return redirect(f'{reverse("get_readonly_api", args=(api_id,))}?version={cache_version}')
+
+    api = api_cache['data']
     serializer = ReadOnlyAPIDetailSerializer(api)
-
-    return api_success(serializer.data)
+    return api_success(serializer.data, additional_headers=READONLY_CACHE_HEADER)
 
 
 @swagger_auto_schema(method='GET',

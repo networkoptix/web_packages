@@ -61,7 +61,7 @@ class MenuCache(BaseCache):
         super().clear_cache()
         DOC_CACHE.clear_cache()
 
-
+READONLY_API_CACHE = BaseCache(cache_key='readonly_apis')
 MENU_CACHE = MenuCache()
 PORTAL_MANAGER_PERMISSIONS = [
     'access_customization',
@@ -3144,6 +3144,15 @@ class ReadOnlyAPI(models.Model):
     type = models.IntegerField(
        choices=API_TYPES, default=API_TYPES.VMS)
     enabled = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if self.id:
+            # Clear cache
+            READONLY_API_CACHE.lookup_key = "readonlyapi-" + str(self.id)
+            READONLY_API_CACHE.set_cached_item({})
+
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.name} - {self.version}"

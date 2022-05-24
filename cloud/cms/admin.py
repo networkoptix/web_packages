@@ -1533,5 +1533,4 @@ class ReadOnlyAPIFileInline(admin.TabularInline):
 @admin.register(ReadOnlyAPI)
 class ReadOnlyAPIAdmin(CMSAdmin):
     inlines = [ReadOnlyAPIFileInline]
-    inlines = [ReadOnlyAPIFileInline]
 

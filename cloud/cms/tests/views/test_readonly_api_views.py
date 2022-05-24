@@ -30,8 +30,9 @@ class TestReadOnlyAPIViews:
         mocker.patch.object(ReadOnlyAPI.objects, 'all', lambda: self.models)
 
     @pytest.mark.no_db
-    def get_readonly_api(self, arf=None, user=None, json_id=''):
-        request_url = f'/api/readonly_apis/{json_id}'
+    def get_readonly_api(self, arf=None, user=None, json_id='', request_url=''):
+        if not request_url:
+            request_url = f'/api/readonly_apis/{json_id}'
         request = arf.get(request_url)
         request.session = {}
         request.user = user
@@ -42,6 +43,10 @@ class TestReadOnlyAPIViews:
         response = self.get_readonly_api(
             arf=arf, user=self.user, json_id=json_id)
 
+        versioned_url = response.url
+        assert response.status_code == status.HTTP_302_FOUND
+
+        response = self.get_readonly_api(arf=arf, user=self.user, json_id=json_id, request_url=versioned_url)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['id'] == json_id
         # Testing that the type is showing as human-readable string instead of integer

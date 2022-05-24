@@ -344,6 +344,13 @@ CACHES = {
         "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
         "KEY_PREFIX": 'release_notes'
     },
+    "readonly_apis": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT" : REDIS_CACHE['TIMEOUT'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'] + '/15',
+        "KEY_PREFIX": 'readonly_apis'
+    }
 }
 
 if DEBUG:
