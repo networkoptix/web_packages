@@ -63,7 +63,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         if (res instanceof HttpErrorResponse && offlineStatus && offlineStatus !== errorStatus) {
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
-        } else if (res instanceof HttpErrorResponse && status === 401) {
+        } else if (res instanceof HttpErrorResponse && [401, 403].includes(status)) {
             // Session expired
             if (this.isDialogActive) {
                 return;
