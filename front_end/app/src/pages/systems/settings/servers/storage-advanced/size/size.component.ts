@@ -22,6 +22,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
+import { NumberParser } from '@utils/number-parser';
 
 type CachedSizes = Record<string, { vms: number, total: number }>;
 
@@ -186,6 +187,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             GB: 1,
             TB: 2
         };
-        return `${parseFloat(size).toFixed(fixed[units])} ${units}`;
+        return `${new NumberParser(locale).parse(size).toFixed(fixed[units])} ${units}`;
     }
 }
