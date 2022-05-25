@@ -139,17 +139,22 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private setNameAndTitle() {
-        this.systemName = this.system.info.systemName || this.system.info.name;
-        if (!this.CONFIG.isLocal) {
-            this.pageService.pageTitle = this.systemName;
-        }
+        const name = this.system.info.systemName || this.system.info.name;
+        if (name !== this.systemName) {
+            this.systemName = name;
+            this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
 
-        setTimeout(() => {
-            this.systemNameFormWatcher = this.applyService.createFormWatcher(
-                'systemNameForm',
-                this.systemNameForm,
-                this.systemNameProcess);
-        });
+            if (!this.CONFIG.isLocal) {
+                this.pageService.pageTitle = this.systemName;
+            }
+
+            setTimeout(() => {
+                this.systemNameFormWatcher = this.applyService.createFormWatcher(
+                    'systemNameForm',
+                    this.systemNameForm,
+                    this.systemNameProcess);
+            });
+        }
     }
 
     private updateSettings(forceMergeState?: boolean) {

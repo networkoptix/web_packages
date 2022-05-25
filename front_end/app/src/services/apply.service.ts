@@ -37,7 +37,8 @@ export type extNgForm = {
     save: Process,
     discard: () => void,
     hasChange: boolean,
-    changedFields: Set<string>
+    changedFields: Set<string>,
+    reset$: Subject<boolean>,
 }
 
 /**
@@ -400,7 +401,7 @@ export class NxApplyService {
 
     removeFormWatcher(id: string) {
         const watcher = this.applyComponentInstance.forms[id];
-        watcher?.form?.valueChanges && watcher.form.valueChanges.unsubscribe();
+        watcher.reset$.next(true);
         delete this.forms[id];
     }
 
@@ -500,11 +501,12 @@ export class NxApplyService {
                 discard: discardFunction,
                 hasChange: false,
                 changedFields: new Set(),
+                reset$: new Subject(),
             };
 
             extNgForm.form.valueChanges
                 .pipe(
-                    takeUntil(this.resetForms$),
+                    takeUntil(extNgForm.reset$ || this.resetForms$),
                     untilDestroyed(this))
                 .subscribe((change) => {
                     // Init phase ... in some cases form doesn't provide initial controls
