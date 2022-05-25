@@ -331,11 +331,16 @@ def cached_doc_menu_map(customization_name, refresh=False):
 
 def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
     menu_customization = MENU_CACHE[customization_name]
-    menu_missing = menu_customization and name and menu_customization.get(name.lower(), False)
+
     if menu_customization is None:
-        menus_to_generate = [name] if menu_missing else [*Menu.REQUIRED_MENUS, name]
+        menus_to_generate = [*Menu.REQUIRED_MENUS, name] if name else Menu.REQUIRED_MENUS
         menu_customization = Menu.generate_menus(customization_name, menus_to_generate)
         MENU_CACHE[customization_name] = menu_customization
+
+    elif name and not menu_customization.get(name.lower(), False):
+        if generated := Menu.generate_menus(customization_name, [name]):
+            MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
+
     for menu_name, menu in menu_customization.items():
         check_user_menu_permissions(menu['nodes'], user)
 

@@ -1,8 +1,8 @@
 import statistics
 
 from django.conf import settings
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -32,7 +32,7 @@ systemId__body = openapi.Schema(type=openapi.TYPE_STRING)
                          required=["systemId"]
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def create(request):
     require_params(request, ['systemId'])
     storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION)\
@@ -58,7 +58,7 @@ def create(request):
                          required=["systemId"]
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def delete(request):
     require_params(request, ['systemId', 'password'])
     with cloud_api.TempLogin(request.user.email, request.data.get('password')) as credentials:
@@ -77,7 +77,7 @@ def delete(request):
                          required=["destinationSystemId", "sourceSystemId"]
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def move(request):
     require_params(request, ["destinationSystemId", "sourceSystemId"])
     cloud_api.Storage.move(request,
@@ -90,7 +90,7 @@ def move(request):
                      operation_description="Returns the cloud storage usage statistics for a system.",
                      manual_parameters=[systemId__query_params])
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def usage_stats(request):
     require_params(request, ['systemId'])
     storages = cloud_api.Storage.list_system_storages(request,

@@ -3,8 +3,8 @@ from datetime import datetime
 from django.db.models import Q
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 
 from api.helpers.exceptions import api_success, require_params
 from cms.models import PortalNotification
@@ -48,7 +48,7 @@ def mark_read(request):
 
 
 @api_view(("POST", "GET"))
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def notifications(request):
     handler = get_notifications if request.method == 'GET' else mark_read
     return api_success(handler(request))

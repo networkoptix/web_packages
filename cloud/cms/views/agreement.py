@@ -1,5 +1,4 @@
 from django.conf import settings
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -145,7 +144,7 @@ review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
                          }
                      ))
 @api_view(("POST", ))
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def accept_agreement(request):
     review_id = request.data.get('review_id', None)
     if review_id is None:

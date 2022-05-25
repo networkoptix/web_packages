@@ -8,10 +8,9 @@ import requests
 from django.core.cache import cache, caches
 from django.conf import settings
 from django.shortcuts import redirect
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import serializers
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -240,7 +239,7 @@ def downloads_history(request):
                                            "cloud portal.",
                      manual_parameters=[build__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
@@ -574,7 +573,7 @@ CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the
                              'errorData': openapi.Schema(type=openapi.TYPE_STRING)})
                     })
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope,))
+@permission_classes((IsAuthenticated,))
 @handle_exceptions
 def get_customizations(request):
     if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):

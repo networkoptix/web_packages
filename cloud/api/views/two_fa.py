@@ -1,10 +1,9 @@
 from django.utils.decorators import method_decorator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import decorators, serializers
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api.controllers.cloud_api import Auth
 from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
@@ -45,7 +44,7 @@ class VerificationSerializer(serializers.Serializer):
 
 
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
     serializer_class = None
 
     @method_decorator(swagger_auto_schema(query_serializer=VerificationSerializer))
@@ -73,7 +72,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
 
 
 class BackupCode(TwoFactorPermissionsMixin, APIView):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
     serializer_class = None
 
     @method_decorator(swagger_auto_schema(query_serializer=VerificationSerializer))
@@ -136,7 +135,7 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
 
 
 @decorators.api_view(["GET"])
-@decorators.permission_classes((IsAuthenticatedOrTokenHasScope,))
+@decorators.permission_classes((IsAuthenticated,))
 def get_active_backup_codes(request):
     """
     Returns a list of all of the users backup codes.
@@ -154,7 +153,7 @@ def get_active_backup_codes(request):
                          required=["verification_code"]
                      ))
 @decorators.api_view(["POST"])
-@decorators.permission_classes((IsAuthenticatedOrTokenHasScope,))
+@decorators.permission_classes((IsAuthenticated,))
 def add_2fa_to_session(request):
     """
     Verifies the current user's access_token using a 2fa code.

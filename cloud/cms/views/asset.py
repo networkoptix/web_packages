@@ -17,11 +17,10 @@ from django.utils.text import slugify
 from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.exceptions import APIException
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from celery import result
@@ -906,7 +905,7 @@ version_id__query_param = openapi.Parameter(
                      operation_description="Download data records for a given asset",
                      manual_parameters=[asset_id__route_param, draft__query_param, version_id__query_param])
 @api_view(["GET"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def download_package(request, asset_id):
     if not request.user.has_perm("cms.can_download_package"):
         raise PermissionDenied
@@ -954,7 +953,7 @@ def handle_cloud_portal_and_vms_package(asset, preview, version_id):
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def download_async_package(request, asset_id):
     if not request.user.has_perm("cms.can_download_package"):
         raise PermissionDenied
@@ -975,7 +974,7 @@ def download_async_package(request, asset_id):
 
 
 @api_view(["POST"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def upload_image(request, asset_id, ds_id, content_uuid=None):
     file = request.data.get('file')
     content_file = base.File(file, name=f'{ds_id}-{content_uuid or uuid.uuid4()}.' + file.name.split('.')[-1].lower())
@@ -999,7 +998,7 @@ type__query_param = openapi.Parameter(
                      operation_description="Returns a list of asset ids based on an asset type.",
                      manual_parameters=[customization__query_param, name__query_param, type__query_param])
 @api_view(["GET"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def get_asset_ids_by_asset_type(request):
 
     if not request.user.has_perm("cms.can_download_package"):
@@ -1084,7 +1083,7 @@ def prepare_asset_info(request, customization, asset, ignore_error=False):
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def get_asset_info(request, asset_id):
     require_params(request, ('customization',))
     customization = request.GET.get('customization')
@@ -1231,7 +1230,7 @@ def get_assets(request):
 
 
 class CustomClientViewSet(WaffleFlagMixin, ModelViewSet):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
     serializer_class = CustomClientSerializer
     waffle_flag = FLAGS.custom_clients
 
@@ -1380,7 +1379,7 @@ def generate_manifest_for_asset_type(asset_type: AssetType = None):
 
 
 class AssetViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
     serializer_class = AssetSerializer
 
     def get_queryset(self):
