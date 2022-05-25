@@ -1,4 +1,4 @@
-import { DOCUMENT, Location } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     Input,
@@ -148,7 +148,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
-        private location: Location,
         private accountService: NxAccountService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
@@ -367,27 +366,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     undefined,
                                     true
                                 );
-
-                                if (
-                                    system?.system2faEnabled &&
-                                    !this.account?.sessionVerified
-                                ) {
-                                    this.system.mediaserver
-                                        .getMediaServers(false)
-                                        .toPromise()
-                                        .then(
-                                            () => {},
-                                            () => {
-                                                this.location.replaceState('/systems');
-                                                return this.oauthService.redirectOauth(
-                                                    'system2faAuth',
-                                                    account.email,
-                                                    undefined,
-                                                    this.system.mediaserver.accessToken
-                                                );
-                                            }
-                                        );
-                                }
 
                                 this.system.show404 = false;
                                 this.gettingSystem.run().catch(() => {
