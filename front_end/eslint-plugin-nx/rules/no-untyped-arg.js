@@ -1,5 +1,5 @@
 /**
- * @fileoverview Require types on non-callback function arguments without
+ * @fileoverview Require types on named function arguments without
  * types or informative default parameters.
  *
  * This rule should be cut down or removed once the noImplicitAny option
@@ -16,6 +16,18 @@ const { isUntypedValue } = require('./utils');
 // Helpers
 // ----------------------------------------------------------------------------
 
+const namedParents = [
+    'VariableDeclarator',
+    'MethodDefinition',
+    'PropertyDefinition',
+];
+
+const nonAssignments = [
+    'Identifier',
+    'ObjectPattern',
+    'RestElement',
+];
+
 // ----------------------------------------------------------------------------
 // Rule Definition
 // ----------------------------------------------------------------------------
@@ -31,42 +43,18 @@ module.exports = {
     },
     create: function (context) {
         function checkForUntypedArgs(node) {
-            const { parent, params } = node;
+            const { id, parent, params } = node;
 
-            const isExport = (
-                node.type === 'FunctionDeclaration' &&
-                parent.type.startsWith('Export')
-            ) || (
-                node.type === 'ArrowFunctionExpression' &&
-                parent.type === 'VariableDeclarator' &&
-                parent.parent.type === 'VariableDeclaration' &&
-                parent.parent.parent.type.startsWith('Export')
-            );
-            const isPublicMethod = (
-                parent.type === 'PropertyDefinition' ||
-                parent.type === 'MethodDefinition'
-            ) && (
-                !parent.accessibility ||
-                parent.accessibility === 'public'
-            );
-            if (isExport || isPublicMethod) {
+            const isNamed = id !== null || namedParents.includes(parent.type);
+            if (!isNamed) {
                 return;
             }
-            /* Exports/public methods already require explicit argument
-            types from explicit-module-boundary-types, avoid duplicate error */
-
-            if (
-                parent.type.startsWith('Expression') ||
-                parent.type.endsWith('Expression') ||
-                parent.type === 'Property'
-            ) {
-                return;
-            }
-            /* Don't require for callbacks and other expressions,
-            or for object properties */
 
             params.forEach(param => {
-                if (param.type === 'Identifier' && !param.typeAnnotation) {
+                if (
+                    nonAssignments.includes(param.type) &&
+                    !param.typeAnnotation
+                ) {
                     context.report({
                         node: param,
                         messageId: 'untypedArg'

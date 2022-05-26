@@ -175,7 +175,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     // See TODO in constructor, remove params argument at that time
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    // eslint-disable-next-line nx/no-untyped-arg
     updateFilter(params?): void {
         if (params?.value) {
             this.params = params.value;

@@ -10,22 +10,22 @@ const ruleTester = new RuleTester({
 
 ruleTester.run('no-untyped-arg', rule, {
     valid: [
-        { code: 'export function foo(bar) {}' },
-        { code: 'export const foo = bar => {}' },
-        { code: classWrapper('foo(bar) {}') },
-        { code: classWrapper('public foo = (bar) => {};') },
-        { code: '{ foo: bar => {} }' },
         { code: '[].forEach(bar => {})' },
         { code: 'baz(function () {}, () => {})' },
+        { code: '{ foo: bar => {} }' },
         { code: 'function foo(bar: number) {}' },
         { code: 'function foo(bar = 3) {}' },
-        { code: 'function foo(bar: number[] = []) {}' },
         { code: 'const foo = (bar: number[] = []) => {}' },
+        { code: 'function foo({ bar }: { bar: number }) {}' },
+        { code: 'function foo(...bars: string[]) {}' },
     ],
     invalid: [
-        { code: classWrapper('private foo(bar) {}'), errors: 1 },
-        { code: classWrapper('private foo(bar = {}) {}'), errors: 1 },
         { code: 'function foo(bar) {}', errors: 1 },
+        { code: 'const foo = (bar) => {};', errors: 1 },
+        { code: classWrapper('foo(bar) {}'), errors: 1 },
+        { code: classWrapper('foo = (bar) => {};'), errors: 1 },
         { code: 'function foo(bar = []) {}', errors: 1 },
+        { code: 'function foo({ bar }) {}', errors: 1 },
+        { code: 'function foo(...bars) {}', errors: 1 },
     ],
 });

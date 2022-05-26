@@ -173,7 +173,6 @@ module.exports = {
                     'error',
                     { allowExpressions: true }
                 ],
-                '@typescript-eslint/explicit-module-boundary-types': 'error',
                 '@typescript-eslint/no-empty-function': 'off',
                 '@typescript-eslint/no-empty-interface': 'off',
                 '@typescript-eslint/no-explicit-any': 'error',
