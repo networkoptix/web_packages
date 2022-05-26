@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from api.account_backend import get_ip
 from api.controllers.cloud_api import Auth, System
 from api.helpers.exceptions import (
-    require_params, api_success, APILogicException, APINotAuthorisedException, APIRequestException, ErrorCodes
+    require_params, api_success, APILogicException, APINotAuthorisedException, APIRequestException, ErrorCodes, kill_session
 )
 
 client_description = "A registered client_id."
@@ -163,12 +163,17 @@ def authenticate(request):
     if signature := get_param(request, "signature"):
         check_signature(signature, scope, redirect_uri)
 
-    res = Auth.get_code(email=get_param(request, "email"),
-                        password=get_param(request, "password"),
-                        client_id=get_param(request, "client_id"),
-                        ip=ip,
-                        redirect_uri=redirect_uri,
-                        scope=scope)
+    try:
+        res = Auth.get_code(email=get_param(request, "email"),
+                            password=get_param(request, "password"),
+                            client_id=get_param(request, "client_id"),
+                            ip=ip,
+                            redirect_uri=redirect_uri,
+                            scope=scope)
+    except Exception as e:
+        # Ensure session and csrf are reset on failure
+        kill_session(request)
+        raise e
 
     data = {
         "code": res.get('code'),

@@ -61,8 +61,12 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
                                         session_access_token=request.session.get("access_token"))
 
         if request.user and request.user.is_authenticated and request.user.email == email:
-            Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
-            request.session["has2fa"] = True
+            try:
+                Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
+                request.session["has2fa"] = True
+            # Slight possibility that your session conflicts with the code you are verifying
+            except APINotAuthorisedException:
+                pass
         return api_success(res)
 
     def post(self, request, *args, **kwargs):
