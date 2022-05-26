@@ -27,6 +27,11 @@
             display: flex;
             .system-name {
                 margin: 0 auto 4px auto;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                height: 39px;
+                max-width: 180px;
                 &:hover {
                     cursor: pointer;
                 }

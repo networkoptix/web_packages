@@ -188,7 +188,6 @@ export class NxHeaderService {
             }
         } else {
             bestMatch.isSystem = false;
-
             const recursivelyFindMatch = NxHeaderService.findMatchFactory(url, bestMatch);
             recursivelyFindMatch(this.nodes);
         }

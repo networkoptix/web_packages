@@ -3,12 +3,12 @@
     <div class="menu-items">
         <div *ngFor="let node of subNodes" class="outer-menu-item">
             <div class="inner-menu-item"
-                 (click)="node.url !== undefined ? headerService.handleNav(node, $event) : null"
-                 [ngClass]="{ 'active': headerService.currentLocation?.path === node.url || (!headerService.currentLocation?.path && node.url === 'content/about')}">
+                 (click)="node.url !== undefined ? nodeClick(node, $event) : null"
+                 [ngClass]="{ 'active': node === optimisticSelectedSubNode || (!optimisticSelectedSubNode && (headerService.currentLocation?.path === node.url || (!headerService.currentLocation?.path && node.url === 'content/about')))}">
                  {{ node.display_name }}
                  <svg-icon *ngIf="node.new_window" [src]="CONFIG.images.dirHeader + 'external_link.svg'"></svg-icon>
             </div>
         </div>
     </div>
-    <a class="create-account btn btn-primary auth-hidden text-nowrap" [href]="headerService.createUrl | unsafe"  translate>Create Account</a>
+    <a class="login btn btn-primary auth-hidden text-nowrap" [href]="headerService.authorizeUrl | unsafe"  translate>Log In</a>
 </div>

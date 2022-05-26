@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
-import { filter, first } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
@@ -28,10 +28,13 @@ export class NxNewHeaderComponent implements OnChanges {
     isMobile: boolean = false;
 
     constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router) {
-        router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this), first()).subscribe((event: NavigationEnd) => {
+        router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
             if (event.url === '/') {
                 this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
                 return;
+            }
+            if (event.url.includes('/systems/') && !menusService.currentSystemNode$.value) {
+                menusService.updateActiveSystemMenu(this.headerService.activeSystem || this.headerService.lastActive$.value);
             }
             this.headerService.setLocation(event.url);
             this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, this.headerService.currentLocation?.path);

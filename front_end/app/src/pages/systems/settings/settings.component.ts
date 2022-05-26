@@ -22,6 +22,7 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
+import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -180,6 +181,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private oauthService: OauthService,
         private cookieService: CookieService,
+        private menusService: NxMenusService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();

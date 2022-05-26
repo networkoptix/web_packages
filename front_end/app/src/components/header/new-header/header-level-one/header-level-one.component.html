@@ -7,8 +7,8 @@
         </button>
     </ng-container>
     <button class="btn auth-section">
-        <a  *ngIf="!displayedName" [href]="headerService.authorizeUrl | unsafe" class="user-section" translate>
-            LOG IN / SIGN IN
+        <a  *ngIf="!displayedName" [href]="headerService.createUrl | unsafe" class="user-section" translate>
+            CREATE ACCOUNT
         </a>
         <a  *ngIf="displayedName" class="user-section logged-in">
             <span class="user-svg-wrapper">

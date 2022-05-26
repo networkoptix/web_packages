@@ -11,6 +11,7 @@
         @extend .header-button;
         margin: 8px 0px;
         border: none !important;
+        border-radius: 4px !important;
         text-transform: uppercase;
 
         &.active {
