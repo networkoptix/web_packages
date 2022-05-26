@@ -628,13 +628,8 @@ export class NxDialogsService extends DialogBase {
     }
 
     public reserveSpaceWarning(): Promise<string | void> {
-        const options: IParams = {
-            windowClass: 'modal-holder',
-            backdrop: 'static'
-        };
-
-        const params: IParams = {};
-
-        return this.createModal(ReserveSpaceWarningModalContent, options, params);
+        const config: Partial<DialogConfig> = {};
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        return this.open(ReserveSpaceWarningModalContent, dialogConfig).afterClosed();
     }
 }

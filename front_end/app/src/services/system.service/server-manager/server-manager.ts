@@ -81,7 +81,7 @@ export class ServerManager {
 
     getForceServers(useCache: boolean, servers?: NxSystemServer[]): Observable<NxSystemServer[]> {
         if (!servers) {
-            if (!this.serverSubscription) {
+            if (!this.serverSubscription || !useCache) {
                 // @ts-expect-error TODO: Fix mismatch between NxSystemServer and GetMediaServers
                 this.serverSubscription = this.mediaserver.getMediaServers(useCache);
                 this.serverSubscription.subscribe(res => {
@@ -273,6 +273,10 @@ export class ServerManager {
 
     getStatistics(serverId: string) {
         return this.mediaserverConnections[serverId].getStatistics();
+    }
+
+    getLogs(serverId: string, params) {
+        return this.mediaserverConnections[serverId].logUrl(params);
     }
 
     createEvent(params: t.EventParams) {

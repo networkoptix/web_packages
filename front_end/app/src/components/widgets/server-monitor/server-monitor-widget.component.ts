@@ -1,16 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, defer, Observable, Subject } from 'rxjs';
-import { debounceTime, switchMap, shareReplay, map, tap, catchError, startWith, filter } from 'rxjs/operators';
+import { BehaviorSubject, defer, Subject } from 'rxjs';
+import { debounceTime, switchMap, shareReplay, map, filter } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { IConfig, NxConfigService } from '@services/nx-config';
-import { NxSystem, NxSystemService } from '@services/system.service';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSystemService } from '@services/system.service/system.service';
 
 import { NxHealthMonitorWidgetComponent } from '../health-monitor/health-monitor-widget.component';
 import { FirstPartyWidget, WidgetSize } from '../helper-classes';
+
+interface SystemDropdownItem extends DropdownItem<string> {
+    disabled: boolean;
+}
 
 @UntilDestroy()
 @Component({
@@ -26,13 +31,13 @@ export class NxServerMonitorWidgetComponent extends FirstPartyWidget {
         { name: '6 x 4', value: { cols: 6, rows: 4 } },
         { name: '8 x 6', value: { cols: 8, rows: 6 } },
         { name: '12 x 6', value: { cols: 12, rows: 6 } }
-    ]
+    ];
 
     static BASE_CONFIG = {
         selectedSystem: '',
         selectedServer: '',
         refreshInterval: 1000
-    }
+    };
 
     static cloudApi: NxCloudApiService;
     static updateSystems$ = new Subject();
@@ -42,8 +47,8 @@ export class NxServerMonitorWidgetComponent extends FirstPartyWidget {
         shareReplay()
     );
 
-    selectedSystem$ = new BehaviorSubject<DropdownItem>(null);
-    selectedServer$ = new BehaviorSubject<DropdownItem>(null);
+    selectedSystem$ = new BehaviorSubject<SystemDropdownItem>(null);
+    selectedServer$ = new BehaviorSubject<SystemDropdownItem>(null);
     loading = false;
     isOnline = true;
 
@@ -86,16 +91,16 @@ export class NxServerMonitorWidgetComponent extends FirstPartyWidget {
             return servers;
         }),
         shareReplay()
-    )
+    );
 
-    system$ = defer(() => this.getSystem(this.card.config.selectedSystem))
+    system$ = defer(() => this.getSystem(this.card.config.selectedSystem));
 
     updateName = (newName: string) => (size: WidgetSize) => {
         size.name = size.name.replace(NxServerMonitorWidgetComponent.NAME, newName);
         return size.name;
-    }
+    };
 
-    getSystem = async (systemId) => {
+    getSystem = async systemId => {
         const system = this.systemService.createSystem(this.accountService.email, systemId);
         await system.update();
         await system.serverManager.initSystemMediaServers();
@@ -106,21 +111,21 @@ export class NxServerMonitorWidgetComponent extends FirstPartyWidget {
         this.card.title = nameUpdater(this.card.size);
         this.card.sizes.forEach(nameUpdater);
         return system;
-    }
+    };
 
     toggleLoading() {
         this.loading = !this.loading;
     }
 
-    updateSystem = (systemDropdown: DropdownItem) => {
+    updateSystem = (systemDropdown: SystemDropdownItem) => {
         this.selectedSystem$.next(systemDropdown);
         this.card.config.selectedSystem = systemDropdown.value;
-    }
+    };
 
-    updateServer = (server: DropdownItem) => {
+    updateServer = (server: SystemDropdownItem) => {
         this.selectedServer$.next(server);
         this.card.config.selectedServer = server.value;
-    }
+    };
 
     constructor(
         cd: ChangeDetectorRef,

@@ -31,7 +31,6 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type {
     ICamera
 } from '@services/system.service/camera-manager/camera-manager-types';
@@ -97,6 +96,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private cancelPrevious$ = new Subject();
     private connection$ = new Subject();
 
+    private connectionSubscription: Subscription;
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -357,7 +357,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private getCloudSystemInfo(): void {
         // Starts the systems poll if starting on a system.
         if (!this.systemsService.isPolling) {
-            this.systemsService.getSystems(account.email);
+            this.systemsService.getSystems(this.account.email);
         }
 
         if (this.systemSubscription) {
@@ -365,8 +365,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.systemSubscription.unsubscribe();
         }
         this.systemSubscription = this.systemsService.systemsSubject
-            .subscribe((systems) => {
-                const system = systems.find((system) =>
+            .subscribe(systems => {
+                const system = systems.find(system =>
                     system.id === this.systemId
                 );
                 if (system === undefined) {
@@ -397,9 +397,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         tap(({ isOnline }) => {
                             this.applyService.isOnline$.next(!!isOnline);
                             if (isOnline) {
-                                this.system.ribbonService.hide();
+                                this.ribbonService.hide();
                             } else {
-                                this.system.ribbonService.show(
+                                this.ribbonService.show(
                                     this.LANG.ribbon.systemOffline?.(),
                                     [],
                                     'alert',
@@ -435,7 +435,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 .subscribe();
                         }
 
-                        this.updateMenu(this.system);
+                        this.updateMenu();
                     });
 
                 if (this.connectionSubscription) {
@@ -453,7 +453,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.settingsService.system = undefined;
         this.accountService
             .get(true)
-            .then((account) => {
+            .then(account => {
                 if (account) {
                     this.account = account;
                     if (!environment.isLocal) {
@@ -481,7 +481,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                     .subscribe(() => {
                                         this.systemReady();
                                         this.updateAlert();
-                                        this.updateMenu(this.system);
+                                        this.updateMenu();
                                     });
                         });
                     }

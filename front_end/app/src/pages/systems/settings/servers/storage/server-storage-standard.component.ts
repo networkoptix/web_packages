@@ -203,7 +203,7 @@ export class NxSystemStorageComponent implements OnInit {
                         return;
                     }
                     this.currentStorageState = state;
-                    this.currentStorageState.locations.forEach((store) => {
+                    this.currentStorageState.locations.forEach(store => {
                         const reservedOrBeingChecked = [STORAGE_STATUS.RESERVED, STORAGE_STATUS.BEING_CHECKED].includes(store.status);
                         const storageId = store.storageId;
                         this.cachedSizes[storageId] ||= { vms: 0, total: 0 };
@@ -214,7 +214,7 @@ export class NxSystemStorageComponent implements OnInit {
                             this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode, this);
                             this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]], this);
                         } else {
-                            if (reservedOrBeingChecked  || this.previouslyReserved.has(storageId)) {
+                            if (reservedOrBeingChecked || this.previouslyReserved.has(storageId)) {
                                 this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
                             }
                             const watcher = this.modeWatchers[this.normalizeId(storageId)];
@@ -254,7 +254,7 @@ export class NxSystemStorageComponent implements OnInit {
                 this.currentStorageState = null;
                 this.setupWatchers();
             });
-    }
+    };
 
     pollStats = async (update: boolean = false): Promise<void> => {
         this.cancelPolling$.next('cancel previous');

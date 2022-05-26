@@ -5,7 +5,7 @@
         class="close"
         data-dismiss="modal"
         aria-label="Close"
-        (click)="activeModal.close()"
+        (click)="close()"
     >
         <span class="close-content"><span class="close-icon"></span></span>
     </button>
@@ -30,5 +30,5 @@
         [buttonText]="'Confirm' | translate"
         [buttonDisabled]="!accepted"
     ></nx-process-button>
-    <nx-cancel-button [discardFn]="activeModal.close"></nx-cancel-button>
+    <nx-cancel-button [discardFn]="close"></nx-cancel-button>
 </div>

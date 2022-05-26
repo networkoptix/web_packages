@@ -52,9 +52,9 @@ export class NxSingleEntityComponent implements OnChanges {
             this.copyParams.values.shift();
         }
 
-        this.copyParams.values.map(param => {
+        this.copyParams.values.forEach(param => {
             param.name = this.LANG.healthMonitor.groups[param.id]?.() || param.name;
-            param.values.map(key => {
+            param.values.forEach(key => {
                 key.name = this.LANG.healthMonitor.keys[key.id]?.() || key.name;
             });
         });

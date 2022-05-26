@@ -13,13 +13,14 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxMenuService } from '@src/menu/menu.service';
 
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 import { Content } from '../../menu/menu.types';
-import { IConfig, NxConfigService } from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 import { NxMonitoringService } from './monitoring.service';

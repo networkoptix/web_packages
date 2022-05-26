@@ -54,7 +54,7 @@ export class NxMenusService {
                 distinctUntilChanged(),
                 untilDestroyed(this)
             )
-            .subscribe((lang) => {
+            .subscribe(lang => {
                 this.LANG = languageService.translations;
                 this.updateMenu(lang);
             });
@@ -74,7 +74,7 @@ export class NxMenusService {
     };
 
     getMenu = (name: string, withCurrentSystem = false, ignoreCache = false): Observable<MenuStructure> => {
-        let menu = { ...this.menusStructure?.[name.toLowerCase()] } as  MenuStructure;
+        let menu = { ...this.menusStructure?.[name.toLowerCase()] } as MenuStructure;
         // Update to also make request if no menu
 
         if (environment.isLocal) {

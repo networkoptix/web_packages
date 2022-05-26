@@ -59,7 +59,7 @@ export class OauthService {
         code?: string,
         accessToken?: string,
         redirectTo?: string,
-        ) {
+    ) {
         redirectTo ??= this.window.location.href;
         const cleanRedirect = url => {
             const [baseUrl, query] = url.split('?');

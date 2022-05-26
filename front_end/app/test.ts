@@ -8,7 +8,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { MockInstance, ngMocks } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, EMPTY, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, EMPTY, of } from 'rxjs';
 
 import staticLang from '@app/language_compiled.json';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';

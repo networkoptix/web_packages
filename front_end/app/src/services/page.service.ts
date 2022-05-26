@@ -28,8 +28,8 @@ export class NxPageService {
 
     updater$ = new Subject();
     metaLookup: MetaLookup = {};
-    defaultMetaKey = environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults'
-    templateKey = environment.isLocal ? 'templateWebadmin' : 'template'
+    defaultMetaKey = environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults';
+    templateKey = environment.isLocal ? 'templateWebadmin' : 'template';
 
     constructor(
         configService: NxConfigService,

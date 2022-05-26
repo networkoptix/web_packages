@@ -13,10 +13,11 @@ import { take } from 'rxjs/operators';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { OauthService } from '@services/oauth.service';
-import type { NxSystemRestAPI } from '@services/system-api.service';
+import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type {
     NxSystemWithUserInfo
 } from '@services/system.service/system-types';
+import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
 

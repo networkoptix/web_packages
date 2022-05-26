@@ -9,7 +9,7 @@ import {
     catchError,
 } from 'rxjs/operators';
 
-import { NxLogger } from '@utils/logger';
+// import { NxLogger } from '@utils/logger';
 import { StateManager } from '@utils/state-manager';
 
 import { BaseManager } from '../base/base-manager';
@@ -162,20 +162,17 @@ export class StorageState extends BaseManager {
             }),
             takeUntil(this.refresh$),
         );
-        this.storageState$.subscribe(NxLogger.logCustom({
-            logIdentifier: 'Storage State',
-            prettyPrint: false
-        }));
 
         this.statsUpdated$ = new Subject<any>();
     }
 
     constructor(public serverManager: ServerManager) {
         super();
-        this.storageState$.subscribe(NxLogger.logCustom({
-            logIdentifier: 'Storage State',
-            prettyPrint: false
-        }));
+        // Uncomment this for debugging ... otherwise let's keep console clean :)
+        // this.storageState$.subscribe(NxLogger.logCustom({
+        //     logIdentifier: 'Storage State',
+        //     prettyPrint: false
+        // }));
         this.#storageStatsStateManager.state$.subscribe(this.statsUpdated$);
     }
 }

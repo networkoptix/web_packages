@@ -939,8 +939,8 @@ class Auth(object):
 
     @staticmethod
     @validate_response
-    def validate_token(access_token):
-        headers = {"Authorization": f"Bearer {access_token}"}
+    def validate_token(access_token, session_access_token=None):
+        headers = {"Authorization": f"Bearer {session_access_token or access_token}"}
         return get_wrapper(f"{CLOUD_DB_URL}/oauth2/token/{access_token}", headers=headers)
 
     @staticmethod

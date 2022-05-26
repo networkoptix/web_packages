@@ -10,6 +10,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
+import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
@@ -22,6 +23,8 @@ type LoggerDropdownItem = DropdownItem<string>;
     templateUrl: './logger.component.html'
 })
 export class NxLoggerComponent implements OnChanges {
+    private readonly relayUrl: string;
+    readonly iframeHeight = 500;
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: NxSystem;
@@ -60,7 +63,7 @@ export class NxLoggerComponent implements OnChanges {
                 if (authGet) {
                     params = params.set('auth', authGet);
                 }
-                loggerHost = this.relayUrl.replace('{systemId}', `${NxUtilsService.cleanId(this.selectedServerId)}.${this.system.id}`);
+                loggerHost = this.relayUrl.replace('{systemId}', `${cleanId(this.selectedServerId)}.${this.system.id}`);
                 this.logUrl = `${protocol}//${loggerHost}/web/api/showLog?${params.toString()}`;
             }
         }
@@ -75,8 +78,8 @@ export class NxLoggerComponent implements OnChanges {
 
         if (this.refreshInterval) {
             timer(0, this.refreshInterval).pipe(
-                takeUntil(this.cancel$),
-                untilDestroyed(this)
+                untilDestroyed(this),
+                takeUntil(this.cancel$)
             ).subscribe(update);
         } else {
             update();
@@ -96,7 +99,7 @@ export class NxLoggerComponent implements OnChanges {
                             name: level,
                             value: level,
                         }));
-                        this.selectedLogLevel = {name: 'MAIN', value: 'MAIN'};
+                        this.selectedLogLevel = { name: 'MAIN', value: 'MAIN' };
                         this.getLogs(this.selectedLogLevel);
                     });
             }

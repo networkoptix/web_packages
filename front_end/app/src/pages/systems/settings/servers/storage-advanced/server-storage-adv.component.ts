@@ -30,10 +30,10 @@ import { NgChanges } from '@utils/ng-changes';
 type GbOrTb = 'GB' | 'TB';
 class BitConverter {
     private _bits = new Watcher<number>();
-    private _unit = new Watcher<GbOrTb>();
+    private _uom = new Watcher<GbOrTb>();
 
     get watcher(): [Watcher<number>, Watcher<GbOrTb>] {
-        return [this._bits, this._unit];
+        return [this._bits, this._uom];
     }
 
     set bits(value: number) {
@@ -44,18 +44,18 @@ class BitConverter {
         return this._bits.value;
     }
 
-    set unit(value: GbOrTb) {
-        this._unit.value = value;
+    set uom(value) {
+        this._uom.value = value;
     }
 
-    get unit(): GbOrTb {
-        return this._unit.value;
+    get uom(): GbOrTb {
+        return this._uom.value;
     }
 
     constructor(initialBits: number) {
-        this._unit.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
+        this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
 
-        if (this._unit.value === 'GB') {
+        if (this._uom.value === 'GB') {
             this._bits.value = Math.round(
                 (Math.round(initialBits / this.bitsGb)) * this.bitsGb
             );
@@ -91,12 +91,9 @@ class BitConverter {
         this.bits = tb * this.bitsTb;
     }
 
-    get value(): number {
-        return this[this.unit];
-    }
-
-    set value(value_: number) {
-        this[this.unit] = value_;
+    get unitsInCurrentUom(): number { return this[this.uom]; }
+    set unitsInCurrentUom(units) {
+        this[this.uom] = units;
     }
 }
 
@@ -116,7 +113,7 @@ class FreeSpace {
     }
 }
 
-type AdvancedPicked = 'url' | 'totalSpace' | 'storageType' | 'storageId';
+type AdvancedPicked = 'url' | 'totalSpace' | 'storageType' | 'storageId' | 'storageStatus';
 interface AdvancedStorage extends Pick<Storage, AdvancedPicked> {
     reservedSpace: BitConverter;
     freeSpace: BitConverter;
@@ -205,21 +202,21 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
     }
 
-    isInacessible(storage): boolean {
+    isInacessible(storage: AdvancedStorage): boolean {
         return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE);
     }
 
-    clamp(input, storage) {
+    clamp(input: number, storage: AdvancedStorage): void {
         const max = storage.maxReserve[storage.reservedSpace.uom];
         const current = storage.reservedSpace.unitsInCurrentUom;
         const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
         const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
         if (updated === current && current !== input) {
             // Force change detection to update input value if model gets out of sync with input
-            storage.reservedSpace.value = 0;
+            storage.reservedSpace.unitsInCurrentUom = 0;
         }
         setTimeout(() => {
-            storage.reservedSpace.value = updated;
+            storage.reservedSpace.unitsInCurrentUom = updated;
         });
     }
 

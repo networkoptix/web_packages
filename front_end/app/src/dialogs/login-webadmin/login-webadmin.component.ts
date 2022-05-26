@@ -308,7 +308,7 @@ export class LoginWebadminModalContent implements OnInit {
                 this.account2faRequired = res.error === 'second_factor_required';
                 let accountCheck = Promise.resolve();
                 if (!this.accountNotOnSystem && !this.account2faRequired) {
-                    accountCheck = this.account.get(true).then((res) => {
+                    accountCheck = this.account.get(true).then(res => {
                         if (res) {
                             this.window.location.reload();
                         } else {

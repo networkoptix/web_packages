@@ -38,8 +38,8 @@ export class NxSessionService {
     invalidateSession(): void {
         this.loginState = null;
         this.session.store('loginRegister', false);
-        this.cloudUserCaches.forEach((cacheName) => {
-            this.nxCache.clearByName(cacheName).catch((error) => console.error(error));
+        this.cloudUserCaches.forEach(cacheName => {
+            this.nxCache.clearByName(cacheName).catch(error => console.error(error));
         });
     }
 

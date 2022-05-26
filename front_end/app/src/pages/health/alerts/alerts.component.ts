@@ -21,9 +21,9 @@ import { NxUriService } from '@services/uri.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { paramSortFunc } from '@utils/general';
 
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { IConfig } from '../../../services/nx-config/config-types';
 import { NxConfigService } from '../../../services/nx-config/nx-config.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxHealthLayoutService } from '../health-layout.service';
 import { NxHealthService } from '../health.service';

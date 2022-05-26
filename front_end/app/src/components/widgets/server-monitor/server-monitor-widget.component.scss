@@ -1,5 +1,5 @@
 @use '../../../styles/typography';
-@use '../../../../styles/theme_variables' as *;
+@use "../../../app/styles/theme_variables_common" as *;
 
 .monitor-wrapper {
     overflow-y: auto;

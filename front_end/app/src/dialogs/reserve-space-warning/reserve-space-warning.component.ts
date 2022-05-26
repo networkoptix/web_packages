@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, OnInit } from '@angular/core';
 
 import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService, Process } from '@services/process.service';
+import { NxProcessService } from '@services/process.service';
+import { Process } from '@services/process.service/process';
 
 @Component({
     selector: 'reserve-space-warning',
@@ -20,10 +21,11 @@ export class ReserveSpaceWarningModalContent implements OnInit {
     acceptOverwrite: Process;
 
     constructor(
-        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private dialogRef: DialogRef,
+        @Inject(DIALOG_DATA) private dialogData: any,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -31,8 +33,12 @@ export class ReserveSpaceWarningModalContent implements OnInit {
 
     ngOnInit(): void {
         this.acceptOverwrite = this.processService.createProcess(() => {
-            this.activeModal.close('accept');
+            this.dialogRef.close('accept');
             return Promise.resolve();
         });
+    }
+
+    close() {
+        this.dialogRef.close();
     }
 }

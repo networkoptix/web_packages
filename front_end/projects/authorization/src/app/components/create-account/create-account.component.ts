@@ -106,7 +106,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
             this.createForm?.controls[eC[0]].setErrors({ [eC[1]]: true });
         }
         if (changes.footerItems) {
-            changes.footerItems.currentValue.forEach((item: { name_raw: string, url: string }) => {
+            changes.footerItems.currentValue.forEach((item: { name: string, name_raw: string, url: string }) => {
                 if (item.name_raw === 'Terms') {
                     this.termsUrl = item.url;
                 }

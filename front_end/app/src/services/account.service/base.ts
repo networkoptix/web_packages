@@ -98,7 +98,7 @@ export abstract class BaseAccount implements OnDestroy {
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
             .pipe(debounceTime(500), distinctUntilChanged())
-            .subscribe((loginState) => {
+            .subscribe(loginState => {
                 if (loginState !== '' && !environment.isLocal) {
                     this.get(true)
                         .then(account => {

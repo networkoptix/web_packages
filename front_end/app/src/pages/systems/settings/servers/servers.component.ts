@@ -88,14 +88,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     );
                 }
 
-            this.menuService.detail = this.serverIdFromParams;
-            if (this.storageTimer) {
-                this.storageTimer.unsubscribe();
-                this.storageTimer = undefined;
-            }
+                this.menuService.detail = this.serverIdFromParams;
+                if (this.storageTimer) {
+                    this.storageTimer.unsubscribe();
+                    this.storageTimer = undefined;
+                }
 
-            this.setServer(true);
-        });
+                this.setServer(true);
+            });
 
         this.route.queryParams
             .pipe(untilDestroyed(this))

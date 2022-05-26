@@ -430,11 +430,11 @@ export class NxSystemAPI {
     }
 
     public getApiPreamble() {
-        throw (this.notImplementedMsg);
+        throw Error(this.notImplementedMsg);
     }
 
     public getApiChangelog() {
-        throw (this.notImplementedMsg);
+        throw Error(this.notImplementedMsg);
     }
 
     login(
