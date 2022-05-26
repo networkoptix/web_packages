@@ -146,6 +146,7 @@ Force Tags        Threaded
 
 11. should open change password page in anonymous state
     [tags]    anonymous
-    Open page anonymously    ${url}/account/password    Authorization
+    Open page anonymously    ${url}/account/password    ${REGISTER TITLE TEXT}
     Wait Until Element Is Visible    ${LOG IN MODAL}
+
     Check Log In    button=None

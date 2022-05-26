@@ -6,7 +6,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { curveBasis } from 'd3-shape';
 import { Subject, timer } from 'rxjs';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { concatMap, switchMap, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -29,6 +29,8 @@ import { NgChanges } from '@utils/ng-changes';
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
     @Input() selectedServerId: string;
+    @Input() noFrame = false;
+    @Input() refreshInterval = 1000;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -101,15 +103,18 @@ export class NxMonitoringGraphComponent implements OnChanges {
     ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): void {
         if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
             this.destroy$.next();
-            this.multi = [];
-            this.getStats();
+
+            if (this.system && this.selectedServerId) {
+                this.multi = [];
+                this.getStats();
+            }
         }
     }
 
     private getStats() {
-        timer(0, 1000)
+        timer(0, this.refreshInterval)
             .pipe(
-                switchMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
+                concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),
                 untilDestroyed(this),
                 takeUntil(this.destroy$),
             ).subscribe(response => {

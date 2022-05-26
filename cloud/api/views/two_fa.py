@@ -4,7 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import decorators
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from cloud.controllers.cloud_api import Auth
 from cloud.helpers.exceptions import api_success, APINotAuthorisedException
@@ -17,9 +17,9 @@ class TwoFactorPermissionsMixin:
             return [AllowAny()]
         return super().get_permissions()
 
-    def get_user_from_code(self, code):
+    def get_user_from_code(self, code, session_access_token=None):
         try:
-            token = Auth.validate_token(code)
+            token = Auth.validate_token(code, session_access_token=session_access_token)
             return token.get("username", "")
         # If the request fails the worst case is we don't add 2fa to the user's session.
         except APINotAuthorisedException:
@@ -27,7 +27,7 @@ class TwoFactorPermissionsMixin:
 
 
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
     serializer_class = None
 
     @method_decorator(swagger_auto_schema(query_serializer=VerificationSerializer))
@@ -40,11 +40,16 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_2fa_code(data["verification_code"], data["code"])
-        email = self.get_user_from_code(data["code"])
+        email = self.get_user_from_code(data["code"],
+                                        session_access_token=request.session.get("access_token"))
 
         if request.user and request.user.is_authenticated and request.user.email == email:
-            Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
-            request.session["has2fa"] = True
+            try:
+                Auth.verify_2fa_code(data["verification_code"], request.session.get("access_token"))
+                request.session["has2fa"] = True
+            # Slight possibility that your session conflicts with the code you are verifying
+            except APINotAuthorisedException:
+                pass
         return api_success(res)
 
     def post(self, request, *args, **kwargs):
@@ -55,7 +60,7 @@ class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
 
 
 class BackupCode(TwoFactorPermissionsMixin, APIView):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
     serializer_class = None
 
     @method_decorator(swagger_auto_schema(query_serializer=VerificationSerializer))
@@ -68,7 +73,8 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
         verificationSerializer.is_valid(raise_exception=True)
         data = verificationSerializer.validated_data
         res = Auth.verify_backup_code(data["verification_code"], data["code"])
-        email = self.get_user_from_code(data["code"])
+        email = self.get_user_from_code(data["code"],
+                                        session_access_token=request.session.get("access_token"))
 
         if request.user and request.user.is_authenticated and request.user.email == email:
             Auth.verify_backup_code(data["verification_code"], request.session.get("access_token"))
@@ -119,7 +125,7 @@ class BackupCode(TwoFactorPermissionsMixin, APIView):
 
 
 @decorators.api_view(["GET"])
-@decorators.permission_classes((IsAuthenticatedOrTokenHasScope,))
+@decorators.permission_classes((IsAuthenticated,))
 def get_active_backup_codes(request):
     """
     Returns a list of all of the users backup codes.
@@ -132,7 +138,7 @@ def get_active_backup_codes(request):
                      request_body=TwoFaSerializer,
                      responses={'200': openapi.Response('Two Factor Auth', CloudResponseSerializer)})
 @decorators.api_view(["POST"])
-@decorators.permission_classes((IsAuthenticatedOrTokenHasScope,))
+@decorators.permission_classes((IsAuthenticated,))
 def add_2fa_to_session(request):
     """
     Verifies the current user's access_token using a 2fa code.

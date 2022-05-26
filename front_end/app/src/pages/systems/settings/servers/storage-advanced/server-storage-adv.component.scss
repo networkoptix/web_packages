@@ -55,6 +55,10 @@
     tr:hover td {
         background : var(--brand-core-t90);
     }
+
+    .overwrite {
+        color: red;
+    }
 }
 
 .server-info {

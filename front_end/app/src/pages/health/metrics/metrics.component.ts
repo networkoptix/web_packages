@@ -158,6 +158,18 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 if (!searchParam || !searchParam.length) {
                     this.filterModel.query = '';
                     this.selectedValues = this.healthService.values[this.metricId] || {};
+
+                    // server returns IPv6 address with appended interface name (IPv6%IName)
+                    // ... but we need only the address
+                    if (this.metricId === 'networkInterfaces') {
+                        for (const adapter in this.selectedValues) {
+                            if (this.selectedValues[adapter].info.otherAddresses) {
+                                this.selectedValues[adapter].info.otherAddresses.text =
+                                        this.selectedValues[adapter].info.otherAddresses.text?.split('%')[0] || '_';
+                            }
+                        }
+                    }
+
                     this.handleInitialId();
                 } else {
                     this.filterModel.query = searchParam;

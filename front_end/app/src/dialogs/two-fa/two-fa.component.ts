@@ -111,7 +111,8 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (
-            ['Enter', 'NumpadEnter'].includes(event.code) &&
+            // Mobile Chrome doesn't use "code" ... maybe some others -- TT
+            ['Enter', 'NumpadEnter'].includes(event.code || event.key) &&
             document.activeElement.tagName === 'INPUT'
         ) {
             const processButton = this.elem.nativeElement

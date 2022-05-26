@@ -121,7 +121,9 @@
         min-width: 320px;
         max-width: 480px;
         width: 100%;
-        height: 480px;
+        min-height: 320px;
+        max-height: 480px;
+        height : 100vh;
 
         &.window-w {
             border: 1px solid var(--border-color);
@@ -480,8 +482,10 @@
                 &.footer-m {
                     border-top: 1px solid $dark4;
                     display: flex;
+
                     button.btn.text-button {
                         color: var(--btn-text-color);
+                        height : auto !important;
                         svg {
                             .st0, .stroke-color-main {
                                 stroke : var(--btn-text-color);
@@ -527,53 +531,8 @@
     }
 
     .auth-footer {
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         min-width: 900px;
-        margin: 75px 16px 0 16px;
-        padding: 12px 0;
-        border-top: 1px solid var(--border-color);
-
-        &-links {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-
-            &.footer-d {
-                border-top: 1px solid $dark11;
-            }
-
-            a {
-                text-decoration: none;
-                @include typography.regular12light16;
-                &:hover {
-                    color: $dark15 !important;
-                }
-            }
-            .dot {
-                margin: auto 10px;
-                width: 3px;
-                height: 3px;
-                border-radius: 50%;
-                background: $light16;
-            }
-        }
-        .copyright {
-            color: $light10;
-            padding: 12px 0 0 0;
-            text-decoration: none;
-
-            &:hover, &:focus {
-                color: $light13;
-            }
-
-            &:active {
-                color: $light10;
-            }
-        }
+        margin-top: 75px;
     }
 }
 

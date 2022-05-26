@@ -60,7 +60,7 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+        this.pageService.pageTitle = this.LANG.productName();
         this.pageService.pageDescription = this.CONFIG.landing.description;
         if (this.startUrl === '/logout') {
             this.accountService.logout();
@@ -84,7 +84,7 @@ export class NxLandingComponent implements OnInit {
                         }
                     }
                 }).catch(() => {
-                    this.pageService.pageTitle = this.LANG.pageTitles.default?.();
+                    this.pageService.pageTitle = this.LANG.productName();
                     this.pageService.pageDescription = this.CONFIG.landing.description;
                     this.loaded = true;
                 });

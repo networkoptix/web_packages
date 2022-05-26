@@ -62,7 +62,6 @@ export abstract class BaseAccount implements OnDestroy {
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;
     abstract get(forceUpdate?: boolean): Promise<Account>;
     abstract login(email: string, password: string, remember?: boolean, navigateHome?: boolean): any;
-    abstract logout(doNotRedirect?: boolean, skipReload?): void;
     abstract requireLogin(): Promise<any>;
     abstract showLogin(
         keepPage?: boolean,
@@ -99,11 +98,8 @@ export abstract class BaseAccount implements OnDestroy {
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
             .pipe(debounceTime(500), distinctUntilChanged())
-            .subscribe(loginState => {
-                if (!this.sessionService.isLoggingOut && loginState === null) {
-                    return this.dialogs.expiredSession()
-                        .then(res => this.logout(res));
-                } else if (loginState !== '' && !environment.isLocal) {
+            .subscribe((loginState) => {
+                if (loginState !== '' && !environment.isLocal) {
                     this.get(true)
                         .then(account => {
                             // prevent stale loginState
@@ -294,10 +290,7 @@ export abstract class BaseAccount implements OnDestroy {
         const tempPassword = auth[1];
 
         return this.login(tempLogin, tempPassword, false)
-            .then(() => {
-                const queryParams = { auth: undefined, from: undefined };
-                return this.router.navigate([], { queryParams, queryParamsHandling: 'merge' });
-            }).catch(() => {
+            .then(() => this.clearAuthFromUri()).catch(() => {
                 this.sessionService.email = '';
                 // If the key login fails ask the user to login manually.
                 return this.loginService.login(true, true)
@@ -309,6 +302,17 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     // TODO: @Chris check for apply service in logout functions
+
+    logout(doNotRedirect = false, skipReload = false) {
+        this.applyService
+            .canMove()
+            .then((allowed: boolean) => {
+                if (allowed) {
+                    this.account = undefined;
+                    this.logoutHelper(doNotRedirect, skipReload);
+                }
+            });
+    }
 
     logoutAuthorised(skipReload = false) {
         return this.get()
@@ -345,6 +349,12 @@ export abstract class BaseAccount implements OnDestroy {
                         });
                 }
             });
+    }
+
+    private clearAuthFromUri() {
+        const queryParams = { auth: undefined, from: undefined };
+        return this.router
+            .navigate([], { queryParams, queryParamsHandling: 'merge' });
     }
 
     private clearCodeFromUri(): void {
@@ -444,23 +454,11 @@ export abstract class BaseAccount implements OnDestroy {
                     'long-cancel-button');
 
             if (response === true) {
-                this.sessionService.isLoggingOut = true;
-                return this.cloudApi.logout().finally(() => {
-                    this.stopAccountPoll();
-                    this.account = undefined;
-                    this.storageService.clear(); // Clear session
-                    setTimeout(() => {
-                        this.loginWithAuthKey(auth).then(() => {
-                            return this.document.location.reload();
-                        });
-                    });
-                });
-            } else {
-                const queryParams = { auth: undefined, from: undefined };
-                return this.router
-                    .navigate([], { queryParams, queryParamsHandling: 'merge' })
-                    .then(() => this.document.location.reload());
+                await this.logoutHelper(true, true);
+                await this.sleep(1000);
+                return this.window.location.reload();
             }
+            return this.clearAuthFromUri().then(() => this.document.location.reload());
         } catch (e) {
             this.dialogs.notify(this.LANG.errorCodes.wrongAuthCode(), 'danger', true);
             return this.requireLogin();
@@ -474,8 +472,10 @@ export abstract class BaseAccount implements OnDestroy {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
             catchError(res => {
-                const expiredSession = res?.error?.resultCode === 'badUsername';
-                this.logoutHelper(expiredSession, expiredSession);
+                if (res?.error?.resultCode === 'badUsername') {
+                    return this.dialogs.expiredSession()
+                        .then(() => this.logoutHelper(true));
+                }
                 return of(undefined);
             })
         ).subscribe((account: Account) => {

@@ -260,7 +260,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
     docs_json = []
 
     # Get global contexts and fill any matching variables in datarecords
-    cloud_portal = None
+    cloud_portal = get_cloud_portal_asset()
 
     for doc in docs:
         version = None
@@ -289,7 +289,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             # Requested state is published, but no published version exists
             continue
 
-        if force_update or not doc_dict or (external_link or not trust_cache and (doc_dict.get('version', None) != version or draft)):
+        if force_update or not doc_dict or external_link or not trust_cache or doc_dict.get('version', None) != version or draft:
             if global_contexts_dict is None or global_contexts is None:
                 # Get global contexts and fill any matching variables in datarecords
                 cloud_portal = get_cloud_portal_asset()
@@ -324,7 +324,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['script'] = doc_dict['script'].replace('\r\n', '')
 
             process_asset_global_contexts(
-                language, cloud_portal, global_contexts, doc.version_id(), doc_dict, global_contexts_dict)
+                language, cloud_portal, global_contexts, cloud_portal.version_id(), doc_dict, global_contexts_dict)
 
             doc_dict['version'] = version
             doc_dict['blocks'] = split_blocks(

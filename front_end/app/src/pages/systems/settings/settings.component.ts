@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import {
     Component,
     Input,
@@ -165,7 +164,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
-        private location: Location,
         private accountService: NxAccountService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
@@ -190,7 +188,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pageService.pageTitle = this.LANG.pageTitles.system?.();
+        if (!this.CONFIG.isLocal) {
+            this.pageService.pageTitle = this.LANG.pageTitles.system?.();
+        }
         this.init();
     }
 
@@ -357,7 +357,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private getCloudSystemInfo(): void {
         // Starts the systems poll if starting on a system.
         if (!this.systemsService.isPolling) {
-            this.systemsService.getSystems(this.account.email);
+            this.systemsService.getSystems(account.email);
         }
 
         if (this.systemSubscription) {
@@ -365,8 +365,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.systemSubscription.unsubscribe();
         }
         this.systemSubscription = this.systemsService.systemsSubject
-            .subscribe(systems => {
-                const system = systems.find(system =>
+            .subscribe((systems) => {
+                const system = systems.find((system) =>
                     system.id === this.systemId
                 );
                 if (system === undefined) {
@@ -383,28 +383,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     true
                 );
 
-                if (
-                    system?.system2faEnabled &&
-                                    !this.account?.sessionVerified
-                ) {
-                    this.system.mediaserver
-                        .getMediaServers(false)
-                        .toPromise()
-                        .then(
-                            () => {},
-                            () => {
-                                this.location.replaceState('/systems');
-                                return this.oauthService.redirectOauth(
-                                    'system2faAuth',
-                                    this.account.email,
-                                    undefined,
-                                    (this.system.mediaserver as NxSystemRestAPI)
-                                        .accessToken
-                                );
-                            }
-                        );
-                }
-
                 this.system.show404 = false;
                 this.gettingSystem.run().catch(() => {
                     this.systemNoAccess = true;
@@ -415,13 +393,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
                 this.systemInfoSubscription = this.system.infoSubject
                     .pipe(
-                        filter(system => system !== undefined),
+                        filter((system: any) => system !== undefined),
                         tap(({ isOnline }) => {
                             this.applyService.isOnline$.next(!!isOnline);
                             if (isOnline) {
-                                this.ribbonService.hide();
+                                this.system.ribbonService.hide();
                             } else {
-                                this.ribbonService.show(
+                                this.system.ribbonService.show(
                                     this.LANG.ribbon.systemOffline?.(),
                                     [],
                                     'alert',
@@ -442,11 +420,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             !environment.isLocal
                         ) {
                             this.uriService.updateURI(
-                                (
-                                    this.CONFIG.featureFlags.dashboardRedirect ||
-                                    this.cookieService.get('devServer') ||
-                                    'beta' in this.route.snapshot.queryParams
-                                )
+                                this.CONFIG.featureFlags.dashboardRedirect || 'beta' in this.route.snapshot.queryParams
                                     ? '/dashboard'
                                     : '/systems'
                             );
@@ -461,15 +435,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 .subscribe();
                         }
 
-                        this.updateMenu();
+                        this.updateMenu(this.system);
                     });
 
-                this.connection$.next(true);
-                this.system.connectionSubject
-                    .pipe(
-                        filter((connectionLost: boolean) => connectionLost),
-                        takeUntil(this.connection$),
-                    )
+                if (this.connectionSubscription) {
+                    this.connectionSubscription.unsubscribe();
+                }
+                this.connectionSubscription = this.system.connectionSubject
+                    .pipe(filter((connectionLost: boolean) => connectionLost))
                     .subscribe(_ => {
                         this.connectionLost();
                     });
@@ -478,42 +451,42 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     getSystemInfo(): void {
         this.settingsService.system = undefined;
-        this.accountService.get(true).then(account => {
-            if (!account) {
-                return;
-            }
-
-            this.account = account;
-            if (!environment.isLocal) {
-                this.getCloudSystemInfo();
-            } else {
-                this.system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi,
-                    account.id,
-                    account.email
-                );
-                this.system.update().then(() => {
-                    this.systems = [this.system];
-                    this.system.isAvailable = true;
-                    this.system.isOnline = true;
-                    setTimeout(() => {
-                        this.pageService.pageTitle =
-                            this.system.info.systemName || this.system.info.name;
-                    });
-
-                    if (this.systemInfoSubscription) {
-                        this.systemInfoSubscription.unsubscribe();
-                    }
-                    this.systemInfoSubscription =
-                        this.system.infoSubject
-                            .subscribe(() => {
-                                this.systemReady();
-                                this.updateAlert();
-                                this.updateMenu();
+        this.accountService
+            .get(true)
+            .then((account) => {
+                if (account) {
+                    this.account = account;
+                    if (!environment.isLocal) {
+                        this.getCloudSystemInfo();
+                    } else {
+                        this.system = this.systemService.createLocalSystem(
+                            this.accountService.mediaServerApi,
+                            account.id,
+                            account.email
+                        );
+                        this.system.update().then(() => {
+                            this.systems = [this.system];
+                            this.system.isAvailable = true;
+                            this.system.isOnline = true;
+                            setTimeout(() => {
+                                this.pageService.pageTitle =
+                                    this.system.info.systemName || this.system.info.name;
                             });
-                });
-            }
-        });
+
+                            if (this.systemInfoSubscription) {
+                                this.systemInfoSubscription.unsubscribe();
+                            }
+                            this.systemInfoSubscription =
+                                this.system.infoSubject
+                                    .subscribe(() => {
+                                        this.systemReady();
+                                        this.updateAlert();
+                                        this.updateMenu(this.system);
+                                    });
+                        });
+                    }
+                }
+            });
     }
 
     updateAlert(): void {
@@ -734,7 +707,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode = {
                     id: this.CONFIG.menus.systemSettings.servers.id,
                     svg: this.CONFIG.menus.systemSettings.servers.icon,
-                    label: this.LANG.servers.servers(),
+                    label: this.LANG.menu.titles.servers(),
                     path: this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);

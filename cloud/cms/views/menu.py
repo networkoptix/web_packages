@@ -1,4 +1,5 @@
 from django.http.request import QueryDict
+from rest_framework.permissions import AllowAny
 from cms.feature_flags import FLAGS, check_feature_flag
 import time
 from cloud.helpers.exceptions import APINotFoundException, APIRequestException, ErrorCodes, api_success
@@ -7,16 +8,28 @@ from django.conf import settings
 from dal import autocomplete
 from rest_framework.decorators import api_view, permission_classes
 
-from cms.models import Customization, Menu, MenuNode, ZendeskSyncLog
+from cms.models import MENU_CACHE, Customization, Menu, MenuNode, ZendeskSyncLog
 from cms.permissions import IsSuperuser
 
 
 @api_view(("GET",))
-@permission_classes((IsSuperuser,))
+@permission_classes((AllowAny,))
 def get_menu(request, name):
-    menu = Menu.generate_menu(menu_name=name)
+    customization = settings.CUSTOMIZATION
+    name = name.lower()
+    cached_menus = MENU_CACHE[customization] or {}
+    menu  = None
+
+    if request.user.is_superuser or not (menu := cached_menus.get(name, None)):
+        menu = Menu.generate_menu(menu_name=name)
+        if menu:
+            cached_menus = cached_menus or Menu.generate_menus(customization)
+            MENU_CACHE[customization] = {**cached_menus, name: menu}
+
+
     if not menu:
         raise APINotFoundException(f'Menu {name} not found')
+
     return api_success(menu)
 
 @api_view(['POST'])

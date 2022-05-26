@@ -233,7 +233,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const serverID = this.APIToolSystemService.currentServerId;
         const Url = new URL(request.url);
         const authParamType = request.method === 'GET' ? 'authGet' : 'authPost';
-        const authParam = systemMediaServerConnections[serverID][authParamType];
+        const authParam =  this.APIToolService.system.serverManager.mediaserver[authParamType];
         const potentialAmpersand = Url.search ? '&' : '';
         Url.search += potentialAmpersand + 'auth=' + authParam;
         request.url = Url.toString();

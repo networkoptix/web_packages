@@ -37,7 +37,15 @@ export class SystemGuard implements CanActivate {
             return true;
         }
 
-        const routesChecked = ['users', 'cloud-storage', 'health', 'licenses', 'servers', 'advanced'];
+        const routesChecked = [
+            'users',
+            'cloud-storage',
+            'health',
+            'licenses',
+            'servers',
+            'advanced',
+            'monitoring'
+        ];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = environment.isLocal || route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
@@ -52,7 +60,8 @@ export class SystemGuard implements CanActivate {
                 health: system.canViewInfo(),
                 licenses: permissions.isAdmin || isOwner,
                 advanced: permissions.isAdmin || isOwner,
-                servers: permissions.isAdmin || isOwner
+                servers: permissions.isAdmin || isOwner,
+                monitoring: permissions.isAdmin || isOwner,
             };
 
             return canViewChecks[currentRoute] || this.router.navigate(

@@ -36,7 +36,7 @@ describe('Session service', () => {
     });
 
     it('should return empty email if not set', () => {
-        expect(session.email).toBe('');
+        expect(session.email).toBe(undefined);
     });
 
     it('should have setter and getter (email)', () => {

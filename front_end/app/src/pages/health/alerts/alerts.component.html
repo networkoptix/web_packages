@@ -38,7 +38,7 @@
                             </nx-search>
                         </div>
                         <nx-dynamic-table
-                                [tableHeader]="alertsCount + ' alerts'"
+                                [tableHeader]="'alertsCount' | translate: {count: alertsCount}"
                                 [headers]="tableHeaders"
                                 [showGroups]="false"
                                 [elements]="alerts"

@@ -94,7 +94,7 @@ export class NxBootstrapProvider {
         const customStrings = {
             '%CLOUD_NAME%': this.CONFIG.cloudName,
             '%VMS_NAME%': this.CONFIG.vmsName,
-            '%SUPPORT_LINK%': this.CONFIG.company.link,
+            '%SUPPORT_LINK%': this.CONFIG.company.links.website,
             '%COMPANY_NAME%': this.CONFIG.company.name
         };
         const processLanguage = language => {
@@ -111,7 +111,7 @@ export class NxBootstrapProvider {
         this.languageService.setTranslations(data.language, processLanguage(data));
         this.LANG = this.languageService.translations;
         this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
-        if (!this.pageService.pageTitle) {
+        if (!this.CONFIG.isLocal && !this.pageService.pageTitle) {
             this.pageService.pageTitle = this.LANG.pageTitles.default?.();
         }
 
@@ -135,7 +135,8 @@ export class NxBootstrapProvider {
             this.CONFIG.company = {
                 copyrightYear: description.copyrightYear,
                 links: {
-                    website: description.contact.supportAddress
+                    website: description.contact.companyUrl,
+                    support: description.contact.supportAddress
                 },
                 name: description.companyName
             };

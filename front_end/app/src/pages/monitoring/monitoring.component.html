@@ -16,6 +16,13 @@
         </div>
 
         <div class="col-12 col-md-8 col-xl-9 pt-3 pt-md-0">
+            <nx-alert-block
+                *ngIf="selectedServer?.disabled"
+                type="error"
+                id="server-offline"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [line1]="'Server offline' | translate"
+            ></nx-alert-block>
             <router-outlet></router-outlet>
         </div>
     </div>

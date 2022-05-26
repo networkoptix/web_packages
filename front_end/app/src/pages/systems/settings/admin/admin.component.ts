@@ -148,7 +148,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.systemName !== systemName) {
             this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
             this.systemName = this.system.info.systemName || this.system.info.name;
-            this.pageService.pageTitle = this.systemName;
+            if (!this.CONFIG.isLocal) {
+                this.pageService.pageTitle = this.systemName;
+            }
 
             setTimeout(() => {
                 this.systemNameFormWatcher = this.applyService.createFormWatcher(
@@ -240,8 +242,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.syncMergeAlerts();
 
                         this.enableEdit = this.system.isOnline &&
-                            this.system.userManager.permissions.isAdmin &&
+                            (this.environment.isLocal
+                                ? this.system.userManager.permissions.isAdmin
+                                : this.system.userManager.isMine) &&
                             !this.settings.renameDisabled;
+                        // TODO: Restore cloud admin rename permissions
+                        // See CB-1596
 
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();

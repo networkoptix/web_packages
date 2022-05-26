@@ -47,7 +47,7 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
                     continue
 
                 process_asset_global_contexts(
-                    language, cloud_portal, global_contexts, current_version, asset_dict)
+                    language, cloud_portal, global_contexts, cloud_portal.version_id(), asset_dict)
                 asset_dict = {
                     **asset_dict,
                     **generate_asset_dictionary(show_pending, show_drafts,
@@ -60,7 +60,7 @@ def make_integrations_json(assets, language, user=None, show_pending=False, show
             # Create a copy to remove the version key.
             asset_dict_copy = asset_dict.copy()
             del asset_dict_copy['version']
-            
+
             asset_dict_copy = add_integration_properties(asset_dict_copy, asset, user, user_assets)
             response_asset_json.append(asset_dict_copy)
 

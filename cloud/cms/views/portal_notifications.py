@@ -5,8 +5,8 @@ from django.conf import settings
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 
 from cloud.helpers.exceptions import api_success, require_params
 from cms.models import PortalNotification
@@ -52,7 +52,7 @@ notifications_description = "Returns a list of portal notifications for user."
                      request_body=PortalNotificationIdSerializer,
                      responses={'200': openapi.Response('PortalNotificationList', PortalNotificationListSerializer)})
 @api_view(("POST", "GET"))
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def notifications(request):
     handler = get_notifications if request.method == 'GET' else mark_read
     return api_success(handler(request))

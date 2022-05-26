@@ -139,6 +139,7 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
     Wait Until Settings Are Visible
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${and criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
+    Sleep    1
     Check if Match AND Criteria         ${LEFT MENU MATCHES CONTENT}    ${and criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 
@@ -148,6 +149,7 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
     Wait Until Settings Are Visible
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${or criteria}
     Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
+    Sleep    1
     Check if Match OR Criteria          ${LEFT MENU MATCHES CONTENT}    ${or criteria}
     Click Button                        ${LEFT MENU SEARCH CLEAR}
 

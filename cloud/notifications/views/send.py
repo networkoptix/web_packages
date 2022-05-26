@@ -8,10 +8,9 @@ from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import redirect
 
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -268,7 +267,7 @@ def send_notification(request):
                          }
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def cloud_notification_action(request):
     can_add = request.user.has_perm('notifications.add_cloudnotification')
     can_change = request.user.has_perm(

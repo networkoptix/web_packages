@@ -124,6 +124,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
+        // Mobile Chrome doesn't use "code" ... maybe some others -- TT
         if (['Enter', 'NumpadEnter'].includes(event.code)) {
             this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
         }
@@ -203,6 +204,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
             this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
+            const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
             this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';
             this.windowSmallEnough = this.window.innerWidth <= 355;
@@ -251,16 +253,20 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else if (this.clientType.includes('Password')) { // confirmPassword clientTypes
                 this.loginEmail = email;
                 this.emailLocked = true;
-                this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.password : AuthorizeState.notSecure;
+                this.currentState = (!isWeb && await this.checkRedirectUrl())
+                    ? AuthorizeState.password
+                    : AuthorizeState.notSecure;
             } else {
                 if (email) {
                     this.loginEmail = email;
                     this.checkEmailProcess.run();
                 }
-                if (this.clientType === ClientType.connect) {
+                if (isWeb && this.clientType === ClientType.connect) {
                     this.currentState = AuthorizeState.notSecure;
                 } else {
-                    this.currentState = (await this.checkRedirectUrl()) ? AuthorizeState.email : AuthorizeState.notSecure;
+                    this.currentState = (!isWeb && await this.checkRedirectUrl())
+                        ? AuthorizeState.email
+                        : AuthorizeState.notSecure;
                 }
             }
         });
@@ -548,6 +554,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         );
 
         this.loginPostExternalProcess = this.processService.createProcess(() => {
+            this.loginCode = undefined;
             this.currentState = AuthorizeState.password;
             return Promise.resolve();
         });

@@ -189,70 +189,72 @@ export class NxSystemStorageComponent implements OnInit {
         this.system.storageManager.serverId$.pipe(untilDestroyed(this)).subscribe(() => {
             this.saveSettings = null;
         });
-        this.system.storageManager.storageState$.pipe(untilDestroyed(this)).subscribe(async state => {
-            const { analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded } = state;
-            const sources = [analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded];
-            if (
-                sources.every(loaded => loaded) &&
-                !this.updatingModes.length &&
-                !this.applyService.locked
-            ) {
-                if ((!state.locations.length && this.currentStorageState?.locations.length) || this.applyService.locked) {
-                    return;
-                }
-                this.currentStorageState = state;
-                this.currentStorageState.locations.forEach(store => {
-                    const reservedOrBeingChecked = [STORAGE_STATUS.RESERVED, STORAGE_STATUS.BEING_CHECKED].includes(store.status);
-                    const storageId = store.storageId;
-                    this.cachedSizes[storageId] ||= { vms: 0, total: 0 };
-                    this.cachedSizes[storageId].vms ||= store.vmsSpace;
-                    this.cachedSizes[storageId].total ||= store.totalSpace;
-                    const mode = this.selectMode(store)?.value || 'modeNotUsed';
-                    if (!this.modeWatchers[this.normalizeId(storageId)]) {
-                        this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode, this);
-                        this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]], this);
-                    } else {
-                        if (reservedOrBeingChecked || this.previouslyReserved.has(storageId)) {
-                            this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
+        this.system.storageManager.storageState$
+            .pipe(untilDestroyed(this))
+            .subscribe(async state => {
+                const { analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded } = state;
+                const sources = [analyticsLoaded, storageInfoLoaded, storageStatsLoaded, vmsSpaceLoaded];
+                if (
+                    sources.every(loaded => loaded) &&
+                    !this.updatingModes.length &&
+                    !this.applyService.locked
+                ) {
+                    if ((!state.locations.length && this.currentStorageState?.locations.length) || this.applyService.locked) {
+                        return;
+                    }
+                    this.currentStorageState = state;
+                    this.currentStorageState.locations.forEach((store) => {
+                        const reservedOrBeingChecked = [STORAGE_STATUS.RESERVED, STORAGE_STATUS.BEING_CHECKED].includes(store.status);
+                        const storageId = store.storageId;
+                        this.cachedSizes[storageId] ||= { vms: 0, total: 0 };
+                        this.cachedSizes[storageId].vms ||= store.vmsSpace;
+                        this.cachedSizes[storageId].total ||= store.totalSpace;
+                        const mode = this.selectMode(store)?.value || 'modeNotUsed';
+                        if (!this.modeWatchers[this.normalizeId(storageId)]) {
+                            this.modeWatchers[this.normalizeId(storageId)] = new Watcher(mode, this);
+                            this.applyService.addWatchers([this.modeWatchers[this.normalizeId(storageId)]], this);
+                        } else {
+                            if (reservedOrBeingChecked  || this.previouslyReserved.has(storageId)) {
+                                this.modeWatchers[this.normalizeId(storageId)].originalValue = mode;
+                            }
+                            const watcher = this.modeWatchers[this.normalizeId(storageId)];
+                            watcher.originalValue = mode;
+                            watcher.value = mode;
                         }
-                        const watcher = this.modeWatchers[this.normalizeId(storageId)];
-                        watcher.originalValue = mode;
-                        watcher.value = mode;
-                    }
-                    if (reservedOrBeingChecked) {
-                        this.previouslyReserved.add(storageId);
-                    } else if (this.previouslyReserved.has(storageId)) {
-                        this.previouslyReserved.delete(storageId);
-                    }
-                });
-                const backupState = await this.system.storageManager.getBackupState(
-                    this.serverId
-                ).catch(err => {
-                    console.error(err);
-                    return { backup: false, custom: false };
-                });
-                this.customSettings = backupState.custom;
-                this.isBackupOn = new Watcher(backupState.backup);
-                this.backupState = backupState.backup;
-                if (this.loading && this.currentStorageState?.beingChecked) {
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    this.pollStats();
-                }
-                this.setupWatchers();
-                this.loading = false;
-                this.waitingForStorages = false;
-                if (this.currentStorageState.reindexing) {
-                    this.currentStorageState.reindexing.forEach(mode => {
-                        this.reindexing(TARGET_STORAGE[mode.toUpperCase()]);
+                        if (reservedOrBeingChecked) {
+                            this.previouslyReserved.add(storageId);
+                        } else if (this.previouslyReserved.has(storageId)) {
+                            this.previouslyReserved.delete(storageId);
+                        }
                     });
+                    const backupState = await this.system.storageManager.getBackupState(
+                        this.serverId
+                    ).catch(err => {
+                        console.error(err);
+                        return { backup: false, custom: false };
+                    });
+                    this.customSettings = backupState.custom;
+                    this.isBackupOn = new Watcher(backupState.backup);
+                    this.backupState = backupState.backup;
+                    if (this.loading && this.currentStorageState?.beingChecked) {
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                        this.pollStats();
+                    }
+                    this.setupWatchers();
+                    this.loading = false;
+                    this.waitingForStorages = false;
+                    if (this.currentStorageState.reindexing) {
+                        this.currentStorageState.reindexing.forEach(mode => {
+                            this.reindexing(TARGET_STORAGE[mode.toUpperCase()]);
+                        });
+                    }
                 }
-            }
-        }, () => {
-            this.waitingForStorages = false;
-            this.currentStorageState = null;
-            this.setupWatchers();
-        });
-    };
+            }, () => {
+                this.waitingForStorages = false;
+                this.currentStorageState = null;
+                this.setupWatchers();
+            });
+    }
 
     pollStats = async (update: boolean = false): Promise<void> => {
         this.cancelPolling$.next('cancel previous');

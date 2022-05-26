@@ -17,9 +17,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.serializers import ValidationError
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from dal import autocomplete
@@ -221,7 +220,7 @@ def login_with_code(request):
 
 
 @api_view(["POST"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def login_with_tokens(request):
     require_params(request, ["access_token", "refresh_token"])
     tokens = {
@@ -241,7 +240,7 @@ def login_with_tokens(request):
 
 @swagger_auto_schema(method="POST", responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def logout(request):
     kill_tokens(request, Auth.delete_token)
     kill_session(request)
@@ -251,7 +250,7 @@ def logout(request):
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns time since password was used in seconds.")
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def time_since_password(request):
     return api_success({
         "timeSincePassword": Auth.validate_token(request.session.get("access_token")).get("time_since_password")
@@ -316,7 +315,7 @@ def index(request):
                          required=["code"]
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def renew_session(request):
     require_params(request, ("code", ))
     old_tokens = {
@@ -339,7 +338,7 @@ def renew_session(request):
                      operation_description="Returns an temporary authkey based on the user's credentials.",
                      responses={"200": "auth_key"})
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def auth_key(request):
     data = Account.create_temporary_credentials(
         request, credential_type='short')
@@ -360,7 +359,7 @@ def auth_key(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def delete_user(request):
     require_params(request, ('password',))
     user = request.user
@@ -387,7 +386,7 @@ class SecurityAction(enum.Enum):
 
 
 class AccountSecurity(APIView):
-    permission_classes = [IsAuthenticatedOrTokenHasScope]
+    permission_classes = [IsAuthenticated]
 
     @method_decorator(swagger_auto_schema(
         # auto_schema=None,
@@ -437,7 +436,7 @@ class AccountSecurity(APIView):
                      operation_description="If true then the user has accepted the cookie policy and the cookie banner will not appear.",
                      responses={"200": "Ok"})
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def review_cookie(request):
     request.user.cookie_reviewed = True
     request.user.save()
@@ -456,7 +455,7 @@ def review_cookie(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def change_password(request):
     require_params(request, ('old_password', 'new_password'))
     old_password = request.data['old_password']
@@ -490,7 +489,7 @@ def change_password(request):
                      ),
                      responses={'200': 'Ok'})
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def verify_password(request):
     require_params(request, ['password'])
     Account.get({}, email=request.user.email,
@@ -692,7 +691,7 @@ class AccountCustomPropertyView(APIView):
    Could maybe be used to allow an easy place to persist user specific data for other either developer experiments or integrations
     """
 
-    permission_classes = IsAuthenticatedOrTokenHasScope,
+    permission_classes = IsAuthenticated,
 
     def get_and_validate_user(self, request, username=None):
         is_superuser = request.user.is_superuser

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -9,14 +9,11 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     templateUrl: 'card.component.html',
     styleUrls: ['card.component.scss']
 })
-export class NxSystemAlertCardComponent implements OnInit {
+export class NxSystemAlertCardComponent {
     @Input() data;
     CONFIG: IConfig;
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
-    }
-
-    ngOnInit(): void {
     }
 }

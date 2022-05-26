@@ -10,6 +10,7 @@
 export interface LanguageI18NStaticTypes {
     language:              any;
     "About %CLOUD_NAME%":  any;
+    "All Servers":         any;
     "Download %VMS_NAME%": any;
     "For developers":      any;
     "Integrations (β)":    any;
@@ -17,6 +18,12 @@ export interface LanguageI18NStaticTypes {
     Support:               any;
     Terms:                 any;
     "Developers Console":  any;
+    productName:           any;
+    monitoring:            Monitoring;
+    alarmTypes:            AlarmTypes;
+    alarmLevels:           AlarmLevels;
+    alertFilters:          AlertFilters;
+    deviceTypes:           DeviceTypes;
     accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
@@ -32,9 +39,11 @@ export interface LanguageI18NStaticTypes {
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
+    alertsCount:           any;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
     menu:                  Menu;
+    tableHeaders:          TableHeaders;
     pageTitles:            PageTitles;
     pageDescriptions:      PageDescriptions;
     passwordRequirements:  PasswordRequirements;
@@ -50,6 +59,7 @@ export interface LanguageI18NStaticTypes {
     systemStatuses:        SystemStatuses;
     tile:                  Tile;
     toastMessage:          ToastMessage;
+    healthMonitor:         HealthMonitor;
     headerLabels:          HeaderLabels;
     license:               License;
     redirects:             Redirects;
@@ -59,6 +69,7 @@ export interface LanguageI18NStaticTypes {
     security:              Security;
     storage:               Storage;
     metaDefaults:          MetaDefaults;
+    metaDefaultsWebadmin:  MetaDefaultsWebadmin;
     maintenance:           Maintenance;
     view:                  View;
 }
@@ -87,6 +98,25 @@ export interface ActiveActions {
     sendConfirm:         any;
     setNewPassword:      any;
     setNewPasswordLabel: any;
+}
+
+export interface AlarmLevels {
+    offline: any;
+    error:   any;
+    warning: any;
+}
+
+export interface AlarmTypes {
+    Servers:              any;
+    Cameras:              any;
+    "Storage Locations":  any;
+    "Network Interfaces": any;
+}
+
+export interface AlertFilters {
+    all:     any;
+    warning: any;
+    error:   any;
 }
 
 export interface Authorize {
@@ -283,6 +313,14 @@ export interface Dashboard {
 
 export interface DevConsole {
     create: any;
+}
+
+export interface DeviceTypes {
+    "All Device Types": any;
+    servers:            any;
+    cameras:            any;
+    storages:           any;
+    networkInterfaces:  any;
 }
 
 export interface Dialogs {
@@ -520,7 +558,7 @@ export interface DialogsTwoFactor {
 
 export interface Downloads {
     appTypes:      AppTypes;
-    groups:        Groups;
+    groups:        DownloadsGroups;
     mobile:        Mobile;
     platforms:     Platforms;
     releasesTypes: ReleasesTypes;
@@ -538,7 +576,7 @@ export interface AppTypes {
     video_source_sdk: any;
 }
 
-export interface Groups {
+export interface DownloadsGroups {
     android: ArmClass;
     arm:     ArmClass;
     ios:     ArmClass;
@@ -591,6 +629,61 @@ export interface ReleasesTypes {
 
 export interface HeaderLabels {
     healthReportForSystem: any;
+}
+
+export interface HealthMonitor {
+    groups: HealthMonitorGroups;
+    keys:   Keys;
+}
+
+export interface HealthMonitorGroups {
+    info:         any;
+    availability: any;
+    load:         any;
+    activity:     any;
+}
+
+export interface Keys {
+    name:                    any;
+    servers:                 any;
+    cameras:                 any;
+    storages:                any;
+    users:                   any;
+    version:                 any;
+    cloudSystemId:           any;
+    status:                  any;
+    offlineEvents:           any;
+    uptimeS:                 any;
+    cpuUsageP:               any;
+    serverCpuUsageP:         any;
+    ramUsageB:               any;
+    ramUsageP:               any;
+    serverRamUsageB:         any;
+    serverRamUsageP:         any;
+    threads:                 any;
+    decodingThreads:         any;
+    decodingSpeed3s:         any;
+    encodingThreads:         any;
+    encodingSpeed3s:         any;
+    primaryStreams:          any;
+    secondaryStreams:        any;
+    incomingConnections:     any;
+    outgoingConnections:     any;
+    logLevel:                any;
+    publicIp:                any;
+    os:                      any;
+    osTime:                  any;
+    vmsTime:                 any;
+    cpu:                     any;
+    cpuCores:                any;
+    ramB:                    any;
+    guidConflict:            any;
+    vmsTimeChanged24h:       any;
+    transactionsPerSecond1m: any;
+    actionsTriggered1m:      any;
+    apiCalls1m:              any;
+    thumbnails1m:            any;
+    activePlugins:           any;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -707,20 +800,44 @@ export interface MenuTitles {
     general:              any;
     licenses:             any;
     users:                any;
+    servers:              any;
+    alerts:               any;
+    systems:              any;
+    storages:             any;
+    networkInterfaces:    any;
+    graphs:               any;
+    logs:                 any;
 }
 
 export interface MetaDefaults {
-    default:         Default;
+    default:         MetaDefaultsDefault;
     "/systems":      Docs;
     "/integrations": Docs;
     "/docs":         Docs;
     "/ipvd":         Docs;
 }
 
-export interface Default {
+export interface MetaDefaultsDefault {
     site_name:   any;
     title:       any;
     description: any;
+}
+
+export interface MetaDefaultsWebadmin {
+    default:       MetaDefaultsWebadminDefault;
+    "/settings":   Docs;
+    "/view":       Docs;
+    "/health":     Docs;
+    "/monitoring": Docs;
+}
+
+export interface MetaDefaultsWebadminDefault {
+    site_name: any;
+    title:     any;
+}
+
+export interface Monitoring {
+    unavailable: any;
 }
 
 export interface PageDescriptions {
@@ -757,6 +874,7 @@ export interface PageTitles {
     systemShare:            any;
     systems:                any;
     template:               any;
+    templateWebadmin:       any;
     view:                   any;
     apiTool:                any;
     security:               any;
@@ -1018,6 +1136,12 @@ export interface SystemStatuses {
     unavailable:  any;
 }
 
+export interface TableHeaders {
+    type:   any;
+    server: any;
+    alert:  any;
+}
+
 export interface Tile {
     groupCount:  any;
     systemCount: any;
@@ -1267,6 +1391,7 @@ const typeMap: any = {
     "LanguageI18NStaticTypes": o([
         { json: "language", js: "language", typ: "any" },
         { json: "About %CLOUD_NAME%", js: "About %CLOUD_NAME%", typ: "any" },
+        { json: "All Servers", js: "All Servers", typ: "any" },
         { json: "Download %VMS_NAME%", js: "Download %VMS_NAME%", typ: "any" },
         { json: "For developers", js: "For developers", typ: "any" },
         { json: "Integrations (β)", js: "Integrations (β)", typ: "any" },
@@ -1274,6 +1399,12 @@ const typeMap: any = {
         { json: "Support", js: "Support", typ: "any" },
         { json: "Terms", js: "Terms", typ: "any" },
         { json: "Developers Console", js: "Developers Console", typ: "any" },
+        { json: "productName", js: "productName", typ: "any" },
+        { json: "monitoring", js: "monitoring", typ: r("Monitoring") },
+        { json: "alarmTypes", js: "alarmTypes", typ: r("AlarmTypes") },
+        { json: "alarmLevels", js: "alarmLevels", typ: r("AlarmLevels") },
+        { json: "alertFilters", js: "alertFilters", typ: r("AlertFilters") },
+        { json: "deviceTypes", js: "deviceTypes", typ: r("DeviceTypes") },
         { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
@@ -1289,9 +1420,11 @@ const typeMap: any = {
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
+        { json: "alertsCount", js: "alertsCount", typ: "any" },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
         { json: "menu", js: "menu", typ: r("Menu") },
+        { json: "tableHeaders", js: "tableHeaders", typ: r("TableHeaders") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
         { json: "pageDescriptions", js: "pageDescriptions", typ: r("PageDescriptions") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
@@ -1307,6 +1440,7 @@ const typeMap: any = {
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "tile", js: "tile", typ: r("Tile") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "healthMonitor", js: "healthMonitor", typ: r("HealthMonitor") },
         { json: "headerLabels", js: "headerLabels", typ: r("HeaderLabels") },
         { json: "license", js: "license", typ: r("License") },
         { json: "redirects", js: "redirects", typ: r("Redirects") },
@@ -1316,6 +1450,7 @@ const typeMap: any = {
         { json: "security", js: "security", typ: r("Security") },
         { json: "storage", js: "storage", typ: r("Storage") },
         { json: "metaDefaults", js: "metaDefaults", typ: r("MetaDefaults") },
+        { json: "metaDefaultsWebadmin", js: "metaDefaultsWebadmin", typ: r("MetaDefaultsWebadmin") },
         { json: "maintenance", js: "maintenance", typ: r("Maintenance") },
         { json: "view", js: "view", typ: r("View") },
     ], false),
@@ -1341,6 +1476,22 @@ const typeMap: any = {
         { json: "sendConfirm", js: "sendConfirm", typ: "any" },
         { json: "setNewPassword", js: "setNewPassword", typ: "any" },
         { json: "setNewPasswordLabel", js: "setNewPasswordLabel", typ: "any" },
+    ], false),
+    "AlarmLevels": o([
+        { json: "offline", js: "offline", typ: "any" },
+        { json: "error", js: "error", typ: "any" },
+        { json: "warning", js: "warning", typ: "any" },
+    ], false),
+    "AlarmTypes": o([
+        { json: "Servers", js: "Servers", typ: "any" },
+        { json: "Cameras", js: "Cameras", typ: "any" },
+        { json: "Storage Locations", js: "Storage Locations", typ: "any" },
+        { json: "Network Interfaces", js: "Network Interfaces", typ: "any" },
+    ], false),
+    "AlertFilters": o([
+        { json: "all", js: "all", typ: "any" },
+        { json: "warning", js: "warning", typ: "any" },
+        { json: "error", js: "error", typ: "any" },
     ], false),
     "Authorize": o([
         { json: "loginCloudHeader", js: "loginCloudHeader", typ: "any" },
@@ -1522,6 +1673,13 @@ const typeMap: any = {
     ], false),
     "DevConsole": o([
         { json: "create", js: "create", typ: "any" },
+    ], false),
+    "DeviceTypes": o([
+        { json: "All Device Types", js: "All Device Types", typ: "any" },
+        { json: "servers", js: "servers", typ: "any" },
+        { json: "cameras", js: "cameras", typ: "any" },
+        { json: "storages", js: "storages", typ: "any" },
+        { json: "networkInterfaces", js: "networkInterfaces", typ: "any" },
     ], false),
     "Dialogs": o([
         { json: "twoFa", js: "twoFa", typ: r("DialogsTwoFa") },
@@ -1734,7 +1892,7 @@ const typeMap: any = {
     ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },
-        { json: "groups", js: "groups", typ: r("Groups") },
+        { json: "groups", js: "groups", typ: r("DownloadsGroups") },
         { json: "mobile", js: "mobile", typ: r("Mobile") },
         { json: "platforms", js: "platforms", typ: r("Platforms") },
         { json: "releasesTypes", js: "releasesTypes", typ: r("ReleasesTypes") },
@@ -1750,7 +1908,7 @@ const typeMap: any = {
         { json: "storage_sdk", js: "storage_sdk", typ: "any" },
         { json: "video_source_sdk", js: "video_source_sdk", typ: "any" },
     ], false),
-    "Groups": o([
+    "DownloadsGroups": o([
         { json: "android", js: "android", typ: r("ArmClass") },
         { json: "arm", js: "arm", typ: r("ArmClass") },
         { json: "ios", js: "ios", typ: r("ArmClass") },
@@ -1796,6 +1954,58 @@ const typeMap: any = {
     ], false),
     "HeaderLabels": o([
         { json: "healthReportForSystem", js: "healthReportForSystem", typ: "any" },
+    ], false),
+    "HealthMonitor": o([
+        { json: "groups", js: "groups", typ: r("HealthMonitorGroups") },
+        { json: "keys", js: "keys", typ: r("Keys") },
+    ], false),
+    "HealthMonitorGroups": o([
+        { json: "info", js: "info", typ: "any" },
+        { json: "availability", js: "availability", typ: "any" },
+        { json: "load", js: "load", typ: "any" },
+        { json: "activity", js: "activity", typ: "any" },
+    ], false),
+    "Keys": o([
+        { json: "name", js: "name", typ: "any" },
+        { json: "servers", js: "servers", typ: "any" },
+        { json: "cameras", js: "cameras", typ: "any" },
+        { json: "storages", js: "storages", typ: "any" },
+        { json: "users", js: "users", typ: "any" },
+        { json: "version", js: "version", typ: "any" },
+        { json: "cloudSystemId", js: "cloudSystemId", typ: "any" },
+        { json: "status", js: "status", typ: "any" },
+        { json: "offlineEvents", js: "offlineEvents", typ: "any" },
+        { json: "uptimeS", js: "uptimeS", typ: "any" },
+        { json: "cpuUsageP", js: "cpuUsageP", typ: "any" },
+        { json: "serverCpuUsageP", js: "serverCpuUsageP", typ: "any" },
+        { json: "ramUsageB", js: "ramUsageB", typ: "any" },
+        { json: "ramUsageP", js: "ramUsageP", typ: "any" },
+        { json: "serverRamUsageB", js: "serverRamUsageB", typ: "any" },
+        { json: "serverRamUsageP", js: "serverRamUsageP", typ: "any" },
+        { json: "threads", js: "threads", typ: "any" },
+        { json: "decodingThreads", js: "decodingThreads", typ: "any" },
+        { json: "decodingSpeed3s", js: "decodingSpeed3s", typ: "any" },
+        { json: "encodingThreads", js: "encodingThreads", typ: "any" },
+        { json: "encodingSpeed3s", js: "encodingSpeed3s", typ: "any" },
+        { json: "primaryStreams", js: "primaryStreams", typ: "any" },
+        { json: "secondaryStreams", js: "secondaryStreams", typ: "any" },
+        { json: "incomingConnections", js: "incomingConnections", typ: "any" },
+        { json: "outgoingConnections", js: "outgoingConnections", typ: "any" },
+        { json: "logLevel", js: "logLevel", typ: "any" },
+        { json: "publicIp", js: "publicIp", typ: "any" },
+        { json: "os", js: "os", typ: "any" },
+        { json: "osTime", js: "osTime", typ: "any" },
+        { json: "vmsTime", js: "vmsTime", typ: "any" },
+        { json: "cpu", js: "cpu", typ: "any" },
+        { json: "cpuCores", js: "cpuCores", typ: "any" },
+        { json: "ramB", js: "ramB", typ: "any" },
+        { json: "guidConflict", js: "guidConflict", typ: "any" },
+        { json: "vmsTimeChanged24h", js: "vmsTimeChanged24h", typ: "any" },
+        { json: "transactionsPerSecond1m", js: "transactionsPerSecond1m", typ: "any" },
+        { json: "actionsTriggered1m", js: "actionsTriggered1m", typ: "any" },
+        { json: "apiCalls1m", js: "apiCalls1m", typ: "any" },
+        { json: "thumbnails1m", js: "thumbnails1m", typ: "any" },
+        { json: "activePlugins", js: "activePlugins", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "any" },
@@ -1902,18 +2112,39 @@ const typeMap: any = {
         { json: "general", js: "general", typ: "any" },
         { json: "licenses", js: "licenses", typ: "any" },
         { json: "users", js: "users", typ: "any" },
+        { json: "servers", js: "servers", typ: "any" },
+        { json: "alerts", js: "alerts", typ: "any" },
+        { json: "systems", js: "systems", typ: "any" },
+        { json: "storages", js: "storages", typ: "any" },
+        { json: "networkInterfaces", js: "networkInterfaces", typ: "any" },
+        { json: "graphs", js: "graphs", typ: "any" },
+        { json: "logs", js: "logs", typ: "any" },
     ], false),
     "MetaDefaults": o([
-        { json: "default", js: "default", typ: r("Default") },
+        { json: "default", js: "default", typ: r("MetaDefaultsDefault") },
         { json: "/systems", js: "/systems", typ: r("Docs") },
         { json: "/integrations", js: "/integrations", typ: r("Docs") },
         { json: "/docs", js: "/docs", typ: r("Docs") },
         { json: "/ipvd", js: "/ipvd", typ: r("Docs") },
     ], false),
-    "Default": o([
+    "MetaDefaultsDefault": o([
         { json: "site_name", js: "site_name", typ: "any" },
         { json: "title", js: "title", typ: "any" },
         { json: "description", js: "description", typ: "any" },
+    ], false),
+    "MetaDefaultsWebadmin": o([
+        { json: "default", js: "default", typ: r("MetaDefaultsWebadminDefault") },
+        { json: "/settings", js: "/settings", typ: r("Docs") },
+        { json: "/view", js: "/view", typ: r("Docs") },
+        { json: "/health", js: "/health", typ: r("Docs") },
+        { json: "/monitoring", js: "/monitoring", typ: r("Docs") },
+    ], false),
+    "MetaDefaultsWebadminDefault": o([
+        { json: "site_name", js: "site_name", typ: "any" },
+        { json: "title", js: "title", typ: "any" },
+    ], false),
+    "Monitoring": o([
+        { json: "unavailable", js: "unavailable", typ: "any" },
     ], false),
     "PageDescriptions": o([
         { json: "integrations", js: "integrations", typ: "any" },
@@ -1948,6 +2179,7 @@ const typeMap: any = {
         { json: "systemShare", js: "systemShare", typ: "any" },
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },
+        { json: "templateWebadmin", js: "templateWebadmin", typ: "any" },
         { json: "view", js: "view", typ: "any" },
         { json: "apiTool", js: "apiTool", typ: "any" },
         { json: "security", js: "security", typ: "any" },
@@ -2176,6 +2408,11 @@ const typeMap: any = {
         { json: "offline", js: "offline", typ: "any" },
         { json: "online", js: "online", typ: "any" },
         { json: "unavailable", js: "unavailable", typ: "any" },
+    ], false),
+    "TableHeaders": o([
+        { json: "type", js: "type", typ: "any" },
+        { json: "server", js: "server", typ: "any" },
+        { json: "alert", js: "alert", typ: "any" },
     ], false),
     "Tile": o([
         { json: "groupCount", js: "groupCount", typ: "any" },

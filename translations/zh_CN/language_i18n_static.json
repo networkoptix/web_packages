@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
     "For developers": "开发人员适用",
     "Integrations (β)": "Integrations (β)",
@@ -8,6 +9,30 @@
     "Support": "技术支持",
     "Terms": "条款",
     "Developers Console": "Developers Console",
+    "productName": "",
+    "alarmTypes": {
+        "Servers": "服务器",
+        "Cameras": "摄像机",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "离线",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "服务器",
+        "cameras": "摄像机",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "不受限制地的访问包括共享的能力",
@@ -651,6 +676,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -659,8 +685,20 @@
             "systemAdministration": "系统管理",
             "general": "一般",
             "licenses": "授权",
-            "users": "用户"
+            "users": "用户",
+            "servers": "服务器",
+            "alerts": "Alerts",
+            "systems": "系统",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "类型",
+        "server": "服务器",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "关于",
@@ -690,6 +728,7 @@
         "systemShare": "共享系统",
         "systems": "系统",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "查看摄像机",
         "apiTool": "API testing tool",
         "security": "Security",
@@ -924,6 +963,56 @@
         "sessionRenewed": "Session has been renewed.",
         "failedToUpdateSession": "Updating the session failed."
     },
+    "healthMonitor": {
+        "groups": {
+            "info": "详情",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "服务器",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "用户",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "状态",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "操作系统",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
+    },
     "headerLabels": {
         "healthReportForSystem": "系统资源报告浏览器{systemName}"
     },
@@ -1125,6 +1214,24 @@
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

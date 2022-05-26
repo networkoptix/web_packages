@@ -1,5 +1,4 @@
 from django.conf import settings
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -129,7 +128,7 @@ def get_agreement(request):
             global_contexts_dict = global_contexts_to_dict(
                 global_contexts, cloud_portal)
             context_processor = ContextProcessor(
-                asset=cloud_portal, preview=False, version_id=agreement.version_id(), global_contexts=global_contexts,
+                asset=cloud_portal, preview=False, version_id=cloud_portal.version_id(), global_contexts=global_contexts,
                 global_contexts_dict=global_contexts_dict
             )
             context_processor.process_global_contexts(
@@ -161,7 +160,7 @@ review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
                          }
                      ))
 @api_view(("POST", ))
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def accept_agreement(request):
     review_id = request.data.get('review_id', None)
     if review_id is None:

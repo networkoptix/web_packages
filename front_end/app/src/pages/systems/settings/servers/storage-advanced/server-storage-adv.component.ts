@@ -21,6 +21,7 @@ import { Process } from '@services/process.service/process';
 import {
     CurrentStorageState,
     Storage,
+    STORAGE_STATUS,
 } from '@services/system.service/storage-manager/storage';
 import type { NxSystem } from '@services/system.service/system';
 import { bitsToString } from '@utils/bits-to-string';
@@ -204,13 +205,15 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
     }
 
-    clamp(input: number, storage: AdvancedStorage): void {
-        const max = storage.freeSpace[storage.reservedSpace.unit];
-        const current = storage.reservedSpace.value;
-        const roundTo = storage.reservedSpace.unit === 'GB' ? 0 : 3;
-        const updated = Number(
-            Math.min(Math.max(input, 0), max).toFixed(roundTo)
-        );
+    isInacessible(storage): boolean {
+        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE);
+    }
+
+    clamp(input, storage) {
+        const max = storage.maxReserve[storage.reservedSpace.uom];
+        const current = storage.reservedSpace.unitsInCurrentUom;
+        const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
+        const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
         if (updated === current && current !== input) {
             // Force change detection to update input value if model gets out of sync with input
             storage.reservedSpace.value = 0;
@@ -264,49 +267,61 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         });
     }
 
-    updateSaveProcess(): void {
-        this.saveSettings = this.processService.createProcess(() => {
-            this.storages.forEach(({
-                storageId: id,
-                isUsedForWriting,
-                reservedSpace
-            }) => {
-                const storage = this.currentStorageState.locations.find(
-                    ({ storageId }) => storageId === id
-                );
-                storage.usedForWriting = isUsedForWriting.value;
-                storage.reservedSpace = Math.round(reservedSpace.bits);
-            });
+    private saveStorages(): void {
+        this.storages.forEach(({ storageId: id, isUsedForWriting, reservedSpace }) => {
+            const storage = this.currentStorageState.locations
+                .find(({ storageId }) => storageId === id);
+            storage.usedForWriting = isUsedForWriting.value;
+            storage.reservedSpace = Math.round(reservedSpace.bits);
+        });
 
-            return this.currentStorageState.saveStorages().toPromise()
-                .then(response => {
-                    if (response.error !== undefined && response.error !== '0') {
-                        const errorToShow = response.errorString;
-                        this.dialogsService.alert(
-                            errorToShow,
-                            this.LANG.dialogs.titles.error()
+        this.currentStorageState.saveStorages()
+            .toPromise().then(response => {
+                if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                    const errorToShow = response.errorString;
+                    this.dialogsService
+                        .alert(errorToShow, this.LANG.dialogs.titles.error?.())
+                        .catch(error => {
+                            console.error(error);
+                        });
+                } else {
+                    this.dialogsService
+                        .alert(
+                            this.LANG.dialogs.message.storageSettingsSaved?.(),
+                            this.LANG.dialogs.titles.success?.()
                         ).catch(error => {
                             console.error(error);
                         });
-                    } else {
-                        this.dialogsService.alert(
-                            this.LANG.dialogs.message.storageSettingsSaved(),
-                            this.LANG.dialogs.titles.success()
-                        ).catch(error => {
-                            console.error(error);
-                        });
-                    }
-                }, () => {
-                    this.dialogsService.alert(
-                        this.LANG.dialogs.message.storageSettingsNotSaved(),
-                        this.LANG.dialogs.titles.error()
+                }
+            }, () => {
+                this.dialogsService
+                    .alert(
+                        this.LANG.dialogs.message.storageSettingsNotSaved?.(),
+                        this.LANG.dialogs.titles.error?.()
                     ).catch(error => {
                         console.error(error);
                     });
-                }).then(res => {
-                    this.updateWatchers();
-                    Promise.resolve(res);
-                });
+            }).then(() => {
+                this.updateWatchers();
+            });
+    }
+
+    updateSaveProcess(): void {
+        this.saveSettings = this.processService.createProcess(() => {
+            const overwrite = this.storages.some(s =>
+                s.remainingSpace.bits < 0
+            );
+            if (overwrite) {
+                return this.dialogsService.reserveSpaceWarning()
+                    .then((res: string | void) => {
+                        if (res === 'accept') {
+                            this.saveStorages();
+                        }
+                    });
+            } else {
+                this.saveStorages();
+                return Promise.resolve();
+            }
         });
     }
 

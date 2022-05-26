@@ -124,6 +124,14 @@ export class LoginWebadminModalContent implements OnInit {
     //     });
     // }
 
+    private displayCloudConnectionError() {
+        this.simpleDialogService.notify(
+            this.LANG.toastMessage.noInternet(),
+            'warning',
+            true
+        );
+    }
+
     resetForm(): void {
         if (!this.loginForm.valid) {
             this.loginForm.controls.login_email.setErrors(undefined);
@@ -270,7 +278,7 @@ export class LoginWebadminModalContent implements OnInit {
                             [this.CONFIG.redirect.authorised],
                             { replaceUrl: isRootPath }
                         ).then(() => {
-                            // ensure language reload as translations are loaded on page load
+                        // ensure language reload as translations are loaded on page load
                             this.window.location.reload();
                         });
                 });
@@ -281,23 +289,15 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     redirectOauthLogin(): void {
-        const displayCloudConnectionError = () => {
-            this.simpleDialogService.notify(
-                this.LANG.toastMessage.noInternet(),
-                'warning',
-                true
-            );
-        };
-
         this.account.mediaServerApi.getServerInfo('*')
             .subscribe(data => {
                 const systemHasInternet = data.some(system => system.serverFlags.includes('SF_HasPublicIP'));
                 if (this.window.navigator.onLine && systemHasInternet) {
                     this.account.mediaServerApi.redirectOauth();
                 } else {
-                    displayCloudConnectionError();
+                    this.displayCloudConnectionError();
                 }
-            }, () => displayCloudConnectionError());
+            }, () => this.displayCloudConnectionError());
     }
 
     oauthLogin(code: string): void {
@@ -306,11 +306,19 @@ export class LoginWebadminModalContent implements OnInit {
             .subscribe((res: Record<string, string>) => {
                 this.accountNotOnSystem = res.scope === '';
                 this.account2faRequired = res.error === 'second_factor_required';
+                let accountCheck = Promise.resolve();
                 if (!this.accountNotOnSystem && !this.account2faRequired) {
-                    this.window.location.reload();
-                } else {
-                    this.loading = false;
+                    accountCheck = this.account.get(true).then((res) => {
+                        if (res) {
+                            this.window.location.reload();
+                        } else {
+                            this.displayCloudConnectionError();
+                        }
+                    });
                 }
+                accountCheck.finally(() => {
+                    this.loading = false;
+                });
             });
     }
 

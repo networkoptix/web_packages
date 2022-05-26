@@ -7,17 +7,17 @@ Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        form    Threaded
 
 *** Test Cases ***                   Expect Success     Your Name       Email                  Message
-1. Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
+1. IPVD Valid email with all required data        True          ${name}         ${EMAIL OWNER}         ${message}
     [tags]    C48969    Valid    IPVD
-2. Invalid email with all required data 1    False         ${name}         myemail                ${message}
+2. IPVD Invalid email with all required data 1    False         ${name}         myemail                ${message}
     [tags]    C48969    Invalid    IPVD
-3. Invalid email with all required data 2    False         ${name}         myemail@               ${message}
+3. IPVD Invalid email with all required data 2    False         ${name}         myemail@               ${message}
     [tags]    C48969    Invalid    IPVD
-4. Invalid email with all required data 3    False         ${name}         myemail@gmail          ${message}
+4. IPVD Invalid email with all required data 3    False         ${name}         myemail@gmail          ${message}
     [tags]    C48969    Invalid    IPVD
-5. Invalid email with all required data 4    False         ${name}         my@email@gmail.com     ${message}
+5. IPVD Invalid email with all required data 4    False         ${name}         my@email@gmail.com     ${message}
     [tags]    C48969    Invalid    IPVD
-6. Invalid email with all required data 5    False         ${name}         myemail@ gmail.com     ${message}
+6. IPVD Invalid email with all required data 5    False         ${name}         myemail@ gmail.com     ${message}
     [tags]    C48969    Invalid    IPVD
-7. Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
+7. IPVD Invalid email with all required data 6    False         ${name}         myemail@ gmail.com$    ${message}
     [tags]    C48969    Invalid    IPVD

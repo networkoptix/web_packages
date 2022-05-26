@@ -118,10 +118,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             base: '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
             level1: [
                 {
-                    id: 'alerts',
-                    label: 'Alerts',
-                    path: 'alerts',
-                    svg: 'alerts'
+                    id: this.CONFIG.menus.systemHealth.alerts.id,
+                    label: this.LANG.menu.titles.alerts(),
+                    path: this.CONFIG.menus.systemHealth.alerts.path,
+                    svg: this.CONFIG.menus.systemHealth.alerts.icon
                 }
             ]
         };
@@ -259,7 +259,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     : asset === 'systems' ? 'system' : asset;
                 menu.level1.push({
                     id: asset,
-                    label: this.healthService.manifest[asset].name,
+                    label: this.LANG.menu.titles[asset](),
                     path: asset,
                     svg: svgName
                 });

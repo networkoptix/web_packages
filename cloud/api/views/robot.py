@@ -1,5 +1,5 @@
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -17,7 +17,7 @@ type__body = openapi.Schema(type=openapi.TYPE_STRING,
                                            "The purpose of this is to help speed up auto tests so that they dont have "
                                            "to wait on emails to appear in the inbox.")
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, timer } from 'rxjs';
+import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -36,15 +36,18 @@ import { NxSettingsService } from '../settings.service';
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
+
     readonly environment = environment;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     serverIdFromParams: string;
     selectedServer: NxSystemServer;
+    storageTimer: Subscription;
     serverId$ = new BehaviorSubject<string>('');
 
     advanced: boolean;
     isOffline: boolean = false;
+    isServerOffline: boolean = false;
     serverLoaded: boolean = false;
     storagesOutdated: boolean = false;
 
@@ -85,15 +88,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     );
                 }
 
-                this.menuService.detail = this.serverIdFromParams;
+            this.menuService.detail = this.serverIdFromParams;
+            if (this.storageTimer) {
+                this.storageTimer.unsubscribe();
+                this.storageTimer = undefined;
+            }
 
-                this.setServer(true);
-
-                // remove when storages update with normal 30 second poll
-                timer(60000).subscribe(() => {
-                    this.storagesOutdated = true;
-                });
-            });
+            this.setServer(true);
+        });
 
         this.route.queryParams
             .pipe(untilDestroyed(this))
@@ -211,6 +213,15 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 setServerIpAndPort(server);
             }
             this.selectedServer = server;
+            this.isServerOffline = (server.status === 'Offline');
+
+            if (!this.isServerOffline && !this.storageTimer) {
+                // remove when storages update with normal 30 second poll
+                this.storageTimer = timer(60000).subscribe(() => {
+                    this.storagesOutdated = true;
+                });
+            }
+
             this.menuService.detail = this.selectedServer.id;
             if (this.selectedServer.id !== this.serverId$.value) {
                 this.serverId$.next(this.selectedServer.id);

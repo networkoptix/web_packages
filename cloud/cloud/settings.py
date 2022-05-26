@@ -113,7 +113,7 @@ INSTALLED_APPS = (
     'django_celery_beat',
     'rest_framework',
     'rest_hooks',
-    'oauth2_provider',
+    # 'oauth2_provider',
     'corsheaders',
     'push_notifications',
     'api',
@@ -131,7 +131,7 @@ INSTALLED_APPS = (
 MIDDLEWARE = (
     'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
+    # 'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

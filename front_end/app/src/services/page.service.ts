@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -27,6 +28,8 @@ export class NxPageService {
 
     updater$ = new Subject();
     metaLookup: MetaLookup = {};
+    defaultMetaKey = environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults'
+    templateKey = environment.isLocal ? 'templateWebadmin' : 'template'
 
     constructor(
         configService: NxConfigService,
@@ -42,17 +45,16 @@ export class NxPageService {
             untilDestroyed(this),
             debounceTime(50)
         ).subscribe(_ => {
-            const meta = this.metaLookup[this.router.url] || {};
-            Object.entries(meta).forEach(([name, content]) => {
+            Object.entries(this.metaProperties).forEach(([name, content]) => {
                 const property = `og:${name}`;
                 this.meta.updateTag({ name, property, content });
-                if (name === 'title') {
+                if (name === 'title' && !this.router.url.startsWith('/authorize')) {
                     this.title.setTitle(content);
                 }
             });
 
-            if (!meta.title && !headerService?.currentLocation?.isSystem) {
-                this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.CONFIG.cloudName);
+            if (!this.metaProperties.title || this.metaProperties.title === this.LANG[this.defaultMetaKey].default.title() && !headerService?.currentLocation?.isSystem && headerService.currentLocation.childNode) {
+                this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.LANG.productName);
             }
         });
         this.router.events.pipe(
@@ -67,7 +69,7 @@ export class NxPageService {
     mapMeta = (metaProperties: Record<string, any>) => Object.entries(metaProperties || {}).reduce((lookup, [property, val]) => ({ ...lookup, [property]: val() }), {});
 
     getBaseMeta() {
-        const baseLangMeta = this.mapMeta(this.LANG.metaDefaults.default);
+        const baseLangMeta = this.mapMeta(this.LANG[this.defaultMetaKey].default);
         const { image, type } = this.CONFIG.metaDefaults.default;
         return { ...baseLangMeta, type, image: this.getRoot() + image };
     }
@@ -77,7 +79,7 @@ export class NxPageService {
     getPathMeta(url) {
         const findIn = this.findMatchingMeta(url);
         return {
-            ...this.mapMeta(findIn(this.LANG.metaDefaults)),
+            ...this.mapMeta(findIn(this.LANG[this.defaultMetaKey])),
             ...findIn(this.CONFIG.metaDefaults)
         };
     }
@@ -105,7 +107,7 @@ export class NxPageService {
      * Get a pages current metadata
      */
     get metaProperties() {
-        const { url } = this.router;
+        const url = this.router.url.split('?')[0];
         return this.metaLookup[url] || this.generateDefaultMeta(url);
     }
 
@@ -130,9 +132,12 @@ export class NxPageService {
     }
 
     public set pageTitle(title: any) {
+        if (this.router.url === '/authorize') {
+            return;
+        }
         const txt = (typeof title === 'function') ? title() : title;
-        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.pageTitles.default()) {
-            this.updateLookups('title', this.LANG.pageTitles.template({ title: txt }));
+        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.productName) {
+            this.updateLookups('title', this.LANG.pageTitles[this.templateKey]({ title: txt }));
             return;
         }
         this.updateLookups('title', txt);
@@ -151,9 +156,9 @@ export class NxPageService {
     }
 
     public set pageTitleRemoveHyphen(title: any) {
-        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default?.()) {
+        if (this.LANG && title !== this.LANG.productName()) {
             const txt = (typeof title === 'function') ? title() : title;
-            this.updateLookups('title', this.LANG.pageTitles.template({ title: txt }).replace('- ', ''));
+            this.updateLookups('title', this.LANG.pageTitles[this.templateKey]({ title: txt }).replace('- ', ''));
             return;
         }
         this.updateLookups('title', title());

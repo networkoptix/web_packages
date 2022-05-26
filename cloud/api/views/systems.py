@@ -2,9 +2,8 @@ import hashlib
 import base64
 
 from django.conf import settings
-from oauth2_provider.contrib.rest_framework import IsAuthenticatedOrTokenHasScope
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
@@ -49,7 +48,7 @@ def get_refresh_from_request(request):
                      operation_description="If the user has access to the system clouddb will return its info.",
                      manual_parameters=[system_id__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def system(request, system_id):
     data = cloud_api.System.get(request, system_id)
     return api_success(data['systems'])
@@ -58,7 +57,7 @@ def system(request, system_id):
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns a list of systems that the user has access to.")
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def list_systems(request):
     data = cloud_api.System.list(request)
     return api_success(data['systems'])
@@ -138,7 +137,7 @@ def digest(login, password, realm, nonce, method):
                          }
                      ))
 @api_view(["POST"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def get_code(request, system_id):
     refresh_token = get_refresh_from_request(request)
     scope = None
@@ -157,7 +156,7 @@ def get_code(request, system_id):
                      operation_description="Returns the auth keys needed to make api requests to a cloud system.",
                      manual_parameters=[system_id__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def get_auth(request, system_id):
     # Todo: Add oauth support when servers get it.
     data = cloud_api.System.get_nonce(request, system_id)
@@ -184,7 +183,7 @@ def get_auth(request, system_id):
                          }
                      ))
 @api_view(["POST"])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def get_token(request, system_id):
     refresh_token = get_refresh_from_request(request)
     data = cloud_api.\
@@ -207,7 +206,7 @@ def get_token(request, system_id):
                          }
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def revoke_token(request):
     require_params(request, ("token",))
     return api_success(Auth.delete_token(request, request.data.get("token")))
@@ -223,7 +222,7 @@ def revoke_token(request):
                          }
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def rename(request, system_id):
     require_params(request, ('name',))
     data = cloud_api.System.rename(request, system_id, request.data['name'])
@@ -241,7 +240,7 @@ def rename(request, system_id):
                          }
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def merge(request):
     require_params(request, ('master_system_id', 'slave_system_id'))
     master_id = request.data['master_system_id']
@@ -267,7 +266,7 @@ def merge(request):
                      operation_description="Returns the user access roles for the system.",
                      manual_parameters=[system_id__route_param])
 @api_view(['GET'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def access_roles(request, system_id):
     data = cloud_api.System.access_roles(request, system_id)
     return api_success(data['accessRoles'])
@@ -345,7 +344,7 @@ def connect(request):
                          required=["system_id", "mfaCode"]
                      ))
 @api_view(['POST'])
-@permission_classes((IsAuthenticatedOrTokenHasScope, ))
+@permission_classes((IsAuthenticated, ))
 def toggle2fa(request):
     require_params(request, ('systemId', 'mfaCode'))
     system_id = request.data.get('systemId')

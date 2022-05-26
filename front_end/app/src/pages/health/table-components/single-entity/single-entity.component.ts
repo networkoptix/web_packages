@@ -5,8 +5,10 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import {
     InfoBlockLine,
     InfoBlockSection
@@ -29,15 +31,19 @@ export class NxSingleEntityComponent implements OnChanges {
     @Input() entity;
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     copyParams;
     entityName: string;
     sections: SectionLookup;
 
     constructor(
-        private configService: NxConfigService,
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         private healthService: NxHealthService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnChanges(): void {
@@ -45,6 +51,14 @@ export class NxSingleEntityComponent implements OnChanges {
         if (this.copyParams.values.length && this.copyParams.values[0].id === '_') {
             this.copyParams.values.shift();
         }
+
+        this.copyParams.values.map(param => {
+            param.name = this.LANG.healthMonitor.groups[param.id]?.() || param.name;
+            param.values.map(key => {
+                key.name = this.LANG.healthMonitor.keys[key.id]?.() || key.name;
+            });
+        });
+
         this.entityName = this.healthService.findEntityName(this.entity);
         if (this.copyParams) {
             const paramGroups = this.copyParams.values.filter(({ id }) => id !== '_');

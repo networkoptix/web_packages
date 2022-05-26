@@ -1,6 +1,7 @@
 {
     "language": "pt_BR",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
     "Integrations (β)": "Integrações (β)",
@@ -8,6 +9,30 @@
     "Support": "Suporte",
     "Terms": "Termos",
     "Developers Console": "Console do desenvolvedor",
+    "productName": "",
+    "alarmTypes": {
+        "Servers": "Servidores",
+        "Cameras": "Câmeras",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Off-line",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Servidor",
+        "cameras": "Câmeras",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Acesso irrestrito, incluindo a capacidade de compartilhar",
@@ -651,6 +676,7 @@
     "ipvdFeedback": {
         "request": "Por favor, <span id=\"request\">envie uma solicitação</span> para perguntas/preocupações adicionais sobre dispositivos suportados."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} por volume:",
     "ipvdDisclaimer": "Esta lista é limitada a dispositivos encontrados em {vmsName} onde os usuários permitiram relatórios automáticos de especificações do dispositivo para {companyName}. Nenhuma informação pessoal é coletada e cada usuário permanece completamente anônimo.",
     "menu": {
@@ -659,8 +685,20 @@
             "systemAdministration": "Administração do Sistema",
             "general": "Geral",
             "licenses": "Licenças",
-            "users": "Usuários"
+            "users": "Usuários",
+            "servers": "Servidores",
+            "alerts": "Alerts",
+            "systems": "Sistema",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Tipo",
+        "server": "Servidor",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "Sobre",
@@ -690,6 +728,7 @@
         "systemShare": "Compartilhar Sistema",
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Visualizar câmaras",
         "apiTool": "Ferramenta de teste de API",
         "security": "Segurança",
@@ -924,6 +963,56 @@
         "sessionRenewed": "A sessão foi renovada.",
         "failedToUpdateSession": "Falha ao atualizar a sessão."
     },
+    "healthMonitor": {
+        "groups": {
+            "info": "Informações",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Servidores",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Usuários",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "Status",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "SO",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
+    },
     "headerLabels": {
         "healthReportForSystem": "Relatório de saúde para o sistema {systemName}"
     },
@@ -1125,6 +1214,24 @@
         },
         "/ipvd": {
             "title": "Dispositivos Suportados - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

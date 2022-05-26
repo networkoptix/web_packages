@@ -22,7 +22,7 @@ from ServerAPI import ServerAPI
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException
+from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException, StaleElementReferenceException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr, timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
@@ -684,6 +684,8 @@ class GenericKeywords(object):
         elements = seleniumlib.find_elements(locator)
         for element in elements:
             try:
+                seleniumlib.driver.execute_script("arguments[0].scrollIntoView();", element)
+                time.sleep(.2)
                 highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
                 for highlight in highlights:
                     if highlight.get_attribute('innerHTML').lower() not in queries:
@@ -691,6 +693,8 @@ class GenericKeywords(object):
 
             except NoSuchElementException:
                 raise NoSuchElementException
+            except StaleElementReferenceException:
+                raise StaleElementReferenceException
 
         return True
 

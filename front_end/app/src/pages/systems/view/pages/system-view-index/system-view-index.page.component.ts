@@ -5,11 +5,11 @@ import {
     ElementRef,
     HostListener,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription, timer } from 'rxjs';
-import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, take, takeUntil } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -183,6 +183,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             .pipe(untilDestroyed(this))
             .subscribe(this._onUxStateChange);
         this.onResize({ target: { innerWidth: window.innerWidth } });
+
+        // Handles the case where you are on the view tab and get redirected back to /view
+        this.router.events
+            .pipe(
+                untilDestroyed(this),
+                filter(e => e instanceof NavigationEnd && !this.route.snapshot.children.length)
+            )
+            .subscribe(() => {
+                this._tryToRedirectToCamera();
+            });
 
         this.accountService.get().then(account => {
             if (

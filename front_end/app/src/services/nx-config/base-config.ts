@@ -550,10 +550,13 @@ export interface Path {
 
 export interface SystemHealth {
     baseUrl: string;
+    alerts: Admin;
 }
 
 export interface SystemMonitoring {
     baseUrl: string;
+    graphs: Admin;
+    logs: Admin;
 }
 
 export interface SystemSettings {

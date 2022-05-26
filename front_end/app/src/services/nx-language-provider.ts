@@ -106,6 +106,9 @@ export class NxLanguageProviderService {
         this.translate.use(lang); // this will tell TranslateService to switch language -> see "breadcrumbs"
 
         this.translations = this.translate.translations[this.translate.currentLang];
+        this.translations.productName = this.translations[
+            environment.isLocal ? 'metaDefaultsWebadmin' : 'metaDefaults'
+        ]?.default?.site_name || '';
         this.translateSubject.next(this.translations);
     }
 

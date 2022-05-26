@@ -1,5 +1,7 @@
 from django.http.response import HttpResponse
 import pytest
+from django.conf import settings
+from importlib import import_module
 from unittest.mock import MagicMock, patch, Mock
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.request import Request
@@ -81,8 +83,9 @@ class TestOauthViews:
         if signature:
             data['signature'] = signature
         # The path doesn't actually do anything here, but a path is required and it may as well be the correct path
+        engine = import_module(settings.SESSION_ENGINE)
         request = self.arf.post('/oauth/authenticate', data=data)
-        request.session = {}
+        request.session = engine.SessionStore()
         return authenticate(request)
 
     def test_valid_authenticate(self, mocker):

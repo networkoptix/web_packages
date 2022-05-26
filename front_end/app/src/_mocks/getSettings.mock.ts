@@ -40,6 +40,7 @@ export function getLocalSettings() {
             copyrightYear: '2020',
             defaultLanguage: 'en_US',
             contact: {
+                companyUrl: 'No address',
                 supportAddress: 'No address'
             },
             desktop: {

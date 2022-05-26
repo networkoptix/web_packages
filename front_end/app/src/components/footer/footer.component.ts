@@ -30,6 +30,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
 
     // options
     @Input() center: boolean;
+    @Input() oauth = false;
     classes: string[] = [];
     private footerSubscription: Subscription;
 
@@ -51,6 +52,13 @@ export class NxFooterComponent implements OnInit, OnDestroy {
             this.footerItems = this.menusService.cleanEmptyNodes(footer.nodes);
             if (environment.isLocal) {
                 this.footerItems.forEach(footerItem => {
+                    if (footerItem.name === 'Support') {
+                        if (footerItem.url.includes('@')) {
+                            footerItem.url = `mailto:${footerItem.url}`;
+                        } else if ((/\d{3}-\d{3}-\d{4}/g).test(footerItem.url)) {
+                            footerItem.url = `tel:${footerItem.url.replace(/ \(Option (\d*)\)/, ';$1')}`;
+                        }
+                    }
                     footerItem.new_window = true;
                     footerItem.url = footerItem.url.replace(
                         '{{CLOUD_HOST}}',

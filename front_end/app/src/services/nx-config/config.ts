@@ -456,10 +456,25 @@ export const nxConfig: IConfig = {
             }
         },
         systemHealth: {
-            baseUrl: '/health/'
+            baseUrl: '/health/',
+            alerts: {
+                id: 'alerts',
+                icon: 'alerts',
+                path: 'alerts'
+            }
         },
         systemMonitoring: {
-            baseUrl: '/monitoring/'
+            baseUrl: '/monitoring/',
+            graphs: {
+                id: 'graphs',
+                icon: 'system',
+                path: '',
+            },
+            logs: {
+                id: 'logs',
+                icon: 'server',
+                path: 'logs',
+            }
         },
         systemSettings: {
             baseUrl: environment.isLocal ? '/settings/' : '/systems/',

@@ -429,6 +429,14 @@ export class NxSystemAPI {
         }
     }
 
+    public getApiPreamble() {
+        throw (this.notImplementedMsg);
+    }
+
+    public getApiChangelog() {
+        throw (this.notImplementedMsg);
+    }
+
     login(
         login: string,
         password: string,

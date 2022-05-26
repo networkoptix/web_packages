@@ -154,7 +154,7 @@ Force Tags        system
     Press Keys    ${PORT INPUT}    77777
     Wait Until Element Is Not Visible    ${PORT TOO LOW ERROR}
     ${current port}=    Get Value    ${PORT INPUT}
-    Should Be Equal    ${current port}    7777
+    Should Be Equal    ${current port}    65535
 
     Log    Step 5
     Click Element    ${PORT INPUT}

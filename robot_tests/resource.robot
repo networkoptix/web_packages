@@ -1249,7 +1249,8 @@ Delete All Text
     ${length}=   Evaluate    ${length} + 1
     Click Element    ${input}
     FOR    ${n}    IN RANGE    ${length}
-        Press Keys    None     BACKSPACE 
+        Press Keys    None    ARROW_RIGHT
+        Press Keys    None     BACKSPACE
     END
     Run Keyword If    ${replaceText}    Press Keys    None   ${replaceWith}
 
@@ -1544,4 +1545,19 @@ Check Page Text Language
                 Run Keyword And Continue On Failure    Should Not Contain    ${lang}    lang=en
              END
         END
+    END
+
+Click
+    [Documentation]     Acceptible types: Element, Button, Link.  This kw ensures that no stale element errors occur.
+    [Arguments]     ${type}     ${locator}
+    Wait Until Element Is Visible    ${locator}
+    Wait Until Element is Enabled    ${locator}
+    IF    '${type}' == 'Button'
+        Wait Until Keyword Succeeds   10    .1   Click Button    ${locator}
+    ELSE IF   '${type}' == 'Element'
+        Wait Until Keyword Succeeds   10    .1   Click Element    ${locator}
+    ELSE IF   '${type}' == 'Link'
+        Wait Until Keyword Succeeds   10    .1   Click Link      ${locator}
+    ELSE
+        Fail    Button, Element or Link are the only allowed types.
     END

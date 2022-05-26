@@ -1,6 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "All Servers": "All Servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
@@ -8,6 +9,33 @@
     "Support": "Support",
     "Terms": "Terms",
     "Developers Console": "Developers Console",
+    "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
+    "alarmTypes": {
+        "Servers": "Servers",
+        "Cameras": "Cameras",
+        "Storage Locations": "Storage Locations",
+        "Network Interfaces": "Network Interfaces"
+    },
+    "alarmLevels": {
+        "offline": "Offline",
+        "error": "Errors",
+        "warning": "Warnings"
+    },
+    "alertFilters": {
+        "all": "All Alerts",
+        "warning": "Only Warnings",
+        "error": "Only Errors"
+    },
+    "deviceTypes": {
+        "All Device Types": "All Device Types",
+        "servers": "Server",
+        "cameras": "Cameras",
+        "storages": "Storages",
+        "networkInterfaces": "Interface"
+    },
     "accessRoles": {
         "Administrator": {
             "description": "Unrestricted access including the ability to share",
@@ -365,7 +393,6 @@
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",
                 "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
-
             },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
             "secondarySystemUnavailable": "System {targetSystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -652,6 +679,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
@@ -660,8 +688,20 @@
             "systemAdministration": "System Administration",
             "general": "General",
             "licenses": "Licenses",
-            "users": "Users"
+            "users": "Users",
+            "servers": "Servers",
+            "alerts": "Alerts",
+            "systems": "System",
+            "storages": "Storage Locations",
+            "networkInterfaces": "Network Interfaces",
+            "graphs": "Graphs",
+            "logs": "Logs"
         }
+    },
+    "tableHeaders": {
+        "type": "Type",
+        "server": "Server",
+        "alert": "Alert"
     },
     "pageTitles": {
         "about": "About",
@@ -691,6 +731,7 @@
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
+        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "View cameras",
         "apiTool": "API testing tool",
         "security": "Security",
@@ -925,6 +966,56 @@
         "sessionRenewed": "Session has been renewed.",
         "failedToUpdateSession": "Updating the session failed."
     },
+    "healthMonitor": {
+        "groups": {
+            "info": "Info",
+            "availability": "Availability",
+            "load": "Load",
+            "activity": "Activity"
+        },
+        "keys": {
+            "name": "Name",
+            "servers": "Servers",
+            "cameras": "Camera channels",
+            "storages": "Storage locations",
+            "users": "Users",
+            "version": "System version",
+            "cloudSystemId": "Cloud system ID",
+            "status": "Status",
+            "offlineEvents": "Events: Server Offline (24h)",
+            "uptimeS": "Uptime",
+            "cpuUsageP": "CPU %",
+            "serverCpuUsageP": "CPU (VMS Server) %",
+            "ramUsageB": "RAM Usage",
+            "ramUsageP": "RAM %",
+            "serverRamUsageB": "RAM (VMS Server)",
+            "serverRamUsageP": "RAM (VMS Server) %",
+            "threads": "Server threads",
+            "decodingThreads": "Decoding threads",
+            "decodingSpeed3s": "Decoding speed",
+            "encodingThreads": "Encoding threads",
+            "encodingSpeed3s": "Encoding speed",
+            "primaryStreams": "Outgoing Primary streams",
+            "secondaryStreams": "Outgoing Secondary streams",
+            "incomingConnections": "Incoming connections",
+            "outgoingConnections": "Outgoing connections",
+            "logLevel": "Logging level",
+            "publicIp": "Public IP",
+            "os": "OS",
+            "osTime": "OS Time",
+            "vmsTime": "VMS Time",
+            "cpu": "CPU",
+            "cpuCores": "Cores",
+            "ramB": "RAM",
+            "guidConflict": "Server GUID conflict",
+            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "transactionsPerSecond1m": "Transactions/s",
+            "actionsTriggered1m": "Rules Activations/s",
+            "apiCalls1m": "API Calls/s",
+            "thumbnails1m": "Thumbnails/s",
+            "activePlugins": "Active plugins list"
+        }
+    },
     "headerLabels": {
         "healthReportForSystem": "Heath Report For System {systemName}"
     },
@@ -1126,6 +1217,24 @@
         },
         "/ipvd": {
             "title": "Supported Devices - %CLOUD_NAME%"
+        }
+    },
+    "metaDefaultsWebadmin": {
+        "default": {
+            "site_name": "%VMS_NAME%",
+            "title": "webadmin - %VMS_NAME%"
+        },
+        "/settings": {
+            "title": "Settings - webadmin - %VMS_NAME%"
+        },
+        "/view": {
+            "title": "View - webadmin - %VMS_NAME%"
+        },
+        "/health": {
+            "title": "Information - webadmin - %VMS_NAME%"
+        },
+        "/monitoring": {
+            "title": "Server Monitoring - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

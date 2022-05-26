@@ -1335,7 +1335,7 @@ class TestCustomClientViewSet:
     @staticmethod
     def check_and_replace_class_variables(view_class):
         expected_variables = {
-            'permission_classes': [IsAuthenticatedOrTokenHasScope],
+            'permission_classes': [IsAuthenticated],
             'serializer_class': CustomClientSerializer,
             'waffle_flag': FLAGS.custom_clients
         }

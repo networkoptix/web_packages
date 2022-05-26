@@ -38,6 +38,7 @@ import { MessageModalContent } from './message/message.component';
 import { MoveSystemToGroupModalContent } from './move-system-to-group/move-system-to-group.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
+import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
 import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
@@ -96,6 +97,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         SelectTimeRangeModalContent,
         TransferOwnershipModalContent,
         Client2faWarningModalContent,
+        ReserveSpaceWarningModalContent,
         CreateSystemGroupModalContent,
         SystemGroupSettingsModalContent,
         MoveSystemToGroupModalContent,
