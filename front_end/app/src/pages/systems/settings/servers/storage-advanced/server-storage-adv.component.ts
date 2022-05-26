@@ -75,11 +75,14 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     isInacessible(storage): boolean {
-        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE);
+        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !storage.isOnline;
     }
 
     clamp(input, storage) {
-        const max = storage.maxReserve[storage.reservedSpace.uom];
+        const max = Math.min(
+            storage.maxReserve[storage.reservedSpace.uom],
+            storage.totalSpace[storage.reservedSpace.uom],
+        );
         const current = storage.reservedSpace.unitsInCurrentUom;
         const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
         const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
@@ -246,11 +249,12 @@ export const toParams = (serverId) =>
 export const mapStorages = (storages) => storages.map(({
     freeSpace: free,
     reservedSpace: reserved,
-    totalSpace,
+    totalSpace: total,
     vmsSpace,
     usedForWriting: ufw,
     ...storage
 }) => {
+    const totalSpace = new BitConverter(total);
     const reservedSpace = new BitConverter(reserved);
     const freeSpace = new BitConverter(free);
     const remainingSpace = new FreeSpace(
