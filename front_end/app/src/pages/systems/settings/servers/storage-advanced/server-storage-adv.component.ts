@@ -113,7 +113,7 @@ class FreeSpace {
     }
 }
 
-type AdvancedPicked = 'url' | 'totalSpace' | 'storageType' | 'storageId' | 'storageStatus';
+type AdvancedPicked = 'url' | 'storageType' | 'storageId' | 'storageStatus' | 'isOnline';
 interface AdvancedStorage extends Pick<Storage, AdvancedPicked> {
     reservedSpace: BitConverter;
     freeSpace: BitConverter;
@@ -121,6 +121,7 @@ interface AdvancedStorage extends Pick<Storage, AdvancedPicked> {
 
     remainingSpace: FreeSpace;
     maxReserve: BitConverter;
+    totalSpace: BitConverter;
 }
 
 function mapStorages(
@@ -209,7 +210,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     clamp(input: number, storage: AdvancedStorage): void {
-         const max = Math.min(
+        const max = Math.min(
             storage.maxReserve[storage.reservedSpace.uom],
             storage.totalSpace[storage.reservedSpace.uom],
         );
