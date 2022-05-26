@@ -84,9 +84,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     parsedServerId: string;
     serverDetails: InfoBlockSection;
     serversSubscription: SubscriptionLike;
-    checkIfOnlineSubscription: SubscriptionLike;
     storageSubscription: SubscriptionLike;
-    analyticsSubscription: SubscriptionLike;
     destroyRestartTake$ = new Subject<boolean>();
 
     readonly environment = environment;
@@ -159,10 +157,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             }
 
             if (!isEqual(currentValue, previousValue)) {
-                if (!this.applyService.locked) {
-                    setTimeout(() => this.setServer(
-                        currentValue?.id !== previousValue?.id
-                    ));
+                if (!this.applyService.locked && currentValue?.id !== previousValue?.id) {
+                    setTimeout(() => {
+                        this.setServer(true);
+                    });
                 }
             } else {
                 this.checkIfOnline(cleanId(currentValue.id));
@@ -298,6 +296,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             params
                         );
                         await this.system.update();
+
+                        this.system.storageManager.update();
                         this.saveStorageWatcher.value = false;
                         this.currentAnalyticsDbId = this.selectedStorage.id;
                     } catch (err) {
@@ -508,8 +508,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         }
         // check if analytics data exists
         this.checkingForDataAnalytics = true;
-        const analyticsData = await this.system.storageManager
+        const analyticsData = await this.system
+            .storageManager
             .checkForAnalyticsData(this.selectedServer.id).toPromise();
+
         const analyticsDataExists = Boolean(analyticsData[0]);
         if (analyticsDataExists) {
             this.dialogs.changeStorage(this.system)
@@ -526,6 +528,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             params
                         );
                         await this.system.update();
+                        this.system.storageManager.update();
                     } else if (closeRes === 'error') {
                         const options = {
                             classname: this.CONFIG.toast.warning,
@@ -590,7 +593,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         selected,
                         id: storageId,
                         value: storageId,
-                        freeSpace
+                        freeSpace,
+                        disabled: !isOnline,
                     };
                 });
                 if (!this.saveStorageWatcher.value) {

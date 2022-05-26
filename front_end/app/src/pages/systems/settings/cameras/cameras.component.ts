@@ -137,6 +137,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     // Added for handing non camera devices CLOUD-8669
     settingsDisabled = false;
+    settingsRecordingDisabled = true;
 
     motionGridChangeWatcher = new Watcher<boolean>();
     cameraNameWatcher: Watcher<string> = new Watcher();
@@ -931,6 +932,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = cameras[cameraIndex];
             const { vendor, model, url, parentName, deviceType } = this.selectedCamera;
             this.settingsDisabled = (deviceType !== 'Camera' || !vendor);
+            this.settingsRecordingDisabled = environment.isLocal || (deviceType !== 'Camera' || !vendor);
             const deviceColumn = [
                 new InfoBlockSection([
                     new InfoBlockLine(this.LANG.common.vendor(), vendor),

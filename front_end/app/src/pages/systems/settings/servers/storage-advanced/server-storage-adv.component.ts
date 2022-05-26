@@ -130,6 +130,7 @@ function mapStorages(
     const watchers: Watcher<unknown>[] = [];
 
     storages.forEach(s => {
+        const totalSpace = new BitConverter(s.totalSpace);
         const reservedSpace = new BitConverter(s.reservedSpace);
         const freeSpace = new BitConverter(s.freeSpace);
         const remainingSpace = new FreeSpace(
@@ -144,6 +145,7 @@ function mapStorages(
             ...s,
             freeSpace,
             reservedSpace,
+            totalSpace,
             isUsedForWriting,
             maxReserve,
             remainingSpace,
@@ -203,11 +205,14 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     }
 
     isInacessible(storage: AdvancedStorage): boolean {
-        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE);
+        return storage.storageStatus.includes(STORAGE_STATUS.INACCESSIBLE) || !storage.isOnline;
     }
 
     clamp(input: number, storage: AdvancedStorage): void {
-        const max = storage.maxReserve[storage.reservedSpace.uom];
+         const max = Math.min(
+            storage.maxReserve[storage.reservedSpace.uom],
+            storage.totalSpace[storage.reservedSpace.uom],
+        );
         const current = storage.reservedSpace.unitsInCurrentUom;
         const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
         const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));

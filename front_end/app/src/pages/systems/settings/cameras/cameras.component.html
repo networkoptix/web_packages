@@ -113,7 +113,7 @@
                 </nx-block>
             </div>
             <ng-container *ngIf="!settingsDisabled">
-                <div class="col-12 camera-settings-info mt-3">
+                <div class="col-12 camera-settings-info mt-3" *ngIf="!settingsRecordingDisabled">
                     <nx-block [header-style]="system.useRest ? '' : 'no-padding'">
                         <header>
                             <div class="d-flex align-items-center">
