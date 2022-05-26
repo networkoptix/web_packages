@@ -124,7 +124,6 @@
     "@angular/cli": "12.2.16",
     "@angular/compiler-cli": "12.2.16",
     "@angular/language-service": "12.2.16",
-    "@angular/localize": "^12.2.16",
     "@babel/preset-env": "^7.12.1",
     "@biesbjerg/ngx-translate-extract": "~6.1.0",
     "@types/dateformat": "^5.0.0",
