@@ -30,10 +30,10 @@ import { NgChanges } from '@utils/ng-changes';
 type GbOrTb = 'GB' | 'TB';
 class BitConverter {
     private _bits = new Watcher<number>();
-    private _uom = new Watcher<GbOrTb>();
+    private _unit = new Watcher<GbOrTb>();
 
     get watcher(): [Watcher<number>, Watcher<GbOrTb>] {
-        return [this._bits, this._uom];
+        return [this._bits, this._unit];
     }
 
     set bits(value: number) {
@@ -44,18 +44,18 @@ class BitConverter {
         return this._bits.value;
     }
 
-    set uom(value) {
-        this._uom.value = value;
+    set unit(value: GbOrTb) {
+        this._unit.value = value;
     }
 
-    get uom(): GbOrTb {
-        return this._uom.value;
+    get unit(): GbOrTb {
+        return this._unit.value;
     }
 
     constructor(initialBits: number) {
-        this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
+        this._unit.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
 
-        if (this._uom.value === 'GB') {
+        if (this._unit.value === 'GB') {
             this._bits.value = Math.round(
                 (Math.round(initialBits / this.bitsGb)) * this.bitsGb
             );
@@ -91,9 +91,12 @@ class BitConverter {
         this.bits = tb * this.bitsTb;
     }
 
-    get unitsInCurrentUom(): number { return this[this.uom]; }
-    set unitsInCurrentUom(units) {
-        this[this.uom] = units;
+    get value(): number {
+        return this[this.unit];
+    }
+
+    set value(value_: number) {
+        this[this.unit] = value_;
     }
 }
 
@@ -138,7 +141,7 @@ function mapStorages(
             new BitConverter(freeSpace.bits - reservedSpace.bits),
             reservedSpace
         );
-        const maxReserve = new BitConverter(freeSpace.bits + reservedSpace.bits);
+        const maxReserve = new BitConverter(freeSpace.bits + s.vmsSpace);
         const isUsedForWriting = new Watcher<boolean>();
         isUsedForWriting.value = s.usedForWriting;
 
@@ -211,18 +214,18 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     clamp(input: number, storage: AdvancedStorage): void {
         const max = Math.min(
-            storage.maxReserve[storage.reservedSpace.uom],
-            storage.totalSpace[storage.reservedSpace.uom],
+            storage.maxReserve[storage.reservedSpace.unit],
+            storage.totalSpace[storage.reservedSpace.unit],
         );
-        const current = storage.reservedSpace.unitsInCurrentUom;
-        const roundTo = storage.reservedSpace.uom === 'GB' ? 0 : 3;
+        const current = storage.reservedSpace.value;
+        const roundTo = storage.reservedSpace.unit === 'GB' ? 0 : 3;
         const updated = Number(Math.min(Math.max(input, 0), max).toFixed(roundTo));
         if (updated === current && current !== input) {
             // Force change detection to update input value if model gets out of sync with input
-            storage.reservedSpace.unitsInCurrentUom = 0;
+            storage.reservedSpace.value = 0;
         }
         setTimeout(() => {
-            storage.reservedSpace.unitsInCurrentUom = updated;
+            storage.reservedSpace.value = updated;
         });
     }
 
@@ -280,18 +283,18 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
         this.currentStorageState.saveStorages()
             .toPromise().then(response => {
-                if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                if (response.error !== undefined && response.error !== '0') {
                     const errorToShow = response.errorString;
                     this.dialogsService
-                        .alert(errorToShow, this.LANG.dialogs.titles.error?.())
+                        .alert(errorToShow, this.LANG.dialogs.titles.error())
                         .catch(error => {
                             console.error(error);
                         });
                 } else {
                     this.dialogsService
                         .alert(
-                            this.LANG.dialogs.message.storageSettingsSaved?.(),
-                            this.LANG.dialogs.titles.success?.()
+                            this.LANG.dialogs.message.storageSettingsSaved(),
+                            this.LANG.dialogs.titles.success()
                         ).catch(error => {
                             console.error(error);
                         });
@@ -299,8 +302,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
             }, () => {
                 this.dialogsService
                     .alert(
-                        this.LANG.dialogs.message.storageSettingsNotSaved?.(),
-                        this.LANG.dialogs.titles.error?.()
+                        this.LANG.dialogs.message.storageSettingsNotSaved(),
+                        this.LANG.dialogs.titles.error()
                     ).catch(error => {
                         console.error(error);
                     });

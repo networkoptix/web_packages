@@ -25,7 +25,7 @@ export class ReserveSpaceWarningModalContent implements OnInit {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) private dialogData: Record<string, never>,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
@@ -38,7 +38,7 @@ export class ReserveSpaceWarningModalContent implements OnInit {
         });
     }
 
-    close() {
+    close = () => {
         this.dialogRef.close();
-    }
+    };
 }

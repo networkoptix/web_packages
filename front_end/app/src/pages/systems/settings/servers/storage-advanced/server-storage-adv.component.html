@@ -48,9 +48,9 @@
                                         [name]="'reservedSpace' + i"
                                         [class]="'w-50 p-0 text-right'"
                                         [min]="0"
-                                        [max]="storage.maxReserve[storage.reservedSpace.uom]"
-                                        [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
-                                        [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
+                                        [max]="storage.maxReserve[storage.reservedSpace.unit]"
+                                        [step]="storage.reservedSpace.unit === 'GB' ? 1 : 0.001"
+                                        [(ngModel)]="storage.reservedSpace.value"
                                         [ngModelOptions]="{standalone: true}"
                                         (onChange)="clamp($event, storage)"
                                         [disabled]="isInacessible(storage)"></nx-numeric>
@@ -59,7 +59,7 @@
                                     <select
                                             [id]="'reservedSpaceUnit' + i"
                                             [attr.name]="'reservedSpaceUnit' + i"
-                                            [(ngModel)]="storage.reservedSpace.uom"
+                                            [(ngModel)]="storage.reservedSpace.unit"
                                             [ngModelOptions]="{standalone: true}"
                                             class="form-control input-sm w-50"
                                             [style]="{
