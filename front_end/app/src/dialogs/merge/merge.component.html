@@ -1,11 +1,18 @@
 <div class="modal-header">
-    <h1 class="modal-title" translate>Merge Systems</h1>
+    <h1 class="modal-title" >
+        <span *ngIf="machine.currentState !== 'failedToFindAnySystem'"
+              translate>Merge Systems</span>
+
+        <span *ngIf="machine.currentState === 'failedToFindAnySystem'"
+        >{{LANG.dialogs.merge.failedToFindAnySystemHeader()}}</span>
+    </h1>
     <button type="button" class="close"
             data-dismiss="modal" aria-label="Close"
             (click)="close()" *ngIf="closable">
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
 </div>
+
 <form *ngIf="machine.currentState === 'thisSystemHasOutdatedServerError'">
     <div class="modal-body">
         <p translate>Some of the servers in this system have an outdated software version and can't be merged.</p>
@@ -16,10 +23,9 @@
     </div>
 </form>
 
-<form *ngIf="machine.currentState === 'connectAnotherSystemToCloud'">
+<form *ngIf="machine.currentState === 'failedToFindAnySystem'">
     <div class="modal-body">
-        <p>{{LANG.dialogs.merge.ownerCanMergeText()}}.</p>
-        <p [innerHTML]="'dialogs.merge.connectAnotherSystemToCloud' | translate"></p>
+        <p>{{LANG.dialogs.merge.failedToFindAnySystem()}}</p>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>

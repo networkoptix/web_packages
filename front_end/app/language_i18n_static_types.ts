@@ -406,7 +406,8 @@ export interface DialogsMerge {
     cloud:                              any;
     commonText:                         any;
     connectToCloud:                     any;
-    connectAnotherSystemToCloud:        any;
+    failedToFindAnySystemHeader:        any;
+    failedToFindAnySystem:              any;
     differentOwners:                    any;
     duplicateServers:                   any;
     enterSystemAddressTitle:            any;
@@ -1733,7 +1734,8 @@ const typeMap: any = {
         { json: "cloud", js: "cloud", typ: "any" },
         { json: "commonText", js: "commonText", typ: "any" },
         { json: "connectToCloud", js: "connectToCloud", typ: "any" },
-        { json: "connectAnotherSystemToCloud", js: "connectAnotherSystemToCloud", typ: "any" },
+        { json: "failedToFindAnySystemHeader", js: "failedToFindAnySystemHeader", typ: "any" },
+        { json: "failedToFindAnySystem", js: "failedToFindAnySystem", typ: "any" },
         { json: "differentOwners", js: "differentOwners", typ: "any" },
         { json: "duplicateServers", js: "duplicateServers", typ: "any" },
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },
