@@ -133,7 +133,7 @@ export class MergeModalContent {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
             await this.system.serverManager.getModuleInfo().toPromise();
-            await this.getPeerSystems();
+            environment.isLocal && await this.getPeerSystems();
             this.account = await this.user.get();
             await Promise.all(
                 this.systems.map(async system => {
@@ -161,6 +161,7 @@ export class MergeModalContent {
                     }
                 })
             );
+
             if (this.systems.length === 0 && this.peerSystems.length === 0) {
                 if (environment.isLocal) {
                     this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() };
@@ -173,15 +174,15 @@ export class MergeModalContent {
                 if (this.systems.length) {
                     this.processedSystems.push(
                         ...this.makeSelectorList(this.systems),
-                        { name: 'horizontal' }
-                    );
-                }
-                if (this.peerSystems.length) {
-                    this.processedSystems.push(
-                        ...this.makeSelectorList(this.peerSystems)
                     );
                 }
                 if (environment.isLocal) {
+                    if (this.peerSystems.length) {
+                        this.processedSystems.push(
+                            { name: 'horizontal' },
+                            ...this.makeSelectorList(this.peerSystems),
+                        );
+                    }
                     this.processedSystems.push(
                         { name: 'horizontal' },
                         { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem?.() }
