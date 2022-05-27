@@ -10,6 +10,9 @@
     "Terms": "이용 약관",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "서버",
         "Cameras": "카메라",

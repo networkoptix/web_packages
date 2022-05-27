@@ -10,6 +10,9 @@
     "Terms": "Conditions",
     "Developers Console": "Console développeur",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Serveurs",
         "Cameras": "Caméras",

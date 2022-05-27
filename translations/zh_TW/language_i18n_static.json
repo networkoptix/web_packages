@@ -10,6 +10,9 @@
     "Terms": "條款",
     "Developers Console": "開發者工具",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "伺服器",
         "Cameras": "攝影機",

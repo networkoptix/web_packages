@@ -10,6 +10,9 @@
     "Terms": "Vilkår",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Servere",
         "Cameras": "Cameras",

@@ -10,6 +10,9 @@
     "Terms": "Warunki",
     "Developers Console": "Konsola deweloperska",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Serwery",
         "Cameras": "Kamery",

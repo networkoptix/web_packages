@@ -8,8 +8,11 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
-    "Developers Console": "Ontwikkelaars Console",
+    "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Servers",
         "Cameras": "Camera's",
