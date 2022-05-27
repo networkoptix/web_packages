@@ -27,7 +27,9 @@ Force Tags        system    cameras
     ...    ${ROTATION DROPDOWN}
     ...    ${ENABLE AUDIO CHECKBOX}
     ...    ${EDIT CREDENTIALS BUTTON}
-    ...    ${RECORDING CHECK BOX}
+    IF    '${IMAGE}' != '${IMAGE 5.0}'
+        Wait Until Element Is Visible     ${RECORDING CHECK BOX}
+    END
     Log Out
 
     # Not currentlty being tested
@@ -64,7 +66,7 @@ Force Tags        system    cameras
 3. Camera settings is not available by direct link to any viewers
     [Tags]    C76255
     [Setup]    Log in to user and system    ${system}[cloud users][viewer]    ${system}[cloud id]
-    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    id
+    ${camera id}    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    id
     Go to    ${ENV}/systems/${system}[cloud id]/cameras/${camera id}
     Wait Until Elements Are Visible With Retry   ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Element should not be visible    ${CAMERAS LINK}
@@ -134,6 +136,9 @@ Force Tags        system    cameras
 
 7. Warning dialog appears when changes are made on navigating away and works correctly
     [Tags]    C76416
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Log    Step 1
     Verify on Cameras Page
     Select Camera By Name    good cam
@@ -156,7 +161,7 @@ Force Tags        system    cameras
     ...    ${APPLY CHANGES CLOSE BUTTON}
     ...    ${APPLY CHANGES QUESTION}  
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     Log    Step 4
     Click Link    ${SERVERS LINK}
@@ -172,7 +177,7 @@ Force Tags        system    cameras
     Go To Cameras
     Verify on Cameras Page
     Select Camera By Name    good cam
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     Log    Step 5
     Toggle Recording
@@ -185,7 +190,7 @@ Force Tags        system    cameras
     ...    ${APPLY CHANGES QUESTION}  
     Click Button    ${CANCEL CHANGES BUTTON}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     Log    Step 6
     Click Link    ${SERVERS LINK}
@@ -197,7 +202,7 @@ Force Tags        system    cameras
     ...    ${APPLY CHANGES QUESTION}  
     Click Button    ${APPLY CHANGES BUTTON}  
     sleep    5
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${True}
     Log    Step 7
     Go to System Administration
@@ -208,7 +213,7 @@ Force Tags        system    cameras
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    http://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
+    ${status}=   Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    scheduleEnabled
     Should Be Equal    ${status}    ${False}
     
 8. Rename Camera
@@ -260,7 +265,11 @@ Force Tags        system    cameras
     
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam name changed 3    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
+    IF    '${IMAGE}' != '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    name    good cam
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
+    END
 
 9. Name change in client changes in cloud
     [Tags]    C76261
@@ -268,11 +277,19 @@ Force Tags        system    cameras
     Select Camera by Name    good cam
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    api name
+    IF    '${IMAGE}' == '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    name    api name    ${system camera auth1}
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    api name    ${system camera auth1}
+    END
     Reload Page
     Wait Until Element Is Visible    ${EDITABLE TITLE}
     Element Text Should Be  ${EDITABLE TITLE}   api name
-    Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam
+    IF    '${IMAGE}' == '${IMAGE 4.2}'
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    name    good cam    ${system camera auth1}
+    ELSE
+        Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    cameraName    good cam    ${system camera auth1}
+    END
 
 10. View button
     [Tags]    C76262     
@@ -364,10 +381,18 @@ Force Tags        system    cameras
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${cams}=   Get Cameras    ${auth}    https://${QA BURBANK IP}:${system}[port]
-    FOR    ${camera}  IN  @{cams}
-        ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
-        Exit For Loop If    '''${audio enabled}'''=='''True'''
+    IF    '${IMAGE}' != '${IMAGE 4.2}'
+        FOR    ${camera}  IN  @{cams}
+            ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['options']['isAudioEnabled']}
+            Exit For Loop If    '''${audio enabled}'''=='''True'''
+        END
+    ELSE
+        FOR    ${camera}  IN  @{cams}
+            ${audio enabled}=    Set Variable If    '''${camera['name']}'''=='''good cam'''    ${camera['audioEnabled']}
+            Exit For Loop If    '''${audio enabled}'''=='''True'''
+        END
     END
+
     Should Be True    ${audio enabled}
     Audio Enabled Should Be    True
     Reload Page
@@ -432,7 +457,10 @@ Force Tags        system    cameras
     Element Should Contain    ${ROTATION DROPDOWN}    90˚
 
 19. Recording toggle shows correct options
-    [Tags]    C76401    
+    [Tags]    C76401
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera by Name    offline cam
     Verify on Cameras Page
@@ -467,6 +495,9 @@ Force Tags        system    cameras
 
 20. Recording Status
     [Tags]    C76391    deb
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     [Setup]    Camera Test Setup    user=${system2}[owner]    system=${system2}[cloud id] 
     Select Camera by Name    no license cam
     Verify on Cameras Page
@@ -495,6 +526,9 @@ Force Tags        system    cameras
     
 21. Record Always
     [Tags]    C76408
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
@@ -519,6 +553,9 @@ Force Tags        system    cameras
 
 22. Record Motion
     [Tags]
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
@@ -547,6 +584,9 @@ Force Tags        system    cameras
 
 23. Record Motion + Low Quality
     [Tags]    C76408
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page    
     Select Camera By Name    good cam
     Toggle Recording
@@ -568,6 +608,9 @@ Force Tags        system    cameras
     
 24. Check recording triple state
     [Tags]
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     #[Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     ${data} =    Evaluate    json.loads('''${TRIPLE STATE CAM JSON 1}''')
     Set All Camera Attributes    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
@@ -590,6 +633,9 @@ Force Tags        system    cameras
 
 25. Recording Mode functionality (with recording schedule set)
     [Tags]    C78982
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     # [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     # ${camera id}=    Get Camera Attribute By Camera Name    ${system}[local auth]    https://${QA BURBANK IP}:${system}[port]    good cam    id
     ${data} =    Evaluate    json.loads('''${TRIPLE STATE CAM JSON 1}''')
@@ -623,6 +669,9 @@ Force Tags        system    cameras
 
 26. Disabled Motion With Recording
     [Tags]    C78983
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${camera id}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    good cam    id
     Set Camera Attribute    https://${QA BURBANK IP}:${system}[port]    ${auth}    ${camera id}    motionType    8
@@ -660,6 +709,9 @@ Force Tags        system    cameras
     
 27. Change FPS
     [Tags]
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     #Temp removed for uggins
@@ -708,6 +760,9 @@ Force Tags        system    cameras
 29. Change Quality
     [Tags]    C76410
     #Skip    No no audio cam available
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam    #no audio cam
     Toggle Recording
@@ -767,6 +822,9 @@ Force Tags        system    cameras
 
 31. Enable/disable motion detection with recording on
     [Tags]    C76398
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    good cam
     Toggle Recording
@@ -822,6 +880,9 @@ Force Tags        system    cameras
 
 33. Motion sensitivity block for cameras with different statuses
     [Tags]    C76418
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     Verify on Cameras Page
     Select Camera By Name    offline cam
     Verify on Cameras Page
@@ -841,6 +902,9 @@ Force Tags        system    cameras
 
 34. Recording Quality dropdown menu functionality for camera with schedule
     [Tags]    C76417
+    IF    '${IMAGE}' == '${IMAGE 5.0}'
+        Skip    On 5.0 recording settings disabled, the IF statment can be removed for 5.1 version when recording should be enabled again
+    END
     # [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     ${data} =    Evaluate    json.loads('''${TRIPLE STATE CAM JSON 1}''')
     Set All Camera Attributes    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${data}
