@@ -11,7 +11,7 @@
     "Developers Console": "Entwickler-Konsole",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut."
     },
     "alarmTypes": {
         "Servers": "Server",
