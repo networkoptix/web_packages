@@ -53,5 +53,9 @@
   "47853": {
     "name": "django-oauth-toolkit",
     "note": "Django-oauth-toolkit 2.0.0 removes support for insecure 'urn:ietf:wg:oauth:2.0:oob' and 'urn:ietf:wg:oauth:2.0:oob:auto' which are replaced by RFC 8252 \"OAuth 2.0 for Native Apps\" BCP. https://github.com/jazzband/django-oauth-toolkit/pull/1124"
+  },
+  "48542": {
+    "name": "pyjwt",
+    "note": "| PyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify 'jwt.algorithms.get_default_algorithms()' to get support for all algorithms, or specify a single algorithm. The issue is not that big as 'algorithms=jwt.algorithms.get_default_algorithms()' has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding. Conflicts with apns2 0.7.2 requires PyJWT<2.0.0,>=1.4.0"
   }
 }
