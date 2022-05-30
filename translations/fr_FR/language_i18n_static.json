@@ -1,7 +1,7 @@
 {
     "language": "fr_FR",
     "About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Tous les serveurs",
     "Download %VMS_NAME%": "Télécharger %VMS_NAME%",
     "For developers": "Pour développeurs",
     "Integrations (β)": "Intégrations (β)",
@@ -11,29 +11,29 @@
     "Developers Console": "Console développeur",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Assurez-vous que le serveur spécifié est en ligne et réessayez."
     },
     "alarmTypes": {
         "Servers": "Serveurs",
         "Cameras": "Caméras",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Emplacements de stockage",
+        "Network Interfaces": "Interfaces réseau"
     },
     "alarmLevels": {
         "offline": "Hors ligne",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Erreurs",
+        "warning": "Avertissements"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Toutes les alertes",
+        "warning": "Seulement les alertes",
+        "error": "Seulement les erreurs"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Tous les types de périphériques",
         "servers": "Serveur",
         "cameras": "Caméras",
-        "storages": "Storages",
+        "storages": "Stockages",
         "networkInterfaces": "Interface"
     },
     "accessRoles": {
@@ -679,7 +679,7 @@
     "ipvdFeedback": {
         "request": "Veuillez <span id=\"request\">soumettre une demande</span> pour des questions/préoccupations supplémentaires concernant les appareils pris en charge."
     },
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
+    "alertsCount": "{count, plural, =0{# alerte} one{# alerte} other{# alertes}}",
     "ipvdTopXByVolume": "Top {value} par volume :",
     "ipvdDisclaimer": "Cette liste est limitée aux périphériques trouvés sur {vmsName} où les utilisateurs ont autorisé la notification automatique des spécifications de l'appareil à {companyName}. Aucune information personnelle n'est collectée et chaque utilisateur reste complètement anonyme.",
     "menu": {
@@ -690,18 +690,18 @@
             "licenses": "Licences",
             "users": "Utilisateurs",
             "servers": "Serveurs",
-            "alerts": "Alerts",
+            "alerts": "Alertes",
             "systems": "Système",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
-            "logs": "Logs"
+            "storages": "Emplacements de stockage",
+            "networkInterfaces": "Interfaces réseau",
+            "graphs": "Graphiques",
+            "logs": "Journaux"
         }
     },
     "tableHeaders": {
         "type": "Type",
         "server": "Serveur",
-        "alert": "Alert"
+        "alert": "Alerte"
     },
     "pageTitles": {
         "about": "À Propos",
@@ -969,51 +969,51 @@
     "healthMonitor": {
         "groups": {
             "info": "Info",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Disponibilité",
+            "load": "Charger",
+            "activity": "Activité"
         },
         "keys": {
-            "name": "Name",
+            "name": "Nom",
             "servers": "Serveurs",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "cameras": "Canaux de la caméra",
+            "storages": "Emplacements de stockage",
             "users": "Utilisateurs",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Version du système",
+            "cloudSystemId": "ID du système Cloud",
             "status": "État",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
-            "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "offlineEvents": "Évènements : Serveur hors-ligne (24h)",
+            "uptimeS": "Temps d'activité",
+            "cpuUsageP": "% CPU",
+            "serverCpuUsageP": "CPU (Serveur VMS) %",
+            "ramUsageB": "Utilisation de RAM",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
-            "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "serverRamUsageB": "RAM (Serveur VMS)",
+            "serverRamUsageP": "RAM (Serveur VMS) %",
+            "threads": "Threads du serveur",
+            "decodingThreads": "Threads de décodage",
+            "decodingSpeed3s": "Vitesse de décodage",
+            "encodingThreads": "Encodage des threads",
+            "encodingSpeed3s": "Vitesse d'encodage",
+            "primaryStreams": "Flux primaires sortants",
+            "secondaryStreams": "Flux secondaires sortants",
+            "incomingConnections": "Connexions entrantes",
+            "outgoingConnections": "Connexions sortantes",
+            "logLevel": "Niveau des logs",
+            "publicIp": "IP publique",
             "os": "OS",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "Heure de l'OS",
+            "vmsTime": "Heure du VMS",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Cœurs",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "guidConflict": "Conflit GUID du serveur",
+            "vmsTimeChanged24h": "Événements : Changement de temps (24h)",
             "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
+            "actionsTriggered1m": "Activations/s des règles",
             "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "thumbnails1m": "Vignette",
+            "activePlugins": "Liste des plugins actifs"
         }
     },
     "headerLabels": {
@@ -1225,16 +1225,16 @@
             "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Paramètres - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Vue - webadmin - %VMS_NAME%"
         },
         "/health": {
             "title": "Information - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "Surveillance du serveur - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

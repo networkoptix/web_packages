@@ -377,7 +377,7 @@
     "SERVER PORT IS REQUIRED TEXT": "Server port is required",
     "PORT TOO LOW TEXT": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
     "SERVER RESTARTED TEXT": "Сервер успешно перезапущен.",
-    "HOURS TEXT": "час",
+    "HOURS TEXT": "часа",
     "MINUTES TEXT": "минута",
     "DAYS TEXT": "days",
     "NO IMAGE TEXT": "НЕТ ИЗОБРАЖЕНИЯ",
