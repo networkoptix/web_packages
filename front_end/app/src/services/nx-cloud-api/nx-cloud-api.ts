@@ -23,6 +23,10 @@ import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
 
 const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    // CLOUD-9104: Firefox does not support service workers in private mode.
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
     const originalMethod = descriptor.value;
     descriptor.value = function (...args) {
         return of('').pipe(
@@ -48,6 +52,10 @@ const staffSWBypass = (target: Object, propertKey: string, descriptor: PropertyD
 };
 
 const swClear = (cacheName, url, toPromise) => (target: Object, propertKey: string, descriptor: PropertyDescriptor) => {
+    // CLOUD-9104: Firefox does not support service workers in private mode.
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
     const originalMethod = descriptor.value;
     descriptor.value = function (...args) {
         const returnPromise = this.nxSwCacheService.clearCache(cacheName, this.CONFIG.apiBase + url).then(_ => {

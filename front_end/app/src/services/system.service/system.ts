@@ -271,9 +271,12 @@ export class NxSystem extends System {
         });
     }
 
+    /**
+     * @deprecated Should be replaced with direct reference to userManager
+     */
     canViewInfo() {
         // system's capability check was removed as health info page handles it by showing "outdated version" placeholder
-        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return this.userManager.permissions.isAdmin;
     }
 
     canUserViewCloudStorage() {
