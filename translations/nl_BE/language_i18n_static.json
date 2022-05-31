@@ -11,7 +11,7 @@
     "Developers Console": "Developer Tools",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Zorg ervoor dat de opgegeven server online is en probeer het opnieuw."
     },
     "alarmTypes": {
         "Servers": "Servers",
