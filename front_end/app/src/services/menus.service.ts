@@ -191,6 +191,15 @@ export class NxMenusService {
             }
         }
 
+        if (node.name === 'Support') {
+            const supportUrl = node.url;
+            if (supportUrl.includes('@')) {
+                node.url = `mailto:${supportUrl}`;
+            } else if ((/\d{3}-\d{3}-\d{4}/g).test(supportUrl)) {
+                node.url = `tel:${supportUrl.replace(/ \(Option (\d*)\)/, ';$1')}`;
+            }
+        }
+
         const nodes = node.nodes?.map(this.translateNode(lang, [...breadcrumbs, node])) || [];
         return { ...node, display_name, name, nodes, breadcrumbs };
     }
