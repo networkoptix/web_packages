@@ -1,8 +1,12 @@
 *** Variables ***
-${email}       ${EMAIL OWNER}
-${password}    ${BASE PASSWORD}
-@{auth}        ${email}    ${password}
-${url}         ${ENV}
+${email}                                     ${EMAIL OWNER}
+${password}                                  ${BASE PASSWORD}
+@{auth}                                      ${email}    ${password}
+${url}                                       ${ENV}
+@{system camera auth1}=                      admin    QAbur777$
+@{system camera auth2}=                      admin    wrongPass
+@{system camera auth3}=                      admin    admin
+@{system camera auth4}=                      admin    QAbur777$
 
 ${CAMERAS LINK}                              //nx-menu//a[@id="cameras"]
 ${EDITABLE TITLE}                            //nx-text-editable

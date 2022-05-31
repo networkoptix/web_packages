@@ -329,9 +329,36 @@ class ServerAPI5(ServerAPI):
 
     @keyword
     def activate_license(self, auth, serverUrl, license):
-        self._login(serverUrl, auth[0], auth[1])
-        time.sleep(1)
-        body = {"licenseKey": str(license)}
-        r = requests.post(f'{serverUrl}/api/activateLicense', json=body, auth=self._auth, verify=False)
-        assert r.status_code == 200, f"Endpoint /api/activateLicense status code is {r.status_code}"
-        return r.json()
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            body = {"licenseKey": str(license)}
+            r = s.post(f'{serverUrl}/api/activateLicense', json=body, verify=False)
+            assert r.status_code == 200, f"Endpoint /api/activateLicense status code is {r.status_code}"
+            return r.json()
+
+
+    @keyword
+    def set_all_camera_add_params(self, serverUrl, auth, cameraJson):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            r = s.post(f'{serverUrl}/ec2/setResourceParams', json=cameraJson, verify=False)
+            return r.json()
+    
+    @keyword
+    def set_all_camera_attributes(self, serverUrl, auth, cameraJson):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            r = s.post(f'{serverUrl}/ec2/saveCameraUserAttributes',json=cameraJson, verify=False)
+            return r.json()
