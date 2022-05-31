@@ -142,8 +142,8 @@
         "newPassConfirmText": "Hasło zostało ustawione!",
         "newPassInvalidCode": "Nie można zapisać hasła: kod potwierdzający został już użyty lub jest nieprawidłowy",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "confirmHeader": "System podłączono do %CLOUD_NAME%!",
+        "loginError": "Nie można połączyć się z %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
         "connectErrorAdditional": "Spróbuj ponownie później.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
@@ -355,7 +355,7 @@
             "cloud": "Chmura",
             "commonText": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectAnotherSystemToCloud": "System, który chcesz połączyć z tym do <strong>%CLOUD_NAME%</strong> podłącz używając tego samego konta, lub połącz lokalnie używając <strong>%VMS_NAME%</strong> Klienta.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",
@@ -455,8 +455,8 @@
             "loggedFromOtherAccount": "Zostaniesz zalogowany przy użyciu innego konta",
             "noClientDetected": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
             "removeUser": "Remove user",
-            "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
-            "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
+            "serversDetach": "Odłączyć serwer&nbsp;<strong>{ title }</strong>&nbsp;od obecnego systemu?",
+            "serversReset": "Zresetować serwer&nbsp;<strong>{ title }</strong>&nbsp;do ustawień domyślnych?",
             "serversRestart": "Zrestartować serwer &nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
@@ -585,7 +585,7 @@
         "cantUnshareWithMeSystemPrefix": "Nie można usunąć systemu",
         "emailNotFound": "Konto nie istnieje.",
         "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, the system in the link does not exist, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "Nie można uzyskać dostępu do systemu przez ten link. Może się to zdarzyć, gdy system zostanie odłączony od %CLOUD_NAME%, dostęp do tego systemu został odwołany lub jeśli jesteś zalogowany na nieprawidłowe konto.",
         "failedToAccessCamera": "Nie można uzyskać dostępu do kamer poprzez ten link.",
         "forbidden": "Nie masz uprawnień do wykonania tej operacji",
         "lostConnection": "Utracono połączenie z {systemName}",
@@ -791,7 +791,7 @@
             "publishedRibbon": "Ta strona jest wersją dostępną publicznie."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
+            "notification": "Dostępna jest nowa wersja %CLOUD_NAME%",
             "installButton": "Zainstaluj teraz"
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
@@ -906,7 +906,7 @@
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "transferNotification": "<strong>{ ownerName }</strong> chce przenieść własność tego systemu na Ciebie"
     },
     "systemStatuses": {
         "activated": "aktywny",
@@ -955,7 +955,7 @@
             "activity": "Aktywność"
         },
         "keys": {
-            "name": "Name",
+            "name": "Nazwa",
             "servers": "Serwery",
             "cameras": "Kanały kamery",
             "storages": "Lokalizacje archiwum",
@@ -964,7 +964,7 @@
             "cloudSystemId": "ID systemu w chmurze",
             "status": "Status",
             "offlineEvents": "Zdarzenia: Serwer offline (24h)",
-            "uptimeS": "Uptime",
+            "uptimeS": "Czas pracy",
             "cpuUsageP": "CPU %",
             "serverCpuUsageP": "CPU (serwer VMS) %",
             "ramUsageB": "Użycie RAM",
@@ -978,9 +978,9 @@
             "encodingSpeed3s": "Prędkość kodowania",
             "primaryStreams": "Wychodzące strumienie podstawowe",
             "secondaryStreams": "Wychodzące strumienie dodatkowe",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
+            "incomingConnections": "Połączenie przychodzące",
+            "outgoingConnections": "Połączenia wychodzące",
+            "logLevel": "Poziom logowania",
             "publicIp": "Publiczny adres IP",
             "os": "OS",
             "osTime": "Czas systemu operacyjnego",
@@ -988,12 +988,12 @@
             "cpu": "CPU",
             "cpuCores": "Rdzenie",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
+            "guidConflict": "Konflikt GUID serwera",
+            "vmsTimeChanged24h": "Zdarzenia: Zmiana czasu (24 godz.)",
+            "transactionsPerSecond1m": "Transakcje",
+            "actionsTriggered1m": "Aktywacje reguł",
+            "apiCalls1m": "Wywołania API",
+            "thumbnails1m": "Miniatury",
             "activePlugins": "Lista aktywnych wtyczek"
         }
     },
@@ -1206,16 +1206,16 @@
             "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Ustawienia - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Widok - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Informacje - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "Monitorowanie serwera - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {
