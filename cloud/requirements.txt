@@ -77,7 +77,11 @@ kombu==4.6.11
 libsass==0.20.1
 lxml==4.6.5
 MarkupSafe==1.1.1
-meilisearch==0.18.3
+# IMPORTANT: meilisearch doesn't use semantic versioning while it's pre version 1
+# If the minor version changes there could be breaking changes
+# Before bumping minor version check release notes to confirm that the version is compatible with the image being used for the meilisearch service
+# Example, 0.16 is compatible with image 0.24, 0.17 with 0.25, and 0.18 with 0.26
+meilisearch==0.17.0
 mistletoe==0.7.2
 mock==4.0.3
 model-bakery==1.3.1

@@ -24,7 +24,6 @@ interface IParams<Value = any> {
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
-    readonly restVersion = '4_3';
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     private activeSubscription: Subscription;
@@ -206,7 +205,7 @@ export class NxSystemsService implements OnDestroy {
             (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
-            system.useRest = Object.keys(system.capabilities).some((capability) => capability.includes(this.restVersion));
+            system.useRest = parseInt(system.version[0] || '0') > 4;
 
             this.checkMerge(system);
         });
@@ -254,4 +253,5 @@ export interface NxSystemWithUserInfo extends NxSystem {
     state: string;
     stateOfHealth: string;
     system2faEnabled: boolean;
+    version: string;
 }

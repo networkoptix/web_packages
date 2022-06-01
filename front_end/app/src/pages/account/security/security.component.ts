@@ -217,7 +217,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     switchToggle(targetState: boolean) {
         this.account2faEnabled = targetState;
         this.totpExistsForAccount = targetState;
-
+        // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
             this.dialogs
                 .wizard2FA()
@@ -225,7 +225,9 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     const newState = (action === 'enabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
-                    this.updateVerificationOriginal(newState);
+                    if (action !== 'canceled') {
+                        this.updateVerificationOriginal(newState);
+                    }
                     this.accountService.get(true).catch(_ => {});
                     this.applyService.reset();
                     setTimeout(() => {
@@ -239,7 +241,9 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     const newState = !(action === 'disabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
-                    this.updateVerificationOriginal(newState);
+                    if (action !== 'canceled') {
+                        this.updateVerificationOriginal(newState);
+                    }
                     this.accountService.get(true).catch(_ => {});
                     this.applyService.reset();
                 });

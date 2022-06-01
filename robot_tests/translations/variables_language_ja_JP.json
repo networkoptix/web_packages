@@ -24,7 +24,7 @@
     "DETAILED INFO TEXT": "詳細情報",
     "DISCONNECT MODAL WARNING TEXT": "このシステムにアクセスできなくなります。",
     "SUCCESSFULLY DISCONNECTED": "システムは %PRODUCT_NAME%から正常に切断されました。",
-    "ALREADY ACTIVATED TEXT": "アカウントは既にアクティブ済か確認コードが正しくありません",
+    "ALREADY ACTIVATED TEXT": "アカウントがすでに有効化されているか、確認コードが正しくありません",
     "AUTOTESTS OFFLINE TEXT": "オフライン",
     "NEW PERMISSIONS SAVED": "新しい権限の保存",
     "PERMISSIONS WERE REMOVED FROM": "%email% から権限が削除されました",
