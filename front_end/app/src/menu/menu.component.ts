@@ -202,8 +202,18 @@ export class NxMenuComponent implements OnInit, OnChanges {
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.cleanMenuContent(this.menuService.filterItemsBy(this.menuModel));
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
+
             if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
+                const scroll = this.scrollArea?.nativeElement.scrollTop || 0;
                 this.menuContent = filtered;
+                setTimeout(() => {
+                    if (
+                        this.scrollArea &&
+                        this.scrollArea.nativeElement.scrollHeight > this.scrollArea.nativeElement.clientHeight
+                    ) {
+                        this.scrollArea.nativeElement.scrollTop = scroll;
+                    }
+                });
             }
 
             if (this.selectedLevel1 !== changes.content.currentValue.selectedSection) {
