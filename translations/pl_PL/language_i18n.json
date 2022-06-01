@@ -220,6 +220,7 @@
     "Failed to disconnect system from %CLOUD_NAME%.": "Nie można odłączyć systemu od %CLOUD_NAME%.",
     "Failed to merge {primarySystem} and {secondarySystem}.": "Nie udało się złączyć systemów {primarySystem} i {secondarySystem}.",
     "Failed to reset server.": "Nie udało się zresetować serwera.",
+    "Failed to restart server.": "Nie udało się zrestarować serwera.",
     "Failed to the check current system's password.": "Nie udało się sprawdzić aktualnego hasła systemowego.",
     "Fetching Results...": "Pobieranie wyników...",
     "Fill in all required fields": "Wypełnij wszystkie wymagane pola",
