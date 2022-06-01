@@ -192,7 +192,7 @@ export class MergeModalContent {
                 if (environment.isLocal) {
                     if (this.peerSystems.length) {
                         this.processedSystems.push(
-                            { name: 'horizontal' },
+                            { name: 'horizontal', value: undefined },
                             ...this.makeSelectorList(this.peerSystems),
                         );
                     }
