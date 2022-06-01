@@ -213,4 +213,5 @@ export interface NxSystemWithUserInfo extends NxSystem {
     state: string;
     stateOfHealth: string;
     system2faEnabled: boolean;
+    version: string;
 }

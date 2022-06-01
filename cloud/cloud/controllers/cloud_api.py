@@ -34,7 +34,7 @@ INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
 
 
 # Todo: Once cloud_db supports basic and digest switch to true.
-def basic_digest_handler(use_basic_auth=False):
+def basic_digest_handler(use_basic_auth=True):
     """
         Tracks if basic or digest auth should be used.
         If the request fails the decorator will try the other auth type.
