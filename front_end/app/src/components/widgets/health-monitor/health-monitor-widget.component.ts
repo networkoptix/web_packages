@@ -78,7 +78,10 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
     static systemUpdater$ = NxHealthMonitorWidgetComponent.updateSystems$.pipe(
         debounceTime(100),
         switchMap(_ => NxHealthMonitorWidgetComponent.cloudApi.systems()),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     static manifestLookup = {};
@@ -106,7 +109,10 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
                 this.loading = 0;
             }, delay);
         }),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     alarmsFilteredByResource$ = this.alarms$.pipe(map(alarms => {

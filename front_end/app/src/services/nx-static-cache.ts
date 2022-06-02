@@ -25,7 +25,13 @@ export class NxStaticCacheService {
 
         this.cache[name] = this.http.get(
             `/${this.CONFIG.viewsDir}static/${name}.html`, { responseType: 'text' }
-        ).pipe(shareReplay(1));
+        ).pipe(
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            })
+        );
+
         return this.cache[name];
     }
 }

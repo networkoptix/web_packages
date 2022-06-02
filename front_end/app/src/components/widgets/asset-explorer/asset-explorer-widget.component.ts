@@ -86,7 +86,10 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
                     data
                 };
             }),
-            shareReplay()
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            })
         );
     }
 }

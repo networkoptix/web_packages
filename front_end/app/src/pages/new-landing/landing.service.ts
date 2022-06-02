@@ -34,7 +34,10 @@ export class NxLandingService {
         this.screenSize$ = scrollMechanics.windowSizeSubject.pipe(
             debounceTime(40),
             untilDestroyed(this),
-            shareReplay(1)
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            })
         );
 
         this.scrollPosition$ = scrollMechanics.windowScrollSubject.pipe(
@@ -44,7 +47,10 @@ export class NxLandingService {
             map(value => value < this.scrollBreakpoints.showGraphics
                 ? value
                 : this.scrollBreakpoints.showGraphics),
-            shareReplay(1)
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            })
         );
 
         this.backgroundGraphicFinishedLoading$

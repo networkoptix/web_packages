@@ -55,7 +55,10 @@ export class NxLiveViewWidgetComponent extends FirstPartyWidget {
     static systemUpdater$ = NxLiveViewWidgetComponent.updateSystems$.pipe(
         debounceTime(100),
         switchMap(_ => NxLiveViewWidgetComponent.cloudApi.systems()),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     CUSTOM_LABELS = ['Select System', 'Select Camera', 'Auto Update'];

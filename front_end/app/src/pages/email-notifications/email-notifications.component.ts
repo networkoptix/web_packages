@@ -230,13 +230,19 @@ export class EmailNotificationsComponent {
                     this.updateSystem(systems.find(({ state }) => state === 'online') || systems[0]);
                 }
             }),
-            shareReplay()
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            })
         );
 
         this.selectedSystem$.pipe(
             filter(systemId => !!systemId),
             switchMap(({ value: systemId }) => this.cloudApi.users(systemId)),
-            shareReplay(),
+            shareReplay({
+                bufferSize: 1,
+                refCount: true
+            }),
             map(this.usersToCheckboxes),
             untilDestroyed(this)
         ).subscribe(this.users$);

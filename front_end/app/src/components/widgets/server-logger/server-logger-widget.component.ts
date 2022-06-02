@@ -45,7 +45,10 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget {
     static systemUpdater$ = NxServerLoggerWidgetComponent.updateSystems$.pipe(
         debounceTime(100),
         switchMap(_ => NxServerLoggerWidgetComponent.cloudApi.systems()),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     selectedSystem$ = new BehaviorSubject<SystemDropdownItem>(null);
@@ -67,7 +70,10 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget {
             this.updateSystem(selectedSystem);
             return systems;
         }),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     serversDropdownItems$ = this.selectedSystem$.pipe(
@@ -91,7 +97,10 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget {
             this.updateServer(selectedServer);
             return servers;
         }),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     system$ = defer(() => this.getSystem(this.card.config.selectedSystem));

@@ -59,7 +59,10 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
     static systemUpdater$ = NxBookmarksWidgetComponent.updateSystems$.pipe(
         debounceTime(100),
         switchMap(_ => NxBookmarksWidgetComponent.cloudApi.systems()),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     updater$ = new Subject();
@@ -101,7 +104,10 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
             this.system ||= this.systemService.createSystem(this.accountService.email, selectedSystem.value);
             this.updateSystem(selectedSystem);
         }),
-        shareReplay()
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
     );
 
     toggleLoading(): void {

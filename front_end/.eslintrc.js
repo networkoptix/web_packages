@@ -119,13 +119,10 @@ module.exports = {
             plugins: ['nx', '@typescript-eslint', 'rxjs', 'ngrx'],
             extends: ['plugin:rxjs/recommended'],
             rules: {
-                'rxjs/no-async-subscribe': 'off', // TODO: re-factor
-                'rxjs/no-ignored-replay-buffer': 'off', // TODO: re-factor
-                'rxjs/no-ignored-takewhile-value': 'off', // TODO: re-factor
-                'rxjs/no-ignored-takewhile': 'off', // TODO: re-factor
-                'rxjs/no-sharereplay': 'off',  // TODO: re-factor
                 'rxjs/no-nested-subscribe': 'off', // TODO: re-factor
-                'rxjs/no-implicit-any-catch': 'off', // TODO: re-factor
+                'rxjs/no-async-subscribe': 'off', // not sure if this should be implemented - TT
+                'rxjs/no-ignored-takewhile-value': 'off', // not sure if this should be implemented (only one place) - TT
+                'rxjs/no-implicit-any-catch': 'off', // not sure if this should be implemented - TT
                 'rxjs/no-unbound-methods': 'off', // we'll not fix this
                 
                 'no-useless-constructor': 'off',
