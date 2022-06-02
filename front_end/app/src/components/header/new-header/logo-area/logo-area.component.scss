@@ -39,14 +39,18 @@
             .arrow-btn {
                 padding-top: 16px;
                 margin-top: -15px;
-                background-color: var(--dark7);
+                background-color: var(--header-profile-bg);
                 height: 58px;
                 width: 48px;
                 &:hover {
                     cursor: pointer;
+                    background-color: var(--header-arrow-hover);
+                }
+                &:active {
+                    background-color: var(--header-level-one-active-bg);
                 }
                 svg-icon .arrow {
-                    stroke: var(--light4) !important;
+                    stroke: var(--header-level-one-active-color) !important;
                 }
             }
         }

@@ -27,11 +27,15 @@
                 color: var(--light6);
                 &:hover {
                     cursor: pointer;
+                    border-bottom: 2px solid var( --header-level-two-hover-border-color);
                 }
                 padding-bottom: 16px;
                 &.active {
                     color: var(--light4);
                     border-bottom: 2px solid var(--brand_core);
+                }
+                &.disable {
+                    color: var(--header-item-disabled);
                 }
                 svg-icon svg{
                     margin-bottom: 2px;

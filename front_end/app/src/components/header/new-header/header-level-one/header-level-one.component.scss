@@ -14,9 +14,15 @@
         border-radius: 4px !important;
         text-transform: uppercase;
 
+        &:hover {
+            color: var(--header-level-one-hover-color);
+        }
         &.active {
             color: var(--header-level-one-active-color);
             background-color: var(--header-level-one-active-bg);
+        }
+        &.disabled {
+            color: var(--header-item-disabled);
         }
     }
 

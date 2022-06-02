@@ -168,11 +168,15 @@ html[data-theme="dark"] {
     --left-menu-disabled-item-addtitional-color : #445B67; //$dark14;
 
     // New header ************************
-    --header-level-one-active-bg     : #{$dark5};
-    --header-level-one-active-color  : #{$light4};
-    --header-level-two-bg            : #{$dark6};
-    --header-profile-icon            : #{$light13};
-    --header-profile-bg              : #{$dark7};
+    --header-level-one-active-bg          : #{$dark5};
+    --header-level-one-active-color       : #{$light4};
+    --header-level-one-hover-color        : #{$light10};
+    --header-level-two-bg                 : #{$dark6};
+    --header-profile-icon                 : #{$light13};
+    --header-profile-bg                   : #{$dark7};
+    --header-item-disabled                : #{$dark13};
+    --header-level-two-hover-border-color : #{$dark11};
+    --header-arrow-hover                  : #{$dark8};
 
 
     // View tab ********************************
