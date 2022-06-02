@@ -422,8 +422,6 @@ export class NxSystemAPI {
     }
 
     getApiDoc(type: APIDocType) {
-        // return this.get<JSON>('/static/api.json'); // current API
-        // mock response
         if (type === 'main') {
             return this.get<APIDoc>('/static/openapi_legacy.json').toPromise();
         }

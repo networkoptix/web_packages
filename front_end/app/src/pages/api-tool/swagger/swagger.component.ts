@@ -216,7 +216,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private authenticateRequest = (request): void => {
-        const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserverConnections[this.APIToolSystemService.currentServerId].generateHeaders();
+        const headers = this.APIToolSystemService.currentSystem.serverManager.mediaserver.generateHeaders();
         if (headers) {
             // 5.0 and up
             for (const key of headers.keys()) {

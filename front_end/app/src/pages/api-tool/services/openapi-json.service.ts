@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -106,6 +106,13 @@ export class NxOpenAPIJSONService {
         this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(api => {
             this.setReadonlyAPI(api);
         });
+
+        this.router.events.pipe(untilDestroyed(this), filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+            const urlWithoutQueryParams = event.url.split('?')[0];
+            if (this.activeNode && urlWithoutQueryParams !== this.activeNode.url) {
+                this.navigateToMenuNodeFromURL();
+            }
+        });
     }
 
     async handleNewServer(serverInfo: ServerInfo): Promise<void> {
@@ -121,7 +128,7 @@ export class NxOpenAPIJSONService {
         }
         addAPIInfoNodesToMenu(json, mainContent, !!markdown);
 
-        const { legacyAPI, deprecatedAPI } = await this.APIToolService.getLegacyAPIDocs(server.id);
+        const { legacyAPI, deprecatedAPI } = await this.APIToolService.getLegacyAPIDocs();
 
         if (legacyAPI) { // Legacy API is included in the main API menu with a seperator
             prepareSwaggerAPIDoc(legacyAPI, 'legacy');

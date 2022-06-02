@@ -245,18 +245,18 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].checkForAnalyticsData();
     }
 
-    getApiDoc(serverId: string, type: APIDocType = 'main'): Promise<APIDoc> {
-        return this.mediaserverConnections[serverId].getApiDoc(type);
+    getApiDoc(type: APIDocType = 'main'): Promise<APIDoc> {
+        return this.mediaserver.getApiDoc(type);
     }
 
-    getApiChangelog(serverId: string): Promise<string> {
-        const connection = this.mediaserverConnections[serverId] as NxSystemRestAPI;
-        return connection.getApiChangelog();
+    getApiChangelog(): Promise<string> {
+        const mediaServer = this.mediaserver as NxSystemRestAPI;
+        return mediaServer.getApiChangelog();
     }
 
-    getApiPreamble(serverId: string): Promise<string> {
-        const connection = this.mediaserverConnections[serverId] as NxSystemRestAPI;
-        return connection.getApiPreamble();
+    getApiPreamble(): Promise<string> {
+        const mediaServer = this.mediaserver as NxSystemRestAPI;
+        return mediaServer.getApiPreamble();
     }
 
     getStorages(serverId: string, useCache: boolean = false, customTimeout: number = 8000) {
