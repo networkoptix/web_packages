@@ -11,7 +11,7 @@
     "Developers Console": "Konsola deweloperska",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Upewnij się, że określony serwer jest w trybie online i spróbuj ponownie."
     },
     "alarmTypes": {
         "Servers": "Serwery",
@@ -118,12 +118,12 @@
         "connectHeader": "Podłącz system do %CLOUD_NAME%",
         "expiredHeader": "Sesja wygasła",
         "loginSystemSubheader": "Z kontem %CLOUD_NAME%",
-        "connectSubheader": "To access it from anywhere and enable additional features",
+        "connectSubheader": "Aby uzyskać dostęp z dowolnego miejsca i włączyć dodatkowe funkcje",
         "expiredSubheader": "Zaloguj się ponownie",
         "connectAdditional": "To konto otrzyma poziom dostępu właściciela",
         "createText": "Utwórz konto",
         "setupText": "Skonfiguruj system bez chmury",
-        "asAccountSubheader": "As",
+        "asAccountSubheader": "Jako",
         "toAccountSubheader": "Do",
         "forAccountSubheader": "Dla {accountEmail}",
         "passwordDisconnect": "odłącz system od %CLOUD_NAME%",
@@ -138,13 +138,13 @@
         "activateHeader": "Aktywuj konto %CLOUD_NAME%",
         "createdText": "Konto zostało utworzone!",
         "activatedText": "Konto aktywowano!",
-        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
-        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "createdAdditional": "<p class=\"mb-2\">Wiadomość potwierdzająca z linkiem aktywacyjnym zostaje wysłana do {accountEmail}.</p><p>Aktywuj konto i wróć tutaj, aby zakończyć proces.</p>",
+        "activatedAdditional": "<p>Teraz możesz kontynuować logowanie do %CLOUD_NAME% tutaj lub gdzie indziej</p>",
         "passResetHeader": "Resetuj hasło",
         "newPassHeader": "Ustaw nowe hasło",
         "newPassConfirmText": "Hasło zostało ustawione!",
         "newPassInvalidCode": "Nie można zapisać hasła: kod potwierdzający został już użyty lub jest nieprawidłowy",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
+        "notSecureText": "Jeśli będziesz kontynuować, pozwolisz<br><span class='error-label'>{ redirectUrl }</span><br>na dostęp do swojego %CLOUD_NAME% konta.",
         "confirmHeader": "System podłączono do %CLOUD_NAME%!",
         "loginError": "Nie można połączyć się z %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
@@ -280,17 +280,17 @@
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
         "unlockToUpload": "Unlock dashboard to upload config from json",
-        "unlockToMove": "Unlock dashboard to move widgets"
+        "unlockToMove": "Odblokuj pulpit aby przenieść widżety"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "Twórz"
     },
     "dialogs": {
         "twoFa": {
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
             "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
             "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "nowEnabled": "Uwierzytelnianie dwuskładnikowe jest teraz <strong>włączone</strong> dla Twojego %CLOUD_NAME% konta!"
         },
         "addUser": {
             "alreadyExists": "Ten e-mail został już zarejestrowany w systemie %systemName%"
@@ -414,8 +414,8 @@
             "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów."
         },
         "message": {
-            "system2faEnabled": "Two-factor authentication will now be forced for this system.",
-            "system2faDisabled": "Two-factor authentication is not required for this system.",
+            "system2faEnabled": "Uwierzytelnianie dwuskładnikowe będzie teraz wymuszone w tym systemie.",
+            "system2faDisabled": "W przypadku tego systemu uwierzytelnianie dwuskładnikowe nie jest wymagane.",
             "storageSettingsSaved": "Zapisano ustawienia magazynu.",
             "storageSettingsNotSaved": "Nie można zapisać ustawień magazynu.",
             "settingsSaved": "Ustawienia zostały zapisane.",
@@ -442,8 +442,8 @@
             "twoFactor": {
                 "required": "Two-factor authentication is required.",
                 "configure": "You can configure it in your",
-                "accountLink": "account settings",
-                "codeRequired": "Code is required"
+                "accountLink": "ustawienia konta",
+                "codeRequired": "Kod jest wymagany"
             }
         },
         "removeSystem": {
@@ -453,8 +453,8 @@
         },
         "renewAuth": {
             "action": "Login",
-            "message": "Please log in again.",
-            "title": "Your session has expired"
+            "message": "Zaloguj się ponownie.",
+            "title": "Twoja sesja wygasła"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
@@ -919,8 +919,7 @@
             "network": "Sieć, dodana przez system operacyjny",
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
-        },
-        "transferNotification": "<strong>{ ownerName }</strong> chce przenieść własność tego systemu na Ciebie"
+        }
     },
     "systemStatuses": {
         "activated": "aktywny",
