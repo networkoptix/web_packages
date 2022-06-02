@@ -1022,7 +1022,7 @@
             "server": "サーバー",
             "hwid": "ハードウェアID",
             "status": "ステータス",
-            "expires": "期限切れ",
+            "expires": "有効期限",
             "deactivations": "残り解除回数",
             "online": "オンライン",
             "error": "エラー",
