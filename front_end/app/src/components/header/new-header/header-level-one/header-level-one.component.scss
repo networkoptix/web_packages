@@ -3,7 +3,8 @@
 
 .menu-level-one {
     display: flex;
-    margin-left: 12px;
+    background-color: var(--header-level-one-bg);
+    padding-left: 12px;
     height: 40px;
     .menu-item {
         height: 25px !important;

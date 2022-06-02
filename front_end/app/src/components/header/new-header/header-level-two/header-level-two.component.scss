@@ -2,7 +2,8 @@
 @use "../../../../../styles/theme_variables_common" as *;
 
 .menu-level-two {
-    display: flex;
+    position: relative;
+    display: inline-flex;
     height: 58px;
     background-color: var(--header-level-two-bg);
     @include typography.regular14nocolor;
@@ -10,14 +11,15 @@
 
     .login {
         margin : 14px 16px 13px auto;
-        // width  : 123px !important;
+        width: 75px !important;
         border-radius: 4px !important;
     }
 
     .menu-items {
+        scroll-behavior: smooth;
         margin-left: 25px;
-        overflow-y: visible;
         display: flex;
+        overflow-x: hidden;
         .outer-menu-item {
             white-space: nowrap;
             display: inline;
@@ -40,6 +42,44 @@
                 svg-icon svg{
                     margin-bottom: 2px;
                 }
+            }
+        }
+    }
+
+    .context-button-container {
+        background-color: var(--header-level-two-bg);
+        padding-left: 24px;
+    }
+
+    .nav-arrow-container {
+        position: absolute;
+        height: 100%;
+        width: 48px;
+        &:hover {
+            cursor: pointer;
+        }
+        .nav-arrow {
+            width: 24px;
+            height: 100%;
+            z-index: 2;
+            background-color: var(--header-nav-arrow-bg);
+            svg-icon {
+                position: relative;
+                top: 16px;
+                left: 4px;
+            }
+
+            &.left svg-icon {
+                left: initial;
+                right: 4px;
+                svg {
+                    transform: rotate(180deg);
+                }
+            }
+
+            &.right {
+                position: relative;
+                left: 24px;
             }
         }
     }
