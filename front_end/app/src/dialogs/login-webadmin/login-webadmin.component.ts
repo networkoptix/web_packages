@@ -17,6 +17,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxStorageService } from '@services/storage.service';
@@ -91,6 +92,7 @@ export class LoginWebadminModalContent implements OnInit {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
+        private oauthService: OauthService,
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
@@ -168,6 +170,7 @@ export class LoginWebadminModalContent implements OnInit {
             url.hash = hash + (paramString ? '?' + paramString : '');
             this.window.location.href = url.toString();
             this.oauthLogin(code);
+            return;
         } else {
             this.loading = false;
         }
@@ -305,20 +308,34 @@ export class LoginWebadminModalContent implements OnInit {
             .loginOauth(code)
             .subscribe((res: Record<string, string>) => {
                 this.accountNotOnSystem = res.scope === '';
-                this.account2faRequired = res.error === 'second_factor_required';
-                let accountCheck = Promise.resolve();
+
+                if (
+                    !this.accountNotOnSystem &&
+                    res.error === 'second_factor_required'
+                ) {
+                    this.oauthService.redirectOauth(
+                        'system2faAuth',
+                        '',
+                        code,
+                        res.access_token,
+                        this.window.location.href
+                    );
+                    return;
+                }
+
+                this.account2faRequired = res.error === '2fa_disabled_for_the_user';
+                this.loading = !(this.accountNotOnSystem || this.account2faRequired);
+
                 if (!this.accountNotOnSystem && !this.account2faRequired) {
-                    accountCheck = this.account.get(true).then(res => {
+                    this.account.get(true).then(res => {
                         if (res) {
                             this.window.location.reload();
                         } else {
+                            this.loading = false;
                             this.displayCloudConnectionError();
                         }
                     });
                 }
-                accountCheck.finally(() => {
-                    this.loading = false;
-                });
             });
     }
 
