@@ -989,12 +989,12 @@
             "cpuCores": "Kärnor",
             "ramB": "RAM",
             "guidConflict": "Server GUID-konflikt",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "vmsTimeChanged24h": "Händelser: ändrad tid (24h)",
+            "transactionsPerSecond1m": "Transaktioner/s",
+            "actionsTriggered1m": "Regelaktiveringar/s",
+            "apiCalls1m": "API-anrop/s",
+            "thumbnails1m": "Miniatyrer/s",
+            "activePlugins": "Lista över aktiva plugins"
         }
     },
     "headerLabels": {
