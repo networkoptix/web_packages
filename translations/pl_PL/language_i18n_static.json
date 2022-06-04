@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Wprowadź hasło konta właściciela w <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Hasło administratora jest nieprawidłowe",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Sprawdzanie...",
             "cloud": "Chmura",

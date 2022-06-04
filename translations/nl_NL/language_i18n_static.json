@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Voer het wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Het wachtwoord voor de admin gebruiker is onjuist",
-            "knownBothSystemsConnectedToCloud": "Systeem {targetSystem} is verbonden met %CLOUD_NAME%. Cloudsystemen kunnen alleen worden samengevoegd vanaf %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Kan twee systemen die zijn verbonden met de cloud niet samenvoegen. Ga naar %CLOUD_NAME% om deze systemen samen te voegen.",
             "checking": "Controleren...",
             "cloud": "Cloud",

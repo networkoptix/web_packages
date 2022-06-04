@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Lösenord för administratörsanvändare är fel",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} är anslutet till %CLOUD_NAME%. Molnsystem kan endast slås samman från %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Det går inte att slå samman två system anslutna till molnet. Gå till %CLOUD_NAME% att slå samman dessa system.",
             "checking": "Kontrollerar...",
             "cloud": "Moln",

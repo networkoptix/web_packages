@@ -1,5 +1,5 @@
 {
-    "language": "ja_JP",
+    "language": "en_US",
     "About %CLOUD_NAME%": "%CLOUD_NAME% について",
     "All Servers": "すべてのサーバー",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
@@ -74,8 +74,8 @@
             "label": "カスタム"
         },
         "customRole": {
-            "description": "システムで指定されたカスタムのユーザーの役割",
-            "label": "カスタムの役割"
+            "description": "システムで指定されたカスタムのユーザーロール",
+            "label": "カスタムロール"
         },
         "disabled": {
             "description": "ユーザーが無効の為にシステムにログインできません",
@@ -118,13 +118,13 @@
         "connectHeader": "システムを %CLOUD_NAME% に接続",
         "expiredHeader": "セッションの期限が切れました",
         "loginSystemSubheader": "%CLOUD_NAME% アカウントで",
-        "connectSubheader": "どこからでもアクセス & 追加機能を有効にするには",
+        "connectSubheader": "どこでもアクセス & 追加機能",
         "expiredSubheader": "もう一度ログインしてください",
         "connectAdditional": "このアカウントはオーナー権限を取得します。",
         "createText": "アカウント作成",
         "setupText": "非クラウドシステムのセットアップ",
         "asAccountSubheader": "ユーザー名",
-        "toAccountSubheader": "宛先",
+        "toAccountSubheader": "アカウント",
         "forAccountSubheader": "{accountEmail} 用",
         "passwordDisconnect": "%CLOUD_NAME% からシステムを切断するために",
         "passwordMerge": "システムを統合するために",
@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "<strong>{secondarySystem}</strong> にオーナーアカウントのパスワードを入力してください。",
             "adminPasswordWrong": "adminユーザーのパスワードが間違っています",
-            "knownBothSystemsConnectedToCloud": "システム {targetSystem} は %CLOUD_NAME%に接続されています。クラウドシステムは %CLOUD_NAME% からのみ統合できます。",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "クラウドに接続されている2つのシステムを統合することはできません。これらのシステムを統合するには %CLOUD_NAME% に移動してください。",
             "checking": "チェック中...",
             "cloud": "クラウド",
@@ -399,7 +399,7 @@
             "serverAtUrl": "{url} のサーバー",
             "serverNotAvailable": "<p class=\"mb-2\">{targetSystem} システムにアクセスできません。</p><p>当該サーバーがオンラインであることを確認し、もう一度やり直してください。</p>",
             "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
-            "serverVersionOld": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。最新ビルドに更新してから統合してください。",
+            "serverVersionOld": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。対象システムを最新のビルドに更新してから、現在のシステムと統合してください。",
             "serverVersionNew": "このサーバーは、現在のシステムよりも新しいソフトウェアバージョンです。\n両システムを同じビルドに更新してから統合してください。",
             "systemOffline": "システム {targetSystem} がオフラインであるため、現在のシステムと統合することはできません。",
             "systemOfflineUrl": "{targetSystem} にアクセスできません",
