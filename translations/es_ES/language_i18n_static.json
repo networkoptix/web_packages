@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Ingrese la contraseña de la cuenta del propietario en <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "La contraseña para el usuario admin es incorrecta",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "knownBothSystemsConnectedToCloud": "El sistema {targetSystem} está conectado a %CLOUD_NAME%. Los sistemas de la nube solo pueden ser combinados desde el portal %CLOUD_NAME%.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Comprobación...",
             "cloud": "Nube",
