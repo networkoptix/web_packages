@@ -107,6 +107,13 @@ module.exports = {
             alphabetize: { order: 'asc' }
         }],
     },
+    /* Overrides should be ordered by range of files affected, then by
+    range of code affected, from general to specific.
+
+    For example, package specific linting rules like eslint-plugin-rxjs which
+    affect all TS files but only specific code should go below the
+    override for @typescript-eslint, but above the override for test files,
+    which only affects specific TS files. */
     overrides: [
         {
             /* This override is setup for all TS files */
@@ -116,74 +123,13 @@ module.exports = {
                 project: './tsconfig.json',
                 createDefaultProgram: true,
             },
-            plugins: ['nx', '@typescript-eslint', 'rxjs', 'ngrx'],
-            extends: ['plugin:rxjs/recommended'],
+            plugins: ['nx', '@typescript-eslint'],
             rules: {
-                'rxjs/no-nested-subscribe': 'off', // TODO: re-factor
-                'rxjs/no-async-subscribe': 'off', // not sure if this should be implemented - TT
-                'rxjs/no-ignored-takewhile-value': 'off', // not sure if this should be implemented (only one place) - TT
-                'rxjs/no-implicit-any-catch': 'off', // not sure if this should be implemented - TT
-                'rxjs/no-unbound-methods': 'off', // we'll not fix this
-                
+                'no-undef': 'off', // TS incompatible
+
                 'no-useless-constructor': 'off',
                 'nx/no-useless-constructor': 'error',
                 'nx/only-export-injectable': 'error',
-            }
-        },
-        {
-            /* This override is for folders/files that have been fully typed.
-            This should eventually be merged with the other TS overrides. */
-            files: [
-                'app/src/components/search/**/*.ts',
-                'app/src/components/dropdowns/generic/**/*.ts',
-                'app/src/dialogs/create-system-group/**/*.ts',
-                'app/src/dialogs/move-system-to-group/**/*.ts',
-                'app/src/dialogs/system-group-settings/**/*.ts',
-                'app/src/menu/**/*.ts',
-                'app/src/pages/systems/groups/**/*.ts',
-                'app/src/pages/systems/settings/servers/**/*.ts',
-                'app/src/pipes/**/*.ts',
-                'app/src/store/**/*.ts',
-            ],
-            extends: [
-                'plugin:@typescript-eslint/eslint-recommended',
-                'plugin:@typescript-eslint/recommended',
-            ],
-            rules: {
-                'nx/explicit-angular-boundary-types': 'error',
-                'nx/no-untyped-arg': 'error',
-                'nx/no-untyped-init': 'error',
-                'nx/no-untyped-subject': 'error',
-
-                '@typescript-eslint/ban-types': ['error', {
-                    extendDefaults: true,
-                    types: {
-                        SimpleChanges: {
-                            message: [
-                                'Angular\'s `SimpleChanges` is not type-safe.',
-                                'Use the `NgChanges` utility type instead.',
-                            ].join('\n')
-                        }
-                    },
-                }],
-                '@typescript-eslint/explicit-function-return-type': [
-                    'error',
-                    { allowExpressions: true }
-                ],
-                '@typescript-eslint/no-empty-function': 'off',
-                '@typescript-eslint/no-empty-interface': 'off',
-                '@typescript-eslint/no-explicit-any': 'error',
-                '@typescript-eslint/no-inferrable-types': 'off',
-                '@typescript-eslint/no-non-null-assertion': 'error',
-                '@typescript-eslint/no-unused-vars': 'off',
-            },
-        },
-        {
-            /* This override is also for all TS files */
-            files: ['*.ts'],
-            extends: ['plugin:ngrx/recommended'],
-            rules: {
-                'no-undef': 'off', // TS incompatible
 
                 '@typescript-eslint/ban-types': ['error', {
                     extendDefaults: false, // TODO: Restore
@@ -255,10 +201,82 @@ module.exports = {
             },
         },
         {
+            /* This override is for folders/files that have been fully typed.
+
+            It should be kept right under the main TS override since
+            the number of files affected will grow as files are typed until
+            the entire codebase is typed, at which point it can be merged
+            into the main TS override. */
+            files: [
+                'app/src/components/search/**/*.ts',
+                'app/src/components/dropdowns/generic/**/*.ts',
+                'app/src/dialogs/create-system-group/**/*.ts',
+                'app/src/dialogs/move-system-to-group/**/*.ts',
+                'app/src/dialogs/system-group-settings/**/*.ts',
+                'app/src/menu/**/*.ts',
+                'app/src/pages/systems/groups/**/*.ts',
+                'app/src/pages/systems/settings/servers/**/*.ts',
+                'app/src/pipes/**/*.ts',
+                'app/src/store/**/*.ts',
+            ],
+            extends: ['plugin:@typescript-eslint/recommended'],
+            rules: {
+                'nx/explicit-angular-boundary-types': 'error',
+                'nx/no-untyped-arg': 'error',
+                'nx/no-untyped-init': 'error',
+                'nx/no-untyped-subject': 'error',
+
+                '@typescript-eslint/ban-types': ['error', {
+                    extendDefaults: true,
+                    types: {
+                        SimpleChanges: {
+                            message: [
+                                'Angular\'s `SimpleChanges` is not type-safe.',
+                                'Use the `NgChanges` utility type instead.',
+                            ].join('\n')
+                        }
+                    },
+                }],
+                '@typescript-eslint/explicit-function-return-type': [
+                    'error',
+                    { allowExpressions: true }
+                ],
+                '@typescript-eslint/no-empty-function': 'off',
+                '@typescript-eslint/no-empty-interface': 'off',
+                '@typescript-eslint/no-explicit-any': 'error',
+                '@typescript-eslint/no-inferrable-types': 'off',
+                '@typescript-eslint/no-non-null-assertion': 'error',
+
+                // Re-override recommendeded rule config
+                '@typescript-eslint/no-unused-vars': ['error', {
+                    varsIgnorePattern: '^_',
+                    args: 'none',
+                    // argsIgnorePattern: '^_',
+                }],
+            },
+        },
+        {
+            files: ['*.ts'],
+            plugins: ['rxjs'],
+            extends: ['plugin:rxjs/recommended'],
+            rules: {
+                'rxjs/no-nested-subscribe': 'off', // TODO: re-factor
+                'rxjs/no-async-subscribe': 'off', // not sure if this should be implemented - TT
+                'rxjs/no-ignored-takewhile-value': 'off', // not sure if this should be implemented (only one place) - TT
+                'rxjs/no-implicit-any-catch': 'off', // not sure if this should be implemented - TT
+                'rxjs/no-unbound-methods': 'off', // we'll not fix this
+            },
+        },
+        {
+            files: ['*.ts'],
+            plugins: ['ngrx'],
+            extends: ['plugin:ngrx/recommended'],
+            rules: {},
+        },
+        {
             files: ['*.spec.ts'],
             rules: {
                 '@typescript-eslint/dot-notation': 'off',
-                '@typescript-eslint/no-explicit-any': 'off',
                 '@typescript-eslint/no-unused-vars': ['error', {
                     varsIgnorePattern: '(^_)|(component)|(fixture)|(el)',
                     args: 'none',

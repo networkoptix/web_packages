@@ -34,6 +34,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
+import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import { NxSafePipe } from '@src/pipes/nx-safe';
@@ -145,14 +146,14 @@ describe('NxAccountSecurityComponent', () => {
         });
 
         it('should have a warning with at least one v5.0 system if checkbox is checked', () => {
-            component.subV5Systems = [{ name: 'foo' } as any];
+            component.subV5Systems = [{ name: 'foo' } as NxSystemWithUserInfo];
             component.verificationWatcher.value = true;
             fixture.detectChanges();
             const warning = el.querySelector('.tfauth-v5-warning');
             expect(warning).toBeTruthy();
         });
         it('should not have a warning with at least one v5.0 system if checkbox is unchecked', () => {
-            component.subV5Systems = [{ name: 'foo' } as any];
+            component.subV5Systems = [{ name: 'foo' } as NxSystemWithUserInfo];
             component.verificationWatcher.value = false;
             fixture.detectChanges();
             const warning = el.querySelector('.tfauth-v5-warning');

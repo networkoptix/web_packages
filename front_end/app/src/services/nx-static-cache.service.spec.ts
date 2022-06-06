@@ -30,7 +30,8 @@ describe('Static cache service', () => {
 
     it('should fetch item form cache or request and put it into cache', () => {
         httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
-        httpClientSpy.get.and.returnValue(of().pipe(shareReplay(1)));
+        httpClientSpy.get.and.returnValue(of()
+            .pipe(shareReplay({ bufferSize: 1, refCount: true })));
 
         const expectedHTML = cacheService.requestStatic('test');
 
