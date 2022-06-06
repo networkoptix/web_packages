@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "<strong>{secondarySystem}</strong> にオーナーアカウントのパスワードを入力してください。",
             "adminPasswordWrong": "adminユーザーのパスワードが間違っています",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "knownBothSystemsConnectedToCloud": "システム {targetSystem} は %CLOUD_NAME%に接続されています。クラウドシステムは %CLOUD_NAME% ポータルからのみ統合できます。",
             "unknownBothSystemsConnectedToCloud": "クラウドに接続されている2つのシステムを統合することはできません。これらのシステムを統合するには %CLOUD_NAME% に移動してください。",
             "checking": "チェック中...",
             "cloud": "クラウド",
