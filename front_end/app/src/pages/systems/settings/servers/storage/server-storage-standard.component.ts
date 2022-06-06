@@ -359,19 +359,24 @@ export class NxSystemStorageComponent implements OnInit {
             this.isBackupOn.originalValue = !backup;
             this.isBackupOn.value = backup;
         };
-        const updateBackup = (): Promise<void | string> => this.system.useRest
-            ? Promise.resolve() // Skip updating any settings for 4.3 since the backup implementation is pending for that version
-            : this.isBackupOn.originalValue === this.backupState
-                ? Promise.resolve('backupToggleNotUpdated')
-                : this.backupState
-                    ? this.setDefaultBackupSettings().catch(err => {
-                        console.error(err);
-                        handleFailedBackupChange('StartFail');
-                    })
-                    : this.turnOffBackup().catch(err => {
-                        console.error(err);
-                        handleFailedBackupChange('StopFail');
-                    });
+        const updateBackup = (): Promise<void | string> => {
+            if (this.system.useRest) {
+                return Promise.resolve();
+                // Skip updating any settings for 4.3 since the backup implementation is pending for that version
+            } else if (this.isBackupOn.originalValue === this.backupState) {
+                return Promise.resolve('backupToggleNotUpdated');
+            } else if (this.backupState) {
+                this.setDefaultBackupSettings().catch(err => {
+                    console.error(err);
+                    handleFailedBackupChange('StartFail');
+                });
+            } else {
+                this.turnOffBackup().catch(err => {
+                    console.error(err);
+                    handleFailedBackupChange('StopFail');
+                });
+            }
+        };
 
         if (modeWatchers.length) {
             this.saveSettings = this.processService.createProcess(() => {
@@ -439,7 +444,7 @@ export class NxSystemStorageComponent implements OnInit {
                 })
             );
             await this.system.serverManager.initSystemMediaServers();
-            const cameraSettingsToSave = this.system.cameras.reduce((cameras, camera) => {
+            const cameraSettingsToSave = this.system.cameraManager.cameras.reduce((cameras, camera) => {
                 if (!['CameraBackupLowQuality', 'CameraBackupDefault'].includes(camera.backupType)) {
                     let retries = 5;
                     const update = (): Promise<ChangedIdReturned | void> => {
@@ -528,9 +533,8 @@ export class NxSystemStorageComponent implements OnInit {
         ) {
             return true;
         }
-        return Object.values(this.modeWatchers).reduce(
-            (prev, { value }) => prev || value === watcherMode,
-            false
+        return Object.values(this.modeWatchers).some(mw =>
+            mw.value === watcherMode
         );
     };
 
@@ -647,7 +651,7 @@ export class NxSystemStorageComponent implements OnInit {
                 value === 'modeNotUsed' && changed && hasArchive(id)
             );
         this.applyService.setWarn(
-            showWarn ? this.LANG.storage.stillHasArchivesPreWarning?.() : ''
+            showWarn ? this.LANG.storage.stillHasArchivesPreWarning() : ''
         );
     }
 
@@ -780,21 +784,23 @@ export class NxSystemStorageComponent implements OnInit {
         }) + 'storages';
     }
 
-    resetBackupToDefault(): Promise<unknown> {
-        return this.dialogs.resetBackupToDefaultSettings(
+    resetBackupToDefault(): void {
+        this.dialogs.resetBackupToDefaultSettings(
             this.system,
             this.setDefaultBackupSettings
         );
     }
 
-    addExternalStorage = (): Promise<unknown> => this.dialogs.addStorage(
-        this.serverId,
-        this.system.storageManager,
-        () => {
-            this.updatingModes = [];
-            this.cancelPolling$.next('cancel existing');
-        }
-    ).finally(this.pollStats);
+    addExternalStorage = (): void => {
+        this.dialogs.addStorage(
+            this.serverId,
+            this.system.storageManager,
+            () => {
+                this.updatingModes = [];
+                this.cancelPolling$.next('cancel existing');
+            }
+        ).finally(this.pollStats);
+    };
 
     reindexStorage(type: MODE): Subscription {
         this.reindexingStorages = [...this.reindexingStorages, type];

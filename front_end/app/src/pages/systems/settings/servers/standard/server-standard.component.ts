@@ -186,7 +186,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.parsedServerId = cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo
             ? JSON.parse(this.selectedServer.osInfo).platform
-            : this.LANG.common.unknown?.();
+            : this.LANG.common.unknown();
         const { isAdmin, editAdmins } = this.system.userManager.permissions;
         this.enableEdit = isAdmin;
         this.restartDisabled = !isAdmin;
@@ -308,7 +308,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             } catch (error) {
                 return Promise.reject(error);
             }
-            if (this.environment.isLocal && newPort && await this.system.mediaserver.checkIfConnectedToServer(serverId).toPromise()) {
+            if (
+                this.environment.isLocal &&
+                newPort &&
+                await this.system.mediaserver
+                    .checkIfConnectedToServer(serverId).toPromise()
+            ) {
                 setTimeout(() => {
                     this.uriService.changePort(newPort);
                 });
@@ -335,15 +340,13 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.CONFIG.servers.status.offline,
             this.CONFIG.servers.status.checking
         ].includes(this.selectedServer.internalStatus);
-        this.serverUnavailable = this.serverOffline ||
-            (
-                !this.system.currentServerNotBusy &&
-                this.system.currentBusyServerIds.has(this.selectedServer.id)
-            );
+        this.serverUnavailable = this.serverOffline || (
+            !this.system.currentServerNotBusy &&
+            this.system.currentBusyServerIds.has(this.selectedServer.id)
+        );
 
         if (
-            !this.serverOffline &&
-            (
+            !this.serverOffline && (
                 !this.system.currentServerNotBusy &&
                 this.system.currentBusyServerIds.has(this.selectedServer.id)
             )
@@ -437,13 +440,12 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
 
     detachServer(): Promise<void> {
         const { id, name } = this.selectedServer;
-        const currentServerIndex = this.system.servers.findIndex(server =>
-            server.id === id
-        );
-        const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length
+        const currentServerIndex = this.system.serverManager.servers
+            .findIndex(server => server.id === id);
+        const nextServerIndex = currentServerIndex + 1 !== this.system.serverManager.servers.length
             ? currentServerIndex + 1
             : currentServerIndex - 1;
-        const nextServerId = this.system.servers[nextServerIndex].id;
+        const nextServerId = this.system.serverManager.servers[nextServerIndex].id;
         return this.dialogs
             .detachServer(this.system, id, htmlToEntity(name))
             .then(detach => {
@@ -486,7 +488,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.applyService.setInvalidField('port');
         } else if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax) {
             this.applyService.setInvalidField('port');
-            this.applyService.setWarn(this.LANG.servers.portWarning?.());
+            this.applyService.setWarn(this.LANG.servers.portWarning());
         } else {
             this.applyService.setWarn('');
         }
@@ -537,7 +539,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         };
                         this.setSystemStorageChosen(this.selectedStorage);
                         this.toastService.show(
-                            this.LANG.servers.analyticsDataPolicyError?.(),
+                            this.LANG.servers.analyticsDataPolicyError(),
                             options
                         );
                     } else if (closeRes === 'cancel') {
