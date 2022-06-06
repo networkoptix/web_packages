@@ -594,6 +594,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public ngOnDestroy (): void {
+        this.unsub$.next('done');
+
         this._playbackSubscription?.unsubscribe();
         this._routeSubscription?.unsubscribe();
         this._vmsStateSubscription?.unsubscribe();
