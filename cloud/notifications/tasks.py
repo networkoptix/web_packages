@@ -53,11 +53,15 @@ def send_email_log(_task):
 
 @shared_task
 @send_email_log
-def send_email(msg_id, queue="", attempt=1, email_type=Message, emails=[], session={}):
-    message = email_type.objects.get(id=msg_id)
+def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, session = None):
+    if emails is None:
+        emails = []
+    if session is None:
+        session = {}
+    message = (SystemEmail if email_type == SystemEmail.MSG_TYPE else Message).objects.get(id=msg_id)
     customization = getattr(message, 'customization', settings.CUSTOMIZATION)
     emails = emails or getattr(message, 'user_email', '') or getattr(message, 'targets')
-    template_type = getattr(message, 'type', '') or getattr(email_type, 'MSG_TYPE')
+    template_type = getattr(message, 'type', email_type)
     lang = get_language_for_email(emails, customization)
     email_content = getattr(message, 'message')
     send_individual = not isinstance(message, Message)
