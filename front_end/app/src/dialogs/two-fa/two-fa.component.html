@@ -147,10 +147,10 @@
                     </div>
                     <div
                         class="input-error"
-                        *ngIf="loginPassword.touched && loginPassword.errors?.required"
+                        *ngIf="!wrongPassword && !accountBlocked && loginPassword.touched && loginPassword.errors?.required"
                         translate
                     >Password is required</div>
-                    <div class="input-error" *ngIf="loginPassword.touched && loginPassword.errors?.pattern">
+                    <div class="input-error" *ngIf="!wrongPassword && !accountBlocked && loginPassword.touched && loginPassword.errors?.pattern">
                         {{LANG.passwordRequirements.requiredMessage()}}</div>
                 </ng-container>
             </div>
