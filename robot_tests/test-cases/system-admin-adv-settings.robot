@@ -50,7 +50,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
     [Tags]    C76635    threaded
     Log in to system    ${system}    ${system}[owner]
     Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
     Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
     IF    '${IMAGE}'=='5.0_test'
         Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
@@ -63,7 +63,7 @@ Force Tags        system    advanced_settings    cloud    webadmin
         ${location}=   Get Location
         Go to    ${location}${ADVANCED SETTINGS}
     END
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE    timeout=60
+    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
 
 4. Audit trail, backup and statistics section
     [Tags]    C78244
