@@ -57,6 +57,14 @@
         width: 48px;
         &:hover {
             cursor: pointer;
+            .nav-arrow {
+                background-color: var(--header-arrow-hover);
+            }
+        }
+        &:active {
+            .nav-arrow {
+                background-color: var(--header-level-one-active-bg);
+            }
         }
         .nav-arrow {
             width: 24px;
@@ -68,7 +76,6 @@
                 top: 16px;
                 left: 4px;
             }
-
             &.left svg-icon {
                 left: initial;
                 right: 4px;
