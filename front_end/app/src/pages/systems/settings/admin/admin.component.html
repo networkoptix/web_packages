@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="!environment.isLocal && !CONFIG.cloudSystemId">
                         <div class="float-xl-right">
-                            <button [disabled]="settings.disconnectDisabled"
+                            <button [disabled]="settings.disconnectDisabled || getCloudStorageUsagePromise"
                                     class="btn btn-default"
                                     (click)="disconnectFromCloud()">
                                 <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
