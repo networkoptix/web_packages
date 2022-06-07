@@ -158,9 +158,9 @@
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "登录"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "邮件已发送！"
     },
     "cameraFilters": {
         "H265": "H.265 摄像机",
@@ -584,7 +584,7 @@
         "cantChangeAccountPrefix": "无法保存更改",
         "cantChangePasswordPrefix": "无法保存密码",
         "cantDeleteAccountOwningSystems": "Cannot delete account that owns systems",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "无法连接到系统",
         "cantDisconnectSystemPrefix": "不能删除系统",
         "cantEditAdmin": "此用户具有管理员权限",
         "cantEditYourself": "不允许更改自己的权限",
