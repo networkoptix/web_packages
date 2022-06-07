@@ -436,6 +436,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         );
     }
 
+    loginTokenUrl(token: string): Observable<any> {
+        return this.get(`/rest/v1/login/sessions/${token}`, { setCookie: true });
+    }
+
     loginOauth(code: string, skipSetting?: boolean) {
         const params = {
             code,

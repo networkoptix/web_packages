@@ -99,6 +99,13 @@ export class LoginWebadminModalContent implements OnInit {
     //     });
     // }
 
+    private removeParamFromUrl(url: URL, hash: string, params: URLSearchParams, paramName: string): void {
+        params.delete(paramName);
+        const paramString = params.toString();
+        url.hash = hash + (paramString ? '?' + paramString : '');
+        this.window.location.href = url.toString();
+    };
+
     private displayCloudConnectionError() {
         this.simpleDialogService.notify(
             this.LANG.toastMessage.noInternet(),
@@ -126,12 +133,14 @@ export class LoginWebadminModalContent implements OnInit {
         const [hash, query] = url.hash.split('?');
         const params = new URLSearchParams(query || '');
         const code = params.get('code');
+        const token = params.get('token');
         if (code) {
-            params.delete('code');
-            const paramString = params.toString();
-            url.hash = hash + (paramString ? '?' + paramString : '');
-            this.window.location.href = url.toString();
+            this.removeParamFromUrl(url, hash, params, 'code');
             this.oauthLogin(code);
+            return;
+        } else if (token) {
+            this.removeParamFromUrl(url, hash, params, 'token');
+            this.tokenLogin(token);
             return;
         } else {
             this.loading = false;
@@ -293,6 +302,15 @@ export class LoginWebadminModalContent implements OnInit {
                         }
                     });
                 }
+            });
+    }
+
+    tokenLogin(token: string): void {
+        this.account.mediaServerApi.loginTokenUrl(token)
+            .subscribe(() => {
+                this.window.location.reload();
+            }, () => {
+                this.loading = false;
             });
     }
 }
