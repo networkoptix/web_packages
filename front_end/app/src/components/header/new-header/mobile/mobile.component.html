@@ -1,13 +1,15 @@
-<div class="mobile-header">
+<div class="mobile-header" [ngClass]="{ 'open': (menuOpen$ | async) }">
     <ng-container *ngTemplateOutlet="headerLeftIcon"></ng-container>
-    <nx-header-logo-area class="logo" [isMobile]="true"></nx-header-logo-area>
+    <nx-header-logo-area class="logo" [isMobile]="true" [menuOpen]="(menuOpen$ | async)"></nx-header-logo-area>
     <svg-icon
+        (click)="toggleMenuOpen()"
         class="menu-button"
         nx-add-svg-src
         [src]="CONFIG.icons.dirHeader + 'menu.svg'"
         [svgStyle]="{'width.px': '32', 'height.px': '32'}">
     </svg-icon>
 </div>
+<nx-mobile-menu *ngIf="(menuOpen$ | async)" [menuNodes]="menuNodes" (nodeClicked)="toggleMenuOpen()"></nx-mobile-menu>
 
 
 <ng-template #headerLeftIcon [ngSwitch]="iconState">

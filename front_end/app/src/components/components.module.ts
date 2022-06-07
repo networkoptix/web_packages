@@ -72,6 +72,7 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
 import { NxHeaderLevelOneComponent } from './header/new-header/header-level-one/header-level-one.component';
 import { NxHeaderLevelTwoComponent } from './header/new-header/header-level-two/header-level-two.component';
 import { NxHeaderLogoAreaComponent } from './header/new-header/logo-area/logo-area.component';
+import { NxMobileHeaderMenuComponent } from './header/new-header/mobile/mobile-menu/mobile-menu.component';
 import { NxHeaderMobileComponent } from './header/new-header/mobile/mobile.component';
 import { NxNewHeaderComponent } from './header/new-header/new-header.component';
 import { NxTabsComponent } from './header/tabs/tabs.component';
@@ -190,7 +191,8 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxHeaderLevelTwoComponent,
         NxNewHeaderComponent,
         NxHeaderMobileComponent,
-        NxHeaderLogoAreaComponent
+        NxHeaderLogoAreaComponent,
+        NxMobileHeaderMenuComponent
     ],
     providers: [
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
@@ -235,7 +237,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxMonitoringGraphComponent,
         UpdateWebadminSessionComponent,
         NxServerMonitorWidgetComponent,
-        NxServerLoggerWidgetComponent,
+        NxServerLoggerWidgetComponent
     ],
     exports: [
         QuicklinkModule,

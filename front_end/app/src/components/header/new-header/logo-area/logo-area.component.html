@@ -17,5 +17,8 @@
                 [svgStyle]="isMobile ? {'width.px': '130', 'height.px': '32'} : null"
                 [src]="CONFIG.images.dirHeader + 'logo.svg'">
         </svg-icon>
+        <div *ngSwitchCase="'mobileMenu'" translate>
+            Menu
+        </div>
     </div>
 </div>

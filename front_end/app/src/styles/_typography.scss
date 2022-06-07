@@ -240,6 +240,10 @@ p {
     @include font-source($font-family-regular, rem(16px), $dark10);
 }
 
+@mixin regular16nocolor {
+    @include font-source($font-family-regular,rem(16px));
+}
+
 @mixin regular18dark9 {
     @include font-source($font-family-regular, $h3-font-size, $dark9);
 }

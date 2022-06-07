@@ -1,0 +1,20 @@
+<div class="menu-container">
+   <div class="menu-items">
+      <div *ngFor="let node of menuNodes" class="menu-item">
+         <div class="node-name">
+            {{ node.display_name }}
+         </div>
+         <div *ngFor="let subnode of node.nodes" class="level-two-item">
+            <div class="subnode"
+               (click)="nodeClick(subnode, $event)"
+               [ngClass]="{ 'active': headerService.currentLocation?.path === subnode.url || (!headerService.currentLocation?.path && node.url === 'content/about')}">
+               {{ subnode.display_name }}
+               <svg-icon *ngIf="subnode.new_window" [src]="CONFIG.images.dirHeader + 'external_link.svg'"></svg-icon>
+            </div>
+            <div class="nav-arrow" (click)="nodeClick(subnode, $event)">
+               <svg-icon [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'" [svgStyle]="{'width.px': '8', 'height.px': '12'}"></svg-icon>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

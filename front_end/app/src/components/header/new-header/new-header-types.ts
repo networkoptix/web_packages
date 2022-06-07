@@ -1,7 +1,8 @@
 export enum logoAreaState {
     SYSTEM = 'system',
     SYSTEMS = 'systems',
-    LOGO = 'logo'
+    LOGO = 'logo',
+    MOBILE_OPEN = 'mobileMenu'
 }
 
 export enum mobileIconState {

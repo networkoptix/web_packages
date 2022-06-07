@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { BehaviorSubject } from 'rxjs';
 
+import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -16,6 +18,8 @@ import { mobileIconState } from '../new-header-types';
 })
 export class NxHeaderMobileComponent {
     @Input() loggedIn: boolean;
+    @Input() menuNodes: MenuNode[] = [];
+    menuOpen$ = new BehaviorSubject(false);
     iconState: any;
     CONFIG: IConfig;
     constructor(configService: NxConfigService, public headerService: NxHeaderService) {
@@ -24,6 +28,10 @@ export class NxHeaderMobileComponent {
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.setIconState(this.loggedIn, currentLocation?.path);
         });
+    }
+
+    toggleMenuOpen() {
+        this.menuOpen$.next(!this.menuOpen$.value);
     }
 
     ngOnChanges(changes: NgChanges<NxHeaderMobileComponent>) {
