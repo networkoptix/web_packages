@@ -4,7 +4,8 @@ import {
     Inject,
     OnInit,
     Input,
-    ViewChild
+    ViewChild,
+    Renderer2
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -65,6 +66,7 @@ export class LoginWebadminModalContent implements OnInit {
         languageService: NxLanguageProviderService,
         locationService: Location,
         private oauthService: OauthService,
+        private renderer: Renderer2,
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
@@ -171,6 +173,7 @@ export class LoginWebadminModalContent implements OnInit {
             this.loginForm.controls.login_password.setErrors({
                 nx_wrong_credentials: true
             });
+            this.renderer.selectRootElement('#login_password').focus();
         };
 
         const cloudLogin = this.LANG.errorCodes['This authorization method is forbidden. Please contact your system administrator.']();
