@@ -384,11 +384,7 @@
             "primaryCannotMerge": "System {targetSystem} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do wersji {downloadHTML} aby połączyć go z systemem {targetSystem}.",
             "primarySystemOffline": "System {primarySystem} jest w trybie offline i nie można go połączyć z systemem {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-            "recommendSupport": {
-                "a_recommend": "Zalecamy skonsultowanie się z",
-                "b_support": "wsparcie",
-                "c_proceeding": "przed kontynuowaniem."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
                 "useCloudMerge": "Cannot merge systems bound to the cloud",

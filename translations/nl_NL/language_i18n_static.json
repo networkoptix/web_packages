@@ -384,11 +384,7 @@
             "primaryCannotMerge": "Systeem {targetSystem} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar {downloadHTML} om het samen te voegen met het {targetSystem} systeem.",
             "primarySystemOffline": "Systeem {primarySystem} is offline en kan niet worden samengevoegd met Systeem {targetSystem}",
             "primarySystemUnavailable": "Systeem {primarySystem} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "We raden u aan om te overleggen met",
-                "b_support": "ondersteuning",
-                "c_proceeding": ", alvorens verder te gaan."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Fout bij samenvoegen. Beide systemen hebben dezelfde server",
                 "useCloudMerge": "Kan systemen gekoppeld aan de cloud niet samenvoegen",

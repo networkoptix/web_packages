@@ -107,6 +107,7 @@
     "ngx-mask": "11.1.4",
     "ngx-order-pipe": "2.0.1",
     "ngx-quicklink": "^0.2.6",
+    "ngx-translate-cut": "^2.0.0",
     "ngx-translate-messageformat-compiler": "4.7.0",
     "ngx-webstorage": "5.0.0",
     "rxjs": "6.6.7",

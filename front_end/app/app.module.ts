@@ -29,6 +29,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { OrderModule } from 'ngx-order-pipe';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
     MESSAGE_FORMAT_CONFIG
@@ -105,6 +106,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
                 useClass: TranslateMessageFormatCompiler
             }
         }),
+        NgxTranslateCutModule.forRoot(),
         DeviceDetectorModule.forRoot(),
         NgxMaskModule.forRoot(options),
         NgxWebstorageModule.forRoot(),

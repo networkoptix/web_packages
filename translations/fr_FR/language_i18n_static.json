@@ -384,11 +384,7 @@
             "primaryCannotMerge": "Système {targetSystem} a une version logicielle plus récente qui est incompatible avec le système actuel. Mettre à jour le système actuel vers le {downloadHTML} pour le fusionner avec le système {targetSystem}.",
             "primarySystemOffline": "Le système {primarySystem} est hors ligne et ne peut pas être fusionné avec le système {targetSystem}",
             "primarySystemUnavailable": "Le système {primarySystem} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Nous vous recommandons de consulter avec",
-                "b_support": "support",
-                "c_proceeding": "avant de procéder."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Erreur de fusion. Les deux systèmes ont le même serveur",
                 "useCloudMerge": "Impossible de fusionner des systèmes liés au cloud",

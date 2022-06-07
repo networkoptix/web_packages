@@ -384,11 +384,7 @@
             "primaryCannotMerge": "Das System {targetSystem} verfügt über eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf {downloadHTML}, um es mit dem {targetSystem} System zusammenzuführen.",
             "primarySystemOffline": "Das System {primarySystem} ist offline und kann nicht mit System {targetSystem} zusammengeführt werden",
             "primarySystemUnavailable": "Das System {primarySystem} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "recommendSupport": {
-                "a_recommend": "Wir empfehlen Ihnen, sich in Verbindung zu setzen mit",
-                "b_support": "support",
-                "c_proceeding": "bevor Sie fortfahren."
-            },
+            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
             "restError": {
                 "duplicateServer": "Fehler beim Zusammenführen. Beide Systeme haben denselben Server",
                 "useCloudMerge": "An die Cloud gebundene Systeme können nicht zusammengeführt werden",

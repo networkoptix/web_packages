@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { QrCodeModule } from 'ng-qrcode';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { ComponentsModule } from '@components/components.module';
 import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
@@ -63,7 +64,8 @@ import { WizardModalContent } from './wizard/wizard.component';
         AngularSvgIconModule.forRoot(),
         PipesModule,
         QrCodeModule,
-        GenericDialogModule
+        GenericDialogModule,
+        NgxTranslateCutModule,
     ],
     declarations: [
         LoginWebadminModalContent,

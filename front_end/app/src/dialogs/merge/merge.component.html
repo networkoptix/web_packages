@@ -204,9 +204,9 @@
                 <p class="error-label" [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
                 <p class="error-label" translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
                 <p class="mb-3">
-                    {{LANG.dialogs.merge.recommendSupport.a_recommend()}}&nbsp;
-                    <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support()}}</a>&nbsp;
-                    {{LANG.dialogs.merge.recommendSupport.c_proceeding()}}
+                    {{ 'dialogs.merge.recommendSupport' | translate | translateCut:0 }}&nbsp;
+                    <a [href]="CONFIG.company.links.support" target="_blank">{{ 'dialogs.merge.recommendSupport' | translate | translateCut:1 }}</a>&nbsp;
+                    {{ 'dialogs.merge.recommendSupport' | translate | translateCut:2 }}
                 </p>
             </div>
             <div *ngIf="!system.mediaserver.isSessionOauth" class="form-group"

@@ -436,7 +436,7 @@ export interface DialogsMerge {
     primaryCannotMerge:                 any;
     primarySystemOffline:               any;
     primarySystemUnavailable:           any;
-    recommendSupport:                   RecommendSupport;
+    recommendSupport:                   any;
     restError:                          RESTError;
     secondaryCannotMerge:               any;
     secondarySystemUnavailable:         any;
@@ -456,12 +456,6 @@ export interface DialogsMerge {
     urlNotValid:                        any;
     unknownError:                       any;
     warning:                            any;
-}
-
-export interface RecommendSupport {
-    a_recommend:  any;
-    b_support:    any;
-    c_proceeding: any;
 }
 
 export interface RESTError {
@@ -1784,7 +1778,7 @@ const typeMap: any = {
         { json: "primaryCannotMerge", js: "primaryCannotMerge", typ: "any" },
         { json: "primarySystemOffline", js: "primarySystemOffline", typ: "any" },
         { json: "primarySystemUnavailable", js: "primarySystemUnavailable", typ: "any" },
-        { json: "recommendSupport", js: "recommendSupport", typ: r("RecommendSupport") },
+        { json: "recommendSupport", js: "recommendSupport", typ: "any" },
         { json: "restError", js: "restError", typ: r("RESTError") },
         { json: "secondaryCannotMerge", js: "secondaryCannotMerge", typ: "any" },
         { json: "secondarySystemUnavailable", js: "secondarySystemUnavailable", typ: "any" },
@@ -1804,11 +1798,6 @@ const typeMap: any = {
         { json: "urlNotValid", js: "urlNotValid", typ: "any" },
         { json: "unknownError", js: "unknownError", typ: "any" },
         { json: "warning", js: "warning", typ: "any" },
-    ], false),
-    "RecommendSupport": o([
-        { json: "a_recommend", js: "a_recommend", typ: "any" },
-        { json: "b_support", js: "b_support", typ: "any" },
-        { json: "c_proceeding", js: "c_proceeding", typ: "any" },
     ], false),
     "RESTError": o([
         { json: "duplicateServer", js: "duplicateServer", typ: "any" },
