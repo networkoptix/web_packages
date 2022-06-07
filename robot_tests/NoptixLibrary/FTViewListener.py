@@ -24,11 +24,11 @@ class FTViewListener:
         self.runStartTime = now.strftime("%m/%d/%Y %H:%M:%S")
 
     def start_suite(self, data, result):
-        self.vmsVersion = BuiltIn().get_variable_value('${IMAGE}')
-        API.stage_start(self.user, self.host, self.runStartTime, revision, sys.argv, self.vmsVersion, data.name, result.starttime)
+        self.cloudHost = BuiltIn().get_variable_value('${ENV}')
+        API.stage_start(self.user, self.host, self.runStartTime, revision, sys.argv, self.cloudHost, data.name, result.starttime)
 
     def start_test(self, data, result):
-        API.stage_start(self.user, self.host, self.runStartTime, revision, sys.argv, self.vmsVersion, data.name, result.starttime)
+        API.stage_start(self.user, self.host, self.runStartTime, revision, sys.argv, self.cloudHost, data.name, result.starttime)
 
     def end_test(self, data, result):
         API.stage_finish(self.user, self.host, self.runStartTime, data.name, result.status, result.elapsedtime/1000, result.message)
