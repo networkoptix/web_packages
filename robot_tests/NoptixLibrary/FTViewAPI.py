@@ -47,6 +47,9 @@ class FTViewAPI:
         }
         r = requests.post(f'{self.FTServer}/api/reporting/artifact', json=body)
 
+    def stage_mark(self, testsJson):
+        r = requests.post(f'{self.FTServer}/testrail/api/mark', json=testsJson)
+
     def result_converter(self, status):
         if status == "PASS":
             return "passed"
