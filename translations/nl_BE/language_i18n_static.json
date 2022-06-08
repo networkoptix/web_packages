@@ -1,7 +1,7 @@
 {
     "language": "nl_BE",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Alle servers",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Voor ontwikkelaars",
     "Integrations (β)": "Integraties (ß)",
@@ -16,24 +16,24 @@
     "alarmTypes": {
         "Servers": "Servers",
         "Cameras": "Camera's",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Opslaglocaties",
+        "Network Interfaces": "Netwerk interfaces"
     },
     "alarmLevels": {
         "offline": "Offline",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Fouten",
+        "warning": "Waarschuwing"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Alle waarschuwingen",
+        "warning": "Alleen waarschuwingen",
+        "error": "Alleen fouten"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Alle apparaattypen",
         "servers": "Server",
         "cameras": "Camera's",
-        "storages": "Storages",
+        "storages": "Opslag",
         "networkInterfaces": "Interface"
     },
     "accessRoles": {
@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Wachtwoord voor admin gebruiker is onjuist",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "knownBothSystemsConnectedToCloud": "Systeem {targetSystem} is verbonden met %CLOUD_NAME%. Cloud systemen kunnen alleen worden samengevoegd vanuit het %CLOUD_NAME% portaal.",
             "unknownBothSystemsConnectedToCloud": "Kan twee systemen die zijn verbonden met de cloud niet samenvoegen. Ga naar %CLOUD_NAME% om deze systemen samen te voegen.",
             "checking": "Controleren...",
             "cloud": "Cloud",
@@ -467,7 +467,7 @@
             "removeUser": "Gebruiker verwijderen",
             "serversDetach": "Server&nbsp;<strong>{ title }</strong>&nbsp;loskoppelen van het huidige systeem?",
             "serversReset": "Server resetten&nbsp;<strong>{ title }</strong>&nbsp;naar standaardwaarden?",
-            "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
+            "serversRestart": "Herstart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
             "deleteAccount": "Verbreek alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% om uw account te verwijderen."
@@ -675,7 +675,7 @@
     "ipvdFeedback": {
         "request": "Gelieve <span id=\"request\">een verzoek in te dienen</span> voor aanvullende vragen/opmerkingen met betrekking tot ondersteunde apparaten."
     },
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
+    "alertsCount": "{count, plural, =0{# waarschuwingen} one{# waarschuwing} other{# waarschuwingen}}",
     "ipvdTopXByVolume": "Top {value} door volume:",
     "ipvdDisclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {vmsName} waar gebruikers automatisch rapporteren van apparaatspecificaties naar {companyName} toestaan. Er worden geen persoonlijke gegevens verzameld en elke gebruiker blijft volledig anoniem.",
     "menu": {
@@ -686,18 +686,18 @@
             "licenses": "Licenties",
             "users": "Gebruikers",
             "servers": "Servers",
-            "alerts": "Alerts",
+            "alerts": "Waarschuwingen",
             "systems": "Systeem",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
-            "logs": "Logs"
+            "storages": "Opslaglocaties",
+            "networkInterfaces": "Netwerk interfaces",
+            "graphs": "Grafieken",
+            "logs": "Logboeken"
         }
     },
     "tableHeaders": {
         "type": "Type",
         "server": "Server",
-        "alert": "Alert"
+        "alert": "Waarschuwing"
     },
     "pageTitles": {
         "about": "Over",
@@ -706,7 +706,7 @@
         "activateCode": "Activeer account",
         "activateSuccess": "Account geactiveerd",
         "articleTitle": "{ARTICLE_TITLE} voor {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Autorisatie",
         "changePassword": "Wachtwoord wijzigen",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
@@ -727,7 +727,7 @@
         "systemShare": "Deel Systeem",
         "systems": "Systemen",
         "template": "{title} - %CLOUD_NAME%",
-        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
+        "templateWebadmin": "{title} - webbadmin - %VMS_NAME%",
         "view": "Bekijk camera's",
         "apiTool": "API testing tool",
         "security": "Beveiliging",
@@ -965,51 +965,51 @@
     "healthMonitor": {
         "groups": {
             "info": "Info",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Beschikbaarheid",
+            "load": "Belasting",
+            "activity": "Activiteit"
         },
         "keys": {
-            "name": "Name",
+            "name": "Naam",
             "servers": "Servers",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "cameras": "Camera kanalen",
+            "storages": "Opslaglocaties",
             "users": "Gebruikers",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Systeemversie",
+            "cloudSystemId": "Cloudsysteem ID",
             "status": "Status",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
+            "offlineEvents": "Gebeurtenissen: Server offline (24h)",
+            "uptimeS": "Actief",
             "cpuUsageP": "CPU %",
             "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "ramUsageB": "RAM-gebruik",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
+            "serverRamUsageB": "CPU (VMS Server)",
+            "serverRamUsageP": "CPU (VMS Server) %",
             "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "decodingThreads": "Threads decoderen",
+            "decodingSpeed3s": "Decodering snelheid",
+            "encodingThreads": "Threads coderen",
+            "encodingSpeed3s": "Coderingssnelheid",
+            "primaryStreams": "Uitgaande primaire streams",
+            "secondaryStreams": "Uitgaande secundaire streams",
+            "incomingConnections": "Inkomende verbindingen",
+            "outgoingConnections": "Uitgaande verbindingen",
+            "logLevel": "Logging niveau",
+            "publicIp": "Openbare IP",
             "os": "OS",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "OS tijd",
+            "vmsTime": "VMS Tijd",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Kernen",
             "ramB": "RAM",
             "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
+            "vmsTimeChanged24h": "Gebeurtenissen: Tijd gewijzigd (24h)",
+            "transactionsPerSecond1m": "Transacties/s",
+            "actionsTriggered1m": "Regels Activeringen/s",
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "activePlugins": "Actieve plugins lijst"
         }
     },
     "headerLabels": {
@@ -1218,16 +1218,16 @@
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "webadmin - %VMS_NAME%"
+            "title": "webbadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Instellingen - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Weergave - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Informatie - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
             "title": "Server Monitoring - webadmin - %VMS_NAME%"

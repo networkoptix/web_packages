@@ -1,17 +1,17 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Khoảng %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Tất cả máy chủ",
     "Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
-    "For developers": "For developers",
-    "Integrations (β)": "Integrations (β)",
+    "For developers": "Dành cho nhà phát triển",
+    "Integrations (β)": "Tích hợp (beta)",
     "Privacy": "Quyền riêng tư",
     "Support": "Hỗ trợ",
     "Terms": "Điều khoản",
     "Developers Console": "Developers Console",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Đảm bảo rằng máy chủ được chỉ định đang trực tuyến và thử lại."
     },
     "alarmTypes": {
         "Servers": "May chủ",
@@ -21,7 +21,7 @@
     },
     "alarmLevels": {
         "offline": "Ẩn",
-        "error": "Errors",
+        "error": "Lỗi",
         "warning": "Warnings"
     },
     "alertFilters": {
@@ -95,14 +95,14 @@
         }
     },
     "account": {
-        "account": "Account",
-        "key": "Key",
+        "account": "Tài khoản",
+        "key": "Mã khóa",
         "accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
         "accountSettings": "Cài đặt tài khoản",
         "activationLinkSent": "Link kích hoạt đã được gửi",
         "agreementAccepted": "Thỏa thuận đã được chấp nhận",
         "changePassword": "Đổi mật khẩu",
-        "security": "Security",
+        "security": "Bảo mật",
         "newPasswordLabel": "Mật khẩu mới",
         "passwordChangedSuccess": "Mật khẩu đã được lưu thành công",
         "saveChanges": "Lưu"
@@ -114,53 +114,53 @@
         "setNewPasswordLabel": "Mật khẩu mới"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
-        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
-        "connectSubheader": "To access it from anywhere and enable additional features",
-        "expiredSubheader": "Please, log in again",
-        "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
-        "setupText": "Setup Non-cloud System",
-        "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
-        "forAccountSubheader": "For {accountEmail}",
-        "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
-        "passwordMerge": "to merge systems",
-        "passwordBackup": "to create backup",
-        "passwordRestore": "to restore system from backup",
-        "passwordReset": "to reset server",
-        "passwordRestart": "to restart server",
-        "passwordDetach": "to detach server",
-        "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
-        "activateHeader": "Activate %CLOUD_NAME% Account",
-        "createdText": "Account Created!",
-        "activatedText": "Account Activated!",
-        "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
-        "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
+        "loginCloudHeader": "Đăng nhập vào %CLOUD_NAME%",
+        "connectHeader": "Kết nối Hệ thống với %CLOUD_NAME%",
+        "expiredHeader": "Phiên của bạn đã hết hạn",
+        "loginSystemSubheader": "Với tài khoản %CLOUD_NAME% của bạn",
+        "connectSubheader": "Để truy cập từ mọi nơi và kích hoạt các tính năng bổ sung",
+        "expiredSubheader": "Vui lòng đăng nhập lại",
+        "connectAdditional": "Tài khoản này sẽ có cấp độ truy cập của chủ sở hữu",
+        "createText": "Tạo Tài Khoản",
+        "setupText": "Thiết lập hệ thống không phải đám mây",
+        "asAccountSubheader": "Như",
+        "toAccountSubheader": "Đến",
+        "forAccountSubheader": "Dành cho {accountEmail}",
+        "passwordDisconnect": "ngắt kết nối hệ thống khỏi %CLOUD_NAME%",
+        "passwordMerge": "để hợp nhất các hệ thống",
+        "passwordBackup": "để tạo bản sao lưu",
+        "passwordRestore": "để khôi phục hệ thống từ bản sao lưu",
+        "passwordReset": "để đặt lại máy chủ",
+        "passwordRestart": "để khởi động lại máy chủ",
+        "passwordDetach": "để tách máy chủ",
+        "expiredAccountSubheader": "Vui lòng đăng nhập lại bằng",
+        "createAccountHeader": "Tạo tài khoản %CLOUD_NAME%",
+        "activateHeader": "Kích hoạt tài khoản %CLOUD_NAME%",
+        "createdText": "Tài khoản được tạo!",
+        "activatedText": "Tài khoản đã kích hoạt!",
+        "createdAdditional": "<p class=\"mb-2\">Tin nhắn xác nhận với liên kết kích hoạt được gửi tới {accountEmail}.</p><p>Vui lòng kích hoạt tài khoản và quay lại đây để hoàn thành quá trình.</p>",
+        "activatedAdditional": "<p>Bây giờ bạn có thể tiếp tục đăng nhập vào %CLOUD_NAME% tại đây hoặc bất kỳ nơi nào khác</p>",
         "passResetHeader": "Đặt lại mật khẩu",
-        "newPassHeader": "Set New Password",
-        "newPassConfirmText": "Password is set!",
-        "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
-        "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
-        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
-        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
-        "setupConnectedText": "System connected",
-        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "newPassHeader": "Đặt mật khẩu mới",
+        "newPassConfirmText": "Mật khẩu đã được thiết lập!",
+        "newPassInvalidCode": "Không thể lưu mật khẩu: Mã xác nhận đã được sử dụng hoặc không chính xác",
+        "notSecureText": "Nếu tiếp tục, bạn sẽ cho phép<br><span class='error-label'>{ redirectUrl }</span><br>truy cập vào tài khoản %CLOUD_NAME% của bạn.",
+        "confirmHeader": "Hệ thống kết nối với %CLOUD_NAME%!",
+        "loginError": "Không thể kết nối với %CLOUD_NAME%",
+        "loginErrorAdditional": "Vui lòng thử lại hoặc đăng nhập trực tiếp vào hệ thống bằng tài khoản nội bộ của bạn.",
+        "connectErrorAdditional": "Vui lòng thử lại sau.",
+        "setupErrorAdditional": "<p class=\"mb-2\">Vui lòng thử lại hoặc thiết lập hệ thống không phải đám mây.</p><p> Sau đó bạn sẽ có thể kết nối hệ thống với %CLOUD_NAME% bất cứ lúc nào.</p>",
+        "connectedText": "Hệ thống kết nối với %CLOUD_NAME%",
+        "setupConnectedText": "Hệ thống được kết nối",
+        "stayLoggedInHelpText": "Hộp kiểm để duy trì trạng thái đăng nhập",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
         "copiedToClipboard": "Copied to clipboard",
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
-            "newPass": "set a new password",
-            "login": "log in"
+            "newPass": "đặt mật khẩu mới",
+            "login": "đăng nhập"
         },
-        "emailSent": "Email sent!"
+        "emailSent": "Email đã được gửi!"
     },
     "cameraFilters": {
         "H265": "Cameras H.265",
@@ -211,7 +211,7 @@
         },
         "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
         "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "login": "đăng nhập",
         "recordingSettingsWarning": "Vui lòng cập nhật cài đặt ghi âm bị thiếu.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -240,7 +240,7 @@
         "inaccessibleFeatureMessage": "Hệ thống là ngoại tuyến và do đó, thông tin không thể truy cập.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Tìm kiếm",
-        "system": "system",
+        "system": "hệ thống",
         "systemHasNoCameras": "Không có máy ảnh",
         "systemHasNoCamerasMessage": "Không có máy ảnh có thể truy cập cho bạn trong hệ thống. <br><br>Kết nối một vài camera với mạng cục bộ của máy chủ để có thể phát hiện ra chúng hoặc yêu cầu quản trị viên hệ thống thay đổi cấp độ truy cập của bạn.",
         "systemNewVersion": "Cập nhật hệ thống của bạn",
@@ -283,7 +283,7 @@
         "unlockToMove": "Unlock dashboard to move widgets"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "Tạo"
     },
     "dialogs": {
         "twoFa": {
@@ -300,8 +300,8 @@
             "createAccount": "Tạo tài khoản mới",
             "delete": "Xóa bỏ",
             "deleteAccount": "Xóa tài khoản",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Vô hiệu hóa",
+            "enable": "Kích hoạt",
             "download": "Tải xuống %VMS_NAME%",
             "logoutAuthorised": "Đăng xuất",
             "ok": "Xác nhận",
@@ -363,7 +363,7 @@
             "knownBothSystemsConnectedToCloud": "Hệ thống {targetSystem} được kết nối với %CLOUD_NAME%. Hệ thống đám mây chỉ có thể được hợp nhất từ cổng thông tin %CLOUD_NAME%.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Đang kiểm tra...",
-            "cloud": "Cloud",
+            "cloud": "Đám mây",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
             "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
@@ -398,10 +398,10 @@
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
-            "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
-            "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
+            "systemOfflineUrl": "{targetSystem} không thể truy cập được",
+            "systemsIncompatible": "Máy chủ này có phiên bản phần mềm không tương thích. Vui lòng cập nhật cả hai hệ thống thành {downloadHTML}.",
+            "systemVersionOld": "Hệ thống {targetSystem} có phiên bản phần mềm cũ hơn không tương thích với hệ thống hiện tại. Cập nhật %targetSystem% thành {downloadHTML} để hợp nhất với bản hiện tại.",
+            "systemVersionNew": "Hệ thống {targetSystem} có phiên bản phần mềm mới hơn không tương thích với hệ thống hiện tại. Cập nhật hệ thống hiện tại lên bản {downloadHTML} để hợp nhất với hệ thống {targetSystem}.",
             "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
             "targetSystemBoundToCloud": "This system is not connected to the cloud. Cannot merge with systems bound to the cloud.",
             "urlEmpty": "Nhập địa chỉ máy chủ",
@@ -438,17 +438,17 @@
             "twoFactor": {
                 "required": "Two-factor authentication is required.",
                 "configure": "You can configure it in your",
-                "accountLink": "account settings",
+                "accountLink": "cài đặt tài khoản",
                 "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
             "action": "Ngắt kết nối",
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "title": "Ngắt kết nối hệ thống?"
         },
         "renewAuth": {
-            "action": "Login",
+            "action": "Đăng nhập",
             "message": "Please log in again.",
             "title": "Your session has expired"
         },
@@ -464,7 +464,7 @@
             "failedLoginTo": "Failed to login to {systemName}",
             "loggedFromOtherAccount": "Bạn sẽ đăng nhập bằng một tài khoản khác",
             "noClientDetected": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
-            "removeUser": "Remove user",
+            "removeUser": "Xóa người dùng",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
@@ -473,7 +473,7 @@
             "deleteAccount": "Ngắt kết nối tất cả các hệ thống mà bạn là chủ sở hữu khỏi cổng %CLOUD_NAME% để xóa tài khoản của bạn."
         },
         "twoFactor": {
-            "action": "Login",
+            "action": "Đăng nhập",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
@@ -631,7 +631,7 @@
         "Health Monitor": "Theo dõi tài nguyên hệ thống",
         "Storage": "Lưu trữ",
         "myIntegrationsLabel": "Của tôi",
-        "requirements": "{name} Requirements",
+        "requirements": "{name} Yêu cầu",
         "testedVersionLabel": "Tested by the developer with {vmsName} version:",
         "testedVersionsLabel": "Tested by the developer with {vmsName} versions:"
     },
@@ -686,7 +686,7 @@
             "licenses": "Mã bản quyền",
             "users": "Người sử dụng",
             "servers": "May chủ",
-            "alerts": "Alerts",
+            "alerts": "Cảnh báo",
             "systems": "Hệ thống",
             "storages": "Storage Locations",
             "networkInterfaces": "Network Interfaces",
@@ -697,7 +697,7 @@
     "tableHeaders": {
         "type": "Kiểu",
         "server": "May chủ",
-        "alert": "Alert"
+        "alert": "Cảnh báo"
     },
     "pageTitles": {
         "about": "Đối với",
@@ -715,7 +715,7 @@
         "failedToAccess2FA": "Failed to access \"{systemName}\" system",
         "failedToAccessSystem": "Không thể truy cập hệ thống",
         "failedToAccessCamera": "Failed to access camera",
-        "integrations": "%VMS_NAME% Integrations",
+        "integrations": "%VMS_NAME% Tích hợp",
         "login": "Đăng nhập",
         "pageNotFound": "Không tìm thấy trang",
         "register": "Tạo tài khoản tại",
@@ -729,8 +729,8 @@
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Xem camera",
-        "apiTool": "API testing tool",
-        "security": "Security",
+        "apiTool": "Công cụ kiểm tra API",
+        "security": "Bảo mật",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -794,8 +794,8 @@
         },
         "finishingMerge": "Kết thúc hệ thống",
         "integration": {
-            "accept": "Accept",
-            "reject": "Reject",
+            "accept": "Đồng ý",
+            "reject": "Từ chối",
             "backToEditText": "Quay lại giao diện chỉnh sửa",
             "previewRibbon": "Trang này là bản xem trước của những thay đổi mới nhất và nó không phù hợp với phiên bản có sẵn công khai.",
             "publishedRibbon": "This page is the live version that is publicly available."
@@ -826,12 +826,12 @@
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
         "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Máy chủ hiện đang tách ra",
-        "beginReset": "Server is now resetting.",
+        "beginReset": "Máy chủ hiện đang được đặt lại.",
         "detachSystemFailed": "Không thể tách máy chủ khỏi hệ thống. Vui lòng kiểm tra xem mật khẩu bạn đã nhập có chính xác không và máy chủ đang trực tuyến và thử lại.",
         "detachSystemSuccess": "Máy chủ đã được tách ra khỏi hệ thống.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "Làm mới",
+        "refreshing": "Đang làm mới...",
         "removeMediaserverFailed": "Không thể xóa máy chủ khỏi hệ thống.",
         "resetFailed": "Không thể thiết lập lại máy chủ. Vui lòng kiểm tra xem mật khẩu bạn đã nhập có chính xác không và máy chủ đang trực tuyến và thử lại.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -842,21 +842,21 @@
         "status": {
             "checking": "kiểm tra...",
             "offline": "ngoại tuyến",
-            "resetting": "resetting...",
+            "resetting": "đang đặt lại...",
             "restarting": "đang khởi động lại..."
         },
         "successRename": "Tên máy chủ được lưu."
     },
     "serverTabTitles": {
         "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
+        "Settings": "Cài đặt",
+        "Information": "Thông tin",
+        "Bookmarks": "Dấu trang",
         "Monitoring": "Monitoring"
     },
     "system": {
-        "connected": "Connected",
-        "not_connected": "Not connected",
+        "connected": "Đã kết nối",
+        "not_connected": "Không kết nối",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)",
         "mySystemSearch": "IMeMyMine",
@@ -867,7 +867,7 @@
             "sessionLimitDuration": {
                 "hours": "giờ",
                 "minutes": "phút",
-                "days": "days"
+                "days": "ngày"
             },
             "warningMessages": {
                 "videoEncryption": "Mã hóa lưu lượng video sẽ tăng đáng kể việc sử dụng CPU."
@@ -910,11 +910,11 @@
         },
         "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
-            "local": "Local",
+            "local": "Địa phương",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "cloud": "Đám mây"
         }
     },
     "systemStatuses": {
@@ -970,22 +970,22 @@
             "activity": "Activity"
         },
         "keys": {
-            "name": "Name",
+            "name": "Tên",
             "servers": "May chủ",
             "cameras": "Camera channels",
             "storages": "Storage locations",
             "users": "Người sử dụng",
             "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "cloudSystemId": "ID hệ thống đám mây",
             "status": "Trạng thái",
             "offlineEvents": "Events: Server Offline (24h)",
             "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "serverCpuUsageP": "CPU (Máy chủ VMS)%",
+            "ramUsageB": "Sử dụng RAM",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
+            "serverRamUsageB": "RAM (Máy chủ VMS)",
+            "serverRamUsageP": "RAM (Máy chủ VMS)%",
             "threads": "Server threads",
             "decodingThreads": "Decoding threads",
             "decodingSpeed3s": "Decoding speed",
@@ -993,19 +993,19 @@
             "encodingSpeed3s": "Encoding speed",
             "primaryStreams": "Outgoing Primary streams",
             "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
+            "incomingConnections": "Kết nối đến",
+            "outgoingConnections": "Kết nối đi",
             "logLevel": "Logging level",
             "publicIp": "Public IP",
             "os": "HĐH",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "Thời gian OS",
+            "vmsTime": "Thời gian VMS",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Lõi",
             "ramB": "RAM",
             "guidConflict": "Server GUID conflict",
             "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
+            "transactionsPerSecond1m": "Giao dịch/s",
             "actionsTriggered1m": "Rules Activations/s",
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
@@ -1025,7 +1025,7 @@
             "VMAX": "VMAX",
             "Video Wall": "Bức tường video",
             "Analog Encoder": "Bộ mã hóa tương tự",
-            "Starter": "Bắt đầu",
+            "Starter": "Khởi đầu",
             "IO Module": "Mô đun IO",
             "Bridge": "Cầu",
             "NVR": "NVR",
@@ -1043,7 +1043,7 @@
             "error": "Lỗi",
             "expired": "Đã hết hạn",
             "ok": "Xác nhận",
-            "nvrError": "NVR Error",
+            "nvrError": "Lỗi NVR",
             "serverNotFound": "Server not found"
         },
         "messages": {
@@ -1174,13 +1174,13 @@
             "backupFailed": "Lập lại chỉ mục Sao lưu không thành công"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
+            "main": "Chính",
+            "backup": "Sao lưu",
+            "notInUse": "Không sử dụng",
             "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
+            "inaccessible": "Không thể tiếp cận",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Vô hiệu hóa"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
@@ -1203,16 +1203,16 @@
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Hệ thống - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Tích hợp - %CLOUD_NAME%"
         },
         "/docs": {
             "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Thiết bị được hỗ trợ - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {
@@ -1239,48 +1239,48 @@
     "view": {
         "timeline": {
             "dayNames": {
-                "Sun": "Sun",
-                "Mon": "Mon",
-                "Tue": "Tue",
-                "Wed": "Wed",
-                "Thu": "Thu",
-                "Fri": "Fri",
-                "Sat": "Sat",
-                "Sunday": "Sunday",
-                "Monday": "Monday",
-                "Tuesday": "Tuesday",
-                "Wednesday": "Wednesday",
-                "Thursday": "Thursday",
-                "Friday": "Friday",
-                "Saturday": "Saturday"
+                "Sun": "Chủ Nhật",
+                "Mon": "Thứ Hai",
+                "Tue": "Thứ Ba",
+                "Wed": "Thứ Tư",
+                "Thu": "Thứ Năm",
+                "Fri": "Thứ Sáu",
+                "Sat": "Thứ Bảy",
+                "Sunday": "Chủ Nhật",
+                "Monday": "Thứ Hai",
+                "Tuesday": "Thứ Ba",
+                "Wednesday": "Thứ Tư",
+                "Thursday": "Thứ Năm",
+                "Friday": "Thứ Sáu",
+                "Saturday": "Thứ Bảy"
             },
             "monthNames": {
-                "Jan": "Jan",
-                "Feb": "Feb",
-                "Mar": "Mar",
-                "Apr": "Apr",
-                "May": "May",
-                "Jun": "Jun",
-                "Jul": "Jul",
-                "Aug": "Aug",
-                "Sep": "Sep",
-                "Oct": "Oct",
-                "Nov": "Nov",
-                "Dec": "Dec",
-                "January": "January",
-                "February": "February",
-                "March": "March",
-                "April": "April",
-                "June": "June",
-                "July": "July",
-                "August": "August",
-                "September": "September",
-                "October": "October",
-                "November": "November",
-                "December": "December"
+                "Jan": "Tháng một",
+                "Feb": "Tháng hai",
+                "Mar": "Tháng ba",
+                "Apr": "Tháng tư",
+                "May": "Tháng năm",
+                "Jun": "Tháng sáu",
+                "Jul": "Tháng bảy",
+                "Aug": "Tháng tám",
+                "Sep": "Tháng chín",
+                "Oct": "Tháng mười",
+                "Nov": "Tháng mười một",
+                "Dec": "Tháng mười hai",
+                "January": "Tháng một",
+                "February": "Tháng hai",
+                "March": "Tháng ba",
+                "April": "Tháng tư",
+                "June": "Tháng sáu",
+                "July": "Tháng bảy",
+                "August": "Tháng tám",
+                "September": "Tháng chín",
+                "October": "Tháng mười",
+                "November": "Tháng mười một",
+                "December": "Tháng mười hai"
             },
             "timeNames": {
-                "a": "a",
+                "a": "một",
                 "p": "p",
                 "am": "am",
                 "pm": "pm",

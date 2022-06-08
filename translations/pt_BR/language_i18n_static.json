@@ -1,7 +1,7 @@
 {
     "language": "pt_BR",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
     "Integrations (β)": "Integrações (β)",
@@ -11,29 +11,29 @@
     "Developers Console": "Console do desenvolvedor",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Certifique-se de que o servidor especificado esteja online e tente novamente."
     },
     "alarmTypes": {
         "Servers": "Servidores",
         "Cameras": "Câmeras",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Locais de armazenamento",
+        "Network Interfaces": "Interfaces de rede"
     },
     "alarmLevels": {
         "offline": "Off-line",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Erros",
+        "warning": "Avisos"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Todos os alertas",
+        "warning": "Apenas avisos",
+        "error": "Apenas erros"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Todos os tipos de dispositivos",
         "servers": "Servidor",
         "cameras": "Câmeras",
-        "storages": "Storages",
+        "storages": "Armazenamentos",
         "networkInterfaces": "Interface"
     },
     "accessRoles": {
@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Digite a senha da conta do proprietário em <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "A senha do usuário administrador está errada",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "knownBothSystemsConnectedToCloud": "O sistema {targetSystem} está conectado a %CLOUD_NAME%. Os sistemas em nuvem podem ser mesclados apenas a partir de %CLOUD_NAME% portais.",
             "unknownBothSystemsConnectedToCloud": "Não é possível mesclar dois sistemas conectados à nuvem. Vá para %CLOUD_NAME% para mesclar esses sistemas.",
             "checking": "Verificando...",
             "cloud": "Nuvem",
@@ -675,7 +675,7 @@
     "ipvdFeedback": {
         "request": "Por favor, <span id=\"request\">envie uma solicitação</span> para perguntas/preocupações adicionais sobre dispositivos suportados."
     },
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
+    "alertsCount": "{count, plural, =0{#alerta} one{# alerta} other{#alerta}}",
     "ipvdTopXByVolume": "Top {value} por volume:",
     "ipvdDisclaimer": "Esta lista é limitada a dispositivos encontrados em {vmsName} onde os usuários permitiram relatórios automáticos de especificações do dispositivo para {companyName}. Nenhuma informação pessoal é coletada e cada usuário permanece completamente anônimo.",
     "menu": {
@@ -686,18 +686,18 @@
             "licenses": "Licenças",
             "users": "Usuários",
             "servers": "Servidores",
-            "alerts": "Alerts",
+            "alerts": "Alertas",
             "systems": "Sistema",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "storages": "Locais de armazenamento",
+            "networkInterfaces": "Interfaces de rede",
+            "graphs": "Gráficos",
             "logs": "Logs"
         }
     },
     "tableHeaders": {
         "type": "Tipo",
         "server": "Servidor",
-        "alert": "Alert"
+        "alert": "Alerta"
     },
     "pageTitles": {
         "about": "Sobre",
@@ -965,51 +965,51 @@
     "healthMonitor": {
         "groups": {
             "info": "Informações",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Disponibilidade",
+            "load": "Carga",
+            "activity": "Atividade"
         },
         "keys": {
-            "name": "Name",
+            "name": "Nome",
             "servers": "Servidores",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "cameras": "Canais da câmera",
+            "storages": "Locais de armazenamento",
             "users": "Usuários",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Versão do sistema",
+            "cloudSystemId": "Código do sistema em nuvem",
             "status": "Status",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
+            "offlineEvents": "Eventos: Servidor Offline (24h)",
+            "uptimeS": "Tempo de atividade",
             "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "serverCpuUsageP": "% de CPU (servidor VMS)",
+            "ramUsageB": "Uso de RAM",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
-            "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "serverRamUsageB": "RAM (servidor VMS)",
+            "serverRamUsageP": "% de RAM (servidor VMS)",
+            "threads": "Threads do servidor",
+            "decodingThreads": "Decodificação de threads",
+            "decodingSpeed3s": "Velocidade de decodificação",
+            "encodingThreads": "Codificação de threads",
+            "encodingSpeed3s": "Velocidade de codificação",
+            "primaryStreams": "Fluxos primários de saída",
+            "secondaryStreams": "Fluxos secundários de saída",
+            "incomingConnections": "Conexões de entrada",
+            "outgoingConnections": "Conexões de saída",
+            "logLevel": "Nível de registro",
+            "publicIp": "IP Público",
             "os": "SO",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "Hora do SO",
+            "vmsTime": "Hora do VMS",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Núcleos",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "guidConflict": "Conflito de GUID do servidor",
+            "vmsTimeChanged24h": "Eventos: Horário Alterado (24h)",
+            "transactionsPerSecond1m": "Transações/s",
+            "actionsTriggered1m": "Ativações de regras",
+            "apiCalls1m": "Chamadas de API",
+            "thumbnails1m": "Miniaturas",
+            "activePlugins": "Lista de plugins ativos"
         }
     },
     "headerLabels": {
@@ -1221,16 +1221,16 @@
             "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Configurações - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Visualizar - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Informações - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "Monitoramento do Servidor - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

@@ -4,5 +4,5 @@ Olá {{message.userFullName}},
 
 {{config.portal_url}}/ autorizar / ativar /{{message.code}}
 
-Se você não se registou em %CLOUD_NAME%, ignore este e-mail.
+Se você não se registrou em %CLOUD_NAME%, apenas ignore este e-mail.
 Não compartilhe esta mensagem ou o link com ninguém.
