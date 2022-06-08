@@ -1,142 +1,293 @@
 <nx-pre-loader *ngIf="!selectedManifest"></nx-pre-loader>
 
-<nx-block *ngIf="docAsset?.title && docAsset?.blocks.length" header-style="slim" type="mb-3">
+<nx-block
+    *ngIf="docAsset?.title && docAsset?.blocks.length"
+    header-style="slim"
+    type="mb-3"
+>
     <header>
-        {{docAsset.title}}
+        {{ docAsset.title }}
     </header>
     <nx-section *ngFor="let block of docAsset.blocks">
-        <div [innerHTML]="block.contentHTML | safe:'html'"></div>
+        <div [innerHTML]="block.contentHTML | safe: 'html'"></div>
     </nx-section>
 </nx-block>
 
-<nx-block *ngIf="selectedManifest?.contexts" header-style="slim">
+<nx-block
+    *ngIf="selectedManifest?.contexts"
+    header-style="slim"
+>
     <header class="header-with-search">
-        <span>{{selectedManifest.title}}</span>
-        <button *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.SEARCH] && selectedData.showAdvanced$ | async" (click)="toggleSearch()" [ngClass]="{'search-active': showSearch}">
+        <span>{{ selectedManifest.title }}</span>
+        <button
+            *ngIf="
+                !selectedManifest.disabled[OPTIONAL_FEATURES.SEARCH] && selectedData.showAdvanced$
+                    | async
+            "
+            (click)="toggleSearch()"
+            [ngClass]="{ 'search-active': showSearch }"
+        >
             <span class="glyphicon web-icon-search icon-search"></span>
             <span translate>Search</span>
         </button>
     </header>
-    <nx-section *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.SEARCH] && (selectedData.showAdvanced$ | async) && showSearch" type="light-gray">
+    <nx-section
+        *ngIf="
+            !selectedManifest.disabled[OPTIONAL_FEATURES.SEARCH] &&
+            (selectedData.showAdvanced$ | async) &&
+            showSearch
+        "
+        type="light-gray"
+    >
         <div class="search-wrapper">
-            <nx-search [ngModel]="this.selectedData.search$ | async"
+            <nx-search
+                [ngModel]="this.selectedData.search$ | async"
                 (ngModelChange)="updateSearchParam($event)"
                 layout="search"
-                instant></nx-search>
-            <div>{{selectedManifest.searchSubheading}}</div>
+                instant
+            ></nx-search>
+            <div>{{ selectedManifest.searchSubheading }}</div>
         </div>
     </nx-section>
-    <div *ngIf="!noItems" class="console-table-wrapper">
-        <table cdk-table [dataSource]="selectedData" (resize)="updateTableSize($event)" [style.marginBottom.px]="((selectedData.perPage$ | async) - (selectedData.data$ | async).length) * 48">
-            <ng-container *ngFor="let field of selectedManifest.contexts" [cdkColumnDef]="field.name">
-                <th cdk-header-cell *cdkHeaderCellDef #headingCell class="position-relative">
-                    <span>{{field.label}}</span>
+    <div
+        *ngIf="!noItems"
+        class="console-table-wrapper"
+    >
+        <table
+            cdk-table
+            [dataSource]="selectedData"
+            (resize)="updateTableSize($event)"
+            [style.marginBottom.px]="
+                ((selectedData.perPage$ | async) - (selectedData.data$ | async).length) * 48
+            "
+        >
+            <ng-container
+                *ngFor="let field of selectedManifest.contexts"
+                [cdkColumnDef]="field.name"
+            >
+                <th
+                    cdk-header-cell
+                    *cdkHeaderCellDef
+                    #headingCell
+                    class="position-relative"
+                >
+                    <span>{{ field.label }}</span>
                     <ng-container *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.FILTER]">
-                        <span *ngIf="field.meta.filter as filter" (click)="updateActiveFilter(field.name)"  class="label-filter" [ngClass]="{'active': activeFilter === field.name}">&#x25BC;</span>
+                        <span
+                            *ngIf="field.meta.filter as filter"
+                            (click)="updateActiveFilter(field.name)"
+                            class="label-filter"
+                            [ngClass]="{ active: activeFilter === field.name }"
+                            >&#x25BC;</span
+                        >
                         <nx-advanced-filter
                             (onClose)="updateActiveFilter()"
                             [filter]="field.meta.filter"
                             [field]="field.name"
                             [initialState]="filterStates[field.name]"
-                            [data]="(selectedData.data$ | async)"
+                            [data]="selectedData.data$ | async"
                             [activeFilter]="activeFilter"
-                            (updateFilter)="filterUpdaterFactory(field.name)($event)"></nx-advanced-filter>
+                            (updateFilter)="filterUpdaterFactory(field.name)($event)"
+                        ></nx-advanced-filter>
                     </ng-container>
                 </th>
                 <ng-container [ngSwitch]="field.type">
                     <ng-container *ngSwitchCase="CONFIG_TYPE.STATUS">
-                        <td cdk-cell *cdkCellDef="let element"
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
                             [nxTooltip]="field.meta?.tooltip"
                             [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
-                        >{{element[field.name]}}</td>
+                            >{{ element[field.name] }}</td
+                        >
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.COMMENTS">
-                        <td cdk-cell *cdkCellDef="let element"
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
                             [nxTooltip]="field.meta?.tooltip"
                             [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
-                        >{{element[field.name]}}</td>
+                            >{{ element[field.name] }}</td
+                        >
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_LINK">
-                        <td cdk-cell *cdkCellDef="let element" [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
+                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
+                        >
                             <ng-template #icon>
-                                <svg-icon nx-add-svg-src
+                                <svg-icon
+                                    nx-add-svg-src
                                     [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
-                                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
+                                    [svgStyle]="{
+                                        'width.px': '24',
+                                        'height.px': '24',
+                                        'margin.px': '8'
+                                    }"
                                     [applyClass]="true"
                                     [nxTooltip]="field.meta?.tooltip"
                                 ></svg-icon>
                             </ng-template>
                             <ng-template #externalLink>
-                                <a [href]="element[field.name]" target="_blank">
+                                <a
+                                    [href]="element[field.name]"
+                                    target="_blank"
+                                >
                                     <ng-container *ngTemplateOutlet="icon"></ng-container>
                                 </a>
                             </ng-template>
-                            <a *ngIf="element[field.name].startsWith('/'); else externalLink" [routerLink]="base + '/' + sectionParam + '/' + element[field.name]" queryParamsHandling="merge">
+                            <a
+                                *ngIf="element[field.name].startsWith('/'); else externalLink"
+                                [routerLink]="base + '/' + sectionParam + '/' + element[field.name]"
+                                queryParamsHandling="merge"
+                            >
                                 <ng-container *ngTemplateOutlet="icon"></ng-container>
                             </a>
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ASYNC_HANDLER">
-                        <td cdk-cell *cdkCellDef="let element"
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
                             (mousedown)="handleIgnoreActive($event, true)"
-                            [style.width.px]="fixedWidths[field.name] || field.meta?.options?.defaultWidth || 60"
-                            [class]="'dynamic-size type-' + field.type + ' ' + (field.meta?.styles || '')">
-                            <div (click)="asyncInProgress[element[field.name].lookupKey] || handleAsync(element[field.name])"
-                                (resize)="updateFixedWidth(field.name, $event, field.meta?.options?.defaultWidth)"
-                                [ngClass]="asyncInProgress[element[field.name].lookupKey]
-                                    ? 'in-progress-wrapper'
-                                    : asyncErrors[element[field.name].lookupKey]
+                            [style.width.px]="
+                                fixedWidths[field.name] || field.meta?.options?.defaultWidth || 60
+                            "
+                            [class]="
+                                'dynamic-size type-' + field.type + ' ' + (field.meta?.styles || '')
+                            "
+                        >
+                            <div
+                                (click)="
+                                    asyncInProgress[element[field.name].lookupKey] ||
+                                        handleAsync(element[field.name])
+                                "
+                                (resize)="
+                                    updateFixedWidth(
+                                        field.name,
+                                        $event,
+                                        field.meta?.options?.defaultWidth
+                                    )
+                                "
+                                [ngClass]="
+                                    asyncInProgress[element[field.name].lookupKey]
+                                        ? 'in-progress-wrapper'
+                                        : asyncErrors[element[field.name].lookupKey]
                                         ? 'async-error-wrapper'
-                                        : 'async-wrapper'">
+                                        : 'async-wrapper'
+                                "
+                            >
                                 <ng-template #showIcon>
-                                    <svg-icon nx-add-svg-src
-                                        [src]="CONFIG.icons.dirTextButtons + element[field.name].manifest.fields[0].meta.icon"
-                                        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8'}"
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="
+                                            CONFIG.icons.dirTextButtons +
+                                            element[field.name].manifest.fields[0].meta.icon
+                                        "
+                                        [svgStyle]="{
+                                            'width.px': '24',
+                                            'height.px': '24',
+                                            'margin-right.px': '8'
+                                        }"
                                         class="async-svg"
-                                        [applyClass]="true"></svg-icon>
+                                        [applyClass]="true"
+                                    ></svg-icon>
                                 </ng-template>
-                                <svg-icon *ngIf="asyncInProgress[element[field.name].lookupKey]; else showIcon"
+                                <svg-icon
+                                    *ngIf="
+                                        asyncInProgress[element[field.name].lookupKey];
+                                        else showIcon
+                                    "
                                     nx-add-svg-src
                                     class="animate-rotation in-progress-svg"
                                     [src]="CONFIG.icons.dirTextButtons + 'loading.svg'"
-                                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin-right.px': '8'}"
-                                    [applyClass]="true"></svg-icon>
+                                    [svgStyle]="{
+                                        'width.px': '24',
+                                        'height.px': '24',
+                                        'margin-right.px': '8'
+                                    }"
+                                    [applyClass]="true"
+                                ></svg-icon>
                                 <ng-template #download>
                                     <ng-template #errorsTooltip>
                                         <div class="d-flex flex-column">
-                                            <span class="mb-3 text-decoration-underline">{{element[field.name].manifest.fields[0].meta.options.errorHeading}}</span>
-                                            <span *ngFor="let error of (asyncErrors[element[field.name].lookupKey]  || [])">{{ error.message}}</span>
+                                            <span class="mb-3 text-decoration-underline">{{
+                                                element[field.name].manifest.fields[0].meta.options
+                                                    .errorHeading
+                                            }}</span>
+                                            <span
+                                                *ngFor="
+                                                    let error of asyncErrors[
+                                                        element[field.name].lookupKey
+                                                    ] || []
+                                                "
+                                                >{{ error.message }}</span
+                                            >
                                         </div>
                                     </ng-template>
                                     <ng-template #standardStatus>
-                                        <span class="status-label">{{element[field.name].manifest.fields[0].label}}</span>
+                                        <span class="status-label">{{
+                                            element[field.name].manifest.fields[0].label
+                                        }}</span>
                                     </ng-template>
-                                    <span *ngIf="asyncErrors[element[field.name].lookupKey]; else standardStatus"
+                                    <span
+                                        *ngIf="
+                                            asyncErrors[element[field.name].lookupKey];
+                                            else standardStatus
+                                        "
                                         [nxTooltip]="errorsTooltip"
-                                    >{{element[field.name].manifest.fields[0].meta.options.error}}</span>
+                                        >{{
+                                            element[field.name].manifest.fields[0].meta.options
+                                                .error
+                                        }}</span
+                                    >
                                 </ng-template>
-                                <ng-container *ngIf="asyncInProgress[element[field.name].lookupKey] as progress; else download">
-                                    <span class="status-label">{{element[field.name].manifest.fields[1].label}}</span>
-                                    <span class="status-label padded-label">{{progress}}</span>
-                                    <span (click)="$event.stopPropagation(); cancelHandlers[element[field.name].lookupKey]()" class="close-wrapper">
-                                        <svg-icon nx-add-svg-src
+                                <ng-container
+                                    *ngIf="
+                                        asyncInProgress[element[field.name].lookupKey] as progress;
+                                        else download
+                                    "
+                                >
+                                    <span class="status-label">{{
+                                        element[field.name].manifest.fields[1].label
+                                    }}</span>
+                                    <span class="status-label padded-label">{{ progress }}</span>
+                                    <span
+                                        (click)="
+                                            $event.stopPropagation();
+                                            cancelHandlers[element[field.name].lookupKey]()
+                                        "
+                                        class="close-wrapper"
+                                    >
+                                        <svg-icon
+                                            nx-add-svg-src
                                             [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
-                                            [svgStyle]="{'width.px': '12', 'height.px': '12'}"
+                                            [svgStyle]="{ 'width.px': '12', 'height.px': '12' }"
                                             class="close-svg"
-                                            [applyClass]="true"></svg-icon>
+                                            [applyClass]="true"
+                                        ></svg-icon>
                                     </span>
                                 </ng-container>
                             </div>
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.ICON_MODAL">
-                        <td cdk-cell *cdkCellDef="let element"
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
                             (mousedown)="handleIgnoreActive($event, true)"
-                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')">
+                            [class]="'type-' + field.type + ' ' + (field.meta?.styles || '')"
+                        >
                             <a (click)="handleModal(element[field.name])">
-                                <svg-icon nx-add-svg-src
+                                <svg-icon
+                                    nx-add-svg-src
                                     [src]="CONFIG.icons.dirTextButtons + field.meta.icon"
-                                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
+                                    [svgStyle]="{
+                                        'width.px': '24',
+                                        'height.px': '24',
+                                        'margin.px': '8'
+                                    }"
                                     [applyClass]="true"
                                     class="icon-modal-svg"
                                     [nxTooltip]="field.meta?.tooltip"
@@ -145,77 +296,131 @@
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchCase="CONFIG_TYPE.DATE">
-                        <td cdk-cell *cdkCellDef="let element"
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
                             (click)="updateEditValues(element)"
                             [class]="'type-default ' + (field.meta?.styles || '')"
                             queryParamsHandling="merge"
-                            [style.width.px]="fixedWidths[field.name] || field.meta?.options?.defaultWidth || 60"
-                            [routerLink]="[CONSOLE_MODE.EDIT, element.id]">
-                            <span (resize)="updateFixedWidth(field.name, $event, field.meta?.options?.defaultWidth)">
-                                {{element[field.name] | date: 'shortDate'}}
+                            [style.width.px]="
+                                fixedWidths[field.name] || field.meta?.options?.defaultWidth || 60
+                            "
+                            [routerLink]="[CONSOLE_MODE.EDIT, element.id]"
+                        >
+                            <span
+                                (resize)="
+                                    updateFixedWidth(
+                                        field.name,
+                                        $event,
+                                        field.meta?.options?.defaultWidth
+                                    )
+                                "
+                            >
+                                {{ element[field.name] | date: 'shortDate' }}
                             </span>
                         </td>
                     </ng-container>
                     <ng-container *ngSwitchDefault>
-                        <td cdk-cell *cdkCellDef="let element"
+                        <td
+                            cdk-cell
+                            *cdkCellDef="let element"
                             (click)="updateEditValues(element)"
                             [class]="'type-default ' + (field.meta?.styles || '')"
-                            [innerHTML]="element[field.name] | highlight: (selectedData.search$ | async)"
+                            [innerHTML]="
+                                element[field.name] | highlight: (selectedData.search$ | async)
+                            "
                             queryParamsHandling="merge"
-                            [routerLink]="[CONSOLE_MODE.EDIT, element.id]"></td>
+                            [routerLink]="[CONSOLE_MODE.EDIT, element.id]"
+                        ></td>
                     </ng-container>
                 </ng-container>
             </ng-container>
             <thead>
-                <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+                <tr
+                    cdk-header-row
+                    *cdkHeaderRowDef="displayedColumns"
+                ></tr>
             </thead>
             <tbody>
-                <tr cdk-row *cdkRowDef="let row; columns: displayedColumns; let i=index"
+                <tr
+                    cdk-row
+                    *cdkRowDef="let row; columns: displayedColumns; let i = index"
                     (click)="handleIgnoreActive($event, false)"
                     class="data-row"
-                    [ngClass]="{'ignore-active': ignoreActive}"></tr>
-                <tr class="data-row" *cdkNoDataRow>
-                    <td class="data-row" colspan="9999">
-                      <span>{{selectedManifest.noResultsMessage}}</span>
-                      <button (click)="resetSearch()" class="reset-search" translate>Reset Search</button>
+                    [ngClass]="{ 'ignore-active': ignoreActive }"
+                ></tr>
+                <tr
+                    class="data-row"
+                    *cdkNoDataRow
+                >
+                    <td
+                        class="data-row"
+                        colspan="9999"
+                    >
+                        <span>{{ selectedManifest.noResultsMessage }}</span>
+                        <button
+                            (click)="resetSearch()"
+                            class="reset-search"
+                            translate
+                            >Reset Search</button
+                        >
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div *ngIf="!(selectedData.data$ | async)?.length && !(selectedData.noSearchMatches$ | async)" class="table-content-placeholder" [style.height.px]="noItems ? 360 : 48 * (selectedData.perPage$ | async)">
+    <div
+        *ngIf="!(selectedData.data$ | async)?.length && !(selectedData.noSearchMatches$ | async)"
+        class="table-content-placeholder"
+        [style.height.px]="noItems ? 360 : 48 * (selectedData.perPage$ | async)"
+    >
         <ng-template #createPlaceholder>
             <div class="create-placeholder">
-                <svg-icon nx-add-svg-src
-                [src]="CONFIG.icons.dirPagePlaceholder + selectedManifest.actions[0].icon"
-                [svgStyle]="{'width.px': '64', 'height.px': '64', 'margin.px': '8'}"
-                [applyClass]="true"></svg-icon>
-                <h3>{{selectedManifest.actions[0].subheading}}</h3>
-                <button (click)="handleModal()" class="btn btn-primary">{{selectedManifest.actions[0].title}}</button>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirPagePlaceholder + selectedManifest.actions[0].icon"
+                    [svgStyle]="{ 'width.px': '64', 'height.px': '64', 'margin.px': '8' }"
+                    [applyClass]="true"
+                ></svg-icon>
+                <h3>{{ selectedManifest.actions[0].subheading }}</h3>
+                <button
+                    (click)="handleModal()"
+                    class="btn btn-primary"
+                    >{{ selectedManifest.actions[0].title }}</button
+                >
             </div>
         </ng-template>
         <nx-pre-loader *ngIf="!dataLoaded; else createPlaceholder"></nx-pre-loader>
     </div>
-    <nx-section [nonPadded]="true"  type="d-flex flex-row">
+    <nx-section
+        [nonPadded]="true"
+        type="d-flex flex-row"
+    >
         <nx-paginator
             *ngIf="selectedData.showAdvanced$ | async"
             [numPages]="selectedData.numberOfPages$ | async"
             [pagesToShow]="selectedManifest.pagesToShow"
             [tempDisabled]="selectedData.noSearchMatches$ | async"
         ></nx-paginator>
-        <div class="rows-selector" *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.PER_PAGE]">
+        <div
+            class="rows-selector"
+            *ngIf="!selectedManifest.disabled[OPTIONAL_FEATURES.PER_PAGE]"
+        >
             <span>Rows per page:</span>
             <nx-select
                 type="transparent-button"
                 [selected]="perPageSelectedOption"
                 [items]="selectedManifest.perPageOptions"
-                (onSelected)="
-                    perPageSelectedOption = $event;
-                    updatePerPageParam($event.value)"
+                (onSelected)="perPageSelectedOption = $event; updatePerPageParam($event.value)"
             ></nx-select>
         </div>
     </nx-section>
     <div *ngIf="!noItems">
-        <button *ngFor="let action of selectedManifest.actions" (click)="handleModal()" [class]="'btn  min-w-120 mt-3 mb-3 ml-3 mr-auto btn-' + (action.type || 'default')">{{action.title}}</button>
+        <button
+            *ngFor="let action of selectedManifest.actions"
+            (click)="handleModal()"
+            [class]="'btn  min-w-120 mt-3 mb-3 ml-3 mr-auto btn-' + (action.type || 'default')"
+            >{{ action.title }}</button
+        >
     </div>
 </nx-block>

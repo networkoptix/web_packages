@@ -1,6 +1,6 @@
 <div
     class="dropdown"
-    [ngClass]="{'multi-select-show': show}"
+    [ngClass]="{ 'multi-select-show': show }"
     (nxClickElsewhere)="show = false"
 >
     <button
@@ -27,7 +27,10 @@
         [style.display]="show ? 'inline-block' : 'none'"
         [attr.aria-labelledby]="id"
     >
-        <ul class="dropdown-menu--header" *ngIf="canSearch">
+        <ul
+            class="dropdown-menu--header"
+            *ngIf="canSearch"
+        >
             <li class="dropdown-item-container">
                 <span class="glyphicon glyphicon-search icon-search"></span>
                 <input
@@ -37,25 +40,35 @@
                     [placeholder]="'Search' | translate"
                     [ngModel]="filter"
                     (ngModelChange)="applyLocalFilter($event)"
-                >
+                />
                 <span
                     class="glyphicon close-icon search-clear"
                     [hidden]="filter == ''"
                     (click)="applyLocalFilter('')"
                 ></span>
             </li>
-            <li role="separator" class="dropdown-divider"></li>
+            <li
+                role="separator"
+                class="dropdown-divider"
+            ></li>
         </ul>
 
-        <ul class="dropdown-menu--header" *ngIf="canSelectAll">
+        <ul
+            class="dropdown-menu--header"
+            *ngIf="canSelectAll"
+        >
             <li class="dropdown-item-container">
                 <a
                     class="dropdown-item dropdown-item--non-checkbox inset"
-                    (click)="clearSelected($event); show = false;"
+                    (click)="clearSelected($event); show = false"
                     translate
-                >Any</a>
+                    >Any</a
+                >
             </li>
-            <li role="separator" class="dropdown-divider"></li>
+            <li
+                role="separator"
+                class="dropdown-divider"
+            ></li>
         </ul>
 
         <ul class="dropdown-menu--list">
@@ -73,7 +86,8 @@
                     <label
                         class="ellipsis"
                         [htmlFor]="item.id"
-                    >{{item.label}}</label>
+                        >{{ item.label }}</label
+                    >
                 </div>
             </li>
         </ul>

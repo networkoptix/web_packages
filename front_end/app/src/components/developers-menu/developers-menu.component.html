@@ -1,84 +1,138 @@
-<ng-template #recursiveNodes let-nodes="nodes" let-level="level">
+<ng-template
+    #recursiveNodes
+    let-nodes="nodes"
+    let-level="level"
+>
     <div *ngFor="let node of nodes">
         <ng-container *ngIf="node.name.includes('-seperator'); then seperator"></ng-container>
-        <div *ngIf="(!node.name.includes('-seperator') && (level === 1 || openNodes.includes(node.parentNode?.display_name) || openNodes.includes(node.parentNode?.name)))"
-            [class]="'menu-level-' + level">
-            <div *ngIf="node.url;else noLink" class="menu-link"
-                (mouseover)="node.asset_type === 'Documentation Page' && prefetchAsset(node.asset_id, node.state, node.version)"
+        <div
+            *ngIf="
+                !node.name.includes('-seperator') &&
+                (level === 1 ||
+                    openNodes.includes(node.parentNode?.display_name) ||
+                    openNodes.includes(node.parentNode?.name))
+            "
+            [class]="'menu-level-' + level"
+        >
+            <div
+                *ngIf="node.url; else noLink"
+                class="menu-link"
+                (mouseover)="
+                    node.asset_type === 'Documentation Page' &&
+                        prefetchAsset(node.asset_id, node.state, node.version)
+                "
                 (mouseleave)="mouseLeave$.next(node.asset_id)"
-                [ngClass]="{'arrow-padding'       : node.nodes.length,
-                            'activated-highlight' : highlightedTopNode === (node.name || node.display_name) ||
-                                                    service.activeNode && service.activeNode.url === node.url && node.state === service.activeNode.state,
-                            'has-state'           : node.indented}"
+                [ngClass]="{
+                    'arrow-padding': node.nodes.length,
+                    'activated-highlight':
+                        highlightedTopNode === (node.name || node.display_name) ||
+                        (service.activeNode &&
+                            service.activeNode.url === node.url &&
+                            node.state === service.activeNode.state),
+                    'has-state': node.indented
+                }"
                 (click)="handleClick(node, true)"
                 [routerLink]="!node.url ? '' : node.url.startsWith('/') ? node.url : '/' + node.url"
                 [queryParamsHandling]="queryParamsOnInternalRoute"
-                [queryParams]="{'state': node.state}">
+                [queryParams]="{ state: node.state }"
+            >
                 <ng-template #linkContent>
-                    <span [innerHTML]="(node.display_name || node.name) | safe:'html'"></span>
-                    <span *ngIf="node.state"class="badge badge-{{node.state === 'pending' ? 'warning' : 'info'}} ml-2">{{node.state}}</span>
+                    <span [innerHTML]="node.display_name || node.name | safe: 'html'"></span>
+                    <span
+                        *ngIf="node.state"
+                        class="badge badge-{{ node.state === 'pending' ? 'warning' : 'info' }} ml-2"
+                        >{{ node.state }}</span
+                    >
                 </ng-template>
                 <ng-template #externalLink>
                     <a [href]="node.url">
                         <ng-container *ngTemplateOutlet="linkContent"></ng-container>
                     </a>
                 </ng-template>
-                <a *ngIf="node.url.startsWith('/'); externalLink"
+                <a
+                    *ngIf="node.url.startsWith('/'); externalLink"
                     [routerLink]="node.url"
                     [queryParamsHandling]="queryParamsOnInternalRoute"
-                    [queryParams]="{'state': node.state}">
-                        <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+                    [queryParams]="{ state: node.state }"
+                >
+                    <ng-container *ngTemplateOutlet="linkContent"></ng-container>
                 </a>
             </div>
             <ng-template #noLink>
-                <div class="menu-link"
+                <div
+                    class="menu-link"
                     (click)="handleClick(node)"
-                    [ngClass]="{'arrow-padding': node.nodes.length,
-                                'activated-highlight': highlightedTopNode === (node.name || node.display_name) ||
-                                                       service.activeNode && service.activeNode.name === node.name &&
-                                                       service.activeNode.url === node.url && node.state === service.activeNode.state}"
-                ><span [innerHTML]="(node.display_name || node.name) | safe:'html'"></span></div>
+                    [ngClass]="{
+                        'arrow-padding': node.nodes.length,
+                        'activated-highlight':
+                            highlightedTopNode === (node.name || node.display_name) ||
+                            (service.activeNode &&
+                                service.activeNode.name === node.name &&
+                                service.activeNode.url === node.url &&
+                                node.state === service.activeNode.state)
+                    }"
+                    ><span [innerHTML]="node.display_name || node.name | safe: 'html'"></span
+                ></div>
             </ng-template>
-            <div (click)="toggleOpen(node)" [ngClass]="{
-                'left-menu-arrow': node.nodes.length,
-                'down': openNodes.includes(node.display_name) || openNodes.includes(node.name),
-                'd-none': !node.nodes.length}">
-                <svg-icon nx-add-svg-src
+            <div
+                (click)="toggleOpen(node)"
+                [ngClass]="{
+                    'left-menu-arrow': node.nodes.length,
+                    down: openNodes.includes(node.display_name) || openNodes.includes(node.name),
+                    'd-none': !node.nodes.length
+                }"
+            >
+                <svg-icon
+                    nx-add-svg-src
                     [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
-                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                ></svg-icon>
             </div>
         </div>
-            <ng-template #seperator>
-                <div class="seperator">
-                    <span class="seperator-text">{{ node.display_name }}</span>
-                </div>
-            </ng-template>
-            <ng-container *ngIf="node.nodes.length">
-                <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:node.nodes, level: level + 1}"></ng-container>
-            </ng-container>
+        <ng-template #seperator>
+            <div class="seperator">
+                <span class="seperator-text">{{ node.display_name }}</span>
+            </div>
+        </ng-template>
+        <ng-container *ngIf="node.nodes.length">
+            <ng-container
+                *ngTemplateOutlet="recursiveNodes; context: { nodes: node.nodes, level: level + 1 }"
+            ></ng-container>
+        </ng-container>
     </div>
 </ng-template>
 
 <ng-template #noNodes>
-    <div class="no-nodes-placeholder" translate>Nothing Found</div>
+    <div
+        class="no-nodes-placeholder"
+        translate
+        >Nothing Found</div
+    >
 </ng-template>
 
-<nx-pre-loader *ngIf="!menuNodes.length;else leftMenu"></nx-pre-loader>
+<nx-pre-loader *ngIf="!menuNodes.length; else leftMenu"></nx-pre-loader>
 
 <ng-template #leftMenu>
     <ng-container *ngIf="searchEnabled">
-            <nx-search
-                (ngModelChange)="updateSearchQuery($event)"
-                [ngModel]="(searchQuery$ | async)"
-                class="d-block mb-2"
-                layout="search"
-                instant>
-            </nx-search>
+        <nx-search
+            (ngModelChange)="updateSearchQuery($event)"
+            [ngModel]="searchQuery$ | async"
+            class="d-block mb-2"
+            layout="search"
+            instant
+        >
+        </nx-search>
     </ng-container>
     <ng-container *ngIf="displayedMenuNodes.length; else noNodes">
-        <div [ngClass]="{'nodes-container': searchEnabled}"
-             [ngStyle]="{'max-height': searchEnabled ? 'calc(100vh - ' + (offsetHeight + 32) + 'px)' : 'none'}">
-            <ng-container *ngTemplateOutlet="recursiveNodes;context{nodes:displayedMenuNodes, level: 1}"></ng-container>
+        <div
+            [ngClass]="{ 'nodes-container': searchEnabled }"
+            [ngStyle]="{
+                'max-height': searchEnabled ? 'calc(100vh - ' + (offsetHeight + 32) + 'px)' : 'none'
+            }"
+        >
+            <ng-container
+                *ngTemplateOutlet="recursiveNodes; context: { nodes: displayedMenuNodes, level: 1 }"
+            ></ng-container>
         </div>
     </ng-container>
 </ng-template>

@@ -1,25 +1,47 @@
-<div *ngIf="ready && isOnline" class="pt-3 placeholder-text" [ngClass]="{'unsaved-changes': show}">
-    <div *ngIf="show && warn" class="warning-text pb-3">{{ warn }}</div>
-    <div *ngIf="show; else noChanges" class="d-flex">
+<div
+    *ngIf="ready && isOnline"
+    class="pt-3 placeholder-text"
+    [ngClass]="{ 'unsaved-changes': show }"
+>
+    <div
+        *ngIf="show && warn"
+        class="warning-text pb-3"
+        >{{ warn }}</div
+    >
+    <div
+        *ngIf="show; else noChanges"
+        class="d-flex"
+    >
         <ng-container *ngIf="showSectionWarning; else applyButtons">
-            <div class="warning-text pb-3" translate>Page contains unsaved changes.</div>
+            <div
+                class="warning-text pb-3"
+                translate
+                >Page contains unsaved changes.</div
+            >
         </ng-container>
         <ng-template #applyButtons>
             <nx-process-button
-                    [process]="save"
-                    [actionType]="'primary min-w-120'"
-                    [buttonDisabled]="!isOnline || _disabled"
-                    [form]="form"
-                    [clickFn]="submitFn"
-                    buttonText="{{ 'Save' | translate }}"></nx-process-button>
+                [process]="save"
+                [actionType]="'primary min-w-120'"
+                [buttonDisabled]="!isOnline || _disabled"
+                [form]="form"
+                [clickFn]="submitFn"
+                buttonText="{{ 'Save' | translate }}"
+            ></nx-process-button>
             <nx-cancel-button
                 [process]="save"
                 [discardFn]="discard"
                 [showDiscard]="showDiscard"
-                customClass="ml-2"></nx-cancel-button>
+                customClass="ml-2"
+            ></nx-cancel-button>
         </ng-template>
     </div>
     <ng-template #noChanges>
-        <div *ngIf="applyVisible" class="placeholder-text-no-changes" translate>No unsaved changes</div>
+        <div
+            *ngIf="applyVisible"
+            class="placeholder-text-no-changes"
+            translate
+            >No unsaved changes</div
+        >
     </ng-template>
 </div>

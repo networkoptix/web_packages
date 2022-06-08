@@ -1,26 +1,45 @@
-<div class="dropdown"
-     [ngClass]="{'permissions-show': show}"
-     (nxClickElsewhere)="show = false">
-    <button class="btn btn-dropdown-toggle dropdown-toggle"
-            [disabled]="disabled"
-            (click)="show = !show"
-            type="button" id="componentId" data-toggle="dropdown">
-
-        <span class="ellipsis" [innerText]="selection"></span>
+<div
+    class="dropdown"
+    [ngClass]="{ 'permissions-show': show }"
+    (nxClickElsewhere)="show = false"
+>
+    <button
+        class="btn btn-dropdown-toggle dropdown-toggle"
+        [disabled]="disabled"
+        (click)="show = !show"
+        type="button"
+        id="componentId"
+        data-toggle="dropdown"
+    >
+        <span
+            class="ellipsis"
+            [innerText]="selection"
+        ></span>
         <div class="arrow-flip">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+            ></svg-icon>
         </div>
     </button>
-    <div class="dropdown-menu" [nxArrowNav]="show"
-         [style.display]="show ? 'inline-block' : 'none'"
-         aria-labelledby="componentId">
-
+    <div
+        class="dropdown-menu"
+        [nxArrowNav]="show"
+        [style.display]="show ? 'inline-block' : 'none'"
+        aria-labelledby="componentId"
+    >
         <ul class="dropdown-menu--list">
-            <li class="dropdown-item-container" *ngFor="let role of accessRoles">
-                <a href class="dropdown-item inset"
-                   [ngClass]="{'selected': role.optionLabel == selection}"
-                   (click)="show = false; changePermission(role);">
-                    <span>{{role.optionLabel}}</span>
+            <li
+                class="dropdown-item-container"
+                *ngFor="let role of accessRoles"
+            >
+                <a
+                    href
+                    class="dropdown-item inset"
+                    [ngClass]="{ selected: role.optionLabel == selection }"
+                    (click)="show = false; changePermission(role)"
+                >
+                    <span>{{ role.optionLabel }}</span>
                 </a>
             </li>
         </ul>

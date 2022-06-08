@@ -14,7 +14,10 @@
         [id]="id"
         data-toggle="dropdown"
     >
-        <div class="btn loading" *ngIf="stillLoading">
+        <div
+            class="btn loading"
+            *ngIf="stillLoading"
+        >
             <div>
                 <span class="dot1"></span>
                 <span class="dot2"></span>
@@ -54,10 +57,7 @@
             width: forcePosition?.width ? forcePosition.width + 'px' : '100%'
         }"
         [style.left.px]="forcePosition?.left || 0"
-        [style.top.px]="
-            forcePosition?.top ||
-            nativeElementTop - (forcePosition?.offsetTop || 0)
-        "
+        [style.top.px]="forcePosition?.top || nativeElementTop - (forcePosition?.offsetTop || 0)"
         [attr.aria-labelledby]="id"
     >
         <ul class="dropdown-menu--list">
@@ -67,22 +67,25 @@
             >
                 <ng-container
                     *ngIf="
-                        !hideSelectedItem ||
-                        !(_selectedItem && _selectedItem.value === item.value)
+                        !hideSelectedItem || !(_selectedItem && _selectedItem.value === item.value)
                     "
                     [ngTemplateOutlet]="dropdownRow"
                 ></ng-container>
-                <ng-template #dropdownRow [ngSwitch]="item.name">
+                <ng-template
+                    #dropdownRow
+                    [ngSwitch]="item.name"
+                >
                     <hr
                         *ngSwitchCase="'horizontal'"
                         [ngClass]="{ 'narrow-hr': hrMargin }"
                     />
-                    <div *ngSwitchCase="'seperator'" class="seperator"></div>
+                    <div
+                        *ngSwitchCase="'seperator'"
+                        class="seperator"
+                    ></div>
                     <ng-container
                         *ngSwitchDefault
-                        [ngTemplateOutlet]="
-                            !item.disabled ? enabledItem : disabledItem
-                        "
+                        [ngTemplateOutlet]="!item.disabled ? enabledItem : disabledItem"
                     >
                     </ng-container>
                 </ng-template>
@@ -92,9 +95,7 @@
                         (keyup)="handleKeyup($event, item)"
                         tabindex="0"
                         [ngClass]="{
-                            selected:
-                                _selectedItem &&
-                                _selectedItem.value === item.value
+                            selected: _selectedItem && _selectedItem.value === item.value
                         }"
                         (click)="show = false; change(item)"
                     >
@@ -103,11 +104,7 @@
                             [item]="item"
                             marginLeft="15"
                         ></item-icon>
-                        <span
-                            [innerHTML]="
-                                allowHTML ? item.name : (item.name | unsafe)
-                            "
-                        ></span>
+                        <span [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
                     </a>
                 </ng-template>
                 <ng-template #disabledItem>
@@ -122,9 +119,7 @@
                         ></item-icon>
                         <span
                             class="disabled"
-                            [innerHTML]="
-                                allowHTML ? item.name : (item.name | unsafe)
-                            "
+                            [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"
                         ></span>
                     </a>
                 </ng-template>

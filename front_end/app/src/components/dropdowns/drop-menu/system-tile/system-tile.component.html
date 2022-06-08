@@ -1,12 +1,19 @@
-<div class="system-tile" [ngClass]="{selected: active}" [style.width.px]="width">
+<div
+    class="system-tile"
+    [ngClass]="{ selected: active }"
+    [style.width.px]="width"
+>
     <div class="system-status">
-        <svg-icon [src]="icon" [applyClass]="true"></svg-icon>
+        <svg-icon
+            [src]="icon"
+            [applyClass]="true"
+        ></svg-icon>
     </div>
     <div class="system-info">
-        <span class="system-name">{{system.name}}</span>
+        <span class="system-name">{{ system.name }}</span>
         <span class="owner">
             <span translate>Owner</span>
-            {{' ' + '\u2014' + ' ' + system.ownerFullName}}
+            {{ ' ' + '\u2014' + ' ' + system.ownerFullName }}
         </span>
     </div>
 </div>
