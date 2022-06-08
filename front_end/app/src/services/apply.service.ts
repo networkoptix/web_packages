@@ -10,7 +10,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     BehaviorSubject,
     combineLatest as combineLatestFrom,
-    Subject
+    Subject,
 } from 'rxjs';
 import { isArray, isObject } from 'rxjs/internal-compatibility';
 import {
@@ -18,7 +18,7 @@ import {
     distinctUntilChanged,
     map,
     startWith,
-    takeUntil
+    takeUntil,
 } from 'rxjs/operators';
 
 import { NxApplyComponent } from '@components/apply/apply.component';
@@ -372,7 +372,6 @@ export class NxApplyService {
      * @param nonSystem
      */
     forms: any = {};
-    resetForms$ = new Subject();
 
     initPageFormsWatcher(
         component: ViewContainerRef,
@@ -391,9 +390,10 @@ export class NxApplyService {
         }, 0);
     }
 
+    // TODO: Combine next two functions as they have same functionality -- TT
     resetFormWatchers() {
-        this.applyComponentInstance.forms && this.resetForms$.next();
         for (const id in this.applyComponentInstance.forms) {
+            this.applyComponentInstance.forms[id].reset$.next(true);
             delete this.applyComponentInstance.forms[id];
             delete this.forms[id];
         }
@@ -494,6 +494,7 @@ export class NxApplyService {
                 !form.form.controls.fields && Object.keys(form.form.controls).length
                     ? formatInitial()
                     : {};
+
             const extNgForm: extNgForm = {
                 form: form,
                 originalForm: initialForm,
@@ -506,7 +507,7 @@ export class NxApplyService {
 
             extNgForm.form.valueChanges
                 .pipe(
-                    takeUntil(extNgForm.reset$ || this.resetForms$),
+                    takeUntil(extNgForm.reset$),
                     untilDestroyed(this))
                 .subscribe((change) => {
                     // Init phase ... in some cases form doesn't provide initial controls
