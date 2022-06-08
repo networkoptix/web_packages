@@ -1,3 +1,3 @@
 {
-    "paths": ["app/**/*.ts"]
+    "paths": ["app/**/*.ts", "projects/authorization/src/**/*.ts"]
 }

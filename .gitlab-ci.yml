@@ -84,12 +84,24 @@ no-changes:
       changes:
         - front_end/**/*.spec.ts
 
+.authorization-changes:
+  extends: .retries
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/projects/authorization/src/**/*
+
 .frontend-node:
   extends: .frontend-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .frontend-test:
   extends: .frontend-test-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.authorization-node:
+  extends: .authorization-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .django-python:
@@ -172,6 +184,14 @@ fe-lint-tests-check:
     - cd front_end
     - npm install
     - npm run lint:ci:tests app
+
+auth-lint-check:
+  extends: .authorization-node
+  stage: check
+  script:
+    - cd front_end
+    - npm install
+    - npm run lint:ci:auth projects/authorization/src
 
 django-unit-test-slow:
   extends: .django-unit-test
@@ -328,6 +348,15 @@ on-test-lint:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - front_end/**/*.spec.ts
+      when: on_failure
+
+on-auth-lint:
+  extends: .fail-on-frontend
+  needs: ["auth-lint-check"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/projects/authorization/src/**/*
       when: on_failure
 
 on-language-check:
