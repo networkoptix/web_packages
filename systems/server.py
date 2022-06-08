@@ -2,6 +2,7 @@ import quart.flask_patch  # Keep needed for using flask things in quart
 import asyncio
 import json
 import os
+import queue
 import requests
 import uuid
 
@@ -30,7 +31,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database url should be 'mysql+pymysql://{username}:{password}@{db_host}:{db_port}/{db_name}'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI') or 'sqlite:///test.sqlite3'
 db = SQLAlchemy(app)
-db.create_all(app=app)
 
 
 class PrintDebug:
@@ -56,15 +56,20 @@ def generate_uuid():
 
 
 class Group(db.Model):
-    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
-    name = db.Column(db.String(80), nullable=False)
+    id = db.Column(db.String(64), primary_key=True, default=generate_uuid)
+    name = db.Column(db.String(1024), nullable=False)
     owner_account_email = db.Column(db.String(255), nullable=False)
-    parent_group_id = db.Column(db.String(16), db.ForeignKey(id), nullable=True)
+    parent_group_id = db.Column(db.String(64), db.ForeignKey(id), nullable=True)
     parent = db.relationship('Group', backref='groups', remote_side=id, lazy=True)
     systems = db.relationship('System', lazy=True)
 
     def __repr__(self):
         return f'<Group {self.name}>'
+
+    def find_root(self):
+        if self.parent:
+            return self.parent.find_root()
+        return self
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -90,10 +95,27 @@ class Group(db.Model):
         systems_in_child_groups = [group.get_all_system_ids_in_group() for group in self.groups]
         return systems + systems_in_child_groups
 
+    # Operates on the assumption that there are no cycles in the tree to begin with
+    @staticmethod
+    def has_cycle(root):
+        if not root:
+            return False
+        q = queue.SimpleQueue()
+        q.put(root)
+        visited = set()
+        while not q.empty():
+            current = q.get()
+            if current.id in visited:
+                return True
+            visited.add(current.id)
+            for child in current.groups:
+                q.put(child)
+        return False
+
 
 class System(db.Model):
-    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
-    group_id = db.Column(db.String(36), db.ForeignKey('group.id'), nullable=True)
+    id = db.Column(db.String(64), primary_key=True, default=generate_uuid)
+    group_id = db.Column(db.String(64), db.ForeignKey('group.id'), nullable=True)
 
     def __repr__(self):
         return f'<System {self.id}>'
@@ -104,15 +126,18 @@ class System(db.Model):
         return data
 
 
+db.create_all(app=app)
+
+
 # Code for views
 class ActionEnum(Enum):
-    AGGREGATE_SYSTEMS_REQUEST = 'aggregateSystemsRequest'
-    AGGREGATE_REQUEST_BY_GROUP = 'aggregateRequestByGroup'
+    AGGREGATE_SYSTEMS_REQUEST = 'aggregate_systems_request'
+    AGGREGATE_REQUEST_BY_GROUP = 'aggregate_request_by_group'
     CREATE = 'create'
     DELETE = 'delete'
     LIST = 'list'
-    MOVE_GROUP = 'moveGroup'
-    MOVE_SYSTEM = 'moveSystem'
+    MOVE_GROUP = 'move_group'
+    MOVE_SYSTEM = 'move_system'
     SYSTEMS = 'systems'
 
     @classmethod
@@ -145,12 +170,12 @@ class ParamsValidator:
 
         params_to_actions = {
             ActionEnum.AGGREGATE_SYSTEMS_REQUEST: ['url', 'method'],
-            ActionEnum.AGGREGATE_REQUEST_BY_GROUP: ['groupId', 'url', 'method'],
+            ActionEnum.AGGREGATE_REQUEST_BY_GROUP: ['group_id', 'url', 'method'],
             ActionEnum.CREATE: ['name'],
-            ActionEnum.DELETE: ['groupId'],
+            ActionEnum.DELETE: ['group_id'],
             ActionEnum.LIST: [],
-            ActionEnum.MOVE_GROUP: ['groupId', 'targetId'],
-            ActionEnum.MOVE_SYSTEM: ['groupId', 'systemId'],
+            ActionEnum.MOVE_GROUP: ['group_id', 'target_id'],
+            ActionEnum.MOVE_SYSTEM: ['group_id', 'system_id'],
             ActionEnum.SYSTEMS: []
         }
 
@@ -218,12 +243,22 @@ class GroupView:
 
     @staticmethod
     def move_group_to_group(src_group_id, dst_group_id):
+        if src_group_id == dst_group_id:
+            return {'msg': 'You cannot add a group to itself', 'error': 403}
         src = Group.query.get(src_group_id)
-        dst = Group.query.get(dst_group_id)
-        if src.owner_account_email != dst.owner_account_email:
-            return {'msg': 'You can only move groups that you own.', 'error': 403}
+        root = None
+        if dst_group_id:
+            dst = Group.query.get(dst_group_id)
+
+            if dst.parent_group_id == src_group_id:
+                return {'msg': 'You cannot add a parent group to it\'s child.', 'error': 403}
+            if src.owner_account_email != dst.owner_account_email:
+                return {'msg': 'You can only move groups that you own.', 'error': 403}
+            root = dst.find_root()
 
         src.parent_group_id = dst_group_id
+        if dst_group_id is not None and src.has_cycle(root):
+            return {'msg': 'Adding src group to dst group would create a cycle in tree.', 'error': 403}
         db.session.commit()
 
         return {'msg': 'Group was moved to target group.'}
@@ -271,31 +306,35 @@ class NxSystem:
 
 
 class CloudConnector:
-    def __init__(self, csrf_token, session_id):
+    def __init__(self):
         self.loop = asyncio.get_event_loop()
         self.session = requests.Session()
-        self.session.headers.update({'X-CSRFToken': csrf_token})
-        self.session.cookies.update({'csrftoken': csrf_token, 'sessionid': session_id})
         self.account = {}
         self.systems = {}
 
-    def _get_wrapper(self, route, params=None):
+    def _get_wrapper(self, route, params=None, _websocket=None):
         res = None
         try:
             res = self.session.get(f'{CLOUD_HOST}{route}', params=params)
+            res.raise_for_status()
             return res.json()
         except requests.exceptions.HTTPError as e:
-            if res and 400 <= res.status_code < 500:
-                websocket.close(res.status_code, 'Failed auth')
+            if res is not None and 400 <= res.status_code < 500:
+                if _websocket:
+                    return websocket.close(res.status_code, 'Failed auth')
+                raise e
 
-    def _post_wrapper(self, route, data=None):
+    def _post_wrapper(self, route, data=None, _websocket=None):
         res = None
         try:
             res = self.session.post(f'{CLOUD_HOST}{route}', json=data)
+            res.raise_for_status()
             return res.json()
         except requests.exceptions.HTTPError as e:
-            if res and 400 <= res.status_code < 500:
-                websocket.close(res.status_code, 'Failed auth')
+            if res is not None and 400 <= res.status_code < 500:
+                if _websocket:
+                    return websocket.close(res.status_code, 'Failed auth')
+                raise e
 
     async def _get_token_for_system(self, system_id):
         return await self.loop.run_in_executor(None, self._post_wrapper, f'/api/systems/{system_id}/token')
@@ -317,6 +356,10 @@ class CloudConnector:
                 await system.login(auth)
                 if not system.is_logged_in:
                     continue
+
+    async def login(self, code):
+        return await self.loop.run_in_executor(
+            None, self._post_wrapper, f'/api/account/loginCode', {"code": code}, websocket)
 
     async def aggregate_request(self, request_url, method=None, post_body=None, allowed_systems=None):
         data = {}
@@ -398,23 +441,23 @@ async def receiving(cloud_connector):
         elif action == 'create':
             res = GroupView.create_group(data['name'], cloud_connector.account.get('email'))
         elif action == 'delete':
-            res = GroupView.delete_group(data['groupId'], cloud_connector.account.get('email'))
-        elif action == 'moveGroup':
-            res = GroupView.move_group_to_group(data['groupId'], data['targetId'])
-        elif action == 'moveSystem':
-            system = await cloud_connector.get_systems(system_id=data['systemId'])
-            res = GroupView.move_system_to_group(data['groupId'], system, cloud_connector.account)
+            res = GroupView.delete_group(data['group_id'], cloud_connector.account.get('email'))
+        elif action == 'move_group':
+            res = GroupView.move_group_to_group(data['group_id'], data['target_id'])
+        elif action == 'move_system':
+            system = await cloud_connector.get_systems(system_id=data['system_id'])
+            res = GroupView.move_system_to_group(data['group_id'], system, cloud_connector.account)
         elif action == 'systems':
             res = await cloud_connector.get_systems()
             app.logger.debug(res)
             create_missing_systems(res)
-        elif action == 'aggregateSystemsRequest':
+        elif action == 'aggregate_systems_request':
             res = await cloud_connector.aggregate_request(
                 data['url'], method=data['method'], post_body=data.get('postBody')
             )
-        elif action == 'aggregateRequestByGroup':
+        elif action == 'aggregate_request_by_group':
             res = await cloud_connector.aggregate_request_by_group(
-                data['groupId'], data['url'], method=data['method'], post_body=data.get('postBody')
+                data['group_id'], data['url'], method=data['method'], post_body=data.get('postBody')
             )
         elif action != 'list':
             res = {'msg': 'Please send data in a json format', 'error': 400}
@@ -430,24 +473,22 @@ async def receiving(cloud_connector):
         if not res or 'error' not in res:
             await websocket.send(json.dumps({
                 'action': 'list',
-                'data': GroupView.list_groups(data.get('accountId'))
+                'data': GroupView.list_groups(data.get('account_id'))
             }))
 
 
 # Actual views
 @app.websocket('/ws')
 async def ws():
-    session_id = websocket.cookies.get('sessionid')
-    csrf_token = websocket.cookies.get('csrftoken')
-    if session_id and csrf_token:
+    if code := websocket.args.get('code'):
         try:
-            cloud_connector = CloudConnector(csrf_token, session_id)
+            cloud_connector = CloudConnector()
+            await cloud_connector.login(code)
             await cloud_connector.get_account_info()
             return await asyncio.create_task(receiving(cloud_connector))
         except requests.exceptions.HTTPError as e:
-            print(e)
             return await websocket.close(500, 'Something went wrong')
-    return await websocket.close(400, 'Missing cookies')
+    return await websocket.close(400, 'Missing code')
 
 
 @app.route('/health')
