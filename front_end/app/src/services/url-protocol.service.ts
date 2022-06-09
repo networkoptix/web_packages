@@ -122,23 +122,24 @@ export class NxUrlProtocolService {
         // eslint-disable-next-line camelcase
         code?: string
     }> {
-        const auth = linkSettings.useOauth
-            ? this.cloudApiService.getCode('*').toPromise()
-            : this.accountService.authKey();
-
-        return auth.then((data) => {
+        return Promise.all([
+            linkSettings.useOauth ? Promise.resolve('') : this.accountService.authKey(),
+            this.cloudApiService.getCode('*').toPromise()
+        ]).then(([data, { code }]) => {
             if (linkSettings.useOauth) {
-                linkSettings.code = data.code;
+                linkSettings.code = code;
             } else {
                 linkSettings.auth = data;
+                linkSettings.code = code;
             }
             const linkData: any = {
                 link: this.generateLink(linkSettings)
             };
             if (linkSettings.useOauth) {
-                linkData.code = data.code;
+                linkData.code = code;
             } else {
                 linkData.authKey = data;
+                linkData.code = code;
             }
             return linkData;
         }).catch(() => ({
