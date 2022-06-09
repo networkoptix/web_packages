@@ -147,16 +147,16 @@
         "notSecureText": "Jeśli będziesz kontynuować, pozwolisz<br><span class='error-label'>{ redirectUrl }</span><br>na dostęp do swojego %CLOUD_NAME% konta.",
         "confirmHeader": "System podłączono do %CLOUD_NAME%!",
         "loginError": "Nie można połączyć się z %CLOUD_NAME%",
-        "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
+        "loginErrorAdditional": "Spróbuj ponownie lub zaloguj się do systemu bezpośrednio na swoje konto lokalne.",
         "connectErrorAdditional": "Spróbuj ponownie później.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
         "connectedText": "System podłączono do %CLOUD_NAME%",
         "setupConnectedText": "System podłączony",
-        "stayLoggedInHelpText": "Checkbox for staying logged in",
+        "stayLoggedInHelpText": "Wybierz, aby pozostać zalogowanym",
         "termsAndConditionsHelpText": "Wyrażenie zgody na warunki i politykę prywatności",
         "copiedToClipboard": "Skopiowane do schowka",
         "authCode": {
-            "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
+            "message": "Wprowadź kod z aplikacji uwierzytelniającej, aby potwierdzić {suffix}",
             "newPass": "ustaw nowe hasło",
             "login": "zaloguj się"
         },
@@ -277,9 +277,9 @@
         "viewingOutdatedReport": "Przeglądasz nieaktualny raport."
     },
     "dashboard": {
-        "dashboardEditEnabled": "Dashboard editing is enabled",
-        "dashboardLocked": "Dashboard is locked",
-        "unlockToUpload": "Unlock dashboard to upload config from json",
+        "dashboardEditEnabled": "Edycja panelu ustawień jest włączona",
+        "dashboardLocked": "Pulpit nawigacyjny jest zablokowany",
+        "unlockToUpload": "Odblokuj pulpit nawigacyjny, aby przesłać konfigurację z json",
         "unlockToMove": "Odblokuj pulpit aby przenieść widżety"
     },
     "devConsole": {
@@ -287,9 +287,9 @@
     },
     "dialogs": {
         "twoFa": {
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
-            "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
+            "wizardWarning": "Po włączeniu uwierzytelniania dwuskładnikowego nie będziesz mógł zalogować się do {count, plural, =0{# systemów} one{# systemu} few {# systemów} many {# systemów} other{# systemów}} od %VMS_NAME% klienta i administratora sieci:",
+            "wizardWarningDescr": "Starsze wersje klienta %VMS_NAME% i administratora sieci nie obsługują uwierzytelniania dwuskładnikowego.",
+            "installAuthApp": "Zainstaluj aplikację uwierzytelniającą na swoim urządzeniu mobilnym, jeśli jeszcze jej nie masz. %CLOUD_NAME% obsługuje <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> lub <strong>Duo Mobile</strong>.",
             "nowEnabled": "Uwierzytelnianie dwuskładnikowe jest teraz <strong>włączone</strong> dla Twojego %CLOUD_NAME% konta!"
         },
         "addUser": {
@@ -300,8 +300,8 @@
             "createAccount": "Utwórz nowe konto",
             "delete": "Usuń",
             "deleteAccount": "Usuń konto",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Wyłącz",
+            "enable": "Włącz",
             "download": "Pobierz %VMS_NAME%",
             "logoutAuthorised": "Wyloguj",
             "ok": "OK",
@@ -360,12 +360,12 @@
         "merge": {
             "adminPasswordTitle": "Wprowadź hasło konta właściciela w <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Hasło administratora jest nieprawidłowe",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
-            "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} jest połączony z %CLOUD_NAME%. Systemy chmurowe można łączyć tylko z %CLOUD_NAME%.",
+            "unknownBothSystemsConnectedToCloud": "Nie można złączyć dwóch systemów połączonych z chmurą. Przejdź do %CLOUD_NAME% aby złączyć te systemy.",
             "checking": "Sprawdzanie...",
             "cloud": "Chmura",
             "commonText": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>%CLOUD_NAME%</strong> lub złącz je lokalnie za pomocą klienta <strong>%VMS_NAME%</strong>.",
             "connectAnotherSystemToCloud": "System, który chcesz połączyć z tym do <strong>%CLOUD_NAME%</strong> podłącz używając tego samego konta, lub połącz lokalnie używając <strong>%VMS_NAME%</strong> Klienta.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
@@ -384,11 +384,11 @@
             "primaryCannotMerge": "System {targetSystem} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do wersji {downloadHTML} aby połączyć go z systemem {targetSystem}.",
             "primarySystemOffline": "System {primarySystem} jest w trybie offline i nie można go połączyć z systemem {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "recommendSupport": "Zalecamy skonsultowanie się z działem wsparcia technicznego przed kontynuowaniem.",
             "restError": {
-                "duplicateServer": "Merge error. Both systems have same server",
-                "useCloudMerge": "Cannot merge systems bound to the cloud",
-                "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
+                "duplicateServer": "Błąd scalania. Oba systemy mają ten sam serwer",
+                "useCloudMerge": "Nie można złączyć systemów powiązanych z chmurą",
+                "differentCloudOwners": "Nie można połączyć dwóch systemów w chmurze z różnymi właścicielami"
             },
             "secondaryCannotMerge": "System {targetSystem} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym. Zaktualizuj {targetSystem} do {downloadHTML} aby połączyć systemy.",
             "secondarySystemUnavailable": "System {targetSystem} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
@@ -436,8 +436,8 @@
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer"
             },
             "twoFactor": {
-                "required": "Two-factor authentication is required.",
-                "configure": "You can configure it in your",
+                "required": "Wymagane jest uwierzytelnianie dwuskładnikowe.",
+                "configure": "Możesz to skonfigurować w swoim",
                 "accountLink": "ustawienia konta",
                 "codeRequired": "Kod jest wymagany"
             }
@@ -453,7 +453,7 @@
             "title": "Twoja sesja wygasła"
         },
         "transferOwnership": {
-            "userNotFound": "{ newOwnerEmail } is not a user in the system"
+            "userNotFound": "{ newOwnerEmail } nie jest użytkownikiem w systemie"
         },
         "titles": {
             "error": "Błąd",
@@ -461,10 +461,10 @@
             "changeAccount": "Jesteś już zalogowany jako {email}",
             "changePasswordFor": "Zmień hasło dla użytkownika \"{username}\"",
             "deleteUser": "Usunąć użytkownika?",
-            "failedLoginTo": "Failed to login to {systemName}",
+            "failedLoginTo": "Nie udało się zalogować do {systemName}",
             "loggedFromOtherAccount": "Zostaniesz zalogowany przy użyciu innego konta",
             "noClientDetected": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
-            "removeUser": "Remove user",
+            "removeUser": "Usuń użytkownika",
             "serversDetach": "Odłączyć serwer&nbsp;<strong>{ title }</strong>&nbsp;od obecnego systemu?",
             "serversReset": "Zresetować serwer&nbsp;<strong>{ title }</strong>&nbsp;do ustawień domyślnych?",
             "serversRestart": "Zrestartować serwer &nbsp;<strong>{ title }</strong>?"
@@ -474,8 +474,8 @@
         },
         "twoFactor": {
             "action": "Login",
-            "message": "Two factor authentication is enabled for this account. Please login.",
-            "title": "Two factor is required!",
+            "message": "Uwierzytelnianie dwuskładnikowe jest włączone dla tego konta. Zaloguj się.",
+            "title": "Wymagane są dwa składniki weryfikacji!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
@@ -560,10 +560,10 @@
         "Connection timed out": "System <strong>{failedSystem}</strong> jest w trybie offline.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z działem wsparcia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "INCOMPATIBLE": "Systemy mają niezgodne wersje oprogramowania. Zaktualizuj oba z nich do wersji {downloadHTML}.",
-        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
+        "This authorization method is forbidden. Please contact your system administrator.": "Ta metoda autoryzacji jest zabroniona. Skontaktuj się z administratorem systemu.",
         "This user does not exist.": "Ten użytkownik nie istnieje.",
         "The user is disabled. Please contact your system administrator.": "Użytkownik jest wyłączony. Skontaktuj się z administratorem systemu.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "This user has been disabled by a system administrator.": "Ten użytkownik został zablokowany przez administratora systemu.",
         "cloud_systems_have_different_owners": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
         "fail": "{failedSystem} jest niedostępny.",
@@ -580,7 +580,7 @@
         "cantChangeAccountPrefix": "Nie można zapisać zmian",
         "cantChangePasswordPrefix": "Nie można zapisać hasła",
         "cantDeleteAccountOwningSystems": "Nie można usunąć konta, które posiada systemy",
-        "cantConnectSystemPrefix": "Cannot connect System",
+        "cantConnectSystemPrefix": "Nie można połączyć się z systemem",
         "cantDisconnectSystemPrefix": "Nie można usunąć systemu",
         "cantEditAdmin": "Ten użytkownik ma uprawnienia administratora",
         "cantEditYourself": "Zmiana własnych uprawnień nie jest dozwolona",
@@ -594,7 +594,7 @@
         "cantSharePrefix": "Nie można udostępnić systemu",
         "cantUnshareWithMeSystemPrefix": "Nie można usunąć systemu",
         "emailNotFound": "Konto nie istnieje.",
-        "failedToAccess2FA": "<p class=\"mb-0\">Two-factor authentication is required to access this system.</p><p>You can enable two-factor authentication in your <a href=\"/account/security\">account settings</a>.</p>",
+        "failedToAccess2FA": "<p class=\"mb-0\">Aby uzyskać dostęp do tego systemu, wymagane jest uwierzytelnianie dwuskładnikowe.</p><p>Możesz włączyć uwierzytelnianie dwuskładnikowe w <a href=\"/account/security\">ustawieniach konta</a>.</p>",
         "failedToAccessSystem": "Nie można uzyskać dostępu do systemu przez ten link. Może się to zdarzyć, gdy system zostanie odłączony od %CLOUD_NAME%, dostęp do tego systemu został odwołany lub jeśli jesteś zalogowany na nieprawidłowe konto.",
         "failedToAccessCamera": "Nie można uzyskać dostępu do kamer poprzez ten link.",
         "forbidden": "Nie masz uprawnień do wykonania tej operacji",
@@ -675,7 +675,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
+    "alertsCount": "{count, plural, =0{# alertów} one{# alert} few {# alertów} many {# alertów} other{# alerty}}",
     "ipvdTopXByVolume": "Max {value} wg ilości:",
     "ipvdDisclaimer": "Ta lista jest ograniczona do urządzeń znalezionych przez serwer {vmsName}, na którym administrator zezwolił na automatyczne raportowanie specyfikacji urządzeń do firmy {companyName}. Żadne dane osobowe nie są gromadzone, a każdy użytkownik pozostaje całkowicie anonimowy.",
     "menu": {
@@ -731,7 +731,7 @@
         "view": "Podgląd kamer",
         "apiTool": "Narzędzie testowania API",
         "security": "Security",
-        "twofaRequired": "Two-factor authentication required"
+        "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe"
     },
     "pageDescriptions": {
         "integrations": "Integrations Marketplace to scentralizowany ekosystem produktów, które bezproblemowo integrują się z produktami VMS, takimi jak %VMS_NAME%, wszystkie dostępne w %CLOUD_NAME% dzięki czemu można znaleźć rozwiązania umożliwiające zbudowanie i dostosowanie systemu wideo IP.",

@@ -384,7 +384,7 @@
             "primaryCannotMerge": "System {targetSystem} har en nyare programversion som är oförenlig med det nuvarande systemet. Uppdatera det nuvarande systemet till {downloadHTML} att slå samman det med {targetSystem} systemet.",
             "primarySystemOffline": "System {primarySystem} är offline och kan inte slås samman med System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "recommendSupport": "Vi rekommenderar att du rådgör med | support | innan du fortsätter.",
             "restError": {
                 "duplicateServer": "Sammanfogningsfel. Båda systemen har samma server",
                 "useCloudMerge": "Kan inte slå samman system som är bundna till molnet",

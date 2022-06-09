@@ -384,7 +384,7 @@
             "primaryCannotMerge": "システム {targetSystem} は、現在のシステムと互換性のない新しいソフトウェアバージョンです。現在のシステムを {downloadHTML} に更新してから {targetSystem} システムと統合してください。",
             "primarySystemOffline": "システム {primarySystem} がオフラインであるため、システム {targetSystem} と統合することはできません。",
             "primarySystemUnavailable": "システム {primarySystem} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "recommendSupport": "次に進む前に、|サポート| までご相談ください。",
             "restError": {
                 "duplicateServer": "統合エラー。両方のシステムに同じサーバーが存在します",
                 "useCloudMerge": "クラウド に紐付けされているシステムは統合できません",

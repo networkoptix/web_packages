@@ -384,7 +384,7 @@
             "primaryCannotMerge": "O sistema {targetSystem} possui uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para {downloadHTML} para fundi-lo com o {targetSystem} System.",
             "primarySystemOffline": "O sistema {primarySystem} está offline e não pode ser mesclado com o sistema {targetSystem}",
             "primarySystemUnavailable": "O sistema {primarySystem} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "recommendSupport": "Recomendamos que você consulte | suporte | antes de proceder.",
             "restError": {
                 "duplicateServer": "Erro de mesclagem. Ambos os sistemas têm o mesmo servidor",
                 "useCloudMerge": "Não é possível mesclar sistemas vinculados à nuvem",
