@@ -1,35 +1,49 @@
-<div class="dropdown"
-     [ngClass]="{'header-nav-show': show, show: show}"
-
-     (nxClickElsewhere)="show = false">
-
-    <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
+<div
+    class="dropdown"
+    [ngClass]="{ 'header-nav-show': show, show: show }"
+    (nxClickElsewhere)="show = false"
+>
+    <button
+        class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
         #dropDownButton
-        type="button" id="activeSystemDropdown" data-toggle="dropdown"
+        type="button"
+        id="activeSystemDropdown"
+        data-toggle="dropdown"
         [disabled]="hideDropdown"
-        [ngClass]="{'hide-dropdown': hideDropdown}"
-        (click)="dropdownNode && $event.stopPropagation();updateOffset(); show = !show;"
-    >{{name}}
+        [ngClass]="{ 'hide-dropdown': hideDropdown }"
+        (click)="dropdownNode && $event.stopPropagation(); updateOffset(); show = !show"
+        >{{ name }}
         <svg-icon
             nx-add-svg-src
             [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
             *ngIf="!hideDropdown"
         ></svg-icon>
     </button>
-    <div *ngIf="show" class="popup arrow up"></div>
-    <ul class="dropdown-menu width-override"
+    <div
+        *ngIf="show"
+        class="popup arrow up"
+    ></div>
+    <ul
+        class="dropdown-menu width-override"
         *ngIf="!hideDropdown"
         [style.display]="show ? 'inline-block' : 'none'"
         [style.transform]="'translateX(' + offset + 'px)'"
         aria-labelledby="navLocationDropdown"
-        [nxArrowNav]="show">
-        <li *ngFor="let node of nodes" class="dropdown-item-container">
-            <a class="dropdown-item inset"
-               *ngIf="!node.new_window"
-               [ngClass]="{ 'selected': node.url === path}"
-               [routerLink]="node.url"
-               (click)="headerService.handleNav(node, $event);$event.preventDefault();hide()">
-               <span>{{node.name}}</span></a>
+        [nxArrowNav]="show"
+    >
+        <li
+            *ngFor="let node of nodes"
+            class="dropdown-item-container"
+        >
+            <a
+                class="dropdown-item inset"
+                *ngIf="!node.new_window"
+                [ngClass]="{ selected: node.url === path }"
+                [routerLink]="node.url"
+                (click)="headerService.handleNav(node, $event); $event.preventDefault(); hide()"
+            >
+                <span>{{ node.name }}</span></a
+            >
         </li>
     </ul>
 </div>

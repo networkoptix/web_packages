@@ -1,23 +1,58 @@
-<div class="logo-wrapper" [ngClass]="isMobile ? 'logo-mobile' : null ">
-    <div class="logo" [ngSwitch]="logoState">
-        <div *ngSwitchCase="'systems'" class="system-list">
-            <svg-icon nx-add-svg-src [svgStyle]="{'width.px': '24'}" [src]="CONFIG.icons.dir + 'system.svg'"></svg-icon>
+<div
+    class="logo-wrapper"
+    [ngClass]="isMobile ? 'logo-mobile' : null"
+>
+    <div
+        class="logo"
+        [ngSwitch]="logoState"
+    >
+        <div
+            *ngSwitchCase="'systems'"
+            class="system-list"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{ 'width.px': '24' }"
+                [src]="CONFIG.icons.dir + 'system.svg'"
+            ></svg-icon>
             {{ systemListText }}
         </div>
-        <div *ngSwitchCase="'system'" class="current-system-display">
-            <div class="arrow-btn" *ngIf="!isMobile" (click)="headerService.handleNav({ url: '/systems', new_window: false }, $event); emitClick('systems-list')">
-                <svg-icon nx-add-svg-src [svgStyle]="{'width.px': '24'}" [src]="CONFIG.icons.dir + 'arrow_back.svg'"></svg-icon>
+        <div
+            *ngSwitchCase="'system'"
+            class="current-system-display"
+        >
+            <div
+                class="arrow-btn"
+                *ngIf="!isMobile"
+                (click)="
+                    headerService.handleNav({ url: '/systems', new_window: false }, $event);
+                    emitClick('systems-list')
+                "
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '24' }"
+                    [src]="CONFIG.icons.dir + 'arrow_back.svg'"
+                ></svg-icon>
             </div>
-            <span class="system-name" (click)="emitClick('system')">
+            <span
+                class="system-name"
+                (click)="emitClick('system')"
+            >
                 {{ headerService.activeSystem.name }}
             </span>
         </div>
-        <svg-icon *ngSwitchCase="'logo'"
-                nx-add-svg-src
-                [svgStyle]="isMobile ? {'width.px': '130', 'height.px': '32'} : null"
-                [src]="CONFIG.images.dirHeader + 'logo.svg'">
+        <svg-icon
+            *ngSwitchCase="'logo'"
+            nx-add-svg-src
+            [svgStyle]="isMobile ? { 'width.px': '130', 'height.px': '32' } : null"
+            [src]="CONFIG.images.dirHeader + 'logo.svg'"
+        >
         </svg-icon>
-        <div *ngSwitchCase="'mobileMenu'" translate>
+        <div
+            *ngSwitchCase="'mobileMenu'"
+            translate
+        >
             Menu
         </div>
     </div>

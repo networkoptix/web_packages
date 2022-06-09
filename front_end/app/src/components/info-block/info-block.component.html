@@ -1,52 +1,85 @@
-<ng-template #detailsBlock let-block="block" let-columnIndex="columnIndex" let-blockIndex="blockIndex">
+<ng-template
+    #detailsBlock
+    let-block="block"
+    let-columnIndex="columnIndex"
+    let-blockIndex="blockIndex"
+>
     <div class="block">
-        <h6 *ngIf="block.heading">{{block.heading}}</h6>
-        <div class="block-section mw-100 w-100" #thisSection (resize)="check(columnIndex, blockIndex, thisSection)">
-            <div class="block-section-keys"
-                 [style.max-width.%]="block.maxParamWidth || 100"
-                [ngClass]="{'clear-flex' : infoLineStyle == 'condensed'}">
-
-                <p *ngFor="let line of block.lines; let lineIndex=index"
+        <h6 *ngIf="block.heading">{{ block.heading }}</h6>
+        <div
+            class="block-section mw-100 w-100"
+            #thisSection
+            (resize)="check(columnIndex, blockIndex, thisSection)"
+        >
+            <div
+                class="block-section-keys"
+                [style.max-width.%]="block.maxParamWidth || 100"
+                [ngClass]="{ 'clear-flex': infoLineStyle == 'condensed' }"
+            >
+                <p
+                    *ngFor="let line of block.lines; let lineIndex = index"
                     [ngClass]="infoBlockStyle === 'dark' && 'dark'"
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
-                    [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
+                    [ngStyle]="{ display: line.show == false ? 'none' : 'flex' }"
                     [title]="line.name"
-                >{{line.name}}</p>
+                    >{{ line.name }}</p
+                >
             </div>
             <div class="block-section-values">
-                <p *ngFor="let line of block.lines; let lineIndex=index"
-                   [ngClass]="line.customClass"
-                   [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
-                   [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
-                   [title]="line.tooltip || line.name + '-' + line.value"
-                >{{line.value}}<span *ngIf="line.icon">
-                                    <svg-icon
-                                          nx-add-svg-src
-                                          [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
-                                          [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
-                                          style="height: 16px"
-                                          class="pl-1">
-                                    </svg-icon>
-                                </span></p>
+                <p
+                    *ngFor="let line of block.lines; let lineIndex = index"
+                    [ngClass]="line.customClass"
+                    [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
+                    [ngStyle]="{ display: line.show == false ? 'none' : 'flex' }"
+                    [title]="line.tooltip || line.name + '-' + line.value"
+                    >{{ line.value
+                    }}<span *ngIf="line.icon">
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'margin-top': '-4px' }"
+                            style="height: 16px"
+                            class="pl-1"
+                        >
+                        </svg-icon> </span
+                ></p>
             </div>
         </div>
     </div>
 </ng-template>
 
-<ng-template #infoColumn let-column="column" let-columnIndex="columnIndex">
-    <div class="d-flex flex-column mw-100" [ngClass]="infoBlockSize === 'full' && 'flex-grow-1'">
+<ng-template
+    #infoColumn
+    let-column="column"
+    let-columnIndex="columnIndex"
+>
+    <div
+        class="d-flex flex-column mw-100"
+        [ngClass]="infoBlockSize === 'full' && 'flex-grow-1'"
+    >
         <ng-container
-            *ngFor="let block of column; let blockIndex=index"
+            *ngFor="let block of column; let blockIndex = index"
             [ngTemplateOutlet]="detailsBlock"
-            [ngTemplateOutletContext]="{block: block, columnIndex: columnIndex, blockIndex: blockIndex}"
+            [ngTemplateOutletContext]="{
+                block: block,
+                columnIndex: columnIndex,
+                blockIndex: blockIndex
+            }"
         ></ng-container>
     </div>
 </ng-template>
 
-<div class="column-wrapper d-flex flex-wrap mw-100" [ngClass]="removeTopMargin && 'remove-top-margin'">
+<div
+    class="column-wrapper d-flex flex-wrap mw-100"
+    [ngClass]="removeTopMargin && 'remove-top-margin'"
+>
     <ng-container
-        *ngFor="let column of (singleColumn ? [sectionsOrColumns] : sectionsOrColumns) | as: InfoBlockType; let columnIndex=index"
+        *ngFor="
+            let column of (singleColumn ? [sectionsOrColumns] : sectionsOrColumns)
+                | as: InfoBlockType;
+            let columnIndex = index
+        "
         [ngTemplateOutlet]="infoColumn"
-        [ngTemplateOutletContext]="{column: column, columnIndex: columnIndex}"
+        [ngTemplateOutletContext]="{ column: column, columnIndex: columnIndex }"
     ></ng-container>
 </div>

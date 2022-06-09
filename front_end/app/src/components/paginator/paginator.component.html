@@ -1,29 +1,35 @@
-<a *ngIf="showPrevNext"
+<a
+    *ngIf="showPrevNext"
     [routerLink]="[]"
-    [queryParams]="{page: (page$ | async) - 1 || tempDisabled}"
+    [queryParams]="{ page: (page$ | async) - 1 || tempDisabled }"
     queryParamsHandling="merge"
-    [ngClass]="{'disabled': (page$ | async) === 1}"
+    [ngClass]="{ disabled: (page$ | async) === 1 }"
     class="btn btn-default btn-default--paginator"
     translate
->Previous</a>
+    >Previous</a
+>
 
-<a *ngFor="let page of (pages$ | async); let idx=index"
+<a
+    *ngFor="let page of pages$ | async; let idx = index"
     [routerLink]="[]"
-    [queryParams]="{page: page || (page$ | async) + pagesToShow - 1}"
+    [queryParams]="{ page: page || (page$ | async) + pagesToShow - 1 }"
     queryParamsHandling="merge"
     [ngClass]="{
         'active-page': (page$ | async) === page,
-        'disabled': !page || tempDisabled,
+        disabled: !page || tempDisabled,
         'five-r': showExperimental
     }"
-    class="btn btn-default page-num-btn assemble-{{idx}}"
->{{page || '...'}}</a>
+    class="btn btn-default page-num-btn assemble-{{ idx }}"
+    >{{ page || '...' }}</a
+>
 
-<a *ngIf="showPrevNext"
+<a
+    *ngIf="showPrevNext"
     [routerLink]="[]"
-    [queryParams]="{page: (page$ | async) + 1}"
+    [queryParams]="{ page: (page$ | async) + 1 }"
     queryParamsHandling="merge"
-    [ngClass]="{'disabled': (page$ | async) === (numPages$ | async) || tempDisabled}"
+    [ngClass]="{ disabled: (page$ | async) === (numPages$ | async) || tempDisabled }"
     class="btn btn-default btn-default--paginator"
     translate
->Next</a>
+    >Next</a
+>

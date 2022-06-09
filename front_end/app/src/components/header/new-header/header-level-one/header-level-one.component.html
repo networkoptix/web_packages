@@ -1,24 +1,42 @@
 <div class="menu-level-one">
     <ng-container *ngFor="let node of menuNodes">
-        <button (click)="handleNavigation(node, $event); onNodeSelect(node)"
-                [ngClass]="{ 'active': node?.name === selectedNode?.name }"
-                class="menu-item btn btn-menu">
-                {{ node.display_name }}
+        <button
+            (click)="handleNavigation(node, $event); onNodeSelect(node)"
+            [ngClass]="{ active: node?.name === selectedNode?.name }"
+            class="menu-item btn btn-menu"
+        >
+            {{ node.display_name }}
         </button>
     </ng-container>
     <button class="btn auth-section">
-        <a  *ngIf="!displayedName" [href]="headerService.createUrl | unsafe" class="user-section" translate>
+        <a
+            *ngIf="!displayedName"
+            [href]="headerService.createUrl | unsafe"
+            class="user-section"
+            translate
+        >
             CREATE ACCOUNT
         </a>
-        <a  *ngIf="displayedName" class="user-section logged-in">
+        <a
+            *ngIf="displayedName"
+            class="user-section logged-in"
+        >
             <span class="user-svg-wrapper">
-                <svg-icon nx-add-svg-src class="user-svg" [svgStyle]="{'width.px': '20'}" [src]="CONFIG.icons.dir + 'user.svg'"></svg-icon>
+                <svg-icon
+                    nx-add-svg-src
+                    class="user-svg"
+                    [svgStyle]="{ 'width.px': '20' }"
+                    [src]="CONFIG.icons.dir + 'user.svg'"
+                ></svg-icon>
             </span>
             <span class="displayed-name">
                 {{ displayedName }}
             </span>
-            <svg-icon nx-add-svg-src class="dropdown-arrow" [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"></svg-icon>
+            <svg-icon
+                nx-add-svg-src
+                class="dropdown-arrow"
+                [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"
+            ></svg-icon>
         </a>
     </button>
-
 </div>

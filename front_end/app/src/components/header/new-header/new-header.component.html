@@ -3,11 +3,13 @@
         [menuNodes]="displayedNodes"
         [selectedNode]="selectedNode"
         (nodeSelect)="handleNodeSelect($any($event))"
-        [displayedName]="displayedName">
+        [displayedName]="displayedName"
+    >
     </nx-header-level-one>
     <nx-header-level-two
         [subNodes]="selectedNode?.nodes"
-        (systemNav)="navigateToSystemsList()">
+        (systemNav)="navigateToSystemsList()"
+    >
     </nx-header-level-two>
 </ng-container>
 

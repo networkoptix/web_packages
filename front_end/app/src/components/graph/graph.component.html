@@ -21,17 +21,21 @@
 
 <ng-template #unavailable>
     <nx-section-placeholder
-            svgFileName="system_settings_placeholder"
-            [wrapperHeight]="250"
-            [translatedMessage]="LANG.monitoring.unavailable()">
+        svgFileName="system_settings_placeholder"
+        [wrapperHeight]="250"
+        [translatedMessage]="LANG.monitoring.unavailable()"
+    >
     </nx-section-placeholder>
 </ng-template>
 
-<nx-block *ngIf="!noFrame; else chart" class="d-block">
+<nx-block
+    *ngIf="!noFrame; else chart"
+    class="d-block"
+>
     <header>
         <h4 translate>System Monitoring</h4>
-</header>
-    <nx-section *ngIf="selectedServerId else unavailable">
+    </header>
+    <nx-section *ngIf="selectedServerId; else unavailable">
         <ng-container *ngTemplateOutlet="chart"></ng-container>
     </nx-section>
 </nx-block>

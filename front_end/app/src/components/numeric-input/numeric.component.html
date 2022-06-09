@@ -2,12 +2,12 @@
     type="number"
     inputmode="numeric"
     pattern="[0-9]*"
-    style="padding-right: 2px !important;"
+    style="padding-right: 2px !important"
     class="form-control"
-    id="{{componentId}}"
-    name="{{componentId}}"
-    min="{{min}}"
-    max="{{max}}"
+    id="{{ componentId }}"
+    name="{{ componentId }}"
+    min="{{ min }}"
+    max="{{ max }}"
     [placeholder]="placeholder"
     [ngClass]="class"
     [step]="step || 1"
@@ -16,7 +16,8 @@
     (paste)="onPaste($event)"
     (change)="valueChanged($event)"
     (keyup)="setValue($event)"
-    (keydown)="checkValue($event)"/>
+    (keydown)="checkValue($event)"
+/>
 <div class="spinner-button spinner-button--increment">
     <svg-icon
         nx-add-svg-src

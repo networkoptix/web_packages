@@ -1,31 +1,69 @@
 <div class="menu-level-two">
     <nx-header-logo-area (logoClick)="handleLogoClick($event)"></nx-header-logo-area>
-    <div class="menu-items"  [ngStyle]="{ 'width.px': menuItemsWidth }" #menuItems>
-        <div class="nav-arrow-container"
-             (click)="scrollMenuItems('left')"
-             *ngIf="navArrowState.visible && navArrowState.left">
+    <div
+        class="menu-items"
+        [ngStyle]="{ 'width.px': menuItemsWidth }"
+        #menuItems
+    >
+        <div
+            class="nav-arrow-container"
+            (click)="scrollMenuItems('left')"
+            *ngIf="navArrowState.visible && navArrowState.left"
+        >
             <div class="nav-arrow left">
-                <svg-icon [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'" [svgStyle]="{'width.px': '32', 'height.px': '16'}"></svg-icon>
+                <svg-icon
+                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [svgStyle]="{ 'width.px': '32', 'height.px': '16' }"
+                ></svg-icon>
             </div>
         </div>
-        <div *ngFor="let node of subNodes" class="outer-menu-item">
-            <div class="inner-menu-item"
-                 (click)="node.url !== undefined ? nodeClick(node, $event) : null"
-                 [ngClass]="{ 'active': node === optimisticSelectedSubNode || (!optimisticSelectedSubNode && (headerService.currentLocation?.path === node.url || (!headerService.currentLocation?.path && node.url === 'content/about')))}">
-                 {{ node.display_name }}
-                 <svg-icon *ngIf="node.new_window" [src]="CONFIG.images.dirHeader + 'external_link.svg'"></svg-icon>
+        <div
+            *ngFor="let node of subNodes"
+            class="outer-menu-item"
+        >
+            <div
+                class="inner-menu-item"
+                (click)="node.url !== undefined ? nodeClick(node, $event) : null"
+                [ngClass]="{
+                    active:
+                        node === optimisticSelectedSubNode ||
+                        (!optimisticSelectedSubNode &&
+                            (headerService.currentLocation?.path === node.url ||
+                                (!headerService.currentLocation?.path &&
+                                    node.url === 'content/about')))
+                }"
+            >
+                {{ node.display_name }}
+                <svg-icon
+                    *ngIf="node.new_window"
+                    [src]="CONFIG.images.dirHeader + 'external_link.svg'"
+                ></svg-icon>
             </div>
         </div>
-        <div class="nav-arrow-container"
-             (click)="scrollMenuItems('right')"
-             *ngIf="navArrowState.visible && navArrowState.right"
-             [ngStyle]="{ 'right.px': controlButtonVisible ? contextButtonWidth : 0 }">
+        <div
+            class="nav-arrow-container"
+            (click)="scrollMenuItems('right')"
+            *ngIf="navArrowState.visible && navArrowState.right"
+            [ngStyle]="{ 'right.px': controlButtonVisible ? contextButtonWidth : 0 }"
+        >
             <div class="nav-arrow right">
-                <svg-icon [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'" [svgStyle]="{'width.px': '16', 'height.px': '16'}"></svg-icon>
+                <svg-icon
+                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [svgStyle]="{ 'width.px': '16', 'height.px': '16' }"
+                ></svg-icon>
             </div>
         </div>
     </div>
-    <div class="context-button-container" *ngIf="controlButtonVisible" #contextButton>
-        <a class="login btn btn-primary text-nowrap" [href]="headerService.authorizeUrl | unsafe"  translate>Log In</a>
+    <div
+        class="context-button-container"
+        *ngIf="controlButtonVisible"
+        #contextButton
+    >
+        <a
+            class="login btn btn-primary text-nowrap"
+            [href]="headerService.authorizeUrl | unsafe"
+            translate
+            >Log In</a
+        >
     </div>
 </div>
