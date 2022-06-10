@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
+import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config';
@@ -38,6 +39,7 @@ describe('NxSystemStandardServerComponent', () => {
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 NxApplyService,
+                { provide: NxAccountService, useValue: {} },
                 { provide: NxCloudApiService, useValue: {} },
                 { provide: NxProcessService, useValue: {} },
                 { provide: ActivatedRoute, useValue: routeMock },

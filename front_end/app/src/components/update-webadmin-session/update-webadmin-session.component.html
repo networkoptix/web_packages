@@ -15,7 +15,7 @@
                        (ngModelChange)="setLogin($event); resetForm()"
                        maxlength="255"
                        disabled
-                       required nxFocusMe>
+                       required>
             </div>
             <div class="form-group">
                 <label for="login_password" translate>Password</label>
@@ -26,7 +26,7 @@
                     [(ngModel)]="auth.password"
                     (ngModelChange)="resetForm()"
                     maxlength="255"
-                    required>
+                    required nxFocusMe>
                 <div class="input-error"
                     *ngIf="login_password?.invalid && (login_password.dirty || login_password.touched) && login_password.errors.required"
                     translate>Password is required</div>

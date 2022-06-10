@@ -17,7 +17,7 @@ const proxyTargetConfig = {
         cloud: defaultCloud
     },
     sofia: {
-        host: 'https://10.1.5.196:7011',
+        host: 'https://192.168.99.113:7001',
         cloud: defaultCloud
     },
     amir1: {

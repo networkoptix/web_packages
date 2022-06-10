@@ -13,17 +13,21 @@ import { tap } from 'rxjs/operators';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
+import { NxConfigService, IConfig } from '@services/nx-config';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
+    CONFIG: IConfig;
     isDialogActive = false;
 
     constructor(
+        private configService: NxConfigService,
         private appState: NxAppStateService,
         private dialogService: NxSimpleDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
+        this.CONFIG = configService.config;
     }
 
     public intercept(
@@ -49,7 +53,8 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     // appState.systemAvailable for webadmin, overlay-modal.component
     checkIfSystemAvailable(res: HttpResponse<unknown> | HttpErrorResponse): void {
         // res might be just { type: number } and not full response
-        if (res.url && new URL(res.url).pathname.startsWith('/static')) {
+        const url = res.url && new URL(res.url, this.window.location.origin);
+        if (url?.pathname.startsWith('/static')) {
             // Don't check on request for static resource
             return;
         }
@@ -74,7 +79,8 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         } else if (
             res instanceof HttpResponse &&
             this.appState.systemAvailable$.value === false &&
-            this.appState.lastErrorStatus$.value !== undefined
+            this.appState.lastErrorStatus$.value !== undefined &&
+            url?.origin !== this.CONFIG.cloudHost       // avoid making system online if cloud request succeed
         ) {
             this.appState.systemAvailable$.next(true);
 
