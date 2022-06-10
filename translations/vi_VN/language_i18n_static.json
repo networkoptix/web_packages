@@ -8,7 +8,7 @@
     "Privacy": "Quyền riêng tư",
     "Support": "Hỗ trợ",
     "Terms": "Điều khoản",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Bảng điều khiển dành cho nhà phát triển",
     "productName": "",
     "monitoring": {
         "unavailable": "Đảm bảo rằng máy chủ được chỉ định đang trực tuyến và thử lại."
@@ -16,25 +16,25 @@
     "alarmTypes": {
         "Servers": "May chủ",
         "Cameras": "Máy ảnh",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Vị trí lưu trữ",
+        "Network Interfaces": "Giao diện mạng"
     },
     "alarmLevels": {
         "offline": "Ẩn",
         "error": "Lỗi",
-        "warning": "Warnings"
+        "warning": "Cảnh báo"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Tất cả thông báo",
+        "warning": "Chỉ có cảnh báo",
+        "error": "Chỉ có Lỗi"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Tất cả các loại thiết bị",
         "servers": "May chủ",
         "cameras": "Máy ảnh",
-        "storages": "Storages",
-        "networkInterfaces": "Interface"
+        "storages": "Lưu trữ",
+        "networkInterfaces": "Giao diện"
     },
     "accessRoles": {
         "Administrator": {
@@ -995,21 +995,21 @@
             "secondaryStreams": "Outgoing Secondary streams",
             "incomingConnections": "Kết nối đến",
             "outgoingConnections": "Kết nối đi",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "logLevel": "Mức ghi nhật ký",
+            "publicIp": "IP công khai",
             "os": "HĐH",
             "osTime": "Thời gian OS",
             "vmsTime": "Thời gian VMS",
             "cpu": "CPU",
             "cpuCores": "Lõi",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "guidConflict": "Xung đột GUID máy chủ",
+            "vmsTimeChanged24h": "Sự kiện: Thời gian đã thay đổi (24h)",
             "transactionsPerSecond1m": "Giao dịch/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "actionsTriggered1m": "Kích hoạt quy tắc/giây",
+            "apiCalls1m": "Lệnh gọi API/giây",
+            "thumbnails1m": "Hình thu nhỏ/giây",
+            "activePlugins": "Danh sách plugin hoạt động"
         }
     },
     "headerLabels": {
@@ -1029,7 +1029,7 @@
             "IO Module": "Mô đun IO",
             "Bridge": "Cầu",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Không hợp lệ"
         },
         "info": {
             "type": "Kiểu",
@@ -1142,7 +1142,7 @@
         "osTimeChangeCheckPeriodMs": "Thời gian kiểm tra thay đổi thời gian của hệ điều hành",
         "syncTimeExchangePeriod": "Đồng bộ hóa khoảng thời gian đồng bộ hóa cho các yêu cầu mạng",
         "syncTimeEpsilon": "Đồng bộ hóa thời gian epsilon. Giá trị mới không được áp dụng nếu thời gian delta nhỏ hơn epsilon",
-        "maxVirtualCameraArchiveSynchronizationThreads": "Chủ đề đồng bộ hóa kho lưu trữ camera ảo tối đa",
+        "maxVirtualCameraArchiveSynchronizationThreads": "Chủ đề đồng bộ hóa kho lưu trữ tối đa cho camera ảo",
         "updateNotificationsEnabled": "Đã cập nhật thông báo",
         "upnpPortMappingEnabled": "Ánh xạ cổng UPNP được kích hoạt",
         "useTextEmailFormat": "Gửi email văn bản đơn giản",
@@ -1179,28 +1179,28 @@
             "notInUse": "Không sử dụng",
             "reserved": "Đã dự phòng",
             "inaccessible": "Không thể tiếp cận",
-            "changing": "Changing mode...",
+            "changing": "Đang thay đổi chế độ...",
             "disabled": "Vô hiệu hóa"
         },
-        "alreadyUsed": "Storage path {url} is already used by another server.",
-        "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
-        "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
-        "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
-        "storageDeleted": "Storage {url} deleted",
-        "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
-        "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "alreadyUsed": "Đường dẫn lưu trữ {url} đã được sử dụng bởi một máy chủ khác.",
+        "deleteExternalStorage": "Xóa bộ nhớ ngoài?",
+        "failed": "Không thêm được bộ nhớ ngoài",
+        "invalidPath": "Đường dẫn lưu trữ không hợp lệ.",
+        "stillHasArchivesPreWarning": "Việc ghi vào vị trí lưu trữ này sẽ dừng lại. Nhưng các cảnh quay quá hạn tại đó sẽ vẫn tiếp tục bị xóa.",
+        "stillHasArchives": "Việc ghi vào vị trí lưu trữ này sẽ dừng lại. Nhưng các cảnh quay quá hạn tại đó sẽ vẫn tiếp tục bị xóa.",
+        "storageDeleted": "Bộ nhớ {url} đã bị xóa",
+        "failedRemove": "Không xóa được bộ nhớ ngoài {url}",
+        "reservedTooSmallTooltip": "Không thể sử dụng vị trí lưu trữ này để ghi vì dung lượng quá nhỏ và vẫn còn những vị trí lưu trữ khác lớn hơn.",
+        "reservedSystemTooltip": "Không thể sử dụng vị trí lưu trữ này để ghi vì đó là bộ lưu trữ hệ thống và vẫn còn những vị trí lưu trữ khác lớn hơn.",
+        "serverOffline": "Không thêm được bộ nhớ ngoài - máy chủ không phản hồi",
+        "success": "Đã thêm bộ nhớ ngoài",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     },
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
-            "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
+            "title": "%CLOUD_NAME% - Cổng đám mây",
+            "description": "%CLOUD_NAME%, một cách đơn giản để kết nối, quản lý và mở rộng Hệ thống %VMS_NAME%."
         },
         "/systems": {
             "title": "Hệ thống - %CLOUD_NAME%"
@@ -1209,7 +1209,7 @@
             "title": "%VMS_NAME% Tích hợp - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "Tài liệu %VMS_NAME% - %CLOUD_NAME%"
         },
         "/ipvd": {
             "title": "Thiết bị được hỗ trợ - %CLOUD_NAME%"
@@ -1234,7 +1234,7 @@
         }
     },
     "maintenance": {
-        "description": "We are working on some improvements and brand new features."
+        "description": "Chúng tôi đang tiến hành một số cải tiến và các tính năng hoàn toàn mới."
     },
     "view": {
         "timeline": {

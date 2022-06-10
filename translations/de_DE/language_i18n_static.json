@@ -360,7 +360,7 @@
         "merge": {
             "adminPasswordTitle": "Geben Sie das Passwort für das Besitzerkonto in <strong>{secondarySystem}</strong> ein",
             "adminPasswordWrong": "Das Passwort für den Administrator ist falsch",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} ist mit %CLOUD_NAME% verbunden. Cloud-Systeme können nur über das Portal %CLOUD_NAME% zusammengeführt werden.",
             "unknownBothSystemsConnectedToCloud": "Zwei mit der Cloud verbundene Systeme können nicht zusammengeführt werden. Bitte gehen Sie zu %CLOUD_NAME%, um diese Systeme zusammenzuführen.",
             "checking": "Prüfung...",
             "cloud": "Cloud",
@@ -384,7 +384,7 @@
             "primaryCannotMerge": "Das System {targetSystem} verfügt über eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf {downloadHTML}, um es mit dem {targetSystem} System zusammenzuführen.",
             "primarySystemOffline": "Das System {primarySystem} ist offline und kann nicht mit System {targetSystem} zusammengeführt werden",
             "primarySystemUnavailable": "Das System {primarySystem} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "recommendSupport": "We recommend that you consult with | support | before proceeding.",
+            "recommendSupport": "Wir empfehlen, dass Sie sich mit unserem | Support | in Verbindung setzen, bevor Sie fortfahren.",
             "restError": {
                 "duplicateServer": "Fehler beim Zusammenführen. Beide Systeme haben denselben Server",
                 "useCloudMerge": "An die Cloud gebundene Systeme können nicht zusammengeführt werden",

@@ -149,7 +149,7 @@
         "loginError": "Nie można połączyć się z %CLOUD_NAME%",
         "loginErrorAdditional": "Spróbuj ponownie lub zaloguj się do systemu bezpośrednio na swoje konto lokalne.",
         "connectErrorAdditional": "Spróbuj ponownie później.",
-        "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
+        "setupErrorAdditional": "<p class=\"mb-2\">Spróbuj ponownie lub skonfiguruj system bez chmury.</p><p> Będziesz mógł połączyć go z %CLOUD_NAME% później.</p>",
         "connectedText": "System podłączono do %CLOUD_NAME%",
         "setupConnectedText": "System podłączony",
         "stayLoggedInHelpText": "Wybierz, aby pozostać zalogowanym",
@@ -233,7 +233,7 @@
             "weekS": "{count, plural, =0{# weeks} one{# week} other{# weeks}}",
             "dayS": "{count, plural, =0{# days} one{# day} other{# days}}",
             "hourS": "{count, plural, =0{# hours} one{# hour} other{# hours}}",
-            "minuteS": "{count, plural, =0{# minutes} one{# minute} other{# minutes}}"
+            "minuteS": "{count, plural, =0{# minut} one{# minuta} few {# minut} many {# minut} other{# minuty}}"
         },
         "general": "Ogólne",
         "generalError": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
@@ -477,7 +477,7 @@
             "message": "Uwierzytelnianie dwuskładnikowe jest włączone dla tego konta. Zaloguj się.",
             "title": "Wymagane są dwa składniki weryfikacji!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
-            "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
+            "unsupportedSystem": "Aby zalogować się do tego systemu, wyłącz opcję „Pytaj o kod weryfikacyjny przy każdym logowaniu z kontem %CLOUD_NAME%” w ustawieniach <a href=\"/account/security\">konta</a>."
         }
     },
     "downloads": {
@@ -771,11 +771,11 @@
             "message": "System jest offline i dlatego serwery są niedostępne."
         },
         "noSystemApiTool": {
-            "title": "No Valid System Found",
+            "title": "Nie znaleziono poprawnego systemu",
             "message": ""
         },
         "systemLoadFailureApiTool": {
-            "title": "System failed to load",
+            "title": "Nie udało się załadować systemu",
             "message": ""
         }
     },
@@ -820,7 +820,7 @@
         "selected": "{count, plural, =0{# wybrane} one{# wybranych} other{# wybranych}}",
         "vendor": "Producent",
         "vendors": "Producenci",
-        "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found"
+        "resultsFound": "{count, plural, =0{# Wyników} one{# Wynik} few {# Wyników} many {# Wyników} other{# Wyniki}} znaleziono"
     },
     "servers": {
         "analyticsDataPolicyError": "Błąd z usuwaniem lub przechowywaniem danych analitycznych",
@@ -848,10 +848,10 @@
         "successRename": "Nazwa serwera została zapisana."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
+        "View": "Widok",
+        "Settings": "Ustawienia",
+        "Information": "Informacje",
+        "Bookmarks": "Zakładki",
         "Monitoring": "Monitoring"
     },
     "system": {
@@ -867,7 +867,7 @@
             "sessionLimitDuration": {
                 "hours": "godziny",
                 "minutes": "minuty",
-                "days": "days"
+                "days": "dni"
             },
             "warningMessages": {
                 "videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
@@ -908,7 +908,7 @@
                 "help": "(rejestruj wszystkie dostępne informacje)"
             }
         },
-        "loggerDropdownLabel": "{ loggerName } log level",
+        "loggerDropdownLabel": "{ loggerName } poziom logowania",
         "storageToolTips": {
             "local": "Lokalny",
             "usb": "USB",
@@ -958,9 +958,9 @@
         },
         "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
-        "loggingIn": "Logging in. Please wait.",
+        "loggingIn": "Logowanie. Proszę czekać...",
         "sessionRenewed": "Session has been renewed.",
-        "failedToUpdateSession": "Updating the session failed."
+        "failedToUpdateSession": "Aktualizacja sesji nie powiodła się."
     },
     "healthMonitor": {
         "groups": {
