@@ -1,17 +1,34 @@
 <ng-template #editMode>
     <ng-template #saveButton>
-        <button class="btn btn-primary" (click)="saveSettings()">Save Settings</button>
+        <button
+            class="btn btn-primary"
+            (click)="saveSettings()"
+            >Save Settings</button
+        >
     </ng-template>
     <nx-stepper [saveButton]="saveButton">
         <cdk-step>
             <div class="h-100 overflow-auto">
                 <h4>Select Systems</h4>
-                <ng-container *ngFor="let system of card.config.systems | as : {systemId: NxSystem} | keyvalue">
-                    <div *ngIf="card.config.systems[system.key].available" class="d-flex mb-1">
-                        <nx-checkbox [componentId]="system.key" [(ngModel)]="card.config.systems[system.key].show">
+                <ng-container
+                    *ngFor="
+                        let system of card.config.systems | as: { systemId: NxSystem } | keyvalue
+                    "
+                >
+                    <div
+                        *ngIf="card.config.systems[system.key].available"
+                        class="d-flex mb-1"
+                    >
+                        <nx-checkbox
+                            [componentId]="system.key"
+                            [(ngModel)]="card.config.systems[system.key].show"
+                        >
                         </nx-checkbox>
-                        <label class="mb-0" [for]="system.key">
-                            <span>{{card.config.systems[system.key].name}}</span>
+                        <label
+                            class="mb-0"
+                            [for]="system.key"
+                        >
+                            <span>{{ card.config.systems[system.key].name }}</span>
                         </label>
                     </div>
                 </ng-container>
@@ -21,9 +38,17 @@
             <div class="h-100 overflow-auto">
                 <h4>Enable Search</h4>
                 <div class="d-flex mb-1">
-                    <nx-checkbox componentId="searchEnabled" [(ngModel)]="card.config.searchEnabled"></nx-checkbox>
-                    <label class="mb-0" for="searchEnabled">
-                        <span>{{card.config.searchEnabled ? 'Search is enabled' : 'Search is disabled'}}</span>
+                    <nx-checkbox
+                        componentId="searchEnabled"
+                        [(ngModel)]="card.config.searchEnabled"
+                    ></nx-checkbox>
+                    <label
+                        class="mb-0"
+                        for="searchEnabled"
+                    >
+                        <span>{{
+                            card.config.searchEnabled ? 'Search is enabled' : 'Search is disabled'
+                        }}</span>
                     </label>
                 </div>
             </div>
@@ -31,9 +56,17 @@
     </nx-stepper>
 </ng-template>
 
-<div class="systems-view-wrapper" [ngClass]="{'p-2': card.editMode}">
-    <nx-systems-list-component *ngIf="!this.card.config.systems || !card.editMode; else editMode"
-        (availableSystems)="updateSystems($event)" base="/dashboard"
+<div
+    class="systems-view-wrapper"
+    [ngClass]="{ 'p-2': card.editMode }"
+>
+    <nx-systems-list-component
+        *ngIf="!this.card.config.systems || !card.editMode; else editMode"
+        (availableSystems)="updateSystems($event)"
+        base="/dashboard"
         [size]="card.size.value.cols > 8 ? 'full' : card.size.value.cols > 4 ? 'mid' : 'compact'"
-        [disableSearch]="!card.config.searchEnabled" [systemsToShow]="systemsToShow" [linkHandler]="showAction"></nx-systems-list-component>
+        [disableSearch]="!card.config.searchEnabled"
+        [systemsToShow]="systemsToShow"
+        [linkHandler]="showAction"
+    ></nx-systems-list-component>
 </div>

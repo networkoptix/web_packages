@@ -1,22 +1,39 @@
-<div class="w-100" [ngClass]="{'show-preloader': preloader, 'h-100': condition}">
+<div
+    class="w-100"
+    [ngClass]="{ 'show-preloader': preloader, 'h-100': condition }"
+>
     <div
         class="page-placeholder"
         [ngClass]="{
-            'has-preloader':preloader,
+            'has-preloader': preloader,
             'with-footer': withFooter,
             'with-padding': addPadding
         }"
-        [ngStyle]="{'padding-top': (withFooter && iconVisible) ? '16px': undefined}"
+        [ngStyle]="{ 'padding-top': withFooter && iconVisible ? '16px' : undefined }"
     >
-        <div class="placeholder-content {{constrainWidth ? 'constrain-width' : ''}}">
-            <div *ngIf="preloader && !condition" class="placeholder-preloader">
+        <div class="placeholder-content {{ constrainWidth ? 'constrain-width' : '' }}">
+            <div
+                *ngIf="preloader && !condition"
+                class="placeholder-preloader"
+            >
                 <div class="circleG circleG_1"></div>
                 <div class="circleG circleG_2"></div>
                 <div class="circleG circleG_3"></div>
             </div>
-            <div *ngIf="condition" class="mx-2">
-                <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
-                <div *ngIf="!iconClass && iconVisible" [attr.name]="type" class="placeholder-icon">
+            <div
+                *ngIf="condition"
+                class="mx-2"
+            >
+                <div
+                    *ngIf="iconClass"
+                    class="placeholder-icon"
+                    [ngClass]="iconClass"
+                ></div>
+                <div
+                    *ngIf="!iconClass && iconVisible"
+                    [attr.name]="type"
+                    class="placeholder-icon"
+                >
                     <svg-icon
                         nx-add-svg-src
                         [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
@@ -35,8 +52,15 @@
                     class="placeholder-message"
                     [innerHTML]="message | safe: 'html'"
                 ></div>
-                <button *ngIf="showMainButton" class="btn btn-primary main-button mx-auto">
-                    <a routerLink="/" translate>Go to Main Page</a>
+                <button
+                    *ngIf="showMainButton"
+                    class="btn btn-primary main-button mx-auto"
+                >
+                    <a
+                        routerLink="/"
+                        translate
+                        >Go to Main Page</a
+                    >
                 </button>
                 <ng-content></ng-content>
             </div>

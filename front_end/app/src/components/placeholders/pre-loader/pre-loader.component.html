@@ -1,6 +1,16 @@
-<div [ngClass]="{ 'placeholder-wrapper' : type == '' }" name="placeholder" [style.minHeight.px]="minHeight">
-    <div class="placeholder has-preloader" [ngClass]="type">
-        <div class="placeholder-content" [ngClass]="type">
+<div
+    [ngClass]="{ 'placeholder-wrapper': type == '' }"
+    name="placeholder"
+    [style.minHeight.px]="minHeight"
+>
+    <div
+        class="placeholder has-preloader"
+        [ngClass]="type"
+    >
+        <div
+            class="placeholder-content"
+            [ngClass]="type"
+        >
             <div class="placeholder-preloader">
                 <div class="circleG circleG_1"></div>
                 <div class="circleG circleG_2"></div>
