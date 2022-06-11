@@ -207,7 +207,7 @@
                             <nx-checkbox
                                     name="mandatory2fa"
                                     componentId="mandatory2fa"
-                                    [disabled]="!system.userManager.isMine"
+                                    (click)="check2fa($event)"
                                     [(ngModel)]="system2faEnabled">
                             </nx-checkbox>
 
