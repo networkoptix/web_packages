@@ -730,7 +730,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Podgląd kamer",
         "apiTool": "Narzędzie testowania API",
-        "security": "Security",
+        "security": "Ochrona",
         "twofaRequired": "Wymagane jest uwierzytelnianie dwuskładnikowe"
     },
     "pageDescriptions": {
@@ -746,7 +746,7 @@
         "good": "dobre",
         "minLength": "za krótkie",
         "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
-        "missingMessage": "Required",
+        "missingMessage": "Wymagane",
         "required": "nieprawidłowe",
         "requiredMessage": "Używaj tylko liter łacińskich, cyfr i symboli z klawiatury, unikając spacji na początku i na końcu",
         "strongMessage": "Bezpieczne hasło!",
@@ -927,15 +927,15 @@
         "unavailable": "niedostępny"
     },
     "tile": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+        "groupCount": "{count, plural, one {# grupa} few {# grup} other {# grupy}}",
+        "systemCount": "{count, plural, =0{# Systemów} one{# System} few {# Systemów} many {# Systemów} other{# Systemy}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Coś poszło nie tak. Odśwież stronę po 30 sekundach.",
         "nameFail": "Nie udało się zmienić {type}",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
-        "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "noConnection": "Przywróć połączenie do %CLOUD_NAME% i spróbuj ponownie.",
+        "noInternet": "%CLOUD_NAME% jest tymczasowo niedostępna. Spróbuj ponownie później.",
+        "userChangesFail": "Nie udało się zapisać zmian",
         "reviewAccepted": "Opinia została przyjęta",
         "system": {
             "deleted": {
@@ -956,10 +956,10 @@
                 "success": "Zapisana nazwa systemu"
             }
         },
-        "webAdminCloudCredentialError": "Log in with %CLOUD_NAME% to access this system as cloud user",
-        "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
+        "webAdminCloudCredentialError": "Zaloguj się z %CLOUD_NAME%, aby uzyskać dostęp do tego systemu jako użytkownik chmury",
+        "twoFaRequired": "Uwierzytelnianie dwuskładnikowe zostało włączone dla tego konta. Wprowadź kod weryfikacyjny w wyskakującym okienku.",
         "loggingIn": "Logowanie. Proszę czekać...",
-        "sessionRenewed": "Session has been renewed.",
+        "sessionRenewed": "Sesja została odnowiona.",
         "failedToUpdateSession": "Aktualizacja sesji nie powiodła się."
     },
     "healthMonitor": {
@@ -1055,7 +1055,7 @@
     },
     "redirects": {
         "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
-        "defaultMessage": "Please update any links to reference the new route.",
+        "defaultMessage": "Zaktualizuj wszystkie linki, aby odwoływały się do nowej trasy.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
         }
