@@ -305,7 +305,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             } else if (this.clientType.includes('Password')) { // confirmPassword clientTypes
                 this.loginEmail = email;
                 this.emailLocked = true;
-                this.currentState = (!isWeb && await this.checkRedirectUrl())
+                this.currentState = (!isWeb || await this.checkRedirectUrl())
                     ? AuthorizeState.password
                     : AuthorizeState.notSecure;
             } else {
@@ -316,7 +316,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 if (isWeb && this.clientType === ClientType.connect) {
                     this.currentState = AuthorizeState.notSecure;
                 } else {
-                    this.currentState = (!isWeb && await this.checkRedirectUrl())
+                    this.currentState = (!isWeb || await this.checkRedirectUrl())
                         ? AuthorizeState.email
                         : AuthorizeState.notSecure;
                 }
