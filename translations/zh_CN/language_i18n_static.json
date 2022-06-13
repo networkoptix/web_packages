@@ -1,14 +1,14 @@
 {
     "language": "英语_US",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "所有服务器",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
     "For developers": "开发人员适用",
     "Integrations (β)": "整合（β）",
     "Privacy": "隐私政策",
     "Support": "技术支持",
     "Terms": "条款",
-    "Developers Console": "Developers Console",
+    "Developers Console": "开发者控制台",
     "productName": "",
     "monitoring": {
         "unavailable": "请确保指定的服务器在线并重试。"
@@ -16,25 +16,25 @@
     "alarmTypes": {
         "Servers": "服务器",
         "Cameras": "摄像机",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "存储位置",
+        "Network Interfaces": "网络接口"
     },
     "alarmLevels": {
         "offline": "离线",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "错误",
+        "warning": "警告"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "所有告警",
+        "warning": "仅限警告",
+        "error": "仅限错误"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "所有设备类型",
         "servers": "服务器",
         "cameras": "摄像机",
-        "storages": "Storages",
-        "networkInterfaces": "Interface"
+        "storages": "存储设备",
+        "networkInterfaces": "接口"
     },
     "accessRoles": {
         "Administrator": {
@@ -123,7 +123,7 @@
         "connectAdditional": "此帐户将获得所有者访问级别",
         "createText": "创建帐户",
         "setupText": "设置非云系统",
-        "asAccountSubheader": "As",
+        "asAccountSubheader": "用户名",
         "toAccountSubheader": "发送至",
         "forAccountSubheader": "为 {accountEmail}",
         "passwordDisconnect": "系统断开 %CLOUD_NAME%",
@@ -283,7 +283,7 @@
         "unlockToMove": "Unlock dashboard to move widgets"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "创建"
     },
     "dialogs": {
         "twoFa": {
@@ -686,18 +686,18 @@
             "licenses": "授权",
             "users": "用户",
             "servers": "服务器",
-            "alerts": "Alerts",
+            "alerts": "警告",
             "systems": "系统",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
-            "logs": "Logs"
+            "storages": "存储位置",
+            "networkInterfaces": "网络接口",
+            "graphs": "图表",
+            "logs": "日志"
         }
     },
     "tableHeaders": {
         "type": "类型",
         "server": "服务器",
-        "alert": "Alert"
+        "alert": "警告"
     },
     "pageTitles": {
         "about": "关于",
@@ -706,7 +706,7 @@
         "activateCode": "激活帐户",
         "activateSuccess": "帐户已激活",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "身份验证",
         "changePassword": "更改密码",
         "debug": "调试",
         "default": "%CLOUD_NAME%",
@@ -727,7 +727,7 @@
         "systemShare": "共享系统",
         "systems": "系统",
         "template": "{title} - %CLOUD_NAME%",
-        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
+        "templateWebadmin": "{title} - 网络管理员 - %VMS_NAME%",
         "view": "查看摄像机",
         "apiTool": "API testing tool",
         "security": "Security",
@@ -801,8 +801,8 @@
             "publishedRibbon": "This page is the live version that is publicly available."
         },
         "newVersionAvailable": {
-            "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "notification": "可用新版本%CLOUD_NAME%",
+            "installButton": "立即安装"
         },
         "systemOffline": "系统离线。某些设置可能无法使用。",
         "systemsMerging": "此系统正在合并中。"
@@ -852,7 +852,7 @@
         "Settings": "Settings",
         "Information": "Information",
         "Bookmarks": "Bookmarks",
-        "Monitoring": "Monitoring"
+        "Monitoring": "监测中"
     },
     "system": {
         "connected": "Connected",
@@ -966,26 +966,26 @@
         "groups": {
             "info": "详情",
             "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "load": "载入",
+            "activity": "活动"
         },
         "keys": {
-            "name": "Name",
+            "name": "名称",
             "servers": "服务器",
             "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "storages": "存储位置",
             "users": "用户",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "系统版本",
+            "cloudSystemId": "云系统ID",
             "status": "状态",
-            "offlineEvents": "Events: Server Offline (24h)",
+            "offlineEvents": "事件：服务器离线（24 小时）",
             "uptimeS": "Uptime",
             "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "serverCpuUsageP": "CPU (VMS服务器) %",
+            "ramUsageB": "RAM 使用量",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
+            "serverRamUsageB": "RAM (VMS服务器)",
+            "serverRamUsageP": "RAM (VMS服务器) %",
             "threads": "Server threads",
             "decodingThreads": "Decoding threads",
             "decodingSpeed3s": "Decoding speed",
@@ -998,18 +998,18 @@
             "logLevel": "Logging level",
             "publicIp": "Public IP",
             "os": "操作系统",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "OS 时间",
+            "vmsTime": "VMS时间",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "核心",
             "ramB": "RAM",
             "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
+            "vmsTimeChanged24h": "事件：时间改变（24 小时）",
             "transactionsPerSecond1m": "Transactions/s",
             "actionsTriggered1m": "Rules Activations/s",
             "apiCalls1m": "API Calls/s",
             "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "activePlugins": "激活插件列表"
         }
     },
     "headerLabels": {
@@ -1029,7 +1029,7 @@
             "IO Module": "I/O模块",
             "Bridge": "桥接",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "无效"
         },
         "info": {
             "type": "类型",
@@ -1218,19 +1218,19 @@
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "webadmin - %VMS_NAME%"
+            "title": "网络管理员 - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "设置 - 网络管理员 - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "查看 - 网络管理员 - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "信息 - 网络管理员 - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "服务器监测 - 网络管理员 - %VMS_NAME%"
         }
     },
     "maintenance": {
