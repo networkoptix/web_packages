@@ -5,6 +5,7 @@
     queryParamsHandling="merge"
     [ngClass]="{ disabled: (page$ | async) === 1 }"
     class="btn btn-default btn-default--paginator"
+    id="paginator-prev"
     translate
     >Previous</a
 >
@@ -20,6 +21,7 @@
         'five-r': showExperimental
     }"
     class="btn btn-default page-num-btn assemble-{{ idx }}"
+    id="{{idx == 0 ? 'paginator-tile-first' : idx === (pages$ | async).length - 1 ? 'paginator-tile-last' : 'paginator-tile-' + idx }}`"
     >{{ page || '...' }}</a
 >
 
@@ -30,6 +32,7 @@
     queryParamsHandling="merge"
     [ngClass]="{ disabled: (page$ | async) === (numPages$ | async) || tempDisabled }"
     class="btn btn-default btn-default--paginator"
+    id="paginator-next"
     translate
     >Next</a
 >
