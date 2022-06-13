@@ -21,7 +21,6 @@ def get_test_json():
     branch = repo.active_branch.name
     tests=[]
     for suite in testsuite.suites:
-        #suites[f'{suite.name}'] = {}
         for test in suite.tests:
             tags=[]
             for tag in test.tags:
@@ -36,5 +35,7 @@ def get_test_json():
                 }
             )
     return json.dumps(tests)
-API = FTViewAPI()
-API.stage_mark(get_test_json())
+
+if __name__ == "__main__":
+    API = FTViewAPI()
+    API.stage_mark(get_test_json())

@@ -64,7 +64,7 @@ Force Tags        Threaded
     Turn off 2fa Functionality
     Element Should Be Visible    ${2FA SWITCH DISABLED}
 
-7. Successfully changing 2FA mode for user to "specific systems"
+7. Successfully changing 2FA mode for user to specific systems
     [Tags]    C93780
     Log In    ${login user}    ${password}
     Turn on 2fa Functionality

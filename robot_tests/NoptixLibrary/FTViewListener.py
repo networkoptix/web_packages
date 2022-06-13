@@ -1,14 +1,9 @@
-import json
-from robot.api import logger
-from robot.api.deco import keyword, library
-import os.path
 import git
 import sys
-from robot.libraries.BuiltIn import BuiltIn
 
-from FTViewAPI import FTViewAPI
 from datetime import datetime
-
+from FTViewAPI import FTViewAPI
+from robot.libraries.BuiltIn import BuiltIn
 
 logLocation = "file:///C:/develop/cloud_portal/robot_tests/log.html"
 repo = git.Repo(search_parent_directories=True)

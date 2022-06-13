@@ -20,7 +20,7 @@ Force Tags        Threaded    activate
         Register and activate account with random email    ${name}    ${name}    ${password}
     END
 
-3. Allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
+3. Allows register, activate, login with +!#$%'*-/=\?^_`{\|}~ in email field
 #ampersand was removed from this test because imaplib could not handle it
     [Tags]
     ${email}=   Get Random Symbol Email    ${BASE EMAIL}
@@ -38,7 +38,7 @@ Force Tags        Threaded    activate
     Register    mark    hamill    ${email}${SPACE}    ${password}
     Activate Account    ${email}    ${password}
 
-6. Allows register, activate, login with pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} password
+6. Allows register, activate, login with pass!@#$%^&*()_-+=;:'\"`~,./\|?[]{} password
     [Tags]    C41861
     Register and activate account with random email    mark    hamill    ${symbol password}
 

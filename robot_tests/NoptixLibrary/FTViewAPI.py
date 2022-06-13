@@ -1,9 +1,7 @@
-import json
 import requests
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
 from robot.api.deco import keyword, library
-import os.path
 
 class FTViewAPI:
     
