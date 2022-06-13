@@ -13,10 +13,12 @@
             ></nx-search>
         </div>
         <div *ngIf="systems.length">
-            <h1 *ngIf="!showCompact" class="old-h12 p-0 mb-3 mt-3"><span>{{search.value &&
-                    filteredSystems.length}}&nbsp;</span>
-                <span translate>Systems</span>&nbsp;{{search.value && 'found'}}
-            </h1>
+            <div *ngIf="!showCompact" class="p-0 mb-3 mt-3">
+                <h1 class="old-h12">
+                    <span *ngIf="search.value">{{LANG.systemsCount({ count: filteredSystems.length })}}</span>
+                    <span *ngIf="!search.value" translate>Systems</span>
+                </h1>
+            </div>
             <div class="row">
                 <ng-container *ngFor="let system of filteredSystems; trackBy: trackItem">
                     <div *ngIf="!systemsToShow || systemsToShow.includes(system.id)"

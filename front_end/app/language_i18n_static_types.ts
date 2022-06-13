@@ -39,6 +39,7 @@ export interface LanguageI18NStaticTypes {
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
+    systemsCount:          any;
     alertsCount:           any;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
@@ -1399,6 +1400,7 @@ const typeMap: any = {
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
+        { json: "systemsCount", js: "systemsCount", typ: "any" },
         { json: "alertsCount", js: "alertsCount", typ: "any" },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
