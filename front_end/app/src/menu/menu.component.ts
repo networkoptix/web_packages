@@ -221,7 +221,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 filtered.length !== this.menuContent.length ||
                 !isEqual(filtered, cleanMenuContent)
             ) {
+                 const scroll = this.scrollArea?.nativeElement.scrollTop || 0;
                 this.menuContent = filtered;
+                setTimeout(() => {
+                    if (
+                        this.scrollArea &&
+                        this.scrollArea.nativeElement.scrollHeight > this.scrollArea.nativeElement.clientHeight
+                    ) {
+                        this.scrollArea.nativeElement.scrollTop = scroll;
+                    }
+                });
             }
 
             if (this.selectedLevel1 !== currentContent.selectedSection) {

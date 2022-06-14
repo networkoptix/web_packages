@@ -235,6 +235,23 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
+    redirectAfterLogout(doNotRedirect, skipReload) {
+        if (!doNotRedirect) {
+            this.router
+                .navigate([this.CONFIG.redirect.unauthorised])
+                .finally(() => {
+                    setTimeout(() => {
+                        this.account = undefined;
+                        !skipReload && this.window.location.reload();
+                    });
+                });
+        } else if (!skipReload) {
+            setTimeout(() => {
+                this.window.location.reload();
+            });
+        }
+    }
+
     reactivate(email) {
         return this.cloudApi.reactivate(email);
     }
@@ -308,7 +325,7 @@ export abstract class BaseAccount implements OnDestroy {
             .canMove()
             .then((allowed: boolean) => {
                 if (allowed) {
-                    this.account = undefined;
+                    // this.account = undefined; <- moved to logout helper --TT
                     this.logoutHelper(doNotRedirect, skipReload);
                 }
             });

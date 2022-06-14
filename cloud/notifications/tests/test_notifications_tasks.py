@@ -91,7 +91,7 @@ def test_send_email(mocker, db):
         'html_body': message_html,
         'text_body': message_text
     }
-    status = send_email(sys_email.id, email_type=SystemEmail)
+    status = send_email(sys_email.id, email_type=SystemEmail.MSG_TYPE)
     updated_sys_email = SystemEmail.objects.get(id=sys_email.id)
     assert updated_sys_email.completed_date
     assert updated_sys_email.result == RESULT_STATES.success

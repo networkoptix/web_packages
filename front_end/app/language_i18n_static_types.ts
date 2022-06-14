@@ -39,6 +39,7 @@ export interface LanguageI18NStaticTypes {
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
+    systemsCount:          any;
     alertsCount:           any;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
@@ -418,7 +419,8 @@ export interface DialogsMerge {
     cloud:                              any;
     commonText:                         any;
     connectToCloud:                     any;
-    connectAnotherSystemToCloud:        any;
+    failedToFindAnySystemHeader:        any;
+    failedToFindAnySystem:              any;
     differentOwners:                    any;
     duplicateServers:                   any;
     enterSystemAddressTitle:            any;
@@ -1414,6 +1416,7 @@ const typeMap: any = {
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
+        { json: "systemsCount", js: "systemsCount", typ: "any" },
         { json: "alertsCount", js: "alertsCount", typ: "any" },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
@@ -1760,7 +1763,8 @@ const typeMap: any = {
         { json: "cloud", js: "cloud", typ: "any" },
         { json: "commonText", js: "commonText", typ: "any" },
         { json: "connectToCloud", js: "connectToCloud", typ: "any" },
-        { json: "connectAnotherSystemToCloud", js: "connectAnotherSystemToCloud", typ: "any" },
+        { json: "failedToFindAnySystemHeader", js: "failedToFindAnySystemHeader", typ: "any" },
+        { json: "failedToFindAnySystem", js: "failedToFindAnySystem", typ: "any" },
         { json: "differentOwners", js: "differentOwners", typ: "any" },
         { json: "duplicateServers", js: "duplicateServers", typ: "any" },
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "any" },

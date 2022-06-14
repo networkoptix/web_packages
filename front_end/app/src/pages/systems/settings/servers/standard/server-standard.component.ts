@@ -20,8 +20,10 @@ import {
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
+import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -126,6 +128,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
+        private appState: NxAppStateService,
+        private accountService: NxAccountService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private route: ActivatedRoute,
@@ -169,6 +173,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.destroyRestartTake$.next(true);
         this.destroyRestartTake$.complete();
     }
 
@@ -340,10 +345,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             this.CONFIG.servers.status.offline,
             this.CONFIG.servers.status.checking
         ].includes(this.selectedServer.internalStatus);
+
         this.serverUnavailable = this.serverOffline || (
-            !this.system.currentServerNotBusy &&
-            this.system.currentBusyServerIds.has(this.selectedServer.id)
-        );
+                !this.system.currentServerNotBusy &&
+                this.system.currentBusyServerIds.has(this.selectedServer.id)
+            );
 
         if (
             !this.serverOffline && (
@@ -357,6 +363,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         if (this.serverOffline || this.serverUnavailable) {
             this.storagesLoading = false;
             this.dropdownStorages = [];
+        }
+
+        if (environment.isLocal && status === 'restarting') {
+            // Force overlay to show - don't wait next api call to fail --TT
+            this.appState.systemAvailable$.next(false);
         }
     }
 
@@ -418,21 +429,34 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                 this.system.isAvailable = false;
                 this.system.storageManager.update();
                 this.setStatus(res);
-                this.system.infoSubject
-                    .pipe(
-                        untilDestroyed(this),
-                        skipWhile(system => system.isOnline),
-                        takeUntil(this.destroyRestartTake$))
-                    .subscribe(() => {
-                        if (this.system.isOnline) {
-                            this.system.currentServerNotBusy = true;
-                            this.system.currentBusyServerIds.delete(id);
-                            this.system.isAvailable = true;
-                            this.destroyRestartTake$.next(true);
-                            this.destroyRestartTake$.complete();
-                            this.setStatus('');
-                        }
-                    });
+                if (environment.isLocal) {
+                    this.appState.systemAvailable$
+                        .pipe(
+                            untilDestroyed(this),
+                            takeUntil(this.destroyRestartTake$),
+                        )
+                        .subscribe((status) => {
+                            if (status) {
+                                this.destroyRestartTake$.next(true);
+                                this.accountService.logout(false);
+                            }
+                        });
+                } else {
+                    this.system.infoSubject
+                        .pipe(
+                            untilDestroyed(this),
+                            skipWhile(system => system.isOnline),
+                            takeUntil(this.destroyRestartTake$))
+                        .subscribe(() => {
+                            if (this.system.isOnline) {
+                                this.system.currentServerNotBusy = true;
+                                this.system.currentBusyServerIds.delete(id);
+                                this.system.isAvailable = true;
+                                this.setStatus('');
+                                this.destroyRestartTake$.next(true);
+                            }
+                        });
+                }
             }).catch(() => {
                 // Dialog was canceled
             });

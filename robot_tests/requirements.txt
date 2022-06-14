@@ -4,6 +4,7 @@ decorator==4.4.0
 docker==4.1.0
 docker-pycreds==0.4.0
 future==0.17.1
+GitPython==3.1.27
 idna==2.8
 requests==2.22.0
 robotframework==4.0.1

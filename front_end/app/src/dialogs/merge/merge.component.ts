@@ -181,7 +181,7 @@ export class MergeModalContent {
                     this.secondarySystem = this.targetSystem;
                     this.updateShow('noOtherSystemServerUrl');
                 } else {
-                    this.machine.transition('connectAnotherSystemToCloud');
+                    this.machine.transition('failedToFindAnySystem');
                 }
             } else {
                 if (this.systems.length) {

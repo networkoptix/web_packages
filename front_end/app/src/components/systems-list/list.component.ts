@@ -6,7 +6,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -81,6 +81,7 @@ export class NxSystemsListComponent implements OnInit {
         this.LANG = this.language.translations;
 
         this.pageService.pageTitle = this.LANG.pageTitles.systems?.();
+        this.search = { value: '' };
     }
 
     constructor(
@@ -94,6 +95,7 @@ export class NxSystemsListComponent implements OnInit {
         private headerService: NxHeaderService,
         private menusService: NxMenusService,
         private router: Router,
+        private route: ActivatedRoute,
         private location: Location
     ) {
         this.setupDefaults(configService);
@@ -102,7 +104,6 @@ export class NxSystemsListComponent implements OnInit {
     ngOnInit(): void {
         this.showSearch = false;
         this.fetchComplete = false;
-        this.search = { value: '' };
 
         this.accountService.get().then(account => {
             if (account?.email) {
@@ -155,6 +156,8 @@ export class NxSystemsListComponent implements OnInit {
             ).subscribe(() => {
                 this.searchSystems();
             });
+
+        this.search.value = this.route.snapshot.queryParams.search;
     }
 
     trackItem(index: number, item: NxSystemWithUserInfo): string | undefined {
@@ -220,7 +223,7 @@ export class NxSystemsListComponent implements OnInit {
             this.updateEndpoint(system.id);
             this.headerService.show$ = false;
             this.uriService
-                .updateURI(this.menusService.getUrl(system.id, this.endpoint))
+                .updateURI(this.menusService.getUrl(system.id, this.endpoint), { search: undefined })
                 .then(() => {
                     const activeSystem = this.headerService.activeSystem ||
                         this.headerService.lastActive$.value ||

@@ -466,6 +466,10 @@ export class NxSystemAPI {
         throw Error(this.notImplementedMsg);
     }
 
+    loginTokenUrl(token: string): Observable<any> {
+        throw Error(this.notImplementedMsg);
+    }
+
     loginOauth(code: string, skipSetting?: boolean): Observable<any> {
         throw Error(this.notImplementedMsg);
     }

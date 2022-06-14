@@ -221,6 +221,9 @@ export class NxMenuService implements OnDestroy {
         const clean = cloneDeep(content);
         return clean.map(node => {
             delete node.toggle;
+            node.level3?.map((level3node) => {
+                delete level3node.additionalText;
+            });
             return node;
         });
     }

@@ -543,8 +543,8 @@ Disconnect from my account
 Failure Tasks
     [timeout]    5 minutes
     ${console}    Get Browser Log
-    Log    ${console}
-    Capture Page Screenshot    selenium-screenshot-${LANGUAGE}{index}.png
+    Log    ${console}    level=trace
+    Capture Page Screenshot    EMBED
     # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True    folder=[Gmail]/All Mail
     # Delete All Emails
     # Close Mailbox
@@ -552,7 +552,7 @@ Failure Tasks
 Wait Until Elements Are Visible
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
     FOR     ${element}  IN  @{elements}
-        Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${element}    ${timeout}
+        Wait Until Element Is Visible    ${element}    ${timeout}
     END
     
 Wait Until Elements Are Visible with Retry

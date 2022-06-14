@@ -88,8 +88,8 @@ describe('Url Protocol Service', () => {
 
     it('should use authKey if useOauth is falsy', async () => {
         const linkData = await urlService.getLink({});
-        expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&auth=someAuth');
-        expect(linkData.code).toBeUndefined();
+        expect(linkData.link).toBe('https://localhost:7001/client/?from=portal&auth=someAuth&code=someCode');
+        expect(linkData.code).toBe('someCode');
         expect(linkData.authKey).toEqual('someAuth');
     });
 });

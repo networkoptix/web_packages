@@ -146,8 +146,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     private setNameAndTitle(): void {
         const systemName = this.system.info.systemName || this.system.info.name;
         if (this.systemName !== systemName) {
+            this.systemName = systemName;
             this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
-            this.systemName = this.system.info.systemName || this.system.info.name;
             if (!this.CONFIG.isLocal) {
                 this.pageService.pageTitle = this.systemName;
             }
@@ -372,6 +372,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
+    public getCloudStorageUsagePromise: Promise<any> = null
+
     async disconnectFromCloud() {
         if (!this.system) {
             return setTimeout(() => this.disconnectFromCloud(), 500);
@@ -388,12 +390,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }
                 }
             }).catch(_ => _);
-
         if (this.system.userManager.isMine) {
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
             }
-            this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
+            if (this.getCloudStorageUsagePromise) {
+                return;
+            }
+            this.getCloudStorageUsagePromise = this.cloudApiService.getCloudStorageUsage(this.system.id);
+            this.getCloudStorageUsagePromise.then(() => {
                 // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
                 const {
                     dialogs: {
@@ -402,9 +407,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }
                 } = this.LANG;
                 this.dialogs.confirm(message, title, ok);
+                this.getCloudStorageUsagePromise = null;
             }).catch(() => {
                 // User is the owner. Deleting system means unbinding it and disconnecting all accounts
                 // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
+                this.getCloudStorageUsagePromise = null;
                 this.dialogs
                     .disconnect(this.accountService, this.system)
                     .then(result => {

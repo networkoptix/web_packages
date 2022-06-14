@@ -109,17 +109,7 @@ export class LocalAccount extends BaseAccount {
                 this.cookieService.deleteAll();
                 this.sessionService.invalidateSession(); // Clear session
 
-                if (!doNotRedirect) {
-                    this.router
-                        .navigate([this.CONFIG.redirect.unauthorised])
-                        .finally(() => {
-                            setTimeout(() => !skipReload && this.window.location.reload());
-                        });
-                } else if (!skipReload) {
-                    setTimeout(() => {
-                        this.window.location.reload();
-                    });
-                }
+                this.redirectAfterLogout(doNotRedirect, skipReload);
             });
     }
 

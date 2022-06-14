@@ -3,6 +3,7 @@ import {
     Component,
     Inject,
     OnInit,
+    Renderer2,
     ViewChild
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
@@ -93,6 +94,7 @@ export class LoginWebadminModalContent implements OnInit {
         languageService: NxLanguageProviderService,
         locationService: Location,
         private oauthService: OauthService,
+        private renderer: Renderer2,
         private processService: NxProcessService,
         private storageService: NxStorageService,
         private appStateService: NxAppStateService,
@@ -125,6 +127,13 @@ export class LoginWebadminModalContent implements OnInit {
     //         errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix()
     //     });
     // }
+
+    private removeParamFromUrl(url: URL, hash: string, params: URLSearchParams, paramName: string): void {
+        params.delete(paramName);
+        const paramString = params.toString();
+        url.hash = hash + (paramString ? '?' + paramString : '');
+        this.window.location.href = url.toString();
+    };
 
     private displayCloudConnectionError() {
         this.simpleDialogService.notify(
@@ -164,12 +173,14 @@ export class LoginWebadminModalContent implements OnInit {
         const [hash, query] = url.hash.split('?');
         const params = new URLSearchParams(query || '');
         const code = params.get('code');
+        const token = params.get('token');
         if (code) {
-            params.delete('code');
-            const paramString = params.toString();
-            url.hash = hash + (paramString ? '?' + paramString : '');
-            this.window.location.href = url.toString();
+            this.removeParamFromUrl(url, hash, params, 'code');
             this.oauthLogin(code);
+            return;
+        } else if (token) {
+            this.removeParamFromUrl(url, hash, params, 'token');
+            this.tokenLogin(token);
             return;
         } else {
             this.loading = false;
@@ -211,6 +222,7 @@ export class LoginWebadminModalContent implements OnInit {
             this.loginForm.controls.login_password.setErrors({
                 nx_wrong_credentials: true
             });
+            this.renderer.selectRootElement('#login_password').focus();
         };
 
         const cloudLogin = this.LANG.errorCodes['This authorization method is forbidden. Please contact your system administrator.']();
@@ -336,6 +348,15 @@ export class LoginWebadminModalContent implements OnInit {
                         }
                     });
                 }
+            });
+    }
+
+    tokenLogin(token: string): void {
+        this.account.mediaServerApi.loginTokenUrl(token)
+            .subscribe(() => {
+                this.window.location.reload();
+            }, () => {
+                this.loading = false;
             });
     }
 
