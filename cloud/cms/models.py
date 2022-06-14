@@ -2004,7 +2004,7 @@ class Menu(models.Model):
     enabled = models.BooleanField(default=True)
 
     LOGS_TO_SHOW = 10
-    REQUIRED_MENUS = ['header', 'footer', 'configuration']
+    REQUIRED_MENUS = ['Header', 'Footer', 'Configuration']
 
     def __str__(self):
         if self.name:
