@@ -168,7 +168,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
             {},
             { withCredentials: 'true' }
-        );
+        ).pipe(catchError(e => {
+            if (!environment.isLocal) {
+                this.injector.get(WINDOW).location.reload();
+            }
+            throw e;
+        }));
     }
 
     public setTokens(tokens, isSystem) {
