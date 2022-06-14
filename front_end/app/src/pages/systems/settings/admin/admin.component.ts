@@ -372,7 +372,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    public getCloudStorageUsagePromise: Promise<any> = null
+    public getCloudStorageUsagePromise: Promise<any> = null;
 
     async disconnectFromCloud() {
         if (!this.system) {

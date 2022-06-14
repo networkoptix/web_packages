@@ -347,9 +347,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         ].includes(this.selectedServer.internalStatus);
 
         this.serverUnavailable = this.serverOffline || (
-                !this.system.currentServerNotBusy &&
+            !this.system.currentServerNotBusy &&
                 this.system.currentBusyServerIds.has(this.selectedServer.id)
-            );
+        );
 
         if (
             !this.serverOffline && (
@@ -435,7 +435,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                             untilDestroyed(this),
                             takeUntil(this.destroyRestartTake$),
                         )
-                        .subscribe((status) => {
+                        .subscribe(status => {
                             if (status) {
                                 this.destroyRestartTake$.next(true);
                                 this.accountService.logout(false);

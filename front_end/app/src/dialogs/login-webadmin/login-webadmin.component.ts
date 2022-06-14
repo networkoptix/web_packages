@@ -133,7 +133,7 @@ export class LoginWebadminModalContent implements OnInit {
         const paramString = params.toString();
         url.hash = hash + (paramString ? '?' + paramString : '');
         this.window.location.href = url.toString();
-    };
+    }
 
     private displayCloudConnectionError() {
         this.simpleDialogService.notify(

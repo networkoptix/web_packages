@@ -13,7 +13,8 @@ import { tap } from 'rxjs/operators';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import { NxConfigService, IConfig } from '@services/nx-config';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { WINDOW } from '@services/window-provider';
 
 @Injectable()
@@ -80,7 +81,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             res instanceof HttpResponse &&
             this.appState.systemAvailable$.value === false &&
             this.appState.lastErrorStatus$.value !== undefined &&
-            url?.origin !== this.CONFIG.cloudHost       // avoid making system online if cloud request succeed
+            url?.origin !== this.CONFIG.cloudHost // avoid making system online if cloud request succeed
         ) {
             this.appState.systemAvailable$.next(true);
 

@@ -54,6 +54,7 @@ export interface Level2Button {
 }
 
 export interface Level3Item {
+    additionalText?: string;
     id: string;
     label: string;
     path: string;

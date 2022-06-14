@@ -13,7 +13,6 @@ import {
     BehaviorSubject,
     combineLatest as combineLatestFrom,
     Subject,
-    Subscription,
 } from 'rxjs';
 import {
     combineLatest,
@@ -35,14 +34,14 @@ import { Process } from '../process.service/process';
 
 import { Watcher, SectionWatcher, FormWatcher } from './watcher';
 
-type ExtNgForm = {
+export type extNgForm = {
     form: NgForm,
     originalForm: {},
     save: Process,
     discard: () => void,
     hasChange: boolean,
     changedFields: Set<string>,
-    subscr: Subscription,
+    reset$: Subject<boolean>,
 };
 
 @UntilDestroy()
@@ -146,7 +145,7 @@ export class NxApplyService extends DialogBase {
      * The other thing that still needs to be done are processes that trigger dialogs, need to find a way to only show the last.
      */
     runProcesses = () => this.applyFunctions.reduce(
-        (prevPromise, process, index) => {
+        (prevPromise, process, _) => {
             return prevPromise.then(prevRes => {
                 return new Promise((resolve, reject) => {
                     process.run(res => resolve(res || prevRes), res => reject(res || prevRes));
@@ -226,7 +225,6 @@ export class NxApplyService extends DialogBase {
      * @param nonSystem
      */
     forms: any = {};
-    resetForms$ = new Subject();
 
     initPageFormsWatcher(
         component: ViewContainerRef,
@@ -245,17 +243,19 @@ export class NxApplyService extends DialogBase {
         }, 0);
     }
 
+    // TODO: Combine next two functions as they have same functionality -- TT
     resetFormWatchers(): void {
-        this.applyComponentInstance.forms && this.resetForms$.next();
         for (const id in this.applyComponentInstance.forms) {
+            this.applyComponentInstance.forms[id].reset$.next(true);
             delete this.applyComponentInstance.forms[id];
+            delete this.forms[id];
         }
     }
 
     removeFormWatcher(id: string): void {
         const watcher = this.applyComponentInstance.forms[id];
-        watcher?.subscr.unsubscribe();
-        delete this.applyComponentInstance.forms[id];
+        watcher.reset$.next(true);
+        delete this.forms[id];
     }
 
     createFormWatcher(
@@ -318,7 +318,7 @@ export class NxApplyService extends DialogBase {
             }
 
             return this.applyFormFunctions.reduce(
-                (prevPromise, process, index) => {
+                (prevPromise, process, _) => {
                     return prevPromise.then(prevRes => {
                         return new Promise((resolve, reject) => {
                             process.run(
@@ -347,21 +347,21 @@ export class NxApplyService extends DialogBase {
                 !form.form.controls.fields && Object.keys(form.form.controls).length
                     ? formatInitial()
                     : {};
-            const extNgForm: ExtNgForm = {
+
+            const extNgForm: extNgForm = {
                 form: form,
                 originalForm: initialForm,
                 save: saveFunction,
                 discard: discardFunction,
                 hasChange: false,
                 changedFields: new Set(),
-                subscr: new Subscription(),
+                reset$: new Subject(),
             };
 
-            extNgForm.subscr = extNgForm.form.valueChanges
+            extNgForm.form.valueChanges
                 .pipe(
                     untilDestroyed(this),
-                    takeUntil(this.resetForms$),
-                )
+                    takeUntil(extNgForm.reset$))
                 .subscribe(change => {
                     // Init phase ... in some cases form doesn't provide initial controls
                     // but valueChanges triggers on every control init
