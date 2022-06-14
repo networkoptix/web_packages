@@ -83,7 +83,7 @@ def auto_refresh_token(no_refresh=False):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
             from api.account_backend import BearerAuthentication
-            if isinstance(getattr(request, 'successful_authenticator', None), BearerAuthentication):
+            if isinstance(request._authenticator, BearerAuthentication):
                 access_token = request.auth
                 refresh_token = None
             elif hasattr(request, "session"):
