@@ -116,14 +116,14 @@ Force Tags        system    cameras
     [Tags]    C76256
     @{auth}=   Create List    admin    ${BASE PASSWORD}
 
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_offline.svg"]
-    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_recording.svg")]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_offline.svg")]
+    Element Should Not Be Visible    //nx-level-3-item//span[contains(text(),"good cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]
     
     Wait Until Elements Are Visible With Retry   
-    #...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_recording.svg"]
-    ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[@data-src="/static/images/icons/standard/device_offline.svg"]
-    ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]
+    #...    //nx-level-3-item//span[contains(text(),"no audio cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_recording.svg")]
+    ...    //nx-level-3-item//span[contains(text(),"offline cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/device_offline.svg")]
+    ...    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]
 
     ${value}=   Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    status
     Should Be Equal As Strings    ${value}    Unauthorized
@@ -1129,7 +1129,7 @@ Force Tags        system    cameras
     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
     Reload Page
-    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[@data-src="/static/images/icons/standard/camera_unauthorized.svg"]    180
+    Wait Until Element is Not Visible    //nx-level-3-item//span[contains(text(),"unauth cam")]/..//svg-icon[contains(@data-src,"/images/icons/standard/camera_unauthorized.svg")]    180
     Sleep    120
     @{auth}=   Create List    admin    ${BASE PASSWORD}
     ${status}    Get Camera Attribute By Camera Name    ${auth}    https://${QA BURBANK IP}:${system}[port]    unauth cam    status

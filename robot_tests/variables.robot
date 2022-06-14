@@ -263,8 +263,8 @@ ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas
 
 #Eye icons for password forms
-${EYE ICON OPEN}             //svg-icon[@data-src="/static/images/icons/text_buttons/eye.svg"]
-${EYE ICON CLOSED}           //svg-icon[@data-src="/static/images/icons/text_buttons/eye_closed.svg"]
+${EYE ICON OPEN}             //svg-icon[contains(@data-src,"/images/icons/text_buttons/eye.svg")]
+${EYE ICON CLOSED}           //svg-icon[contains(@data-src,"/images/icons/text_buttons/eye_closed.svg")]
 
 # Form validation passwords
 ${LOWERCASE PASSWORD}    adrhartjad
@@ -310,10 +310,10 @@ ${ACTIVATE MODAL LOGIN BTN}           //nx-authorize-component//nx-authorize-act
 ${LOCAL USER NAME HEADER}             //nx-system-user-component//nx-block//header//span[contains(@class,"user-name")]
 
 #svg icons
-${USERS ICON}                      *[name()="svg-icon" and @data-src="/static/images/icons/standard/users.svg"]
-${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/standard/user.svg"]
-${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
-${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
-${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]
-${PLACEHOLDER ICON}                //*[name()="svg-icon" and @data-src="/static/images/placeholders/section/system_settings_placeholder.svg"]
-${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and @data-src="/static/images/placeholders/page/NoSettings.svg"]
+${USERS ICON}                      *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/users.svg")]
+${LOCAL USER ICON}                 *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/user.svg")]
+${CAMERAS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/cameras.svg")]
+${SERVERS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/servers.svg")]
+${SYSTEMS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/systems.svg")]
+${PLACEHOLDER ICON}                //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/section/system_settings_placeholder.svg")]
+${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/page/NoSettings.svg")]
