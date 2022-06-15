@@ -86,8 +86,4 @@ export class NxSystemGroupsPageComponent implements OnInit, OnDestroy {
     initMoveSystemDialog(): void {
         this.dialogsService.moveSystemToGroup();
     }
-
-    initSettingsDialog(): void {
-        this.dialogsService.systemGroupSettings();
-    }
 }

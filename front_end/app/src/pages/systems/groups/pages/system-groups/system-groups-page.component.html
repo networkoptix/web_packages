@@ -12,12 +12,6 @@
                 [disabled]="!(_groupForest$ | async).length"
                 translate
             >Move system</button>
-            <button
-                class="btn btn-default"
-                (click)="initSettingsDialog()"
-                [disabled]="!(_groupForest$ | async).length"
-                translate
-            >Settings</button>
         </div>
         <h2>Groups</h2>
         <nx-system-group-tree

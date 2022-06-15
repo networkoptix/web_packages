@@ -32,17 +32,8 @@ import { isObject } from '@utils/general';
 import { NxProcessService } from '../process.service';
 import { Process } from '../process.service/process';
 
+import { extNgForm } from './apply.service.type';
 import { Watcher, SectionWatcher, FormWatcher } from './watcher';
-
-export type extNgForm = {
-    form: NgForm,
-    originalForm: {},
-    save: Process,
-    discard: () => void,
-    hasChange: boolean,
-    changedFields: Set<string>,
-    reset$: Subject<boolean>,
-};
 
 @UntilDestroy()
 @Injectable({
