@@ -561,18 +561,22 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return camera.name;
                 }, NxUtilsService.sortASC);
                 this.system.cameras.sort(byParam);
-                camerasNode.level3 = this.system.cameras.map(camera => ({
-                    id: camera.id.replace(/\s|\{|\}/g, ''),
-                    svgIcon: this.getCameraStatusIcon(camera),
-                    isEnabled: camera.status !== 'Offline' &&
-                        camera.status !== 'Unauthorized',
-                    label: camera.name,
-                    indent: true,
-                    path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                    additionalLabel: camera.url.match(
-                        /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
-                    )
-                }));
+                camerasNode.level3 = this.system.cameras
+                    .map(camera => {
+                        const cameraIP = camera.url.match(
+                            /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
+                        );
+
+                        return ({
+                            id: camera.id.replace(/\s|\{|\}/g, ''),
+                            svgIcon: this.getCameraStatusIcon(camera),
+                            isEnabled: camera.status !== 'Offline' && camera.status !== 'Unauthorized',
+                            label: camera.name,
+                            indent: true,
+                            path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                            additionalLabel: cameraIP && cameraIP[0]
+                        });
+                    });
             } else {
                 camerasNode.level3 = [];
             }
