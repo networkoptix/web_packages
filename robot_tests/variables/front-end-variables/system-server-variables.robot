@@ -78,15 +78,15 @@ ${STORAGE DISABLED NOT IN USE}      ${STORAGE DISK 2}/parent::td[@class="disable
 ${STORAGE DISABLED RESERVED}        ${STORAGE DISK 3}/parent::td[@class="disabled-label"]/following-sibling::td${STORAGE RESERVED MODE}
 ${STORAGE ENABLED MAIN}             ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE MAIN MODE}
 ${STORAGE ENABLED BACKUP}           ${STORAGE DISK 1}/parent::td[not(@class="disabled-label")]/following-sibling::td${STORAGE BACKUP MODE}
-${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
-${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
-${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
-${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
+${STORAGE DISABLED RESERVED ICON}   ${STORAGE DISK 3}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE DISABLED NOT IN USE ICON}   ${STORAGE DISK 2}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE DISABLED INACCESSIBLE ICON}   ${STORAGE DISK INVALID}/parent::td[@class="disabled-label"]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE ENABLED MAIN ICON}        ${STORAGE DISK 0}/parent::td[not(@class="disabled-label")]//*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
 ${STORAGE DISABLED RESERVED ADDRESS}   ${STORAGE DISK 3}
 ${STORAGE DISABLED NOT IN USE ADDRESS}   ${STORAGE DISK 2}
 ${STORAGE DISABLED INACCESSIBLE ADDRESS}   ${STORAGE DISK INVALID} 
 ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
-${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/info.svg"]
+${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/info.svg")]
 ${STORAGE RESERVED TOOLTIP}         //div[contains(@class, "tooltip-body") and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
 ${RESERVED SPACE}                   ${STORAGE POPOVER}//td[text()="Reserved"]/following-sibling::td
@@ -106,13 +106,13 @@ ${RESET BACKUP RESET BUTTON}        ${RESET BACKUP MODAL}//button[@type="submit"
 ${RESET BACKUP CLOSE BUTTON}        ${RESET BACKUP MODAL}//button[@aria-label="Close"]
 ${RESET BACKUP CANCEL BUTTON}       ${RESET BACKUP MODAL}//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${RECORDING STOP WARNING}           //*[contains(text(), "${RECORDING STOP WARNING TEXT}")]
-${STORAGE LOCAL ICON}               *[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_local.svg"]
-${STORAGE LOADING ICON}             //*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/loading.svg"]
-${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and @data-src="/static/images/icons/error.svg"]
+${STORAGE LOCAL ICON}               *[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_local.svg")]
+${STORAGE LOADING ICON}             //*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/loading.svg")]
+${STORAGE DELETION ALERT ICON}      //*[name()="svg-icon" and contains(@data-src,"/images/icons/error.svg")]
 ${STORAGE DELETION ALERT TOOLTIP}   //div[contains(@class, "tooltip-body") and contains(text(), "${STORAGE DELETION ALERT TOOLTIP TEXT}")]
-${STORAGE SMB ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/storage_smb.svg"]
+${STORAGE SMB ICON}                 *[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/storage_smb.svg")]
 ${STORAGE SMB TOOLTIP}              //div[contains(@class, "tooltip-body") and contains(text(), "${SMB TOOLTIP TEXT}")]
-${STORAGE DELETE ICON}              //*[name()="svg-icon" and @data-src="/static/images/icons/standard/delete.svg"]   
+${STORAGE DELETE ICON}              //*[name()="svg-icon" and contains(@data-src,"/images/icons/standard/delete.svg")]
 ${STORAGE DELETE BUTTON}            ${STORAGE DELETE ICON}/parent::button
 ${SMB STORAGE DELETE BUTTON}        ${STORAGE DISK NETWORK}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
 ${INACCESSIBLE STORAGE DELETE BUTTON}    ${STORAGE DISK INVALID}/parent::td/following-sibling::td${STORAGE DELETE BUTTON}
@@ -174,7 +174,7 @@ ${SERVER NOT ACCESIBLE IMAGE}       //div[contains(@class,"placeholder-icon") an
 ${OFFLINE BANNER}                    //nx-alert-block//span[contains(text(),"${SERVER OFFLINE TEXT}")]
 ${CHECKING BANNER}                   //nx-alert-block//span[contains(text(),"${CHECKING TEXT}")]
 ${OUTDATED BANNER}                   //div[@class="warning-margin"]/span[contains(text(), "${STORAGES OUTDATED WARNING TEXT}")]
-${RELOAD ICON}                       //*[name()="svg-icon" and @data-src="/static/images/icons/text_buttons/reload.svg"]
+${RELOAD ICON}                       //*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/reload.svg")]
 
 # ADVANCED
 # Storage Locations Block

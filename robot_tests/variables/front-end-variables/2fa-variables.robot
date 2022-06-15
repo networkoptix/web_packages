@@ -9,7 +9,7 @@ ${2FA SWITCH}                               //nx-account-security-component//nx-
 ${2FA SWITCH ENABLED}                       //nx-account-security-component//input[(@id="2fa-active-status-switch") and (@class="selected")]//..
 ${2FA SWITCH DISABLED}                      //nx-account-security-component//input[(@id="2fa-active-status-switch") and (@class="")]//..
 ${2FA PASSWORD MODAL FIELD}                 //two-fa-modal-content//input[@id="login_password"]
-${2FA PASSWORD MODAL NEXT BTN}              //two-fa-modal-content//svg-icon[@data-src="/static/images/icons/standard/arrow_right.svg"]
+${2FA PASSWORD MODAL NEXT BTN}              //two-fa-modal-content//svg-icon[contains(@data-src,"/images/icons/standard/arrow_right.svg")]
 ${2FA QA CODE BTN}                          //two-fa-modal-content//button[@id="qrMode"]
 ${2FA KEY MODAL NEXT BTN}                   //two-fa-modal-content//button[@id="nextWizardCode"]
 ${2FA KEY}                                  //two-fa-modal-content//nx-info-block//div[@class="block-section-values"]//p[contains(@title,"Key")]
@@ -23,12 +23,12 @@ ${2FA AUTH CODE LOG IN BTN}                 //nx-authorize-component//nx-process
 ${2FA BACKUP CODE BTN}                      //nx-authorize-auth-code-component//span[text()="${2FA BACKUP CODE BTN TEXT}"]
 ${2FA BACKUP CODE FIELD}                    //nx-authorize-backup-code-component//input[@id="backupCode"]
 ${2FA BACKUP CODE LOG IN BTN}               //nx-authorize-backup-code-component//nx-process-button//button[@type="submit"]
-${2FA CLOUD ILLUSTRATION}                   //nx-authorize-component//nx-authorize-auth-code-component//svg-icon[@data-src="/static/images/placeholders/section/cloud_header.svg"]
+${2FA CLOUD ILLUSTRATION}                   //nx-authorize-component//nx-authorize-auth-code-component//svg-icon[contains(@data-src,"/images/placeholders/section/cloud_header.svg")]
 ${2FA LOG IN CLOUD}                         //nx-authorize-component//nx-authorize-auth-code-component//h3[text()="${2FA LOG IN CLOUD TEXT}"]
 ${2FA CODE INSTRUCTIONS}                    //nx-authorize-component//nx-authorize-auth-code-component//p[text()="${2FA CODE INSTRUCTIONS TEXT}"]
 ${2FA BACK BTN}                             //nx-authorize-component//nx-authorize-auth-code-component//span[text()="${BACK TEXT}"]
 ${2FA LOG IN BTN}                           //nx-authorize-auth-code-component//nx-process-button//button[text()="${LOG IN BUTTON TEXT}"]
-${2FA BK CLOUD ILLUSTRATION}                //nx-authorize-component//nx-authorize-backup-code-component//svg-icon[@data-src="/static/images/placeholders/section/cloud_header.svg"]
+${2FA BK CLOUD ILLUSTRATION}                //nx-authorize-component//nx-authorize-backup-code-component//svg-icon[contains(@data-src,"/images/placeholders/section/cloud_header.svg")]
 ${2FA BK LOG IN CLOUD}                      //nx-authorize-component//nx-authorize-backup-code-component//h3[text()="${2FA LOG IN CLOUD TEXT}"]
 ${2FA BK CODE FIELD}                        //nx-authorize-component//nx-authorize-backup-code-component//input[@id="backupCode"]
 ${2FA BK CODE HELP}                         //nx-authorize-component//nx-authorize-backup-code-component//span[text()="${2FA BACKUP CODE HELP TEXT}"]

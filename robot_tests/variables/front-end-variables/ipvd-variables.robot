@@ -17,7 +17,7 @@ ${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="
 ${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
-${IPVD ARROW}                         //svg-icon[@data-src="/static/images/icons/test_buttons/arrow_collapse.svg" or @data-src="/static/images/icons/text_buttons/arrow_expand.svg"]
+${IPVD ARROW}                         //svg-icon[contains(@data-src,"/images/icons/test_buttons/arrow_collapse.svg" or contains(@data-src,"/images/icons/text_buttons/arrow_expand.svg")]
 #IPVD Advanced Filters
 ${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
 ${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
