@@ -1,7 +1,7 @@
 {
-    "language": "en_US",
+    "language": "no_NO",
     "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Alle servere",
     "Download %VMS_NAME%": "Last ned %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
@@ -15,8 +15,8 @@
     },
     "alarmTypes": {
         "Servers": "Servere",
-        "Cameras": "Cameras",
-        "Storage Locations": "Storage Locations",
+        "Cameras": "Kameraer",
+        "Storage Locations": "Lagringssteder",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
@@ -32,7 +32,7 @@
     "deviceTypes": {
         "All Device Types": "All Device Types",
         "servers": "Server",
-        "cameras": "Cameras",
+        "cameras": "Kameraer",
         "storages": "Storages",
         "networkInterfaces": "Interface"
     },
@@ -95,14 +95,14 @@
         }
     },
     "account": {
-        "account": "Account",
+        "account": "Konto",
         "key": "Key",
         "accountSavedSuccess": "Din konto er lagret",
         "accountSettings": "Kontoinnstillinger",
         "activationLinkSent": "Aktiveringslink sendt",
         "agreementAccepted": "Avtalen er akseptert",
         "changePassword": "Bytt passord",
-        "security": "Security",
+        "security": "Sikkerhet",
         "newPasswordLabel": "Nytt passord",
         "passwordChangedSuccess": "Passordet ble lagret",
         "saveChanges": "Lagre"
@@ -114,17 +114,17 @@
         "setNewPasswordLabel": "Nytt passord"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
+        "loginCloudHeader": "Logg inn på %CLOUD_NAME%",
+        "connectHeader": "Koble systemet til %CLOUD_NAME%",
+        "expiredHeader": "Økten din har utløpt",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
         "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "createText": "Opprett konto",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
+        "toAccountSubheader": "Til",
         "forAccountSubheader": "For {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
@@ -134,23 +134,23 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "createAccountHeader": "Opprett %CLOUD_NAME% konto",
         "activateHeader": "Activate %CLOUD_NAME% Account",
-        "createdText": "Account Created!",
+        "createdText": "Konto opprettet!",
         "activatedText": "Account Activated!",
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "Tilbakestille passord",
-        "newPassHeader": "Set New Password",
+        "newPassHeader": "Angi et nytt passord",
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "confirmHeader": "System koblet til %CLOUD_NAME%!",
+        "loginError": "Kan ikke koble til %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "Vennligst prøv igjen senere.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
+        "connectedText": "System koblet til %CLOUD_NAME%",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
@@ -158,7 +158,7 @@
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "logg Inn"
         },
         "emailSent": "Email sent!"
     },
@@ -211,7 +211,7 @@
         },
         "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
         "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "login": "logg Inn",
         "recordingSettingsWarning": "Oppdater manglende innspillingsinnstillinger.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -263,14 +263,14 @@
         "voiceCommands": {
             "clear search": "nullstill søk",
             "collapse all servers": "kollapse alle servere",
-            "collapse server": "collapse server + [server name]",
+            "collapse server": "utvider server + [servernavn]",
             "expand all servers": "utvide alle servere",
             "expand server": "utvider server + [servernavn]",
-            "help": "help | show commands",
-            "live": "go to live | show me live",
+            "help": "hjelp | vis kommandoer",
+            "live": "gå til live | vis meg live",
             "pause": "pause",
             "play": "spill av",
-            "search": "find + [text for searchbar]",
+            "search": "finn + [tekst for søkefelt]",
             "stop listening": "slutt å lytte",
             "view": "se + [kamera navn]"
         },
@@ -300,8 +300,8 @@
             "createAccount": "Opprette ny konto",
             "delete": "Slett",
             "deleteAccount": "Slett konto",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Deaktiver",
+            "enable": "Aktiver",
             "download": "Last ned %VMS_NAME%",
             "logoutAuthorised": "Logg ut",
             "ok": "OK",
@@ -366,11 +366,12 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "latestBuild": "siste versjon",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
             "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
@@ -387,7 +388,7 @@
             "recommendSupport": "Vi anbefaler deg å rådføre deg med teknisk support, før du fortsetter.",
             "restError": {
                 "duplicateServer": "Merge error. Both systems have same server",
-                "useCloudMerge": "Cannot merge systems bound to the cloud",
+                "useCloudMerge": "Kan ikke slå sammen systemer som er bundet til skyen",
                 "differentCloudOwners": "Cannot merge two Cloud Systems with different owners"
             },
             "secondaryCannotMerge": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the {downloadHTML} to merge it with the current one.",
@@ -395,7 +396,7 @@
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionOld": "Denne serveren har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det til det nyeste versjon å slå sammen med den nåværende.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
@@ -444,13 +445,13 @@
         },
         "removeSystem": {
             "action": "Koble fra",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "Du er i ferd med å koble fra dette systemet fra kontoen din. Du vil ikke kunne få tilgang til dette systemet lenger. Er du sikker?",
+            "title": "Koble fra systemet?"
         },
         "renewAuth": {
-            "action": "Login",
+            "action": "Logg Inn",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "Økten din har utløpt"
         },
         "transferOwnership": {
             "userNotFound": "{ newOwnerEmail } is not a user in the system"
@@ -461,10 +462,10 @@
             "changeAccount": "Du er allerede logget inn som {email}",
             "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "Slett bruker?",
-            "failedLoginTo": "Failed to login to {systemName}",
+            "failedLoginTo": "Kunne ikke logge inn på {systemName}",
             "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
-            "removeUser": "Remove user",
+            "removeUser": "Vil du fjerne bruker",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
@@ -473,7 +474,7 @@
             "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
         },
         "twoFactor": {
-            "action": "Login",
+            "action": "Logg Inn",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
@@ -601,7 +602,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Feil passord",
-        "badUsername": "Account not found",
+        "badUsername": "Konto ikke funnet",
         "notFound": "Ikke funnet",
         "ok": "ok",
         "oldPasswordMistmatch": "Nåværende passord er feil.",
@@ -675,12 +676,13 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
     "menu": {
         "titles": {
-            "cameras": "Cameras",
+            "cameras": "Kameraer",
             "systemAdministration": "Systemadministrasjon",
             "general": "Generell",
             "licenses": "Lisenser",
@@ -688,9 +690,9 @@
             "servers": "Servere",
             "alerts": "Alerts",
             "systems": "System",
-            "storages": "Storage Locations",
+            "storages": "Lagringssteder",
             "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "graphs": "Grafer",
             "logs": "Logs"
         }
     },
@@ -730,7 +732,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Se kameraer",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "Sikkerhet",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -830,8 +832,8 @@
         "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "detachSystemSuccess": "Serveren ble koblet fra systemet.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "Oppdater",
+        "refreshing": "Oppdaterer...",
         "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",
         "resetFailed": "Kunne ikke tilbakestille serveren. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -848,14 +850,14 @@
         "successRename": "Servernavn lagret."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
-        "Monitoring": "Monitoring"
+        "View": "Vis",
+        "Settings": "Innstillingar",
+        "Information": "Informasjon",
+        "Bookmarks": "Bokmerker",
+        "Monitoring": "Overvåking"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "Tilkoblet",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
@@ -867,7 +869,7 @@
             "sessionLimitDuration": {
                 "hours": "timer",
                 "minutes": "minutter",
-                "days": "days"
+                "days": "dager"
             },
             "warningMessages": {
                 "videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
@@ -910,7 +912,7 @@
         },
         "loggerDropdownLabel": "{ loggerName } log level",
         "storageToolTips": {
-            "local": "Local",
+            "local": "Lokal",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
@@ -933,9 +935,9 @@
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
         "nameFail": "Failed to change {type} name",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "Gjenopprett tilkoblingen til %CLOUD_NAME% og prøv igjen.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "Kunne ikke bruke endringene",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
@@ -945,12 +947,12 @@
                 "success": "Systemet er frakoblet fra %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "System koblet til %CLOUD_NAME%",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "Systemsammenslåing mislyktes",
-                "success": "System merge completed"
+                "success": "Systemsammenslåing fullført"
             },
             "rename": {
                 "success": "Systemnavn lagret"
@@ -967,10 +969,10 @@
             "info": "Info",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "Aktivitet"
         },
         "keys": {
-            "name": "Name",
+            "name": "Navn",
             "servers": "Servere",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -999,7 +1001,7 @@
             "publicIp": "Public IP",
             "os": "OS",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "VMS-tid",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1029,7 +1031,7 @@
             "IO Module": "IO Module",
             "Bridge": "Bro",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Ugyldig"
         },
         "info": {
             "type": "Skriv",
@@ -1044,10 +1046,10 @@
             "expired": "Utløpt",
             "ok": "OK",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Server ikke funnet"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} mer kreves",
             "activated": "Lisensnøkkel aktivert",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Prøvelisens aktivert. Fra og med i dag kan du ta opp opptil 4 kameraer i 30 dager."
@@ -1160,7 +1162,7 @@
     "security": {
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
+            "systemsRemainder": "og {count} mer...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
@@ -1174,25 +1176,25 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "main": "Hoved",
+            "backup": "Sikkerhetskopi",
+            "notInUse": "Ikke i bruk",
+            "reserved": "Reservert",
+            "inaccessible": "Utilgjengelig",
+            "changing": "Endrer modus...",
+            "disabled": "Deaktivert"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
+        "invalidPath": "Ugyldig lagringsbane.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",
         "failedRemove": "Failed to delete external storage {url}",
-        "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
+        "reservedTooSmallTooltip": "Denne lagringsplassen kan ikke brukes til opptak fordi den er for liten, og det finnes andre større lagringsplasser tilgjengelig for opptak.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
-        "serverOffline": "Failed to add external storage - server doesn't respond",
+        "serverOffline": "Kunne ikke legge til ekstern lagring - serveren svarer ikke",
         "success": "External storage added",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     },

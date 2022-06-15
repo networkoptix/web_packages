@@ -366,7 +366,8 @@
             "cloud": "Chmura",
             "commonText": "Nie udało się złączyć systemów <strong>{primarySystem}</strong> i <strong>{secondarySystem}</strong>.",
             "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>%CLOUD_NAME%</strong> lub złącz je lokalnie za pomocą klienta <strong>%VMS_NAME%</strong>.",
-            "connectAnotherSystemToCloud": "System, który chcesz połączyć z tym do <strong>%CLOUD_NAME%</strong> podłącz używając tego samego konta, lub połącz lokalnie używając <strong>%VMS_NAME%</strong> Klienta.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Zarówno wybrany, jak i bieżący system są podłączone do %CLOUD_NAME% i mają różnych właścicieli. Systemy w chmurze mogą zostać złączone tylko wtedy, gdy konto właściciela jest to samo.",
             "duplicateServers": "<p class=\"mb-2\">Wygląda na to, że serwer jest zarejestrowany zarówno w wybranym, jak i w bieżącym systemie.</p><p>Usuń odłączone i niekompatybilne serwery z każdego systemu i spróbuj ponownie.</p>",
             "enterSystemAddressTitle": "Wprowadź adres dowolnego serwera znajdującego się w systemie, który chcesz połączyć z tym systemem.",
@@ -476,7 +477,7 @@
             "action": "Login",
             "message": "Uwierzytelnianie dwuskładnikowe jest włączone dla tego konta. Zaloguj się.",
             "title": "Wymagane są dwa składniki weryfikacji!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarning": "Po włączeniu uwierzytelniania dwuskładnikowego nie będziesz mógł zalogować się do {count, plural, =0{# systemów} one{# systemu} few {# systemów} many {# systemów} other{# systemów}} od %VMS_NAME% klienta i administratora sieci:",
             "unsupportedSystem": "Aby zalogować się do tego systemu, wyłącz opcję „Pytaj o kod weryfikacyjny przy każdym logowaniu z kontem %CLOUD_NAME%” w ustawieniach <a href=\"/account/security\">konta</a>."
         }
     },
@@ -621,7 +622,7 @@
         "networkConnection": "Nie można połączyć się z %CLOUD_NAME%. Sprawdź swoje połączenie sieciowe.",
         "archiveEncrypted": "ARCHIWUM\nZASZYFROWANE",
         "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum.",
-        "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
+        "webadmin2faRequired": "Aby uzyskać dostęp do tego systemu, wymagane jest uwierzytelnianie dwuskładnikowe. Możesz włączyć uwierzytelnianie dwuskładnikowe w <a href=\"{ cloudHost }/account/security\">ustawieniach konta</a>."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",
@@ -673,8 +674,9 @@
         "sortKey": ""
     },
     "ipvdFeedback": {
-        "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
+        "request": "Proszę <span id=\"request\">prześlij zgłoszenie</span> w przypadku dodatkowych pytań/wątpliwości dotyczących obsługiwanych urządzeń."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alertów} one{# alert} few {# alertów} many {# alertów} other{# alerty}}",
     "ipvdTopXByVolume": "Max {value} wg ilości:",
     "ipvdDisclaimer": "Ta lista jest ograniczona do urządzeń znalezionych przez serwer {vmsName}, na którym administrator zezwolił na automatyczne raportowanie specyfikacji urządzeń do firmy {companyName}. Żadne dane osobowe nie są gromadzone, a każdy użytkownik pozostaje całkowicie anonimowy.",
@@ -712,7 +714,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Pobierz %VMS_NAME%",
         "downloadPlatform": "Pobierz %VMS_NAME% dla",
-        "failedToAccess2FA": "Failed to access \"{systemName}\" system",
+        "failedToAccess2FA": "Nie udało się uzyskać dostępu do systemu „{systemName}”",
         "failedToAccessSystem": "Nie udało się uzyskać dostępu do systemu",
         "failedToAccessCamera": "Nie można uzyskać dostępu do kamery",
         "integrations": "%VMS_NAME% Integracje",
@@ -1054,7 +1056,7 @@
         }
     },
     "redirects": {
-        "message": "The route \"{url}\" has been moved to \"{redirectUrl}\".",
+        "message": "Trasa „{url}” została przeniesiona na „{redirectUrl}”.",
         "defaultMessage": "Zaktualizuj wszystkie linki, aby odwoływały się do nowej trasy.",
         "cloudLinks": {
             "supportLink": "%SUPPORT_LINK%"
@@ -1159,9 +1161,9 @@
     "additionalSystems": "{count, plural, =0{+ # systemy} one{+ # systemów} other{+ # systemów}}",
     "security": {
         "twoFa": {
-            "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
-            "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
+            "twoFADescription": "Obecnie masz <span id=\"target2FaSystems\">{count, plural, =0{# takich systemów} one{# taki system} few {# takich systemów} many {# takich systemów} other{# takie systemy}}</span>.",
+            "systemsRemainder": "i jeszcze {count}...",
+            "v5Warning": "Masz <span id=\"targetV5\">{count, plural, =0{# systemów} one{# system} few {# systemów} many {# systemów} other{# systemy}}</span> z oprogramowaniem w wersji niższej niż 5.0. {count, plural, =0{Te systemy} one{Ten system} few {Te systemy} many {Te systemy} other{Te systemy}} będzie niedostępny przez <strong>%VMS_NAME% Client</strong> , ponieważ wcześniejsze wersje %VMS_NAME% Client nie obsługują uwierzytelniania dwuskładnikowego.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
         }
@@ -1199,20 +1201,20 @@
     "metaDefaults": {
         "default": {
             "site_name": "%CLOUD_NAME%",
-            "title": "%CLOUD_NAME% - Cloud Portal",
+            "title": "%CLOUD_NAME% - Portal w chmurze",
             "description": "%CLOUD_NAME%, a simple way to connect to, manage and expand %VMS_NAME% Systems."
         },
         "/systems": {
-            "title": "Systems - %CLOUD_NAME%"
+            "title": "Systemy - %CLOUD_NAME%"
         },
         "/integrations": {
-            "title": "%VMS_NAME% Integrations - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Integracje - %CLOUD_NAME%"
         },
         "/docs": {
-            "title": "%VMS_NAME% Documentation - %CLOUD_NAME%"
+            "title": "%VMS_NAME% Dokumentacja - %CLOUD_NAME%"
         },
         "/ipvd": {
-            "title": "Supported Devices - %CLOUD_NAME%"
+            "title": "Obsługiwane urządzenia - %CLOUD_NAME%"
         }
     },
     "metaDefaultsWebadmin": {
@@ -1234,7 +1236,7 @@
         }
     },
     "maintenance": {
-        "description": "We are working on some improvements and brand new features."
+        "description": "Pracujemy nad kilkoma ulepszeniami i zupełnie nowymi funkcjami."
     },
     "view": {
         "timeline": {

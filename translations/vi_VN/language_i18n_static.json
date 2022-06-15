@@ -366,7 +366,8 @@
             "cloud": "Đám mây",
             "commonText": "Không thể hợp nhất Hệ thống <strong>{primarySystem}</strong> và <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Kết nối Hệ thống bạn muốn hợp nhất với hệ thống này thành <strong>%CLOUD_NAME%</strong> hoặc hợp nhất nội bộ bằng Máy khách <strong>%VMS_NAME%</strong>.",
-            "connectAnotherSystemToCloud": "Kết nối Hệ thống bạn muốn hợp nhất với hệ thống này thành <strong>%CLOUD_NAME%</strong> bằng cách dùng cùng một tài khoản hoặc hợp nhất cục bộ bằng Ứng dụng khách <strong>%VMS_NAME%</strong>.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Cả hệ thống được chọn và hệ thống hiện tại được kết nối với %CLOUD_NAME% và có chủ sở hữu khác nhau. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
             "duplicateServers": "<p class=\"mb-2\">Một máy chủ dường như xuất hiện trong cả hệ thống được chọn và hệ thống hiện tại.</p><p>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi hệ thống và thử lại.</p>",
             "enterSystemAddressTitle": "Nhập địa chỉ của bất kỳ máy chủ nào trong hệ thống bạn muốn hợp nhất với máy chủ này.",
@@ -675,6 +676,7 @@
     "ipvdFeedback": {
         "request": "Vui lòng <span id=\"request\">gửi yêu cầu</span> nếu bạn có thêm câu hỏi / thắc mắc liên quan đến các thiết bị được hỗ trợ."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# cảnh báo} one{# cảnh báo} other{# cảnh báo}}",
     "ipvdTopXByVolume": "Top {value} theo khối lượng:",
     "ipvdDisclaimer": "Danh sách này giới hạn cho các thiết bị được tìm thấy trên {vmsName}, nơi người dùng cho phép tự động báo cáo các thông số kỹ thuật của thiết bị đến {companyName}. Không có thông tin cá nhân nào được thu thập và mỗi người dùng vẫn hoàn toàn ẩn danh.",
