@@ -366,8 +366,8 @@
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
-            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
+            "failedToFindAnySystemHeader": "Kunne ikke finne noe system å slå sammen med",
+            "failedToFindAnySystem": "Sørg for at du har eierrollen i Clouden du vil slå sammen med. Eller at systemet du ønsker å slå sammen med er tilgjengelig over det lokale nettverket til gjeldende system.",
             "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
@@ -676,7 +676,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "systemsCount": "{count, plural, =0{# Systemer} one{# System} other{# Systemer}} funnet",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",

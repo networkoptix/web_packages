@@ -366,8 +366,8 @@
             "cloud": "Moln",
             "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> eller slå samman lokalt med <strong>%VMS_NAME%</strong> klienten.",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
-            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
+            "failedToFindAnySystemHeader": "Det gick inte att hitta något system att sammanfoga med",
+            "failedToFindAnySystem": "Se till att du har rollen som ägare i ett molnsystem som du vill gå samman med. Eller att det system du vill slå ihop med är tillgängligt via det lokala nätverket till det nuvarande systemet.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",
@@ -676,7 +676,7 @@
     "ipvdFeedback": {
         "request": "Vänligen <span id=\"request\">skicka in en begäran</span> för ytterligare frågor/bekymmer angående enheter som stöds."
     },
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "systemsCount": "{count, plural, =0{# System} one{# Systemet} other{# System}}",
     "alertsCount": "{count, plural, =0{# varningar} one{# varna} other{# varningar}}",
     "ipvdTopXByVolume": "Topp {value} efter volym:",
     "ipvdDisclaimer": "Denna lista är begränsad till enheter som finns på {vmsName} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {companyName}. Ingen personlig information samlas in och varje användare förblir helt anonym.",

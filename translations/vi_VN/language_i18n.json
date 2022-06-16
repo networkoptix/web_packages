@@ -88,7 +88,7 @@
     "Cancel": "Hủy bỏ",
     "Cancel ownership transfer": "Hủy chuyển đổi quyền sở hữu",
     "Cannot connect to %CLOUD_NAME%": "Không thể kết nối với %CLOUD_NAME%",
-    "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
+    "Cannot enable mandatory two-factor authentication": "Không thể bật xác thực hai yếu tố bắt buộc",
     "Cannot scan QR code?": "Không thể quét mã QR?",
     "Caption": "Chú thích",
     "Change Password": "Đổi mật khẩu",

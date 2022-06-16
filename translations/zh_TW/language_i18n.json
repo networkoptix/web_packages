@@ -88,7 +88,7 @@
     "Cancel": "取消",
     "Cancel ownership transfer": "取消系統所有權轉移",
     "Cannot connect to %CLOUD_NAME%": "無法連接到 %CLOUD_NAME%",
-    "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
+    "Cannot enable mandatory two-factor authentication": "無法強制啟用雙重驗證",
     "Cannot scan QR code?": "Cannot scan QR code?",
     "Caption": "說明",
     "Change Password": "變更密碼",

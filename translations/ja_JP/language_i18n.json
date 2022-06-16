@@ -88,7 +88,7 @@
     "Cancel": "キャンセル",
     "Cancel ownership transfer": "所有権の譲渡をキャンセル",
     "Cannot connect to %CLOUD_NAME%": "%CLOUD_NAME% に接続できません",
-    "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
+    "Cannot enable mandatory two-factor authentication": "強制二要素認証を有効化できません",
     "Cannot scan QR code?": "QRコードをスキャンできませんか？",
     "Caption": "キャプション",
     "Change Password": "パスワードを変更",

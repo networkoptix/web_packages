@@ -88,7 +88,7 @@
     "Cancel": "Avbryt",
     "Cancel ownership transfer": "Avbryt ägandeöverföring",
     "Cannot connect to %CLOUD_NAME%": "Kan inte ansluta till %CLOUD_NAME%",
-    "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
+    "Cannot enable mandatory two-factor authentication": "Det går inte att aktivera obligatorisk tvåfaktorsautentisering",
     "Cannot scan QR code?": "Kan du inte skanna QR -kod?",
     "Caption": "Rubrik",
     "Change Password": "Ändra lösenord",

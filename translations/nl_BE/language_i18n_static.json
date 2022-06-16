@@ -366,8 +366,8 @@
             "cloud": "Cloud",
             "commonText": "Het samenvoegen van systemen <strong>{primarySystem}</strong> en <strong>{secondarySystem}</strong> is mislukt.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen met <strong>%CLOUD_NAME%</strong> of voeg lokaal samen met <strong>%VMS_NAME%</strong> Client.",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
-            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
+            "failedToFindAnySystemHeader": "Kan geen systeem vinden om mee samen te voegen",
+            "failedToFindAnySystem": "Zorg ervoor dat je de Eigenaar rol hebt in een cloud systeem waarmee je wilt samenvoegen. Of dat het systeem waarmee u wilt samenvoegen toegankelijk is via het lokale netwerk naar het huidige systeem.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
             "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
@@ -676,7 +676,7 @@
     "ipvdFeedback": {
         "request": "Gelieve <span id=\"request\">een verzoek in te dienen</span> voor aanvullende vragen/opmerkingen met betrekking tot ondersteunde apparaten."
     },
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "systemsCount": "{count, plural, =0{# Systemen} one{# Systeem} other{# Systemen}} gevonden",
     "alertsCount": "{count, plural, =0{# waarschuwingen} one{# waarschuwing} other{# waarschuwingen}}",
     "ipvdTopXByVolume": "Top {value} door volume:",
     "ipvdDisclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {vmsName} waar gebruikers automatisch rapporteren van apparaatspecificaties naar {companyName} toestaan. Er worden geen persoonlijke gegevens verzameld en elke gebruiker blijft volledig anoniem.",

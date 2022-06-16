@@ -88,7 +88,7 @@
     "Cancel": "Abbrechen",
     "Cancel ownership transfer": "Eigentumsübertragung abbrechen",
     "Cannot connect to %CLOUD_NAME%": "Kann keine Verbindung zu %CLOUD_NAME% herstellen",
-    "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
+    "Cannot enable mandatory two-factor authentication": "Die obligatorische Zwei-Faktor-Authentifizierung kann nicht aktiviert werden",
     "Cannot scan QR code?": "Können Sie den QR-Code nicht scannen?",
     "Caption": "Titelzeile",
     "Change Password": "Passwort ändern",

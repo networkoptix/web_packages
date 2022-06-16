@@ -366,8 +366,8 @@
             "cloud": "クラウド",
             "commonText": "システム <strong>{primarySystem}</strong> および <strong>{secondarySystem}</strong>を統合できませんでした。",
             "connectToCloud": "統合したいサーバーを <strong>%CLOUD_NAME%</strong> に接続するか、 <strong>%VMS_NAME%</strong> クライアントを使用してローカルで統合してください。",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
-            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
+            "failedToFindAnySystemHeader": "統合するシステムが見つかりませんでした",
+            "failedToFindAnySystem": "統合したいクラウドシステムのオーナー権限を持っていることを確認してください。 もしくは、統合したいシステムがローカルネットワークを介して現在のシステムにアクセスできることを確認してください。",
             "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、オーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "統合先システム内の任意のサーバーのアドレスを入力してください。",
@@ -676,7 +676,7 @@
     "ipvdFeedback": {
         "request": "対応デバイスに関する追加の質問/懸念事項については、<span id=\"request\">リクエストを送信</span>してください。"
     },
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "systemsCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}が見つかりました",
     "alertsCount": "{count, plural, =0{# アラート} one{# アラート} other{# アラート}}",
     "ipvdTopXByVolume": "ボリューム別トップ {value}:",
     "ipvdDisclaimer": "このリストは、ユーザーが {companyName} へのデバイススペックの自動報告を許可した {vmsName} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。",
