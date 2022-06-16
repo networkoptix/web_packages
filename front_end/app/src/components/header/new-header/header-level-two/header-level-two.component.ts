@@ -33,7 +33,7 @@ export class NxHeaderLevelTwoComponent {
     controlButtonVisible = true;
     sizeConstants = {
         logoAreaWidth: 256,
-        margins: 26
+        margins: 25
     };
     contextButtonWidth = 0;
     optimisticSelectedSubNode: MenuNode; // The selected node is typically controlled by the headerServices currentLocation,

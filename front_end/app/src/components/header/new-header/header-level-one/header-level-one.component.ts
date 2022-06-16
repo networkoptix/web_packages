@@ -13,9 +13,10 @@ import { NxHeaderService } from '@services/nx-header.service';
 export class NxHeaderLevelOneComponent {
     @Input() menuNodes: MenuNode[] = [];
     @Input() selectedNode: MenuNode;
-    @Input() displayedName: string;
+    @Input() loggedIn: boolean;
     @Output() nodeSelect = new EventEmitter<MenuNode>();
     CONFIG: IConfig;
+    profileDropdownOpen = false;
 
     constructor(public headerService: NxHeaderService, configService: NxConfigService) {
         this.CONFIG = configService.getConfig();

@@ -8,35 +8,8 @@
             {{ node.display_name }}
         </button>
     </ng-container>
-    <button class="btn auth-section">
-        <a
-            *ngIf="!displayedName"
-            [href]="headerService.createUrl | unsafe"
-            class="user-section"
-            translate
-        >
+    <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>
+    <a  *ngIf="!loggedIn" [href]="headerService.createUrl | unsafe" class="create-account" translate>
             CREATE ACCOUNT
-        </a>
-        <a
-            *ngIf="displayedName"
-            class="user-section logged-in"
-        >
-            <span class="user-svg-wrapper">
-                <svg-icon
-                    nx-add-svg-src
-                    class="user-svg"
-                    [svgStyle]="{ 'width.px': '20' }"
-                    [src]="CONFIG.icons.dir + 'user.svg'"
-                ></svg-icon>
-            </span>
-            <span class="displayed-name">
-                {{ displayedName }}
-            </span>
-            <svg-icon
-                nx-add-svg-src
-                class="dropdown-arrow"
-                [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"
-            ></svg-icon>
-        </a>
-    </button>
+    </a>
 </div>

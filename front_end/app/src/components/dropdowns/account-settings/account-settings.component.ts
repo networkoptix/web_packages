@@ -37,15 +37,19 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
     rightOffset$ = new BehaviorSubject(0);
+    newHeader = false;
+    displayedFullName = '';
 
     accountSubscription: SubscriptionLike;
     widthSubscription: SubscriptionLike;
 
     readonly environment = environment;
 
-    settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser'> = {
+    settings: Pick<Account, 'name' | 'email' | 'is_staff' | 'is_superuser' | 'first_name' | 'last_name'> = {
         name: '',
         email: '',
+        first_name: '',
+        last_name: '',
         is_staff: false,
         is_superuser: false
     };
@@ -56,6 +60,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
         private accountService: NxAccountService
     ) {
         super(languageService, configService);
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
     }
 
     ngOnInit(): void {
@@ -64,17 +69,23 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                 if (account) {
                     this.settings = {
                         name: account.name,
+                        first_name: account.first_name,
+                        last_name: account.last_name,
                         email: account.email,
                         is_staff: account.is_staff,
                         is_superuser: account.is_superuser
                     };
+                    this.displayedFullName = (account.first_name + ' ' + account.last_name[0] + '.').toUpperCase();
                 } else {
                     this.settings = {
                         name: '',
                         email: '',
+                        first_name: '',
+                        last_name: '',
                         is_staff: false,
                         is_superuser: false
                     };
+                    this.displayedFullName = '';
                 }
             });
         this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)

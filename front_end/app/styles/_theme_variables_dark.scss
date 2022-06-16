@@ -167,13 +167,13 @@ html[data-theme="dark"] {
     --left-menu-disabled-item-color             : #3F545F; //$dark13;
     --left-menu-disabled-item-addtitional-color : #445B67; //$dark14;
 
-    // New header ************************
+    // New header ******************************
+    --header-level-one-color              : #{$light13};
+    --header-level-one-bg                 : #{$dark4};
     --header-level-one-active-bg          : #{$dark5};
     --header-level-one-active-color       : #{$light4};
     --header-level-one-hover-color        : #{$light10};
     --header-level-two-bg                 : #{$dark6};
-    --header-profile-icon                 : #{$light13};
-    --header-profile-bg                   : #{$dark7};
     --header-item-disabled                : #{$dark13};
     --header-level-two-hover-border-color : #{$dark11};
     --header-arrow-hover                  : #{$dark8};
@@ -182,6 +182,12 @@ html[data-theme="dark"] {
     --mobile-level-two-color              : #{$light6};
     --header-nav-arrow-bg                 : #{$dark7};
 
+    --header-profile-bg                   : #{$dark7};
+    --header-profile-color                : #{$light13};
+    --header-profile-hover-bg             : #{$dark9};
+    --header-profile-hover-color          : #{$light10};
+    --header-profile-active-color         : #{$light4};
+    --header-profile-active-bg            : #{$dark9};
 
     // View tab ********************************
     --view-bg                    : #171C1F; //$dark5;

@@ -24,7 +24,7 @@ export class NxNewHeaderComponent implements OnChanges {
     @Input() width: number;
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
-    displayedName: string;
+    loggedIn = false;
     isMobile: boolean = false;
 
     constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router) {
@@ -49,9 +49,9 @@ export class NxNewHeaderComponent implements OnChanges {
         accountService.accountSubject
             .subscribe(account => {
                 if (account) {
-                    this.displayedName = (account.first_name + ' ' + account.last_name[0] + '.').toUpperCase();
+                    this.loggedIn = true;
                 } else {
-                    this.displayedName = '';
+                    this.loggedIn = false;
                 }
             });
     }

@@ -15,59 +15,36 @@
         border-radius: 4px !important;
         text-transform: uppercase;
 
-        &:hover {
-            color: var(--header-level-one-hover-color);
-        }
-        &.active {
-            color: var(--header-level-one-active-color);
-            background-color: var(--header-level-one-active-bg);
-        }
-        &.disabled {
-            color: var(--header-item-disabled);
-        }
     }
 
-    .auth-section {
+    nx-account-settings-select {
+        display: block;
+        position: absolute;
+        right: 0px;
+    }
+
+    .create-account {
         white-space: nowrap;
         @extend .header-button;
+        text-decoration: inherit;
+        color: inherit;
         min-height: 24px;
-        margin: 5px 4px 8px auto;
-        .user-section {
-            text-decoration: inherit;
-            color: inherit;
-            .user-svg-wrapper {
-                display: inline-flex;
-                position: relative;
-                bottom: 3px;
-                width: 24px;
-                height: 24px;
-                margin-right: 3px;
-                background: var(--header-profile-bg);
-                border-radius: 50%;
-
-                .user-svg {
-                    margin-left: 2px;
-                    .st0 {
-                        fill:  var(--header-profile-icon) !important;
-                        stroke:  var(--header-profile-icon) !important;
-                    }
-                }
-            }
-            &.logged-in {
-                margin-top: 5px;
-            }
-            .displayed-name {
-                margin-top: 1px;
-            }
-            .dropdown-arrow {
-                position: relative;
-                left: 2px;
-            }
-        }
+        margin: 13px 16px 10px auto;
     }
 }
 
 .header-button {
-    @include typography.regular13nocolor;
-    color: var(--light13);
+    @include typography.regular11nocolor;
+    color: var(--header-level-one-color);
+
+    &:hover {
+        color: var(--header-level-one-hover-color);
+    }
+    &.active {
+        color: var(--header-level-one-active-color);
+        background-color: var(--header-level-one-active-bg);
+    }
+    &.disabled {
+        color: var(--header-item-disabled);
+    }
 }

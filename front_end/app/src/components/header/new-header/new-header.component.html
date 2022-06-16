@@ -3,7 +3,7 @@
         [menuNodes]="displayedNodes"
         [selectedNode]="selectedNode"
         (nodeSelect)="handleNodeSelect($any($event))"
-        [displayedName]="displayedName"
+        [loggedIn]="loggedIn"
     >
     </nx-header-level-one>
     <nx-header-level-two
@@ -15,6 +15,6 @@
 
 <nx-header-mobile
     *ngIf="isMobile"
-    [loggedIn]="!!displayedName"
+    [loggedIn]="loggedIn"
     [menuNodes]="displayedNodes"
 ></nx-header-mobile>

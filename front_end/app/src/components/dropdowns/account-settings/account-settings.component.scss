@@ -1,4 +1,5 @@
 @use "../../../../styles/theme_variables_common" as *;
+@use "../../../styles/typography";
 
 .dropdown-menu {
     width          : auto !important;
@@ -15,8 +16,7 @@
         border     : none;
         border-top : var(--dropdown-menu-top-border);
     }
-    
-    
+
     .arrow {
         display : none;
     }
@@ -27,7 +27,7 @@
         border: 1px solid transparent;
         height: 100% !important;
         border-radius: 4px;
-    
+
         svg-icon svg .st0 {
             fill : var(--btn-header-main-color);
         }
@@ -57,6 +57,74 @@
     }
 }
 
+.dropdown.new-header {
+    margin-top: 0px;
+    padding: 0px;
+
+    .dropdown-menu {
+        top: 37px !important;
+        border-radius: 2px;
+        width: 90px;
+    }
+
+    &.show {
+        .dropdown-arrow-wrapper {
+            background-color: var(--header-profile-active-bg) !important;
+            .dropdown-arrow {
+                transform: scaleY(-1);
+                top: initial !important;
+                bottom: 2px;
+                .profile-dropdown-arrow {
+                    fill: var(--header-profile-active-color) !important;
+                }
+            }
+        }
+    }
+
+    &:hover {
+        .displayed-name {
+            color: var(--header-profile-hover-color);
+        }
+        .user-svg-wrapper {
+            background: var(--header-profile-hover-bg);
+            .user-svg {
+                .icon-with-fill {
+                    fill: var(--header-profile-hover-color);
+                }
+            }
+        }
+        .dropdown-arrow-wrapper {
+            background-color: var(--header-profile-hover-bg);
+            .dropdown-arrow {
+                .profile-dropdown-arrow {
+                    fill: var(--header-profile-hover-color);
+                }
+            }
+        }
+    }
+    &:active {
+        .displayed-name {
+            color: var(--header-profile-active-color);
+        }
+        .user-svg-wrapper {
+            background: var(--header-profile-active-bg);
+            .user-svg {
+                .icon-with-fill {
+                    fill: var(--header-profile-active-color);
+                }
+            }
+        }
+        .dropdown-arrow-wrapper {
+            background-color: $dark9;
+            .dropdown-arrow {
+                .profile-dropdown-arrow {
+                    fill: var(--header-profile-active-color);
+                }
+            }
+        }
+    }
+}
+
 .popup {
     &.arrow {
         bottom              : 0 !important;
@@ -65,7 +133,7 @@
         left                : 16px !important;
         z-index             : 9990 !important;
         border-bottom-color : var(--dropdown-menu-arrow-color) !important;
-    
+
         &::after {
             border-bottom-color : var(--dropdown-menu-arrow-fill-color) !important;
         }
@@ -95,5 +163,55 @@
 .width-override {
     @media screen and (max-width: 420px){
         width: 100vw !important;
+    }
+}
+
+.auth-section {
+    background-color: var(--header-level-one-bg) !important;
+    padding: 0px 8px !important;
+    white-space: nowrap;
+    @include typography.regular11nocolor;
+    color: var(--header-profile-color);
+    min-height: 24px;
+    margin: 0px 0px 10px auto;
+    .user-section {
+        text-decoration: inherit;
+        color: var(--header-profile-color);
+        .user-svg-wrapper {
+            display: inline-flex;
+            position: relative;
+            bottom: 3px;
+            width: 24px;
+            height: 24px;
+            margin-right: 3px;
+            background: var(--header-profile-bg);
+            border-radius: 50%;
+
+            .user-svg {
+                margin-left: 2px;
+                .st0 {
+                    fill:  var(--header-profile-color) !important;
+                    stroke:  var(--header-profile-color) !important;
+                }
+            }
+        }
+        &.logged-in {
+            margin-top: 5px;
+        }
+        .displayed-name {
+            margin-top: 1px;
+        }
+        .dropdown-arrow-wrapper {
+            width: 20px;
+            border-radius: 4px;
+            height: 20px;
+            display: inline-flex;
+            position: relative;
+            .dropdown-arrow {
+                position: relative;
+                left: 6.5px;
+                top: 1px;
+            }
+        }
     }
 }

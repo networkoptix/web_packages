@@ -1,11 +1,12 @@
 <div
     class="dropdown"
     #dropdown
-    [ngClass]="{ show: show }"
+    [ngClass]="{ show: show, 'new-header': newHeader }"
     (nxClickElsewhere)="show = false"
 >
     <button
         class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+ 	    *ngIf="!newHeader; else newHeaderButton"
         [ngClass]="{ 'small-icon-overrides': small }"
         (resize)="buttonWidth.next($event.width)"
         (click)="show = !show"
@@ -103,3 +104,22 @@
         </ul>
     </div>
 </div>
+
+
+<ng-template #newHeaderButton>
+    <button class="btn auth-section" (click)="show = !show">
+        <a class="user-section logged-in">
+            <span class="user-svg-wrapper">
+                <svg-icon nx-add-svg-src class="user-svg" [svgStyle]="{'width.px': '20'}" [src]="CONFIG.icons.dir + 'user.svg'"></svg-icon>
+            </span>
+            <span class="displayed-name">
+                {{ displayedFullName }}
+            </span>
+            <div class="dropdown-arrow-wrapper">
+                <svg-icon nx-add-svg-src class="dropdown-arrow"
+                        [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"
+                ></svg-icon>
+            </div>
+        </a>
+    </button>
+</ng-template>
