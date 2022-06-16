@@ -31,7 +31,11 @@ export class NxThemeSwitcherComponent implements OnInit {
 
     setTheme(name): void {
         this.theme = name;
-        NxConfigService.isDarkTheme = this.theme === 'dark';
+        if (name === 'auto') {
+            const darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+            name = darkThemeMq.matches ? 'dark' : 'light';
+        }
+        NxConfigService.isDarkTheme = name === 'dark';
         this.localStorageService.store('theme', name);
         this.window.document.documentElement.setAttribute('data-theme', name);
     }

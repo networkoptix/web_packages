@@ -115,7 +115,7 @@ export class AppComponent {
         // TODO: Add CMS flag after finishing tests
         // also set default theme to "AUTO"
         const themeSelected = this.localStorageService.retrieve('theme');
-        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
+        const darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
         darkThemeMq.addEventListener('change', e => {
             if (e.matches) {
                 this.window.document.documentElement.setAttribute('data-theme', 'dark');
