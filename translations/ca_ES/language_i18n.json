@@ -531,7 +531,7 @@
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Us recomanem que instal·leu les últimes versions de Google Chrome o Mozilla Firefox, però podeu utilitzar qualsevol altre navegador web modern.",
     "We've sent you an email": "We've sent you an email",
     "What to do with current analytics data?": "Què cal fer amb les dades d'anàlisi actuals?",
-    "What's New?": "Novetats",
+    "What's New?": "Què hi ha de nou?",
     "When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)": "When a storage device is moved, renamed, or deleted, or when an archive file is removed, renamed, has an incorrect timestamp, or is otherwise corrupted, this index will be broken. Reindexing restores the relationship between the database and storage device(s)",
     "When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.": "Si està activat, el sistema descobrirà càmeres i servidors nous. També enviarà de manera automàtica i persistent sol·licituds de descobriment a les càmeres per obtenir una actualització sobre l'estat de la càmera. La prohibició de comprovació d'estat podria ometre's en alguns servidors amb la migració per error habilitada.",
     "Widget Preview": "Widget Preview",

@@ -335,7 +335,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "Desconnecta del meu compte",
     "YOU TEXT": "vós",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Accés sense restriccions, inclosa la possibilitat de compartir i connectar/desconnectar el sistema del núvol",
-    "WHATS NEW TEXT": "Novetats",
+    "WHATS NEW TEXT": "Què hi ha de nou?",
     "ENABLE AUTO DISCOVERY TEXT": "Activa el descobriment automàtic de càmeres i servidors",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "Si està activat, el sistema descobrirà càmeres i servidors nous. També enviarà de manera automàtica i persistent sol·licituds de descobriment a les càmeres per obtenir una actualització sobre l'estat de la càmera. La prohibició de comprovació d'estat podria ometre's en alguns servidors amb la migració per error habilitada.",
     "SEND ANONYMOUS USAGE TEXT": "Envia estadístiques d'ús i errors anònimes als desenvolupadors",

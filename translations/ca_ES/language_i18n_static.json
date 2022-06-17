@@ -417,8 +417,8 @@
             "storageSettingsNotSaved": "No s'ha pogut desar la configuració d'emmagatzematge.",
             "settingsSaved": "Configuració desada.",
             "settingsNotSaved": "No s'ha pogut desar la configuració.",
-            "logLevelsSaved": "Nivells de registre desats.",
-            "logLevelsNotSaved": "No s'han pogut desar els nivells de registre.",
+            "logLevelsSaved": "Nivell(s) de registre desats.",
+            "logLevelsNotSaved": "No s'han pogut desar els nivell(s) de registre.",
             "failedToSend": "No s'ha pogut enviar el missatge.",
             "placeholders": {
                 "feedback": "Assegureu-vos d'incloure el model i el fabricant de la càmera..."
