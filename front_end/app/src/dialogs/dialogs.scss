@@ -103,11 +103,17 @@ nx-modal-wizard {
         box-shadow    : 0 1rem 2rem 0 transparentize($dark15, 0.8) !important;
     }
 
-    &-paragraph {
+    &-paragraph,
+    &-paragraph-light {
         padding-bottom: 15px !important;
         p {
             line-height: 10px !important;
         }
+    }
+
+    &-paragraph-light {
+        color: $light16;
+        padding-top: 5px;
     }
 
     &-header {
