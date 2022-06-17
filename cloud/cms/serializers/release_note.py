@@ -78,6 +78,6 @@ class ReleaseNotesListSerializer(serializers.Serializer):
         return ReleaseNotesListSerializer(data=response_release_notes)
 
     def __init__(self, *args, **kwargs):
-        if data := kwargs.pop('data', None):
-            kwargs['data'] = {'data': data}
+        data = kwargs.get('data', [])
+        kwargs['data'] = {'data': data}
         super().__init__(*args, **kwargs)

@@ -8,7 +8,7 @@ from cms.views.menu import *
 
 
 @pytest.mark.no_db
-def test_get_menu(mocker, arf, account_factory):
+def test_get_menu(mocker, arf, account_factory, db):
     mock_request = arf.get('')
     mock_request.session = {}
     mock_request.user = account_factory(prepare_only=True)
