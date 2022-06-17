@@ -722,6 +722,10 @@ class Asset(models.Model):
         return ContentVersion.objects.get(id=current_version).accepted_date.strftime('%m/%d/%Y')
 
     @property
+    def can_submit_for_review(self):
+        return self.customizations.exists()
+
+    @property
     def admin_link(self):
         kwargs = {'asset_id': self.id}
 

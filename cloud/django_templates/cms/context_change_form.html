@@ -164,7 +164,8 @@
             {% else %}
                 <button class="btn btn-sm btn-info" type="submit" name="SaveDraft">Save Draft</button>
             {% endif %}
-            <button class="btn btn-sm btn-success" type="submit" name="SendReview">Submit & Review</button>
+            <button class="btn btn-sm btn-success" type="submit" name="SendReview"
+            {% if not asset.can_submit_for_review %}disabled title="At least one customization must be enabled to submit for review"{% endif %}>Submit & Review</button>
             <button class="btn btn-sm btn-danger" type="reset" name="Reset">Reset</button>
         </div>
     {% endif %}
