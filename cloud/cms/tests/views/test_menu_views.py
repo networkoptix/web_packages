@@ -26,6 +26,8 @@ def test_get_menu(mocker, arf, account_factory):
     mock_menu = str(uuid4())
     mock_generate_menu = mocker.patch(
         'cms.models.Menu.generate_menu', return_value=mock_menu)
+    mocker.patch(
+        'cms.models.Menu.generate_menus', return_value={})
     res = get_menu(mock_request, menu_name)
     assert res.status_code == status.HTTP_200_OK
     assert res.data == mock_menu
