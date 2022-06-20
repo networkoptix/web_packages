@@ -1,6 +1,14 @@
-<form #createSystemGroupForm="ngForm" name="createSystemGroupForm" novalidate>
+<form
+    #createSystemGroupForm="ngForm"
+    name="createSystemGroupForm"
+    novalidate
+>
     <div class="modal-header">
-        <h1 class="modal-title" translate>Create Group</h1>
+        <h1
+            class="modal-title"
+            translate
+            >Create Group</h1
+        >
         <button
             type="button"
             class="close"
@@ -13,7 +21,11 @@
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="groupName" translate>Name</label>
+            <label
+                for="groupName"
+                translate
+                >Name</label
+            >
             <input
                 #groupName="ngModel"
                 class="form-control"
@@ -22,7 +34,7 @@
                 [(ngModel)]="newGroupName"
                 autofocus
                 required
-            >
+            />
             <p class="modal-paragraph-light">Enter a new group name</p>
         </div>
     </div>

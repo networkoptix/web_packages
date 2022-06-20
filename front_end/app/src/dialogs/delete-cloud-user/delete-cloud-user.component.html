@@ -1,19 +1,43 @@
-<form #deleteCloudUserForm="ngForm" name="deleteCloudUserForm" novalidate>
+<form
+    #deleteCloudUserForm="ngForm"
+    name="deleteCloudUserForm"
+    novalidate
+>
     <div class="modal-header">
-        <h1 class="modal-title" translate>Delete Account?</h1>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"
-                (click)="close()"  (mousedown)="clearErrors()" *ngIf="closable">
+        <h1
+            class="modal-title"
+            translate
+            >Delete Account?</h1
+        >
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            (mousedown)="clearErrors()"
+            *ngIf="closable"
+        >
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
     <div class="modal-body">
         <div class="form-group">
             <div class="modal-paragraph">
-                <span translate>Your account and all data associated with it will be permanently deleted without the possibility to restore it.</span>
+                <!-- eslint-disable prettier/prettier -->
+                <span translate
+                    >Your account and all data associated with it will be permanently deleted without the possibility to restore it.</span
+                >
+                <!-- eslint-enable prettier/prettier -->
             </div>
-            <label for="password" class="control-label mb-2" translate>Enter your account password to continue</label>
-            <input class="form-control"
+            <label
+                for="password"
+                class="control-label mb-2"
+                translate
+                >Enter your account password to continue</label
+            >
+            <input
+                class="form-control"
                 #password="ngModel"
                 id="password"
                 name="password"
@@ -22,15 +46,29 @@
                 (ngModelChange)="setPassword(password)"
                 (blur)="setPassword(password)"
                 [ngModel]="passwordForUser"
-                nxFocusMe>
-            <label class="error-label mt-2 mb-0" for="password" style="min-height: 12px">{{ passwordError }}</label>
+                nxFocusMe
+            />
+            <label
+                class="error-label mt-2 mb-0"
+                for="password"
+                style="min-height: 12px"
+                >{{ passwordError }}</label
+            >
         </div>
     </div>
     <div class="modal-footer">
-        <nx-process-button [process]="deleteCloudUser"
+        <nx-process-button
+            [process]="deleteCloudUser"
             [form]="deleteCloudUserForm"
             actionType="danger"
-            [buttonText]="LANG.dialogs.buttons.delete()"></nx-process-button>
-        <button type="button" class="btn btn-default" (click)="close()" (mousedown)="clearErrors()">{{ LANG.dialogs.buttons.cancel() }}</button>
+            [buttonText]="LANG.dialogs.buttons.delete()"
+        ></nx-process-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            (click)="close()"
+            (mousedown)="clearErrors()"
+            >{{ LANG.dialogs.buttons.cancel() }}</button
+        >
     </div>
 </form>

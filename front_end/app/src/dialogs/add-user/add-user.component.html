@@ -1,15 +1,33 @@
-<form #addUserForm="ngForm" name="addUserForm" novalidate [ngClass]="{'hide-errors': hideErrors}">
+<form
+    #addUserForm="ngForm"
+    name="addUserForm"
+    novalidate
+    [ngClass]="{ 'hide-errors': hideErrors }"
+>
     <div class="modal-header">
-        <h1 class="modal-title" translate>Add User</h1>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"
-                (click)="close()" *ngIf="closable">
+        <h1
+            class="modal-title"
+            translate
+            >Add User</h1
+        >
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="addUserEmail" translate>Email</label>
+            <label
+                for="addUserEmail"
+                translate
+                >Email</label
+            >
             <nx-email-input
                 class="form-component"
                 id="addUserEmail"
@@ -18,41 +36,65 @@
                 [(ngModel)]="user.email"
                 [form]="addUserForm"
                 [setFocus]="true"
-                #addUserEmail="ngModel">
+                #addUserEmail="ngModel"
+            >
             </nx-email-input>
             <div class="col-12 ml-n2 d-flex">
                 <ng-container *ngIf="addUserEmail.errors">
-                    <span *ngIf="addUserEmail.errors.alreadyExists"
-                        class="input-error">{{ alreadyExists }}</span>
+                    <span
+                        *ngIf="addUserEmail.errors.alreadyExists"
+                        class="input-error"
+                        >{{ alreadyExists }}</span
+                    >
                     <ng-container *ngIf="addUserEmail.touched">
-                        <span *ngIf="addUserEmail.errors.required"
-                            class="input-error" translate>Email is required</span>
-                        <span *ngIf="addUserEmail.errors.pattern"
-                            class="input-error" translate>Please enter a valid Email</span>
+                        <span
+                            *ngIf="addUserEmail.errors.required"
+                            class="input-error"
+                            translate
+                            >Email is required</span
+                        >
+                        <span
+                            *ngIf="addUserEmail.errors.pattern"
+                            class="input-error"
+                            translate
+                            >Please enter a valid Email</span
+                        >
                     </ng-container>
                 </ng-container>
             </div>
         </div>
         <div class="form-group">
-            <label for="permissionsSelect" translate>Access Level</label>
+            <label
+                for="permissionsSelect"
+                translate
+                >Access Level</label
+            >
             <nx-permissions-select
-                    id="permissionsSelect"
-                    name="permissionsSelect"
-                    [user]="user"
-                    [system]="system"
-                    [roles]="system.accessRoles"
-                    [ngModel]="user.role"
-                    (ngModelChange)="setPermission($event)">
+                id="permissionsSelect"
+                name="permissionsSelect"
+                [user]="user"
+                [system]="system"
+                [roles]="system.accessRoles"
+                [ngModel]="user.role"
+                (ngModelChange)="setPermission($event)"
+            >
             </nx-permissions-select>
-            <span class="help-block" [innerText]="accessDescription"></span>
+            <span
+                class="help-block"
+                [innerText]="accessDescription"
+            ></span>
         </div>
     </div>
     <div class="modal-footer">
         <nx-process-button
-                [clickFn]="preSubmit"
-                [process]="addUser"
-                [form]="addUserForm"
-                [buttonText]="'Add' | translate"></nx-process-button>
-        <nx-cancel-button [process]="addUser" [discardFn]="close"></nx-cancel-button>
+            [clickFn]="preSubmit"
+            [process]="addUser"
+            [form]="addUserForm"
+            [buttonText]="'Add' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="addUser"
+            [discardFn]="close"
+        ></nx-cancel-button>
     </div>
 </form>

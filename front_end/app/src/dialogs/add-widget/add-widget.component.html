@@ -1,19 +1,29 @@
 <div class="modal-header">
-    <h1 class="modal-title" translate>Widget Preview</h1>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()"
-        *ngIf="closable">
+    <h1
+        class="modal-title"
+        translate
+        >Widget Preview</h1
+    >
+    <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+        *ngIf="closable"
+    >
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
 </div>
 <div class="modal-body">
-    <div *ngIf="dashboardOptions.length" class="mb-3">
+    <div
+        *ngIf="dashboardOptions.length"
+        class="mb-3"
+    >
         <label translate>Select Dashboard</label>
         <nx-select
             [items]="dashboardOptions"
-            (onSelected)="updateSelectedDashboard(
-                $event.value,
-                findDashboard($event.value)
-            )"
+            (onSelected)="updateSelectedDashboard($event.value, findDashboard($event.value))"
             [selected]="selectedDashboard"
         ></nx-select>
     </div>
@@ -30,9 +40,9 @@
             *ngIf="selectedWidget"
             class="preview-wrapper"
             [ngStyle]="{
-              'max-width.%': 100,
-              'width.px': selectedWidget.value.size.value.cols * (gridSize + gridGap) - gridGap,
-              'height.px': selectedWidget.value.size.value.rows * (gridSize + gridGap) - gridGap
+                'max-width.%': 100,
+                'width.px': selectedWidget.value.size.value.cols * (gridSize + gridGap) - gridGap,
+                'height.px': selectedWidget.value.size.value.rows * (gridSize + gridGap) - gridGap
             }"
         >
             <div class="dashboard-card">
@@ -44,12 +54,20 @@
                         type="transparent-button"
                     ></nx-select>
                     <div class="d-flex">
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'settings.svg'"
                             (click)="toggleEditMode(selectedWidget.value)"
-                            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}" [applyClass]="true">
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '4' }"
+                            [applyClass]="true"
+                        >
                         </svg-icon>
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
-                            [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '4'}" [applyClass]="true">
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                            [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '4' }"
+                            [applyClass]="true"
+                        >
                         </svg-icon>
                     </div>
                 </div>
@@ -57,8 +75,14 @@
                     <h4>Downloading widget...</h4>
                 </ng-template>
                 <nx-dynamic-widget
-                    *ngIf="(selectedWidget && isFirstPartyWidget(selectedWidget.value.identifier) && !downloadingThirdParty); else thirdParty"
-                    [card]="selectedWidget.value">
+                    *ngIf="
+                        selectedWidget &&
+                            isFirstPartyWidget(selectedWidget.value.identifier) &&
+                            !downloadingThirdParty;
+                        else thirdParty
+                    "
+                    [card]="selectedWidget.value"
+                >
                 </nx-dynamic-widget>
             </div>
         </div>
