@@ -60,10 +60,10 @@
             <nx-section>
                 <div class="float-right">
                     <div class="d-inline-block"
-                         [nxTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount() : ''">
+                         [nxTooltip]="isSystemOwner || account.account2faEnabled ? LANG.dialogs.tooltips.deleteAccount() : ''">
                         <button class="btn btn-default"
                                 id="accountSettingsDeleteButton"
-                                [disabled]="isSystemOwner"
+                                [disabled]="isSystemOwner || account.account2faEnabled"
                                 (click)="deleteUser()">
                             <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'delete.svg'"
                                 [svgStyle]="{'width.px': '24', 'height.px': '24'}"
