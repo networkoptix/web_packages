@@ -7,5 +7,5 @@
 		.st0{stroke:#91A7B2; fill: none}
 	</style>
 
-	<circle class="st0" cx="12" cy="12" r="5"/>
+	<circle class="st0" style="fill: none !important;" cx="12" cy="12" r="5"/>
 </svg>
