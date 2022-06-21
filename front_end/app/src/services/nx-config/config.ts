@@ -707,7 +707,7 @@ export const nxConfig: IConfig = {
         chunksOnTimeline: false // timeline.js - draw debug events
     },
     globalViewArchivePermission: 'GlobalViewArchivePermission',
-    openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
+    openClientTimeout: 1000,
     openClientError: 'notVisited',
     openMobileClientTimeout: 300, // 300ms for mobile browsers
     responseOk: 'ok',

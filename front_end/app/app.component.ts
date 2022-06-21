@@ -35,7 +35,6 @@ import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 
 require('what-input');
-require('./scripts/vendor/protocolcheck');
 
 @Component({
     selector: 'nx-app',

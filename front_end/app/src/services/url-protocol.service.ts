@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { protocolCheck } from '@utils/protocolcheck';
 
 import { NxAccountService } from './account.service';
 import type { IConfig } from './nx-config/config-types';
@@ -151,9 +153,12 @@ export class NxUrlProtocolService {
     open(systemId: string, useOauth: boolean) {
         return this.getLink({
             systemId, useOauth
-        }).then((data: { link: string, authKey: string }) => {
-            let link = data.link;
-            const authKey = data.authKey;
+        }).then(({ link }) => {
+            if (!environment.production) {
+                link = link
+                    .replace(this.LANG.clientProtocol(), 'nx-vms:')
+                    .replace(this.window.location.host, environment.cloudHost);
+            }
             link = link.replace(/&/g, '&&'); // This is a hack,
             // Google Chrome for mac has a bug - he looses one ampersand which brakes the link parameters
             // Here we duplicate ampersands to keep one of them
@@ -161,74 +166,21 @@ export class NxUrlProtocolService {
             // ugly thing!
             // see CLOUD-716 for more information
 
-            // TODO: Add type to returned promise, low priority
-            return new Promise<any>((resolve, reject) => {
-                /* The browser opens a dialog that we cannot directly detect or get a response from.
-                 * However, when the browser dialog opens it causes the page to blur so we use that to detect what
-                 * happens.
-                 */
-                let blurCount = 0;
-                let hasBlur = false; // Checks if the browser dialog opened.
-                let hasOpened = false; // Open button was clicked.
-                let hasOpenChecked = false; // Ensure that we only check on the first blur after we regain focus from the browser dialog.
-                this.window.onblur = () => {
-                    if (!this.window.document.hidden) {
-                        blurCount++;
-                    }
-                };
-                this.window.onfocus = () => {
-                    if (hasBlur && !hasOpenChecked) {
-                        hasOpenChecked = true;
-                        // If the browser leaves focus right after coming back it means we probably tried to open the app via protocol.
-                        // Doubtful most users will change apps or click out before a second has passed.
-                        setTimeout(() => {
-                            hasOpened = blurCount > 1;
-                        }, 100);
-                    }
-                };
-                // Browser dialog will cause a blur. If not then we never blurred.
-                setTimeout(() => {
-                    hasBlur = blurCount === 1;
-                }, 100);
-
-                // Check on before unload
-                // @ts-expect-error
-                this.window.protocolCheck(
+            /* The browser opens a dialog that we cannot directly detect or get a response from.
+             * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
+             */
+            return new Promise<void>((resolve, reject) => {
+                protocolCheck(
                     link,
-                    this.CONFIG.openClientTimeout,
-                    this.CONFIG.openMobileClientTimeout,
                     () => {
-                        this.accountService
-                            .checkVisitedKey(authKey)
-                            .then(visited => {
-                                // On windows chrome actually fails so we can use the protocol error handler
-                                this.window.onblur = undefined;
-                                this.window.onfocus = undefined;
-                                if (!visited && blurCount > 0) {
-                                    return reject({ resultCode: this.CONFIG.openClientError });
-                                }
-                                return resolve(false);
-                            });
+                        resolve();
                     },
                     () => {
-                        setTimeout(() => {
-                            this.accountService
-                                .checkVisitedKey(authKey)
-                                .then(visited => {
-                                    this.window.onblur = undefined;
-                                    this.window.onfocus = undefined;
-                                    /* How the check works
-                                     * !visited && !hasBlur && !hasOpened = The browser did not open the native dialog.
-                                     * !visited && hasBlur && !hasOpened = The browser opened the native dialog, but the user didn't press anything.
-                                     * !visited && hasBlur && hasOpened = The browser tried to open the app but could not find it.
-                                     */
-                                    if (!visited && (!hasBlur || hasOpened)) {
-                                        return reject({ resultCode: this.CONFIG.openClientError });
-                                    }
-                                    return resolve(visited);
-                                });
-                        }, this.CONFIG.openClientTimeout);
-                    });
+                        reject({ resultCode: this.CONFIG.openClientError });
+                    },
+                    this.CONFIG.openClientTimeout,
+                    this.CONFIG.openMobileClientTimeout,
+                );
             });
         });
     }
