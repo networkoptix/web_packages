@@ -32,7 +32,7 @@ Account Suite Setup
     ${delete}=   Register and activate account with random email    mark    hamill    ${password}
     Set Suite Variable    ${delete}    ${delete}
     
-    ${random}=   Generate Random String
+    ${random}=   Generate Random String      length=5
 
     ${server 1}=   Create Base System    account1-${random}    owner=${owner}
     ${server 2}=   Create Base System    account2-${random}    owner=${owner}

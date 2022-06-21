@@ -151,7 +151,7 @@ Camera Suite Setup
     #system(name,port,cont,owner,id) 
     #local auth, cloud auth, server url, 
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
-    ${random}=   Generate Random String
+    ${random}=   Generate Random String      length=5
     #Create Base Cloud System    cameras${random}
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}
     ${system}     Create Base System    cameras-${random}    owner=${owner}

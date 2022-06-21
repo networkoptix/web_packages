@@ -27,7 +27,7 @@ Upload Json
 
 Health Monitor Suite Setup
     ${owner}=   Register and activate account with random email    mark    hamill    ${password}
-    ${random}=   Generate Random String
+    ${random}=   Generate Random String      length=5
     ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
     ${server 2}=   Create Base System    HM2-${random}    owner=${owner}
     Set Suite Variable    ${server 1}    ${server 1}
@@ -143,7 +143,7 @@ Health Monitor Suite Teardown
 
 
 Health Monitor Details Setup
-    ${random}=    Generate Random String
+    ${random}=    Generate Random String      length=5
     ${owner}=    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     ${server} =    Create Base System      hmdetails-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}

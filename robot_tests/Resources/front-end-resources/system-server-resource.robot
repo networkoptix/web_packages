@@ -76,7 +76,7 @@ Verify Add Storage Dialog
     ...    ${AS MODAL CANCEL BUTTON}
 
 Server Advanced Settings Suite Setup
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    ${random} =	   Generate Random String   length=5
     Set Suite Variable     ${random}    ${random}
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
     ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
@@ -128,7 +128,7 @@ Server Settings Suite Setup
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     # We setup one server manually here because we need 2 ports
-    ${random}=    Generate Random String
+    ${random}=    Generate Random String      length=5
     ${port 1}=   Get Random Available Port
     Set Suite Variable    ${port 1}
     ${extra port}=  Get Random Available Port

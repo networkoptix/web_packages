@@ -8,7 +8,7 @@ Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
     ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 4.3}'    [\"{beee013e-d913-8f47-144f-2092371ee118}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
     Set Suite Variable     ${value}    ${value}
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    ${random} =	   Generate Random String      length=5
     Set Suite Variable     ${random}    ${random}
     ${loglevel} =    Set Loglevel    INFO
     ${ignore} =    Set Loglevel    ${loglevel}

@@ -17,7 +17,7 @@ System Settings Menu Test Restart
     END
 
 System Settings Menu Suite Setup
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${owner}=   Register and activate account with random email    SystemsMenu    Owner    ${BASE PASSWORD}
 
     FOR    ${i}    IN RANGE    1    4

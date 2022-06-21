@@ -7,7 +7,7 @@ Resource          storage-resource.robot
 # Setups and teardowns
 System Admin Suite Setup
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Add Virtual Camera    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]    ${CAMERA NAME}
@@ -413,7 +413,7 @@ Reset Settings To Default
     END
 System Offline Suite Setup
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    system_admin_offline_1_${rand}    image=${IMAGE}    owner=${owner}
     Set Suite Variable    ${system}
     Stop Docker Server    ${system}[id]

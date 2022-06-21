@@ -4,7 +4,7 @@ Resource          system-camera-resource.robot
 
 *** Keywords ***
 View Page Suite Setup
-    ${random}=   Generate Random String
+    ${random}=   Generate Random String      length=5
     ${owner}=    Register and activate account with random email    mark    hamill    ${password}
     ${system}     Create Base System    View_Page-${random}    owner=${owner}
     Set Suite Variable    ${system}

@@ -4,7 +4,7 @@ Resource          ../../resource.robot
 *** Keywords ***
 LM Suite Set Up
     FOR   ${i}    IN RANGE    1    4
-        ${rand}=   Generate Random String
+        ${rand}=   Generate Random String      length=5
         ${system}=   Create Base System    license_system_${i}_${rand}    network=bridge
         Change License Portal Host    ${LOCAL AUTH}    https://${QA BURBANK IP}:${system}[port]   ${LM HOST}
         Set Suite Variable    ${system ${i}}    ${system}

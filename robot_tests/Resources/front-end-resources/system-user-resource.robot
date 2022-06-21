@@ -7,7 +7,7 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Users Suite Setup
-    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
+    ${random} =	   Generate Random String   length=5
     Set Suite Variable     ${random}    ${random}
     #system(name,port,cont,owner,id) 
     #local auth, cloud auth, server url, 

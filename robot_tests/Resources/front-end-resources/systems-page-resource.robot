@@ -3,7 +3,7 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Systems Page Suite Setup
-    ${rand str}=   Generate Random String
+    ${rand str}=   Generate Random String      length=5
     ${owner}=   Register and activate account with random email    Main    Owner    ${base password}
     ${system}=   Create Base System    systems_page_main_${rand str}   add users=True    owner=${owner}
     Set Suite Variable    ${system}

@@ -10,7 +10,7 @@ Setup
     Open Browser and go to URL    ${url}
     ${user}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${login user}    ${user}
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    2fa-${rand}    image=${IMAGE}    owner=${login user}    add users=${False}
     Set Suite Variable    ${server url}    https://${QABURBANK IP}:${system}[port]
     Set Suite Variable    ${system}    ${system}

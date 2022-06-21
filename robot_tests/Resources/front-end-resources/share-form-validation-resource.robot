@@ -3,7 +3,7 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Share Form Setup
-    ${random}=    Generate Random String
+    ${random}=    Generate Random String      length=5
     ${owner}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     ${server} =    Create Base System      shareform-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}

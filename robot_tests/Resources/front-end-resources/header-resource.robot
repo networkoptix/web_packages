@@ -19,13 +19,13 @@ Header Suite Setup
         Append To List    ${HEADER TMP USERS}    ${user}
     END
 
-    ${rand}=   Generate Random String
-    ${main system}=   Create Base System    header_main_system_${rand}    owner=${one system owner}
+    ${rand}=   Generate Random String      length=5
+    ${main system}=   Create Base System    header_main_sys_${rand}    owner=${one system owner}
     Set Suite Variable    ${main system}
 
     Run Keyword If   '''${mode}''' == '''webadmin'''    Pass Execution    Webadmin mode: suite setup finished
     ${offline systems}=   Create List
-    ${rand}=   Generate Random String
+    ${rand}=   Generate Random String      length=5
     FOR    ${i}    IN RANGE    1    17
         ${system}=   Create Base System    header_offline_system_${rand}_${i}    owner=${many systems owner}    add users=${False}
         Sleep    2
@@ -91,7 +91,7 @@ Validate System Navigation Tile
     ...    //h5[text()="${system name}"]/../..//following-sibling::ul//a[contains(text(), "${VIEW}")]
     ...    //h5[text()="${system name}"]/../../following-sibling::ul//a[contains(text(), "${SETTINGS TEXT}")]
     ...    //h5[text()="${system name}"]/../../following-sibling::ul//a[contains(text(), "${INFORMATION TEXT}")]
-    Run keyword if    $active_link    Wait until element is visible    //h5[text()="${system name}"]/../../following-sibling::ul/li[contains(@class, "active")]/a[contains(text(), "${active link}")]
+    Run keyword if    $active_link    Wait until element is visible    //h5[text()="${system name}"]/../../following-sibling::ul/li[contains(@class, "selected")]/a[contains(text(), "${active link}")]
 
 Validate Navigation Grid Tile
     [Arguments]    ${tile header}    ${tile pages}    ${active link}=${None}
@@ -100,7 +100,7 @@ Validate Navigation Grid Tile
         ${page title}=   Evaluate    $page['title'].strip()
         Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../../following-sibling::ul//a[contains(text(), "${page}[title]")]
     END
-    Run Keyword If    $active_link    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../../following-sibling::ul/li[contains(@class, "active")]//a[contains(text(), "${active link}")]
+    Run Keyword If    $active_link    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}//h5[text()="${tile header}"]/../../following-sibling::ul/li[contains(@class, "selected")]//a[contains(text(), "${active link}")]
 
 Get External Links Names
     [Arguments]    ${section title}
