@@ -42,7 +42,7 @@ ${2FA ERROR LOGIN CODE}                     //nx-authorize-component//nx-authori
 ${2FA DISABLE MODAL HEADER}                 //two-fa-modal-content//h1[text()="${2FA DISABLE MODAL HEADER TEXT}"]
 ${2FA DISABLE MODAL DESCRIPTION}            //two-fa-modal-content//form//label[text()="${2FA DISABLE MODAL DESCRIPTION TEXT}"]
 ${2FA DISABLE MODAL BTN}                    //two-fa-modal-content//button[@id="disableFinish" or @type="submit"]
-${2FA DISABLE MODAL RED COLOR}              rgba(220, 53, 69, 1)
+${2FA DISABLE MODAL RED COLOR}              rgba(194, 38, 38, 1)
 ${2FA DISABLE MODAL CANCEL BTN}             //two-fa-modal-content//button[(@type="reset") or contains(text(),"${CANCEL BUTTON TEXT}")]
 ${2FA SECURITY PAGE SAVE BTN}               //nx-account-security-component//nx-apply//button[@type="submit"]
 ${2FA SECURITY PAGE CANCEL BTN}             //nx-account-security-component//nx-apply//button[@type="reset"]
