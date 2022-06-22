@@ -366,7 +366,7 @@
             "cloud": "云",
             "commonText": "无法合并系统 <strong>{primarySystem}</strong> 和 <strong>{secondarySystem}</strong>",
             "connectToCloud": "请将要与此合并的系统连接到 <strong>%CLOUD_NAME%</strong> 或使用 <strong>%VMS_NAME%</strong>客户端进行本地合并。",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystemHeader": "找不到要合并的系统",
             "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "所选系统和当前系统都连接到 %CLOUD_NAME% 并且分属不同的所有者。仅当所有者帐户相同时，才可以合并云系统。",
             "duplicateServers": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
@@ -450,7 +450,7 @@
         },
         "renewAuth": {
             "action": "登录",
-            "message": "Please log in again.",
+            "message": "请再次登录.",
             "title": "您的登录已过期。"
         },
         "transferOwnership": {
