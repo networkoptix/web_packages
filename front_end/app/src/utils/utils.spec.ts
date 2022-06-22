@@ -139,8 +139,7 @@ describe('deepCopyWithCircularReference', () => {
         const utilsClone = deepCopyWithCircularReference(cyclical);
         const utilsActual = utilsClone[`v${LARGE_ARRAY_SIZE}`][0];
         const lodashClone = cloneDeep(cyclical);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const lodashActual = lodashClone[`v${LARGE_ARRAY_SIZE}`][0];
+        // const lodashActual = lodashClone[`v${LARGE_ARRAY_SIZE}`][0];
 
         expect(utilsActual).toEqual(utilsClone[`v${LARGE_ARRAY_SIZE - 1}`]);
         expect(utilsActual).not.toEqual(cyclical[`v${LARGE_ARRAY_SIZE - 1}`]);

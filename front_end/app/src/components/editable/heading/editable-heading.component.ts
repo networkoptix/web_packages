@@ -49,8 +49,8 @@ export class NxEditableHeading implements OnInit, OnChanges {
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = (): void => {
-    };
+    // private onTouchedCallback = (): void => {
+    // };
 
     private onChangeCallback = (_: any): void => {
     };
@@ -90,9 +90,9 @@ export class NxEditableHeading implements OnInit, OnChanges {
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
-    }
+    // registerOnTouched(fn: any): void {
+    //     this.onTouchedCallback = fn;
+    // }
 
     onChange(): void {
         this.nameWatcherValueChange.emit(this.value);

@@ -38,7 +38,6 @@ export class MotionMaskRenderer {
     public canvas: ElementRef<HTMLCanvasElement>;
     public selectionCanvas: ElementRef<HTMLCanvasElement>;
     private selectionCtx: CanvasRenderingContext2D;
-    private matrixSubscription: Subscription;
     public renderer: Subscription;
     public selectionRenderer: Subscription;
     public interactions: Subscription;
@@ -54,7 +53,7 @@ export class MotionMaskRenderer {
         private sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>,
         private isMobile: boolean
     ) {
-        this.matrixSubscription = this.motionMask.maskMatrix
+        this.motionMask.maskMatrix
             .pipe(takeUntil(this.unsub$))
             .subscribe(matrix => {
                 const columns = matrix[0].length;

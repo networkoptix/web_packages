@@ -2,8 +2,8 @@ import { Location } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { combineLatest, Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -27,7 +27,7 @@ import type { Content } from '@src/menu/menu.types';
 
 import { IntegrationService } from '../integration.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'integration-detail-component',
     templateUrl: 'details.component.html',
@@ -40,9 +40,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     plugin;
     content: Content;
 
-    private integrationSubscription: Subscription;
-    private menuDetailsSubscription: Subscription;
-    private routeSubscription: Subscription;
     private acceptProcess: Process;
     private account: Account;
 
@@ -69,8 +66,11 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     setUpRouteSubscription(): void {
-        this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
-            .pipe(map(results => ({ params: results[0], query: results[1] })))
+        combineLatest(this.route.params, this.route.queryParams)
+            .pipe(
+                untilDestroyed(this),
+                map(results => ({ params: results[0], query: results[1] }))
+            )
             .subscribe(results => {
                 if (results.params.id) {
                     const assetParam = results.params.id;
@@ -109,7 +109,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                         ]
                     };
 
-                    this.integrationSubscription = this.integrationService.getIntegrationBy(assetid, results.query.state)
+                    this.integrationService.getIntegrationBy(assetid, results.query.state)
+                        .pipe(untilDestroyed(this))
                         .subscribe(result => {
                             if (result.length) {
                                 this.plugin = this.integrationService.format(result[0]);
@@ -186,8 +187,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.menuDetailsSubscription = this.menuService
-            .selectedDetailsSection
+        this.menuService.selectedDetailsSection
+            .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
                 this.content = { ...this.content }; // trigger onChange

@@ -8,8 +8,7 @@ import {
     Inject
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
@@ -21,7 +20,7 @@ interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',
@@ -35,7 +34,6 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     auth;
     params: IParams;
     embedUrl: string;
-    private formChangesSubscription: Subscription;
 
     @ViewChild('embedForm', { static: true }) embedForm: NgForm;
 
@@ -43,7 +41,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         language: NxLanguageProviderService,
         configService: NxConfigService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) dialogData: never,
     ) {
         this.params = {
             authString: '',
@@ -69,7 +67,8 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.formChangesSubscription = this.embedForm.form.valueChanges
+        this.embedForm.form.valueChanges
+            .pipe(untilDestroyed(this))
             .subscribe(changes => {
                 this.createEmbedUrl(changes);
             });

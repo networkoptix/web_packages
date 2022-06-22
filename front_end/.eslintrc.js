@@ -189,6 +189,8 @@ module.exports = {
                 }]),
                 ...tsExtension('object-curly-spacing', ['error', 'always']),
                 '@typescript-eslint/prefer-includes': 'error',
+                // Note: @ts-ignore should still be used for false
+                // positives on TS warnings
                 '@typescript-eslint/prefer-ts-expect-error': 'error',
                 ...tsExtension('semi'),
                 ...tsExtension('space-before-blocks', ['error', 'always']),
@@ -277,11 +279,6 @@ module.exports = {
             files: ['*.spec.ts'],
             rules: {
                 '@typescript-eslint/dot-notation': 'off',
-                '@typescript-eslint/no-unused-vars': ['error', {
-                    varsIgnorePattern: '(^_)|(component)|(fixture)|(el)',
-                    args: 'none',
-                    // argsIgnorePattern: '^_',
-                }],
             }
         },
         {

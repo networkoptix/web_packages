@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
@@ -36,7 +36,6 @@ export class PushComponent implements OnInit, OnDestroy {
     account: any;
 
     private subChanges: boolean;
-    private timeSubscription: Subscription;
     private tokenSubscription: Subscription;
 
     private setupDefaults(): void {
@@ -92,7 +91,7 @@ export class PushComponent implements OnInit, OnDestroy {
     }
 
     setSystems(): void {
-        this.timeSubscription = timer(10000, 10000).subscribe(() =>
+        timer(10000, 10000).pipe(untilDestroyed(this)).subscribe(() =>
             this.updateSubStates()
         );
         this.systemsService.forceUpdateSystemsAsPromise().then(

@@ -119,6 +119,8 @@ export class Process {
         settings: Partial<ProcessSettings> = {},
         private _successHandler: Handler = () => {},
         private _errorHandler: Handler = logError,
+        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+        // @ts-ignore: Deprecated, kept for compatibility
         private _catchHandler: Handler = logError
     ) {
         this.CONFIG = configService.getConfig();

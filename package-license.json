@@ -768,7 +768,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/code-frame",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/code-frame/LICENSE"
         },
-        "@babel/compat-data@7.17.10": {
+        "@babel/compat-data@7.18.5": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -776,7 +776,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/compat-data",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/compat-data/LICENSE"
         },
-        "@babel/core@7.18.2": {
+        "@babel/core@7.18.5": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -896,7 +896,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/highlight",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/highlight/LICENSE"
         },
-        "@babel/parser@7.18.4": {
+        "@babel/parser@7.18.5": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -912,7 +912,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/template",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/template/LICENSE"
         },
-        "@babel/traverse@7.18.2": {
+        "@babel/traverse@7.18.5": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -1065,7 +1065,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/minimist",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/minimist/LICENSE"
         },
-        "@types/node@17.0.41": {
+        "@types/node@17.0.45": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/node",
@@ -1089,7 +1089,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/prop-types",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/prop-types/LICENSE"
         },
-        "@types/react@17.0.45": {
+        "@types/react@17.0.47": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/react",
@@ -1341,7 +1341,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/braces",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/braces/LICENSE"
         },
-        "browserslist@4.20.4": {
+        "browserslist@4.21.0": {
             "licenses": "MIT",
             "repository": "https://github.com/browserslist/browserslist",
             "publisher": "Andrey Sitnik",
@@ -1393,7 +1393,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/camelcase",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001349": {
+        "caniuse-lite@1.0.30001358": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -1755,7 +1755,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.148": {
+        "electron-to-chromium@1.4.165": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -1961,7 +1961,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-prettier",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-plugin-prettier/LICENSE.md"
         },
-        "eslint-plugin-react-hooks@4.5.0": {
+        "eslint-plugin-react-hooks@4.6.0": {
             "licenses": "MIT",
             "repository": "https://github.com/facebook/react",
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks",
@@ -2018,7 +2018,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-visitor-keys",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-visitor-keys/LICENSE"
         },
-        "eslint@8.17.0": {
+        "eslint@8.18.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslint",
             "publisher": "Nicholas C. Zakas",
@@ -2261,7 +2261,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/get-caller-file",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/get-caller-file/LICENSE.md"
         },
-        "get-intrinsic@1.1.1": {
+        "get-intrinsic@1.1.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/get-intrinsic",
             "publisher": "Jordan Harband",
@@ -2331,7 +2331,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/globals",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/globals/license"
         },
-        "globby@13.1.1": {
+        "globby@13.1.2": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/globby",
             "publisher": "Sindre Sorhus",
@@ -3512,7 +3512,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/p-locate",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/p-locate/license"
         },
-        "p-map@5.4.0": {
+        "p-map@5.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/p-map",
             "publisher": "Sindre Sorhus",
@@ -3684,7 +3684,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/prettier-linter-helpers",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/prettier-linter-helpers/LICENSE.md"
         },
-        "prettier@2.6.2": {
+        "prettier@2.7.1": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/prettier",
             "publisher": "James Long",
@@ -3851,7 +3851,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/resolve-from",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/resolve-from/license"
         },
-        "resolve@1.22.0": {
+        "resolve@1.22.1": {
             "licenses": "MIT",
             "repository": "https://github.com/browserify/resolve",
             "publisher": "James Halliday",
@@ -4267,7 +4267,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/type-fest",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/type-fest/license"
         },
-        "typescript@4.7.3": {
+        "typescript@4.7.4": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/Microsoft/TypeScript",
             "publisher": "Microsoft Corp.",
@@ -4289,6 +4289,14 @@
             "url": "https://github.com/jonschlinkert",
             "path": "cloud_portal/cloud_helper/node_modules/unc-path-regex",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/unc-path-regex/LICENSE"
+        },
+        "update-browserslist-db@1.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/browserslist/update-db",
+            "publisher": "Andrey Sitnik",
+            "email": "andrey@sitnik.ru",
+            "path": "cloud_portal/cloud_helper/node_modules/update-browserslist-db",
+            "licenseFile": "cloud_portal/cloud_helper/node_modules/update-browserslist-db/LICENSE"
         },
         "uri-js@4.4.1": {
             "licenses": "BSD-2-Clause",
@@ -5739,7 +5747,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/camelcase",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001349": {
+        "caniuse-lite@1.0.30001358": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -6387,7 +6395,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.148": {
+        "electron-to-chromium@1.4.165": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -6918,7 +6926,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/get-caller-file",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/get-caller-file/LICENSE.md"
         },
-        "get-intrinsic@1.1.1": {
+        "get-intrinsic@1.1.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ljharb/get-intrinsic",
             "publisher": "Jordan Harband",
@@ -7004,7 +7012,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/globby",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/globby/license"
         },
-        "globule@1.3.3": {
+        "globule@1.3.4": {
             "licenses": "MIT",
             "repository": "https://github.com/cowboy/node-globule",
             "publisher": "\"Cowboy\" Ben Alman",
@@ -9201,7 +9209,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/resolve-url",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/resolve-url/LICENSE"
         },
-        "resolve@1.22.0": {
+        "resolve@1.22.1": {
             "licenses": "MIT",
             "repository": "https://github.com/browserify/resolve",
             "publisher": "James Halliday",

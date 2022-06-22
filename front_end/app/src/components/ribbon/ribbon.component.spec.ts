@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
+// import { DebugElement } from '@angular/core';
 import {
     ComponentFixture,
     inject,
@@ -22,7 +22,7 @@ import type { RibbonAction } from './ribbon.types';
 describe('NxRibbonComponent', () => {
     let component: NxRibbonComponent;
     let fixture: ComponentFixture<NxRibbonComponent>;
-    let el: DebugElement;
+    // let el: DebugElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -42,7 +42,7 @@ describe('NxRibbonComponent', () => {
             .then(() => {
                 fixture = TestBed.createComponent(NxRibbonComponent);
                 component = fixture.componentInstance;
-                el = fixture.debugElement;
+                // el = fixture.debugElement;
 
                 fixture.detectChanges();
             });

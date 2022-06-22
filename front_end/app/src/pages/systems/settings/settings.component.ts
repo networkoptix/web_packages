@@ -11,7 +11,6 @@ import {
     NavigationStart
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CookieService } from 'ngx-cookie-service';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil, tap } from 'rxjs/operators';
 
@@ -22,12 +21,10 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
-import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { OauthService } from '@services/oauth.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -95,11 +92,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private cancelPrevious$ = new Subject();
-    private connection$ = new Subject();
 
     private connectionSubscription: Subscription;
-    private resizeSubscription: Subscription;
-    private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
     private systemInfoSubscription: Subscription;
     private checkMergeSubscription: Subscription;
@@ -179,9 +173,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
-        private oauthService: OauthService,
-        private cookieService: CookieService,
-        private menusService: NxMenusService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -198,7 +189,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     init(): void {
         // this.systemId = this.uriParamSystemId;
-        this.routerParamsSubscription = this.route.params.subscribe(params => {
+        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
                 this.content.base =
@@ -334,7 +325,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
+        this.scrollMechanicsService.windowSizeSubject
+            .pipe(untilDestroyed(this))
             .subscribe(({ width }) => {
                 if (width >= 768) {
                     this.setHeaderHeight();

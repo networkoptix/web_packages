@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -10,7 +9,7 @@ import { NxSessionService } from '@services/session.service';
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'account',
     templateUrl: 'account.component.html',
@@ -24,8 +23,6 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     content: Content;
     menuReady = false;
     userEmail: string;
-    private loginStateSubscription: Subscription;
-    private menuDetailSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -48,7 +45,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             level1: [],
         };
 
-        this.loginStateSubscription = this.sessionService.loginStateSubject
+        this.sessionService.loginStateSubject
+            .pipe(untilDestroyed(this))
             .subscribe((loginState: string) => {
                 this.userEmail = loginState;
                 this.init();
@@ -84,8 +82,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             ]
         }];
 
-        this.menuDetailSubscription = this.menuService
-            .selectedDetailsSection
+        this.menuService.selectedDetailsSection
+            .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
                 this.content = { ...this.content }; // trigger onChange

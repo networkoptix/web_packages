@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
+// import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
@@ -24,7 +24,7 @@ import { NxCookieBannerComponent } from './cookie-banner.component';
 xdescribe('NxCookieBannerComponent', () => {
     let component: NxCookieBannerComponent;
     let fixture: ComponentFixture<NxCookieBannerComponent>;
-    let el: DebugElement;
+    // let el: DebugElement;
 
     const configMock = { getConfig: () => nxConfig };
     let localStorageMockStore = {};
@@ -56,7 +56,7 @@ xdescribe('NxCookieBannerComponent', () => {
             .then(() => {
                 fixture = TestBed.createComponent(NxCookieBannerComponent);
                 component = fixture.componentInstance;
-                el = fixture.debugElement;
+                // el = fixture.debugElement;
 
                 fixture.detectChanges();
             });

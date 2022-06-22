@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -84,8 +84,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         return this.localUserNameDiffers && !this.passwordChanged;
     }
 
-    private routeParamsSubscription: Subscription;
-    private systemSubscription: Subscription;
     private userSubscription: Subscription;
 
     private setupDefaults(): void {
@@ -123,22 +121,23 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.applyService.initPageFormsWatcher(this.pageApply);
 
-        this.routeParamsSubscription = this.route
-            .params
-            .subscribe(params => {
-                if (params.userId) {
-                    this.paramUser = params.userId;
-                    const qmi = this.paramUser.indexOf('?'); // qmi stands for "question mark index"
-                    if (qmi > -1) {
-                        this.paramUser = this.paramUser.substring(0, qmi);
-                    }
-                    this.menuService.detail = this.paramUser;
-                    this.setUser();
+        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+            if (params.userId) {
+                this.paramUser = params.userId;
+                const qmi = this.paramUser.indexOf('?'); // qmi stands for "question mark index"
+                if (qmi > -1) {
+                    this.paramUser = this.paramUser.substring(0, qmi);
                 }
-            });
+                this.menuService.detail = this.paramUser;
+                this.setUser();
+            }
+        });
 
-        this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
+        this.settingsService.systemSubject
+            .pipe(
+                untilDestroyed(this),
+                filter(data => data !== undefined),
+            )
             .subscribe(system => {
                 this.system = system;
                 if (!this.environment.isLocal) {

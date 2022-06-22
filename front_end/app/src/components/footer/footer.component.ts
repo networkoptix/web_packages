@@ -4,8 +4,7 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { environment } from '@environments/environment';
 import { NxMenusService } from '@services/menus.service';
@@ -14,7 +13,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-footer',
     templateUrl: 'footer.component.html',
@@ -32,7 +31,6 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     @Input() center: boolean;
     @Input() oauth = false;
     classes: string[] = [];
-    private footerSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -61,11 +59,11 @@ export class NxFooterComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.footerSubscription =
-            this.appState.footerVisibleSubject
-                .subscribe(visible => {
-                    this.viewFooter = visible;
-                });
+        this.appState.footerVisibleSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(visible => {
+                this.viewFooter = visible;
+            });
     }
 
     trackItem(index, item) {

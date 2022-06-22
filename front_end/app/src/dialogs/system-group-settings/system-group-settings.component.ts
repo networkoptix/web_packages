@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { DialogRef } from '@dialogs/dialog-ref';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -22,7 +22,7 @@ export class SystemGroupSettingsModalContent implements OnInit {
         private processService: NxProcessService,
         private systemGroupsService: NxSystemGroupsService,
         public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: Record<string, never>,
+        // @Inject(DIALOG_DATA) private dialogData: never,
     ) {
     }
 

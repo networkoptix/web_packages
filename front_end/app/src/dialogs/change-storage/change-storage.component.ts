@@ -1,8 +1,8 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -30,7 +30,7 @@ export class ChangeStorageModalContent {
         language: NxLanguageProviderService,
         private processService: NxProcessService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        // @Inject(DIALOG_DATA) private dialogData: never,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;

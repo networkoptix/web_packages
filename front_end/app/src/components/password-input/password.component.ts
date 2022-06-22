@@ -16,15 +16,14 @@ import {
     FormControl,
     NgModel
 } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-password-input',
     templateUrl: 'password.component.html',
@@ -62,8 +61,6 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     tagWidth: number;
 
     public value: string;
-
-    private passwordSubscription: Subscription;
 
     @ViewChild('addons') addons : ElementRef<HTMLDivElement>;
 
@@ -133,7 +130,8 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     private loadCommonPasswords(): void {
         if (!this.CONFIG.commonPasswordsList) {
-            this.passwordSubscription = this.api.getCommonPasswords()
+            this.api.getCommonPasswords()
+                .pipe(untilDestroyed(this))
                 .subscribe(data => {
                     this.CONFIG.commonPasswordsList = data;
                 });

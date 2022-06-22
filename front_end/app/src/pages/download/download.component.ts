@@ -12,7 +12,7 @@ import {
     ActivationEnd,
     Router
 } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -56,7 +56,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
     checkedDownloads = false;
     // Placeholder should not appear while downloads are loading
     otherPackages;
-    private routerSubscription: Subscription;
 
     // TODO: Fix arm supported. It says the same thing as linux
 
@@ -89,9 +88,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.routerSubscription = this.router
-                .events
+            this.router.events
                 .pipe(
+                    untilDestroyed(this),
                     filter(event => event instanceof ActivationEnd)
                 )
                 .subscribe((event: ActivationEnd) => {

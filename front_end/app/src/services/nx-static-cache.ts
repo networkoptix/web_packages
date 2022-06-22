@@ -13,7 +13,7 @@ export class NxStaticCacheService {
 
     constructor(
         private http: HttpClient,
-        private config: NxConfigService
+        config: NxConfigService
     ) {
         this.CONFIG = config.getConfig();
     }

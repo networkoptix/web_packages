@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { map, delay, retryWhen, take } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -24,7 +24,7 @@ interface SystemSetting {
     [key: string]: unknown
 }
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-system-advanced-admin-component',
     templateUrl: 'advanced.component.html',
@@ -39,7 +39,6 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
 
     haveAdvSettings: boolean;
-    private serverSubscription: Subscription;
 
     systemSettings: SystemSetting = {};
     changedFields = {};
@@ -60,8 +59,9 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     ngOnInit(): void {
-        this.serverSubscription = this.system.infoSubject
+        this.system.infoSubject
             .pipe(
+                untilDestroyed(this),
                 map((system: any) => {
                     if (!system.servers || system.servers.length === 0) {
                         throw system;

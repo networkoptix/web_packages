@@ -23,7 +23,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     isDialogActive = false;
 
     constructor(
-        private configService: NxConfigService,
+        configService: NxConfigService,
         private appState: NxAppStateService,
         private dialogService: NxSimpleDialogsService,
         @Inject(WINDOW) private window: Window

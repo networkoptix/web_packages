@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import type { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
+import { DialogRef } from '@dialogs/dialog-ref';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -25,7 +25,7 @@ export class ReserveSpaceWarningModalContent implements OnInit {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: Record<string, never>,
+        // @Inject(DIALOG_DATA) private dialogData: never,
     ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();

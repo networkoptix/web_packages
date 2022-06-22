@@ -16,11 +16,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import {
-    Subscription,
     BehaviorSubject,
     combineLatest,
     fromEvent,
-    SubscriptionLike
 } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -67,7 +65,7 @@ enum breakpoints {
     XL = 1200
 }
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
@@ -115,14 +113,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     getUrlSystemId;
     untilHaveID;
-    private headerSubscription: Subscription;
-    private loginSubscription: Subscription;
-    private routerSubscription: Subscription;
-    private systemSubscription: Subscription;
-    private menuSubscription: SubscriptionLike;
-    private resizeSubscription: SubscriptionLike;
-    private widthSubscription: SubscriptionLike;
-    private queryParamSubscription: SubscriptionLike;
 
     constructor(
         configService: NxConfigService,
@@ -145,25 +135,32 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.LANG = languageService.translations;
-        this.menuSubscription = this.menusService.getMenu('header', true).subscribe(header => {
-            const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-            this.headerService.setLocation(this.window.location.pathname);
-            if (this.newHeader) {
-                const firstNode = this.loginState ? this.menusService.makeSystemMenuNode() : this.menusService.makeWelcomeNode();
-                nodes.unshift(firstNode);
-            }
-            this.headerService.nodes = nodes;
+        this.menusService.getMenu('header', true)
+            .pipe(untilDestroyed(this))
+            .subscribe(header => {
+                const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                this.headerService.setLocation(this.window.location.pathname);
+                if (this.newHeader) {
+                    const firstNode = this.loginState
+                        ? this.menusService.makeSystemMenuNode()
+                        : this.menusService.makeWelcomeNode();
+                    nodes.unshift(firstNode);
+                }
+                this.headerService.nodes = nodes;
 
-            this.headerService.setLocation(this.window.location.pathname);
-        });
+                this.headerService.setLocation(this.window.location.pathname);
+            });
         // Updates windowWidth$ behavior subject on window resize
-        this.resizeSubscription = fromEvent<FocusEvent>(this.window, 'resize').pipe(
-            map(event => (event.target as Window).innerWidth),
-            startWith(this.window.innerWidth)
-        ).subscribe(width => this.windowWidth$.next(width));
+        fromEvent<FocusEvent>(this.window, 'resize')
+            .pipe(
+                untilDestroyed(this),
+                map(event => (event.target as Window).innerWidth),
+                startWith(this.window.innerWidth)
+            )
+            .subscribe(width => this.windowWidth$.next(width));
 
         // Combines all tracked element sizes into a flattened observable and updates combinedWidths$ with latest values
-        this.widthSubscription = combineLatest([
+        combineLatest([
             this.iconWidth$,
             this.mainButtonWidth$,
             this.tabsWidth$,
@@ -171,6 +168,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.windowWidth$,
             this.breadcrumbWidth$
         ]).pipe(
+            untilDestroyed(this),
             map(([icon, mainButton, tabs, rightNav, windowWidth, breadcrumbWidths]) => ({
                 totalWidths: icon + mainButton + tabs + rightNav + sum(breadcrumbWidths),
                 icon,
@@ -294,7 +292,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnInit(): void {
-        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
+        this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.inline = params.inline !== 'undefined';
         });
 
@@ -303,11 +301,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
-        this.headerSubscription = this.appState.headerVisibleSubject.subscribe(visible => {
-            this.viewHeader = visible || this.bootstrapProvider.newSystem;
-        });
+        this.appState.headerVisibleSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(visible => {
+                this.viewHeader = visible || this.bootstrapProvider.newSystem;
+            });
 
-        this.routerSubscription = this.router.events
+        this.router.events
+            .pipe(untilDestroyed(this))
             .subscribe((event: Event) => {
                 if (event instanceof RoutesRecognized) {
                     this.systemId = event.state.root.firstChild.params.systemId || '';
@@ -334,7 +335,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.loginSubscription = this.sessionService.loginStateSubject
+        this.sessionService.loginStateSubject
+            .pipe(untilDestroyed(this))
             .subscribe((loginState: string) => {
                 if (loginState) {
                     this.userEmail = loginState;
@@ -384,30 +386,32 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 });
             });
         } else {
-            this.systemSubscription = this.systemsService.systemsSubject.subscribe(systems => {
-                if (!systems) {
-                    return;
-                }
+            this.systemsService.systemsSubject
+                .pipe(untilDestroyed(this))
+                .subscribe(systems => {
+                    if (!systems) {
+                        return;
+                    }
 
-                this.systemId = this.storageService.systemId;
-                if (this.router.url.startsWith('/systems/')) {
-                    this.systemId = this.router.url.split('/')[2].split('?')[0];
-                }
+                    this.systemId = this.storageService.systemId;
+                    if (this.router.url.startsWith('/systems/')) {
+                        this.systemId = this.router.url.split('/')[2].split('?')[0];
+                    }
 
-                if (
-                    !this.systemId &&
+                    if (
+                        !this.systemId &&
                     this.route.firstChild &&
                     this.route.firstChild.snapshot.params.systemId
-                ) {
-                    this.systemId = this.route.firstChild.snapshot.params.systemId;
-                }
-                this.systems = systems;
-                this.singleSystem = (this.systems.length === 1);
-                this.systemCounter = this.systems.length;
+                    ) {
+                        this.systemId = this.route.firstChild.snapshot.params.systemId;
+                    }
+                    this.systems = systems;
+                    this.singleSystem = (this.systems.length === 1);
+                    this.systemCounter = this.systems.length;
 
-                this.updateActiveSystem();
-                this.updateActive();
-            });
+                    this.updateActiveSystem();
+                    this.updateActive();
+                });
         }
     }
 

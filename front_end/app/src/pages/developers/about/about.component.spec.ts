@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement, Input, Component } from '@angular/core';
+import { Input, Component } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,7 +40,8 @@ class MockFooterComponent {
 describe('NxAboutComponent', () => {
     let component: NxAboutComponent;
     let fixture: ComponentFixture<NxAboutComponent>;
-    let el: DebugElement;
+    // let el: DebugElement;
+
     const translateMock = getMockTranslations();
     const configMock = { config: { ...nxConfig, docMenuMap } };
 
@@ -97,7 +98,7 @@ describe('NxAboutComponent', () => {
             fixture = TestBed.createComponent(NxAboutComponent);
             fixture.componentInstance.aboutStructure$.next([]);
             component = fixture.componentInstance;
-            el = fixture.debugElement;
+            // el = fixture.debugElement;
             fixture.detectChanges();
         })
     );

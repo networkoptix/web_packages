@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
+// import { DebugElement } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MockProvider, MockDirective } from 'ng-mocks';
@@ -24,7 +24,7 @@ import type { DropdownStorage } from './server-standard.component.types';
 describe('NxSystemStandardServerComponent', () => {
     let component: NxSystemStandardServerComponent;
     let fixture: ComponentFixture<NxSystemStandardServerComponent>;
-    let el: DebugElement;
+    // let el: DebugElement;
 
     const translateMock = { translations: {} };
     const configMock = { getConfig: () => nxConfig };
@@ -119,7 +119,7 @@ describe('NxSystemStandardServerComponent', () => {
             .then(() => {
                 fixture = TestBed.createComponent(NxSystemStandardServerComponent);
                 component = fixture.componentInstance;
-                el = fixture.debugElement;
+                // el = fixture.debugElement;
             })
             .catch(err => console.error(err));
     }));

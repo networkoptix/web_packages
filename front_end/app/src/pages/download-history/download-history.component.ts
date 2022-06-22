@@ -11,7 +11,7 @@ import {
     ActivationEnd,
     Router
 } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -33,7 +33,7 @@ import { NxUriService } from '@services/uri.service';
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
-    private sub;
+    private sub: Subscription;
     readonly releases = 'releases';
 
     CONFIG: IConfig;
@@ -50,7 +50,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     downloadsData;
     noteTypes;
     linkbase;
-    private routerSubscription: Subscription;
 
     currentTab: string;
 
@@ -76,8 +75,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         this.LANG = language.translations;
 
         if (isPlatformBrowser(this.platformId)) {
-            this.routerSubscription = this.router.events
+            this.router.events
                 .pipe(
+                    untilDestroyed(this),
                     filter(event => event instanceof ActivationEnd)
                 )
                 .subscribe((event: ActivationEnd) => {

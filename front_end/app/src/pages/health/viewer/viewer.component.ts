@@ -8,10 +8,10 @@ import {
     ElementRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { of, Subscription, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -31,7 +31,7 @@ import type { Content } from '@src/menu/menu.types';
 
 import { NxHealthService } from '../health.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-health-viewer-component',
     templateUrl: 'viewer.component.html',
@@ -57,9 +57,6 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
     outdatedVersion = false;
 
     mediaLayoutClass: string;
-    selectedSubscription: Subscription;
-
-    private resizeSubscription: Subscription;
 
     @ViewChild('loadReport') loadReport: ElementRef;
     @ViewChild('loadReportMain') loadReportMain;
@@ -107,7 +104,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.selectedSubscription = this.menuService.selectedSectionSubject
+        this.menuService.selectedSectionSubject
+            .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 if (this.menu.selectedSection !== selection) {
                     this.menu.selectedSection = selection;
@@ -125,7 +123,8 @@ export class NxReportViewerComponent implements OnInit, OnDestroy {
         }
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject
+        this.scrollMechanicsService.windowSizeSubject
+            .pipe(untilDestroyed(this))
             .subscribe(({ width }) => {
                 if (
                     width >= 768 &&

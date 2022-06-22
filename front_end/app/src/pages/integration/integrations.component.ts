@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
-import { Subscription } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type { SearchFilter } from '@components/search/search.component.types';
@@ -14,7 +13,7 @@ import { NxUriService } from '@services/uri.service';
 
 import { IntegrationService } from './integration.service';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'integrations-component',
     templateUrl: 'integrations.component.html',
@@ -37,9 +36,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         home: false,
         psim: false
     };
-
-    private integrationSubscription: Subscription;
-    private uriSubscription: Subscription;
 
     private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
@@ -66,15 +62,15 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
         // Example URI
         // /integrations?search=node
-        this.uriSubscription = this.uri
-            .getParams()
+        this.uri.getParams()
+            .pipe(untilDestroyed(this))
             .subscribe(params => {
                 this.params = { ...params };
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.integrationSubscription = this.integrations
-            .pluginsSubject
+        this.integrations.pluginsSubject
+            .pipe(untilDestroyed(this))
             .subscribe((result: any) => {
                 if (result) {
                     if (!this.CONFIG.cloudCapabilities.integrationStore) {

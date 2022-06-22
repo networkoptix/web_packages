@@ -6,7 +6,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
@@ -62,8 +62,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     mediaLayoutClass: string;
     selectedSubscription: Subscription;
-
-    private resizeSubscription: Subscription;
 
     constructor(
         configService: NxConfigService,
@@ -195,27 +193,32 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            if (width >= 768 && this.appStateService.headerVisibleSubject.getValue()) {
-                this.setHeaderHeight();
-            }
+        this.scrollMechanicsService.windowSizeSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(({ width }) => {
+                if (
+                    width >= 768 &&
+                this.appStateService.headerVisibleSubject.getValue()
+                ) {
+                    this.setHeaderHeight();
+                }
 
-            if (
-                this.scrollMechanicsService.mediaQueryMax(
-                    NxScrollMechanicsService.MEDIA.lg
-                )
-            ) {
-                this.mediaLayoutClass = 'mobileLayout';
-            } else if (
-                this.scrollMechanicsService.mediaQueryMin(
-                    NxScrollMechanicsService.MEDIA.xl
-                )
-            ) {
-                this.mediaLayoutClass = 'wideLayout';
-            } else {
-                this.mediaLayoutClass = '';
-            }
-        });
+                if (
+                    this.scrollMechanicsService.mediaQueryMax(
+                        NxScrollMechanicsService.MEDIA.lg
+                    )
+                ) {
+                    this.mediaLayoutClass = 'mobileLayout';
+                } else if (
+                    this.scrollMechanicsService.mediaQueryMin(
+                        NxScrollMechanicsService.MEDIA.xl
+                    )
+                ) {
+                    this.mediaLayoutClass = 'wideLayout';
+                } else {
+                    this.mediaLayoutClass = '';
+                }
+            });
     }
 
     setHeaderHeight(): void {

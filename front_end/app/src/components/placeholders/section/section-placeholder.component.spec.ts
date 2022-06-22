@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
+// import { DebugElement } from '@angular/core';
 import {
     waitForAsync,
     ComponentFixture,
@@ -18,7 +18,7 @@ import { NxSectionPlaceholderComponent } from './section-placeholder.component';
 describe('NxSectionPlaceholderComponent', () => {
     let component: NxSectionPlaceholderComponent;
     let fixture: ComponentFixture<NxSectionPlaceholderComponent>;
-    let el: DebugElement;
+    // let el: DebugElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -33,7 +33,7 @@ describe('NxSectionPlaceholderComponent', () => {
         fixture = TestBed.createComponent(NxSectionPlaceholderComponent);
         component = fixture.componentInstance;
         component.translatedMessage = 'Placeholder Title';
-        el = fixture.debugElement;
+        // el = fixture.debugElement;
     }));
 
     it('should create the component', () => {

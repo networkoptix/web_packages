@@ -4,8 +4,7 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -14,7 +13,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxRibbonService } from './ribbon.service';
 import type { RibbonAction } from './ribbon.types';
 
-@UntilDestroy({ checkProperties: true })
+@UntilDestroy()
 @Component({
     selector: 'nx-ribbon',
     templateUrl: 'ribbon.component.html',
@@ -28,7 +27,6 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     visibility: boolean;
     type: string;
     updateFunction;
-    private ribbonSubscription: Subscription;
 
     private setupDefaults(): void {
         this.visibility = false;
@@ -55,12 +53,14 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.ribbonSubscription = this.ribbonService.contextSubject.subscribe(context => {
-            this.visibility = context.visibility || false;
-            this.message = context.message || '';
-            this.actions = context.actions || [];
-            this.type = context.type || '';
-            this.updateFunction = context.updateFunction || '';
-        });
+        this.ribbonService.contextSubject
+            .pipe(untilDestroyed(this))
+            .subscribe(context => {
+                this.visibility = context.visibility || false;
+                this.message = context.message || '';
+                this.actions = context.actions || [];
+                this.type = context.type || '';
+                this.updateFunction = context.updateFunction || '';
+            });
     }
 }

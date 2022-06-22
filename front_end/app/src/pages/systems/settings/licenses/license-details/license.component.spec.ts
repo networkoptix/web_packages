@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { DebugElement } from '@angular/core';
+// import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,7 +24,7 @@ import { NxLicenseDetailComponent } from './license.component';
 describe('Licenses (Details)', () => {
     let component: NxLicenseDetailComponent;
     let fixture: ComponentFixture<NxLicenseDetailComponent>;
-    let el: DebugElement;
+    // let el: DebugElement;
 
     const systemMock = {};
 
@@ -54,7 +54,7 @@ describe('Licenses (Details)', () => {
             .then(() => {
                 fixture = TestBed.createComponent(NxLicenseDetailComponent);
                 component = fixture.componentInstance;
-                el = fixture.debugElement;
+                // el = fixture.debugElement;
             })
             .catch(err => console.error(err));
     }));

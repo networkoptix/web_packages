@@ -1,21 +1,18 @@
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
 
+@UntilDestroy()
 @Component({
     selector: 'sandbox-component',
     templateUrl: 'sandbox.component.html',
     styleUrls: ['sandbox.component.scss']
 })
-
 export class NxSandboxComponent {
     content: Content;
     menuReady = false;
-
-    private menuSectionSubscription: Subscription;
-    private menuSelectedDetailsSubscription: Subscription;
 
     constructor(
         private menuService: NxMenuService,
@@ -101,8 +98,8 @@ export class NxSandboxComponent {
         };
         this.menuReady = true;
 
-        this.menuSectionSubscription = this.menuService
-            .selectedSectionSubject
+        this.menuService.selectedSectionSubject
+            .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 if (this.content.selectedSection === selection) {
                     return;
@@ -111,8 +108,8 @@ export class NxSandboxComponent {
                 this.content = { ...this.content }; // trigger onChange
             });
 
-        this.menuSelectedDetailsSubscription = this.menuService
-            .selectedDetailsSection
+        this.menuService.selectedDetailsSection
+            .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
                 this.content = { ...this.content }; // trigger onChange
