@@ -2,9 +2,8 @@
     <h1
         class="modal-title"
         translate
+        >Move Cloud Storage</h1
     >
-        Move Cloud Storage
-    </h1>
     <button
         type="button"
         class="close"
@@ -33,16 +32,14 @@
             *ngIf="targetOnline$ | async"
             class="light-text"
             translate
+            >If selected system already has cloud storage, it will be merged with this one.</p
         >
-            If selected system already has cloud storage, it will be merged with this one.
-        </p>
         <p
             *ngIf="!(targetOnline$ | async)"
             class="mt-2 error-label"
             translate
+            >Cloud storage cannot be moved to offline systems.</p
         >
-            Cloud storage cannot be moved to offline systems.
-        </p>
     </div>
     <div class="modal-footer">
         <nx-process-button

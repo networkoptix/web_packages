@@ -1,27 +1,50 @@
-<form #systemGroupSettingsForm="ngForm" name="systemGroupSettingsForm" novalidate>
+<form
+    #systemGroupSettingsForm="ngForm"
+    name="systemGroupSettingsForm"
+    novalidate
+>
     <div class="modal-header">
-        <h1 class="modal-title" translate>Groups Import/Export</h1>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"
-                (click)="close()">
+        <h1
+            class="modal-title"
+            translate
+            >Groups Import/Export</h1
+        >
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+        >
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
     <div class="modal-body">
         <div class="form-group">
-            <label for="code" translate>Base64 System Groups Code</label>
-            <input class="form-control"
+            <label
+                for="code"
+                translate
+                >Base64 System Groups Code</label
+            >
+            <input
+                class="form-control"
                 id="code"
                 name="code"
                 [(ngModel)]="code"
-                autofocus required>
+                autofocus
+                required
+            />
         </div>
     </div>
     <div class="modal-footer">
         <nx-process-button
-                [form]="systemGroupSettingsForm"
-                [process]="systemGroupSettingsProcess"
-                [buttonText]="'Import' | translate"></nx-process-button>
-        <nx-cancel-button [process]="systemGroupSettingsProcess" [discardFn]="close"></nx-cancel-button>
+            [form]="systemGroupSettingsForm"
+            [process]="systemGroupSettingsProcess"
+            [buttonText]="'Import' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="systemGroupSettingsProcess"
+            [discardFn]="close"
+        ></nx-cancel-button>
     </div>
 </form>

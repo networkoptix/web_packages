@@ -1,12 +1,20 @@
 <form
     name="select-time-range-form"
     novalidate
-    [ngClass]="{'hide-errors': hideErrors}"
-    (submit)="hideErrors = false">
+    [ngClass]="{ 'hide-errors': hideErrors }"
+    (submit)="hideErrors = false"
+>
     <div class="modal-header">
-        <h1 class="modal-title" translate>Selection</h1>
-        <button type="button" class="close"
-            data-dismiss="modal" aria-label="Close"
+        <h1
+            class="modal-title"
+            translate
+            >Selection</h1
+        >
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
             (click)="closeModal($event)"
         >
             <span class="close-content"><span class="close-icon"></span></span>
@@ -14,9 +22,12 @@
     </div>
 
     <div class="modal-body">
-
         <div class="date-form-group">
-            <label class="control-label m-0" translate>Start</label>
+            <label
+                class="control-label m-0"
+                translate
+                >Start</label
+            >
             <div class="col-12 px-0">
                 <input
                     name="start-year"
@@ -28,23 +39,26 @@
                 <input
                     name="start-month"
                     type="number"
-                    min="1" max="12"
+                    min="1"
+                    max="12"
                     [ngModel]="start.month"
                     placeholder="month"
                     (ngModelChange)="handleChange($event, 'start', 'month')"
                 />
                 <input
                     name="start-day"
-                    min="1" max="31"
+                    min="1"
+                    max="31"
                     type="number"
                     [ngModel]="start.day"
                     placeholder="day"
                     (ngModelChange)="handleChange($event, 'start', 'day')"
                 />
-                <br>
+                <br />
                 <input
                     name="start-hour"
-                    min="0" max="23"
+                    min="0"
+                    max="23"
                     type="number"
                     [ngModel]="start.hour"
                     placeholder="hour"
@@ -52,7 +66,8 @@
                 />
                 <input
                     name="start-minute"
-                    min="0" max="59"
+                    min="0"
+                    max="59"
                     type="number"
                     [ngModel]="start.minute"
                     placeholder="minute"
@@ -62,7 +77,11 @@
         </div>
 
         <div class="date-form-group">
-            <label class="control-label m-0" translate>End</label>
+            <label
+                class="control-label m-0"
+                translate
+                >End</label
+            >
             <div class="col-12 px-0">
                 <input
                     name="end-year"
@@ -74,7 +93,8 @@
                 <input
                     name="end-month"
                     type="number"
-                    min="1" max="12"
+                    min="1"
+                    max="12"
                     [ngModel]="end.month"
                     placeholder="month"
                     (ngModelChange)="handleChange($event, 'end', 'month')"
@@ -82,16 +102,18 @@
                 <input
                     name="end-day"
                     type="number"
-                    min="1" max="31"
+                    min="1"
+                    max="31"
                     [ngModel]="end.day"
                     placeholder="day"
                     (ngModelChange)="handleChange($event, 'end', 'day')"
                 />
-                <br>
+                <br />
                 <input
                     name="end-hour"
                     type="number"
-                    min="0" max="23"
+                    min="0"
+                    max="23"
                     [ngModel]="end.hour"
                     placeholder="hour"
                     (ngModelChange)="handleChange($event, 'end', 'hour')"
@@ -99,17 +121,25 @@
                 <input
                     name="end-minute"
                     type="number"
-                    min="0" max="59"
+                    min="0"
+                    max="59"
                     [ngModel]="end.minute"
                     placeholder="minute"
                     (ngModelChange)="handleChange($event, 'end', 'minute')"
                 />
             </div>
         </div>
-
     </div>
     <div class="modal-footer">
-        <button (click)="save($event)"translate>Save</button>
-        <button (click)="closeModal($event)" translate>Cancel</button>
+        <button
+            (click)="save($event)"
+            translate
+            >Save</button
+        >
+        <button
+            (click)="closeModal($event)"
+            translate
+            >Cancel</button
+        >
     </div>
 </form>
