@@ -445,8 +445,14 @@ export class NxApplyService {
 
                         Object.keys(item.originalForm).forEach((key) => {
                             item.form.form.controls[key].setValue(item.originalForm[key]);
+                            setTimeout(() => {
+                                item.form.form.controls[key].touched = false;
+                                item.form.form.controls[key].pristine = true;
+                            });
                         });
 
+                        item.form.form.touched = false;
+                        item.form.form.pristine = true;
                         item.discard && item.discard();
                     }
                 });
