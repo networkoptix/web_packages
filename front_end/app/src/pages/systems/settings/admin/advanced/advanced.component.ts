@@ -21,8 +21,7 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 
 interface SystemSetting {
-    key: string,
-    value: any
+    [key: string]: unknown
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -42,7 +41,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     haveAdvSettings: boolean;
     private serverSubscription: Subscription;
 
-    systemSettings: SystemSetting;
+    systemSettings: SystemSetting = {};
     changedFields = {};
 
     advancedFormWatcher: FormWatcher;
@@ -171,7 +170,7 @@ export class NxSystemAdvancedAdminComponent implements OnDestroy {
     }
 
     settingsToBeDisplayedOrUpdated = (settings): void => {
-        Object.entries(settings).reduce((systemSettings, [key, value]) => {
+        Object.entries(settings).reduce((systemSettings: SystemSetting, [key, value]: [string, unknown]) => {
             // CLOUD-6350: Refactor advanced global settings page
             if (this.CONFIG.settingsConfig[key]?.hiddenInAdvanced) {
                 return systemSettings;

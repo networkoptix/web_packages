@@ -606,7 +606,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                         additionalLabel: camera.url.match(
                             /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
-                        )[0]
+                        )?.[0]
                     }));
             } else {
                 camerasNode.level3 = [];
