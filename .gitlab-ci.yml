@@ -1,4 +1,4 @@
-image: nx/ci:1.18
+image: nx/ci:1.20
 
 include:
   - project: "dev/ci"
