@@ -6,10 +6,12 @@
     <nx-header-logo-area
         class="logo"
         [isMobile]="true"
+        [isProfile]="isProfile$ | async"
         [menuOpen]="menuOpen$ | async"
     ></nx-header-logo-area>
     <svg-icon
         (click)="toggleMenuOpen()"
+        *ngIf="!(menuOpen$ | async); else closeButton"
         class="menu-button"
         nx-add-svg-src
         [src]="CONFIG.icons.dirHeader + 'menu.svg'"
@@ -20,6 +22,8 @@
 <nx-mobile-menu
     *ngIf="menuOpen$ | async"
     [menuNodes]="menuNodes"
+    [isProfile]="isProfile$ | async"
+    [loggedIn]="loggedIn"
     (nodeClicked)="toggleMenuOpen()"
 ></nx-mobile-menu>
 
@@ -43,6 +47,7 @@
         *ngSwitchCase="'profile'"
         class="user-section"
         nx-add-svg-src
+        (click)="openProfile()"
         [src]="CONFIG.icons.dirHeader + 'user.svg'"
         [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
     >
@@ -54,6 +59,15 @@
         nx-add-svg-src
         [src]="CONFIG.icons.dirHeader + 'return_to_systems.svg'"
         [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
+    >
+    </svg-icon>
+    <svg-icon
+        *ngSwitchCase="'return'"
+        (click)="toggleMenuOpen()"
+        class="user-section back-arrow"
+        nx-add-svg-src
+        [src]="CONFIG.icons.dir + 'arrow_back.svg'"
+        [svgStyle]="{ 'width.px': '27', 'height.px': '20' }"
     >
     </svg-icon>
     <span
@@ -68,6 +82,17 @@
         nx-add-svg-src
         [src]="CONFIG.icons.dirHeader + 'user.svg'"
         [svgStyle]="{ 'width.px': '34', 'height.px': '34' }"
+    >
+    </svg-icon>
+</ng-template>
+
+<ng-template #closeButton>
+    <svg-icon
+        (click)="toggleMenuOpen()"
+        class="menu-button close-btn"
+        nx-add-svg-src
+        [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+        [svgStyle]="{ 'width.px': '32', 'height.px': '20' }"
     >
     </svg-icon>
 </ng-template>

@@ -178,11 +178,21 @@
     --header-item-disabled                : #{$dark13};
     --header-level-two-hover-border-color : #{$dark11};
     --header-arrow-hover                  : #{$dark8};
+    --header-nav-arrow-bg                 : #{$dark7};
+
+    // Mobile header
     --mobile-header-bg                    : #{$dark4};
     --mobile-level-one-color              : #{$dark15};
     --mobile-level-two-color              : #{$light6};
-    --header-nav-arrow-bg                 : #{$dark7};
+    --mobile-header-svg-color             : #{$light1};
+    --mobile-header-border-one            : #{$dark2};
+    --mobile-header-border-two            : #{$dark5};
+    --mobile-header-border-three          : #{$dark3};
+    --mobile-header-item-nav-arrow        : #{$dark13};
+    --mobile-header-logout-btn-bg         : #{$dark12};
+    --mobile-header-logout-btn-color      : #{$light2};
 
+    // Header profile dropdown
     --header-profile-bg                   : #{$dark7};
     --header-profile-color                : #{$light13};
     --header-profile-hover-bg             : #{$dark9};

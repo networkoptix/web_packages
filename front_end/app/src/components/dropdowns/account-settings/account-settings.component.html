@@ -40,39 +40,18 @@
         aria-labelledby="accountSettingsSelect"
     >
         <ul class="dropdown-menu--list width-override">
-            <li
-                *ngIf="!environment.isLocal"
-                class="dropdown-item-container"
-            >
-                <a
-                    class="dropdown-item inset"
-                    (click)="hide()"
-                    routerLink="/account/"
-                    ><span translate>Account Settings</span>
-                </a>
-            </li>
-            <li
-                *ngIf="!environment.isLocal"
-                class="dropdown-item-container"
-            >
-                <a
-                    class="dropdown-item inset"
-                    (click)="hide()"
-                    routerLink="/account/password/"
-                    ><span translate>Change Password</span>
-                </a>
-            </li>
-            <li
-                *ngIf="!environment.isLocal"
-                class="dropdown-item-container"
-            >
-                <a
-                    class="dropdown-item inset"
-                    (click)="hide()"
-                    routerLink="/account/security/"
-                    ><span translate>Security</span>
-                </a>
-            </li>
+            <ng-container *ngIf="!environment.isLocal">
+                <li
+                    class="dropdown-item-container"
+                    *ngFor="let dropdownItem of CONFIG.accountDropdown"
+                >
+                    <ng-container
+                        *ngTemplateOutlet="
+                            dropdownItem.newWindow ? externalLink : routerLink;
+                            context: { dropdownItem: dropdownItem }"
+                    ></ng-container>
+                </li>
+            </ng-container>
             <li class="dropdown-item-container">
                 <a
                     class="dropdown-item inset"
@@ -90,21 +69,41 @@
                 class="dropdown-divider"
                 role="separator"
             ></li>
-
-            <li class="dropdown-item-container">
-                <a
-                    class="dropdown-item inset"
-                    (click)="this.show = false; (true)"
-                    href="/admin/"
-                    target="_blank"
-                >
-                    <span translate>Administration</span>
-                </a>
+            <li
+                class="dropdown-item-container"
+                *ngFor="let dropdownItem of CONFIG.accountDropdownStaff"
+            >
+                <ng-container
+                    *ngTemplateOutlet="
+                        dropdownItem.newWindow ? externalLink : routerLink;
+                        context: { dropdownItem: dropdownItem }"
+                ></ng-container>
             </li>
         </ul>
     </div>
 </div>
 
+
+<ng-template #routerLink let-dropdownItem="dropdownItem">
+    <a
+        class="dropdown-item inset"
+        (click)="hide()"
+        [routerLink]=dropdownItem.route
+    >
+        <span>{{ dropdownItem.name }}</span>
+    </a>
+</ng-template>
+
+<ng-template #externalLink let-dropdownItem="dropdownItem">
+    <a
+        class="dropdown-item inset"
+        (click)="hide(); true"
+        [attr.href]="dropdownItem.route"
+        target="_blank"
+    >
+        <span>{{ dropdownItem.name }}</span>
+    </a>
+</ng-template>
 
 <ng-template #newHeaderButton>
     <button class="btn auth-section" (click)="show = !show">

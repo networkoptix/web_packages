@@ -27,6 +27,30 @@ export const nxConfig: IConfig = {
     extendedRequestTimeout: 15 * 1000,
     apiRequestAttempts: 4, // combined with extendedRequestTimeout this mean we'll give up after 1 min
     maxNumberServerChecked: 6, // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
+    accountDropdown: [
+        {
+            name: 'Account Settings',
+            route: '/account/',
+            newWindow: false
+        },
+        {
+            name: 'Change Password',
+            route: '/account/password/',
+            newWindow: false
+        },
+        {
+            name: 'Security',
+            route: '/account/security/',
+            newWindow: false
+        }
+    ],
+    accountDropdownStaff: [
+        {
+            name: 'Administration',
+            route: '/admin/',
+            newWindow: true
+        }
+    ],
     animations: {
         carouselImage: {
             enter: '0.25s ease-in',

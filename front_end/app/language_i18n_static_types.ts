@@ -36,6 +36,7 @@ export interface LanguageI18NStaticTypes {
     dialogs:               Dialogs;
     downloads:             Downloads;
     errorCodes:            { [key: string]: any };
+    appHeader:             AppHeader;
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
@@ -118,6 +119,11 @@ export interface AlertFilters {
     all:     any;
     warning: any;
     error:   any;
+}
+
+export interface AppHeader {
+    mySystems:  any;
+    systemList: any;
 }
 
 export interface Authorize {
@@ -1413,6 +1419,7 @@ const typeMap: any = {
         { json: "dialogs", js: "dialogs", typ: r("Dialogs") },
         { json: "downloads", js: "downloads", typ: r("Downloads") },
         { json: "errorCodes", js: "errorCodes", typ: m("") },
+        { json: "appHeader", js: "appHeader", typ: r("AppHeader") },
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
@@ -1489,6 +1496,10 @@ const typeMap: any = {
         { json: "all", js: "all", typ: "any" },
         { json: "warning", js: "warning", typ: "any" },
         { json: "error", js: "error", typ: "any" },
+    ], false),
+    "AppHeader": o([
+        { json: "mySystems", js: "mySystems", typ: "any" },
+        { json: "systemList", js: "systemList", typ: "any" },
     ], false),
     "Authorize": o([
         { json: "loginCloudHeader", js: "loginCloudHeader", typ: "any" },

@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { logoAreaState, logoClickType } from '../new-header-types';
@@ -17,22 +19,24 @@ import { logoAreaState, logoClickType } from '../new-header-types';
 export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isMobile = false;
     @Input() menuOpen = false;
+    @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     logoState = logoAreaState.LOGO;
-    systemListText = 'System List';
-    constructor(public headerService: NxHeaderService, configService: NxConfigService) {
+    systemListText: string;
+    constructor(public headerService: NxHeaderService,
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService) {
         this.CONFIG = configService.getConfig();
-
+        this.LANG = languageService.translations;
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.checkLogoState(currentLocation);
         });
     }
 
     ngOnInit() {
-        if (this.isMobile) {
-            this.systemListText = 'My Systems';
-        }
+        this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems() : this.LANG.appHeader.systemList();
     }
 
     emitClick(clickType: logoClickType): void {
@@ -45,14 +49,22 @@ export class NxHeaderLogoAreaComponent implements OnInit {
             newLogoState = logoAreaState.SYSTEMS;
         } else if (this.headerService.activeSystem && currentLocation?.path?.includes('/systems/')) {
             newLogoState = logoAreaState.SYSTEM;
-        } else if (this.isMobile && this.menuOpen) {
-            newLogoState = logoAreaState.MOBILE_OPEN;
+        }
+        if (this.isMobile) {
+            if (this.menuOpen) {
+                if (this.isProfile) {
+                    newLogoState = logoAreaState.PROFILE_OPEN;
+                } else {
+                    newLogoState = logoAreaState.MOBILE_OPEN;
+                }
+            }
         }
         this.logoState = newLogoState;
     }
 
     ngOnChanges(changes: NgChanges<NxHeaderLogoAreaComponent>) {
-        if (changes.menuOpen?.currentValue !== changes.menuOpen?.previousValue) {
+        if (changes.menuOpen?.currentValue !== changes.menuOpen?.previousValue ||
+            changes.isProfile?.currentValue !== changes.isProfile?.previousValue) {
             this.checkLogoState(this.headerService.currentLocation);
         }
     }

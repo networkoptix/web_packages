@@ -20,6 +20,7 @@ export class NxHeaderMobileComponent {
     @Input() loggedIn: boolean;
     @Input() menuNodes: MenuNode[] = [];
     menuOpen$ = new BehaviorSubject(false);
+    isProfile$ = new BehaviorSubject(false);
     iconState: any;
     CONFIG: IConfig;
     constructor(configService: NxConfigService, public headerService: NxHeaderService) {
@@ -28,10 +29,21 @@ export class NxHeaderMobileComponent {
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
             this.setIconState(this.loggedIn, currentLocation?.path);
         });
+
+        this.menuOpen$.pipe(untilDestroyed(this)).subscribe(() => {
+            this.setIconState(this.loggedIn, this.headerService.currentLocation?.path);
+        });
     }
 
     toggleMenuOpen() {
+        this.isProfile$.next(false);
         this.menuOpen$.next(!this.menuOpen$.value);
+    }
+
+    openProfile() {
+        this.isProfile$.next(true);
+        this.menuOpen$.next(true);
+        this.setIconState(this.loggedIn, this.headerService.currentLocation?.path);
     }
 
     ngOnChanges(changes: NgChanges<NxHeaderMobileComponent>) {
@@ -44,11 +56,16 @@ export class NxHeaderMobileComponent {
         let state = mobileIconState.CREATE_ACCOUNT;
         if (loggedIn) {
             state = mobileIconState.PROFILE;
-            if (path === '/systems') {
-                state = mobileIconState.NONE;
-            } else if (this.headerService.activeSystem && path?.includes('/systems/')) {
-                state = mobileIconState.RETURN_TO_SYSTEMS;
+            if (!this.menuOpen$.value) {
+                if (path === '/systems') {
+                    state = mobileIconState.NONE;
+                } else if (this.headerService.activeSystem && path?.includes('/systems/')) {
+                    state = mobileIconState.RETURN_TO_SYSTEMS;
+                }
             }
+        }
+        if (this.isProfile$.value && this.menuOpen$.value) {
+            state = mobileIconState.RETURN;
         }
         this.iconState = state;
     }

@@ -1,5 +1,5 @@
 <div class="menu-container">
-    <div class="menu-items">
+    <div class="menu-items" *ngIf="!isProfile; else profile">
         <div
             *ngFor="let node of menuNodes"
             class="menu-item"
@@ -38,4 +38,53 @@
             </div>
         </div>
     </div>
+    <div class="account-button-wrapper">
+        <div class="account-button logout-button btn" (click)="logout()" *ngIf="loggedIn; else logIn" translate>
+            Log Out
+        </div>
+    </div>
 </div>
+
+
+<ng-template #profile>
+    <div class="menu-items">
+        <div
+        *ngFor="let node of profileMenu"
+        class="level-two-item"
+        >
+            <div
+                class="subnode"
+                (click)="nodeClick(node, $event)"
+                [ngClass]="{
+                    active:
+                        headerService.currentLocation?.path === node.url ||
+                        (!headerService.currentLocation?.path && node.url === 'content/about')
+                }"
+            >
+                {{ node.display_name }}
+                <svg-icon
+                    *ngIf="node.new_window"
+                    [src]="CONFIG.images.dirHeader + 'external_link.svg'"
+                ></svg-icon>
+            </div>
+            <div
+                class="nav-arrow"
+                (click)="nodeClick(node, $event)"
+            >
+                <svg-icon
+                    [src]="CONFIG.icons.dirHeader + 'nav_arrow.svg'"
+                    [svgStyle]="{ 'width.px': '8', 'height.px': '12' }"
+                ></svg-icon>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #logIn>
+    <a
+        [href]="headerService.authorizeUrl | unsafe" class="btn btn-primary account-button"
+        translate
+    >
+        Log In
+    </a>
+</ng-template>

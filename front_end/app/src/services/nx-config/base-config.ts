@@ -27,6 +27,8 @@ export interface BaseConfig {
     viewsDir?: string;
     previewPath?: string;
     alertTimeout: number;
+    accountDropdown: AccountDropdown[];
+    accountDropdownStaff: AccountDropdown[];
     longAlertTimeout: number;
     maxNumberServerChecked: number;
     extendedRequestTimeout: number;
@@ -230,6 +232,12 @@ export interface AccessRoles {
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
+}
+
+export interface AccountDropdown {
+    name: string,
+    route: string,
+    newWindow: boolean
 }
 
 export interface CameraSettings {
