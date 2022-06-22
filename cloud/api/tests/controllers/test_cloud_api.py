@@ -196,7 +196,9 @@ class TestSystemAPI:
         cloud_api_post_mock.assert_called_with(
             System.get_request_url('share'),
             json={'systemId': self.system_id,
-                  'accountEmail': share_email, 'accessRole': access_role},
+                  'accountEmail': share_email,
+                  'accessRole': access_role,
+                  'isEnabled': True},
             headers=self.headers
         )
         assert share.json() == self.sample_data

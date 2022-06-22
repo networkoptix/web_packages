@@ -37,11 +37,11 @@
 <div>
     <div>
         <h3>Group actions</h3>
-        <button onclick="send('create')">Create group</button>
-        <button onclick="send('delete')">Delete group</button>
+        <button onclick="send('create_group')">Create group</button>
+        <button onclick="send('delete_group')">Delete group</button>
         <button onclick="send('move_system')">Move system to group</button>
         <button onclick="send('move_group')">Move group to group</button>
-        <button onclick="send('list')">Update list</button>
+        <button onclick="send('list_groups')">Update list</button>
     </div>
     <div>
         <h3>Aggregated Calls</h3>
@@ -127,7 +127,7 @@
                     _systems[system.id] = system;
                     return _systems;
                 }, {});
-            } else if (action === 'list') {
+            } else if (action === 'list_group') {
                 const mapIdsToSystem = (groupSystems) => groupSystems
                     .filter(({id}) => systems.hasOwnProperty(id))
                     .map(system => ({...system, ...systems[system.id]}));

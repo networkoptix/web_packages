@@ -57,6 +57,7 @@ urlpatterns = [
     url(r'^systems/merge$',                          systems.merge),
     url(r'^systems/toggle2fa$',                      systems.toggle2fa),
     url(r'^systems/revokeToken$',                    systems.revoke_token),
+    url(r'^systems/group-users$',                    systems.system_groups_users_management),
     url(r'^systems/(?P<system_id>.+?)/accessRoles$', systems.access_roles),
     url(r'^systems/(?P<system_id>.+?)/auth$',        systems.get_auth),
     url(r'^systems/(?P<system_id>.+?)/code$',        systems.get_code),

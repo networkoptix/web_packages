@@ -386,3 +386,17 @@ def proxy(request, system_id, system_url):
         return api_success(data)
 
     return None
+
+
+@swagger_auto_schema(method="POST", auto_schema=None)
+@api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
+def system_groups_users_management(request):
+    require_params(request, ('systems', 'users'))
+    systems = request.data.get('systems')
+    users = request.data.get('users')
+    for system_id in systems:
+        for user in users:
+            cloud_api.System.share(
+                request, system_id, user.get('email'), user.get('role', ''), enabled=user.get('enabled', True))
+    return api_success()

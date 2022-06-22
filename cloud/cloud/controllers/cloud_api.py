@@ -393,13 +393,16 @@ class System(object):
     @staticmethod
     @validate_response
     @auto_refresh_token
-    def share(request, system_id, account_email, role, headers=None):
+    def share(request, system_id, account_email, role, enabled=True, headers=None):
         account_email = account_email.lower()
         params = {
             'systemId': system_id,
             'accountEmail': account_email,
-            'accessRole': role
+            'accessRole': role,
+            'isEnabled': enabled
         }
+        if not params['accessRole']:
+            del params['accessRole']
         return post_wrapper(System.get_request_url('share'), json=params, headers=headers)
 
     @staticmethod
