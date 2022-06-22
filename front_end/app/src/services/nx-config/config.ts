@@ -256,7 +256,8 @@ export const nxConfig: IConfig = {
         dirDevelopersDevtools: `/${staticBase}/images/developers/dev_tools/`,
         dirLanding: `/${staticBase}/images/landing/`,
         dirLandingGraphic: `/${staticBase}/images/landing/main_screen/`,
-        dirHeader: `/${staticBase}/images/header/`
+        dirHeader: `/${staticBase}/images/header/`,
+        dirTheme: `/${staticBase}/images/themes/`
     },
     integration: {
         adminLink: '/admin/cms/asset/%ID%/pages/',

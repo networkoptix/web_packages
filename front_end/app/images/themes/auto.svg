@@ -1,0 +1,14 @@
+<svg width="120" height="96" viewBox="0 0 120 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="60" width="60" height="96" fill="#EBEFF1"/>
+<rect width="60" height="96" fill="#212A2F"/>
+<path class="dark-brand-color" d="M12 78C12 76.8954 12.8954 76 14 76H54C55.1046 76 56 76.8954 56 78V82C56 83.1046 55.1046 84 54 84H14C12.8954 84 12 83.1046 12 82V78Z" fill="#076281"/>
+<path d="M12 50C12 48.8954 12.8954 48 14 48H60V56H14C12.8954 56 12 55.1046 12 54V50Z" fill="#303F47"/>
+<path d="M12 62C12 60.8954 12.8954 60 14 60H60V68H14C12.8954 68 12 67.1046 12 66V62Z" fill="#303F47"/>
+<path d="M12 30C12 28.8954 12.8954 28 14 28H60V40H14C12.8954 40 12 39.1046 12 38V30Z" fill="#445B67"/>
+<rect width="60" height="16" fill="#35464F"/>
+<path d="M60 48H106C107.105 48 108 48.8954 108 50V54C108 55.1046 107.105 56 106 56H60V48Z" fill="#CDD7DC"/>
+<path d="M60 60H106C107.105 60 108 60.8954 108 62V66C108 67.1046 107.105 68 106 68H60V60Z" fill="#CDD7DC"/>
+<path d="M60 28H106C107.105 28 108 28.8954 108 30V38C108 39.1046 107.105 40 106 40H60V28Z" fill="#B9C7CE"/>
+<rect width="60" height="16" transform="translate(60)" fill="#C3CFD5"/>
+<rect x="64" y="76" width="44" height="8" rx="2" fill="#B9C7CE"/>
+</svg>

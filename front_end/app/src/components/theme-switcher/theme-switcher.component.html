@@ -5,21 +5,74 @@
 
     <nx-section>
         <div class="d-flex flex-row themes">
-            <div
-                class="theme-light"
-                (click)="setTheme('light')"
-                [ngClass]="{ selected: theme === 'light' }"
-            ></div>
-            <div
-                class="theme-auto"
-                (click)="setTheme('auto')"
-                [ngClass]="{ selected: theme === 'auto' }"
-            ></div>
-            <div
-                class="theme-dark"
-                (click)="setTheme('dark')"
-                [ngClass]="{ selected: theme === 'dark' }"
-            ></div>
+            <div>
+                <div
+                    class="tile"
+                    (click)="setTheme('dark')"
+                    [ngClass]="{ selected: theme === 'dark' }"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.images.dirTheme + 'dark.svg'"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+                <div class="label">
+                    <svg-icon
+                        *ngIf="theme === 'dark'"
+                        nx-add-svg-src
+                        [src]="CONFIG.images.dirTheme + 'check.svg'"
+                        [applyClass]="true"
+                    ></svg-icon>
+                    <span translate>Dark</span>
+                </div>
+            </div>
+
+            <div>
+                <div
+                    class="tile"
+                    (click)="setTheme('light')"
+                    [ngClass]="{ selected: theme === 'light' }"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.images.dirTheme + 'light.svg'"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+                <div class="label">
+                    <svg-icon
+                        *ngIf="theme === 'light'"
+                        nx-add-svg-src
+                        [src]="CONFIG.images.dirTheme + 'check.svg'"
+                        [applyClass]="true"
+                    ></svg-icon>
+                    <span translate>Light</span>
+                </div>
+            </div>
+
+            <div>
+                <div
+                    class="tile"
+                    (click)="setTheme('auto')"
+                    [ngClass]="{ selected: theme === 'auto' }"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.images.dirTheme + 'auto.svg'"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+                <div class="label">
+                    <svg-icon
+                        *ngIf="theme === 'auto'"
+                        nx-add-svg-src
+                        [src]="CONFIG.images.dirTheme + 'check.svg'"
+                        [applyClass]="true"
+                    ></svg-icon>
+                    <span translate>Use device theme</span>
+                </div>
+            </div>
         </div>
     </nx-section>
 </nx-block>

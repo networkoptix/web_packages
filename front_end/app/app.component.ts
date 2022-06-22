@@ -112,31 +112,37 @@ export class AppComponent {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
 
-        // TODO: Add CMS flag after finishing tests
-        // also set default theme to "AUTO"
-        const themeSelected = this.localStorageService.retrieve('theme');
-        const darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
-        darkThemeMq.addEventListener('change', e => {
-            if (e.matches) {
-                this.window.document.documentElement.setAttribute('data-theme', 'dark');
-            } else {
-                this.window.document.documentElement.setAttribute('data-theme', 'light');
-            }
-        });
+        if (this.CONFIG.featureFlags.themesEnabled) {
+            let themeSelected = this.localStorageService.retrieve('theme');
+            const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
 
-        if (
-            themeSelected === 'auto' ||
-            themeSelected === null
-        ) {
-            !themeSelected && this.localStorageService.store('theme', 'auto');
-            if (darkThemeMq.matches) {
-                this.window.document.documentElement.setAttribute('data-theme', 'dark');
+            darkThemeMq.addEventListener('change', e => {
+                themeSelected = this.localStorageService.retrieve('theme');
+                if (themeSelected !== 'auto') {
+                    return;
+                }
+
+                if (e.matches) {
+                    this.window.document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                    this.window.document.documentElement.setAttribute('data-theme', 'light');
+                }
+            });
+
+            if (
+                themeSelected === 'auto' ||
+                themeSelected === null
+            ) {
+                !themeSelected && this.localStorageService.store('theme', 'auto');
+                if (darkThemeMq.matches) {
+                    this.window.document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } else {
+                this.window.document.documentElement.setAttribute(
+                    'data-theme',
+                    this.localStorageService.retrieve('theme')
+                );
             }
-        } else {
-            this.window.document.documentElement.setAttribute(
-                'data-theme',
-                this.localStorageService.retrieve('theme')
-            );
         }
 
         const url = new URL(this.window.location.href.replace('#/', ''));

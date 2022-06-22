@@ -1,36 +1,44 @@
 :host {
     .themes {
-        div {
-            width               : 120px;
-            height              : 100px;
-            cursor              : pointer;
-            border              : 1px solid var(--image-box-border-color);
-            background-position : center center;
-            background-repeat   : no-repeat;
-            background-size     : auto 100%;
-            background-image    : url("/static/images/themes/sprite.png");
+        .tile {
+            width         : 124px;
+            height        : 100px;
+            cursor        : pointer;
+            margin-right  : 24px;
+            border        : 2px solid transparent;
+            border-radius : 2px;
             
             &.selected {
-                border-color : var(--image-box-selected-border-color);
+                border-color : var(--image-box-selected-border-color) !important;
+                
             }
             
-            &.theme-light {
-                opacity             : .9;
-                background-position : 0 0;
-            }
-            
-            &.theme-auto {
-                opacity             : .9;
-                margin-left         : 1rem;
-                background-position : -117px 0;
-            }
-            
-            &.theme-dark {
-                margin-left         : 1rem;
-                background-position : -234px 0;
+            svg-icon svg {
+                .dark-brand-color {
+                    fill : var(--brand-d4);
+                }
+                
+                .bright-brand-color {
+                    fill : var(brand-core);
+                }
             }
         }
         
-        
+        .label {
+            margin-top : 9px;
+            color: var(--label-color);
+            
+            svg-icon {
+                margin-right: 8px;
+                
+                svg {
+                    margin-top : -4px;
+    
+                    path {
+                        stroke : var(--label-color);
+                    }
+                }
+            }
+        }
     }
 }

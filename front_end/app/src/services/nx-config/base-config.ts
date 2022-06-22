@@ -475,6 +475,7 @@ export interface Images {
     dirLanding: string;
     dirLandingGraphic: string;
     dirHeader: string;
+    dirTheme: string;
 }
 
 export interface Platform {
