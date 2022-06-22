@@ -1,4 +1,4 @@
-image: nx/ci:1.18
+image: nx/ci:1.20
 
 include:
   - project: "dev/ci"
@@ -47,7 +47,7 @@ stages:
   - else
   -   TARGET_BRANCH_NAME=$(get_target_protected_branch.py
         --gitlab-server-url=${CI_SERVER_URL}
-        --gitlab-token=$(cat "${GITLAB_API_TOKEN}")
+        --gitlab-token="${GITLAB_API_TOKEN}"
         --project-id=${CI_PROJECT_ID}
         --merge-request-iid=${CI_MERGE_REQUEST_IID})
   - fi
