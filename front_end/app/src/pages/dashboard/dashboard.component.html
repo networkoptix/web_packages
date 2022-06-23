@@ -42,8 +42,11 @@
         <div class="menu-item" (click)="addWidget()" translate>Add widget</div>
         <a class="menu-item" (click)="prepareConfigDownload()" [href]="settingsDownloadLink"
           [download]="downloadFileName" translate>Download dashboard config </a>
-        <label for="settings_upload" class="menu-item" [ngClass]="{disabled:!dragEnabled}"
-          [nxTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''" translate>Apply existing config</label>
+        <label for="settings_upload"
+               class="menu-item"
+               [ngClass]="{ 'disabled-input-label': !dragEnabled }"
+               [nxTooltip]="!dragEnabled ? LANG.dashboard.unlockToUpload() : ''"
+               translate>Apply existing config</label>
         <input type="file" id="settings_upload" (change)="handleConfigUpload($event)" [disabled]="!dragEnabled">
       </div>
     </div>

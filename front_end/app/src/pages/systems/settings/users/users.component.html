@@ -83,6 +83,7 @@
                     <div class="form-group d-md-table-row d-flex flex-column">
                         <label for="fullName"
                             class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            [ngClass]="{ 'disabled-input-label': !(environment.isLocal && selectedUser.isMe) && !selectedUser.canBeEdited }"
                             translate>Name</label>
                         <input type="text" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             [(ngModel)]="fullName"
@@ -93,6 +94,7 @@
                     <div class="form-group d-md-table-row d-flex flex-column">
                         <label for="email"
                             class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            [ngClass]="{ 'disabled-input-label': !(environment.isLocal && selectedUser.isMe) && !selectedUser.canBeEdited }"
                             translate>Email</label>
                         <input type="email" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             [(ngModel)]="email"

@@ -76,16 +76,22 @@
                                         #targets="cdkTextareaAutosize" disabled></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="subject">subject (required)</label>
+                                    <label for="subject"
+                                        [ngClass]="{ 'disabled-input-label': selectedNotificationType.name !== notificationTypes[0].name }"
+                                    >subject (required)</label>
                                     <input [(ngModel)]="subject" (input)="updatePreview()" type="text" id="subject" [disabled]="selectedNotificationType.name !== notificationTypes[0].name">
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="subject">messageHtml</label>
+                                    <label for="subject"
+                                        [ngClass]="{ 'disabled-input-label': selectedNotificationType.name !== notificationTypes[0].name }"
+                                    >messageHtml</label>
                                     <textarea [(ngModel)]="messageHtml" (input)="updatePreview()" id="messageHtml"
                                         cdkTextareaAutosize [cdkAutosizeMinRows]="4" [disabled]="selectedNotificationType.name !== notificationTypes[0].name"></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="subject">messageText</label>
+                                    <label for="subject"
+                                        [ngClass]="{ 'disabled-input-label': selectedNotificationType.name !== notificationTypes[0].name }"
+                                    >messageText</label>
                                     <textarea [(ngModel)]="messageText" (input)="updatePreview()" id="messageText"
                                         cdkTextareaAutosize [cdkAutosizeMinRows]="2" [disabled]="selectedNotificationType.name !== notificationTypes[0].name"></textarea>
                                 </div>
