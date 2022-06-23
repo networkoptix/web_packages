@@ -471,7 +471,7 @@
             "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "ログイン",

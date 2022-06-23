@@ -471,7 +471,7 @@
             "serversRestart": "Reinicie o servidor&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do %CLOUD_NAME% para excluir sua conta."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "Entrar",

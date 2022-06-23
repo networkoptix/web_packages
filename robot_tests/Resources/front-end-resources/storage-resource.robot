@@ -3,6 +3,25 @@ Resource          ../../resource.robot
 Resource          system-camera-resource.robot
 Resource          system-server-resource.robot
 
+*** Variables ***
+#${QA BURBANK IP}     10.1.5.34
+${password}    ${BASE PASSWORD}
+${url}         ${ENV}
+${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
+${storage string 2}    ${EMPTY}
+${camera}      00-09-18-64-EE-7D
+${camera url}    10.1.5.168
+${camera manufacturer}    3100
+${camera user}    admin
+${camera password}    QAbur777$
+${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+${disk location}    /media/nxwitness-storages/disk1
+${backup initialized}    ${FALSE}
+${change focus}    //h4[contains(text(),"Storage")]
+@{disk size}    80000    30000    30000    12000    12000
+${networkdisk}    //${QA BURBANK IP}/networkdisk
+${drives}    5
+
 *** Keywords ***
 Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)

@@ -471,7 +471,7 @@
             "serversRestart": "Server &nbsp;<strong>{ title }</strong> neu starten?"
         },
         "tooltips": {
-            "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "Login",

@@ -66,10 +66,19 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         const offlineStatus = [504, 502, 0].includes(status);
         const errorStatus = [504, 502, 0].includes(this.appState.lastErrorStatus$.value);
 
-        if (res instanceof HttpErrorResponse && offlineStatus && offlineStatus !== errorStatus) {
+        if (
+            res instanceof HttpErrorResponse &&
+            offlineStatus &&
+            offlineStatus !== errorStatus
+        ) {
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
-        } else if (res instanceof HttpErrorResponse && [401].includes(status)) {
+        } else if (
+            res instanceof HttpErrorResponse &&
+            (status === 401 ||
+            status === 422 &&
+            res.url.includes('rest/v1/login/sessions'))
+        ) {
             // Session expired
             if (this.isDialogActive) {
                 return;

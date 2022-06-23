@@ -587,6 +587,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.cameraManager.cameras.sort(
                     paramSortFunc(camera => camera.name)
                 );
+                const getCameraIP = cameraUrl => cameraUrl.match(
+                    /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
+                )?.[0];
                 camerasNode.level3 = this.system.cameraManager.cameras
                     .map<Level3Item>(camera => ({
                         id: camera.id.replace(/\s|\{|\}/g, ''),
@@ -596,9 +599,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         label: camera.name,
                         indent: true,
                         path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                        additionalLabel: camera.url.match(
-                            /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/
-                        )?.[0]
+                        additionalLabel: getCameraIP(camera.url)
                     }));
             } else {
                 camerasNode.level3 = [];

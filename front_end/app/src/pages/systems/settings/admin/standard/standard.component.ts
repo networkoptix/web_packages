@@ -274,17 +274,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         };
 
         this.saveSettings = this.processService.createProcess(() => {
-            if (this.applyService.forms.systemAndSecuritySettingsForm.changedFields.has('mandatory2fa')) {
-                return this.handleMandatory2fa().finally(() => {
-                    if (this.applyService.forms.systemAndSecuritySettingsForm.changedFields.size > 1) {
-                        return this.updateSettings();
-                    } else {
-                        return Promise.resolve();
-                    }
-                });
-            } else {
-                return this.updateSettings();
-            }
+            return this.updateSettings();
         });
     }
 
@@ -336,6 +326,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
     }
 
+    check2fa(event) {
+        event.preventDefault();
+        this.handleMandatory2fa();
+    }
+
     // handle mandatory 2fa
     async handleMandatory2fa(): Promise<any> {
         if (this.is2faDialogActive) {
@@ -344,22 +339,21 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
         // @ts-expect-error
         this.is2faDialogActive = await this.dialogService
-            .toggleSystem2fa(this.system, this.system2faEnabled)
+            .toggleSystem2fa(this.system, !this.system2faEnabled) // using !this.system2faEnabled as click event was canceled --TT
             .then(res => {
-                if (!res || res === 'cancel' || res === 'GOTO_SECURITY') {
+                if (res === 'success') {
                     this.system2faEnabled = !this.system2faEnabled;
-                    this.applyService.forms.systemAndSecuritySettingsForm.originalForm.system2faEnabled = this.system2faEnabled;
+                }
 
-                    if (res === 'GOTO_SECURITY') {
-                        // let apply service process to finish
-                        setTimeout(() => {
-                            this.router
-                                .navigate(['/account/security'])
-                                .catch(error => {
-                                    console.error(error);
-                                });
-                        });
-                    }
+                if (res === 'GOTO_SECURITY') {
+                    // let apply service process to finish
+                    setTimeout(() => {
+                        this.router
+                            .navigate(['/account/security'])
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    });
                 }
             }).finally(() => {
                 this.is2faDialogActive = undefined;
