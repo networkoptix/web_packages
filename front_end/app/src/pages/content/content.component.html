@@ -4,17 +4,21 @@
     <ng-container *ngIf="title || body">
         <h1>{{ title }}</h1>
         <div class="card">
-            <div class="card-body"
-                [innerHTML]="body | safe: 'html'">
+            <div
+                class="card-body"
+                [innerHTML]="body | safe: 'html'"
+            >
             </div>
         </div>
     </ng-container>
 
-    <nx-process-button *ngIf="showAgree"
-                       customClass="mt-3"
-                       actionType="primary"
-                       [process]="agreeProcess"
-                       [buttonText]="'Agree' | translate"></nx-process-button>
+    <nx-process-button
+        *ngIf="showAgree"
+        customClass="mt-3"
+        actionType="primary"
+        [process]="agreeProcess"
+        [buttonText]="'Agree' | translate"
+    ></nx-process-button>
 
     <nx-footer></nx-footer>
 </div>

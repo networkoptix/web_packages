@@ -1,25 +1,40 @@
-
 <a
     class="inset menu-level-1 ellipsis"
-    [ngClass]="{'selected': selected, 'collapsed': _toggle}"
+    [ngClass]="{ selected: selected, collapsed: _toggle }"
     [id]="item.id"
     (click)="menuClick(item.id)"
 >
-
-    <div class="menu-level-1-icon" *ngIf="item.icon">
-        <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
+    <div
+        class="menu-level-1-icon"
+        *ngIf="item.icon"
+    >
+        <span
+            class="m-0 glyphicon"
+            [ngClass]="item.icon"
+        ></span>
     </div>
-    <div class="menu-level-1-icon" *ngIf="item.svg">
+    <div
+        class="menu-level-1-icon"
+        *ngIf="item.svg"
+    >
         <svg-icon
             nx-add-svg-src
-            [src]="CONFIG.icons.dir + item.svg +'.svg'"
+            [src]="CONFIG.icons.dir + item.svg + '.svg'"
             [applyClass]="true"
-            [svgStyle]="{'width.px': '24', 'height.px': '24'}"
+            [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
         ></svg-icon>
     </div>
-    <span><ng-container>{{item.label}}</ng-container></span>
-    <div *ngIf="item.alerts" class="menu-level-1-alerts">
-        <div *ngFor="let alert of item.alerts" class="pr-2">
+    <span
+        ><ng-container>{{ item.label }}</ng-container></span
+    >
+    <div
+        *ngIf="item.alerts"
+        class="menu-level-1-alerts"
+    >
+        <div
+            *ngFor="let alert of item.alerts"
+            class="pr-2"
+        >
             <nx-alert-counter
                 *ngIf="alert.count !== undefined && alert.count > 0"
                 [count]="alert.count"
@@ -29,17 +44,24 @@
     </div>
 
     <div>
-        <div class="search-results-label" *ngIf="searchMode && _toggle">
+        <div
+            class="search-results-label"
+            *ngIf="searchMode && _toggle"
+        >
             <span
                 translate
                 [translateParams]="{ count: _searchableItemsLength }"
-            >result</span>
+                >result</span
+            >
         </div>
-        <div class="search-results" *ngIf="searchMode">
+        <div
+            class="search-results"
+            *ngIf="searchMode"
+        >
             <svg-icon
                 nx-add-svg-src
                 [src]="CONFIG.icons.dirTextButtons + _type + '.svg'"
-                [svgStyle]="{'width.px': '20', 'height.px': '20'}"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
             ></svg-icon>
         </div>
     </div>

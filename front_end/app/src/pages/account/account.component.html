@@ -1,6 +1,12 @@
-<nx-pre-loader type="page" *ngIf="!menuReady"></nx-pre-loader>
+<nx-pre-loader
+    type="page"
+    *ngIf="!menuReady"
+></nx-pre-loader>
 
-<div class="block-container mt-3" *ngIf="menuReady">
+<div
+    class="block-container mt-3"
+    *ngIf="menuReady"
+>
     <div class="row">
         <div class="col-12 col-md-4 col-xl-3">
             <nx-menu [content]="content"></nx-menu>

@@ -1,23 +1,30 @@
 <div class="mb-3">
     <ng-container *ngIf="!environment.isLocal">
-    <nx-select
-        [id]="'avail-systems'"
-        [type]="'api-tool'"
-        [stillLoading]="!this.systems.length || (!this.APIToolSystemService.currentSystemId  && !this.readonlyAPIService.currentReadonlyAPI) || this.APIToolSystemService.systemChangeLockout"
-        [items]="systems"
-        [selected]="system"
-        (onSelected)="onSystemChange($event)">
-    </nx-select>
-    <nx-select
-        *ngIf="serverDropdownEnabled && !environment.isLocal && servers"
-        [type]="'api-tool'"
-        class="mt-2"
-        [id]="'avail-systems'"
-        [stillLoading]="APIToolSystemService.loading$ | async"
-        [items]="servers"
-        [selected]="server"
-        (onSelected)="onServerChange($event)">
-    </nx-select>
+        <nx-select
+            [id]="'avail-systems'"
+            [type]="'api-tool'"
+            [stillLoading]="
+                !this.systems.length ||
+                (!this.APIToolSystemService.currentSystemId &&
+                    !this.readonlyAPIService.currentReadonlyAPI) ||
+                this.APIToolSystemService.systemChangeLockout
+            "
+            [items]="systems"
+            [selected]="system"
+            (onSelected)="onSystemChange($event)"
+        >
+        </nx-select>
+        <nx-select
+            *ngIf="serverDropdownEnabled && !environment.isLocal && servers"
+            [type]="'api-tool'"
+            class="mt-2"
+            [id]="'avail-systems'"
+            [stillLoading]="APIToolSystemService.loading$ | async"
+            [items]="servers"
+            [selected]="server"
+            (onSelected)="onServerChange($event)"
+        >
+        </nx-select>
     </ng-container>
     <nx-select
         *ngIf="!(APIToolSystemService.outDatedSystem$ | async)"
@@ -26,7 +33,8 @@
         [selected]="type"
         (onSelected)="onTypeChange($event)"
         [stillLoading]="APIToolSystemService.loading$ | async"
-        [ngClass]="environment.isLocal? 'mb-3' : 'mt-2'">
+        [ngClass]="environment.isLocal ? 'mb-3' : 'mt-2'"
+    >
     </nx-select>
     <nx-version-message *ngIf="!(APIToolSystemService.loading$ | async)"></nx-version-message>
 </div>

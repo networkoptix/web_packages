@@ -1,19 +1,28 @@
 <a
     class="menu-level-2 ellipsis"
-    [ngClass]="{'selected': selected, 'item-disabled': item.disabled }"
+    [ngClass]="{ selected: selected, 'item-disabled': item.disabled }"
     [id]="item.id"
     [routerLink]="[itemPath]"
     [queryParams]="item.query"
 >
-    <div class="menu-level-2-icon" *ngIf="item.icon">
+    <div
+        class="menu-level-2-icon"
+        *ngIf="item.icon"
+    >
         <span
-            class="m-0 glyphicon {{item.icon}}"
-            [ngClass]="{'selected': selected, 'item-disabled': item.disabled}"
+            class="m-0 glyphicon {{ item.icon }}"
+            [ngClass]="{ selected: selected, 'item-disabled': item.disabled }"
         ></span>
     </div>
-    <div class="ellipsis" >
-        <span [innerText]="item.label" class="user"></span>
-        <span *ngIf="item.additionalLabel" class="menu-level-2-additional">
+    <div class="ellipsis">
+        <span
+            [innerText]="item.label"
+            class="user"
+        ></span>
+        <span
+            *ngIf="item.additionalLabel"
+            class="menu-level-2-additional"
+        >
             <span class="ml-1 mr-1">&ndash;</span>
             <span [outerHTML]="item.additionalLabel | safe: 'html'"></span>
         </span>
