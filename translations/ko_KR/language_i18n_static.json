@@ -1,7 +1,7 @@
 {
-    "language": "en_US",
+    "language": "ko_KR",
     "About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
-    "All Servers": "All Servers",
+    "All Servers": "모든 서버",
     "Download %VMS_NAME%": "%VMS_NAME% 다운로드",
     "For developers": "개발자용",
     "Integrations (β)": "통합 (베타)",
@@ -10,10 +10,13 @@
     "Terms": "이용 약관",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "서버",
         "Cameras": "카메라",
-        "Storage Locations": "Storage Locations",
+        "Storage Locations": "저장 위치",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
@@ -92,14 +95,14 @@
         }
     },
     "account": {
-        "account": "Account",
+        "account": "계정",
         "key": "Key",
         "accountSavedSuccess": "계정이 성공적으로 저장되었습니다.",
         "accountSettings": "계정 설정",
         "activationLinkSent": "활성화 링크 전송",
         "agreementAccepted": "결제가 완료되었습니다.",
         "changePassword": "패스워드 변경",
-        "security": "Security",
+        "security": "보안",
         "newPasswordLabel": "새 패스워드",
         "passwordChangedSuccess": "암호가 정상적으로 저장되었습니다",
         "saveChanges": "저장"
@@ -111,17 +114,17 @@
         "setNewPasswordLabel": "새 패스워드"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
+        "loginCloudHeader": "%CLOUD_NAME%에 로그인",
+        "connectHeader": "%CLOUD_NAME% 시스템에 연결",
+        "expiredHeader": "세션이 만료되었습니다.",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
         "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "createText": "계정 만들기",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
+        "toAccountSubheader": "받는 사람",
         "forAccountSubheader": "For {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
@@ -131,9 +134,9 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "createAccountHeader": "%CLOUD_NAME% 계정 만들기",
         "activateHeader": "Activate %CLOUD_NAME% Account",
-        "createdText": "Account Created!",
+        "createdText": "계정 생성됨!",
         "activatedText": "Account Activated!",
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
@@ -142,12 +145,12 @@
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "confirmHeader": "%CLOUD_NAME%에 연결 된 시스템!",
+        "loginError": "%CLOUD_NAME%에 연결할 수 없습니다.",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "나중에 다시 시도하십시오.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
+        "connectedText": "%CLOUD_NAME%에 연결 된 시스템",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
@@ -155,7 +158,7 @@
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "로그인"
         },
         "emailSent": "Email sent!"
     },
@@ -272,7 +275,7 @@
         "unlockToMove": "Unlock dashboard to move widgets"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "만들다"
     },
     "dialogs": {
         "twoFa": {
@@ -289,8 +292,8 @@
             "createAccount": "새 계정 만들기",
             "delete": "삭제",
             "deleteAccount": "계정 삭제",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "비활성화",
+            "enable": "사용",
             "download": "%VMS_NAME% 다운로드",
             "logoutAuthorised": "로그 아웃",
             "ok": "확인",
@@ -349,20 +352,21 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "관리자의 비밀번호가 잘못되었습니다.",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "확인...",
             "cloud": "클라우드",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "선택한 시스템과 현재 시스템이 모두 %CLOUD_NAME% 연결되어 있고 다른 소유자가 있습니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
             "duplicateServers": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "latestBuild": "최신 빌드",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "시스템 {primaryName} 과 {secondaryName} 병합 완료",
             "mergeSystemsTitle": "와 현재 시스템을 병합",
             "noServerFound": "미디어 서버 없음",
             "newSystemDisplayName": "새로운 시스템",
@@ -391,7 +395,7 @@
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{targetSystem} is inaccessible",
+            "systemOfflineUrl": "{targetSystem} 시스템 접근 권한이 없습니다.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the {downloadHTML}.",
             "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update %targetSystem% to the {downloadHTML} to merge it with the current one.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the {downloadHTML} to merge it with the {targetSystem} system.",
@@ -429,21 +433,21 @@
                 "ipvd_feedback_page": "카메라 페이지에 대한 피드백"
             },
             "twoFactor": {
-                "required": "Two-factor authentication is required.",
+                "required": "이중 인증이 필요합니다.",
                 "configure": "You can configure it in your",
-                "accountLink": "account settings",
+                "accountLink": "계정 설정",
                 "codeRequired": "Code is required"
             }
         },
         "removeSystem": {
             "action": "연결 끊기",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "이 시스템을 당신의 계정과의 연결을 해제하려고합니다. 더 이상이 시스템에 액세스 할 수 없습니다. 확실합니까?",
+            "title": "시스템 연결을 끊으시겠습니까?"
         },
         "renewAuth": {
             "action": "Login",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "세션이 만료되었습니다."
         },
         "titles": {
             "error": "오류",
@@ -451,16 +455,16 @@
             "changeAccount": "이미 로그인 한 상태입니다 {email}",
             "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "사용자를 삭제하시겠습니까?",
-            "failedLoginTo": "Failed to login to {systemName}",
+            "failedLoginTo": "{systemName}에 로그인 하지 못했습니다.",
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
-            "removeUser": "Remove user",
+            "removeUser": "사용자를 삭제 하시겠습니까",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "%CLOUD_NAME% 포털에서 귀하가 소유 한 모든 시스템을 연결 해제하여 계정을 삭제하십시오."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "Login",
@@ -553,7 +557,7 @@
         "This authorization method is forbidden. Please contact your system administrator.": "이 승인 방법은 허용되지 않습니다. 시스템 관리자에게 문의하십시오.",
         "This user does not exist.": "이 사용자는 존재하지 않습니다",
         "The user is disabled. Please contact your system administrator.": "사용자가 비활성화 되었습니다. 시스템 관리자에게 문의하십시오.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "This user has been disabled by a system administrator.": "이 사용자는 시스템 관리자에 의해 비활성화되었습니다.",
         "cloud_systems_have_different_owners": "이 시스템은 %CLOUD_NAME%연결되어 있지만 소유자가 다릅니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -591,7 +595,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "잘못된 암호",
-        "badUsername": "Account not found",
+        "badUsername": "계정을 찾을 수 없습니다",
         "notFound": "찾을 수 없습니다",
         "ok": "ok",
         "oldPasswordMistmatch": "현재 패스워드가 잘못되었습니다.",
@@ -665,6 +669,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
@@ -678,9 +683,9 @@
             "servers": "서버",
             "alerts": "Alerts",
             "systems": "시스템",
-            "storages": "Storage Locations",
+            "storages": "저장 위치",
             "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "graphs": "그래프",
             "logs": "Logs"
         }
     },
@@ -696,7 +701,7 @@
         "activateCode": "계정 활성화",
         "activateSuccess": "계정 활성화 됨",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "권한 부여",
         "changePassword": "암호 변경",
         "debug": "디버그",
         "default": "%CLOUD_NAME%",
@@ -720,7 +725,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "카메라 보기",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "보안",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -753,7 +758,7 @@
             "message": {
                 "dependingOnSize": "데이터베이스 크기에 따라 최대 몇 시간이 소요될 수 있습니다.",
                 "untilFinished": "병합이 완료 될 때까지 현재 시스템에 접속하여 비디오를 볼 수는 있지만 설정을 변경할 수는 없습니다.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {systemName} system, and this system will be deleted."
+                "whenFinished": "병합이 완료되면 이 시스템의 모든 사용자와 카메라를 {systemName} 시스템에서 사용할 수 있게 되고, 이 시스템은 삭제됩니다."
             }
         },
         "server": {
@@ -784,7 +789,7 @@
         },
         "finishingMerge": "시스템 병합을 마무리중입니다",
         "integration": {
-            "accept": "Accept",
+            "accept": "수락",
             "reject": "Reject",
             "backToEditText": "편집 인터페이스로 돌아 가기",
             "previewRibbon": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다.",
@@ -821,8 +826,8 @@
         "detachSystemFailed": "시스템에서 서버를 분리하지 못했습니다. 입력 한 비밀번호가 올 바르고 서버가 온라인인지 확인한 후 다시 시도하십시오.",
         "detachSystemSuccess": "서버에서 사용자가 제거되었습니다.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "새로고침",
+        "refreshing": "새로 고침 중...",
         "removeMediaserverFailed": "시스템에서 서버를 제거하지 못했습니다.",
         "resetFailed": "시스템에서 서버를 분리하지 못했습니다. 입력 한 비밀번호가 올 바르고 서버가 온라인인지 확인한 후 다시 시도하십시오.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -839,14 +844,14 @@
         "successRename": "서버 이름이 저장됨"
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
-        "Monitoring": "Monitoring"
+        "View": "보기",
+        "Settings": "설정",
+        "Information": "정보",
+        "Bookmarks": "즐겨찾기",
+        "Monitoring": "모니터링"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "연결됨",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
@@ -858,7 +863,7 @@
             "sessionLimitDuration": {
                 "hours": "시간",
                 "minutes": "분",
-                "days": "days"
+                "days": "일"
             },
             "warningMessages": {
                 "videoEncryption": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다."
@@ -900,10 +905,10 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "로컬",
             "usb": "USB",
             "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "smb": "VMS를 통해 추가된 네트워크(smb)",
             "cloud": "클라우드"
         },
         "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
@@ -922,7 +927,7 @@
         "nameFail": "Failed to change {type} name",
         "noConnection": "%CLOUD_NAME% 과의 연결을 복원하고 다시 시도하십시오.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "변경 내용을 저장 하지 못했습니다.",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
@@ -932,12 +937,12 @@
                 "success": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다."
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "%CLOUD_NAME%에 연결 된 시스템",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "시스템 머지에 실패했습니다.",
-                "success": "System merge completed"
+                "success": "시스템 머지가 완료되었습니다."
             },
             "rename": {
                 "success": "시스템 이름 저장"
@@ -952,10 +957,10 @@
             "info": "안내",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "활동"
         },
         "keys": {
-            "name": "Name",
+            "name": "이름",
             "servers": "서버",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -984,7 +989,7 @@
             "publicIp": "Public IP",
             "os": "OS",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "VMS 시간",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1014,7 +1019,7 @@
             "IO Module": "IO장치",
             "Bridge": "연결",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "유효하지 않음"
         },
         "info": {
             "type": "형식",
@@ -1029,12 +1034,12 @@
             "expired": "만료",
             "ok": "확인",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "서버를 찾을 수 없음"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} 더 필요",
             "activated": "라이선스 키 활성화 되었습니다.",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "라이선스 키가 이미 활성화되어 있으며, 다른 시스템의 서버 하드웨어 ID {hwid}에 귀속 되었습니다.",
             "trialActivated": "체험용 라이선스가 활성화 되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다."
         }
     },
@@ -1145,7 +1150,7 @@
     "security": {
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
+            "systemsRemainder": "그리고 {count} 더...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
@@ -1159,18 +1164,18 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
-            "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
-            "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "main": "메인",
+            "backup": "백업",
+            "notInUse": "사용하지 않음",
+            "reserved": "예약됨",
+            "inaccessible": "접속불가",
+            "changing": "모드 변경 중...",
+            "disabled": "비활성화"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
-        "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
+        "failed": "외부 스토리지를 추가하지 못했습니다.",
+        "invalidPath": "잘못된 저장 경로",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",
@@ -1178,7 +1183,7 @@
         "reservedTooSmallTooltip": "This storage location cannot be used for recording because it is too small, and there are other larger storage locations available for recording.",
         "reservedSystemTooltip": "This storage location cannot be used for recording because it’s system storage and there are other larger storage locations available for recording.",
         "serverOffline": "Failed to add external storage - server doesn't respond",
-        "success": "External storage added",
+        "success": "외부 저장소 추가",
         "urlPlaceholder": "//<Computer Name>/<Folder>"
     },
     "metaDefaults": {

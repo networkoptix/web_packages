@@ -1,7 +1,7 @@
 {
     "language": "en_US",
     "About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Tutti i server",
     "Download %VMS_NAME%": "Scarica %VMS_NAME%",
     "For developers": "Per gli sviluppatori",
     "Integrations (β)": "Integrazioni (β)",
@@ -10,10 +10,13 @@
     "Terms": "Termini di servizio",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Server",
         "Cameras": "Telecamere",
-        "Storage Locations": "Storage Locations",
+        "Storage Locations": "Posizioni di archiviazione",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
@@ -155,7 +158,7 @@
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "accesso"
         },
         "emailSent": "Email sent!"
     },
@@ -289,8 +292,8 @@
             "createAccount": "Crea nuovo account",
             "delete": "Elimina",
             "deleteAccount": "Eliminare l'account",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Disattivare",
+            "enable": "Abilitare",
             "download": "Scarica %VMS_NAME%",
             "logoutAuthorised": "Disconnetti",
             "ok": "Ok",
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Inserisci la password per l'account del proprietario in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "La password per l'utente amministratore è sbagliata",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Verifica in corso...",
             "cloud": "Cloud",
             "commonText": "Impossibile unire i sistemi <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectToCloud": "Connetti il sistema che desideri unire a questo a <strong>%CLOUD_NAME%</strong> o unisci localmente utilizzando <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Sia il sistema selezionato che quello attuale sono collegati a %CLOUD_NAME% e hanno proprietari diversi. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
             "duplicateServers": "<p class=\"mb-2\">Un server sembra elencare se stesso sia nel sistema selezionato che in quello corrente.</p><p>Rimuovere i server offline ed incompatibili da ciascun sistema e riprovare.</p>",
             "enterSystemAddressTitle": "Immettere l'indirizzo di qualsiasi server nel sistema che si desidera unire a questo.",
@@ -443,7 +447,7 @@
         "renewAuth": {
             "action": "Accesso",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "La sessione è scaduta"
         },
         "titles": {
             "error": "Errore",
@@ -454,13 +458,13 @@
             "failedLoginTo": "Impossibile accedere a {systemName}",
             "loggedFromOtherAccount": "Verrà effettuato l'accesso con un altro account",
             "noClientDetected": "Installa %VMS_NAME% per visualizzare il tuo sistema",
-            "removeUser": "Remove user",
+            "removeUser": "Rimuovere l'utente",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnetti tutti i sistemi di cui sei il proprietario dal portale %CLOUD_NAME% per eliminare il tuo account."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "Accesso",
@@ -665,6 +669,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {{value}} per volume:",
     "ipvdDisclaimer": "Questo elenco è limitato ai dispositivi trovati su {vmsName} cui gli utenti hanno consentito la segnalazione automatica delle specifiche del dispositivo a {companyName}. Non vengono raccolte informazioni personali e ogni utente rimane completamente anonimo.",
@@ -678,9 +683,9 @@
             "servers": "Server",
             "alerts": "Alerts",
             "systems": "Sistema",
-            "storages": "Storage Locations",
+            "storages": "Posizioni di archiviazione",
             "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "graphs": "Grafici",
             "logs": "Logs"
         }
     },
@@ -843,7 +848,7 @@
         "Settings": "Impostazioni",
         "Information": "Informazioni",
         "Bookmarks": "Segnalibri",
-        "Monitoring": "Monitoring"
+        "Monitoring": "Monitoraggio"
     },
     "system": {
         "connected": "Connesso",
@@ -922,7 +927,7 @@
         "nameFail": "Impossibile modificare il nome {type}",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "Impossibile applicare le modifiche",
         "reviewAccepted": "La revisione è stata accettata",
         "system": {
             "deleted": {
@@ -952,10 +957,10 @@
             "info": "Informazioni",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "Attività"
         },
         "keys": {
-            "name": "Name",
+            "name": "Nome",
             "servers": "Server",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -984,7 +989,7 @@
             "publicIp": "Public IP",
             "os": "Sistema operativo",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "Tempo VMS",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1014,7 +1019,7 @@
             "IO Module": "Modulo I / O",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Non valido"
         },
         "info": {
             "type": "Tipo",

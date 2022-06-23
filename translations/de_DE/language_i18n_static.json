@@ -10,6 +10,9 @@
     "Terms": "Bedingungen",
     "Developers Console": "Entwickler-Konsole",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut."
+    },
     "alarmTypes": {
         "Servers": "Server",
         "Cameras": "Kameras",
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Geben Sie das Passwort für das Besitzerkonto in <strong>{secondarySystem}</strong> ein",
             "adminPasswordWrong": "Das Passwort für den Administrator ist falsch",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} ist mit %CLOUD_NAME% verbunden. Cloud-Systeme können nur von %CLOUD_NAME% aus zusammengeführt werden.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} ist mit %CLOUD_NAME% verbunden. Cloud-Systeme können nur über das Portal %CLOUD_NAME% zusammengeführt werden.",
             "unknownBothSystemsConnectedToCloud": "Zwei mit der Cloud verbundene Systeme können nicht zusammengeführt werden. Bitte gehen Sie zu %CLOUD_NAME%, um diese Systeme zusammenzuführen.",
             "checking": "Prüfung...",
             "cloud": "Cloud",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{primarySystem}</strong> und <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Verbinden Sie das System, das Sie mit diesem zusammenführen möchten, mit <strong>%CLOUD_NAME%</strong> oder führen Sie es lokal mit dem <strong>%VMS_NAME%</strong>-Client zusammen.",
-            "connectAnotherSystemToCloud": "Verbinden Sie das System, das Sie mit diesem zusammenführen möchten, mit <strong>%CLOUD_NAME%</strong> unter Verwendung desselben Kontos, oder führen Sie es lokal mit dem <strong>%VMS_NAME%</strong>-Client zusammen.",
+            "failedToFindAnySystemHeader": "Es wurde kein System gefunden, mit dem es zusammengeführt werden kann",
+            "failedToFindAnySystem": "Vergewissern Sie sich, dass Sie in dem Cloud-System, das Sie zusammenführen möchten, die Rolle des Eigentümers haben. Oder dass das System, das Sie zusammenführen möchten, über das lokale Netzwerk für das aktuelle System zugänglich ist.",
             "differentOwners": "Sowohl das ausgewählte als auch das aktuelle System sind mit %CLOUD_NAME% verbunden und haben unterschiedliche Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
@@ -460,7 +464,7 @@
             "serversRestart": "Server &nbsp;<strong>{ title }</strong> neu starten?"
         },
         "tooltips": {
-            "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "Login",
@@ -665,6 +669,7 @@
     "ipvdFeedback": {
         "request": "Bitte <span id=\"request\">senden Sie eine Anfrage</span> für weitere Fragen/Bedenken bezüglich unterstützter Geräte."
     },
+    "systemsCount": "{count, plural, =0{# Systeme} one{# System} other{# Systeme}} gefunden",
     "alertsCount": "{count, plural, =0{# Alarme} one{# Alarm} other{# Alarme}}",
     "ipvdTopXByVolume": "Top {value} nach Volumen:",
     "ipvdDisclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {vmsName} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {companyName} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",

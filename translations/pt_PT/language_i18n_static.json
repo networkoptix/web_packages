@@ -1,7 +1,7 @@
 {
-    "language": "en_US",
+    "language": "pt_PT",
     "About %CLOUD_NAME%": "Sobre o %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Baixar %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "Integrations (β)",
@@ -10,10 +10,13 @@
     "Terms": "Termos",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Servidores",
         "Cameras": "Câmaras",
-        "Storage Locations": "Storage Locations",
+        "Storage Locations": "Locais de armazenamento",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
@@ -92,14 +95,14 @@
         }
     },
     "account": {
-        "account": "Account",
+        "account": "Conta",
         "key": "Key",
         "accountSavedSuccess": "A sua conta foi gravada com sucesso",
         "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de activação enviado",
         "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Alterar senha",
-        "security": "Security",
+        "security": "Segurança",
         "newPasswordLabel": "Nova senha",
         "passwordChangedSuccess": "Senha guardada com sucesso",
         "saveChanges": "Gravar"
@@ -111,17 +114,17 @@
         "setNewPasswordLabel": "Nova senha"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
+        "loginCloudHeader": "Logar em %CLOUD_NAME%",
         "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
+        "expiredHeader": "Sua sessão expirou",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
         "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "createText": "Criar conta",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
+        "toAccountSubheader": "Para",
         "forAccountSubheader": "For {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
@@ -138,14 +141,14 @@
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "Reset da Senha",
-        "newPassHeader": "Set New Password",
+        "newPassHeader": "Definir nova senha",
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "System connected to %CLOUD_NAME%!",
         "loginError": "Cannot connect to %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "Por favor, tente novamente mais tarde.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
         "connectedText": "System connected to %CLOUD_NAME%",
         "setupConnectedText": "System connected",
@@ -155,7 +158,7 @@
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "entrar"
         },
         "emailSent": "Email sent!"
     },
@@ -208,7 +211,7 @@
         },
         "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
         "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "login": "entrar",
         "recordingSettingsWarning": "Please update missing recording settings.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -229,7 +232,7 @@
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Pesquisar",
-        "system": "system",
+        "system": "sistema",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
         "systemNewVersion": "Update your system",
@@ -289,8 +292,8 @@
             "createAccount": "Create New Account",
             "delete": "Apagar",
             "deleteAccount": "Delete Account",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Desativar",
+            "enable": "Activar",
             "download": "Baixar %VMS_NAME%",
             "logoutAuthorised": "Terminar sessão",
             "ok": "OK",
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Checking...",
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
@@ -437,13 +441,13 @@
         },
         "removeSystem": {
             "action": "Desconectar",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "Está prestes a desconectar este Sistema da sua conta. Não poderá mais aceder a este Sistema. Tem certeza?",
+            "title": "Desconectar o Sistema?"
         },
         "renewAuth": {
-            "action": "Login",
+            "action": "Entrar",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "Sua sessão expirou"
         },
         "titles": {
             "error": "Erro",
@@ -460,10 +464,10 @@
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
-            "action": "Login",
+            "action": "Entrar",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
@@ -591,7 +595,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Senha incorrecta",
-        "badUsername": "Account not found",
+        "badUsername": "Conta não encontrada",
         "notFound": "Não encontrado",
         "ok": "ok",
         "oldPasswordMistmatch": "A senha actual está incorreta.",
@@ -665,6 +669,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
@@ -678,7 +683,7 @@
             "servers": "Servidores",
             "alerts": "Alerts",
             "systems": "System",
-            "storages": "Storage Locations",
+            "storages": "Locais de armazenamento",
             "networkInterfaces": "Network Interfaces",
             "graphs": "Graphs",
             "logs": "Logs"
@@ -720,7 +725,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Visualizar câmaras",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "Segurança",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -784,7 +789,7 @@
         },
         "finishingMerge": "A terminar fusão dos sistemas",
         "integration": {
-            "accept": "Accept",
+            "accept": "Aceitar",
             "reject": "Reject",
             "backToEditText": "Back to the editing interfaces",
             "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
@@ -821,8 +826,8 @@
         "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
         "detachSystemSuccess": "Server was successfully detached from the system.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "Actualizar",
+        "refreshing": "Atualizando...",
         "removeMediaserverFailed": "Failed to remove the server from system.",
         "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -839,14 +844,14 @@
         "successRename": "Server name saved."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
+        "View": "Ver",
+        "Settings": "Definições",
+        "Information": "Informação",
+        "Bookmarks": "Favoritos",
         "Monitoring": "Monitoring"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "Conectado",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)",
@@ -858,7 +863,7 @@
             "sessionLimitDuration": {
                 "hours": "hora",
                 "minutes": "minuto",
-                "days": "days"
+                "days": "dia"
             },
             "warningMessages": {
                 "videoEncryption": "A encriptação do tráfego de vídeo irá aumentar significativamente o uso de CPU."
@@ -922,7 +927,7 @@
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "Falha ao aplicar as alterações",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
@@ -937,7 +942,7 @@
             },
             "merge": {
                 "failed": "Falha na fusão de Sistemas",
-                "success": "System merge completed"
+                "success": "Fusão do sistema concluída"
             },
             "rename": {
                 "success": "Nome do sistema guardado"
@@ -952,10 +957,10 @@
             "info": "Info",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "Actividade"
         },
         "keys": {
-            "name": "Name",
+            "name": "Nome",
             "servers": "Servidores",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -984,7 +989,7 @@
             "publicIp": "Public IP",
             "os": "OS",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "Horário do VMS",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1014,7 +1019,7 @@
             "IO Module": "IO Module",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Inválido"
         },
         "info": {
             "type": "Tipo",
@@ -1029,10 +1034,10 @@
             "expired": "Expirado",
             "ok": "OK",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Servidor não encontrado"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "{number} adicionais são necessárias",
             "activated": "License key activated",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
@@ -1159,18 +1164,18 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
+            "main": "Principal",
             "backup": "Backup",
             "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
+            "reserved": "Reservado",
+            "inaccessible": "Inacessível",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Desabilitado"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
+        "invalidPath": "Caminho de armazenamento inválido.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",

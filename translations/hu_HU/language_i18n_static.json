@@ -1,7 +1,7 @@
 {
-    "language": "en_US",
+    "language": "hu_HU",
     "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
-    "All Servers": "All Servers",
+    "All Servers": "Minden szerver",
     "Download %VMS_NAME%": "%VMS_NAME% letöltése",
     "For developers": "For developers",
     "Integrations (β)": "Integrációk (béta)",
@@ -10,10 +10,13 @@
     "Terms": "Feltételek",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "Szerverek",
         "Cameras": "Kamerák",
-        "Storage Locations": "Storage Locations",
+        "Storage Locations": "Tároló helyek",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
@@ -92,14 +95,14 @@
         }
     },
     "account": {
-        "account": "Account",
+        "account": "Fiók",
         "key": "Key",
         "accountSavedSuccess": "A fiók mentése sikeres",
         "accountSettings": "Fiókbeállítások",
         "activationLinkSent": "Aktiválási link elküldve",
         "agreementAccepted": "A megállapodást elfogadták",
         "changePassword": "Jelszómódosítás",
-        "security": "Security",
+        "security": "Biztonság",
         "newPasswordLabel": "Új jelszó",
         "passwordChangedSuccess": "Jelszó sikeresen frissítve",
         "saveChanges": "Mentés"
@@ -111,17 +114,17 @@
         "setNewPasswordLabel": "Új jelszó"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
+        "loginCloudHeader": "Bejelentkezés ide: %CLOUD_NAME%",
+        "connectHeader": "Csatlakozzon %CLOUD_NAME% felhőhöz",
+        "expiredHeader": "Munkamenet lejárt",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
         "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "createText": "Fiók létrehozása",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
+        "toAccountSubheader": "Címzett",
         "forAccountSubheader": "For {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
@@ -131,9 +134,9 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "createAccountHeader": "Hozzon létre %CLOUD_NAME% fiókot",
         "activateHeader": "Activate %CLOUD_NAME% Account",
-        "createdText": "Account Created!",
+        "createdText": "Fiók létrehozva!",
         "activatedText": "Account Activated!",
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
@@ -142,20 +145,20 @@
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "confirmHeader": "A rendszer %CLOUD_NAME% felhőhöz csatlakoztatva!",
+        "loginError": "Nem lehet kapcsolódni ehhez: %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "Kérjük, próbálja meg később.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
+        "connectedText": "A rendszer %CLOUD_NAME% felhőhöz csatlakoztatva",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard",
+        "copiedToClipboard": "Vágólapra másolva",
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "bejelentkezés"
         },
         "emailSent": "Email sent!"
     },
@@ -207,8 +210,8 @@
             "unauthorized": "Hitelesítés szükséges"
         },
         "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
-        "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "copiedToClipboard": "Vágólapra másolva",
+        "login": "felhasználónév",
         "recordingSettingsWarning": "Kérjük, frissítse a hiányzó felvételi beállításokat.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -229,7 +232,7 @@
         "inaccessibleFeatureMessage": "A rendszer offline állapotban van, tehát az információk nem érhetők el.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "Keresés",
-        "system": "system",
+        "system": "rendszer",
         "systemHasNoCameras": "Nincsenek kamerák",
         "systemHasNoCamerasMessage": "A rendszerben nincs elérhető kamera. <br><br>Csatlakoztasson néhány kamerát a szerver helyi hálózatához, hogy azok felderítésre kerüljenek, vagy kérje meg a rendszergazdát, hogy változtassa meg a hozzáférési szintet.",
         "systemNewVersion": "Frissítse a rendszerét",
@@ -289,8 +292,8 @@
             "createAccount": "Új Fiók Létrehozása",
             "delete": "Törlés",
             "deleteAccount": "Fiók törlése",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "Letiltás",
+            "enable": "Engedélyezés",
             "download": "%VMS_NAME% letöltése",
             "logoutAuthorised": "Kijelentkezés",
             "ok": "OK",
@@ -349,20 +352,21 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "Ellenőrzés...",
-            "cloud": "Cloud",
+            "cloud": "Felhő",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "Mind a kiválasztott, mind a jelenlegi rendszer %CLOUD_NAME% csatlakoztatva van, és különböznek a tulajdonosok. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "duplicateServers": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "latestBuild": "legutolsó verzió",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "A rendszeregyesítés sikertelen",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "A {primaryName} és {secondaryName} rendszer egyesítése befejeződött",
             "mergeSystemsTitle": "Egyesítse a jelenlegi rendszert a",
             "noServerFound": "Nem találhatók szerverek",
             "newSystemDisplayName": "Új rendszer",
@@ -388,7 +392,7 @@
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionOld": "Ennek a szervernek egy régebbi szoftververziója van, amely nem kompatibilis a jelenlegi rendszerrel. Frissítse a legújabb verzióra, hogy összevonja a jelenlegi verzióval.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
@@ -437,13 +441,13 @@
         },
         "removeSystem": {
             "action": "Szétkapcsolás",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
+            "title": "Leválasztja a rendszert?"
         },
         "renewAuth": {
-            "action": "Login",
+            "action": "Felhasználónév",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "Munkamenet lejárt"
         },
         "titles": {
             "error": "Hiba",
@@ -451,19 +455,19 @@
             "changeAccount": "Már be van jelentkezve, mint {email}",
             "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "Törli a felhasználót?",
-            "failedLoginTo": "Failed to login to {systemName}",
+            "failedLoginTo": "Bejelentkezés {systemName} felhőbe sikertelen",
             "loggedFromOtherAccount": "Egy másik fiókkal lesz bejelentkezve",
             "noClientDetected": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
-            "removeUser": "Remove user",
+            "removeUser": "Eltávolítja a felhasználót",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Válassza le az összes rendszert, amelyben a tulajdonosa a %CLOUD_NAME% portálról, hogy törölje a fiókját."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
-            "action": "Login",
+            "action": "Felhasználónév",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
@@ -591,7 +595,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Hibás jelszó",
-        "badUsername": "Account not found",
+        "badUsername": "A fiók nem található",
         "notFound": "Nem található",
         "ok": "ok",
         "oldPasswordMistmatch": "A jelenlegi jelszó helytelen.",
@@ -665,6 +669,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
+    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} by volume:",
     "ipvdDisclaimer": "This list is limited to devices found on {vmsName} where users have allowed auto-reporting of device specs to {companyName}. No personal information is collected and each user remains completely anonymous.",
@@ -678,9 +683,9 @@
             "servers": "Szerverek",
             "alerts": "Alerts",
             "systems": "Rendszer",
-            "storages": "Storage Locations",
+            "storages": "Tároló helyek",
             "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "graphs": "Grafikonok",
             "logs": "Logs"
         }
     },
@@ -696,7 +701,7 @@
         "activateCode": "Fiók aktiválása",
         "activateSuccess": "Fiók aktiválva",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "Hitelesítés",
         "changePassword": "Jelszó módosítása",
         "debug": "Hibakeresés",
         "default": "%CLOUD_NAME%",
@@ -720,7 +725,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "Kamerák megtekintése",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "Biztonság",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -784,7 +789,7 @@
         },
         "finishingMerge": "Rendszeregyesítés befejezése",
         "integration": {
-            "accept": "Accept",
+            "accept": "Elfogad",
             "reject": "Reject",
             "backToEditText": "Vissza a szerkesztő felületekhez",
             "previewRibbon": "Ez az oldal a legfrissebb változások előnézete, és nem egyezik meg a nyilvánosan elérhető verzióval.",
@@ -821,8 +826,8 @@
         "detachSystemFailed": "Nem sikerült kiszolgálót leválasztani a rendszerről. Ellenőrizze, hogy a megadott jelszó helyes-e, és a kiszolgáló online, - és próbálkozzon újra.",
         "detachSystemSuccess": "A szervert sikeresen leválasztottuk a rendszertől.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "Frissít",
+        "refreshing": "Frissítés...",
         "removeMediaserverFailed": "Nem sikerült eltávolítani a kiszolgálót a rendszerből.",
         "resetFailed": "A szerver visszaállítása nem sikerült. Ellenőrizze, hogy a megadott jelszó helyes-e, és a kiszolgáló online, - és próbálkozzon újra.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -839,14 +844,14 @@
         "successRename": "A szerver neve mentve."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
-        "Monitoring": "Monitoring"
+        "View": "Nézet",
+        "Settings": "Beállítások",
+        "Information": "Információ",
+        "Bookmarks": "Könyjelzők",
+        "Monitoring": "Monitorozás"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "Csatlakozva",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)",
@@ -858,7 +863,7 @@
             "sessionLimitDuration": {
                 "hours": "órák",
                 "minutes": "percek",
-                "days": "days"
+                "days": "nap"
             },
             "warningMessages": {
                 "videoEncryption": "A videoforgalom titkosítása jelentősen növeli a CPU használatát."
@@ -900,11 +905,11 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "Helyi",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "cloud": "Felhő"
         },
         "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
@@ -922,22 +927,22 @@
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "A változások érvényesítése sikertelen",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
-                "success": "System {systemName} is successfully deleted from your account"
+                "success": "{systemName} rendszer sikeresen törölve a fiókból"
             },
             "disconnected": {
                 "success": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "A rendszer %CLOUD_NAME% felhőhöz csatlakoztatva",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "A rendszeregyesítés sikertelen",
-                "success": "System merge completed"
+                "success": "A rendszer egyesítése befejeződött"
             },
             "rename": {
                 "success": "Rendszer neve mentve"
@@ -952,10 +957,10 @@
             "info": "Info",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "Aktivitás"
         },
         "keys": {
-            "name": "Name",
+            "name": "Név",
             "servers": "Szerverek",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -984,7 +989,7 @@
             "publicIp": "Public IP",
             "os": "OS",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "VMS idő",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1014,7 +1019,7 @@
             "IO Module": "I/O modul",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "Érvénytelen"
         },
         "info": {
             "type": "Típus",
@@ -1029,12 +1034,12 @@
             "expired": "Lejárt",
             "ok": "OK",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "Szerver nem található"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "További {number} szükséges",
             "activated": "A licenckulcs aktiválva",
-            "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
+            "inuse": "A licenckulcsot már aktiválták és egy másik rendszer {hwid} -os hardverazonosítójú szerveréhez regisztrálták",
             "trialActivated": "A próba licenc aktiválva. Ma kezdve akár 4 kamerát is felvehet 30 napig."
         }
     },
@@ -1145,7 +1150,7 @@
     "security": {
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
+            "systemsRemainder": "és még {count}...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
@@ -1159,18 +1164,18 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
+            "main": "Elsődleges",
+            "backup": "Biztonsági mentés",
             "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
+            "reserved": "Fenntartott",
+            "inaccessible": "Nem elérhető",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "Letiltva"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
+        "invalidPath": "Érvénytelen tároló útvonal.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",
@@ -1267,12 +1272,12 @@
             "timeNames": {
                 "a": "a",
                 "p": "p",
-                "am": "am",
-                "pm": "pm",
+                "am": "de",
+                "pm": "du",
                 "A": "A",
                 "P": "P",
-                "AM": "AM",
-                "PM": "PM"
+                "AM": "DE",
+                "PM": "DU"
             }
         }
     }

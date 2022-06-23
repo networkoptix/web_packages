@@ -10,7 +10,7 @@
     "CREATE ACCOUNT BUTTON TEXT": "Create Account",
     "CREATE NEW ACCOUNT BUTTON TEXT": "Create New Account",
     "TERMS AND CONDITIONS LINK TEXT": "Terms and Conditions",
-    "RESEND ACTIVATION LINK BUTTON TEXT": "Resend activation email.",
+    "RESEND ACTIVATION LINK BUTTON TEXT": "إعادة إرسال بريد التفعيل.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "All cloud users will be deleted",
     "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
@@ -35,7 +35,7 @@
     "RESET SUCCESS MESSAGE TEXT": "Password is set",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Your account is successfully saved",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT": "Account Activated!",
-    "ACCOUNT NOT ACTIVATED": "Account not activated.",
+    "ACCOUNT NOT ACTIVATED": "الحساب غير مفعل.",
     "SYSTEM NAME SAVED": "System name saved",
     "ACCOUNT CREATED TEXT": "Account Created!",
     "CONFIRMATION MESSAGE IS SENT TO": "Confirmation message is sent to %email%",
@@ -379,7 +379,7 @@
     "SERVER RESTARTED TEXT": "Server has successfully restarted.",
     "HOURS TEXT": "ساعات",
     "MINUTES TEXT": "دقائق",
-    "DAYS TEXT": "days",
+    "DAYS TEXT": "أيام",
     "NO IMAGE TEXT": "NO IMAGE",
     "CAMERA UNAUTHORIZED TEXT": "Camera is unauthorized",
     "CAMERA OFFLINE TEXT": "Camera is offline",
@@ -543,6 +543,6 @@
     "VIEW PAGE WEBM TEXT": "webm",
     "VIEW PAGE TRANSPORT TEXT": "Transport",
     "VIEW PAGE HLS TEXT": "hls",
-    "VIEW PAGE CAMERA OFFLINE TEXT": "Offline",
-    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "Authentication required"
+    "VIEW PAGE CAMERA OFFLINE TEXT": "غير متصل",
+    "VIEW PAGE CAMERA AUTHENTICATION TEXT": "يستلزم تسجيل الدخول"
 }

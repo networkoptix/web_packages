@@ -1,9 +1,9 @@
 <h1>Hei, {{message.userFullName}}</h1>
 
 {{#message.sharer_name}}
-<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> har delt tilgang til videohåndteringssystem "{{message.system_name}}" med deg.
+<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> har delt tilgang til videohåndteringssystemet "{{message.system_name}}" med deg.
 
-For å se og administrere det, vennligst opprett konto på <a href="{{config.portal_url}}">%CLOUD_NAME%</a> bruker din nåværende e-postadresse og følg ytterligere instruksjoner.</p>
+For å se og administrere, vennligst opprett en konto på <a href="{{config.portal_url}}">%CLOUD_NAME%</a>, bruk din nåværende e-postadresse og følg ytterligere instruksjoner.</p>
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
@@ -12,5 +12,5 @@ For å se og administrere det, vennligst opprett konto på <a href="{{config.por
 For å se og administrere det, vennligst opprett konto på <a href="{{config.portal_url}}">%CLOUD_NAME%</a> bruker din nåværende e-postadresse og følg ytterligere instruksjoner.</p>
 {{/message.sharer_name}}
 
-<a class="btn" href="{{config.portal_url}}/authorize/register/{{message.code}}">Create Account</a>
+<a class="btn" href="{{config.portal_url}}/authorize/register/{{message.code}}">Opprett konto</a>
 
