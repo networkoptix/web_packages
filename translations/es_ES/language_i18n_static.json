@@ -366,8 +366,8 @@
             "cloud": "Nube",
             "commonText": "Error al combinar sistemas <strong>{primarySystem}</strong> y <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Conecte el sistema que desea combinar con éste a <strong>%CLOUD_NAME%</strong> o fusionar localmente usando <strong>%VMS_NAME%</strong> Cliente.",
-            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
-            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
+            "failedToFindAnySystemHeader": "No se pudo encontrar ningún sistema para fusionarse",
+            "failedToFindAnySystem": "Asegúrese de tener el rol de Propietario en un sistema en la nube con el que desea fusionarse. O que el sistema con el que desea fusionarse sea accesible a través de la red local al sistema actual.",
             "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
             "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Solicite al administrador del sistema que introduzca la contraseña de cifrado para descifrar este archivo.",
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Control de Acceso",
         "Connector": "Conector",
@@ -676,7 +680,7 @@
     "ipvdFeedback": {
         "request": "Please <span id=\"request\">submit a request</span> for additional questions/concerns regarding supported devices."
     },
-    "systemsCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}} found",
+    "systemsCount": "{count, plural, =0{+ # Sistemas} one{+ # Sistema} other{+ # Sistemas}} encontrados",
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "ipvdTopXByVolume": "Top {value} por volumen:",
     "ipvdDisclaimer": "Esta lista está limitada a dispositivos encontrados en {vmsName} donde los usuarios han permitido reportar automáticamente las especificaciones del dispositivo a {companyName}. No se recoge ninguna información personal y cada usuario permanece completamente anónimo.",

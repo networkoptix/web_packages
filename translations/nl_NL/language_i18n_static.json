@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Vraag uw systeembeheerder om het wachtwoord voor het versleutelen in te voeren om dit archief te decoderen.",
         "webadmin2faRequired": "Tweestapsverificatie is vereist voor toegang tot dit systeem. Je kunt tweestapsverificatie inschakelen in je <a href=\"{ cloudHost }/account/security\">account instellingen</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Toegangscontrole",
         "Connector": "Connector",

@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Yêu cầu quản trị viên hệ thống của bạn nhập mật khẩu mã hóa\nđể giải mã kho lưu trữ này.",
         "webadmin2faRequired": "Xác thực hai yếu tố là bắt buộc để truy cập hệ thống này. Bạn có thể bật xác thực hai yếu tố trong cài đặt tài khoản<a href=\"{ cloudHost }/account/security\"></a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Kiểm soát truy cập",
         "Connector": "Kết nối",

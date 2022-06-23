@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "このアーカイブを復号するには、暗号化パスワードを入力するようシステム管理者に依頼してください。",
         "webadmin2faRequired": "このシステムにアクセスするには二段階認証が必要です。 <a href=\"{ cloudHost }/account/security\">アカウント設定</a>で二段階認証を有効にできます。"
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "アクセスコントロール",
         "Connector": "コネクタ",

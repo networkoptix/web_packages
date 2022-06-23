@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Vraag uw systeembeheerder om de versleuteling\nwachtwoord in te voeren om dit archief te decoderen.",
         "webadmin2faRequired": "Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem. U kunt tweefactorauthenticatie inschakelen in uw <a href=\"{ cloudHost }/account/security\">accountinstellingen</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Toegangscontrole",
         "Connector": "Connector",

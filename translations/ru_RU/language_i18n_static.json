@@ -11,7 +11,7 @@
     "Developers Console": "Developers Console",
     "productName": "",
     "monitoring": {
-        "unavailable": "Make sure the specified server is online and try again."
+        "unavailable": "Убедитесь, что указанный сервер находится в сети, и повторите попытку."
     },
     "alarmTypes": {
         "Servers": "Серверы",
@@ -96,7 +96,7 @@
     },
     "account": {
         "account": "Учетная запись",
-        "key": "Key",
+        "key": "Ключ",
         "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
         "accountSettings": "Настройки учетной записи",
         "activationLinkSent": "Ссылка для активации отправлена",
@@ -117,9 +117,9 @@
         "loginCloudHeader": "Войти в %CLOUD_NAME%",
         "connectHeader": "Подключить систему к %CLOUD_NAME%",
         "expiredHeader": "Истек срок действия вашей сессии",
-        "loginSystemSubheader": "With your %CLOUD_NAME% Account",
-        "connectSubheader": "To access it from anywhere and enable additional features",
-        "expiredSubheader": "Please, log in again",
+        "loginSystemSubheader": "С вашей учётной записью %CLOUD_NAME%",
+        "connectSubheader": "Чтобы получить к нему доступ из любого места и включить дополнительные функции",
+        "expiredSubheader": "Пожалуйста, войдите снова",
         "connectAdditional": "This account will get owner access level",
         "createText": "Зарегистрироваться",
         "setupText": "Setup Non-cloud System",
@@ -623,6 +623,10 @@
         "archiveEncrypted": "АРХИВ\nЗАШИФРОВАН",
         "archiveEncryptedMessage": "Попросите системного администратора ввести пароль шифрования\nдля расшифровки этого архива.",
         "webadmin2faRequired": "Для доступа к этой системе требуется двухфакторная аутентификация. Вы можете включить двухфакторную аутентификацию в настройках вашей <a href=\"{ cloudHost }/account/security\">учетной записи</a>."
+    },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
     },
     "integration": {
         "Access Control": "Контроль доступа",

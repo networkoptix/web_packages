@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Bitten Sie Ihren Systemadministrator, das Passwort\neinzugeben, um dieses Archiv zu entschlüsseln.",
         "webadmin2faRequired": "Für den Zugriff auf dieses System ist eine Zwei-Faktor-Authentifizierung erforderlich. Sie können die Zwei-Faktor-Authentifizierung in Ihren <a href=\"{ cloudHost }/account/security\">Kontoeinstellungen</a>aktivieren."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Zugangskontrolle",
         "Connector": "Konnektor",

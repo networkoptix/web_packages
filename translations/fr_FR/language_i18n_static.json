@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Demandez à votre administrateur système d'entrer le mot de passe de cryptage\npour déchiffrer cette archive.",
         "webadmin2faRequired": "L'authentification à deux facteurs est nécessaire pour accéder à ce système. Vous pouvez activer l'authentification à deux facteurs dans vos <a href=\"{ cloudHost }/account/security\">paramètres de compte</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Contrôle d'accès",
         "Connector": "Connecteur",

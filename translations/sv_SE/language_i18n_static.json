@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Be din systemadministratör att ange krypteringslösenordet för att dekryptera detta arkiv.",
         "webadmin2faRequired": "Tvåfaktorsautentisering krävs för att komma åt detta system. Du kan aktivera tvåfaktorsautentisering i dina <a href=\"{ cloudHost }/account/security\">-kontoinställningar</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Åtkomstkontroll",
         "Connector": "Anslutare",

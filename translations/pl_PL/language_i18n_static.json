@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Poproś administratora systemu o wprowadzenie hasła, aby odszyfrować to archiwum.",
         "webadmin2faRequired": "Aby uzyskać dostęp do tego systemu, wymagane jest uwierzytelnianie dwuskładnikowe. Możesz włączyć uwierzytelnianie dwuskładnikowe w <a href=\"{ cloudHost }/account/security\">ustawieniach konta</a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Kontrola dostępu",
         "Connector": "Złącze",

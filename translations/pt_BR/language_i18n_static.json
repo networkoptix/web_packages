@@ -624,6 +624,10 @@
         "archiveEncryptedMessage": "Peça ao administrador do sistema para inserir a\npara descriptografar este arquivo.",
         "webadmin2faRequired": "A autenticação de dois fatores é necessária para acessar este sistema. Você pode habilitar a autenticação de dois fatores nas configurações da sua conta <a href=\"{ cloudHost }/account/security\"></a>."
     },
+    "appHeader": {
+        "mySystems": "My Systems",
+        "systemList": "System List"
+    },
     "integration": {
         "Access Control": "Controle de Acesso",
         "Connector": "Conector",
