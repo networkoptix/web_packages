@@ -8,6 +8,26 @@
   selected
 </div>
 
-<div class="set-time-button" (click)="initSetTimeDialog()">Set Time</div>
+<div class="set-time-button" (click)="initSetTimeDialog()">
+  <svg-icon
+      nx-add-svg-src
+      [src]="CONFIG.icons.dir + 'clock.svg'"
+      [svgStyle]="{'width.px': '20', 'height.px': '20', 'margin-top': '-3', 'margin-right': '6'}"
+  ></svg-icon>
+  <span translate>Set Time</span>
+</div>
 
-<a class="export-link" [href]="exportUrl" target="_blank" download type="application/octet-stream">Export</a>
+<a class="export-link"
+   [href]="exportUrl" target="_blank"
+   download
+   type="application/octet-stream"
+>
+  <svg-icon
+      nx-add-svg-src
+      [src]="CONFIG.icons.dir + 'download.svg'"
+      [svgStyle]="{'width.px': '20', 'height.px': '20', 'margin-top': '-3', 'margin-right': '6'}"
+  ></svg-icon>
+  <span translate>Export</span>
+</a>
+
+<a class="close" (click)="clearSelection()"></a>

@@ -18,6 +18,10 @@ html[data-theme="dark"] {
     --ribbon-alert-bg : #{$yellow_d2};
     --ribbon-alert-border : #{$yellow_d1};
     --ribbon-alert-color : #E1E7EA; //$light4;
+    
+    --timeline-selection-panel-bg : #{$brand_d3};
+    --timeline-selection-panel-color : #{$light4};
+    --timeline-selection-picker : dark;
 
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;

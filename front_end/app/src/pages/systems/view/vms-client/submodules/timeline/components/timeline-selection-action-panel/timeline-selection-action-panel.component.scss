@@ -1,5 +1,3 @@
-@use "styles/theme_variables_common" as *;
-
 :host {
   display: block;
   min-width: 100px;
@@ -10,8 +8,8 @@
   right: 8px;
   bottom: 108px;
 
-  background: var(--brand-core);
-  color: var(--light1);
+  background: var(--timeline-selection-panel-bg);
+  color: var(--timeline-selection-panel-color);
   border-radius: 2px;
 
   font-size: 13px;
@@ -31,7 +29,7 @@
   }
 
   > a {
-    color: var(--light1);
+    color: var(--timeline-selection-panel-color);
   }
 
   > .duration-selected {
@@ -39,12 +37,33 @@
   }
 
   > .export-link {
-    background-image: url("./export-icon.png");
-    background-position: 6px center;
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    padding-left: 32px;
     position: relative;
+    text-decoration: none;
+
+    &::before, &::after {
+      content: "";
+      background-color: var(--light1);
+      width: 1px;
+      height: 20px;
+      position: absolute;
+      left: 0;
+      top: 6px;
+      opacity: 0.2;
+    }
+    
+    &::after {
+      left: auto;
+      right: 0;
+    }
+    
+    svg-icon svg path {
+      fill: var(--timeline-selection-panel-color);
+    }
+  }
+
+  > .set-time-button {
+    position: relative;
+    cursor: pointer;
 
     &::before {
       content: "";
@@ -56,27 +75,36 @@
       top: 6px;
       opacity: 0.2;
     }
-  }
-
-  > .set-time-button {
-    background-image: url("./edit.png");
-    background-position: 6px center;
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    padding-left: 32px;
-    position: relative;
-    cursor: pointer;
-
-    &::before {
-      content: "";
-      background-color: $light1;
-      width: 1px;
-      height: 20px;
-      position: absolute;
-      left: 0;
-      top: 6px;
-      opacity: 0.2;
+    
+    svg-icon svg path {
+      stroke: var(--timeline-selection-panel-color);
     }
+  }
+  
+  .close {
+    position: relative;
+    width: 34px;
+    height: 32px;
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .close:before, .close:after {
+    position: absolute;
+    left: 16px;
+    top: 6px;
+    content: ' ';
+    height: 21px;
+    width: 2px;
+    background-color: var(--timeline-selection-panel-color);
+  }
+  .close:before {
+    transform: rotate(45deg);
+  }
+  .close:after {
+    transform: rotate(-45deg);
   }
 
 }

@@ -10,11 +10,13 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import { NxAccountService } from '@services/account.service';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
-import { NxAccountService } from '../../../../../../../../services/account.service';
 import { TimeRange } from '../../services/TimeRange';
 import {
     TimelineSelectionService,
@@ -37,6 +39,8 @@ type ssRange = { start: number, end: number };
     styleUrls: ['./timeline-selection-action-panel.component.scss']
 })
 export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy, AfterViewInit {
+    CONFIG: IConfig;
+
     protected subscription: Subscription;
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
@@ -55,6 +59,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     }
 
     constructor(
+        configService: NxConfigService,
         private self: ElementRef,
         protected timeline: TimelineService,
         public selection: TimelineSelectionService,
@@ -63,6 +68,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         protected vms: VideoManagementSystemService,
         protected dialogs: NxDialogsService
     ) {
+        this.CONFIG = configService.getConfig();
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
@@ -114,7 +120,9 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         this.subscription.unsubscribe();
     }
 
-    protected _prev;
+    public clearSelection(): void {
+        this.selection.reset();
+    }
 
     public onSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.status = s;

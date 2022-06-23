@@ -29,14 +29,14 @@
     > .ear {
       width: 120px;
       position: absolute;
-      background-color: rgba(var(--brand-core--rgb), 0.9);
+      background-color: var(--timeline-selection-panel-bg);
       padding: 2px 4px;
       top: 0;
       height: 34px;
       font-size: 12px;
       line-height: 1.2em;
 
-      color: var(--light1);
+      color: var(--timeline-selection-panel-color);
 
       cursor: col-resize;
 

@@ -30,12 +30,14 @@
             >
             <div class="col-12 px-0">
                 <input
+                    class="form-control"
                     name="start-date"
                     type="date"
                     [ngModel]="startDate"
                     (ngModelChange)="handleChange($event, 'start', 'Date')"
                 />
                 <input
+                    class="form-control ml-2"
                     name="start-time"
                     type="time"
                     [ngModel]="startTime"
@@ -52,12 +54,14 @@
             >
             <div class="col-12 px-0">
                 <input
+                    class="form-control"
                     name="end-date"
                     type="date"
                     [ngModel]="endDate"
                     (ngModelChange)="handleChange($event, 'end', 'Date')"
                 />
                 <input
+                    class="form-control ml-2"
                     name="end-time"
                     type="time"
                     [ngModel]="endTime"
@@ -68,11 +72,13 @@
     </div>
     <div class="modal-footer">
         <button
+            class="btn btn-primary"
             (click)="save($event)"
             translate
             >Save</button
         >
         <button
+            class="btn btn-default"
             (click)="closeModal($event)"
             translate
             >Cancel</button

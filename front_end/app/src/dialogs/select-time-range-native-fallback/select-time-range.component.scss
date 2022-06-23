@@ -2,7 +2,13 @@
     .date-form-group {
         margin-bottom: 1em;
         input {
-            display: inline-block;
+            display: inline-block !important;
+            width: 150px !important;
+            color-scheme: var(--timeline-selection-picker);
+            
+            &::-webkit-calendar-picker-indicator {
+                font-size : 18px;
+            }
         }
     }
 }
