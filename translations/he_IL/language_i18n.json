@@ -464,7 +464,7 @@
     "System Settings": "הגדרות מערכת",
     "System is offline. This information is not available.": "System is offline. This information is not available.",
     "System owner can change this setting at any time.": "System owner can change this setting at any time.",
-    "System will be accessible only through local network.": "System will be accessible only through local network.",
+    "System will be accessible only via local network.": "System will be accessible only via local network.",
     "Systems": "מערכות",
     "Systems of such size may be unstable and have troubles with updates and synchronization.": "מערכות בגודל כזה עשויות לפעול, אך הן עלולות להיות לא יציבות ו\\או עם בעיות עם עדכונים וסנכרון.",
     "System <strong>{systemName}</strong>": "System <strong>{systemName}</strong>",

@@ -471,7 +471,7 @@
             "serversRestart": "是否重啟此伺服器&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "請經由%CLOUD_NAME%中斷您為所有者的全部系統，以刪除您的帳號。"
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "登入帳號",
@@ -625,8 +625,8 @@
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "我的系統",
+        "systemList": "系統清單"
     },
     "integration": {
         "Access Control": "門禁管理",

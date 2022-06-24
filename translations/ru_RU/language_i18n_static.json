@@ -120,9 +120,9 @@
         "loginSystemSubheader": "С вашей учётной записью %CLOUD_NAME%",
         "connectSubheader": "Чтобы получить к нему доступ из любого места и включить дополнительные функции",
         "expiredSubheader": "Пожалуйста, войдите снова",
-        "connectAdditional": "This account will get owner access level",
+        "connectAdditional": "Этот аккаунт получит уровень доступа владельца",
         "createText": "Зарегистрироваться",
-        "setupText": "Setup Non-cloud System",
+        "setupText": "Настройка необлачной системы",
         "asAccountSubheader": "As",
         "toAccountSubheader": "Куда",
         "forAccountSubheader": "For {accountEmail}",
@@ -471,7 +471,7 @@
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Отключите все системы, владельцем которых вы являетесь, от портала %CLOUD_NAME%, чтобы удалить свою учетную запись."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
         },
         "twoFactor": {
             "action": "Имя пользователя",

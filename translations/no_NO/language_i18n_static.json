@@ -8,7 +8,7 @@
     "Privacy": "Personvern",
     "Support": "Brukerstøtte",
     "Terms": "Vilkår",
-    "Developers Console": "Developers Console",
+    "Developers Console": "Utviklerkonsoll",
     "productName": "",
     "monitoring": {
         "unavailable": "Make sure the specified server is online and try again."
@@ -471,7 +471,7 @@
             "serversRestart": "Start server på nytt&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
+            "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% -portalen og deaktiver tofaktorautentisering for å slette kontoen din."
         },
         "twoFactor": {
             "action": "Logg Inn",
@@ -625,8 +625,8 @@
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Mine systemer",
+        "systemList": "Systemliste"
     },
     "integration": {
         "Access Control": "Adgangskontroll",
@@ -1002,20 +1002,20 @@
             "incomingConnections": "Innkommende tilkoblinger",
             "outgoingConnections": "Utgående forbindelser",
             "logLevel": "Loggføringsnivå",
-            "publicIp": "Public IP",
+            "publicIp": "Offentlig IP",
             "os": "OS",
-            "osTime": "OS Time",
+            "osTime": "OS-tid",
             "vmsTime": "VMS-tid",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Kjerner",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "guidConflict": "Server GUID-konflikt",
+            "vmsTimeChanged24h": "Hendelser: Tid endret (24 timer)",
+            "transactionsPerSecond1m": "Transaksjoner/s",
+            "actionsTriggered1m": "Regler Aktiveringer/s",
+            "apiCalls1m": "API-kall/s",
+            "thumbnails1m": "Miniatyrbilder/s",
+            "activePlugins": "Liste over aktive plugins"
         }
     },
     "headerLabels": {
@@ -1227,16 +1227,16 @@
             "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Innstillinger - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Vis - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Informasjon - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "Serverovervåking - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

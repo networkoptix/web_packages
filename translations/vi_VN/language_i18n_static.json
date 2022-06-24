@@ -471,7 +471,7 @@
             "serversRestart": "Khởi động lại máy chủ&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Ngắt kết nối tất cả các hệ thống mà bạn là chủ sở hữu khỏi cổng %CLOUD_NAME% để xóa tài khoản của bạn."
+            "deleteAccount": "Ngắt kết nối tất cả các hệ thống mà bạn là chủ sở hữu khỏi %CLOUD_NAME% và tắt xác thực hai yếu tố để xóa tài khoản của bạn."
         },
         "twoFactor": {
             "action": "Đăng nhập",
@@ -625,8 +625,8 @@
         "webadmin2faRequired": "Xác thực hai yếu tố là bắt buộc để truy cập hệ thống này. Bạn có thể bật xác thực hai yếu tố trong cài đặt tài khoản<a href=\"{ cloudHost }/account/security\"></a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Hệ thống của tôi",
+        "systemList": "Danh sách hệ thống"
     },
     "integration": {
         "Access Control": "Kiểm soát truy cập",

@@ -471,7 +471,7 @@
             "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "アカウントを削除するには、オーナー権限を持っているシステムをすべて %CLOUD_NAME% ポータルから切断し、二要素認証を無効化してください。"
         },
         "twoFactor": {
             "action": "ログイン",
@@ -625,8 +625,8 @@
         "webadmin2faRequired": "このシステムにアクセスするには二段階認証が必要です。 <a href=\"{ cloudHost }/account/security\">アカウント設定</a>で二段階認証を有効にできます。"
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "マイシステム",
+        "systemList": "システムリスト"
     },
     "integration": {
         "Access Control": "アクセスコントロール",

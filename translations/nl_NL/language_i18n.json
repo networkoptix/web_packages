@@ -464,7 +464,7 @@
     "System Settings": "Systeeminstellingen",
     "System is offline. This information is not available.": "Het systeem is offline en daarom is informatie niet toegankelijk.",
     "System owner can change this setting at any time.": "Systeemeigenaar kan deze instelling op elk gewenst moment wijzigen.",
-    "System will be accessible only through local network.": "Systeem zal alleen toegankelijk zijn via het lokale netwerk.",
+    "System will be accessible only via local network.": "System will be accessible only via local network.",
     "Systems": "Systemen",
     "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systemen van een dergelijke grootte kunnen instabiel zijn en problemen hebben met updates en synchronisatie.",
     "System <strong>{systemName}</strong>": "System <strong>{systemName}</strong>",

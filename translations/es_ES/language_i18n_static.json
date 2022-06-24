@@ -471,7 +471,7 @@
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Desconecta todos los sistemas de los que eres propietario del portal %CLOUD_NAME% y desactiva la autenticación de dos factores para eliminar tu cuenta."
         },
         "twoFactor": {
             "action": "Usuario",
@@ -625,8 +625,8 @@
         "webadmin2faRequired": "Two-factor authentication is required to access this system. You can enable two-factor authentication in your <a href=\"{ cloudHost }/account/security\">account settings</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Mis sistemas",
+        "systemList": "Lista de sistemas"
     },
     "integration": {
         "Access Control": "Control de Acceso",
