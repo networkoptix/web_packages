@@ -171,8 +171,13 @@
     {% endif %}
 </form>
 <script>
-    const brandingVariables = {{default_branding|safe}}
+    let brandingVariables = {{default_branding|safe}}
     const reviewButton = document.querySelector('button[name="SendReview"]')
+    const textInputs = [
+    ...document.querySelectorAll('input[type="text"]'),
+    ...document.querySelectorAll('textarea')
+    ]
+
 
     const checkInput = (
         inputText,
@@ -214,14 +219,17 @@
         }
     }
 
-    const textInputs = [
-    ...document.querySelectorAll('input[type="text"]'),
-    ...document.querySelectorAll('textarea')
-    ]
+    const updateBranding = elementOrEvent => {
+        const element = (elementOrEvent.target || elementOrEvent)
+        brandingVariables = JSON.parse(element.value)
+        textInputs.forEach(input => input !== element && checkValue(input))
+    }
+
 
     textInputs.forEach(input => {
-        checkValue(input)
-        input.addEventListener('change', checkValue)
+        const callback = input.name === 'Restricted' ? updateBranding : checkValue
+        callback(input)
+        input.addEventListener('change', callback)
     })
 
     const getErrors = () => {
