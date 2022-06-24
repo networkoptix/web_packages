@@ -1755,7 +1755,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.165": {
+        "electron-to-chromium@1.4.168": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -1967,7 +1967,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-plugin-react-hooks/LICENSE"
         },
-        "eslint-plugin-react@7.30.0": {
+        "eslint-plugin-react@7.30.1": {
             "licenses": "MIT",
             "repository": "https://github.com/jsx-eslint/eslint-plugin-react",
             "publisher": "Yannick Croissant",
@@ -3027,7 +3027,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/json5",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/json5/LICENSE.md"
         },
-        "jsx-ast-utils@3.3.0": {
+        "jsx-ast-utils@3.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/jsx-eslint/jsx-ast-utils",
             "publisher": "Ethan Cohen",
@@ -4290,7 +4290,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/unc-path-regex",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/unc-path-regex/LICENSE"
         },
-        "update-browserslist-db@1.0.3": {
+        "update-browserslist-db@1.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/browserslist/update-db",
             "publisher": "Andrey Sitnik",
@@ -6395,7 +6395,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.165": {
+        "electron-to-chromium@1.4.168": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -7244,7 +7244,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/http-errors",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/http-errors/LICENSE"
         },
-        "http-parser-js@0.5.6": {
+        "http-parser-js@0.5.7": {
             "licenses": "MIT",
             "repository": "https://github.com/creationix/http-parser-js",
             "publisher": "Tim Caswell",
