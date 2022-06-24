@@ -30,7 +30,8 @@ export class DialogBase {
             hasBackdrop: config.hasBackdrop,
             backdropClass: config.backdropClass,
             panelClass: config.panelClass,
-            width: config.width,
+            width: '100vw',
+            maxWidth: config.width,
         });
 
         // Create dialogRef to return

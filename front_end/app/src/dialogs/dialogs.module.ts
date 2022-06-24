@@ -37,6 +37,7 @@ import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.componen
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
 import { MoveSystemToGroupModalContent } from './move-system-to-group/move-system-to-group.component';
+import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
@@ -103,6 +104,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         CreateSystemGroupModalContent,
         SystemGroupSettingsModalContent,
         MoveSystemToGroupModalContent,
+        NewFeatureInformationModalContent
     ],
     providers: [
         NxDialogsService,

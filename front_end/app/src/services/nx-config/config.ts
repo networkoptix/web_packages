@@ -248,6 +248,7 @@ export const nxConfig: IConfig = {
         dirPagePlaceholder: `/${staticBase}/images/placeholders/page/`,
         dirSectionPlaceholder: `/${staticBase}/images/placeholders/section/`,
         dirDevCapabilities: `/${staticBase}/images/icons/dev_capabilities/`,
+        dirCloudStorage: `/${staticBase}/images/icons/cloud_storage/`,
         dirLandingIcons: `/${staticBase}/images/landing/block_icons/`
     },
     images: {

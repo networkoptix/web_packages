@@ -466,6 +466,7 @@ export interface Icons {
     dirSectionPlaceholder: string;
     dirDevCapabilities: string;
     dirLandingIcons: string;
+    dirCloudStorage: string;
 }
 
 export interface Images {

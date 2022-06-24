@@ -1,6 +1,6 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, TemplateRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
@@ -34,7 +34,7 @@ import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-us
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
-import { DIALOG_SIZE, defaultConfig } from './dialog-ref';
+import { DIALOG_SIZE, defaultConfig, infoDialogConfig } from './dialog-ref';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
 // import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { EditModalContent } from './edit/edit.component';
@@ -43,6 +43,7 @@ import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.componen
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
 import { MoveSystemToGroupModalContent } from './move-system-to-group/move-system-to-group.component';
+import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
@@ -632,4 +633,24 @@ export class NxDialogsService extends DialogBase {
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(ReserveSpaceWarningModalContent, dialogConfig).afterClosed();
     }
+
+    // New Feature Info ModalContent
+
+    /**
+     * Factory to create method for the new feature information modal.
+     *
+     * For hard coded views use the template name, for dynamic view then pass a TemplateRef.
+     *
+     * @param template: string | TemplateRef<T>
+     * @returns: () => Promise<any>
+     */
+    #newFeatureMethodFactory = <T>(
+        template: string | TemplateRef<T>
+    ) => () => this.open(
+        NewFeatureInformationModalContent, {
+            ...infoDialogConfig,
+            data: { template }
+        }).afterClosed();
+
+    public cloudStorageInfo = this.#newFeatureMethodFactory('cloudStorage');
 }

@@ -369,6 +369,7 @@ export interface CloudStorage {
     camera:                any;
     cameras:               any;
     usageLabels:           UsageLabels;
+    information:           Information;
     remove:                EnableCloudStorage;
     activationError:       NoSettings;
     systemDisconnectError: NoSettings;
@@ -380,6 +381,17 @@ export interface CloudStorage {
 export interface EnableCloudStorage {
     success:     any;
     errorPrefix: any;
+}
+
+export interface Information {
+    update:  Delete;
+    migrate: Delete;
+    delete:  Delete;
+}
+
+export interface Delete {
+    title: any;
+    body:  any;
 }
 
 export interface MoveCloudStorage {
