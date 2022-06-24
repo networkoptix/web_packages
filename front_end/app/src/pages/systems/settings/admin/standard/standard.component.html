@@ -208,7 +208,8 @@
                                     name="mandatory2fa"
                                     componentId="mandatory2fa"
                                     (click)="check2fa($event)"
-                                    [(ngModel)]="system2faEnabled">
+                                    [(ngModel)]="system2faEnabled"
+                                    [ngModelOptions]="{standalone: true}">
                             </nx-checkbox>
 
                             <label class="control-label mb-0"
