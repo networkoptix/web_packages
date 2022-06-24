@@ -10,35 +10,64 @@
         <nx-section [nonPadded]="true">
             <ng-template #sendButton>
                 <ng-template #sendAnother>
-                    <button class="btn btn-default" (click)="handleSendAnother()">Send Another Test</button>
+                    <button
+                        class="btn btn-default"
+                        (click)="handleSendAnother()"
+                        >Send Another Test</button
+                    >
                 </ng-template>
-                <button *ngIf="!response; else sendAnother" class="btn btn-primary" [disabled]="!subject"
-                    (click)="handleSend()">Send Test Notification</button>
+                <button
+                    *ngIf="!response; else sendAnother"
+                    class="btn btn-primary"
+                    [disabled]="!subject"
+                    (click)="handleSend()"
+                    >Send Test Notification</button
+                >
             </ng-template>
-            <nx-stepper [saveButton]="sendButton"
+            <nx-stepper
+                [saveButton]="sendButton"
                 [customButtonLabels]="['Select System', 'Select Users', 'Test Email Notification']"
-                [controlledSteps]="true" (selectionChange)="payload = response = ''; attachments = []; cachedCustom = null"
-                (selectionChange)="checkStep($event)">
+                [controlledSteps]="true"
+                (selectionChange)="payload = response = ''; attachments = []; cachedCustom = null"
+                (selectionChange)="checkStep($event)"
+            >
                 <cdk-step [completed]="!!(selectedSystem$ | async)">
-                    <div *ngIf="account$ | async; else preloader" class="h-100">
+                    <div
+                        *ngIf="account$ | async; else preloader"
+                        class="h-100"
+                    >
                         <h4>Select system to test email notification</h4>
                         <nx-select
                             [items]="systems$ | async"
                             [selected]="selectedSystem$ | async"
-                            [stillLoading]="!(selectedSystem$ | async)" (onSelected)="updateSystem($event)"
+                            [stillLoading]="!(selectedSystem$ | async)"
+                            (onSelected)="updateSystem($event)"
                         ></nx-select>
                     </div>
                 </cdk-step>
                 <cdk-step [completed]="!!(usersSelected$ | async).length">
-                    <div *ngIf="(users$ | async) as users; else preloader" class="h-100">
+                    <div
+                        *ngIf="users$ | async as users; else preloader"
+                        class="h-100"
+                    >
                         <h4>Select users to send test email notification</h4>
                         <div class="checkbox-wrapper">
-                            <div *ngFor="let user of users" class="m-1">
-                                <nx-checkbox [componentId]="user.id" [ngModel]="user.value" (change)="updateUser(user)">
+                            <div
+                                *ngFor="let user of users"
+                                class="m-1"
+                            >
+                                <nx-checkbox
+                                    [componentId]="user.id"
+                                    [ngModel]="user.value"
+                                    (change)="updateUser(user)"
+                                >
                                 </nx-checkbox>
-                                <label [for]="user.id" class="d-flex flex-column">
-                                    <span>{{user.label}}</span>
-                                    <span class="user-email">{{user.id}}</span>
+                                <label
+                                    [for]="user.id"
+                                    class="d-flex flex-column"
+                                >
+                                    <span>{{ user.label }}</span>
+                                    <span class="user-email">{{ user.id }}</span>
                                 </label>
                             </div>
                         </div>
@@ -56,7 +85,10 @@
                                 <pre [innerText]="response"></pre>
                             </ng-container>
                         </ng-template>
-                        <div *ngIf="!response && !sending; else eventSummary" class="send-wrapper">
+                        <div
+                            *ngIf="!response && !sending; else eventSummary"
+                            class="send-wrapper"
+                        >
                             <div class="send-section h-100">
                                 <h4>Select test notification type</h4>
                                 <nx-select
@@ -67,53 +99,127 @@
                                 <h4>Test email notification content</h4>
                                 <div class="email-content-wrapper">
                                     <label for="systemId">systemId</label>
-                                    <input [ngModel]="(selectedSystem$ | async)?.value" type="text" id="systemId"
-                                        disabled>
+                                    <input
+                                        [ngModel]="(selectedSystem$ | async)?.value"
+                                        type="text"
+                                        id="systemId"
+                                        disabled
+                                    />
                                 </div>
                                 <div class="email-content-wrapper">
                                     <label for="targets">targets</label>
-                                    <textarea [ngModel]="(usersSelected$ | async)" id="targets" cdkTextareaAutosize
-                                        #targets="cdkTextareaAutosize" disabled></textarea>
+                                    <textarea
+                                        [ngModel]="usersSelected$ | async"
+                                        id="targets"
+                                        cdkTextareaAutosize
+                                        #targets="cdkTextareaAutosize"
+                                        disabled
+                                    ></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="subject"
-                                        [ngClass]="{ 'disabled-input-label': selectedNotificationType.name !== notificationTypes[0].name }"
-                                    >subject (required)</label>
-                                    <input [(ngModel)]="subject" (input)="updatePreview()" type="text" id="subject" [disabled]="selectedNotificationType.name !== notificationTypes[0].name">
+                                    <label
+                                        for="subject"
+                                        [ngClass]="{
+                                            'disabled-input-label':
+                                                selectedNotificationType.name !==
+                                                notificationTypes[0].name
+                                        }"
+                                        >subject (required)</label
+                                    >
+                                    <input
+                                        [(ngModel)]="subject"
+                                        (input)="updatePreview()"
+                                        type="text"
+                                        id="subject"
+                                        [disabled]="
+                                            selectedNotificationType.name !==
+                                            notificationTypes[0].name
+                                        "
+                                    />
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="subject"
-                                        [ngClass]="{ 'disabled-input-label': selectedNotificationType.name !== notificationTypes[0].name }"
-                                    >messageHtml</label>
-                                    <textarea [(ngModel)]="messageHtml" (input)="updatePreview()" id="messageHtml"
-                                        cdkTextareaAutosize [cdkAutosizeMinRows]="4" [disabled]="selectedNotificationType.name !== notificationTypes[0].name"></textarea>
+                                    <label
+                                        for="subject"
+                                        [ngClass]="{
+                                            'disabled-input-label':
+                                                selectedNotificationType.name !==
+                                                notificationTypes[0].name
+                                        }"
+                                        >messageHtml</label
+                                    >
+                                    <textarea
+                                        [(ngModel)]="messageHtml"
+                                        (input)="updatePreview()"
+                                        id="messageHtml"
+                                        cdkTextareaAutosize
+                                        [cdkAutosizeMinRows]="4"
+                                        [disabled]="
+                                            selectedNotificationType.name !==
+                                            notificationTypes[0].name
+                                        "
+                                    ></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
-                                    <label for="subject"
-                                        [ngClass]="{ 'disabled-input-label': selectedNotificationType.name !== notificationTypes[0].name }"
-                                    >messageText</label>
-                                    <textarea [(ngModel)]="messageText" (input)="updatePreview()" id="messageText"
-                                        cdkTextareaAutosize [cdkAutosizeMinRows]="2" [disabled]="selectedNotificationType.name !== notificationTypes[0].name"></textarea>
+                                    <label
+                                        for="subject"
+                                        [ngClass]="{
+                                            'disabled-input-label':
+                                                selectedNotificationType.name !==
+                                                notificationTypes[0].name
+                                        }"
+                                        >messageText</label
+                                    >
+                                    <textarea
+                                        [(ngModel)]="messageText"
+                                        (input)="updatePreview()"
+                                        id="messageText"
+                                        cdkTextareaAutosize
+                                        [cdkAutosizeMinRows]="2"
+                                        [disabled]="
+                                            selectedNotificationType.name !==
+                                            notificationTypes[0].name
+                                        "
+                                    ></textarea>
                                 </div>
                                 <div class="email-content-wrapper">
                                     <label for="attachment">attachment</label>
                                     <div class="w-100">
-                                        <div *ngFor="let attachment of attachments; let index = index"
-                                            (click)="removeAttachment(index)" class="attachment">{{attachment.filename}}
+                                        <div
+                                            *ngFor="
+                                                let attachment of attachments;
+                                                let index = index
+                                            "
+                                            (click)="removeAttachment(index)"
+                                            class="attachment"
+                                            >{{ attachment.filename }}
                                         </div>
-                                        <div class="drop-zone" [ngClass]="{invisible: selectedNotificationType.name !== notificationTypes[0].name}">
-                                            <ngx-file-drop dropZoneClassName="drop-zone" [directory]="false"
-                                                [multiple]="true" [showBrowseBtn]="true"
+                                        <div
+                                            class="drop-zone"
+                                            [ngClass]="{
+                                                invisible:
+                                                    selectedNotificationType.name !==
+                                                    notificationTypes[0].name
+                                            }"
+                                        >
+                                            <ngx-file-drop
+                                                dropZoneClassName="drop-zone"
+                                                [directory]="false"
+                                                [multiple]="true"
+                                                [showBrowseBtn]="true"
                                                 browseBtnLabel="Browse file(s) or drop to attach"
-                                                (onFileDrop)="handleFileDrop($event)">
+                                                (onFileDrop)="handleFileDrop($event)"
+                                            >
                                             </ngx-file-drop>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="send-section">
-                                <h4>{{endpoint}}</h4>
-                                <pre [innerText]="payloadPreview" class="payload-preview"></pre>
+                                <h4>{{ endpoint }}</h4>
+                                <pre
+                                    [innerText]="payloadPreview"
+                                    class="payload-preview"
+                                ></pre>
                             </div>
                         </div>
                     </div>

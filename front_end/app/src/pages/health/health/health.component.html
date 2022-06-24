@@ -1,37 +1,59 @@
-<div [ngSwitch]="healthService.ready" class="h-100">
-    <div *ngSwitchCase="false" class="h-100">
-        <nx-page-placeholder *ngIf="canShowOffline()"
-                             [condition]="system && !system.isOnline"
-                             type="OFFLINE"
-                             [preloader]="!healthService.ready">
+<div
+    [ngSwitch]="healthService.ready"
+    class="h-100"
+>
+    <div
+        *ngSwitchCase="false"
+        class="h-100"
+    >
+        <nx-page-placeholder
+            *ngIf="canShowOffline()"
+            [condition]="system && !system.isOnline"
+            type="OFFLINE"
+            [preloader]="!healthService.ready"
+        >
         </nx-page-placeholder>
 
-        <nx-page-placeholder *ngIf="hasServerError" type="500" withFooter>
+        <nx-page-placeholder
+            *ngIf="hasServerError"
+            type="500"
+            withFooter
+        >
             <button class="btn btn-primary support-button mx-auto">
-                <a [href]="CONFIG.company.links.support" target="_blank" rel="noopener" translate>
-                    Go to Support Page
-                </a>
+                <a
+                    [href]="CONFIG.company.links.support"
+                    target="_blank"
+                    rel="noopener"
+                    translate
+                    >Go to Support Page</a
+                >
             </button>
         </nx-page-placeholder>
 
-        <nx-page-placeholder *ngIf="outdatedVersion"
-                             type="NEW_VERSION">
+        <nx-page-placeholder
+            *ngIf="outdatedVersion"
+            type="NEW_VERSION"
+        >
         </nx-page-placeholder>
         <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
     </div>
 
     <div *ngSwitchDefault>
-        <div class="mainGrid"
-             [ngClass]="mediaLayoutClass"
-             *ngIf="healthService.ready">
-
+        <div
+            class="mainGrid"
+            [ngClass]="mediaLayoutClass"
+            *ngIf="healthService.ready"
+        >
             <div class="gridMenu">
                 <div class="gridMenuComponent">
-                    <nx-menu [content]="menu" class="pb-2 d-block"></nx-menu>
+                    <nx-menu
+                        [content]="menu"
+                        class="pb-2 d-block"
+                    ></nx-menu>
 
                     <ng-template
-                            [ngTemplateOutlet]="healthLinks"
-                            *ngIf="mediaLayoutClass != 'mobileLayout'"
+                        [ngTemplateOutlet]="healthLinks"
+                        *ngIf="mediaLayoutClass != 'mobileLayout'"
                     ></ng-template>
                 </div>
             </div>
@@ -40,8 +62,9 @@
                     <router-outlet></router-outlet>
 
                     <ng-template
-                            [ngTemplateOutlet]="healthLinks"
-                            *ngIf="mediaLayoutClass == 'mobileLayout'">
+                        [ngTemplateOutlet]="healthLinks"
+                        *ngIf="mediaLayoutClass == 'mobileLayout'"
+                    >
                     </ng-template>
                 </div>
             </div>
@@ -50,37 +73,55 @@
         <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
 
         <ng-template #healthLinks>
-            <hr class="mt-1"/>
+            <hr class="mt-1" />
             <div class="menuLinks px-2">
-                <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues($event)"></nx-health-update>
+                <nx-health-update
+                    *ngIf="!importedData.imported"
+                    (updateHealth)="updateValues($event)"
+                ></nx-health-update>
                 <div>
-                    <a href class="btn-text pl-1" (click)="exportReport(); false;">
-                        <svg-icon nx-add-svg-src
-                                  [src]="CONFIG.icons.dirTextButtons + 'download.svg'"
-                                  [svgStyle]="{'width.px': '20'}"></svg-icon>
+                    <a
+                        href
+                        class="btn-text pl-1"
+                        (click)="exportReport(); (false)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'download.svg'"
+                            [svgStyle]="{ 'width.px': '20' }"
+                        ></svg-icon>
                         <span translate>Download Full Report</span>
                     </a>
                 </div>
-                <div *ngIf="importedData.imported" class="importInfo pb-2">
-                    <p>System: {{importedData.system}}</p>
-                    <p>Generated: {{importedData.time}}</p>
+                <div
+                    *ngIf="importedData.imported"
+                    class="importInfo pb-2"
+                >
+                    <p>System: {{ importedData.system }}</p>
+                    <p>Generated: {{ importedData.time }}</p>
                 </div>
             </div>
             <div class="mt-3 px-2">
-                <p *ngIf="importShow" class="contentZone">Drop report anywhere to import</p>
+                <p
+                    *ngIf="importShow"
+                    class="contentZone"
+                    >Drop report anywhere to import</p
+                >
             </div>
         </ng-template>
     </div>
 </div>
 
 <ng-template #fileUpload>
-    <ngx-file-drop dropZoneClassName="importZone"
-                   accept="json"
-                   [directory]="false"
-                   [multiple]="false"
-                   [showBrowseBtn]="false"
-                   (onFileLeave)="fileLeave()"
-                   [ngClass]="!importShow ? 'pointer-ignore' : ''"
-                   (onFileDrop)="fileDropped($event)">
+    <ngx-file-drop
+        dropZoneClassName="importZone"
+        accept="json"
+        [directory]="false"
+        [multiple]="false"
+        [showBrowseBtn]="false"
+        (onFileLeave)="fileLeave()"
+        [ngClass]="!importShow ? 'pointer-ignore' : ''"
+        (onFileDrop)="fileDropped($event)"
+    >
     </ngx-file-drop>
 </ng-template>

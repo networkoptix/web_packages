@@ -1,15 +1,23 @@
 <div class="h-100">
-    <div class="h-100" [ngClass]="!healthService.ready ? 'hiddenElm' : ''">
-        <div class="mainGrid"
-             [ngClass]="mediaLayoutClass">
-
+    <div
+        class="h-100"
+        [ngClass]="!healthService.ready ? 'hiddenElm' : ''"
+    >
+        <div
+            class="mainGrid"
+            [ngClass]="mediaLayoutClass"
+        >
             <div class="gridMenu">
                 <div class="gridMenuComponent">
-                    <nx-menu [content]="menu" class="pb-2 d-block"></nx-menu>
+                    <nx-menu
+                        [content]="menu"
+                        class="pb-2 d-block"
+                    ></nx-menu>
 
                     <ng-template
-                            [ngTemplateOutlet]="healthLinks"
-                            *ngIf="mediaLayoutClass != 'mobileLayout'">
+                        [ngTemplateOutlet]="healthLinks"
+                        *ngIf="mediaLayoutClass != 'mobileLayout'"
+                    >
                     </ng-template>
                 </div>
             </div>
@@ -18,30 +26,50 @@
                     <router-outlet></router-outlet>
 
                     <ng-template
-                            [ngTemplateOutlet]="healthLinks"
-                            *ngIf="mediaLayoutClass == 'mobileLayout'">
+                        [ngTemplateOutlet]="healthLinks"
+                        *ngIf="mediaLayoutClass == 'mobileLayout'"
+                    >
                     </ng-template>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="h-100" [ngClass]="healthService.ready ? 'hiddenElm' : ''">
+    <div
+        class="h-100"
+        [ngClass]="healthService.ready ? 'hiddenElm' : ''"
+    >
         <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
     </div>
 </div>
 
 <ng-template #healthLinks>
-    <hr class="mt-1"/>
+    <hr class="mt-1" />
     <div class="menuLinks px-2">
-        <div *ngIf="importedData.imported" class="importInfo h-auto">
-            <p>Generated: {{importedData.time}}</p>
+        <div
+            *ngIf="importedData.imported"
+            class="importInfo h-auto"
+        >
+            <p>Generated: {{ importedData.time }}</p>
         </div>
     </div>
     <div class="px-2 position-relative">
-        <input #loadReport id="loadReport" type="file" (change)="uploadFile()" style="visibility: hidden;">
-        <button class="btn btn-text position-absolute p-0" style="height: 20px; top: 0; padding-left: 0 !important;" (click)="openFile()">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'report.svg'"></svg-icon>
+        <input
+            #loadReport
+            id="loadReport"
+            type="file"
+            (change)="uploadFile()"
+            style="visibility: hidden"
+        />
+        <button
+            class="btn btn-text position-absolute p-0"
+            style="height: 20px; top: 0; padding-left: 0 !important"
+            (click)="openFile()"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirNonStandard + 'report.svg'"
+            ></svg-icon>
             <span translate>Import Another Report</span>
         </button>
     </div>
@@ -51,29 +79,53 @@
     <div class="file-placeholder">
         <div class="file-placeholder-content">
             <div class="placeholder-icon">
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'drag_and_drop.svg'"
-                          [svgStyle]="{ 'width.px': '100' }"></svg-icon>
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirNonStandard + 'drag_and_drop.svg'"
+                    [svgStyle]="{ 'width.px': '100' }"
+                ></svg-icon>
             </div>
-            <h2 class="placeholder-title"
-                translate>Drag & drop report anywhere</h2>
-            <div class="placeholder-message mb-3" translate>or</div>
-            <button class="btn btn-primary mx-auto"
-                    (click)="openFileMain()"
-                    translate>Browse for Report File</button>
-            <input #loadReportMain id="loadReportMain" type="file" (change)="uploadFileMain()" style="visibility: hidden; height: 0">
+            <h2
+                class="placeholder-title"
+                translate
+                >Drag & drop report anywhere</h2
+            >
+            <div
+                class="placeholder-message mb-3"
+                translate
+                >or</div
+            >
+            <button
+                class="btn btn-primary mx-auto"
+                (click)="openFileMain()"
+                translate
+                >Browse for Report File</button
+            >
+            <input
+                #loadReportMain
+                id="loadReportMain"
+                type="file"
+                (change)="uploadFileMain()"
+                style="visibility: hidden; height: 0"
+            />
         </div>
 
-        <ngx-file-drop dropZoneClassName="importZone"
-                       accept="json"
-                       [directory]="false"
-                       [multiple]="false"
-                       [showBrowseBtn]="false"
-                       [ngClass]="!importShow ? 'pointer-ignore' : ''"
-                       (onFileLeave)="fileLeave()"
-                       (onFileDrop)="fileDropped($event)">
+        <ngx-file-drop
+            dropZoneClassName="importZone"
+            accept="json"
+            [directory]="false"
+            [multiple]="false"
+            [showBrowseBtn]="false"
+            [ngClass]="!importShow ? 'pointer-ignore' : ''"
+            (onFileLeave)="fileLeave()"
+            (onFileDrop)="fileDropped($event)"
+        >
             <ng-template ngx-file-drop-content-tmp>
-                <svg-icon class="circular"
-                          nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'report.svg'">
+                <svg-icon
+                    class="circular"
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirNonStandard + 'report.svg'"
+                >
                 </svg-icon>
                 <span translate>Drop file anywhere to import report</span>
             </ng-template>

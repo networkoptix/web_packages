@@ -2,29 +2,46 @@
     <nx-error-state [errors]="errorManager.errors"></nx-error-state>
 </ng-template>
 
-<ng-template #stepBlock let-block="block" let-step="step">
+<ng-template
+    #stepBlock
+    let-block="block"
+    let-step="step"
+>
     <div class="detail-wrapper card-type-4">
-        <div class="detail-block" [routerLink]="block.url"
-             (mouseenter)="block.currentIcon = block.aniIcon"
-             (mouseleave)="block.currentIcon = block.icon">
-            <div class="step-image" [id]="'step-image-' + step">
-                <img [src]="CONFIG.images.dirDevelopers + block.currentIcon">
+        <div
+            class="detail-block"
+            [routerLink]="block.url"
+            (mouseenter)="block.currentIcon = block.aniIcon"
+            (mouseleave)="block.currentIcon = block.icon"
+        >
+            <div
+                class="step-image"
+                [id]="'step-image-' + step"
+            >
+                <img [src]="CONFIG.images.dirDevelopers + block.currentIcon" />
             </div>
             <div class="step-text">
-                <h3>{{block.title}}</h3>
+                <h3>{{ block.title }}</h3>
             </div>
         </div>
     </div>
 </ng-template>
-<ng-container *ngIf="!errorManager.hasErrors;else showError">
-    <h2 *ngIf="steps.url; else noLinkHeader" class="get-started-heading-link" [routerLink]="steps.url">{{steps.title}}</h2>
+<ng-container *ngIf="!errorManager.hasErrors; else showError">
+    <h2
+        *ngIf="steps.url; else noLinkHeader"
+        class="get-started-heading-link"
+        [routerLink]="steps.url"
+        >{{ steps.title }}</h2
+    >
     <ng-template #noLinkHeader>
-        <h2 class="get-started-heading">{{steps.title}}</h2>
+        <h2 class="get-started-heading">{{ steps.title }}</h2>
     </ng-template>
     <section class="get-started-section">
         <div class="get-started-blocks card-grid">
-            <ng-container *ngFor="let block of steps.nodes;let index=index">
-                <ng-container *ngTemplateOutlet="stepBlock;context{block:block, step:index + 1}"></ng-container>
+            <ng-container *ngFor="let block of steps.nodes; let index = index">
+                <ng-container
+                    *ngTemplateOutlet="stepBlock; context: { block: block, step: index + 1 }"
+                ></ng-container>
             </ng-container>
         </div>
     </section>

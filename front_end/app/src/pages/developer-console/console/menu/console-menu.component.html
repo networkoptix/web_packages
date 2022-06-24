@@ -1,41 +1,83 @@
-<ng-template #icon let-icon="icon">
-    <svg-icon nx-add-svg-src
+<ng-template
+    #icon
+    let-icon="icon"
+>
+    <svg-icon
+        nx-add-svg-src
         *ngIf="icon"
         [src]="CONFIG.icons.dir + icon"
-        [svgStyle]="{'width.px': '24', 'height.px': '24', 'margin.px': '8'}"
-        [applyClass]="true"></svg-icon>
+        [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': '8' }"
+        [applyClass]="true"
+    ></svg-icon>
 </ng-template>
 
-<ng-template #additionalLink let-src="icon" let-title="title">
+<ng-template
+    #additionalLink
+    let-src="icon"
+    let-title="title"
+>
     <div class="additional-link">
-        <ng-container *ngTemplateOutlet="icon; context{
-            icon: src
-        }"></ng-container>
-        <span>{{title}}</span>
+        <ng-container
+            *ngTemplateOutlet="
+                icon;
+                context: {
+                    icon: src
+                }
+            "
+        ></ng-container>
+        <span>{{ title }}</span>
     </div>
 </ng-template>
 
-<h3 *ngIf="(TYPES.EDIT === type) && !loading">
-    <ng-container *ngTemplateOutlet="icon; context{
-        icon: 'developers.svg'
-    }"></ng-container>
+<h3 *ngIf="TYPES.EDIT === type && !loading">
+    <ng-container
+        *ngTemplateOutlet="
+            icon;
+            context: {
+                icon: 'developers.svg'
+            }
+        "
+    ></ng-container>
     <span translate>Content</span>
 </h3>
 
-<ul *ngIf="!loading" [class]="type">
+<ul
+    *ngIf="!loading"
+    [class]="type"
+>
     <li *ngFor="let node of menu">
-        <a [routerLink]="base + '/' + node.url" routerLinkActive="active-section" [ngClass]="{'active-section': node.url === sectionParam}" queryParamsHandling="merge">
-            <ng-container *ngTemplateOutlet="icon; context{icon: node.icon}"></ng-container>
-            <span>{{node.title}}</span>
+        <a
+            [routerLink]="base + '/' + node.url"
+            routerLinkActive="active-section"
+            [ngClass]="{ 'active-section': node.url === sectionParam }"
+            queryParamsHandling="merge"
+        >
+            <ng-container *ngTemplateOutlet="icon; context: { icon: node.icon }"></ng-container>
+            <span>{{ node.title }}</span>
         </a>
     </li>
 </ul>
 
-<div *ngIf="showAdditionalLinks && TYPES.EDIT === type" class="additional-links">
-    <ng-container *ngTemplateOutlet="additionalLink; context{
-        icon: 'eye.svg', title: 'Show Preview' | translate
-    }"></ng-container>
-    <ng-container *ngTemplateOutlet="additionalLink; context{
-        icon: 'server.svg', title: 'Version Control' | translate
-    }"></ng-container>
+<div
+    *ngIf="showAdditionalLinks && TYPES.EDIT === type"
+    class="additional-links"
+>
+    <ng-container
+        *ngTemplateOutlet="
+            additionalLink;
+            context: {
+                icon: 'eye.svg',
+                title: 'Show Preview' | translate
+            }
+        "
+    ></ng-container>
+    <ng-container
+        *ngTemplateOutlet="
+            additionalLink;
+            context: {
+                icon: 'server.svg',
+                title: 'Version Control' | translate
+            }
+        "
+    ></ng-container>
 </div>
