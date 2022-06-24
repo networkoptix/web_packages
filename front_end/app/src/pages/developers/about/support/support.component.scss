@@ -12,25 +12,30 @@
         display        : flex;
         flex-direction : column;
         align-items    : center;
-        
+
         @include bootstrap.media-breakpoint-down(xs) {
             margin-top : 48px !important;
         }
-        
-        & > h2 {
+
+        & h2 {
             @include typography.regular24nocolor;
             line-height : 28px;
         }
     }
-    
+
+    a.heading-link {
+        text-decoration : none;
+    }
+
     .support-link {
         cursor : pointer;
-        
+
+
         &:hover {
             text-decoration : underline;
         }
     }
-    
+
     .support-wrapper {
         position        : relative;
         display         : flex;
@@ -40,28 +45,28 @@
         width           : 100%;
         margin          : 16px 0 0 0;
         flex-grow       : 1;
-        
+
         @include bootstrap.media-breakpoint-down(sm) {
             background : var(--alt-body-bg) !important;
         }
-        
+
         &:before, &:after {
             content : "";
             flex    : 1 2 30%;
-            
+
             @include bootstrap.media-breakpoint-down(sm) {
                 display : none;
             }
         }
-        
+
         &:before {
             margin-right : -64px;
         }
-        
+
         &:after {
             margin-left : -64px;
         }
-        
+
         .support-block {
             position       : relative;
             display        : flex;
@@ -70,24 +75,24 @@
             padding        : 6px 16px 32px 16px;
             min-width      : 436px;
             flex           : 0 3 50%;
-            
+
             @include bootstrap.media-breakpoint-down(sm) {
                 min-width  : unset;
                 max-width  : 436px;
                 flex-basis : 100%;
             }
-            
+
             & > * {
                 z-index    : 2;
                 text-align : center;
             }
-            
+
             ::ng-deep .support-body {
                 line-height : 1.23;
-                
+
                 a {
                     text-decoration : none;
-                    
+
                     & > button {
                         @include typography.regular18nocolor;
                         display        : block !important;
@@ -99,18 +104,18 @@
                         border-radius  : 5px !important;
                         box-shadow     : var(--btn-default-shadow) !important;
                         background     : $light1;
-                        
+
                         &:hover {
                             box-shadow : var(--btn-default-hover-shadow) !important;
                         }
-                        
+
                         &:active {
                             box-shadow : var(--btn-default-active-shadow) !important;
                         }
                     }
                 }
             }
-            
+
             &:before, &:after {
                 content          : "";
                 z-index          : 1;
@@ -121,19 +126,19 @@
                 background       : var(--alt-body-bg);
                 transform-origin : bottom;
             }
-            
+
             &:before {
                 transform : skewX(23deg);
                 left      : 64px;
             }
-            
+
             &:after {
                 transform : skewX(-23deg);
                 right     : 64px;
             }
         }
     }
-    
+
     .support-images {
         display   : flex;
         position  : absolute;
@@ -142,24 +147,24 @@
         bottom    : 0;
         width     : 100%;
         overflow  : hidden;
-        
+
         @include bootstrap.media-breakpoint-down(xs) {
             display : none !important;
         }
     }
-    
+
     .left-image {
         @extend .support-images;
         left            : 0;
         justify-content : flex-start;
     }
-    
+
     .right-image {
         @extend .support-images;
         right           : 0;
         justify-content : flex-end;
     }
-    
+
     svg-icon #brand {
         fill : var(--card-capability-icon);
     }

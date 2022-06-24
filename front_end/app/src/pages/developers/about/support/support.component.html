@@ -2,37 +2,27 @@
     <nx-error-state [errors]="errorManager.errors"></nx-error-state>
 </ng-template>
 
-<div
-    *ngIf="!errorManager.hasErrors; else showError"
-    class="support-footer"
->
-    <h2
-        *ngIf="cleanSupportNode.url; else noLinkHeading"
-        class="support-link"
-        [routerLink]="cleanSupportNode.url"
-        >{{ cleanSupportNode.title }}</h2
-    >
+<div *ngIf="!errorManager.hasErrors; else showError" class="support-footer">
+    <ng-container *ngIf="cleanSupportNode.url; else noLinkHeading">
+        <ng-template #internalLink>
+            <h2 class="support-link" [routerLink]="cleanSupportNode.url">{{cleanSupportNode.title}}</h2>
+        </ng-template>
+        <a *ngIf="cleanSupportNode.newWindow" [href]="cleanSupportNode.url" target="_blank" class="heading-link">
+            <h2 class="support-link">{{cleanSupportNode.title}}</h2>
+        </a>
+    </ng-container>
     <ng-template #noLinkHeading>
         <h2>{{ cleanSupportNode.title }}</h2>
     </ng-template>
     <div class="support-wrapper">
         <div class="left-image">
-            <svg-icon
-                nx-add-svg-src
-                [src]="CONFIG.images.dirDevelopers + supportNode.icon.split(' ')[1]"
-            ></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.images.dirDevelopers + supportNode.icon.split(' ')[1]"></svg-icon>
         </div>
         <div class="support-block">
-            <div
-                class="support-body"
-                [innerHTML]="cleanSupportNode.asset.shortDescription"
-            ></div>
+            <div class="support-body" [innerHTML]="cleanSupportNode.asset.shortDescription"></div>
         </div>
         <div class="right-image">
-            <svg-icon
-                nx-add-svg-src
-                [src]="CONFIG.images.dirDevelopers + supportNode.icon.split(' ')[2]"
-            ></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.images.dirDevelopers + supportNode.icon.split(' ')[2]"></svg-icon>
         </div>
     </div>
 </div>

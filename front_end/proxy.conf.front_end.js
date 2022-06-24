@@ -1,5 +1,4 @@
 const legacyTargetConfigs = {
-    'cloud-test': 'https://cloud-test.hdw.mx',
     prod: 'https://nxvms.com',
     stage: 'https://stage.nxvms.com/'
 };
@@ -8,6 +7,7 @@ const proxyTargetConfig = {
     dev2: 'https://dev2.cloud.hdw.mx',
     dev3: 'https://dev3.cloud.hdw.mx',
     local: 'http://localhost:8000',
+    'cloud-test': 'https://cloud-test.hdw.mx',
     ...legacyTargetConfigs
 };
 
