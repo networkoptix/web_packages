@@ -169,7 +169,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             {},
             { withCredentials: 'true' }
         ).pipe(catchError(e => {
-            if (!environment.isLocal) {
+            if (!environment.isLocal && [401, 403, 422].includes(e.status)) {
                 this.injector.get(WINDOW).location.reload();
             }
             throw e;
