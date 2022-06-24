@@ -5,7 +5,7 @@ import { isEqual } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, filter, take } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -492,8 +492,7 @@ export abstract class BaseAccount implements OnDestroy {
                 if (res?.error?.resultCode === 'badUsername') {
                     return this.dialogs.expiredSession()
                         .afterClosed()
-                        .pipe(take(1))
-                        .subscribe(() => this.logoutHelper(true));
+                        .then(() => this.logoutHelper(true));
                 }
                 return of(undefined);
             })
