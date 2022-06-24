@@ -405,7 +405,7 @@
     "Send anonymous usage and crash statistics to developers": "以匿名方式发送使用情况和故障统计报告至开发人员",
     "Send feedback about this device": "留下您对于此设备的意见",
     "Server URL": "服务器 URL",
-    "Server is offline due to certificate error": "Server is offline due to certificate error",
+    "Server is offline due to certificate error": "由于憑證错误，服务器处于脱机状态",
     "Server needs to be online to get license activated": "服务器需要在线才能激活授权",
     "Server offline": "服务器离线",
     "Server port is required": "服务器端口为必填项",

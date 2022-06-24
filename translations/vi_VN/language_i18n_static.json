@@ -464,7 +464,7 @@
             "serversRestart": "Khởi động lại máy chủ&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Ngắt kết nối tất cả các hệ thống mà bạn là chủ sở hữu khỏi %CLOUD_NAME% và tắt xác thực hai yếu tố để xóa tài khoản của bạn."
         },
         "twoFactor": {
             "action": "Đăng nhập",

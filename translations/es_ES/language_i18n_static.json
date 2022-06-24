@@ -464,7 +464,7 @@
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Desconecta todos los sistemas de los que eres propietario del portal %CLOUD_NAME% y desactiva la autenticación de dos factores para eliminar tu cuenta."
         },
         "twoFactor": {
             "action": "Usuario",
