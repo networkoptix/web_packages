@@ -3,8 +3,9 @@
         <button
             class="btn btn-primary"
             (click)="saveSettings()"
-            >Save Settings</button
         >
+            Save Settings
+        </button>
     </ng-template>
     <nx-stepper
         [saveButton]="saveButton"
@@ -72,8 +73,9 @@
                                 <div
                                     *ngIf="bookmark.description as content"
                                     class="bookmark-content"
-                                    >{{ content }}</div
                                 >
+                                    {{ content }}
+                                </div>
                                 <div
                                     *ngIf="isModal && bookmark.tags.length"
                                     class="tags-wrapper"
@@ -109,8 +111,9 @@
                             cdkOverlayOrigin
                             #trigger="cdkOverlayOrigin"
                             class="btn btn-default m-3 ml-auto"
-                            >{{ bookmark.isOpen ? 'Collapse' : 'Expand' }}</button
                         >
+                            {{ bookmark.isOpen ? 'Collapse' : 'Expand' }}
+                        </button>
                     </div>
                 </section>
             </cdk-accordion-item>

@@ -3,8 +3,9 @@
         <button
             class="btn btn-primary"
             (click)="saveSettings(); updateResourceHeading()"
-            >Save Settings</button
         >
+            Save Settings
+        </button>
     </ng-template>
     <nx-stepper
         [customButtonLabels]="HM_STEP_LABELS"
@@ -156,8 +157,9 @@
                             <th
                                 cdk-header-cell
                                 *cdkHeaderCellDef
-                                >Type</th
                             >
+                                Type
+                            </th>
                             <td
                                 cdk-cell
                                 *cdkCellDef="let element"
@@ -169,8 +171,9 @@
                             <th
                                 cdk-header-cell
                                 *cdkHeaderCellDef
-                                >Level</th
                             >
+                                Level
+                            </th>
                             <td
                                 cdk-cell
                                 *cdkCellDef="let element"
@@ -182,8 +185,9 @@
                             <th
                                 cdk-header-cell
                                 *cdkHeaderCellDef
-                                >Message</th
                             >
+                                Message
+                            </th>
                             <td
                                 cdk-cell
                                 *cdkCellDef="let element"
@@ -210,8 +214,9 @@
             <div
                 *ngIf="updatingIn"
                 class="until-update"
-                >Updating in&nbsp;{{ updatingIn }}&nbsp;seconds</div
             >
+                Updating in&nbsp;{{ updatingIn }}&nbsp;seconds
+            </div>
         </ng-container>
     </div>
 </div>

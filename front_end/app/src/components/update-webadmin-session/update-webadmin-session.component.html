@@ -57,20 +57,23 @@
                         login_password.errors.required
                     "
                     translate
-                    >Password is required</div
                 >
+                    Password is required
+                </div>
                 <div
                     class="input-error"
                     *ngIf="flags.wrongCredentials"
                     translate
-                    >Wrong login or password</div
                 >
+                    Wrong login or password
+                </div>
                 <div
                     class="input-error"
                     *ngIf="flags.accountBlocked"
                     translate
-                    >Too many attempts. Try again in a minute.</div
                 >
+                    Too many attempts. Try again in a minute.
+                </div>
             </div>
         </ng-template>
     </div>

@@ -4,8 +4,9 @@
             class="btn btn-primary"
             (click)="saveSettings()"
             translate
-            >Save Settings</button
         >
+            Save Settings
+        </button>
     </ng-template>
     <nx-stepper
         [saveButton]="saveButton"
@@ -58,8 +59,9 @@
             <h2
                 class="mx-auto"
                 translate
-                >Unable to connect to selected system</h2
             >
+                Unable to connect to selected system
+            </h2>
         </ng-template>
         <monitoring-graph
             *ngIf="isOnline; else offlinePlaceholder"

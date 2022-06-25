@@ -27,10 +27,16 @@
             <div
                 *ngIf="!showCompact"
                 class="p-0 mb-3 mt-3"
-                >
+            >
                 <h1 class="old-h12">
-                    <span *ngIf="search.value">{{LANG.systemsCount({ count: filteredSystems.length })}}</span>
-                    <span *ngIf="!search.value" translate>Systems</span>
+                    <span *ngIf="search.value">{{
+                        LANG.systemsCount({ count: filteredSystems.length })
+                    }}</span>
+                    <span
+                        *ngIf="!search.value"
+                        translate
+                        >Systems</span
+                    >
                 </h1>
             </div>
             <div class="row">
@@ -52,8 +58,7 @@
                                 <h2
                                     class="old-h12 d-block"
                                     [innerHTML]="system.name | unsafe | highlight: search.value"
-                                >
-                                </h2>
+                                ></h2>
                                 <span
                                     class="user-name"
                                     [innerHTML]="

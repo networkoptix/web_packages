@@ -219,8 +219,9 @@
         <p
             class="btn-helper mt-2 mb-0"
             [ngClass]="{ invisible: !(timeoutUntilRefresh$ | async) }"
-            >{{ 'servers.autoRefresh' | translate: { time: (timeoutUntilRefresh$ | async) } }}</p
         >
+            {{ 'servers.autoRefresh' | translate: { time: (timeoutUntilRefresh$ | async) } }}
+        </p>
     </div>
     <div
         class="overlay-modal"
@@ -230,8 +231,9 @@
             <p
                 class="overlay-modal-title mb-3"
                 translate
-                >You can try to connect to other servers in this system:</p
             >
+                You can try to connect to other servers in this system:
+            </p>
             <ul class="overlay-modal-servers pl-0 mb-0">
                 <li *ngFor="let server of servers">
                     <a

@@ -9,7 +9,12 @@
         </button>
     </ng-container>
     <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>
-    <a  *ngIf="!loggedIn" [href]="headerService.createUrl | unsafe" class="create-account" translate>
-            CREATE ACCOUNT
+    <a
+        *ngIf="!loggedIn"
+        [href]="headerService.createUrl | unsafe"
+        class="create-account"
+        translate
+    >
+        CREATE ACCOUNT
     </a>
 </div>

@@ -1,5 +1,8 @@
 <div class="menu-container">
-    <div class="menu-items" *ngIf="!isProfile; else profile">
+    <div
+        class="menu-items"
+        *ngIf="!isProfile; else profile"
+    >
         <div
             *ngFor="let node of menuNodes"
             class="menu-item"
@@ -39,18 +42,22 @@
         </div>
     </div>
     <div class="account-button-wrapper">
-        <div class="account-button logout-button btn" (click)="logout()" *ngIf="loggedIn; else logIn" translate>
+        <div
+            class="account-button logout-button btn"
+            (click)="logout()"
+            *ngIf="loggedIn; else logIn"
+            translate
+        >
             Log Out
         </div>
     </div>
 </div>
 
-
 <ng-template #profile>
     <div class="menu-items">
         <div
-        *ngFor="let node of profileMenu"
-        class="level-two-item"
+            *ngFor="let node of profileMenu"
+            class="level-two-item"
         >
             <div
                 class="subnode"
@@ -82,7 +89,8 @@
 
 <ng-template #logIn>
     <a
-        [href]="headerService.authorizeUrl | unsafe" class="btn btn-primary account-button"
+        [href]="headerService.authorizeUrl | unsafe"
+        class="btn btn-primary account-button"
         translate
     >
         Log In

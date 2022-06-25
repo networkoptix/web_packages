@@ -5,8 +5,9 @@
             class="btn btn-sm btn-default"
             (click)="switchUploadSource()"
             translate
-            >Switch to load from widget file</button
         >
+            Switch to load from widget file
+        </button>
         <div class="form-group">
             <div>
                 <label
@@ -38,8 +39,9 @@
             (click)="useSourceUrl()"
             class="btn btn-primary mx-auto"
             translate
-            >Save Widget</button
         >
+            Save Widget
+        </button>
     </ng-template>
     <div *ngIf="!card.config.useSourceUrl; else useUrlForm">
         <h2 translate>From widget file</h2>
@@ -47,8 +49,9 @@
             class="btn btn-sm btn-default"
             (click)="switchUploadSource()"
             translate
-            >Switch to load from source url</button
         >
+            Switch to load from source url
+        </button>
         <ngx-file-drop
             dropZoneClassName="import-zone"
             accept="wgt html"

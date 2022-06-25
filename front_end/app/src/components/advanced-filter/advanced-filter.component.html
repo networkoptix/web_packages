@@ -13,15 +13,17 @@
                 [ngClass]="{ active: currentState?.sort === FILTER_SORT.ASC }"
                 class="btn btn-default"
                 translate
-                >Ascending</button
             >
+                Ascending
+            </button>
             <button
                 (click)="updateState({ sort: FILTER_SORT.DESC })"
                 [ngClass]="{ active: currentState?.sort === FILTER_SORT.DESC }"
                 class="btn btn-default"
                 translate
-                >Descending</button
             >
+                Descending
+            </button>
         </div>
     </section>
     <section class="selection-area">
@@ -46,7 +48,8 @@
             (click)="reset()"
             class="btn btn-default ml-auto"
             translate
-            >Reset Filter</button
         >
+            Reset Filter
+        </button>
     </section>
 </div>

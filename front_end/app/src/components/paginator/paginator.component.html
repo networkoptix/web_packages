@@ -21,7 +21,13 @@
         'five-r': showExperimental
     }"
     class="btn btn-default page-num-btn assemble-{{ idx }}"
-    id="{{idx == 0 ? 'paginator-tile-first' : idx === (pages$ | async).length - 1 ? 'paginator-tile-last' : 'paginator-tile-' + idx }}"
+    id="{{
+        idx == 0
+            ? 'paginator-tile-first'
+            : idx === (pages$ | async).length - 1
+            ? 'paginator-tile-last'
+            : 'paginator-tile-' + idx
+    }}"
     >{{ page || '...' }}</a
 >
 

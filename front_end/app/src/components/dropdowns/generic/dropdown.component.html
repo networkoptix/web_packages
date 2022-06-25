@@ -60,7 +60,10 @@
         [style.top.px]="forcePosition?.top || nativeElementTop - (forcePosition?.offsetTop || 0)"
         [attr.aria-labelledby]="id"
     >
-        <div *ngIf="canSearch" class="search-box">
+        <div
+            *ngIf="canSearch"
+            class="search-box"
+        >
             <span class="glyphicon web-icon-search icon-search"></span>
             <input
                 class="form-control search-input inset"
@@ -69,7 +72,7 @@
                 [ngModel]="filter"
                 (ngModelChange)="filterChanged($event)"
             />
-             <span
+            <span
                 class="glyphicon close-icon search-clear"
                 [hidden]="filter == ''"
                 (click)="filterChanged('')"
@@ -81,7 +84,9 @@
                 *ngFor="let item of _items; trackBy: trackItem"
             >
                 <ng-container
-                    *ngIf="!hideSelectedItem || !(_selectedItem && _selectedItem.value === item.value)"
+                    *ngIf="
+                        !hideSelectedItem || !(_selectedItem && _selectedItem.value === item.value)
+                    "
                     [ngTemplateOutlet]="dropdownRow"
                 ></ng-container>
                 <ng-template

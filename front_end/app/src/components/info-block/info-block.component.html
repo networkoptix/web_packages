@@ -22,8 +22,9 @@
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
                     [ngStyle]="{ display: line.show == false ? 'none' : 'flex' }"
                     [title]="line.name"
-                    >{{ line.name }}</p
                 >
+                    {{ line.name }}
+                </p>
             </div>
             <div class="block-section-values">
                 <p
@@ -32,7 +33,8 @@
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
                     [ngStyle]="{ display: line.show == false ? 'none' : 'flex' }"
                     [title]="line.tooltip || line.name + '-' + line.value"
-                    >{{ line.value
+                >
+                    {{ line.value
                     }}<span *ngIf="line.icon">
                         <svg-icon
                             nx-add-svg-src
@@ -41,8 +43,9 @@
                             style="height: 16px"
                             class="pl-1"
                         >
-                        </svg-icon> </span
-                ></p>
+                        </svg-icon>
+                    </span>
+                </p>
             </div>
         </div>
     </div>

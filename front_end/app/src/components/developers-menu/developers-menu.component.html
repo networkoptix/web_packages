@@ -71,8 +71,9 @@
                                 service.activeNode.url === node.url &&
                                 node.state === service.activeNode.state)
                     }"
-                    ><span [innerHTML]="node.display_name || node.name | safe: 'html'"></span
-                ></div>
+                >
+                    <span [innerHTML]="node.display_name || node.name | safe: 'html'"></span>
+                </div>
             </ng-template>
             <div
                 (click)="toggleOpen(node)"
@@ -106,8 +107,9 @@
     <div
         class="no-nodes-placeholder"
         translate
-        >Nothing Found</div
     >
+        Nothing Found
+    </div>
 </ng-template>
 
 <nx-pre-loader *ngIf="!menuNodes.length; else leftMenu"></nx-pre-loader>

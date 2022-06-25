@@ -22,8 +22,9 @@
                 class="section-title-text"
                 [ngClass]="{ 'no-link': node.url == '' }"
                 [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined"
-                >{{ node.display_name || node.name }}</h5
             >
+                {{ node.display_name || node.name }}
+            </h5>
         </div>
     </div>
 

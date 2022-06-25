@@ -12,7 +12,8 @@
         [disabled]="hideDropdown"
         [ngClass]="{ 'hide-dropdown': hideDropdown }"
         (click)="dropdownNode && $event.stopPropagation(); updateOffset(); show = !show"
-        >{{ name }}
+    >
+        {{ name }}
         <svg-icon
             nx-add-svg-src
             [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"

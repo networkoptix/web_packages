@@ -6,7 +6,7 @@
 >
     <button
         class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
- 	    *ngIf="!newHeader; else newHeaderButton"
+        *ngIf="!newHeader; else newHeaderButton"
         [ngClass]="{ 'small-icon-overrides': small }"
         (resize)="buttonWidth.next($event.width)"
         (click)="show = !show"
@@ -48,7 +48,8 @@
                     <ng-container
                         *ngTemplateOutlet="
                             dropdownItem.newWindow ? externalLink : routerLink;
-                            context: { dropdownItem: dropdownItem }"
+                            context: { dropdownItem: dropdownItem }
+                        "
                     ></ng-container>
                 </li>
             </ng-container>
@@ -76,28 +77,34 @@
                 <ng-container
                     *ngTemplateOutlet="
                         dropdownItem.newWindow ? externalLink : routerLink;
-                        context: { dropdownItem: dropdownItem }"
+                        context: { dropdownItem: dropdownItem }
+                    "
                 ></ng-container>
             </li>
         </ul>
     </div>
 </div>
 
-
-<ng-template #routerLink let-dropdownItem="dropdownItem">
+<ng-template
+    #routerLink
+    let-dropdownItem="dropdownItem"
+>
     <a
         class="dropdown-item inset"
         (click)="hide()"
-        [routerLink]=dropdownItem.route
+        [routerLink]="dropdownItem.route"
     >
         <span>{{ dropdownItem.name }}</span>
     </a>
 </ng-template>
 
-<ng-template #externalLink let-dropdownItem="dropdownItem">
+<ng-template
+    #externalLink
+    let-dropdownItem="dropdownItem"
+>
     <a
         class="dropdown-item inset"
-        (click)="hide(); true"
+        (click)="hide(); (true)"
         [attr.href]="dropdownItem.route"
         target="_blank"
     >
@@ -106,17 +113,27 @@
 </ng-template>
 
 <ng-template #newHeaderButton>
-    <button class="btn auth-section" (click)="show = !show">
+    <button
+        class="btn auth-section"
+        (click)="show = !show"
+    >
         <a class="user-section logged-in">
             <span class="user-svg-wrapper">
-                <svg-icon nx-add-svg-src class="user-svg" [svgStyle]="{'width.px': '20'}" [src]="CONFIG.icons.dir + 'user.svg'"></svg-icon>
+                <svg-icon
+                    nx-add-svg-src
+                    class="user-svg"
+                    [svgStyle]="{ 'width.px': '20' }"
+                    [src]="CONFIG.icons.dir + 'user.svg'"
+                ></svg-icon>
             </span>
             <span class="displayed-name">
                 {{ displayedFullName }}
             </span>
             <div class="dropdown-arrow-wrapper">
-                <svg-icon nx-add-svg-src class="dropdown-arrow"
-                        [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"
+                <svg-icon
+                    nx-add-svg-src
+                    class="dropdown-arrow"
+                    [src]="CONFIG.icons.dirHeader + 'profile_dropdown_arrow.svg'"
                 ></svg-icon>
             </div>
         </a>

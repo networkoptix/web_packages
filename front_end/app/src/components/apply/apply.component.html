@@ -6,8 +6,9 @@
     <div
         *ngIf="show && warn"
         class="warning-text pb-3"
-        >{{ warn }}</div
     >
+        {{ warn }}
+    </div>
     <div
         *ngIf="show; else noChanges"
         class="d-flex"
@@ -16,8 +17,9 @@
             <div
                 class="warning-text pb-3"
                 translate
-                >Page contains unsaved changes.</div
             >
+                Page contains unsaved changes.
+            </div>
         </ng-container>
         <ng-template #applyButtons>
             <nx-process-button
@@ -41,7 +43,8 @@
             *ngIf="applyVisible"
             class="placeholder-text-no-changes"
             translate
-            >No unsaved changes</div
         >
+            No unsaved changes
+        </div>
     </ng-template>
 </div>
