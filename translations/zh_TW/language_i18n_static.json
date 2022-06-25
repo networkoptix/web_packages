@@ -325,6 +325,20 @@
                 "recordingBitrate": "錄影頻寬",
                 "delayFromLive": "與即時影像差距"
             },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
+            },
             "remove": {
                 "success": "雲端儲存已成功從系統中刪除",
                 "errorPrefix": "刪除雲端儲存時發生錯誤"
@@ -733,7 +747,7 @@
         "systemShare": "共用系統",
         "systems": "系統",
         "template": "{title} - %CLOUD_NAME%",
-        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
+        "templateWebadmin": "{title} - 網頁管理介面 - %VMS_NAME%",
         "view": "查看攝影機",
         "apiTool": "API testing tool",
         "security": "安全性",
@@ -999,7 +1013,7 @@
             "encodingSpeed3s": "編碼速度",
             "primaryStreams": "Outgoing Primary streams",
             "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
+            "incomingConnections": "連入連線",
             "outgoingConnections": "Outgoing connections",
             "logLevel": "日誌等級",
             "publicIp": "公開IP",
@@ -1012,9 +1026,9 @@
             "guidConflict": "伺服器GUID 衝突",
             "vmsTimeChanged24h": "伺服器時間變更事件(24小時內)",
             "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
+            "actionsTriggered1m": "觸發事件/秒",
+            "apiCalls1m": "API請求/秒",
+            "thumbnails1m": "縮圖/秒",
             "activePlugins": "啟用套件列表"
         }
     },
@@ -1224,19 +1238,19 @@
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "網頁客戶端 - %VMS_NAME%"
+            "title": "網頁管理介面 - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "設定 - 網頁管理介面 - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "查看 - 網頁管理介面 - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "系統資訊 - 網頁管理介面 - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "伺服器監控 - 網頁管理介面 - %VMS_NAME%"
         }
     },
     "maintenance": {

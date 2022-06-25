@@ -325,6 +325,20 @@
                 "recordingBitrate": "녹화 비트레이트",
                 "delayFromLive": "라이브 지연"
             },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
+            },
             "remove": {
                 "success": "클라우드 스토리지가 시스템에서 성공적으로 제거되었습니다",
                 "errorPrefix": "클라우드 스토리지 제거 오류"

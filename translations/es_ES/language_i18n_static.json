@@ -325,6 +325,20 @@
                 "recordingBitrate": "Bitrate de grabación",
                 "delayFromLive": "Retrasos desde vivo"
             },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
+            },
             "remove": {
                 "success": "Almacenamiento en la nube eliminado del sistema",
                 "errorPrefix": "Error al eliminar el almacenamiento en la nube"

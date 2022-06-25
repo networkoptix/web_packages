@@ -325,6 +325,20 @@
                 "recordingBitrate": "录像比特率",
                 "delayFromLive": "与实时影像差距"
             },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
+            },
             "remove": {
                 "success": "云存储已成功从系统中删除",
                 "errorPrefix": "删除云存储时发生错误"

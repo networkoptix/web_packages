@@ -325,6 +325,20 @@
                 "recordingBitrate": "Taxa de bits d'enregistrament",
                 "delayFromLive": "Retard respecte de directe"
             },
+            "information": {
+                "update": {
+                    "title": "Modify",
+                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                },
+                "migrate": {
+                    "title": "Move",
+                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                },
+                "delete": {
+                    "title": "Delete",
+                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                }
+            },
             "remove": {
                 "success": "L'emmagatzematge al núvol s'ha eliminat correctament del sistema",
                 "errorPrefix": "S'ha produït un error en eliminar l'emmagatzematge al núvol"
