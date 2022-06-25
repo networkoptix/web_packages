@@ -16,11 +16,31 @@ nx-multi-select {
             max-height : $dropdown-multi-list-height !important;
             margin     : 0;
             margin-top : 4px;
-            overflow   : unset !important;
+            overflow   : auto !important;
         }
         
         .dropdown-item--non-checkbox {
             padding-left : 12px !important;
+        }
+        
+        .search-box {
+            input {
+                height: 28px !important;
+                padding-left: 28px !important;
+                margin-bottom: 4px;
+                margin-left: 4px;
+                width: calc(100% - 8px) !important;
+            }
+            .icon-search {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+            }
+            .search-clear {
+                position: absolute;
+                top: 10px;
+                right: 5px;
+            }
         }
     }
 }

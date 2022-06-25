@@ -27,32 +27,24 @@
         [style.display]="show ? 'inline-block' : 'none'"
         [attr.aria-labelledby]="id"
     >
-        <ul
-            class="dropdown-menu--header"
+        <div
             *ngIf="canSearch"
+            class="search-box"
         >
-            <li class="dropdown-item-container">
-                <span class="glyphicon glyphicon-search icon-search"></span>
-                <input
-                    id="localFilter"
-                    class="form-control search-input inset"
-                    autocomplete="off"
-                    [placeholder]="'Search' | translate"
-                    [ngModel]="filter"
-                    (ngModelChange)="applyLocalFilter($event)"
-                />
-                <span
-                    class="glyphicon close-icon search-clear"
-                    [hidden]="filter == ''"
-                    (click)="applyLocalFilter('')"
-                ></span>
-            </li>
-            <li
-                role="separator"
-                class="dropdown-divider"
-            ></li>
-        </ul>
-
+            <span class="glyphicon web-icon-search icon-search"></span>
+            <input
+                class="form-control search-input inset"
+                autocomplete="off"
+                [placeholder]="'Search' | translate"
+                [ngModel]="filter"
+                (ngModelChange)="applyLocalFilter($event)"
+            />
+            <span
+                class="glyphicon close-icon search-clear"
+                [hidden]="filter == ''"
+                (click)="applyLocalFilter('')"
+            ></span>
+        </div>
         <ul
             class="dropdown-menu--header"
             *ngIf="canSelectAll"
@@ -60,12 +52,13 @@
             <li class="dropdown-item-container">
                 <a
                     class="dropdown-item dropdown-item--non-checkbox inset"
-                    (click)="clearSelected($event); show = false"
+                    (click)="clearSelected(); show = false"
                     translate
                     >Any</a
                 >
             </li>
             <li
+                *ngIf="items.length"
                 role="separator"
                 class="dropdown-divider"
             ></li>

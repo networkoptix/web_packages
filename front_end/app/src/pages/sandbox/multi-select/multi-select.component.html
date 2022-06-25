@@ -5,7 +5,8 @@
             [items]="items"
             [ngModel]="itemsSelected"
             (ngModelChange)="modelChanged($event)"
-            canSelectAll>
+            canSelectAll
+            canSearch>
         </nx-multi-select>
     </div>
     <div class="col-3 p-5">
@@ -26,6 +27,18 @@
         Selected
         <br>
         {{itemsSelected}}
+    </div>
+</div>
+<div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">
+    <div class="col-3 p-5">
+        <nx-select
+            name="ddSSingle"
+            [items]="itemsDDSingle"
+            [ngModel]="selectedDDItem"
+            (ngModelChange)="ddSingleModelChanged($event)"
+            [selected]="selectedDDItem ? selectedDDItem : null"
+            canSearch>
+        </nx-select>
     </div>
 </div>
 <div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">

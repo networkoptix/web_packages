@@ -64,7 +64,11 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
     ngOnInit(): void {}
 
-    clearSelected(event: MouseEvent): void {
+    clearSelected(): void {
+        if (this.filter) {
+            this.items = this.itemsOrig;
+            this.filter = '';
+        }
         this.items.forEach(item => {
             item.selected = false;
             const index = this.innerValue.indexOf(item.id);
@@ -96,8 +100,9 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.filter = value;
 
         this.items = this.itemsOrig.filter(item =>
-            item.id.toLowerCase().includes(value.toLowerCase())
+            item.label.toLowerCase().includes(value.toLowerCase())
         );
+        this.updateItems();
     }
 
     trackItem(_index: number, item: MultiSelectItem): string | undefined {

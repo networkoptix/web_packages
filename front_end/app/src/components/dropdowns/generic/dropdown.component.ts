@@ -61,6 +61,7 @@ export class NxGenericDropdown<
     @Input() stillLoading: boolean;
     @Input() type: string;
     @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
+    @IBool() @Input() canSearch: CoercedBoolInput;
     @Input() forcePosition: {
         left?: number,
         top?: number,
@@ -74,6 +75,9 @@ export class NxGenericDropdown<
 
     dropdownType: string;
     nativeElementTop: number = 0;
+
+    filter: string;
+    _items: Item[];
 
     // Used in merge.component.ts
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
@@ -92,7 +96,7 @@ export class NxGenericDropdown<
                 item.name += additionalHelpSpan(item.help);
             }
         });
-
+        this._items = this.items;
         this.dropdownType = `dropdown-${this.type || 'default'}`;
     }
 
@@ -117,6 +121,7 @@ export class NxGenericDropdown<
                     item.name += additionalHelpSpan(item.help);
                 }
             });
+            this._items = this.items;
         }
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected?.currentValue) {
@@ -134,6 +139,15 @@ export class NxGenericDropdown<
         if (ev.key === 'Enter') {
             this.show = false;
             this.change(item);
+        }
+    }
+
+    filterChanged(value: string): void {
+        this.filter = value;
+        this._items = this.items.filter(item => item.name.toLowerCase().includes(this.filter.toLowerCase()));
+
+        if (!this._items.length) {
+            this._items = [<Item>{ name: 'No matches', value: '' }];
         }
     }
 }
