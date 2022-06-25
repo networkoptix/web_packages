@@ -722,7 +722,7 @@
         "systemShare": "共用系統",
         "systems": "系統",
         "template": "{title} - %CLOUD_NAME%",
-        "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
+        "templateWebadmin": "{title} - 網頁管理介面 - %VMS_NAME%",
         "view": "查看攝影機",
         "apiTool": "API testing tool",
         "security": "安全性",
@@ -911,7 +911,7 @@
             "smb": "網絡（smb），已透過VMS新增",
             "cloud": "雲端"
         },
-        "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "transferNotification": "<strong>{ ownerName }</strong>欲將此系統的擁有權轉讓給您"
     },
     "systemStatuses": {
         "activated": "啟用",
@@ -983,7 +983,7 @@
             "encodingSpeed3s": "編碼速度",
             "primaryStreams": "Outgoing Primary streams",
             "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
+            "incomingConnections": "連入連線",
             "outgoingConnections": "Outgoing connections",
             "logLevel": "日誌等級",
             "publicIp": "公開IP",
@@ -996,9 +996,9 @@
             "guidConflict": "伺服器GUID 衝突",
             "vmsTimeChanged24h": "伺服器時間變更事件(24小時內)",
             "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
+            "actionsTriggered1m": "觸發事件/秒",
+            "apiCalls1m": "API請求/秒",
+            "thumbnails1m": "縮圖/秒",
             "activePlugins": "啟用套件列表"
         }
     },
@@ -1208,19 +1208,19 @@
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "網頁客戶端 - %VMS_NAME%"
+            "title": "網頁管理介面 - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "設定 - 網頁管理介面 - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "查看 - 網頁管理介面 - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "系統資訊 - 網頁管理介面 - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "伺服器監控 - 網頁管理介面 - %VMS_NAME%"
         }
     },
     "maintenance": {
