@@ -327,16 +327,16 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Chỉnh sửa",
+                    "body": "Bạn có thể thay đổi kích thước Bộ nhớ đám mây hiện tại trong Hệ thống bằng cách sử dụng khóa mới. Tất cả dữ liệu đã ghi sẽ được lưu lại."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Di chuyển",
+                    "body": "Lưu trữ đám mây với tất cả dữ liệu đã ghi có thể dễ dàng chuyển sang Hệ thống khác của bạn mà không cần Bộ nhớ đám mây đang hoạt động."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Xóa",
+                    "body": "Bạn có thể xóa Bộ nhớ Đám mây khỏi Hệ thống bất kỳ lúc nào. Nếu muốn, bạn có thể sử dụng khóa này để kích hoạt lại."
                 }
             },
             "remove": {

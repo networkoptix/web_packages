@@ -327,16 +327,16 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Redigera",
+                    "body": "Du kan ändra storleken på molnlagring i systemet med den nya nyckeln. Alla inspelade data kommer att sparas."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Flytta",
+                    "body": "Molnlagring med all inspelad data kan enkelt överföras till ditt andra system utan aktiv molnlagring."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Radera",
+                    "body": "Du kan när som helst ta bort molnlagring från systemet. Du kan använda denna nyckel senare för återaktivering, om du vill."
                 }
             },
             "remove": {
