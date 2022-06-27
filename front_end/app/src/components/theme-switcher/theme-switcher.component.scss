@@ -8,9 +8,12 @@
             border        : 2px solid transparent;
             border-radius : 2px;
             
+            &:hover {
+                border-color : var(--image-box-selected-border-color) !important;
+            }
+            
             &.selected {
                 border-color : var(--image-box-selected-border-color) !important;
-                
             }
             
             svg-icon svg {

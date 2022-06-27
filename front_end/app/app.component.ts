@@ -121,7 +121,7 @@ export class AppComponent {
                 if (themeSelected !== 'auto') {
                     return;
                 }
-
+                NxConfigService.isDarkTheme = e.matches;
                 if (e.matches) {
                     this.window.document.documentElement.setAttribute('data-theme', 'dark');
                 } else {
@@ -135,12 +135,15 @@ export class AppComponent {
             ) {
                 !themeSelected && this.localStorageService.store('theme', 'auto');
                 if (darkThemeMq.matches) {
+                    NxConfigService.isDarkTheme = true;
                     this.window.document.documentElement.setAttribute('data-theme', 'dark');
                 }
             } else {
+                const theme = this.localStorageService.retrieve('theme');
+                NxConfigService.isDarkTheme = theme === 'dark';
                 this.window.document.documentElement.setAttribute(
                     'data-theme',
-                    this.localStorageService.retrieve('theme')
+                    theme
                 );
             }
         }

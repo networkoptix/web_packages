@@ -9,7 +9,7 @@
                 <div
                     class="tile"
                     (click)="setTheme('dark')"
-                    [ngClass]="{ selected: theme === 'dark' }"
+                    [ngClass]="{ selected: selectedTheme === 'dark' }"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -19,7 +19,7 @@
                 </div>
                 <div class="label">
                     <svg-icon
-                        *ngIf="theme === 'dark'"
+                        *ngIf="selectedTheme === 'dark'"
                         nx-add-svg-src
                         [src]="CONFIG.images.dirTheme + 'check.svg'"
                         [applyClass]="true"
@@ -32,7 +32,7 @@
                 <div
                     class="tile"
                     (click)="setTheme('light')"
-                    [ngClass]="{ selected: theme === 'light' }"
+                    [ngClass]="{ selected: selectedTheme === 'light' }"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -42,7 +42,7 @@
                 </div>
                 <div class="label">
                     <svg-icon
-                        *ngIf="theme === 'light'"
+                        *ngIf="selectedTheme === 'light'"
                         nx-add-svg-src
                         [src]="CONFIG.images.dirTheme + 'check.svg'"
                         [applyClass]="true"
@@ -55,7 +55,7 @@
                 <div
                     class="tile"
                     (click)="setTheme('auto')"
-                    [ngClass]="{ selected: theme === 'auto' }"
+                    [ngClass]="{ selected: selectedTheme === 'auto' }"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -65,7 +65,7 @@
                 </div>
                 <div class="label">
                     <svg-icon
-                        *ngIf="theme === 'auto'"
+                        *ngIf="selectedTheme === 'auto'"
                         nx-add-svg-src
                         [src]="CONFIG.images.dirTheme + 'check.svg'"
                         [applyClass]="true"
@@ -85,7 +85,7 @@
             name="theme"
             value="light"
             label="light"
-            [(ngModel)]="theme"
+            [(ngModel)]="selectedTheme"
             (click)="setTheme('light')"
         ></nx-radio>
     </div>
@@ -95,7 +95,7 @@
             name="theme"
             value="auto"
             label="system"
-            [(ngModel)]="theme"
+            [(ngModel)]="selectedTheme"
             (click)="setTheme('auto')"
         ></nx-radio>
     </div>
@@ -105,7 +105,7 @@
             name="theme"
             value="dark"
             label="dark"
-            [(ngModel)]="theme"
+            [(ngModel)]="selectedTheme"
             (click)="setTheme('dark')"
         ></nx-radio>
     </div>

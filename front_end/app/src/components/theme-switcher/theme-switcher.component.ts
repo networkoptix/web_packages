@@ -24,6 +24,8 @@ export class NxThemeSwitcherComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     theme : string;
+    selectedTheme : string;
+    darkThemeMq: MediaQueryList;
 
     constructor(
         configService: NxConfigService,
@@ -36,18 +38,23 @@ export class NxThemeSwitcherComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.theme = this.localStorageService.retrieve('theme');
-        NxConfigService.isDarkTheme = this.theme === 'dark';
+        this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+        this.selectedTheme = this.localStorageService.retrieve('theme');
+        NxConfigService.isDarkTheme = this.selectedTheme === 'dark' ||
+            this.selectedTheme === 'auto' && this.darkThemeMq.matches;
     }
 
     setTheme(name): void {
-        this.theme = name;
+        this.selectedTheme = name;
         if (name === 'auto') {
-            const darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
-            name = darkThemeMq.matches ? 'dark' : 'light';
+            this.localStorageService.store('theme', 'auto');
+            this.theme = this.darkThemeMq.matches ? 'dark' : 'light';
+            NxConfigService.isDarkTheme = this.darkThemeMq.matches;
+        } else {
+            this.theme = name;
+            NxConfigService.isDarkTheme = this.theme === 'dark';
+            this.localStorageService.store('theme', this.theme);
         }
-        NxConfigService.isDarkTheme = name === 'dark';
-        this.localStorageService.store('theme', name);
-        this.window.document.documentElement.setAttribute('data-theme', name);
+        this.window.document.documentElement.setAttribute('data-theme', this.theme);
     }
 }
