@@ -118,7 +118,10 @@ class Group(db.Model):
 
     # Moving groups
     async def _move_users_in_group(self, modify_users, remove_user=False):
-        users = set(self.parent.get_users_to_root()) - set(self.users)
+        users = set()
+        if self.parent:
+            users = set(self.parent.get_users_to_root())
+        users = users - set(self.users)
         users_to_update = [{'email': '', 'role': '' if remove_user else user.role} for user in users]
         return await modify_users(self.get_all_system_ids_in_group(), users_to_update)
 
