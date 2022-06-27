@@ -47,11 +47,12 @@ async def setup_polling():
     await redis_pubsub.unsubscribe()
 
 
-async def start_listening(email, socket_queue, provider_protocol):
+async def start_listening(socket_queue, provider_protocol):
     from main import redis_pubsub
+    email = provider_protocol.email
     add_to_email_queue(email, socket_queue)
     await redis_pubsub.subscribe(**{email: message_handler_factory(email)})
-    await provider_protocol.send_listener_established(email)
+    # await provider_protocol.send_listener_established(email)
 
 
 async def stop_lisening(email, socket_queue):

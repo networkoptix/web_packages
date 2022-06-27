@@ -21,16 +21,13 @@ class CloudAPI:
         await asyncio.sleep(0.25)
         await self.client.__aexit__(None, None, None)
 
-    async def validate_token(self, email, access_token, cloud_host):
+    async def validate_token(self, access_token, cloud_host):
         headers = {
             'Authorization': f'Bearer {access_token}'
         }
         async with self.client.get(f'https://{cloud_host}{self.OAUTH_URL}/token/{access_token}', headers=headers) as resp:
             if resp.ok:
-                resp = await resp.json()
-                token_email = resp.get('username')
-                if token_email:
-                    return token_email == email.lower()
+                return await resp.json()
             return False
 
     async def check_system_credentials(self, system_id, system_auth_key, cloud_host):
@@ -51,8 +48,10 @@ class CloudAPI:
                 auth=aiohttp.BasicAuth(login=system_id, password=system_auth_key)
         ) as resp:
             if resp.ok:
-                resp = await resp.json()
-                users = resp.get('sharing')
-                if users is not None:
-                    return users
+                resp_json = await resp.json()
+                if type(resp_json) is list:
+                    return resp_json
+
+                if type(resp_json) is dict:
+                    return resp_json.get('sharing')
             return []

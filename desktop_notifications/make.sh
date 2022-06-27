@@ -1,9 +1,23 @@
-#!/bin/bash
-VERSION=$1
-DOCKER_REGISTRY=${DOCKER_REGISTRY:-"009544449203.dkr.ecr.us-east-1.amazonaws.com"}
+#!/bin/bash -e
 
-docker build -t cloud_notifications:$VERSION -t ${DOCKER_REGISTRY}/cloud/cloud_notifications:$VERSION .
-docker build -t cloud_notifications_nginx:$VERSION -t ${DOCKER_REGISTRY}/cloud/cloud_notifications_nginx:$VERSION ./nginx
+. ../deploy/environment
+. ../deploy/common.sh
 
-docker push ${DOCKER_REGISTRY}/cloud/cloud_notifications:$VERSION
-docker push ${DOCKER_REGISTRY}/cloud/cloud_notifications_nginx:$VERSION
+MODULE=cloud_notifications
+BUILD_NUMBER=${BUILD_NUMBER:-0}
+BUILD_ARGS=(--build-arg CACHE_DATE=$(date +%s))
+
+VERSION="22.1.0.$BUILD_NUMBER"
+
+function publish() {
+  MODULE=cloud_notifications
+  pack
+  push
+
+  pushd nginx
+  MODULE=cloud_notifications_nginx
+  pack
+  push
+}
+
+main $@

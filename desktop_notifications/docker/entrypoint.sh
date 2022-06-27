@@ -6,7 +6,7 @@ do
         provider)
             echo "Running provider hypercorn"
             cd notification_provider
-            exec hypercorn --workers 4 --bind 0.0.0.0:8000 --root-path /cloud_notifications/provider --log-level debug --access-logfile - --error-logfile - main:app
+            exec hypercorn --workers 4 --bind 0.0.0.0:8000 --root-path /cloud_notifications/provider --websocket-ping-interval 30 --log-level debug --access-logfile - --error-logfile - main:app
             ;;
         receiver)
             echo "Running receiver hypercorn"

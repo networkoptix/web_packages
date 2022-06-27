@@ -1,4 +1,6 @@
-from quart import Quart, websocket
+from typing import Tuple
+
+from quart import Quart, websocket, Response
 
 import redis.asyncio as redis
 
@@ -29,39 +31,48 @@ def collect_websocket(func):
     return wrapper
 
 
-async def authenticate(provider_protocol, init_msg, cloud_host):
-    access_token = init_msg.get('accessToken', '')
-    email = init_msg.get('username', '')
-    if not (email and access_token):
-        await provider_protocol.send_auth_failure('Missing email or access token')
-        await websocket.close(3000)
-        return None
+async def auth_with_query_param(provider_protocol: ProviderProtocol) -> Tuple[bool, str]:
+    access_token = websocket.args.get('access-token')
+    if not access_token:
+        return False, 'Missing access-token query param'
 
-    if not await app.cloud_auth.validate_token(email, access_token, cloud_host):
-        await provider_protocol.send_auth_failure('Could not validate access token with email')
-        await websocket.close(3000)
-        return None
-    return email
+    return await provider_protocol.authenticate(access_token)
+
+
+async def sending(socket_queue, provider_protocol: ProviderProtocol):
+    await start_listening(socket_queue, provider_protocol)
+    while True:
+        # Receive message from queue
+        message = await socket_queue.get()
+
+        # Send message
+        data = json.loads(message.get('data', b'').decode())
+        await provider_protocol.send_notification(data.get('systemId'), data.get('userId'), payload=data['notification'])
+
+
+async def receiving(provider_protocol: ProviderProtocol):
+    while True:
+        await provider_protocol.handle_message(await websocket.receive())
 
 
 @app.websocket('/api/v1/subscribe')
 @collect_websocket
 async def subscribe(socket_queue):
-    msg = json.loads(await websocket.receive())
-    provider_protocol = ProviderProtocol(websocket)
-    email = await authenticate(provider_protocol, msg, websocket.headers['Host'])
-    if not email:
-        return
+    cloud_host = websocket.headers['Host']
+    provider_protocol = ProviderProtocol(websocket, cloud_host, app.cloud_auth)
+    success, message = await auth_with_query_param(provider_protocol)
+    if success:
+        await provider_protocol.send_auth_response(success=True)
+    else:
+        return Response('', headers={'Authentication-Error': message})
 
+    producer = asyncio.create_task(sending(socket_queue, provider_protocol))
+    consumer = asyncio.create_task(receiving(provider_protocol))
+    auth_watcher = asyncio.create_task(provider_protocol.watcher())
     try:
-        await start_listening(email, socket_queue, provider_protocol)
-
-        while True:
-            message = await socket_queue.get()
-            data = json.loads(message.get('data', b'').decode())
-            await provider_protocol.send_notification(data['systemId'], payload=data['notification'])
+        await asyncio.gather(producer, consumer, auth_watcher)
     finally:
-        await stop_lisening(email, socket_queue)
+        await stop_lisening(provider_protocol.email, socket_queue)
 
 
 @app.before_serving
