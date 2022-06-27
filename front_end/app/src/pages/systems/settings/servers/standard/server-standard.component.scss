@@ -82,7 +82,11 @@
     gap: 8px;
     grid-template-columns: min-content auto;
     align-items: center;
-    
+
+    &:first-of-type {
+        margin-bottom: 8px;
+    }
+
     .text-column {
         text-align : right;
         color      : var(--label-color);
