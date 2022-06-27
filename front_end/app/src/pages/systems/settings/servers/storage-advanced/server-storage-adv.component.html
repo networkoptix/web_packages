@@ -31,7 +31,7 @@
                             <td>{{friendlyBytes( storage.totalSpace.bits )}}</td>
                             <td
                                 [ngClass]="{ overwrite: storage.remainingSpace.bits < 0 }"
-                            >{{friendlyBytes( storage.remainingSpace.bits )}}</td>
+                            >{{friendlyBytes( Math.max(storage.remainingSpace.bits, 0) )}}</td>
                             <td class="reserved-cell">
                                 <nx-numeric
                                         style="width: 60px;"
