@@ -327,15 +327,15 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "編集",
+                    "body": "新しいキーを使用して、システムのクラウドストレージ容量を変更できます。録画されたデータはすべて保存されます。"
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "移動",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "削除",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
