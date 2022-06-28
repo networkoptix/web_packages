@@ -36,7 +36,8 @@
                     </div>
                 </ng-container>
             </div>
-            <button class="btn btn-primary btn-big" translate>Activate Cloud Storage</button>
+            <button class="btn btn-primary btn-big" translate
+                (click)="close(); dialogsService.cloudStorageActivate()">Activate Cloud Storage</button>
         </div>
         <div *ngSwitchDefault>
             Not Implemented

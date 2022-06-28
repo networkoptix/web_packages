@@ -368,6 +368,7 @@ export interface CloudStorage {
     available:             (params?: Record<string, string | number>) => string;
     camera:                (params?: Record<string, string | number>) => string;
     cameras:               (params?: Record<string, string | number>) => string;
+    actions:               Actions;
     usageLabels:           UsageLabels;
     information:           Information;
     remove:                EnableCloudStorage;
@@ -376,6 +377,19 @@ export interface CloudStorage {
     moveCloudStorage:      MoveCloudStorage;
     enableCloudStorage:    EnableCloudStorage;
     noOtherSystemsError:   NoOtherSystemsError;
+}
+
+export interface Actions {
+    activate: Activate;
+    modify:   Activate;
+    move:     Activate;
+    delete:   Activate;
+}
+
+export interface Activate {
+    heading: (params?: Record<string, string | number>) => string;
+    action:  (params?: Record<string, string | number>) => string;
+    success: (params?: Record<string, string | number>) => string;
 }
 
 export interface EnableCloudStorage {

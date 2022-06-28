@@ -319,7 +319,7 @@ export class NxCloudStorageComponent implements OnInit {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();
         }
-        // TODO: Will implement errors on a future task when api service is finalized
+            // TODO: Will implement errors on a future task when api service is finalized
         );
     }
 
@@ -340,18 +340,13 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     public deleteCloudStorage(): void {
-        this.dialogService.cloudStorageDelete(
-            this.system$,
-            this.handleCloudStorageDisabled
-        );
+        // TODO: Need to update once modal is connected
+        this.dialogService.cloudStorageDelete();
     }
 
     public moveCloudStorage(): void {
-        // TODO: Need list of systems
-        this.dialogService.cloudStorageMove(
-            this.system$,
-            this.handleCloudStorageDisabled
-        ).then(result => {
+        // TODO: Need to update once modal is connected
+        this.dialogService.cloudStorageMove().then(result => {
             if (result !== 'noOtherSystemsError') {
                 this.dialogService.confirm(
                     this.LANG.dialogs.cloudStorage.noOtherSystemsError.message?.(),
@@ -364,7 +359,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     // Callback for disabled or moved storage
 
-    private handleCloudStorageDisabled = (): void => {
-        this.cloudStorageSystemEnabled = false;
-    };
+    // private handleCloudStorageDisabled = (): void => {
+    //     this.cloudStorageSystemEnabled = false;
+    // };
 }

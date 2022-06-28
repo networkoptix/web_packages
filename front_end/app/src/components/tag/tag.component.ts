@@ -46,7 +46,9 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @IBool() @Input() locked: CoercedBoolInput;
     @Input() link: string;
     @Input() linkParam: Params = {};
-    @IBool() @Input('value') selected: CoercedBoolInput;
+    @IBool() @Input('value') _selected: CoercedBoolInput;
+
+    selected: boolean;
 
     @Output() onClick = new EventEmitter<boolean>();
 
@@ -80,33 +82,31 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnChanges(changes: NgChanges<NxTagComponent>): void {
-        if (changes.selected?.currentValue) {
-            setTimeout(() => {
-                if (!changes.selected?.currentValue) {
-                    this.deselectTag();
-                } else {
-                    this.selectTag();
-                }
-            });
+        if (!!changes._selected?.currentValue !== !!changes._selected?.previousValue) {
+            this[!changes._selected?.currentValue ? 'deselectTag' : 'selectTag'](true);
         }
     }
 
-    deselectTag(): void {
+    deselectTag(skipEmit = false): void {
         if (this.locked) {
             return;
         }
         this.selected = false;
         this.badgeType = this.badgeTypes.unselected;
-        this.changeState(false);
+        if (!skipEmit) {
+            this.changeState(false);
+        }
     }
 
-    selectTag(): void {
+    selectTag(skipEmit = false): void {
         if (this.locked) {
             return;
         }
         this.selected = true;
         this.badgeType = this.badgeTypes.selected;
-        this.changeState(true);
+        if (!skipEmit) {
+            this.changeState(true);
+        }
     }
 
     // Form control functions

@@ -9,6 +9,7 @@ export const DIALOG_DATA = new InjectionToken<any>('DIALOG_DATA');
 export enum DIALOG_SIZE {
     LARGE = 800,
     INFO = 774,
+    ACTION = 448,
     NORMAL = 500,
     SMALL = 400
 }
@@ -23,7 +24,12 @@ export const defaultConfig: DialogConfig = {
 
 export const infoDialogConfig: DialogConfig = {
     ...defaultConfig,
-    width: DIALOG_SIZE.LARGE,
+    width: DIALOG_SIZE.INFO,
+};
+
+export const cloudStorageActionDialogConfig: DialogConfig = {
+    ...defaultConfig,
+    width: DIALOG_SIZE.ACTION,
 };
 
 /**

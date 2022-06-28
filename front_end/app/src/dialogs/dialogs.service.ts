@@ -1,9 +1,9 @@
-import { Overlay } from '@angular/cdk/overlay';
+import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Injectable, Injector, TemplateRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ModalContent } from '@components/console-table/console-table.component.types';
@@ -26,7 +26,9 @@ import { AddWidgetModalContent } from './add-widget/add-widget.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
+import { CloudStorageActivateModalContent } from './cloud-storage/activate/cloud-storage-activate.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
+import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
 import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
@@ -34,7 +36,7 @@ import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-us
 import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
-import { DIALOG_SIZE, defaultConfig, infoDialogConfig } from './dialog-ref';
+import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
 // import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { EditModalContent } from './edit/edit.component';
@@ -248,39 +250,15 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public cloudStorageDelete(
-        system$: BehaviorSubject<NxSystem>,
-        updateCallback: () => void
-    ) {
-        // WIP still need to implement
-        const config: Partial<DialogConfig> = {
-            data: {
-                system$,
-                updateCallback
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+    #cloudStorageActionMethodFactory = <T>(modalContent: ComponentType<T>) => () => this.open(modalContent, cloudStorageActionDialogConfig).afterClosed();
 
-        return this.open(CloudStorageDeleteModalContent, dialogConfig)
-            .afterClosed();
-    }
+    public cloudStorageActivate = this.#cloudStorageActionMethodFactory(CloudStorageActivateModalContent);
 
-    public cloudStorageMove(
-        system$: BehaviorSubject<NxSystem>,
-        updateCallback: () => void
-    ) {
-        // WIP still need to implement
-        const config: Partial<DialogConfig> = {
-            data: {
-                system$,
-                updateCallback
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+    public cloudStorageModify = this.#cloudStorageActionMethodFactory(CloudStorageModifyModalContent);
 
-        return this.open(CloudStorageMoveModalContent, dialogConfig)
-            .afterClosed();
-    }
+    public cloudStorageDelete = this.#cloudStorageActionMethodFactory(CloudStorageDeleteModalContent);
+
+    public cloudStorageMove = this.#cloudStorageActionMethodFactory(CloudStorageMoveModalContent);
 
     connectLocalToCloud(
         account: NxAccountService,

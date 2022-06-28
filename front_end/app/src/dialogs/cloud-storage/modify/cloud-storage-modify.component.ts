@@ -19,8 +19,8 @@ import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../a
     templateUrl: '../action-common/license-input-template.html',
     styleUrls: ['../action-common/styles.scss']
 })
-export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalContent {
-    actionType = CloudStorageActionType.MOVE;
+export class CloudStorageModifyModalContent extends BaseCloudStorageActionModalContent {
+    actionType = CloudStorageActionType.MODIFY;
 
     constructor(
         configService: NxConfigService,

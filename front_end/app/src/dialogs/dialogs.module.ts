@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { QrCodeModule } from 'ng-qrcode';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { ComponentsModule } from '@components/components.module';
@@ -20,7 +21,9 @@ import { ApplyModalContent } from './apply/apply.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { ChangeStorageModalContent } from './change-storage/change-storage.component';
 import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
+import { CloudStorageActivateModalContent } from './cloud-storage/activate/cloud-storage-activate.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
+import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
 import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
 import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
 import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
@@ -67,6 +70,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         QrCodeModule,
         GenericDialogModule,
         NgxTranslateCutModule,
+        NgxMaskModule
     ],
     declarations: [
         LoginWebadminModalContent,
@@ -104,7 +108,9 @@ import { WizardModalContent } from './wizard/wizard.component';
         CreateSystemGroupModalContent,
         SystemGroupSettingsModalContent,
         MoveSystemToGroupModalContent,
-        NewFeatureInformationModalContent
+        NewFeatureInformationModalContent,
+        CloudStorageActivateModalContent,
+        CloudStorageModifyModalContent
     ],
     providers: [
         NxDialogsService,

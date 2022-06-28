@@ -15,12 +15,12 @@ import { NxProcessService } from '@services/process.service';
 import { BaseCloudStorageActionModalContent, CloudStorageActionType } from '../action-common/BaseCloudStorageActionModalContent';
 
 @Component({
-    selector: 'nx-cloud-storage-modify-content',
+    selector: 'nx-cloud-storage-activate-content',
     templateUrl: '../action-common/license-input-template.html',
     styleUrls: ['../action-common/styles.scss']
 })
-export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalContent {
-    actionType = CloudStorageActionType.MOVE;
+export class CloudStorageActivateModalContent extends BaseCloudStorageActionModalContent {
+    actionType = CloudStorageActionType.ACTIVATE;
 
     constructor(
         configService: NxConfigService,

@@ -60,7 +60,7 @@ nx-modal-wizard {
         //height: 100vh !important;
         display  : flex !important;
         position : absolute !important;
-        
+
         .modal-holder {
             margin: 0 !important;
         }
@@ -206,7 +206,7 @@ nx-modal-wizard {
             padding : 0;
         }
 
-        .input-error {
+        .input-error, .input-info {
             margin : .5rem 0 0 !important;
 
             & + a {
@@ -261,7 +261,7 @@ nx-modal-wizard {
 
         & > * {
             margin : 0 0.5rem 0 0 !important;
-            
+
             &:last-child {
                 margin : 0 !important;
             }

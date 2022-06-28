@@ -6,6 +6,7 @@ import {
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { DialogRef, DIALOG_DATA } from '@dialogs/dialog-ref';
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -24,6 +25,7 @@ export class NewFeatureInformationModalContent<T> {
     constructor(
         config: NxConfigService,
         language: NxLanguageProviderService,
+        public dialogsService: NxDialogsService,
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) { template }: {
             template: string | TemplateRef<T>
@@ -38,5 +40,5 @@ export class NewFeatureInformationModalContent<T> {
         }
     }
 
-    close = this.dialogRef.close;
+    close = () => this.dialogRef.close();
 }
