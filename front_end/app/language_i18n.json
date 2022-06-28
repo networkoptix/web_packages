@@ -550,7 +550,6 @@
     "Wrong login or password": "Wrong login or password",
     "Wrong password": "Wrong password",
     "Yes, delete existing VMS archives": "Yes, delete existing VMS archives",
-    "You already own this system": "You already own this system",
     "You are attempting to reserve more space than there is free space available. This will delete existing VMS archives!": "You are attempting to reserve more space than there is free space available. This will delete existing VMS archives!",
     "You can both increase and decrease the current Cloud Storage size.": "You can both increase and decrease the current Cloud Storage size.",
     "You can cancel it anytime without data loss.": "You can cancel it anytime without data loss.",

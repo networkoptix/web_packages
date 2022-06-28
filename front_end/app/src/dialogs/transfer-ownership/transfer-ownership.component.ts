@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
+import { isEqual } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -31,11 +35,12 @@ export class TransferOwnershipModalContent implements OnInit {
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;
-    newOwnerEmail: string;
+
+    userItems: DropdownItem<string>[];
+    selectedUser: DropdownItem<string>;
 
     get noUsers(): boolean {
-        return this.system.userManager.users.length === 2;
-        // Local admin and cloud owner
+        return !this.userItems?.length;
     }
 
     constructor(
@@ -56,43 +61,37 @@ export class TransferOwnershipModalContent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.userItems = this.system.userManager.users
+            .filter(user =>
+                user.email && // Discard local admin
+                user.email !== this.system.userManager.currentOwner.email
+                // Discard system owner
+            )
+            .map(user => ({
+                name: user.email,
+                value: user.email,
+                help: user.fullName,
+            }));
+        this.selectedUser = this.userItems?.[0];
+
         const errorCodes = {
-            selfTransfer: () => {
-                this.form.controls.newSystemOwner.setErrors({
-                    selfTransfer: true
-                });
-            },
             duplicateTransfer: () => {
-                this.form.controls.newSystemOwner.setErrors({
+                this.form.control.setErrors({
                     duplicateTransfer: true
-                });
-            },
-            accountDoesNotExist: () => {
-                this.form.controls.newSystemOwner.setErrors({
-                    accountDoesNotExist: true
                 });
             },
         };
 
         this.transferOwnership = this.processService.createProcess(
             async () => {
-                if (this.system.userManager.currentOwner.email === this.newOwnerEmail) {
-                    return Promise.reject({ error: 'selfTransfer' });
-                }
+                const newOwnerEmail = this.selectedUser.value;
 
-                if (this.transfers.some(t => t.toAccount === this.newOwnerEmail)) {
+                if (this.transfers.some(t => t.toAccount === newOwnerEmail)) {
                     return Promise.reject({ error: 'duplicateTransfer' });
                 }
 
-                const notInSystem = !this.system.userManager.users.some(user =>
-                    user.email === this.newOwnerEmail
-                );
-                if (notInSystem) {
-                    return Promise.reject({ error: 'accountDoesNotExist' });
-                }
-
                 return this.cloudService
-                    .startTransfer(this.system.id, this.newOwnerEmail)
+                    .startTransfer(this.system.id, newOwnerEmail)
                     .toPromise();
             },
             { errorCodes },
@@ -102,6 +101,13 @@ export class TransferOwnershipModalContent implements OnInit {
             },
             () => {},
         );
+    }
+
+    selectUser(user: DropdownItem<string>): void {
+        if (!isEqual(user, this.selectedUser)) {
+            this.form.control.setErrors(null);
+        }
+        this.selectedUser = { ...user };
     }
 
     close = (): void => {

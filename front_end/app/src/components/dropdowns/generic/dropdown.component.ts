@@ -62,6 +62,7 @@ export class NxGenericDropdown<
     @Input() type: string;
     @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
     @IBool() @Input() canSearch: CoercedBoolInput;
+    @IBool() @Input() forceLoneOption: CoercedBoolInput = true;
     @Input() forcePosition: {
         left?: number,
         top?: number,
@@ -147,7 +148,7 @@ export class NxGenericDropdown<
         this._items = this.items.filter(item => item.name.toLowerCase().includes(this.filter.toLowerCase()));
 
         if (!this._items.length) {
-            this._items = [<Item>{ name: 'No matches', value: '' }];
+            this._items = [<Item>{ name: 'No matches', value: '', disabled: true }];
         }
     }
 }
