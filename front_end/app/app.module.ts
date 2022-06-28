@@ -26,9 +26,7 @@ import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { InputTrimModule } from 'ng2-trim-directive';
 import { CookieService } from 'ngx-cookie-service';
-import { DeviceDetectorModule } from 'ngx-device-detector';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
-import { OrderModule } from 'ngx-order-pipe';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
@@ -60,9 +58,9 @@ import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
+import { systemsReducer } from '@src/store/systems/systems.reducer';
 
 import { AppComponent } from './app.component';
-import { systemsReducer } from './src/store/systems/systems.reducer';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -89,7 +87,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             headerName: 'X-CSRFToken'
         }),
         NgxChartsModule,
-        OrderModule,
         InputTrimModule,
         ComponentsModule,
         MenuModule,
@@ -107,7 +104,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             }
         }),
         NgxTranslateCutModule.forRoot(),
-        DeviceDetectorModule.forRoot(),
         NgxMaskModule.forRoot(options),
         NgxWebstorageModule.forRoot(),
         // Need to find a different way to choose page module for webadmin

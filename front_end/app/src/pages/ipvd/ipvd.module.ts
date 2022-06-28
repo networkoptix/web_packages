@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Angular2CsvModule } from 'angular2-csv';
 
 import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -31,7 +30,6 @@ const appRoutes: Routes = [
         DirectivesModule,
         PipesModule,
         ReactiveFormsModule,
-        Angular2CsvModule,
         RouterModule.forChild(appRoutes),
         AngularSvgIconModule
     ],

@@ -6,9 +6,14 @@
  * If this script starts causing build failures even though the language_compiled.json files are valid then set failOnBuild to false.
  */
 
-const { TranslateMessageFormatCompiler } = require('ngx-translate-messageformat-compiler');
-const fs = require('fs');
-const path = require('path');
+import "@angular/compiler";
+import { TranslateMessageFormatCompiler } from "ngx-translate-messageformat-compiler";
+import fs from 'fs';
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const LANG_FILE = 'language_compiled.json';
 const failOnBuild = false; // Set to false to prevent error from killing build

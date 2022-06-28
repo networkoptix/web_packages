@@ -65,15 +65,16 @@ const PROXY_CONFIG = [
             }
             return req.url.replace('/static', '');
         }
-    }, {
-        context: [
-            '/ws'
-        ],
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false,
-        ws: true
     }
+    // }, {
+    //     context: [
+    //         '/ws'
+    //     ],
+    //     target: 'http://localhost:5000',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     ws: true
+    // }
 ];
 
 module.exports = PROXY_CONFIG;

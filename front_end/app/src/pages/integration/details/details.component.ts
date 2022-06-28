@@ -68,8 +68,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     setUpRouteSubscription(): void {
         combineLatest(this.route.params, this.route.queryParams)
             .pipe(
-                untilDestroyed(this),
-                map(results => ({ params: results[0], query: results[1] }))
+                map(results => ({ params: results[0], query: results[1] })),
+                untilDestroyed(this)
             )
             .subscribe(results => {
                 if (results.params.id) {
@@ -187,7 +187,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.menuService.selectedDetailsSection
+        this.menuService
+            .selectedDetailsSection
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;

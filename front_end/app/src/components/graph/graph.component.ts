@@ -4,6 +4,7 @@ import {
     OnChanges,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { LegendPosition } from '@swimlane/ngx-charts';
 import { curveBasis } from 'd3-shape';
 import { Subject, timer } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
@@ -46,7 +47,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
     // options
     legend: boolean = true;
     legendTitle = '';
-    legendPosition = 'right';
+    legendPosition = LegendPosition.Right;
     showLabels: boolean = true;
     animations: boolean = false;
     xAxis: boolean = false;
@@ -57,31 +58,6 @@ export class NxMonitoringGraphComponent implements OnChanges {
     yAxisLabel: string = '';
     timeline: boolean = false;
     curve = curveBasis;
-
-    colorScheme = {
-        domain: [
-            '#a8385d',
-            '#7aa3e5',
-            '#a27ea8',
-            '#aae3f5',
-            '#adcded',
-            '#a95963',
-            '#8796c0',
-            '#7ed3ed',
-            '#50abcc',
-            '#ad6886',
-            '#bf9d76',
-            '#e99450',
-            '#d89f59',
-            '#f2dfa7',
-            '#a5d7c6',
-            '#7794b1',
-            '#afafaf',
-            '#707160',
-            '#ba9383',
-            '#d9d5c3'
-        ]
-    };
 
     private setupDefaults(): void {
         // leave "view" undefined to "fitContent"
@@ -102,7 +78,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
 
     ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): void {
         if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
-            this.destroy$.next();
+            this.destroy$.next(true);
 
             if (this.system && this.selectedServerId) {
                 this.multi = [];

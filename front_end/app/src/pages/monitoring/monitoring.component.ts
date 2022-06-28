@@ -134,7 +134,7 @@ export class NxMonitoringComponent implements OnInit {
                 return;
             }
 
-            this.destroy$.next();
+            this.destroy$.next(true);
             this.system = undefined;
             this.monitoringService.system = undefined;
             this.monitoringService.selectedServerId = undefined;

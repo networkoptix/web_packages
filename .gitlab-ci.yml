@@ -43,7 +43,9 @@ stages:
 
 .frontend-changes:
   extends: .retries
-  needs: []
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -78,7 +80,9 @@ no-changes:
 
 .frontend-test-changes:
   extends: .retries
-  needs: []
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -86,7 +90,9 @@ no-changes:
 
 .authorization-changes:
   extends: .retries
-  needs: []
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -166,7 +172,7 @@ language-check:
   stage: check
   script:
     - cd front_end
-    - npm install
+    - npm run node-modules
     - npm run lang-ci-check
 
 frontend-lint-check:
@@ -174,7 +180,7 @@ frontend-lint-check:
   stage: check
   script:
     - cd front_end
-    - npm install
+    - npm run node-modules
     - npm run lint:ci app
 
 fe-lint-tests-check:
@@ -182,7 +188,7 @@ fe-lint-tests-check:
   stage: check
   script:
     - cd front_end
-    - npm install
+    - npm run node-modules
     - npm run lint:ci:tests app
 
 auth-lint-check:
@@ -190,7 +196,7 @@ auth-lint-check:
   stage: check
   script:
     - cd front_end
-    - npm install
+    - npm run node-modules
     - npm run lint:ci:auth projects/authorization/src
 
 django-unit-test-slow:
@@ -220,7 +226,7 @@ frontend-unit-test:
     CHROME_BIN: /usr/bin/google-chrome
   script:
     - cd front_end
-    - npm install
+    - npm run node-modules
     - npm run lang
     - npm run test:ci front-end
   artifacts:
@@ -235,7 +241,7 @@ authorization-unit-test:
     CHROME_BIN: /usr/bin/google-chrome
   script:
     - cd front_end
-    - npm install
+    - npm run node-modules
     - npm run lang
     - npm run test:ci authorization
   artifacts:
@@ -457,7 +463,9 @@ fail-on-python-license-check:
 check-node-licenses:
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
   stage: check
-  needs: []
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
   artifacts:
     paths:
       - ci-package-license.json

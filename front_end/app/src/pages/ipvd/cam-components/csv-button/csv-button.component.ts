@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { Angular2CsvComponent } from 'angular2-csv';
+import { Component, Input } from '@angular/core';
+
+import { NxCsvExtractService } from '@services/csv-export.service';
+import { CVS_OPTIONS } from '@services/csv-export.service.types';
 
 // Component to customize the "export to csv" button
 @Component({
@@ -7,9 +9,16 @@ import { Angular2CsvComponent } from 'angular2-csv';
     templateUrl: './csv-button.component.html',
     styleUrls: ['./csv-button.component.scss']
 })
-export class CsvButtonComponent extends Angular2CsvComponent {
+export class CsvButtonComponent {
+    @Input() data: object[];
+    @Input() filename: string;
+    @Input() options: CVS_OPTIONS;
+
+    constructor(
+        private extractService: NxCsvExtractService
+    ) {}
+
     downloadCSV() {
-        this.onDownload();
-        return false;
+        this.extractService.exportToCsv(this.data, this.filename, this.options);
     }
 }

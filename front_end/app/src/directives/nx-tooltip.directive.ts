@@ -84,7 +84,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     private close(): void {
-        this.destroy$.next();
+        this.destroy$.next(true);
         this.overlayRef?.detach();
     }
 

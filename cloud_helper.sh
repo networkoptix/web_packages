@@ -30,7 +30,8 @@ function init_backend(){
 
 function init_frontend(){
     pushd front_end
-    npm install
+    echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
+    npm install --legacy-peer-deps
     npm run setSkin blue
     popd
 }
@@ -100,7 +101,7 @@ function setup_env() {
     export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
-    npm install --prefix cloud
+    npm run node-modules --prefix cloud
 }
 
 function setup_robot_env() {
@@ -262,7 +263,7 @@ function start_https_tunnel() {
 function install_cli() {
     export CLOUD_PORTAL_DIR=$(pwd)
     pushd cloud_helper
-    npm install
+    npm run node-modules
     npm run build
     npm link
     echo 'cloud-helper CLI installed'

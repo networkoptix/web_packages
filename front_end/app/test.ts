@@ -10,7 +10,6 @@ import { MockInstance, ngMocks } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, EMPTY, of } from 'rxjs';
 
-import staticLang from '@app/language_compiled.json';
 import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import { DUMMY_ACCOUNT } from '@services/account.service/account';
@@ -27,6 +26,8 @@ import { NxSessionService } from '@services/session.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+
+import staticLang from './language_compiled.json';
 
 // HELPERS ******************************************
 nxConfig.company.name = 'Nx Cloud';
@@ -133,7 +134,9 @@ declare const require: {
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
     BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting()
+    platformBrowserDynamicTesting(), {
+        teardown: { destroyAfterEach: false }
+    }
 );
 // Then we find all the tests.
 const context = require.context('./', true, /\.spec\.ts$/);

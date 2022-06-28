@@ -827,6 +827,7 @@ export class NxSystemStorageComponent implements OnInit {
             delay: this.CONFIG.alertTimeout
         };
         let message: string;
+        // @ts-expect-error TODO: Fix type
         return defer(() => this.system.storageManager
             .rebuildArchive(this.serverId, type, action)
             .pipe(

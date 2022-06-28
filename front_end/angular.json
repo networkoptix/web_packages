@@ -64,7 +64,7 @@
               "app/styles/main.scss"
             ],
             "scripts": [
-              "node_modules/marked/lib/marked.js"
+              "node_modules/marked/marked.min.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -189,8 +189,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "7mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "8mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -205,14 +205,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "publicHost": "localhost:9000",
             "host": "0.0.0.0",
             "port": 9000,
             "browserTarget": "front-end:build",
-            "sourceMap": {
-              "scripts": true,
-              "styles": true,
-              "vendor": false
-            },
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
@@ -271,19 +267,6 @@
             },
             "scripts": [],
             "codeCoverage": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         },
         "e2e": {
@@ -398,11 +381,6 @@
             "browserTarget": "authorization:build:development",
             "host": "0.0.0.0",
             "port": 9002,
-            "sourceMap": {
-              "scripts": true,
-              "styles": true,
-              "vendor": false
-            },
             "sslKey": "ssl_keys/server.key",
             "sslCert": "ssl_keys/server.crt",
             "ssl": true
@@ -436,19 +414,6 @@
             "scripts": []
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/authorization/tsconfig.app.json",
-              "projects/authorization/tsconfig.spec.json",
-              "projects/authorization/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -466,6 +431,11 @@
   },
   "defaultProject": "front-end",
   "cli": {
-    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea"
+    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea",
+    "cache": {
+      "enabled": true,
+      "path": ".angular/cache",
+      "environment": "all"
+    }
   }
 }

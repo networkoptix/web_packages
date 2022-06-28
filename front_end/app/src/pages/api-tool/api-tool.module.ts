@@ -55,9 +55,6 @@ const appRoutes: Routes = [
         NxSwaggerAPIInformationComponent
     ],
     bootstrap: [],
-    entryComponents: [
-        NxAPIToolComponent
-    ],
     exports: [
         NxAPIToolComponent
     ]

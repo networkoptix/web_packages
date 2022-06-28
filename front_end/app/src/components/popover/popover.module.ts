@@ -15,8 +15,7 @@ import { NxPopoverComponent } from './popover/popover.component';
     ],
     providers: [
         NxPopoverService
-    ],
-    entryComponents: [NxPopoverComponent]
+    ]
 })
 export class PopoverModule {
 }

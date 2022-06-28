@@ -81,7 +81,7 @@ export class NxBookmarksWidgetComponent extends FirstPartyWidget {
         }),
         switchMap(_ => this.system.getBookmarks()),
         // map(getMockBookmarks), Use in case you want to demo when no bookmarks
-        switchMap(async bookmarks => bookmarks.map(bookmark => {
+        switchMap(async (bookmarks: any) => bookmarks.map(bookmark => {
             const thumbnail = this.system.serverManager.getPreviewUrl(bookmark.deviceId, bookmark.startTimeMs, 800, 800, 0, this.system.mediaserver.authGet);
             return { ...bookmark, thumbnail };
         })

@@ -1,6 +1,6 @@
 variables:
   NODE_JS_IMAGE: "nx/cloud_portal_node_js"
-  NODE_JS_IMAGE_TAG: "1.0"
+  NODE_JS_IMAGE_TAG: "1.2"
 
 docker:build-node-chrome:
   extends: .docker.template

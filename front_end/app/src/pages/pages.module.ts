@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Angular2CsvModule } from 'angular2-csv';
 import { QuicklinkStrategy } from 'ngx-quicklink';
 
 import { DirectivesModule } from '@directives/directives.module';
@@ -190,7 +189,6 @@ const lazyRoutes: Routes = [
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        Angular2CsvModule,
         NxAccountModule,
         // NxDebugModule,
         Nx500Module,
@@ -215,7 +213,6 @@ const lazyRoutes: Routes = [
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        Angular2CsvModule,
         // NxDebugModule,
         Nx500Module,
         Nx503Module,

@@ -106,7 +106,7 @@ export class NxConsoleTableComponent {
 
             combineLatest([
                 this.update$.pipe(switchMap(this.cloudApi.getSubAPI(this.sectionParam).list)),
-                this.cloudApi.getSubAPI(this.sectionParam).getManifest(),
+                this.cloudApi.getSubAPI(this.sectionParam).getManifest() as BehaviorSubject<{}>,
                 this.menusService.getMenu('configuration').pipe(
                     map(({ nodes }) => NxHeaderService.findMatchFactory(`${this.base}/${this.sectionParam}`)(nodes)?.assetId),
                     switchMap(assetId => assetId ? this.cloudApi.getDocAsset(assetId) : Promise.resolve(null as DocAsset))
@@ -118,7 +118,7 @@ export class NxConsoleTableComponent {
                 this.displayedColumns = (this.selectedManifest?.contexts || []).map(({ name }) => name);
                 this.manifest = this.selectedManifest.editManifest;
                 const { page = 1, search = '', perPage = 0 } = this.route.snapshot.queryParams;
-                const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, list, this.contentManifest.manifest.settings);
+                const { data } = new ListSerializer(this.sectionParam, this.selectedManifest, <unknown>list as unknown[], this.contentManifest.manifest.settings);
                 this.noItems = !data.length;
                 this.showSearch ||= !!search;
                 const perPageFromParam = parseInt(perPage || this.selectedManifest.perPage);

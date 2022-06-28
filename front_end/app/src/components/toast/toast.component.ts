@@ -38,7 +38,7 @@ export class NxToast implements OnChanges {
     }
 
     remove(): void {
-        this.destroy$.next();
+        this.destroy$.next(true);
         this.hide.emit(true);
     }
 }

@@ -22,10 +22,6 @@ export class NxUtilsService {
 
         if (this.deviceService.isDesktop()) {
             blob = new Blob([data], { type });
-            if (navigator.msSaveOrOpenBlob) {
-                navigator.msSaveOrOpenBlob(blob, filename);
-                return false;
-            }
             objectUrl = URL.createObjectURL(blob);
             a.href = objectUrl;
         } else {

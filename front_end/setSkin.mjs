@@ -1,5 +1,10 @@
-const fsmv = require('fs-extra');
-const path = require('path');
+import fsmv from 'fs-extra';
+import path from 'path';
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const copySkin = (color) => {
     var source = path.resolve(__dirname, '../skins', color, 'front_end/styles');
     var dest = path.resolve(__dirname, 'app/styles/custom');

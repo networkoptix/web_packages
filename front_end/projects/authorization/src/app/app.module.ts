@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
-import { DeviceDetectorModule } from 'ngx-device-detector';
 import { MESSAGE_FORMAT_CONFIG, TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
@@ -47,7 +46,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 useClass: TranslateMessageFormatCompiler
             }
         }),
-        DeviceDetectorModule.forRoot(),
         NgxWebstorageModule.forRoot(),
         OverlayModule,
         GenericDialogModule,

@@ -519,7 +519,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this.vms.setMediaServers(this.systemId, cachedMediaServers);
                     processingMediaServers = false;
 
-                    firstLoad.next();
+                    firstLoad.next(true);
                 });
         }).catch(e => {
             this._warn(

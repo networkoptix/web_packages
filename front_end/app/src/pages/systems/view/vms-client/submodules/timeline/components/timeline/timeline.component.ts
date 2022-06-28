@@ -69,7 +69,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _onTimelineStatusChange(s: TimelineServiceStatus): void {
         if (s.canvasGeometryUpdateRequested) {
-            this.updateCanvas.next();
+            this.updateCanvas.next(true);
         }
     }
 
@@ -99,7 +99,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.unsub$.next();
+        this.unsub$.next(true);
         this._stateSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
         this._pinchDestructor && this._pinchDestructor();
@@ -108,10 +108,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     public ngAfterViewInit(): void {
         window.addEventListener(
             'resize',
-            () => this.updateCanvas.next()
+            () => this.updateCanvas.next(true)
         );
 
-        setTimeout(() => this.updateCanvas.next());
+        setTimeout(() => this.updateCanvas.next(true));
         this.updateCanvas.pipe(
             debounceTime(50),
             takeUntil(this.unsub$)

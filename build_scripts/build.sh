@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-NODE_VERSION="12.20.1"
-NPM_VERSION="6.14.10"
+NODE_VERSION="16.13.1"
+NPM_VERSION="8.1.2"
 
 function build_frontend () {
     echo "Building front_end"
@@ -75,7 +75,8 @@ cd $PORTAL_REPOSITORY
 
 pushd front_end
     echo -e "\nnpm install cloud portal"
-    npm install
+    echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
+    npm install --legacy-peer-deps
 
 #     echo "Auditing npm packages"
 #     AUDIT=$(npm audit | grep -E "(High)" || true)

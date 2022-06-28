@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import type { Options } from 'angular2-csv';
 import { isEqual } from 'lodash-es';
 import { Subject, SubscriptionLike } from 'rxjs';
 import { debounceTime, delay } from 'rxjs/operators';
@@ -102,17 +101,13 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     elementTableWidthSubscription: SubscriptionLike;
     resizeSubscription: SubscriptionLike;
 
-    // Options for the Excel export
+    // Options for the CSV export
     public csvFilename: number;
     public csvCameraData: CsvData;
     /* Missing filename and keys property, but README says keys is optional
     and filename is provided as a property on the element so probably fine */
-    // @ts-expect-error: Above
-    public csvOptions: Options = {
+    public csvOptions = {
         fieldSeparator: ',',
-        quoteStrings: '"',
-        decimalseparator: '.',
-        showLabels: true,
         headers: [
             'Vendor',
             'Model',
@@ -130,8 +125,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         ],
         showTitle: true,
         title: 'Camera List',
-        useBom: false,
-        removeNewLines: true
     };
 
     @ViewChild('nxScrollWrapper', { static: false })
@@ -552,7 +545,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         return typeof x === 'boolean';
     }
 
-    // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
+    // Element with position 'fixed' is losing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
     // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
     @HostListener('mousewheel', ['$event'])
     onMouseWheel(event: MouseEvent): void {

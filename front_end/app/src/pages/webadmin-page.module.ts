@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Angular2CsvModule } from 'angular2-csv';
 import { QuicklinkStrategy } from 'ngx-quicklink';
 
 import { DirectivesModule } from '@directives/directives.module';
@@ -72,7 +71,6 @@ const lazyRoutes: Routes = [
         DirectivesModule,
         PipesModule,
         NonSupportedBrowserModule,
-        Angular2CsvModule,
         // NxDebugModule,
         Nx500Module,
         RouterModule.forRoot(lazyRoutes, {
@@ -93,7 +91,6 @@ const lazyRoutes: Routes = [
     ],
     exports: [
         NonSupportedBrowserModule,
-        Angular2CsvModule,
         // NxDebugModule,
         Nx500Module,
         RouterModule
