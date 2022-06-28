@@ -689,7 +689,7 @@ def handle_settings_from_zip(request, form, file, asset):
 
 
 def handle_settings_file(request, form, file, asset):
-    if handler_result := handle_settings_from_json(request, form, file, asset):
+    if handler_result := handle_settings_from_json(request, False, form, file, asset):
         return handler_result
 
     task_id = None
