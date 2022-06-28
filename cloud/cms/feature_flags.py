@@ -58,6 +58,7 @@ class FLAGS(metaclass=_FlagType):
     archive_selection = ('Archive Selection', 'archiveSelection', '%ARCHIVE_SELECTION_ENABLED%')
     view_camera_details = ('View Camera Details', 'viewCameraDetails', '%VIEW_CAMERA_DETAILS_ENABLED%')
     themes_enabled = ('Enable themes', 'themesEnabled', '%THEMES_ENABLED%')
+    cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer', '%CLOUD_OWNERSHIP_TRANSFER%')
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
     # *************************************************************************************
@@ -72,7 +73,6 @@ class SWITCHES(metaclass=_FlagType):
     server_side_meta = ('Server Side Metadata', 'serverSideMetadata')
     system_groups = ('System Groups', 'systemGroups')
     readonly_apis = ('Readonly APIs', 'readonlyAPIs')
-    cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer')
     new_header = ('New Header', 'newHeader')
 
 class SAMPLES(metaclass=_FlagType):
