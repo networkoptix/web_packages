@@ -760,7 +760,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@ava/typescript",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@ava/typescript/LICENSE"
         },
-        "@babel/code-frame@7.16.7": {
+        "@babel/code-frame@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -768,7 +768,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/code-frame",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/code-frame/LICENSE"
         },
-        "@babel/compat-data@7.18.5": {
+        "@babel/compat-data@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -776,7 +776,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/compat-data",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/compat-data/LICENSE"
         },
-        "@babel/core@7.18.5": {
+        "@babel/core@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -792,7 +792,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/eslint-parser",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/eslint-parser/LICENSE"
         },
-        "@babel/generator@7.18.2": {
+        "@babel/generator@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -800,7 +800,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/generator",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/generator/LICENSE"
         },
-        "@babel/helper-compilation-targets@7.18.2": {
+        "@babel/helper-compilation-targets@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -808,7 +808,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-compilation-targets",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-compilation-targets/LICENSE"
         },
-        "@babel/helper-environment-visitor@7.18.2": {
+        "@babel/helper-environment-visitor@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -816,7 +816,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-environment-visitor",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-environment-visitor/LICENSE"
         },
-        "@babel/helper-function-name@7.17.9": {
+        "@babel/helper-function-name@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -824,7 +824,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-function-name",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-function-name/LICENSE"
         },
-        "@babel/helper-hoist-variables@7.16.7": {
+        "@babel/helper-hoist-variables@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -832,7 +832,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-hoist-variables",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-hoist-variables/LICENSE"
         },
-        "@babel/helper-module-imports@7.16.7": {
+        "@babel/helper-module-imports@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -840,7 +840,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-imports",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-imports/LICENSE"
         },
-        "@babel/helper-module-transforms@7.18.0": {
+        "@babel/helper-module-transforms@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -848,7 +848,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-transforms",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-transforms/LICENSE"
         },
-        "@babel/helper-simple-access@7.18.2": {
+        "@babel/helper-simple-access@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -856,7 +856,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-simple-access",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-simple-access/LICENSE"
         },
-        "@babel/helper-split-export-declaration@7.16.7": {
+        "@babel/helper-split-export-declaration@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -864,7 +864,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-split-export-declaration",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-split-export-declaration/LICENSE"
         },
-        "@babel/helper-validator-identifier@7.16.7": {
+        "@babel/helper-validator-identifier@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -872,7 +872,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-validator-identifier",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-validator-identifier/LICENSE"
         },
-        "@babel/helper-validator-option@7.16.7": {
+        "@babel/helper-validator-option@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -880,7 +880,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-validator-option",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-validator-option/LICENSE"
         },
-        "@babel/helpers@7.18.2": {
+        "@babel/helpers@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -888,7 +888,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helpers",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helpers/LICENSE"
         },
-        "@babel/highlight@7.17.12": {
+        "@babel/highlight@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -896,7 +896,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/highlight",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/highlight/LICENSE"
         },
-        "@babel/parser@7.18.5": {
+        "@babel/parser@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -904,7 +904,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/parser",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/parser/LICENSE"
         },
-        "@babel/template@7.16.7": {
+        "@babel/template@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -912,7 +912,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/template",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/template/LICENSE"
         },
-        "@babel/traverse@7.18.5": {
+        "@babel/traverse@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -920,7 +920,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/traverse",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/traverse/LICENSE"
         },
-        "@babel/types@7.18.4": {
+        "@babel/types@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -957,7 +957,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/gen-mapping",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/gen-mapping/LICENSE"
         },
-        "@jridgewell/resolve-uri@3.0.7": {
+        "@jridgewell/resolve-uri@3.0.8": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/resolve-uri",
             "publisher": "Justin Ridgewell",
@@ -965,7 +965,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/resolve-uri",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/resolve-uri/LICENSE"
         },
-        "@jridgewell/set-array@1.1.1": {
+        "@jridgewell/set-array@1.1.2": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/set-array",
             "publisher": "Justin Ridgewell",
@@ -973,14 +973,14 @@
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/set-array",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/set-array/LICENSE"
         },
-        "@jridgewell/sourcemap-codec@1.4.13": {
+        "@jridgewell/sourcemap-codec@1.4.14": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/sourcemap-codec",
             "publisher": "Rich Harris",
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/sourcemap-codec",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/sourcemap-codec/LICENSE"
         },
-        "@jridgewell/trace-mapping@0.3.13": {
+        "@jridgewell/trace-mapping@0.3.14": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/trace-mapping",
             "publisher": "Justin Ridgewell",
@@ -1027,7 +1027,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/eslint",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/eslint/LICENSE"
         },
-        "@types/estree@0.0.51": {
+        "@types/estree@0.0.52": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/estree",
@@ -1393,7 +1393,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/camelcase",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001358": {
+        "caniuse-lite@1.0.30001359": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -1755,7 +1755,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.168": {
+        "electron-to-chromium@1.4.171": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -1954,7 +1954,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-plugin-node",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-plugin-node/LICENSE"
         },
-        "eslint-plugin-prettier@4.0.0": {
+        "eslint-plugin-prettier@4.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/prettier/eslint-plugin-prettier",
             "publisher": "Teddy Katz",
@@ -2199,7 +2199,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/flat-cache",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/flat-cache/LICENSE"
         },
-        "flatted@3.2.5": {
+        "flatted@3.2.6": {
             "licenses": "ISC",
             "repository": "https://github.com/WebReflection/flatted",
             "publisher": "Andrea Giammarchi",
@@ -5747,7 +5747,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/camelcase",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001358": {
+        "caniuse-lite@1.0.30001359": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -6395,7 +6395,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.168": {
+        "electron-to-chromium@1.4.171": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -7244,7 +7244,7 @@
             "path": "cloud_portal/front_end/inline-wizard/node_modules/http-errors",
             "licenseFile": "cloud_portal/front_end/inline-wizard/node_modules/http-errors/LICENSE"
         },
-        "http-parser-js@0.5.7": {
+        "http-parser-js@0.5.8": {
             "licenses": "MIT",
             "repository": "https://github.com/creationix/http-parser-js",
             "publisher": "Tim Caswell",

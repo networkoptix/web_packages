@@ -350,7 +350,7 @@ export abstract class BaseAccount implements OnDestroy {
                     }
                     return this.dialogs
                         .confirm('',
-                            this.LANG.dialogs.titles.changeAccount(account),
+                            this.LANG.dialogs.titles.changeAccount({ email: account.email }),
                             this.LANG.dialogs.buttons.stayLoggedIn(),
                             undefined,
                             cancelLabel,
@@ -438,7 +438,7 @@ export abstract class BaseAccount implements OnDestroy {
                 this.LANG.dialogs.titles.loggedFromOtherAccount(),
                 this.LANG.dialogs.buttons.ok(),
                 undefined,
-                this.LANG.dialogs.buttons.stayAs(account),
+                this.LANG.dialogs.buttons.stayAs({ email: account.email }),
                 'long-cancel-button');
             if (res === true) {
                 this.stopAccountPoll();
@@ -467,7 +467,7 @@ export abstract class BaseAccount implements OnDestroy {
                     this.LANG.dialogs.titles.loggedFromOtherAccount(),
                     this.LANG.dialogs.buttons.ok(),
                     undefined,
-                    this.LANG.dialogs.buttons.stayAs(account),
+                    this.LANG.dialogs.buttons.stayAs({ email: account.email }),
                     'long-cancel-button');
 
             if (response === true) {

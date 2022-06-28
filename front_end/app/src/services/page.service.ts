@@ -54,7 +54,7 @@ export class NxPageService {
             });
 
             if (!this.metaProperties.title || this.metaProperties.title === this.LANG[this.defaultMetaKey].default.title() && !headerService?.currentLocation?.isSystem && headerService.currentLocation.childNode) {
-                this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.LANG.productName);
+                this.updateLookups('title', translate.instant(headerService.currentLocation.childNode.name) + ' - ' + this.LANG.productName());
             }
         });
         this.router.events.pipe(
@@ -136,7 +136,7 @@ export class NxPageService {
             return;
         }
         const txt = (typeof title === 'function') ? title() : title;
-        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.productName) {
+        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.productName()) {
             this.updateLookups('title', this.LANG.pageTitles[this.templateKey]({ title: txt }));
             return;
         }

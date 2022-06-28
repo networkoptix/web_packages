@@ -78,10 +78,8 @@ export const formatError = (
             return errorCodes[errorCode];
         }
     }
-    const errorText = typeof lang.errorCodes[errorCode] === 'function'
-        ? lang.errorCodes[errorCode]()
-        : lang.errorCodes[errorCode];
-    return errorText || lang.errorCodes.unknownError();
+    const errorText = lang.errorCodes[errorCode]?.();
+    return errorText ?? lang.errorCodes.unknownError();
 };
 
 export class Process {

@@ -65,7 +65,7 @@
     "fill-lang": "python fill-lang.py",
     "test-lang": "node testCompiledLang.js",
     "update-lang": "ngx-translate-extract -i ./app/src ./projects/authorization/src -o ./app/language_i18n.json --clean --sort --format json",
-    "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts --just-types; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /any /g' app/language_i18n_static_types.ts; rm -f app/language_i18n_static_types.ts-e",
+    "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts --just-types; sed -i -e 's/string;/TranslateFuncType;/g' app/language_i18n_static_types.ts; sed -i -e 's/string /TranslateFuncType /g' app/language_i18n_static_types.ts; sed -i -e 's/TranslateFuncType/(params?: Record<string, string | number>) => string/g' app/language_i18n_static_types.ts; rm -f app/language_i18n_static_types.ts-e",
     "link-local-libs": "node app/lib/link-libs.js",
     "publish-public-libraries": "node app/lib/publish-public-libs.js"
   },

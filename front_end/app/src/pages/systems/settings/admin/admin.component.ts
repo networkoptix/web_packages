@@ -406,7 +406,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         buttons: { ok }
                     }
                 } = this.LANG;
-                this.dialogs.confirm(message, title, ok);
+                this.dialogs.confirm(message(), title(), ok());
                 this.getCloudStorageUsagePromise = null;
             }).catch(() => {
                 // User is the owner. Deleting system means unbinding it and disconnecting all accounts

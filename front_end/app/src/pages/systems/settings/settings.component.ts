@@ -529,7 +529,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 { name: this.LANG.system.mergeUnknownName?.() };
                         this.secondaryMerge = true;
                     } else if (mergeInProgress) {
-                        ribbonText = this.LANG.ribbon.systemsMerging;
+                        ribbonText = this.LANG.ribbon.systemsMerging();
                     }
 
                     if (ribbonText) {
