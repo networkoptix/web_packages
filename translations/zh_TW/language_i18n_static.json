@@ -1014,7 +1014,7 @@
             "primaryStreams": "Outgoing Primary streams",
             "secondaryStreams": "Outgoing Secondary streams",
             "incomingConnections": "連入連線",
-            "outgoingConnections": "Outgoing connections",
+            "outgoingConnections": "連外連線",
             "logLevel": "日誌等級",
             "publicIp": "公開IP",
             "os": "作業系統",

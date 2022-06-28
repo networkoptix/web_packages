@@ -332,11 +332,11 @@
                 },
                 "migrate": {
                     "title": "移動",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "body": "クラウドストレージおよびすべての録画データは、アクティブなクラウドストレージがない他のシステムへ簡単に移設できます。"
                 },
                 "delete": {
                     "title": "削除",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "body": "クラウドストレージはいつでもシステムから削除できます。必要に応じて、後でこのキーを使用して再有効化できます。"
                 }
             },
             "remove": {

@@ -327,16 +327,16 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Bearbeiten",
+                    "body": "Sie können die aktuelle Größe des Cloud-Speichers im System mit dem neuen Schlüssel ändern. Alle aufgezeichneten Daten werden gespeichert."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Verschieben",
+                    "body": "Der Cloud-Speicher mit allen aufgezeichneten Daten kann einfach auf Ihr anderes System ohne aktiven Cloud-Speicher übertragen werden."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Löschen",
+                    "body": "Sie können den Cloud-Speicher jederzeit aus dem System entfernen. Sie können diesen Schlüssel später zur Reaktivierung verwenden, wenn Sie möchten."
                 }
             },
             "remove": {

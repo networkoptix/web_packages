@@ -327,16 +327,16 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Aanpassen",
+                    "body": "U kunt de huidige grootte van de cloudopslag in het systeem wijzigen met de nieuwe sleutel. Alle opgenomen gegevens worden opgeslagen."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Verplaatsen",
+                    "body": "Cloud Storage met alle opgenomen gegevens kan eenvoudig worden overgedragen naar uw andere systeem zonder actieve Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Verwijderen",
+                    "body": "U kunt Cloud Storage op elk moment van het systeem verwijderen. U kunt deze sleutel later gebruiken om opnieuw te activeren, als u dat wilt."
                 }
             },
             "remove": {
@@ -485,7 +485,7 @@
             "serversRestart": "Herstart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Verbreek de verbinding met alle systemen waarvan u de eigenaar bent van het portaal %CLOUD_NAME% en schakel tweestapsverificatie uit om uw account te verwijderen."
         },
         "twoFactor": {
             "action": "Login",
@@ -639,8 +639,8 @@
         "webadmin2faRequired": "Twee-factor-authenticatie is vereist om toegang te krijgen tot dit systeem. U kunt tweefactorauthenticatie inschakelen in uw <a href=\"{ cloudHost }/account/security\">accountinstellingen</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Mijn Systemen",
+        "systemList": "Systeem Lijst"
     },
     "integration": {
         "Access Control": "Toegangscontrole",
