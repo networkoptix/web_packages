@@ -141,7 +141,7 @@ Force Tags        Threaded
     Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(0, 0, 0, 0)
     Click Element    ${IPVD SEARCH BAR}
     # white
-    Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(255, 255, 255, 1)
+    Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(0, 0, 0, 0)
 
     Log    Step 2
     IPVD Text Search    h
@@ -224,7 +224,7 @@ Force Tags        Threaded
     ${desiredText}=   Set Variable    SNC-CH120
     IPVD Text Search    ${desiredText}
     Wait Until Location Is   ${baseurl}?search=${desiredText}
-    IPVD Select Device from Table Column by Value    2    ${desiredText}
+    IPVD Select Device from Table Column by Value    2    ${desiredText}    include last=${False}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
     Should be Equal As Strings
     ...    ${model}
@@ -237,7 +237,7 @@ Force Tags        Threaded
     IPVD Text Search    ${desiredText}
     ${t}=   Replace String Using Regexp    ${desiredText}    \(\\ \)    %20
     Wait Until Location Is    ${baseurl}?search=${t}
-    IPVD Select Device from Table Randomly
+    IPVD Select Device from Table Randomly      include last=${False}
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
     Should Contain
@@ -306,7 +306,7 @@ Force Tags        Threaded
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
 9. Advanced search
-    [Tags]    C48968
+    [Tags]    C48968    CLOUD-9243
     Log    Step 1
     Go To IPVD Page
     Verify IPVD Advanced Search is Closed
@@ -481,7 +481,7 @@ Force Tags        Threaded
     Go To    ${ENV}/ipvd
     Validate on IPVD Page
     IPVD Text Search    PNM-9080VQ
-    IPVD Select Device from Table by Row Number
+    IPVD Select Device from Table by Row Number     include last=${False}
     Sleep    1
     ${current url}=   Get Location
     Should be equal as strings    ${current url}    ${ENV}/ipvd?search=PNM-9080VQ&camera=PNM-9080VQ
