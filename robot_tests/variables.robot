@@ -17,7 +17,7 @@ ${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Client Custom
 
 ${BACKDROP}                           //ngb-modal-backdrop
-${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
+${MODAL DIALOG}                       //nx-modal-generic-content
 
 ${COMBO TEXT}                         Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이
 ${CYRILLIC TEXT}                      Кенгшщзх
@@ -147,8 +147,8 @@ ${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-ac
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
-${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
-${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${REMOVE BUTTON}                      ${MODAL DIALOG}//button//span[contains(text(),'${REMOVE BUTTON TEXT}')]
+${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button//span[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
