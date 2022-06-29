@@ -317,6 +317,28 @@
             "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbordsklienten {vmsName}.",
             "camera": "kamera",
             "cameras": "kameror",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Aktuella inspelningar",
                 "whenFullyUsed": "När fullt använd",

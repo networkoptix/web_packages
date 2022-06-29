@@ -317,6 +317,28 @@
             "available": "La posizione di archiviazione nel cloud è disponibile per tutti i server in questo sistema. Puoi gestirlo utilizzando il client desktop {vmsName}.",
             "camera": "telecamera",
             "cameras": "telecamere",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Registrazioni attuali",
                 "whenFullyUsed": "Quando completamente utilizzato",

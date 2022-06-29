@@ -317,6 +317,28 @@
             "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {vmsName} -cliënt.",
             "camera": "camera",
             "cameras": "camera's",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Huidige opnamen",
                 "whenFullyUsed": "Wanneer volledig gebruikt",

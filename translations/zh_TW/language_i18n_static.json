@@ -34,7 +34,7 @@
         "servers": "伺服器",
         "cameras": "攝影機",
         "storages": "儲存裝置",
-        "networkInterfaces": "介面"
+        "networkInterfaces": "網路介面"
     },
     "accessRoles": {
         "Administrator": {
@@ -317,6 +317,28 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "攝影機",
             "cameras": "攝影機",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "當前錄影影像",
                 "whenFullyUsed": "當耗盡時",
@@ -485,7 +507,7 @@
             "serversRestart": "是否重啟此伺服器&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "請先登入%CLOUD_NAME%介面，並將您所有的系統與%CLOUD_NAME%脫離，然後停用雙重認證，才能將您的帳號自%CLOUD_NAME%刪除"
         },
         "twoFactor": {
             "action": "登入帳號",
@@ -1011,8 +1033,8 @@
             "decodingSpeed3s": "解碼速度",
             "encodingThreads": "編碼執行緒",
             "encodingSpeed3s": "編碼速度",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
+            "primaryStreams": "輸出的主碼流總數",
+            "secondaryStreams": "輸出的次碼流總數",
             "incomingConnections": "連入連線",
             "outgoingConnections": "連外連線",
             "logLevel": "日誌等級",
@@ -1025,7 +1047,7 @@
             "ramB": "記憶體",
             "guidConflict": "伺服器GUID 衝突",
             "vmsTimeChanged24h": "伺服器時間變更事件(24小時內)",
-            "transactionsPerSecond1m": "Transactions/s",
+            "transactionsPerSecond1m": "每秒資料讀寫操作次數",
             "actionsTriggered1m": "觸發事件/秒",
             "apiCalls1m": "API請求/秒",
             "thumbnails1m": "縮圖/秒",

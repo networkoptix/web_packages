@@ -317,6 +317,28 @@
             "available": "Vị trí lưu trữ đám mây khả dụng cho tất cả các máy chủ trong hệ thống này. Bạn có thể quản lý nó bằng cách sử dụng máy khách máy tính để bàn {vmsName}.",
             "camera": "máy ảnh",
             "cameras": "máy ảnh",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Bản ghi hiện tại",
                 "whenFullyUsed": "Khi sử dụng đầy đủ",

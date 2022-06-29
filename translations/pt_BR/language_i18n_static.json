@@ -317,6 +317,28 @@
             "available": "O local de armazenamento em nuvem está disponível para todos os servidores neste sistema. Você pode gerenciá-lo usando o cliente {vmsName}.",
             "camera": "câmera",
             "cameras": "câmeras",
+            "actions": {
+                "activate": {
+                    "heading": "Activate Cloud Storage",
+                    "action": "Activate",
+                    "success": "Cloud Storage activated successfully!"
+                },
+                "modify": {
+                    "heading": "Modify Cloud Storage",
+                    "action": "Modify",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "move": {
+                    "heading": "Move Cloud Storage",
+                    "action": "Move",
+                    "success": "Cloud Storage upgraded successfully!"
+                },
+                "delete": {
+                    "heading": "Delete Cloud Storage?",
+                    "action": "Delete",
+                    "success": "Cloud Storage deleted successfully!"
+                }
+            },
             "usageLabels": {
                 "currentRecordings": "Gravações atuais",
                 "whenFullyUsed": "Quando totalmente usado",
