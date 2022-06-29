@@ -31,7 +31,7 @@ function init_backend(){
 function init_frontend(){
     pushd front_end
     echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
-    npm install --legacy-peer-deps
+    npm ci
     npm run setSkin blue
     popd
 }

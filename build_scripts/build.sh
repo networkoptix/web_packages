@@ -74,9 +74,9 @@ echo "Active npm: " && npm -v
 cd $PORTAL_REPOSITORY
 
 pushd front_end
-    echo -e "\nnpm install cloud portal"
+    echo -e "\nnpm ci cloud portal"
     echo "Installing node modules w/ legacy deps ... as new npm is strict about it"
-    npm install --legacy-peer-deps
+    npm ci
 
 #     echo "Auditing npm packages"
 #     AUDIT=$(npm audit | grep -E "(High)" || true)
@@ -88,8 +88,8 @@ pushd front_end
 popd
 
 pushd cloud
-    echo -e "\nnpm install cloud portal backend"
-    npm install
+    echo -e "\nnpm ci cloud portal backend"
+    npm ci
 popd
 
 pushd build_scripts

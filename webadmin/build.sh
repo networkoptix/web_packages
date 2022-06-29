@@ -47,7 +47,7 @@ rsync -a $SOURCE_DIR/../front_end . --exclude static --exclude node_modules --ex
 pushd front_end
 # Install dependencies.
 echo -e "\nInstalling node modules w/ legacy deps ... as new npm is strict about it" >&2
-npm install --legacy-peer-deps
+npm ci
 
 # Build webadmin.
 echo -e "\nBuild webadmin" >&2
