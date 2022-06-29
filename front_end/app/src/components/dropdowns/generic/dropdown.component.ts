@@ -62,7 +62,6 @@ export class NxGenericDropdown<
     @Input() type: string;
     @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
     @IBool() @Input() canSearch: CoercedBoolInput;
-    @IBool() @Input() forceLoneOption: CoercedBoolInput = true;
     @Input() forcePosition: {
         left?: number,
         top?: number,
