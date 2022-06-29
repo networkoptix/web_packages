@@ -8,6 +8,7 @@ import {
     TemplateRef,
     ViewContainerRef
 } from '@angular/core';
+import { timer, takeUntil, Subject, filter } from 'rxjs';
 
 import { PopoverConfig, POS_STRATEGY } from './popover-config';
 import { PopoverRef } from './popover-ref';
@@ -29,6 +30,9 @@ const defaultConfig: PopoverConfig = {
     providedIn: 'root'
 })
 export class NxPopoverService {
+    popoverRef: PopoverRef;
+    close$ = new Subject();
+
     constructor(
         private overlay: Overlay,
     ) {
@@ -142,13 +146,16 @@ export class NxPopoverService {
         );
     }
 
-    open<D = any>(
+    open(
         template: TemplateRef<any>,
         target: HTMLElement,
         config: Partial<PopoverConfig> = {},
         viewContainerRef?: ViewContainerRef,
-    ): PopoverRef<D> {
-        const popoverConfig: PopoverConfig = Object.assign({}, defaultConfig, config);
+        delayTime = 300,
+        closeExisting = true
+    ): NxPopoverService {
+        this.close$.next(closeExisting);
+        const popoverConfig: PopoverConfig = { ...defaultConfig, ...config };
         const positions: ConnectionPositionPair[] = this.generatePositions(popoverConfig);
 
         const positionStrategy = this.overlay
@@ -158,10 +165,24 @@ export class NxPopoverService {
             .withFlexibleDimensions(false)
             .withPositions(positions);
 
-        const { popover, popoverRef } = this.generatePopoverRefs(config, positionStrategy, popoverConfig, target);
+        timer(delayTime)
+            .pipe(
+                takeUntil(this.close$.pipe(filter(val => !!val)))
+            ).subscribe(() => {
+                const { popover, popoverRef } = this.generatePopoverRefs(config, positionStrategy, popoverConfig, target);
 
-        this.renderPopover(template, popover, viewContainerRef, config, popoverRef);
+                this.renderPopover(template, popover, viewContainerRef, config, popoverRef);
+                this.popoverRef = popoverRef;
+            });
 
-        return popoverRef;
+        return this;
+    }
+
+    close(closeExisting = true) {
+        this.close$.next(closeExisting);
+        const targetId = this.popoverRef?.targetId;
+        this.popoverRef?.close();
+        this.popoverRef = undefined;
+        return targetId;
     }
 }

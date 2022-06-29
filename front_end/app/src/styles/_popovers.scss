@@ -4,22 +4,27 @@
     border        : none;
     border-radius : 2px;
     box-shadow    : var(--popover-shadow-color);
-    
+
     &.system-popover {
         width   : 250px;
         z-index : 4;
-        
+
         .system-name {
             font-family   : $font-family-medium;
             overflow      : hidden;
             text-overflow : ellipsis;
             white-space   : nowrap;
         }
-        
+
         .reminder {
             font-family : $font-family-medium;
             color       : var(--light16);
             margin-left : 28px;
         }
+    }
+
+    &.rounded-popover {
+        border-radius: 8px !important;
+        overflow: hidden;
     }
 }

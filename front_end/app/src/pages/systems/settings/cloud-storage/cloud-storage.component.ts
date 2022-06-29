@@ -1,365 +1,113 @@
 import {
-    Component,
-    LOCALE_ID,
-    Inject,
-    OnInit,
-    Input,
+    Component, TemplateRef, ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { startCase } from 'lodash';
 import { BehaviorSubject } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import {
-    InfoBlockColumns,
-    InfoBlockSection,
-    InfoBlockLine,
-} from '@components/info-block/info-block.component.types';
+import { POS_STRATEGY } from '@components/popover/popover-config';
+import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxProcessService } from '@services/process.service';
-import { Process } from '@services/process.service/process';
-import type { NxSystem } from '@services/system.service/system';
-import { NxMenuService } from '@src/menu/menu.service';
-import { bitsToString } from '@utils/bits-to-string';
-import { wrapWithPercent } from '@utils/general';
 
-import { NxSettingsService } from '../settings.service';
-
-type UsageTypes = '&mdash;' | number;
-
-interface IUsageStats {
-    currentRecordings: UsageTypes
-    whenFullyUsed: UsageTypes
-    amountUsed: UsageTypes
-    archiveFrom: UsageTypes
-    recordingBitrate: UsageTypes
-    delayFromLive: UsageTypes
+enum CLOUD_STORAGE_STATES {
+    DEFAULT = 'default',
+    ACTIVATED = 'activated'
 }
 
-const emptyUsage: IUsageStats = {
-    currentRecordings: '&mdash;',
-    whenFullyUsed: '&mdash;',
-    amountUsed: '&mdash;',
-    archiveFrom: '&mdash;',
-    recordingBitrate: '&mdash;',
-    delayFromLive: '&mdash;'
-};
+const mockLicenses = [
+    { size: '100gb', state: 'Active', system: 'Some System', expires: '20 Apr 2023', key: 'abcd1234efgh5678' },
+    { size: '42gb', state: 'Active', system: 'The Answer', expires: '20 Apr 2023', key: 'abcd1234efg69420' },
+    { size: 'urMom', state: 'Inactive', system: 'Huge', expires: '20 Apr 2023', key: 'abcd1234efg69420' }
+];
 
 @Component({
     selector: 'nx-cloud-storage',
     templateUrl: './cloud-storage.component.html',
     styleUrls: ['./cloud-storage.component.scss']
 })
-export class NxCloudStorageComponent implements OnInit {
-    @Input() layout;
-    @Input() type: string;
-
+export class NxCloudStorageComponent {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    system$: BehaviorSubject<NxSystem>;
 
-    usageStats: IUsageStats;
-    _cloudCapacity: number = 0;
-    cloudStorageSystemEnabled$: BehaviorSubject<boolean | string> = new BehaviorSubject('loading');
-    systems$: BehaviorSubject<NxSystem[]>;
-    enableCloudStorage: Process;
-    updateEnabledUsageAndStats: Process;
-    parsedUsage: InfoBlockColumns;
+    readonly MASK = 'AAAA-AAAA-AAAA-AAAA';
 
-    layoutSimple: boolean;
-    cloudStorageInitial: string;
+    CLOUD_STORAGE_STATES = CLOUD_STORAGE_STATES;
+    state = CLOUD_STORAGE_STATES.ACTIVATED;
+    showKeys = false;
+    fields = ['size', 'state', 'system', 'expires', 'key'];
+    asc = true;
+    sortBy = '';
 
-    // Constructor and class initialization methods
-    private setupDefaults(): void {
-        this.usageStats = emptyUsage;
-        this.system$ = this.settingsService.systemSubject;
-        this.system$.subscribe(system => {
-            if (system === undefined) return;
-            this.updateEnabledAndUsageStats();
-            if (system.cloudStorageCapable === undefined) {
-                system.getInfoAndPermissions();
-            }
-        });
-        this.menuService.section = this.type === 'servers'
-            ? this.CONFIG.menus.systemSettings.servers.id
-            : this.CONFIG.menus.systemSettings.admin.id;
-        if (this.type !== 'servers') {
-            this.menuService.detail =
-                this.CONFIG.menus.systemSettings.cloudStorage.id;
-        }
-    }
+    // Mock state
+    cloudStorageNotUsed = true;
 
-    constructor(configService: NxConfigService,
-        languageService: NxLanguageProviderService,
-        @Inject(LOCALE_ID) private locale: string,
-        private dialogService: NxDialogsService,
-        private settingsService: NxSettingsService,
-        private cloudApiService: NxCloudApiService,
-        private processService: NxProcessService,
-        private menuService: NxMenuService,
-        private route: ActivatedRoute
-    ) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
-    }
+    // Mock Licenses
+    licenses$ = new BehaviorSubject(mockLicenses);
+    license = mockLicenses[0];
 
-    ngOnInit(): void {
-        this.setupDefaults();
-        this.cloudStorageInitial = this.LANG.dialogs.cloudStorage.initial({
-            compCapacity: this.compCloudCapacity
-        });
-        this.layoutSimple = (this.layout && this.layout === 'simple');
-        this.initEnableCloudStorageProcess();
-    }
+    // Mock Usage Info
+    usageMessage = '28 GB of 50 GB (56%) is used';
+    usages = [
+        { size: 5, color: 'blue', title: 'Blue usage description' },
+        { size: 12, color: 'green', title: 'Green usage description' },
+        { size: 18, color: 'yellow', title: 'Yellow usage description' },
+        { size: 29, color: 'orange', title: 'Orange usage description' }
+    ];
 
-    private msFromNowToString(ms: number): string {
-        const diff = Date.now() - ms;
-
-        let minutes = Math.floor(diff / 1000 / 60);
-        let hours = Math.floor(minutes / 60);
-        let days = Math.floor(hours / 24);
-        let weeks = Math.floor(days / 7);
-        let months = Math.floor(days / 30);
-        let years = Math.floor(days / 365);
-
-        minutes %= 60;
-        hours %= 24;
-        days %= 30;
-        weeks %= 7;
-        months %= 12;
-        years %= 365;
-
-        const {
-            yearS,
-            monthS,
-            weekS,
-            dayS,
-            hourS,
-            minuteS,
-        } = this.LANG.common.intervals;
-        if (years) {
-            return yearS({ count: years });
-        } else if (months) {
-            return monthS({ count: months });
-        } else if (weeks) {
-            return weekS({ count: weeks });
-        } else if (days) {
-            return dayS({ count: days });
-        } else if (hours) {
-            return hourS({ count: hours });
-        } else if (minutes) {
-            return minuteS({ count: minutes });
+    sort(column: string) {
+        if (this.sortBy === column) {
+            this.asc = !this.asc;
         } else {
-            return '&mdash;';
-        }
-    }
-
-    // Getters for view
-
-    get user() {
-        return this.system$.value.currentUser;
-    }
-
-    get userEmail() {
-        return this.system$.value.currentUserEmail;
-    }
-
-    get isOwner() {
-        return this.system$.value.isOwner;
-    }
-
-    get systemCloudStorageCapable() {
-        return this.system$.value.cloudStorageCapable ||
-            this.CONFIG.clientMode.beta ||
-            this.route.snapshot.queryParams.beta !== undefined;
-    }
-
-    public get cloudCapacity() {
-        const { locale } = this;
-        return bitsToString(
-            this._cloudCapacity,
-            { locale, roundTo: 1073741824 / 10 }
-        );
-    }
-
-    public get compCloudCapacity() {
-        const {
-            locale,
-            CONFIG: { cloudCapabilities: { cloudStorageSize } }
-        } = this;
-        return bitsToString(
-            cloudStorageSize,
-            { locale, roundTo: 1073741824 / 10 }
-        );
-    }
-
-    public get bitrate() {
-        const { locale } = this;
-        return (
-            typeof this.usageStats.recordingBitrate !== 'number'
-                ? this.usageStats.recordingBitrate
-                : bitsToString(
-                    this.usageStats.recordingBitrate,
-                    { unitType: 'bps', locale }
-                )
-        );
-    }
-
-    public get cloudStorageUsed() {
-        const { locale } = this;
-        return (
-            typeof this.usageStats.amountUsed !== 'number'
-                ? this.usageStats.amountUsed
-                : wrapWithPercent(
-                    this.usageStats.amountUsed,
-                    this._cloudCapacity,
-                    bitsToString(
-                        this.usageStats.amountUsed,
-                        { locale, roundTo: 1073741824 / 10 }
-                    ),
-                    2
-                )
-        );
-    }
-
-    public get numberOfCameras() {
-        if (typeof this.usageStats.archiveFrom !== 'number') {
-            return this.usageStats.archiveFrom;
+            this.sortBy = column;
+            this.asc = true;
         }
 
-        const single = this.usageStats.archiveFrom === 1;
-        const { camera, cameras } = this.LANG.dialogs.cloudStorage;
-        return `${this.usageStats.archiveFrom} ${single ? camera?.() : cameras?.()}`;
-    }
+        this.licenses$.next(
+            mockLicenses.sort((a, b) => {
+                const dir = this.asc ? 1 : -1;
+                const aVal = a[this.sortBy];
+                const bVal = b[this.sortBy];
 
-    // String methods for view
-
-    public msFriendlyTime(ms: number | '&mdash;', suffix = false) {
-        return (
-            ms === '&mdash;'
-                ? ms
-                : this.msFromNowToString(ms));
-    }
-
-    // Other getters
-    get systemId() {
-        return this.system$.value.id;
-    }
-
-    set cloudStorageSystemEnabled(value: boolean | string) {
-        const section1 = new InfoBlockSection([
-            new InfoBlockLine(
-                this.LANG.dialogs.cloudStorage.usageLabels.currentRecordings(),
-                this.msFriendlyTime(this.usageStats.currentRecordings)
-            ),
-            new InfoBlockLine(
-                this.LANG.dialogs.cloudStorage.usageLabels.whenFullyUsed(),
-                this.msFriendlyTime(this.usageStats.whenFullyUsed)
-            ),
-            new InfoBlockLine(
-                this.LANG.dialogs.cloudStorage.usageLabels.amountUsed(),
-                this.cloudStorageUsed
-            )
-        ]);
-        const section2 = new InfoBlockSection([
-            new InfoBlockLine(
-                this.LANG.dialogs.cloudStorage.usageLabels.archiveFrom(),
-                this.numberOfCameras
-            ),
-            new InfoBlockLine(
-                this.LANG.dialogs.cloudStorage.usageLabels.recordingBitrate(),
-                this.bitrate
-            ),
-            new InfoBlockLine(
-                this.LANG.dialogs.cloudStorage.usageLabels.delayFromLive(),
-                this.msFriendlyTime(this.usageStats.delayFromLive, true)
-            )
-        ]);
-        this.parsedUsage = [[section1], [section2]];
-        this.cloudStorageSystemEnabled$.next(value);
-    }
-
-    get cloudStorageSystemEnabled(): boolean | string {
-        return this.cloudStorageSystemEnabled$.value;
-    }
-
-    get cloudStorageStateLoading() {
-        return this.cloudStorageSystemEnabled$.value === 'loading';
-    }
-
-    set systems(value) {
-        this.systems$.next(value);
-    }
-
-    // Handler methods for actions
-
-    private initEnableCloudStorageProcess(): void {
-        this.enableCloudStorage = this.processService.createProcess(() => {
-            // Uncomment these lines and add condition in if statement if we add account limits.
-            // const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
-            // if (false) {
-            //     return this.dialogService.confirm(message, title, ok);
-            // }
-            return this.cloudApiService.enableCloudStorage(this.systemId);
-        }, {
-            errorCodes: {
-                cloudInvalidResponse: () => {
-                    return this.LANG.errorCodes.notAuthorized?.();
-                },
-                networkConnection: () => {
-                    return this.LANG.errorCodes.networkConnection();
+                if (aVal === bVal) {
+                    return 0;
                 }
+
+                return aVal < bVal ? dir : -dir;
+            }));
+    }
+
+    perform = (actionId: string) => this.dialogService[`cloudStorage${startCase(actionId)}`]();
+
+    showPopover = <T>(template: TemplateRef<T>, target: HTMLElement) => {
+        this.popoverService.open(
+            template,
+            target,
+            {
+                panelClass: 'rounded-popover',
+                arrowOffset: 4,
+                positionStrategy: POS_STRATEGY.BOTTOM
             },
-            successMessage: this.LANG.dialogs.cloudStorage.enableCloudStorage.success?.(),
-            errorPrefix: this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix?.()
-        }).then(() => {
-            this.cloudStorageSystemEnabled = true;
-            this.updateEnabledAndUsageStats();
-        }
-            // TODO: Will implement errors on a future task when api service is finalized
+            this.viewContainerRef
         );
+    };
+
+    closePopover = () => this.popoverService.close();
+
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        cloudApi: NxCloudApiService,
+        private viewContainerRef: ViewContainerRef,
+        private popoverService: NxPopoverService,
+        public dialogService: NxDialogsService
+    ) {
+        this.CONFIG = configService.config;
+        this.LANG = languageService.translations;
+
+        cloudApi.checkFeatureNotice('cloudStorage', this.dialogService.cloudStorageInfo).toPromise();
     }
-
-    private updateEnabledAndUsageStats(): void {
-        if (!this.systemId || !this.system$.value.cloudStorageCapable) {
-            this.cloudStorageSystemEnabled = true;
-            return;
-        }
-        this.cloudApiService.getCloudStorageUsage(this.systemId)
-            .then(({ resultCode = false, cloudCapacity, ...usageStats }) => {
-                usageStats.spaceUsed = parseInt(usageStats.spaceUsed);
-                this.usageStats = { ...emptyUsage, ...usageStats };
-                this.cloudStorageSystemEnabled = !resultCode;
-                this._cloudCapacity = parseInt(cloudCapacity);
-            }, () => {
-                this.cloudStorageSystemEnabled = false;
-            });
-    }
-
-    public deleteCloudStorage(): void {
-        // TODO: Need to update once modal is connected
-        this.dialogService.cloudStorageDelete();
-    }
-
-    public moveCloudStorage(): void {
-        // TODO: Need to update once modal is connected
-        this.dialogService.cloudStorageMove().then(result => {
-            if (result !== 'noOtherSystemsError') {
-                this.dialogService.confirm(
-                    this.LANG.dialogs.cloudStorage.noOtherSystemsError.message?.(),
-                    this.LANG.dialogs.cloudStorage.title?.(),
-                    this.LANG.dialogs.buttons.ok?.()
-                );
-            }
-        });
-    }
-
-    // Callback for disabled or moved storage
-
-    // private handleCloudStorageDisabled = (): void => {
-    //     this.cloudStorageSystemEnabled = false;
-    // };
 }

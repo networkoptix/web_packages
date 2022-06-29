@@ -21,6 +21,7 @@ export interface LanguageI18NStaticTypes {
     authorize:             Authorize;
     cameraFilters:         CameraFilters;
     clientProtocol:        (params?: Record<string, string | number>) => string;
+    cloudStorage:          LanguageI18NStaticTypesCloudStorage;
     common:                Common;
     dashboard:             Dashboard;
     devConsole:            DevConsole;
@@ -182,6 +183,18 @@ export interface CameraFilters {
     ptz:         (params?: Record<string, string | number>) => string;
 }
 
+export interface LanguageI18NStaticTypesCloudStorage {
+    keyTableFields: KeyTableFields;
+}
+
+export interface KeyTableFields {
+    size:    (params?: Record<string, string | number>) => string;
+    state:   (params?: Record<string, string | number>) => string;
+    system:  (params?: Record<string, string | number>) => string;
+    expires: (params?: Record<string, string | number>) => string;
+    key:     (params?: Record<string, string | number>) => string;
+}
+
 export interface Common {
     account:                    CommonAccount;
     cameraLinks:                CameraLinks;
@@ -325,7 +338,7 @@ export interface Dialogs {
     twoFa:             DialogsTwoFa;
     addUser:           AddUser;
     buttons:           Buttons;
-    cloudStorage:      CloudStorage;
+    cloudStorage:      DialogsCloudStorage;
     changeStorage:     ChangeStorage;
     merge:             DialogsMerge;
     message:           DialogsMessage;
@@ -360,7 +373,7 @@ export interface ChangeStorage {
     support: (params?: Record<string, string | number>) => string;
 }
 
-export interface CloudStorage {
+export interface DialogsCloudStorage {
     title:                 (params?: Record<string, string | number>) => string;
     enableStorage:         (params?: Record<string, string | number>) => string;
     otherSystem:           (params?: Record<string, string | number>) => string;

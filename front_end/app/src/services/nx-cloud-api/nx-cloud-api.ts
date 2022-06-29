@@ -463,6 +463,19 @@ export class NxCloudApiService {
             );
     }
 
+    checkFeatureNotice = <T>(noticeKey: string, firstViewCallback: () => T) => this.getCustomAccountProperty('featureNotices').pipe(
+        catchError(() => Promise.resolve({})),
+        switchMap(value => {
+            if (value[noticeKey]) {
+                return Promise.resolve(value);
+            }
+
+            firstViewCallback();
+
+            return this.saveCustomAccountProperty({ ...value, [noticeKey]: true }, 'featureNotices');
+        }
+        ));
+
     getCustomAccountProperty(property: string, username?: string) {
         const endpoint = `${this.CONFIG.apiBase}/custom-properties/${property}${username ? '/' + username : ''}`;
         return this.http.get<any>(endpoint);

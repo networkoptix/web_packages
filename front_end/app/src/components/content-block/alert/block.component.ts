@@ -28,7 +28,7 @@ export class NxAlertBlockComponent implements OnInit {
     @Input() iconSrc: string;
     @Input() line1: string;
     @Input() line2: string;
-    @Input() type: 'error' | 'warning' | 'info' | 'default' = 'default';
+    @Input() type: 'error' | 'warning' | 'info' | 'default' | 'bright-warning' = 'default';
 
     @Input() btnIconSrc: string;
     @Input() btnCaption: string;
@@ -38,7 +38,7 @@ export class NxAlertBlockComponent implements OnInit {
     isNotDefaultType = false;
 
     ngOnInit(): void {
-        this.isNotDefaultType = ['error', 'warning', 'info'].includes(this.type);
+        this.isNotDefaultType = this.type !== 'default';
     }
 
     onClick(): void {

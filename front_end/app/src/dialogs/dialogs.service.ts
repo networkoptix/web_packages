@@ -254,11 +254,11 @@ export class NxDialogsService extends DialogBase {
 
     public cloudStorageActivate = this.#cloudStorageActionMethodFactory(CloudStorageActivateModalContent);
 
-    public cloudStorageModify = this.#cloudStorageActionMethodFactory(CloudStorageModifyModalContent);
+    public cloudStorageUpdate = this.#cloudStorageActionMethodFactory(CloudStorageModifyModalContent);
 
     public cloudStorageDelete = this.#cloudStorageActionMethodFactory(CloudStorageDeleteModalContent);
 
-    public cloudStorageMove = this.#cloudStorageActionMethodFactory(CloudStorageMoveModalContent);
+    public cloudStorageMigrate = this.#cloudStorageActionMethodFactory(CloudStorageMoveModalContent);
 
     connectLocalToCloud(
         account: NxAccountService,

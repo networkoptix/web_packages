@@ -12,7 +12,6 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { PopoverRef } from '@components/popover/popover-ref';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
@@ -54,7 +53,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     subV5Systems: NxSystemWithUserInfo[] = [];
 
     targets: PseudoAnchorTarget[] = [];
-    popover: PopoverRef;
 
     verificationWatcher = new Watcher<boolean>();
 
@@ -153,11 +151,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     private clearPopoverTargets(): void {
         this.targets = clearPseudoAnchors(this.targets);
-
-        if (this.popover) {
-            this.popover.close();
-            this.popover = undefined;
-        }
+        this.popoverService.close();
     }
 
     private setPopoverTargets(): void {
@@ -189,15 +183,10 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     showPopoverWithTemplate(template: TemplateRef<any>, target: any): void {
-        if (this.popover) {
-            this.popover.close();
-
-            if (this.popover.targetId === target.id) {
-                this.popover = undefined;
-                return;
-            }
+        if (this.popoverService.close() === target.id) {
+            return;
         }
-        this.popover = this.popoverService.open(
+        this.popoverService.open(
             template,
             target,
             {
@@ -208,9 +197,8 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     @HostListener('document:click', ['$event.target'])
     onMouseClick(targetElement): void {
-        if (targetElement.className !== 'pseudo-anchor' && this.popover) {
-            this.popover.close();
-            this.popover = undefined;
+        if (targetElement.className !== 'pseudo-anchor') {
+            this.popoverService.close();
         }
     }
 

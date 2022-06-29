@@ -11,12 +11,9 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { pick } from 'lodash-es';
-import { Subject, timer } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { POS_STRATEGY } from '@components/popover/popover-config';
-import { PopoverRef } from '@components/popover/popover-ref';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
@@ -37,9 +34,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     @Input() cachedSizes: CachedSizes = {};
 
     LANG: LanguageI18NStaticTypes;
-
-    destroy$ = new Subject<void>();
-    popover: PopoverRef<void>;
 
     totalSpace: string;
     reserved: string;
@@ -80,26 +74,19 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
             return;
         }
-        timer(300)
-            .pipe(
-                takeUntil(this.destroy$)
-            ).subscribe(() => {
-                this.popover = this.popoverService.open(
-                    template,
-                    target,
-                    {
-                        panelClass: 'size-popover',
-                        arrowOffset: 4,
-                        positionStrategy: POS_STRATEGY.BOTTOM
-                    },
-                    this._viewContainerRef);
-            });
+        this.popoverService.open(
+            template,
+            target,
+            {
+                panelClass: 'size-popover',
+                arrowOffset: 4,
+                positionStrategy: POS_STRATEGY.BOTTOM
+            },
+            this._viewContainerRef);
     }
 
     closeLegend(): void {
-        this.popover?.close();
-        this.popover = undefined;
-        this.destroy$.next();
+        this.popoverService.close();
     }
 
     ngAfterViewInit(): void {}

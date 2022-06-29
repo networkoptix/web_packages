@@ -1,131 +1,247 @@
 @use "../../../../styles/typography";
+@use "../../../../styles/mixins";
+@use "../../../../../styles/theme_variables_common" as *;
+@import "~bootstrap/scss/mixins/breakpoints";
 
-.initial-state {
-    position: relative;
-    padding: 0 16px 40px 16px;
+header.with-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    svg-icon {
+        cursor: pointer;
+    }
+
+    .tag {
+        @include typography.regular13dark9;
+        padding: 4px 8px;
+        border-radius: 2px;
+        background-color: $yellow_main;
+    }
+}
+
+.toggle {
+    transition: .2s ease-in-out;
+    cursor: pointer;
+
+    &.opened{
+        transform: rotateX(180deg);
+    }
+
+    svg-icon svg g polyline.st0 {
+        stroke: var(--btn-arrow-selected-color);
+        fill : none;
+    }
+}
+
+.header-cell-content {
+    display: flex;
+    & > .toggle {
+        margin-left: 8px;
+    }
+}
+
+.default-wrapper {
     display: flex;
     flex-direction: column;
-    justify-self: center;
-    align-items: center;
-
-    h2 {
-        @include typography.medium24dark9;
-        margin: 16px;
-    }
-
-    p {
-        @include typography.regular13dark9;
-        max-width: 480px;
-        text-align: center;
-    }
-
-    button {
-        margin-top: 24px;
-    }
-}
-
-.header-svg {
-    background: var(--additional_light1);
-    display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-}
+    text-align: center;
+    padding: 0 24px 24px 24px;
 
-.normal-state {
-    padding: 16px;
-    background-color: var(--additional_light1);
-    border-bottom: 1px dotted var(--light3);
+    .heading-icon-wrapper {
+        width: 100%;
+        max-width: 320px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(50% 50% at 50% 50%, #D9D9D9 0%, #A8E1FE 0.01%, rgba(255, 255, 255, 0) 98.65%);
+        margin-bottom: -64px;
+        padding-bottom: 64px;
+    }
+
+    .heading-icon {
+        width: 148px;
+        height: 96px;
+    }
 
     h2 {
         @include typography.medium24dark9;
-        text-align: left;
+        margin-bottom: 12px;
     }
 
-    &-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    span {
+        @include typography.regular14dark9;
     }
 
-    &-footer {
-        padding: 16px;
-        div {
-            display: flex;
-            justify-content: space-between;
+}
+
+.default-buttons {
+    display: flex;
+
+    button {
+        margin-right: 8px;
+    }
+}
+
+// Table Styling
+.table-wrapper {
+    overflow-x: auto;
+    border: none !important;
+}
+
+table {
+    min-width: 100%;
+    border: None;
+}
+
+.cdk-header-cell {
+    @include typography.bold13dark9nocolor;
+    color : var(--card-header-text);
+    background  : var(--card-header-bg);
+    // border      : 1px solid var(--border-color);
+    line-height : 16px;
+    padding     : 8px 8px 8px 16px;
+    white-space : nowrap;
+    border-top  : none;
+
+    &:not(:hover):not(.sorted) .toggle {
+        opacity: 0;
+    }
+}
+
+.cdk-cell, .cdk-header-cell {
+    border       : 1px none;
+    // border-left  : 1px solid var(--border-color);
+    // border-right : 1px solid var(--border-color);
+    white-space  : nowrap;
+    height: 32px;
+}
+
+.cdk-row {
+    &:nth-child(even) {
+        background : var(--table-alt-row-bg);
+    }
+
+    &:last-of-type {
+        border-bottom : 1px solid var(--border-color);
+    }
+}
+
+.header-buttons {
+    @include mixins.details-buttons;
+
+    @include media-breakpoint-down(lg) {
+        &:first-of-type {
+            padding-left : 0 !important;
         }
     }
 }
 
-.details {
+th, td {
+    padding-left: 16px;
+}
+
+.actions {
+    display: flex;
+    padding-top: 16px;
+    justify-content: center;
+
+    @include media-breakpoint-down(md) {
+        flex-direction: column;
+        align-items: center;
+
+        .action {
+            width: 100% !important;
+            max-width: 360px;
+        }
+    }
+
+    .action {
+        flex-basis: 1fr;
+        padding: 24px;
+        margin: 0;
+
+        &:first-child {
+            border-radius: 12px 0px 0px 12px;
+        }
+
+        &:last-child {
+            border-radius: 0px 12px 12px 0px;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: $additional_light3;
+        }
+
+        &:not(:last-child) {
+            border-right: 2px solid $light3;
+        }
+
+        h4 {
+            @include typography.medium16dark9;
+            margin-top: 0;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 12px;
+
+            .action-icon {
+                width: 32x;
+                height: 20px;
+            }
+
+        }
+
+        p {
+            @include typography.regular14dark9;
+            margin-bottom: 0;
+        }
+
+    }
+}
+
+.license-info-block {
+    h2 {
+        margin: 0 0 8px 0;
+    }
+}
+
+.usage-info-block {
+    h4 {
+        @include typography.medium14dark9;
+        margin: 8px 0 12px 0;
+    }
+
+    .usage-bar {
+        height: 20px;
+        border: 1px solid $light7;
+        border-radius: 2px;
+        display: flex;
+    }
+}
+
+.usage-popover {
     display: flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
-    margin: 8px 0 0 0;
-
-    &-section {
-        margin-right: 40px;
-        display: flex;
-        div {
-            display: flex;
-            flex-direction: column;
-            white-space: nowrap;
-
-            p {
-                margin-bottom: 4px;
-            }
-        }
-        &-keys {
-            p {
-                position: relative;
-                display: flex;
-                justify-content: stretch;
-                & > * {
-                    flex-basis: 0;
-                    flex-grow: 0;
-                }
-                &:after {
-                    content: "";
-                    position: relative;
-                    display: inline-block;
-                    margin: 0 8px 4px 4px;
-                    border-bottom: 1px dotted var(--light3);
-                    z-index: 1;
-                    min-width: 16px;
-                    flex-basis: 1;
-                    flex-grow: 1;
-                }
-            }
-        }
-        // &-values {
-        // Might use this later
-        // }
-    }
-}
-
-.server-buttons {
-    height: 18px;
-    padding: -1px inherit; // This is kind of hacky, need to figure out what's going on
-    &:hover {
-        color: var(--dark15);
-        fill: var(--dark15);
-    }
-    @include typography.regular13light;
-    background-color: inherit;
-    display: flex;
     align-items: center;
-    fill: var(--light16);
-    white-space: nowrap;
-    svg-icon {
-        svg {
-            height: 20px;
-            g {
-                fill: inherit;
-            }
-        }
+    min-width: 288px;
+
+    .legend {
+        width: 12px !important;
+        height: 12px !important;
+        flex-shrink: 0;
+        margin-right: 12px;
+        border-radius: 2px;
+        border: 1px solid $light7;
     }
-    a {
-        text-decoration: none;
-        color: inherit;
+
+    .description {
+        width: 100%;
+    }
+
+    .size {
+        margin-left: 36px;
+        justify-self: flex-end;
     }
 }

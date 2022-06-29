@@ -1,69 +1,153 @@
-<!-- Initial State -->
-<nx-pre-loader *ngIf="cloudStorageStateLoading"></nx-pre-loader>
-
-<nx-block *ngIf="cloudStorageSystemEnabled === false" type="mb-3" header-style="{{ layoutSimple ? 'hidden': '' }}">
-    <header><h4 translate>Cloud Storage</h4></header>
-    <div class="header-svg">
-        <svg-icon nx-add-svg-src *ngIf="!layoutSimple" [src]="CONFIG.icons.dir + 'city.svg'"></svg-icon>
-        <svg-icon nx-add-svg-src *ngIf="layoutSimple" [src]="CONFIG.icons.dir + 'cloud_storage_simple.svg'"></svg-icon>
+<!-- Main block templates -->
+<ng-template #mainDefault>
+    <div class="default-wrapper">
+        <div class="heading-icon-wrapper">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + 'cloud_storage.svg'" [applyClass]="true"
+                class="heading-icon" [svgStyle]="{'width.px': '148', 'height.px': '96'}"></svg-icon>
+        </div>
+        <h2 translate>No active Cloud Storage</h2>
+        <span translate>You can activate Cloud Storage in your System.</span>
     </div>
-    <div class="initial-state">
-        <h2 translate>Enhance your data storage experience</h2>
-        <p translate>Now even more options for your data storage. Start using our convenient and secure cloud storage service.</p>
-        <p>{{ cloudStorageInitial }}</p>
-
-        <p *ngIf="!systemCloudStorageCapable" translate>Update your system to the <a routerLink="/download" target="_blank">latest build</a> to enable Cloud Storage.</p>
-        <nx-process-button *ngIf="systemCloudStorageCapable" [actionType]="'default'" [process]="enableCloudStorage" [buttonText]="LANG.dialogs.cloudStorage.enableStorage()"></nx-process-button>
+    <div class="default-buttons">
+        <button (click)="dialogService.cloudStorageActivate()" class="btn btn-primary" translate>Activate Cloud
+            Storage</button>
+        <button (click)="dialogService.cloudStorageInfo()" class="btn btn-default" translate>Learn
+            More</button>
     </div>
+</ng-template>
+
+<ng-template #actionBlocks>
+    <div class="actions">
+        <ng-container *ngFor="let actionId of ['update', 'migrate', 'delete']">
+            <div *ngIf="LANG.dialogs.cloudStorage.information[actionId]" class="action" (click)="perform(actionId)">
+                <h4>
+                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + actionId + '_storage.svg'"
+                        [applyClass]="true" class="action-icon" [svgStyle]="{'width.px': '44', 'height.px': '20'}">
+                    </svg-icon>
+                    <span>{{('dialogs.cloudStorage.information.' + actionId + '.title') | translate}}</span>
+                </h4>
+                <p>{{('dialogs.cloudStorage.information.' + actionId + '.body') | translate}}</p>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #licenseBlock>
+    <div class="license-info-block">
+        <h2>{{license.size}}</h2>
+        <span>{{license.expires}}</span>
+    </div>
+</ng-template>
+
+<ng-template #notUsed>
+    <div translate>Not used</div>
+</ng-template>
+
+<ng-template #usageBlock>
+    <div class="usage-info-block">
+        <h4>
+            <span *ngIf="usages.length; else notUsed">{{usageMessage}}</span>
+        </h4>
+        <ng-template #activateNotice>
+            <div class="usage-popover">
+                <div class="name" translate>Activate to see the usage diagram</div>
+            </div>
+        </ng-template>
+        <div #usageChart class="usage-bar" (mouseenter)="!usages.length && showPopover(activateNotice, usageChart)"
+            (mouseout)="closePopover()">
+            <ng-container *ngFor="let usage of usages">
+                <ng-template #usageTooltip>
+                    <div class="usage-popover">
+                        <div [style.background]="usage.color" class="legend"></div>
+                        <div class="description">{{usage.title}}</div>
+                        <div class="size">{{usage.size}}</div>
+                    </div>
+                </ng-template>
+                <div #usageHighlight (mouseenter)="showPopover(usageTooltip, usageHighlight)"
+                    (mouseout)="closePopover()" [style.width.%]="usage.size" [style.background]="usage.color"></div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #mainActivated>
+    <ng-container [ngTemplateOutlet]="licenseBlock"></ng-container>
+    <ng-container [ngTemplateOutlet]="usageBlock"></ng-container>
+    <ng-container [ngTemplateOutlet]="actionBlocks"></ng-container>
+</ng-template>
+
+<!-- Alert Blocks -->
+<nx-alert-block *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED && cloudStorageNotUsed"
+    (onAction)="cloudStorageNotUsed = false" type="bright-warning" id="storages-outdated"
+    [line1]="'The cloud storage not used for recording. Go to the Servers settings to configure it.' | translate"
+    [iconSrc]="CONFIG.icons.dirTextButtons + 'info.svg'"
+    [btnIconSrc]="CONFIG.icons.dirTextButtons + 'close.svg'">
+</nx-alert-block>
+
+<!-- Main Block-->
+<nx-block>
+    <header class="with-child">
+        <h4 translate>Cloud Storage</h4>
+        <span *ngIf="state === CLOUD_STORAGE_STATES.DEFAULT" class="tag" translate>New Feature</span>
+        <button *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED" class="header-buttons" id="detailed-info">
+            <span>
+                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'" [applyClass]="true">
+                </svg-icon>
+            </span>
+            <span class="ml-1" translate>Detailed Info</span>
+        </button>
+    </header>
+    <nx-section>
+        <ng-container [ngSwitch]="state">
+            <ng-container *ngSwitchCase="CLOUD_STORAGE_STATES.DEFAULT" [ngTemplateOutlet]="mainDefault"></ng-container>
+            <ng-container *ngSwitchCase="CLOUD_STORAGE_STATES.ACTIVATED" [ngTemplateOutlet]="mainActivated">
+            </ng-container>
+        </ng-container>
+    </nx-section>
 </nx-block>
 
-<!-- Empty and Regular State -->
-<nx-block *ngIf="cloudStorageSystemEnabled === true" type="mt-3 mb-3">
-    <header class="normal-state-header">
-        <h4 translate>Cloud Storage</h4>
-    </header>
-    <div class="normal-state">
-        <h2>{{ cloudCapacity }}</h2>
-        <nx-info-block [sectionsOrColumns]="parsedUsage"></nx-info-block>
-        <!-- <div class="details">
-            <div class="details-section">
-                <div class="details-section-keys">
-                    <p translate>Current recordings</p>
-                    <p translate>When fully used</p>
-                    <p translate>Amount used</p>
-                </div>
-                <div class="details-section-values">
-                    <p>{{ msFriendlyTime(usageStats.currentRecordings) }}</p>
-                    <p>{{ msFriendlyTime(usageStats.whenFullyUsed) }}</p>
-                    <p>{{ cloudStorageUsed }}</p>
-                </div>
-            </div>
-            <div class="details-section">
-                <div class="details-section-keys">
-                    <p translate>Archive from</p>
-                    <p translate>Recording Bitrate</p>
-                    <p translate>Delay from live</p>
-                </div>
-                <div class="details-section-values">
-                    <p>{{ numberOfCameras }}</p>
-                    <p>{{ bitrate }}</p>
-                    <p>{{ msFriendlyTime(usageStats.delayFromLive, true) }}</p>
-                </div>
-            </div>
-        </div> -->
-    </div>
-    <div *ngIf="isOwner" class="normal-state-footer">
-        <p [translate]="'dialogs.cloudStorage.available'"
-            [translateParams]="{ vmsName: CONFIG.vmsName }"></p>
-        <div class="pt-3">
-            <button class="btn btn-default" (click)="moveCloudStorage()">Move to Another System</button>
-            <button class="btn btn-default" (click)="deleteCloudStorage()">
-                <svg-icon nx-add-svg-src
-                    [src]="CONFIG.icons.dir + 'delete.svg'"
-                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
-                    class="ml-n2 mr-1"></svg-icon>
-                <span translate>Delete Cloud Storage</span>
-            </button>
+<!-- Keys Block -->
+<nx-block type="mt-3">
+    <header class="with-child">
+        <h4>
+            <span translate>Your Keys</span>
+            <svg-icon [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                [title]="'Inactive keys can be re-used to activate Cloud Storage on another Systems' | translate"
+                [svgStyle]="{'width.px': '20', 'height.px': '20', 'vertical-align': 'top', 'margin-left.px': '8'}">
+            </svg-icon>
+        </h4>
+        <div class="toggle" [ngClass]="{'opened': showKeys}" (click)="showKeys = !showKeys">
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
         </div>
+    </header>
+    <div *ngIf="showKeys" class="table-wrapper">
+        <table cdk-table [dataSource]="licenses$">
+            <ng-container *ngFor="let field of fields" [cdkColumnDef]="field">
+                <th cdk-header-cell *cdkHeaderCellDef #headingCell class="position-relative"
+                    [ngClass]="{'sorted': field === sortBy}">
+                    <div class="header-cell-content">
+                        <span>{{ ('cloudStorage.keyTableFields.' + field) | translate}}</span>
+                        <div class="toggle" [ngClass]="field === sortBy && !asc && 'opened'" (click)="sort(field)">
+                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'">
+                            </svg-icon>
+                        </div>
+                    </div>
+                </th>
+                <td cdk-cell *cdkCellDef="let element">{{field === 'key' ? (element[field] | mask: MASK) :
+                    element[field] }}</td>
+            </ng-container>
+            <thead>
+                <tr cdk-header-row *cdkHeaderRowDef="fields"></tr>
+            </thead>
+
+            <tbody>
+                <tr cdk-row *cdkRowDef="let row; columns: fields; let i = index" class="data-row"></tr>
+                <tr class="data-row" *cdkNoDataRow>
+                    <td class="data-row" colspan="9999">
+                        <span>{{ 'No Licenses' | translate }}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </nx-block>

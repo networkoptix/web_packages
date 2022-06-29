@@ -44,8 +44,9 @@
                         [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                     ></svg-icon>
                     <span
+                        *ngIf="btnCaption"
                         class="ml-1"
-                        [innerText]="btnCaption || ''"
+                        [innerText]="btnCaption"
                     ></span>
                 </button>
             </div>

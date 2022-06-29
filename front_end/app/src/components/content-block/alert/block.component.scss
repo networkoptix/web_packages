@@ -28,7 +28,7 @@
         padding          : 0.75rem 1rem;
         border-bottom    : 1px solid var(--border-color);
         position         : relative;
-    
+
         header h4 {
             margin : 0;
             width  : 100%;
@@ -111,22 +111,22 @@
             border-top : none;
         }
     }
-    
+
     &.gray {
         background-color : var(--grey-section-bg);
         border           : 1px solid var(--grey-section-bg);
         border-bottom    : none;
-        
+
         .card--header {
             background-color    : var(--grey-section-bg);
             border-bottom-color : var(--grey-section-sep-color);
         }
-        
+
         .card--body {
             background-color : var(--grey-section-bg);
             border-top       : 1px solid var(--grey-section-sep-color);
         }
-        
+
         .card--footer {
             background-color : var(--grey-section-bg);
         }
@@ -192,6 +192,14 @@
 
         .card--footer {
             background-color : var(--card-simple-warning-bg);
+        }
+    }
+
+    &.simple-bright-warning {
+        @extend .simple-warning;
+
+        &, & .card--body, .card--footer  {
+            background-color: $yellow_main;
         }
     }
 
