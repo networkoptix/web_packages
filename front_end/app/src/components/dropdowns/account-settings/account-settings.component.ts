@@ -75,7 +75,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                         is_staff: account.is_staff,
                         is_superuser: account.is_superuser
                     };
-                    this.displayedFullName = (account.first_name + ' ' + account.last_name[0] + '.').toUpperCase();
+                    this.displayedFullName = this.makeFullName(account);
                 } else {
                     this.settings = {
                         name: '',
@@ -113,5 +113,15 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     hide() {
         this.show = false;
         return false;
+    }
+
+    makeFullName(account: Account) {
+        if (account.first_name && account.last_name) {
+            return (account.first_name + ' ' + account.last_name.charAt(0) + '.').toUpperCase();
+        } else if (account.name) {
+            return account.name.toUpperCase();
+        } else {
+            return '';
+        }
     }
 }
