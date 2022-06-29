@@ -14,12 +14,13 @@ export enum DIALOG_SIZE {
     SMALL = 400
 }
 
+// Do not change default config as most of the dialogs are using it
 export const defaultConfig: DialogConfig = {
     hasBackdrop: true,
     backdropClass: 'overlay-backdrop',
     panelClass: 'modal-holder',
     disableClose: false,
-    width: DIALOG_SIZE.INFO,
+    width: DIALOG_SIZE.NORMAL,
 };
 
 export const infoDialogConfig: DialogConfig = {
