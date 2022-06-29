@@ -10,13 +10,19 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
+import type {
+    MultiSelectItem
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { MessageParams } from '@dialogs/message/message.component.types';
@@ -37,7 +43,7 @@ import {
 } from '@utils/general';
 
 import { IpvdSearchService } from './ipvd-search.service';
-import type { Disclaimer, IpvdParams } from './ipvd.types';
+import type { Disclaimer, IpvdParams, FilteredCamera } from './ipvd.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -52,32 +58,36 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
 
     targets: PseudoAnchorTarget[] = [];
-    placeholder: string;
-    data;
+    placeholder: string = '';
     company: string;
     vmsName: string;
     vendors: Vendors[] = [];
-    resolution: string;
-    itemsPerPage: number;
-    query: string;
-    cameras: Cameras[];
-    analytics;
-    activeCamera: Cameras | undefined;
-    showAll: boolean;
-    hardwareTypes: any[];
-    resolutions;
-    camerasTable: Cameras[];
+    resolution: string = '0';
+    itemsPerPage: number = 15;
+    query: string = '';
+    cameras: Cameras[] = [];
+    analytics: string[];
+    activeCamera?: Cameras;
+    showAll: boolean = false;
+    hardwareTypes: MultiSelectItem[] = [];
+    resolutions: DropdownItem<string>[] = [];
+    camerasTable: FilteredCamera[] = [];
     allowedParameters: string[];
-    filterModel: SearchFilter;
-    toggleCamview: boolean;
+    filterModel: SearchFilter = {
+        query: '',
+        tags: [],
+        selects: [],
+        multiselects: [],
+    };
+    toggleCamview: boolean = false;
     params: IpvdParams;
     mobileDetailMode: boolean;
-    noResult: boolean;
-    hasNoSearch: boolean;
+    noResult: boolean = false;
+    hasNoSearch: boolean = true;
     debug: boolean;
     beta: boolean;
     uriPath: string;
-    breakpoint: string;
+    breakpoint: string = '(max-width: 767px)';
     showAnalytics: boolean;
     disclaimerParams: Disclaimer;
 
@@ -115,33 +125,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             'resolutionArea'
         ];
 
-        this.breakpoint = '(max-width: 767px)';
-        this.placeholder = '';
-        this.data = undefined;
-        this.resolution = '0';
-        this.itemsPerPage = 15;
-        this.query = '';
-        this.noResult = false;
-        this.hasNoSearch = true;
-        this.cameras = [];
-        this.camerasTable = [];
-        this.vendors = undefined;
-
-        this.activeCamera = undefined;
-        this.showAll = false;
-        this.toggleCamview = false;
-
-        this.filterModel = {
-            query: ''
-        };
-        this.filterModel.tags = [];
-        this.filterModel.selects = [];
-        this.filterModel.multiselects = [];
-
-        this.resolutions = [];
-        this.hardwareTypes = [];
-
-        this.uriPath = '/' + this.route.snapshot.parent.url.map(e => e.path).join('/');
+        this.uriPath = '/' +
+            this.route.snapshot.parent.url.map(e => e.path).join('/');
 
         this.disclaimerParams = {
             companyName: this.CONFIG.company.name,
@@ -171,22 +156,20 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.routerSubscription = this.router.events.subscribe(
-                (event: NavigationEnd) => {
-                    window.scroll(0, this.uri.pageOffset);
-                });
+            this.routerSubscription = this.router.events.subscribe(() => {
+                window.scroll(0, this.uri.pageOffset);
+            });
         }
 
-        this.locationSubscription = this.location.subscribe(
-            (event: PopStateEvent) => {
-                // force view component update without URI update
-                setTimeout(() => {
-                    this.params = this.route.snapshot.queryParams;
-                    if (!this.params.camera && this.activeCamera) {
-                        this.resetActiveCamera(true);
-                    }
-                });
-            }
+        this.locationSubscription = this.location.subscribe(() => {
+            // force view component update without URI update
+            setTimeout(() => {
+                this.params = this.route.snapshot.queryParams;
+                if (!this.params.camera && this.activeCamera) {
+                    this.resetActiveCamera(true);
+                }
+            });
+        }
         );
 
         this.windowSizeSubscription = this.scrollMechanicsService
@@ -199,7 +182,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
                 if (this.tableContainer?.nativeElement) {
                     let width = this.tableContainer.nativeElement.clientWidth;
-                    width = (this.activeCamera) ? width - 8 : width; /* -gutter */
+                    width = this.activeCamera ? width - 8 : width; /* -gutter */
                     this.scrollMechanicsService.elementTableWidth = width;
                 }
             });
@@ -225,7 +208,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.debug ||
             this.beta;
 
-        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices?.();
+        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices();
 
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;
@@ -300,88 +283,62 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     updateFilterModel(): void {
         this.filterModel.query = '';
 
-        if (this.params.search && this.params.search.length > 0) {
+        if (this.params.search) {
             this.filterModel.query = this.params.search;
         }
 
-        if (this.filterModel.tags && this.filterModel.tags.length) {
+        if (this.filterModel.tags?.length) {
             this.filterModel.tags.forEach(tag => {
                 tag.value = false;
             });
             if (this.params.tags) {
-                const tags = {};
-                this.params.tags
-                    .split(',')
-                    .forEach(tagName => {
-                        tags[tagName] = true;
-                    });
+                const paramTags = new Set(this.params.tags.split(','));
                 this.filterModel.tags.forEach(tag => {
-                    if (tags[tag.id]) {
-                        tag.value = true;
-                    }
+                    tag.value = paramTags.has(tag.id);
                 });
             }
         }
 
-        if (this.filterModel.selects && this.filterModel.selects.length) {
-            this.filterModel.selects
-                .forEach(select => {
-                    if (this.params[select.id]) {
-                        select.selected = select.items.find(item =>
-                            item.value === this.params[select.id]
-                        );
-                    } else {
-                        if (!select.selected) {
-                            select.selected = { value: '0', name: 'All' };
-                        }
-                    }
-                });
-        }
+        this.filterModel.selects?.forEach(select => {
+            if (this.params[select.id]) {
+                select.selected = select.items.find(item =>
+                    item.value === this.params[select.id]
+                );
+            } else if (!select.selected) {
+                select.selected = { value: '0', name: 'All' };
+            }
+        });
 
-        if (this.filterModel.multiselects && this.filterModel.multiselects.length) {
-            this.filterModel.multiselects
-                .forEach(select => {
-                    if (this.params[select.id]) {
-                        select.selected = Array.isArray(this.params[select.id])
-                            ? this.params[select.id]
-                            : this.params[select.id].split(',');
-                    } else {
-                        if (select.id === 'vendors' && this.params.camera) {
-                            // direct navigation to camera
-                            select.selected = this.findVendorForCamera(
-                                this.params.camera
-                            );
-                            if (!select.selected.length) {
-                                // not found. wrong camera model? try search...
-                                this.filterModel.search = this.params.camera;
-                            }
-                        } else {
-                            select.selected = [];
-                        }
-                    }
-                });
-        }
+        this.filterModel.multiselects?.forEach(select => {
+            if (this.params[select.id]) {
+                select.selected = this.params[select.id].split(',');
+            } else if (select.id === 'vendors' && this.params.camera) {
+                // direct navigation to camera
+                select.selected = this.findVendorForCamera(this.params.camera);
+                if (!select.selected.length) {
+                    // not found. wrong camera model? try search...
+                    this.filterModel.search = this.params.camera;
+                }
+            } else {
+                select.selected = [];
+            }
+        });
     }
 
     resetFilterModel(): void {
         this.filterModel.search = '';
-        if (this.filterModel.tags) {
-            this.filterModel.tags.forEach(filter => {
-                filter.value = false;
-            });
-        }
 
-        if (this.filterModel.selects) {
-            this.filterModel.selects.forEach(filter => {
-                filter.selected = filter.items[0];
-            });
-        }
+        this.filterModel.tags?.forEach(filter => {
+            filter.value = false;
+        });
 
-        if (this.filterModel.multiselects) {
-            this.filterModel.multiselects.forEach(filter => {
-                filter.selected = [];
-            });
-        }
+        this.filterModel.selects?.forEach(filter => {
+            filter.selected = filter.items[0];
+        });
+
+        this.filterModel.multiselects?.forEach(filter => {
+            filter.selected = [];
+        });
 
         this.filterModel = { ...this.filterModel };
     }
@@ -389,29 +346,24 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     addFilterResolutions(): void {
         this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
-        this.filterModel.selects.push(
-            {
-                id: 'resolution',
-                label: this.LANG.search.minResolution(),
-                items: this.resolutions,
-                selected: this.resolutions[0]
-            });
+        this.filterModel.selects.push({
+            id: 'resolution',
+            label: this.LANG.search.minResolution(),
+            items: this.resolutions,
+            selected: this.resolutions[0]
+        });
     }
 
     addAnalyticsEvents(): void {
         if (this.showAnalytics && this.analytics) {
-            this.filterModel.multiselects.push(
-                {
-                    id: 'analytics',
-                    label: this.LANG.search.analytics(),
-                    searchLabel: this.LANG.search.analyticsSelected(),
-                    searchLabelSingular: '',
-                    items: this.analytics
-                        .map(v => (
-                            { id: v, label: v })
-                        ),
-                    selected: []
-                });
+            this.filterModel.multiselects.push({
+                id: 'analytics',
+                label: this.LANG.search.analytics(),
+                searchLabel: this.LANG.search.analyticsSelected(),
+                searchLabelSingular: '',
+                items: this.analytics.map(v => ({ id: v, label: v })),
+                selected: []
+            });
         }
     }
 
@@ -466,10 +418,12 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         if (this.debug) {
             this.cameraReloadSubscription = this.cloudApi
                 .reloadIPVD()
-                .subscribe(() => {
-                    this.activate();
-                },
-                ex => console.error(ex));
+                .subscribe(
+                    () => {
+                        this.activate();
+                    },
+                    ex => console.error(ex)
+                );
             return;
         }
 
@@ -492,17 +446,13 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 );
 
                 // reformat vendors to fit the multiselect component
-                this.filterModel
-                    .multiselects.unshift(
-                        {
-                            id: 'vendors',
-                            label: this.LANG.search.vendors(),
-                            singular: this.LANG.search.vendor(),
-                            items: this.vendors.map(v => (
-                                { id: v.name, label: v.name }
-                            )),
-                            selected: []
-                        });
+                this.filterModel.multiselects.unshift({
+                    id: 'vendors',
+                    label: this.LANG.search.vendors(),
+                    singular: this.LANG.search.vendor(),
+                    items: this.vendors.map(v => ({ id: v.name, label: v.name })),
+                    selected: []
+                });
 
                 this.updateFilterModel();
                 // Trigger model change for search component
@@ -513,43 +463,32 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     // restrict the parameters to be passed and viewed for to cam-table (based on allowedParameters)
-    preFilterCameraTable(cameras) {
-        const values = Object.keys(cameras).map(key => cameras[key]);
-        const filteredCameras = [];
-        values.forEach(camera => {
+    preFilterCameraTable(cameras: Cameras[]): FilteredCamera[] {
+        const filteredCameras: FilteredCamera[] = [];
+        cameras.forEach(camera => {
             const filteredCamera = Object.keys(camera)
-                .filter(key =>
-                    this.allowedParameters.includes(key) || key === 'sortKey'
-                ).reduce((obj, key) => {
-                    obj[key] = camera[key];
+                .reduce<FilteredCamera>((obj, key) => {
+                    if (this.allowedParameters.includes(key)) {
+                        obj[key] = camera[key];
+                    }
                     return obj;
-                }, {});
+                }, { sortKey: camera.sortKey });
             filteredCameras.push(filteredCamera);
         });
         return filteredCameras;
     }
 
-    filterEmpty() {
-        let tags;
-        if (this.filterModel.tags) {
-            tags = this.filterModel.tags.find(tag => tag.value);
-        }
+    notEmptyFilter(): boolean {
+        const tags = !!this.filterModel.tags?.find(tag => tag.value);
 
-        let multiselect;
-        if (this.filterModel.multiselects) {
-            this.filterModel.multiselects.forEach(select => {
-                multiselect = multiselect || (select.selected.length > 0);
-            });
-        }
+        const multiselect = this.filterModel.multiselects?.some(select =>
+            select.selected.length > 0
+        );
 
-        let singleselect;
-        if (this.filterModel.selects) {
-            this.filterModel.selects.forEach(select => {
-                singleselect = singleselect ||
-                    (select.selected && select.selected.value !== '0');
-                // 0 is default choice
-            });
-        }
+        const singleselect = this.filterModel.selects?.some(select =>
+            select.selected && select.selected.value !== '0'
+            // 0 is default choice
+        );
 
         return tags ||
             multiselect ||
@@ -563,20 +502,16 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
 
         if (this.cameras && this.cameras.length) {
-            if (this.filterEmpty()) {
+            if (this.notEmptyFilter()) {
                 const filteredCameras = this.cameraSearchService.ipvdSearch(
                     this.cameras,
                     this.filterModel
                 );
 
                 this.noResult = (filteredCameras.length === 0);
-                if (!this.noResult) {
-                    this.camerasTable = this.preFilterCameraTable(
-                        filteredCameras
-                    );
-                } else {
-                    this.camerasTable = [];
-                }
+                this.camerasTable = !this.noResult
+                    ? this.preFilterCameraTable(filteredCameras)
+                    : [];
                 this.setActiveCamera();
             } else {
                 this.hasNoSearch = true;
@@ -599,13 +534,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // setVendor(vendor) {
-    //     this.filterModel.query = vendor;
-    //     this.searchVendor();
-    //     return false;
-    // }
-
-    activateCamera(elementSelected: Cameras): void {
+    activateCamera(elementSelected: FilteredCamera): void {
         if (!elementSelected) {
             return;
         }

@@ -12,6 +12,12 @@ import type {
     ConsoleManifest,
     ConsoleSection
 } from '@components/console-table/console-table.component.types';
+import type {
+    DropdownItem
+} from '@components/dropdowns/generic/dropdown.component.types';
+import type {
+    MultiSelectItem
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchTag } from '@components/search/search.component.types';
 
 import type { MenuNode } from '../menus.service.types';
@@ -522,8 +528,8 @@ export interface Ipvd {
     firmwaresToShow: number;
     analyticsToShow: number;
     sortSupportedDevicesByPopularity: string;
-    supportedResolutions: string;
-    supportedHardwareTypes: string[];
+    supportedResolutions: DropdownItem<string>[];
+    supportedHardwareTypes: MultiSelectItem[];
     searchTags: SearchTag[];
     vendorsShown: number;
     showAnalyticsEvents?: boolean;

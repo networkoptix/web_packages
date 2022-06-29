@@ -299,8 +299,8 @@ export const nxConfig: IConfig = {
         firmwaresToShow: 4,
         analyticsToShow: 4,
         sortSupportedDevicesByPopularity: '',
-        supportedResolutions: '',
-        supportedHardwareTypes: [''],
+        supportedResolutions: [],
+        supportedHardwareTypes: [],
         searchTags: [],
         vendorsShown: 0
     },

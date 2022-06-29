@@ -36,7 +36,7 @@ import {
 } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { IpvdParams, Disclaimer } from '../../ipvd.types';
+import type { IpvdParams, Disclaimer, FilteredCamera } from '../../ipvd.types';
 
 function yesNo(bVal: unknown): string {
     if (bVal === undefined || bVal === null) {
@@ -56,12 +56,12 @@ type CsvData = Record<string, string | number>[];
     encapsulation: ViewEncapsulation.None
 })
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
-    @Input() elements: Cameras[];
+    @Input() elements: FilteredCamera[];
     @Input() allowedParameters: string[];
     @Input() activeCamera: Cameras;
     @Input() params: IpvdParams;
 
-    @Output() public onRowClick = new EventEmitter<Cameras>();
+    @Output() public onRowClick = new EventEmitter<FilteredCamera>();
     @Output() public onFeedbackClick = new EventEmitter<'page'>();
 
     public selectedHeader: string;
@@ -71,14 +71,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     public pages: number;
     public debug: boolean;
 
-    private _elements: Cameras[];
+    private _elements: FilteredCamera[];
     private cameraHeaders: string[];
     private beta: boolean;
 
     targets: PseudoAnchorTarget[] = [];
     currentPage: number = 1;
     pageSize: number;
-    pagedItems: Cameras[] = [];
+    pagedItems: FilteredCamera[] = [];
     pagerMaxSize: number;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -92,7 +92,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     elementWidth: string = '100%';
     revert: number;
 
-    private clicks = new Subject<Cameras>();
+    private clicks = new Subject<FilteredCamera>();
 
     clickSubscription: SubscriptionLike;
     uriSubscription: SubscriptionLike;
@@ -339,18 +339,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         }
     }
 
-    trackPagedItem(index: number, item: Cameras): string | undefined {
+    trackPagedItem(index: number, item: FilteredCamera): string | undefined {
         return item ? item.sortKey : undefined;
     }
 
     toggleHeaderSort(param: string): void {
-        let filter: string;
-        for (const [key, value] of Object.entries(this.LANG.ipvd)) {
-            if (value() === param) {
-                filter = key;
-                break;
-            }
-        }
+        const filter = Object.keys(this.LANG.ipvd).find(key =>
+            this.LANG.ipvd[key]() === param
+        );
 
         this.sortOrderASC = (this.LANG.ipvd[filter]() === this.selectedHeader)
             ? !this.sortOrderASC
@@ -445,7 +441,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.showHeaders = this.cameraHeaders;
     }
 
-    showParametersFor(item: Cameras): string[] {
+    showParametersFor(item: FilteredCamera): string[] {
         const showParameters = [...this.allowedParameters];
         // adjust PTZ and Audio params
         let idxToBeRemoved: number;
@@ -479,7 +475,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             windowScroll >= this.scrollHeight - SCROLL_OFFSET;
     }
 
-    setClickedRow(element: Cameras | undefined): void {
+    setClickedRow(element: FilteredCamera | undefined): void {
         if (element) {
             this.clicks.next(element);
             this.selectedCamera = element.sortKey;
@@ -541,8 +537,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             .replace(/\<\/?span\>/g, '');
     }
 
-    isBoolean(x: unknown): boolean {
-        return typeof x === 'boolean';
+    isBoolIcon(value: unknown): boolean {
+        return typeof value === 'boolean' || value === 0 || value === '0x0';
     }
 
     // Element with position 'fixed' is losing the focus when page bottom is reached and cursor is moved (not 'mousewheel')

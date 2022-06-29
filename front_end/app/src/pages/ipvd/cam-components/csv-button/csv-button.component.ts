@@ -18,7 +18,7 @@ export class CsvButtonComponent {
         private extractService: NxCsvExtractService
     ) {}
 
-    downloadCSV() {
+    downloadCSV(): void {
         this.extractService.exportToCsv(this.data, this.filename, this.options);
     }
 }

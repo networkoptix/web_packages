@@ -58,11 +58,8 @@
                                         camera: item.model
                                     }"
                                 ></a>
-                                <div
-                                    *ngIf="!isBoolean(item[p]) && item[p] !== 0 && item[p] !== '0x0';
-                                        else icon"
-                                >
-                                    {{item[p]}}
+                                <div *ngIf="!isBoolIcon(item[p]) else icon">
+                                    {{ item[p] }}
                                 </div>
                                 <ng-template #icon>
                                     <nx-bool-icon

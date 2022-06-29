@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 
+import type {
+    MultiSelectItem
+} from '@components/dropdowns/multi-select/multi-select.component.types';
+import type { SearchFilter } from '@components/search/search.component.types';
+import type { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -9,38 +15,24 @@ export class IpvdSearchService {
     private static TYPES = 'hardwareTypes';
     private static ANALYTICS = 'analytics';
 
-    private _vendors;
-    private _showAnalytics;
-
-    constructor() {
-        this._vendors = [];
-    }
+    private _showAnalytics: boolean;
 
     set showAnalytics(show: boolean) {
         this._showAnalytics = show;
     }
 
-    public get vendors(): any {
-        return this._vendors;
-    }
-
-    public set vendors(list: any) {
-        this._vendors = list;
-    }
-
-    ipvdSearch(camerasData, filter) {
+    ipvdSearch(camerasData: Cameras[], filter: SearchFilter): Cameras[] {
         const query = filter.query.toLowerCase();
         const queryTerms = query.trim()
             .split(/[\s\+]+/)
             .filter(elm => elm !== '');
-        const preferredVendors = '';
 
-        function filterCamera(c, query) {
-            function lowerNoDashes(str) {
+        function filterCamera(c: Cameras, query: string): boolean {
+            function lowerNoDashes(str: string): string {
                 return str.replace(/-/g, '').toLowerCase();
             }
 
-            let result;
+            let result: boolean;
             if (query.includes('-')) {
                 // If dash in query -> perform exact match
                 result = (
@@ -50,57 +42,55 @@ export class IpvdSearchService {
             } else {
                 // If no dash in query -> include results with and without dash
                 const queryLowerNoDashes = lowerNoDashes(query);
-                result = lowerNoDashes(c.vendor).includes(queryLowerNoDashes);
-                result = result || lowerNoDashes(c.model).includes(queryLowerNoDashes);
-
-                result = result || c.analyticsEvents.find(event => {
-                    return event.toLowerCase().includes(queryLowerNoDashes);
-                });
+                result = lowerNoDashes(c.vendor).includes(queryLowerNoDashes) ||
+                    lowerNoDashes(c.model).includes(queryLowerNoDashes) ||
+                    !!c.analyticsEvents.find(event =>
+                        event.toLowerCase().includes(queryLowerNoDashes)
+                    );
             }
 
-            return (query.length === 0 || result || c.maxResolution.includes(query));
+            return query.length === 0 ||
+                result ||
+                c.maxResolution.includes(query);
         }
 
-        let resolution;
-        let vendors;
-        let types;
-        let events;
+        const resolution = filter.selects
+            .find(x => x.id === IpvdSearchService.RESOLUTION)
+            ?.selected;
 
-        if (filter.selects.find(x => x.id === IpvdSearchService.RESOLUTION) !== undefined) {
-            resolution = filter.selects.find(x => x.id === IpvdSearchService.RESOLUTION).selected;
+        const vendors = filter.multiselects
+            .find(x => x.id === IpvdSearchService.VENDORS)
+            ?.selected;
+
+        let types: MultiSelectItem[];
+        const hardwareType = filter.multiselects.find(x =>
+            x.id === IpvdSearchService.TYPES
+        );
+        if (hardwareType?.selected.length) {
+            types = hardwareType.items.filter(x =>
+                !hardwareType.selected.includes(x.id)
+            );
         }
 
-        if (filter.multiselects.find(x => x.id === IpvdSearchService.VENDORS) !== undefined) {
-            vendors = filter.multiselects.find(x => x.id === IpvdSearchService.VENDORS).selected;
-        }
-
-        if (filter.multiselects.find(x => x.id === IpvdSearchService.TYPES) !== undefined) {
-            const hardwareType = filter.multiselects.find(x => x.id === IpvdSearchService.TYPES);
-            if (hardwareType.selected.length) {
-                types = hardwareType.items.filter(x => !hardwareType.selected.includes(x.id));
-            }
-        }
-
-        if (filter.multiselects.find(x => x.id === IpvdSearchService.ANALYTICS) !== undefined) {
-            const analyticsEvents = filter.multiselects.find(x => x.id === IpvdSearchService.ANALYTICS);
-            if (analyticsEvents.selected.length) {
-                events = analyticsEvents.items.filter(x => {
-                    return analyticsEvents.selected.includes(x.id);
-                });
-            }
+        let events: MultiSelectItem[];
+        const analyticsEvents = filter.multiselects.find(x =>
+            x.id === IpvdSearchService.ANALYTICS
+        );
+        if (analyticsEvents?.selected.length) {
+            events = analyticsEvents.items.filter(x =>
+                analyticsEvents.selected.includes(x.id)
+            );
         }
 
         return camerasData.filter(camera => {
-            if (filter.tags.some(key => {
-                return key.value && !camera[key.id];
-            })) {
+            if (filter.tags.some(key => key.value && !camera[key.id])) {
                 return false;
             }
 
             if (
                 resolution &&
                 resolution.value !== '0' &&
-                camera.resolutionArea <= resolution.value * 0.9
+                camera.resolutionArea <= Number(resolution.value) * 0.9
             ) {
                 return false;
             }
@@ -115,7 +105,8 @@ export class IpvdSearchService {
 
             if (types &&
                 types.length > 0 &&
-                types.find(type => type.id === camera.hardwareTypeId)) {
+                types.find(type => type.id === camera.hardwareTypeId)
+            ) {
                 return false;
             }
 
@@ -123,7 +114,8 @@ export class IpvdSearchService {
                 events.length > 0 &&
                 !events.some(event => {
                     return camera.analyticsEvents.includes(event.label);
-                })) {
+                })
+            ) {
                 return false;
             }
 
@@ -140,13 +132,7 @@ export class IpvdSearchService {
             return queryTerms.length
                 ? queryTerms.every(term => filterCamera(camera, term))
                 : true;
-        }).sort((cameraA: any, cameraB: any) => {
-            if (preferredVendors.includes(cameraA.vendor.toLowerCase())) {
-                return -1;
-            }
-            if (preferredVendors.includes(cameraB.vendor.toLowerCase())) {
-                return 1;
-            }
+        }).sort((cameraA, cameraB) => {
             return cameraA.sortKey < cameraB.sortKey ? -1 : 1;
         });
     }
