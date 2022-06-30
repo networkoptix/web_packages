@@ -70,18 +70,24 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             offlineStatus &&
             offlineStatus !== errorStatus
         ) {
+            // Don't show overlay if we're showing session dialog
+            if (this.isDialogActive) {
+                return;
+            }
+
             this.appState.lastErrorStatus$.next(status);
             this.appState.systemAvailable$.next(false);
         } else if (
             res instanceof HttpErrorResponse &&
-            (status === 401 ||
-            status === 422 &&
-            res.url.includes('rest/v1/login/sessions'))
+            (status === 401 || status === 422 && res.url.includes('rest/v1/login/sessions')) ||
+            (status === 0 && res.url?.includes('oauth/token'))
         ) {
             // Session expired
             if (this.isDialogActive) {
                 return;
             }
+            // remove overlay if visible
+            this.appState.systemAvailable$.next(true);
             this.isDialogActive = true;
             return this.dialogService.expiredSession()
                 .then(() => this.window.location.reload());
