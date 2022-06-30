@@ -137,8 +137,8 @@
             <header>
                 <h4 translate>Settings</h4>
             </header>
-            <nx-section class="pl-3">
-                <div class="server-settings">
+            <nx-section>
+                <div class="server-settings pl-3">
                     <span class="ellipsis text-column" translate>Port</span>
                     <div class="server-settings-port">
                         <div style="width: 85px;">
@@ -168,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="server-settings">
+                <div class="server-settings pl-3">
                     <ng-container *ngIf="showAnalytics && (
                             (dropdownStorages.length && !storagesLoading) ||
                             storagesLoading
