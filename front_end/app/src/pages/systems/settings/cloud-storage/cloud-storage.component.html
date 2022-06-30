@@ -77,15 +77,15 @@
 </ng-template>
 
 <!-- Alert Blocks -->
-<nx-alert-block *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED && cloudStorageNotUsed"
-    (onAction)="cloudStorageNotUsed = false" type="bright-warning" id="storages-outdated"
-    [line1]="'The cloud storage not used for recording. Go to the Servers settings to configure it.' | translate"
+<nx-alert-block *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED && type !== 'servers' && cloudStorageNotUsed && serverSettings"
+    (onAction)="cloudStorageNotUsed = false" type="bright-warning" id="cloud-storage-not-used"
+    [line1]="'cloudStorage.notUsedWarning' | translate: { serverSettings: serverSettings }"
     [iconSrc]="CONFIG.icons.dirTextButtons + 'info.svg'"
     [btnIconSrc]="CONFIG.icons.dirTextButtons + 'close.svg'">
 </nx-alert-block>
 
 <!-- Main Block-->
-<nx-block>
+<nx-block [type]="this.type === 'servers' ? 'mt-3' : ''">
     <header class="with-child">
         <h4 translate>Cloud Storage</h4>
         <span *ngIf="state === CLOUD_STORAGE_STATES.DEFAULT" class="tag" translate>New Feature</span>

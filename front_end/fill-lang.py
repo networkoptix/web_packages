@@ -27,6 +27,7 @@ def filter_extracted_static(json_elem):
         "tile.",
         "authorize.",
         "devConsole.",
+        "cloudStorage.",
         "system.transferNotification",
     ]
     return any((key in json_elem for key in keys))

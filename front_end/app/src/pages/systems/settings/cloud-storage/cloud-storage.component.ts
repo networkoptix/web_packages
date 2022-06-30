@@ -1,17 +1,20 @@
 import {
-    Component, TemplateRef, ViewContainerRef,
+    Component, Input, TemplateRef, ViewContainerRef,
 } from '@angular/core';
 import { startCase } from 'lodash';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, take } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+
+import { NxSettingsService } from '../settings.service';
 
 enum CLOUD_STORAGE_STATES {
     DEFAULT = 'default',
@@ -30,6 +33,8 @@ const mockLicenses = [
     styleUrls: ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent {
+    @Input() type: 'servers';
+
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -41,6 +46,7 @@ export class NxCloudStorageComponent {
     fields = ['size', 'state', 'system', 'expires', 'key'];
     asc = true;
     sortBy = '';
+    serverSettings = '';
 
     // Mock state
     cloudStorageNotUsed = true;
@@ -103,11 +109,23 @@ export class NxCloudStorageComponent {
         cloudApi: NxCloudApiService,
         private viewContainerRef: ViewContainerRef,
         private popoverService: NxPopoverService,
-        public dialogService: NxDialogsService
+        public dialogService: NxDialogsService,
+        settingsService: NxSettingsService,
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
+        if (environment.isLocal) {
+            this.serverSettings = '/settings/servers';
+        } else {
+            settingsService.systemSubject.pipe(
+                filter(system => !!system?.id),
+                take(1)).toPromise().then(system => {
+                this.serverSettings = `/systems/${system.id}/servers`;
+            });
+        }
 
-        cloudApi.checkFeatureNotice('cloudStorage', this.dialogService.cloudStorageInfo).toPromise();
+        if (this.type !== 'servers') {
+            cloudApi.checkFeatureNotice('cloudStorage', this.dialogService.cloudStorageInfo).toPromise();
+        }
     }
 }

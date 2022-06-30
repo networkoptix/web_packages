@@ -16,10 +16,10 @@
                     ></svg-icon>
                 </div>
                 <div [ngClass]="isNotDefaultType ? 'warning-margin' : 'ml-2'">
-                    <span [innerText]="line1"></span><br />
+                    <span [innerHtml]="line1"></span><br />
                     <span
                         *ngIf="line2"
-                        [innerText]="line2"
+                        [innerHtml]="line2"
                     ></span>
                 </div>
             </div>

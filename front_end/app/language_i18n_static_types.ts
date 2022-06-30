@@ -185,6 +185,7 @@ export interface CameraFilters {
 
 export interface LanguageI18NStaticTypesCloudStorage {
     keyTableFields: KeyTableFields;
+    notUsedWarning: (params?: Record<string, string | number>) => string;
 }
 
 export interface KeyTableFields {
