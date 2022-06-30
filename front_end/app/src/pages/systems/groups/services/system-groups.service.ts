@@ -1,127 +1,100 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable /*, Inject */ } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { cloneDeep } from 'lodash-es';
-import { Observable } from 'rxjs';
-import { v4 as uuid } from 'uuid';
+// import { of } from 'rxjs';
+import { map, delay, retryWhen, switchMap } from 'rxjs/operators';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+
+// import { WINDOW } from '@services/window-provider';
 
 import * as GroupActions from '../store/groups/groups.actions';
-import { initialState } from '../store/groups/groups.reducer';
-import { selectGroupState } from '../store/groups/groups.selectors';
-import { GroupsState } from '../store/groups/groups.state';
+import { ListItem, SystemsItem } from '../store/groups/groups.types';
 
-type ExportFormat = 'base64';
-const API_URL = '/api/custom-properties/systemGroup';
+interface ISocketIncomingMessage {
+    action: string,
+    data: Record<string, string> | Array<Record<string, string>>,
+} // TODO: more detailed typed message types
+
+interface ISocketOutgoingMessage {
+    action: string,
+    [_: string]: unknown;
+}
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSystemGroupsService {
-    private _groups$: Observable<GroupsState> = this.store.select(selectGroupState);
-    private _groups: GroupsState;
+    protected WEBSOCKET_URL: string;
 
     constructor(
-        public http: HttpClient,
         private store: Store,
+        private http: HttpClient,
+        // @Inject(WINDOW) private window: Window,
     ) {
-        this._groups$.subscribe(groups => {
-            this._groups = cloneDeep(groups);
-        });
+        // this.WEBSOCKET_URL = `wss://${this.window.location.host}/ws`;
+        this.WEBSOCKET_URL = 'ws://127.0.0.1:5000/ws';
     }
 
-    private _isValidSystemGroupsObject(obj: GroupsState): boolean {
-        // return is<GroupState>(obj), see https://github.com/woutervh-/typescript-is
-        return obj &&
-            typeof (obj?.systemGroups) === 'object' &&
-            typeof (obj?.groupNames) === 'object' &&
-            typeof (obj?.groupParents) === 'object';
+    static connection$: WebSocketSubject<ISocketOutgoingMessage>;
+
+    connect(): void {
+        this.http.post<{ code: string }>('/api/systems/*/code', null)
+            .pipe(
+                map(response =>
+                    this.WEBSOCKET_URL + `?code=${response.code}`
+                )
+            ).pipe(
+                switchMap(url => {
+                    if (!NxSystemGroupsService.connection$) {
+                        NxSystemGroupsService.connection$ = webSocket(url);
+                        this.act('systems');
+                    }
+                    return NxSystemGroupsService.connection$;
+                }),
+                retryWhen(errors => errors.pipe(delay(10 * 1000)))
+            )
+            .subscribe({
+                next: this._onSocketMessage.bind(this),
+                error: console.error,
+                complete: () => console.log('websocket connection closed')
+            });
     }
 
-    private _sanitize(groups: GroupsState): GroupsState {
-        if (!this._isValidSystemGroupsObject(groups)) {
-            return initialState;
+    send(data: ISocketOutgoingMessage): void {
+        if (!NxSystemGroupsService.connection$) {
+            console.error('no ws connection');
+            return;
         }
-        return groups;
+        NxSystemGroupsService.connection$.next(data);
     }
 
-    private _handleHttp(query: Observable<GroupsState>): Promise<void> {
-        return query.toPromise().then(groups => {
-            this.store.dispatch(GroupActions.load(
-                { newState: this._sanitize(groups) }
-            ));
-        });
+    public act(action: string, data: Record<string, unknown> = {}): void {
+        this.send({ action, ...data });
     }
 
-    public fetch(): Promise<void> {
-        return this._handleHttp(this.http.get<GroupsState>(API_URL));
-    }
-
-    public _save(groups = this._groups): Promise<void> {
-        return this._handleHttp(this.http.post<GroupsState>(API_URL, groups));
-    }
-
-    public export(format: ExportFormat = 'base64'): string {
-        return btoa(JSON.stringify(this._groups));
-    }
-
-    public import(data: string, format: ExportFormat = 'base64'): void {
-        this._save(JSON.parse(atob(data)));
-    }
-
-    public addGroup(groupName: string, parentId?: string, id?: string): Promise<void> {
-        id = id || uuid();
-        this._groups.groupNames[id] = groupName;
-        if (parentId && this._groups.groupNames[parentId]) {
-            this._groups.groupParents[id] = parentId;
+    public move(id: string, newParentId: string, type: string): void {
+        switch (type) {
+            case 'group':
+                this.act('move_group', { group_id: id, target_id: newParentId });
+                break;
+            case 'system':
+                this.act('move_system', { system_id: id, group_id: newParentId });
+                break;
         }
-        return this._save();
     }
 
-    public renameGroup(groupId: string, newName: string): Promise<void> {
-        this._groups.groupNames[groupId] = newName;
-        return this._save();
-    }
-
-    public setGroupParent(groupId: string, parentId: string): Promise<void> {
-        if (!(groupId in this._groups.groupNames)) {
-            return Promise.reject('wrong group id ' + groupId);
+    protected _onSocketMessage({ action, data }: ISocketIncomingMessage): void {
+        switch (action) {
+            case 'list_groups':
+                this.store.dispatch(GroupActions.loadList({
+                    list: data as unknown as Array<ListItem>
+                }));
+                break;
+            case 'systems':
+                this.store.dispatch(GroupActions.loadSystems({
+                    systems: data as unknown as Array<SystemsItem>
+                }));
+                break;
         }
-        if (!parentId) {
-            delete this._groups.groupParents[groupId];
-            return this._save();
-        } else if (!(parentId in this._groups.groupNames)) {
-            return Promise.reject('wrong parent group id ' + parentId);
-        }
-        if (this._noLoopWouldOccur(groupId, parentId)) {
-            this._groups.groupParents[groupId] = parentId;
-        } else {
-            return Promise.reject(`loop prevented: ${groupId} -> ${parentId}`);
-        }
-        return this._save();
-    }
-
-    protected _noLoopWouldOccur(groupId: string, parentId: string): boolean {
-        // check if parent is group's child now
-        while (parentId) {
-            if (parentId === groupId) {
-                return false;
-            }
-            parentId = this._groups.groupParents[parentId];
-        }
-        return true;
-    }
-
-    public getGroupNewPotentialParentIds(groupId: string): Array<string> {
-        return Object.keys(this._groups.groupNames).filter(
-            parentId => this._noLoopWouldOccur(groupId, parentId)
-        );
-    }
-
-    public setSystemGroup(systemId: string, groupId: string): Promise<void> {
-        if (!(groupId in this._groups.groupNames)) {
-            return Promise.reject('wrong group id ' + groupId);
-        }
-        this._groups.systemGroups[systemId] = groupId;
-        return this._save();
     }
 }

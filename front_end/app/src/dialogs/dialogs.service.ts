@@ -38,13 +38,11 @@ import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
-// import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { EditModalContent } from './edit/edit.component';
 import { GenericModalContent } from './generic/generic.component';
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
-import { MoveSystemToGroupModalContent } from './move-system-to-group/move-system-to-group.component';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
@@ -53,7 +51,6 @@ import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
-import { SystemGroupSettingsModalContent } from './system-group-settings/system-group-settings.component';
 import { NxToastService } from './toast.service';
 import {
     TransferOwnershipModalContent
@@ -586,18 +583,6 @@ export class NxDialogsService extends DialogBase {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
         return this.open(CreateSystemGroupModalContent, dialogConfig).afterClosed();
-    }
-
-    public systemGroupSettings() {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        return this.open(SystemGroupSettingsModalContent, dialogConfig).afterClosed();
-    }
-
-    public moveSystemToGroup(): Promise<void> {
-        const config: Partial<DialogConfig> = {};
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        return this.open(MoveSystemToGroupModalContent, dialogConfig).afterClosed();
     }
 
     public client2faWarning(): Promise<void> {

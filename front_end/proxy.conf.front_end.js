@@ -65,12 +65,13 @@ const PROXY_CONFIG = [
             }
             return req.url.replace('/static', '');
         }
-    }
-    // }, {
+    },
+    // {
     //     context: [
-    //         '/ws'
+    //         '/ws',
+    //         '/system-groups',
     //     ],
-    //     target: 'http://localhost:5000',
+    //     target: 'http://127.0.0.1:5000',
     //     changeOrigin: true,
     //     secure: false,
     //     ws: true

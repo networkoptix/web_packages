@@ -12,7 +12,7 @@ from logging.config import dictConfig
 from quart import Quart, current_app, websocket
 from flask_sqlalchemy import SQLAlchemy
 
-CLOUD_HOST = os.getenv('CLOUD_HOST') or 'https://localhost:8001'
+CLOUD_HOST = os.getenv('CLOUD_HOST') or 'https://cloud-test.hdw.mx' # or 'https://localhost:8001'
 RELAY = os.getenv('CLOUD_RELAY') or 'https://{systemId}.relay.vmsproxy.hdw.mx'
 
 dictConfig({
@@ -510,8 +510,11 @@ class CloudConnector:
     def _get_wrapper(self, route, params=None, _websocket=None):
         res = None
         try:
-            res = self.session.get(f'{CLOUD_HOST}{route}', params=params)  # , verify=False)
+            res = self.session.get(f'{CLOUD_HOST}{route}', params=params)
             res.raise_for_status()
+            if res and res.status_code == 401:
+                websocket.close(res.status_code, 'Failed auth')
+                return
             return res.json()
         except requests.exceptions.HTTPError as e:
             if res is not None and 400 <= res.status_code < 500:
@@ -643,7 +646,9 @@ async def receiving(cloud_connector):
         res = None
         if 'error' in data:
             res = data
+        # TODO actions: import/export, rename group
         elif action == 'create_group':
+            # TODO: support assigining parent on creation
             res = GroupView.create_group(data['name'], cloud_connector.account.get('email'))
         elif action == 'delete_group':
             res = await GroupView.delete_group(data['group_id'], cloud_connector.account.get('email'))
@@ -705,8 +710,11 @@ async def ws():
             cloud_connector = CloudConnector()
             await cloud_connector.login(code)
             await cloud_connector.get_account_info()
+            if not cloud_connector.account or not cloud_connector.account.get('is_authenticated', False):
+                return await websocket.close(401, 'Not Authenticated')
             return await asyncio.create_task(receiving(cloud_connector))
         except requests.exceptions.HTTPError as e:
+            print(e)
             return await websocket.close(500, 'Something went wrong')
     return await websocket.close(400, 'Missing code')
 
@@ -720,4 +728,5 @@ if __name__ == "__main__":
     @app.route('/')
     async def index():
         return await current_app.send_static_file('index.html')
+
     app.run()

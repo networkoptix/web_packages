@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { ListItem } from '../../store/groups/groups.types';
+import type { GroupListItem } from '../../store/groups/groups.types';
 import { ParentIdChangeRequestedEvent } from '../events';
 
 @Component({
-    selector: 'nx-system-group-tree',
-    templateUrl: './system-group-tree.component.html',
-    styleUrls: ['./system-group-tree.component.scss']
+    selector: 'nx-group-list-dumb-component',
+    templateUrl: 'group-list-dumb.component.html',
+    styleUrls: ['group-list-dumb.component.scss', '../../../../../components/systems-list/list.component.scss']
 })
-export class NxSystemGroupTreeComponent {
-    @Input() forest: ReadonlyArray<ListItem> = [];
-    @Input() activeItemId: string = null;
+export class NxGroupListDumbComponent {
+    @Input() groups: Array<GroupListItem> = [];
+    @Input() searchString: string = '';
     @Output() parentIdChangeRequested = new EventEmitter<ParentIdChangeRequestedEvent>();
 
     public onDragStart(e: DragEvent, id: string, type: string): void {
@@ -29,9 +29,5 @@ export class NxSystemGroupTreeComponent {
             type: e.dataTransfer.getData('type'),
             newParentId
         });
-    }
-
-    public reemitParentIdChangeRequested(e: ParentIdChangeRequestedEvent): void {
-        this.parentIdChangeRequested.emit(e);
     }
 }

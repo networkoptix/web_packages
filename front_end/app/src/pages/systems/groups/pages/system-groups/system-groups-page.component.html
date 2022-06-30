@@ -1,36 +1,30 @@
 <div class="wrapper">
+
     <aside>
+
         <div class="d-flex">
+            <button
+                class="btn btn-default mr-2"
+                (click)="refresh()"
+                translate
+            >Refresh</button>
             <button
                 class="btn btn-default mr-2"
                 (click)="initNewGroupDialog()"
                 translate
             >New group</button>
-            <button
-                class="btn btn-default"
-                (click)="initMoveSystemDialog()"
-                [disabled]="!(_groupForest$ | async).length"
-                translate
-            >Move system</button>
+            <a [routerLink]="'/systems/groups/'">/</a>
         </div>
-        <h2>Groups</h2>
-        <nx-system-group-tree
-            [groups]="_groupForest$ | async"
-            [systemNames]="systemNames"
-            (parentIdChangeRequested)="changeGroupParent($event)"
-        ></nx-system-group-tree>
 
-        <h2>Ungrouped systems</h2>
-        <ul *ngIf="ungroupedSystems.length; else noUngrouped">
-            <li *ngFor="let system of ungroupedSystems">
-                <a [routerLink]="'/systems/' + system.id">{{ system.name }}</a>
-            </li>
-        </ul>
-        <ng-template #noUngrouped>
-            <div>(None)</div>
-        </ng-template>
+        <nx-system-group-tree
+            [forest]="forest$ | async"
+            (parentIdChangeRequested)="changeGroupParent($event)"
+            [activeItemId]="activeItemId$ | async"
+        ></nx-system-group-tree>
     </aside>
+
     <div class="content">
         <router-outlet></router-outlet>
     </div>
+
 </div>

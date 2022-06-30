@@ -1,7 +1,28 @@
 .system-group {
     margin-left: 1em;
+
     .system-group-card {
         .system-group-name {
+            // font-weight: bold;
+        }
+
+        &.active {
+            background-color: white;
+        }
+
+        &.system .system-group-name > a {
+            color: black;
+        }
+
+        &.group .system-group-name > a {
+            color: darkgray;
+        }
+    }
+
+    .systems {
+        > a {
+            display: inline-block;
+            margin-right: 1em;
         }
     }
 }

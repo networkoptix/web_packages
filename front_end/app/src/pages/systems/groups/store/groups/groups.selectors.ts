@@ -1,62 +1,58 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
 import { GroupsState } from './groups.state';
-
-export interface ISystem {
-    id: string,
-    // name: string,
-    parentId: string,
-}
-
-export interface IGroup {
-    id: string,
-    name: string,
-    parentId: string,
-    children: Array<IGroup>,
-    systems: Array<ISystem>,
-}
-
-const _systemId2System = (state: GroupsState, systemId: string): ISystem => {
-    return {
-        id: systemId,
-        // name: state.groupNames[systemId],
-        parentId: state.systemGroups[systemId],
-    };
-};
-
-const _groupId2Group = (state: GroupsState, groupId: string): IGroup => {
-    const childrenIds = Object.keys(state.groupParents).filter(
-        childId => state.groupParents[childId] === groupId
-    );
-    const systemIds = Object.keys(state.systemGroups).filter(
-        systemId => state.systemGroups[systemId] === groupId
-    );
-    return {
-        id: groupId,
-        name: state.groupNames[groupId],
-        parentId: state.groupParents[groupId] || null,
-        children: childrenIds.map(cid => _groupId2Group(state, cid)),
-        systems: systemIds.map(systemId => _systemId2System(state, systemId))
-    };
-};
+import { ListItem, SystemsItem } from './groups.types';
 
 export const selectGroupState = createFeatureSelector<GroupsState>('groups');
 
+const _extendSystemInfo = (list: Array<ListItem>, systems: Array<SystemsItem>): Array<ListItem> => list.map(li => {
+    const result: ListItem = { ...li };
+    if (li.type === 'system') {
+        return { ...result, ...(systems.find(s => s.id === li.id) || {}) };
+    }
+    if (li.type === 'group') {
+        if (li.groups) {
+            // @ts-expect-error (weird)
+            result.groups = _extendSystemInfo(li.groups, systems);
+        }
+        if (li.systems) {
+            // @ts-expect-error (weird)
+            result.systems = _extendSystemInfo(li.systems, systems);
+        }
+    }
+    return result;
+});
+
+export const selectForest = createSelector(
+    selectGroupState,
+    state => _extendSystemInfo(state.list, state.systems)
+);
+
+export const selectRootGroups = createSelector(
+    selectGroupState,
+    state => state.list.filter(li => li.type === 'group')
+);
+
+export const selectRootSystems = createSelector(
+    selectGroupState,
+    state => _extendSystemInfo(state.list.filter(li => li.type === 'system'), state.systems)
+);
+
 export const selectGroup = createSelector(
-    selectGroupState,
-    (state: GroupsState, groupId: string) => _groupId2Group(state, groupId)
-);
-
-export const selectGroupList = createSelector(
-    selectGroupState,
-    state => Object.keys(state.groupNames).map(groupId =>
-        _groupId2Group(state, groupId)
-    )
-);
-
-export const selectGroupForest = createSelector(
-    selectGroupState,
-    state => Object.keys(state.groupNames)
-        .filter(groupId => !state.groupParents[groupId]) // Top-level groups
-        .map(groupId => _groupId2Group(state, groupId))
+    selectForest,
+    (forest, groupId) => forest.reduce(function digForTheGroup(found: ListItem | null, candidate: ListItem) {
+        if (found) {
+            return found;
+        }
+        if (candidate.type !== 'group') {
+            return null;
+        }
+        if (candidate.id === groupId) {
+            return candidate;
+        }
+        if (candidate.groups?.length) {
+            return candidate.groups.reduce(digForTheGroup, null);
+        }
+        return null;
+    }, null)
 );

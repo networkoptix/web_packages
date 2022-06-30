@@ -39,7 +39,6 @@ import { LoginWebadminModalContent } from './login-webadmin/login-webadmin.compo
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
-import { MoveSystemToGroupModalContent } from './move-system-to-group/move-system-to-group.component';
 import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
 import { RemoveSystemModalContent } from './remove-system/remove-system.component';
 import { RemoveUserModalContent } from './remove-user/remove-user.component';
@@ -48,7 +47,6 @@ import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
 import { ResetServerModalContent } from './reset-server/reset-server.component';
 import { RestartServerModalContent } from './restart-server/restart-server.component';
 import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
-import { SystemGroupSettingsModalContent } from './system-group-settings/system-group-settings.component';
 import { TwoFAModalContent } from './two-fa/two-fa.component';
 import {
     UpdateCameraCredentialsModalContent
@@ -106,8 +104,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         Client2faWarningModalContent,
         ReserveSpaceWarningModalContent,
         CreateSystemGroupModalContent,
-        SystemGroupSettingsModalContent,
-        MoveSystemToGroupModalContent,
         NewFeatureInformationModalContent,
         CloudStorageActivateModalContent,
         CloudStorageModifyModalContent

@@ -1,25 +1,30 @@
-<div *ngFor="let group of groups" class="system-group">
+<div *ngFor="let item of forest" class="system-group">
 
-    <div class="system-group-card">
+    <div class="system-group-card" [class]="item.type + ' ' + (item.id === activeItemId ? 'active' : '')">
         <h3 class="system-group-name"
-            (dragstart)="onDragStart($event, group.id)"
+            (dragstart)="onDragStart($event, item.id, item.type)"
             (dragover)="onDragOver($event)"
-            (drop)="onDrop($event, group.id)"
-        ><a [routerLink]="'/systems/groups/' + group.id">{{ group.name }}</a></h3>
-        <div class="subgroups" *ngIf="group.children.length">Subgroups: {{ group.children.length }}</div>
-        <div class="systems" *ngIf="group.systems.length">Systems: {{ group.systems.length }}</div>
+            (drop)="onDrop($event, item.id)"
+        ><a [routerLink]="(item.type === 'group' ? '/systems/groups/' : '/systems/') + item.id">{{ item.name }}</a></h3>
     </div>
 
-    <nav *ngIf="group.systems.length">
-        <a *ngFor="let system of group.systems" [routerLink]="'/systems/' + system.id">{{ systemNames[system.id] || system.id }}</a>
-        <!-- TODO: Replace displayed ID with displayed name -->
-    </nav>
+    <div *ngIf="item.type === 'group'">
+        <!-- <h4 *ngIf="item.groups.length">"{{ item.name }}" subGroups ({{ item.groups.length }})</h4> -->
+        <nx-system-group-tree
+            *ngIf="item.groups.length"
+            [forest]="item.groups"
+            [activeItemId]="activeItemId"
+            (parentIdChangeRequested)="reemitParentIdChangeRequested($event)"
+        >
+        </nx-system-group-tree>
 
-    <nx-system-group-tree
-        *ngIf="group.children.length"
-        [groups]="group.children"
-        [systemNames]="systemNames"
-        (parentIdChangeRequested)="reemitParentIdChangeRequested($event)"
-    >
-    </nx-system-group-tree>
+        <!-- <h4 *ngIf="item.systems.length">"{{ item.name }}" subSystems ({{ item.systems.length }})</h4> -->
+        <nx-system-group-tree
+            *ngIf="item.systems.length"
+            [forest]="item.systems"
+            [activeItemId]="activeItemId"
+            (parentIdChangeRequested)="reemitParentIdChangeRequested($event)"
+        >
+        </nx-system-group-tree>
+    </div>
 </div>

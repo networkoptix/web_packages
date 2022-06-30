@@ -10,10 +10,14 @@ import { WINDOW } from '@services/window-provider';
 })
 export class SystemGroupsDataService {
     connection$: WebSocketSubject<any>;
-    constructor(@Inject(WINDOW) private window: Window) {}
+    WEBSOCKET_URL: string;
+    constructor(@Inject(WINDOW) private window: Window) {
+        this.WEBSOCKET_URL = `wss://${this.window.location.host}/ws`;
+        // this.WEBSOCKET_URL = 'ws://127.0.0.1:5000/ws';
+    }
 
     connect(): Observable<any> {
-        return of(`wss://${this.window.location.host}/system-groups`).pipe(
+        return of(this.WEBSOCKET_URL).pipe(
             switchMap(url => {
                 if (!this.connection$) {
                     this.connection$ = webSocket(url);

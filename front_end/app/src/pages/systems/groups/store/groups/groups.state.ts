@@ -1,9 +1,6 @@
-type systemId = string;
-type groupId = string;
-type groupName = string;
+import { ListItem, SystemsItem } from './groups.types';
 
 export interface GroupsState {
-    systemGroups: Record<systemId, groupId>,
-    groupNames: Record<groupId, groupName>,
-    groupParents: Record<groupId, groupId>,
+    list: Array<ListItem>,
+    systems: Array<SystemsItem>
 }

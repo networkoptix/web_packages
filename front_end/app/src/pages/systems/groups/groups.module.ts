@@ -12,8 +12,11 @@ import { ComponentsModule } from '@components/components.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
+import { NxGroupListDumbComponent } from './components/group-list-dumb/group-list-dumb.component';
 import { NxSystemGroupTreeComponent } from './components/system-group-tree/system-group-tree.component';
+import { NxSystemListDumbComponent } from './components/system-list-dumb/system-list-dumb.component';
 import { NxSystemGroupPageComponent } from './pages/system-group/system-group-page.component';
+import { NxSystemGroupsIndexPageComponent } from './pages/system-groups-index/system-groups-index-page.component';
 import { NxSystemGroupsPageComponent } from './pages/system-groups/system-groups-page.component';
 import { routes } from './routes';
 import { NxSystemGroupsService } from './services/system-groups.service';
@@ -39,8 +42,11 @@ import { groupsReducer } from './store/groups/groups.reducer';
     ],
     declarations: [
         NxSystemGroupTreeComponent,
+        NxSystemListDumbComponent,
+        NxGroupListDumbComponent,
 
         NxSystemGroupsPageComponent,
+        NxSystemGroupsIndexPageComponent,
         NxSystemGroupPageComponent
     ],
     bootstrap: [],

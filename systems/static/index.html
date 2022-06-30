@@ -21,15 +21,18 @@
         </div>
         <div>
             <label for="group-id">Group ID</label>
-            <input id="group-id">
+            <!-- <input id="group-id"> -->
+            <select id="group-id"></select>
         </div>
         <div>
             <label for="target-id">Target Group ID (Moving Groups to Group)</label>
-            <input id="target-id">
+            <!-- <input id="target-id"> -->
+            <select id="target-id"></select>
         </div>
         <div>
             <label for="system-id">System ID (Moving System to Group)</label>
-            <input id="system-id">
+            <!-- <input id="system-id"> -->
+            <select id="system-id"></select>
         </div>
     </div>
 </div>
@@ -119,15 +122,28 @@
         ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
         ws.onmessage = function (event) {
             let { action, data } = JSON.parse(event.data);
+            console.log('message received', event, action, data)
 
             if (action === 'login') {
+                console.log('login action')
                 ws.send(JSON.stringify({action: 'systems'}))
             } else if (action === 'systems') {
+                console.log('systems action')
+                systemId.innerHTML = data.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`)
+                systemId.value ||= data[0].id
                 systems = data.reduce((_systems, system) => {
                     _systems[system.id] = system;
                     return _systems;
                 }, {});
-            } else if (action === 'list_group') {
+            } else if (action === 'list_groups') {
+
+                const groups = data.filter(r => r.type === 'group')
+                const gidOptions = groups.map(g => `<option value="${g.id}">${g.name} (${g.id})</option>`)
+                groupId.innerHTML = gidOptions
+                groupId.value ||= groups[0].id
+                targetId.innerHTML = gidOptions
+                targetId.value ||= groups[0].id
+
                 const mapIdsToSystem = (groupSystems) => groupSystems
                     .filter(({id}) => systems.hasOwnProperty(id))
                     .map(system => ({...system, ...systems[system.id]}));
@@ -149,12 +165,15 @@
                 pre.innerText = JSON.stringify(showData, undefined, 4);
                 groupContainer.style.display = 'block'
             } else {
+                console.log('[other action]')
                 logger.innerText = JSON.stringify(data, undefined, 4);
                 loggerContainer.style.display = 'block'
             }
         };
         ws.addEventListener('open', () => {
+            console.log('ws open')
             ws.send(JSON.stringify({ action: 'systems' }));
+            console.log('sent systems action')
         });
     }
 
@@ -178,6 +197,11 @@
 
     const send = (action) => {
         data.action = action;
+        data.groupId = groupId.value
+        data.groupName = groupName.value
+        data.targetId = targetId.value
+        data.systemId = systemId.value
+        console.log('sending action', action, ws, data, data.toJson())
         ws?.send(JSON.stringify(data.toJson()));
     }
 </script>

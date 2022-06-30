@@ -27,7 +27,7 @@ export class CreateSystemGroupModalContent implements OnInit {
 
     newGroupName: string;
     groupNames: string[];
-    parentOptions: GroupNameOption[];
+    // parentOptions: GroupNameOption[];
     selectedParent: GroupNameOption;
 
     createSystemGroupProcess: Process;
@@ -39,30 +39,34 @@ export class CreateSystemGroupModalContent implements OnInit {
         @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
         private groupsService: NxSystemGroupsService,
     ) {
-        this._groups$.subscribe(groups => {
-            const { groupNames } = groups;
-            this.parentOptions = [
-                { name: 'None (root)', value: null },
-                ...Object.entries(groupNames).map(([id, name]) => ({
-                    name,
-                    value: id
-                })),
-            ];
-            // Currently selected parent was removed in update
-            const selectedRemoved = this.selectedParent &&
-                !(this.selectedParent.value in groupNames);
-            if (!this.selectedParent || selectedRemoved) {
-                this.selectedParent = { name: 'None (root)', value: null };
-            }
-        });
+        // this._groups$.subscribe(groups => {
+        //     const { groupNames } = groups;
+        //     this.parentOptions = [
+        //         { name: 'None (root)', value: null },
+        //         ...Object.entries(groupNames).map(([id, name]) => ({
+        //             name,
+        //             value: id
+        //         })),
+        //     ];
+        //     // Currently selected parent was removed in update
+        //     const selectedRemoved = this.selectedParent &&
+        //         !(this.selectedParent.value in groupNames);
+        //     if (!this.selectedParent || selectedRemoved) {
+        //         this.selectedParent = { name: 'None (root)', value: null };
+        //     }
+        // });
     }
 
     ngOnInit(): void {
         this.createSystemGroupProcess = this.processService.createProcess(
-            () => this.groupsService.addGroup(
-                this.newGroupName,
-                this.selectedParent.value
-            ),
+            // () => this.groupsService.addGroup(
+            //     this.newGroupName,
+            //     this.selectedParent.value
+            // ),
+            () => Promise.resolve(this.groupsService.act(
+                'create_group',
+                { name: this.newGroupName },
+            )),
             {},
             () => this.dialogRef.close()
         );
