@@ -28,10 +28,6 @@
               "@videojs/xhr",
               "videojs-vtt.js",
               "global/document",
-              "@babel/runtime/helpers/possibleConstructorReturn",
-              "@babel/runtime/helpers/inheritsLoose",
-              "@babel/runtime/helpers/construct",
-              "@babel/runtime/helpers/inherits",
               "mux.js/lib/mp4/probe",
               "mux.js/lib/tools/ts-inspector.js",
               "swagger-ui"

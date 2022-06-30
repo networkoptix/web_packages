@@ -172,7 +172,7 @@ language-check:
   stage: check
   script:
     - cd front_end
-    - npm run node-modules
+    - npm ci
     - npm run lang-ci-check
 
 frontend-lint-check:
@@ -180,7 +180,7 @@ frontend-lint-check:
   stage: check
   script:
     - cd front_end
-    - npm run node-modules
+    - npm ci
     - npm run lint:ci app
 
 fe-lint-tests-check:
@@ -188,7 +188,7 @@ fe-lint-tests-check:
   stage: check
   script:
     - cd front_end
-    - npm run node-modules
+    - npm ci
     - npm run lint:ci:tests app
 
 auth-lint-check:
@@ -196,7 +196,7 @@ auth-lint-check:
   stage: check
   script:
     - cd front_end
-    - npm run node-modules
+    - npm ci
     - npm run lint:ci:auth projects/authorization/src
 
 django-unit-test-slow:
@@ -226,7 +226,7 @@ frontend-unit-test:
     CHROME_BIN: /usr/bin/google-chrome
   script:
     - cd front_end
-    - npm run node-modules
+    - npm ci
     - npm run lang
     - npm run test:ci front-end
   artifacts:
@@ -241,7 +241,7 @@ authorization-unit-test:
     CHROME_BIN: /usr/bin/google-chrome
   script:
     - cd front_end
-    - npm run node-modules
+    - npm ci
     - npm run lang
     - npm run test:ci authorization
   artifacts:
