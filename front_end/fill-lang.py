@@ -1,36 +1,26 @@
 # Make sure any changes here do not break build_scripts/generate_language_compiled_json.py
 import json
+import re
 
 
-def filter_extracted_static(json_elem):
-    keys = [
-        "dialogs.",
-        "license.messages.",
-        "WHEN_MERGE_FINISHES",
-        "FAILED_SYSTEM_DESCR",
-        "NO_SYSTEMS_",
-        "errorCodes.",
-        "integration.",
-        "registration.agreement",
-        "merge.warning",
-        "common.account",
-        "system.MERGE_FINISHES",
-        "alertsCount",
-        "ipvdDisclaimer",
-        "ipvdTopXByVolume",
-        "servers.autoRefresh",
-        "additionalSystems",
-        "security.",
-        "maintenance.",
-        "search.",
-        "redirects.",
-        "tile.",
-        "authorize.",
-        "devConsole.",
-        "cloudStorage.",
-        "system.transferNotification",
-    ]
-    return any((key in json_elem for key in keys))
+def filter_extracted_static(json_key):
+    """
+    Filter static translations unintentionally extracted into language_i18n.json.
+
+    Will catch dot access (e.g 'errorCodes.webadmin2faRequired') and camelCase
+    top-level keys without dot access (e.g. ipvdTopXByVolume).
+
+    Will not catch top-level keys that are all lowercase or otherwise
+    not camelCase (e.g. 'results'), since there is some overlap between
+    the translation keys and there's no way to know definitively whether a
+    translation in language_i18n.json came from templates or
+    language_i18n_static.json without parsing all templates.
+    """
+    dot_access = re.match(r"^([a-zA-Z0-9]+)(\.[a-zA-Z0-9]+)+$", json_key)
+    camelcase = re.match(r"^[a-z0-9]+([A-Z0-9][a-z0-9]*)+$", json_key)
+
+    return dot_access or camelcase
+
 
 
 def replace_empty(json_elem):

@@ -37,6 +37,7 @@
     "Advanced System Settings": "Advanced System Settings",
     "Agree": "Agree",
     "Alexa Settings": "Alexa Settings",
+    "Alexa integration is currently disabled, press \"Enable Alexa\" to turn on integration.": "Alexa integration is currently disabled, press \"Enable Alexa\" to turn on integration.",
     "Alexa is currently currently linked to this system, to link a different open the system admin page on cloud portal for that system.": "Alexa is currently currently linked to this system, to link a different open the system admin page on cloud portal for that system.",
     "Alexa is currently enabled but is linked to another system, press \"Use this system with Alexa\" to link Alexa to this system.": "Alexa is currently enabled but is linked to another system, press \"Use this system with Alexa\" to link Alexa to this system.",
     "Alexa linked to another system": "Alexa linked to another system",
