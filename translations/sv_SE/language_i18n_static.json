@@ -175,6 +175,15 @@
         "ptz": "PTZ-kameror"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        }
+    },
     "common": {
         "account": {
             "created": {
@@ -319,24 +328,24 @@
             "cameras": "kameror",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Aktivera molnlagring",
+                    "action": "Aktivera",
+                    "success": "Molnlagring har aktiverats!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Ändra molnlagring",
+                    "action": "Ändra",
+                    "success": "Molnlagring har uppgraderats!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Flytta molnlagring",
+                    "action": "Flytta",
+                    "success": "Molnlagring har uppgraderats!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Radera molnlagring?",
+                    "action": "Radera",
+                    "success": "Molnlagring har raderats!"
                 }
             },
             "usageLabels": {

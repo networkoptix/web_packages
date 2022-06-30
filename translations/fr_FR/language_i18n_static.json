@@ -175,6 +175,15 @@
         "ptz": "Caméras PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        }
+    },
     "common": {
         "account": {
             "created": {
@@ -319,24 +328,24 @@
             "cameras": "caméras",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Activer le stockage dans le Cloud",
+                    "action": "Activer",
+                    "success": "Stockage Cloud activé avec succès !"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Modifier le stockage dans le Cloud",
+                    "action": "Modifier",
+                    "success": "Stockage Cloud amélioré avec succès !"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Déplacer le stockage dans le Cloud",
+                    "action": "Déplacer",
+                    "success": "Stockage Cloud amélioré avec succès !"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Supprimer le stockage dans le Cloud ?",
+                    "action": "Supprimer",
+                    "success": "Stockage Cloud supprimé avec succès !"
                 }
             },
             "usageLabels": {
@@ -349,16 +358,16 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Modifier",
+                    "body": "Vous pouvez modifier la taille actuelle du stockage cloud dans le système en utilisant la nouvelle clé. Toutes les données enregistrées seront enregistrées."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Déplacer",
+                    "body": "Le stockage Cloud avec toutes les données enregistrées peut être facilement transféré vers votre autre système sans stockage Cloud actif."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Supprimer",
+                    "body": "Vous pouvez retirer le stockage cloud du système à tout moment. Vous pouvez utiliser cette clé plus tard pour réactiver, si vous le souhaitez."
                 }
             },
             "remove": {
@@ -507,7 +516,7 @@
             "serversRestart": "Redémarrer le serveur&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Déconnectez tous les systèmes dont vous êtes le propriétaire du portail %CLOUD_NAME% et désactivez l'authentification en deux étapes pour supprimer votre compte."
         },
         "twoFactor": {
             "action": "Se connecter",
@@ -661,8 +670,8 @@
         "webadmin2faRequired": "L'authentification à deux facteurs est nécessaire pour accéder à ce système. Vous pouvez activer l'authentification à deux facteurs dans vos <a href=\"{ cloudHost }/account/security\">paramètres de compte</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Mes systèmes",
+        "systemList": "Liste Système"
     },
     "integration": {
         "Access Control": "Contrôle d'accès",

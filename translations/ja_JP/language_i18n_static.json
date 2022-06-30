@@ -175,6 +175,15 @@
         "ptz": "PTZカメラ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        }
+    },
     "common": {
         "account": {
             "created": {
@@ -319,24 +328,24 @@
             "cameras": "カメラ",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "クラウドストレージを有効化",
+                    "action": "有効化",
+                    "success": "クラウドストレージが有効になりました！"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "クラウドストレージを変更",
+                    "action": "編集",
+                    "success": "クラウドストレージが正常にアップグレードされました！"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "クラウドストレージを移動",
+                    "action": "移動",
+                    "success": "クラウドストレージが正常にアップグレードされました！"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "クラウドストレージを削除しますか？",
+                    "action": "削除",
+                    "success": "クラウドストレージが正常に削除されました！"
                 }
             },
             "usageLabels": {

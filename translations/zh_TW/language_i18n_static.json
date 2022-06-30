@@ -175,6 +175,15 @@
         "ptz": "PTZ攝影機"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        }
+    },
     "common": {
         "account": {
             "created": {
@@ -319,8 +328,8 @@
             "cameras": "攝影機",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
+                    "heading": "啟用雲端儲存裝置",
+                    "action": "啟用",
                     "success": "Cloud Storage activated successfully!"
                 },
                 "modify": {
@@ -329,14 +338,14 @@
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
+                    "heading": "移動雲端儲存裝置",
                     "action": "Move",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "是否刪除此雲端儲存裝置?",
+                    "action": "刪除",
+                    "success": "雲端儲存裝置刪除成功！"
                 }
             },
             "usageLabels": {

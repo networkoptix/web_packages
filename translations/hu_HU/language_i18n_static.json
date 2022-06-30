@@ -175,6 +175,15 @@
         "ptz": "PTZ kamerák"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        }
+    },
     "common": {
         "account": {
             "created": {

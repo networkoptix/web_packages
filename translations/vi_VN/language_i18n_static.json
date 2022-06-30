@@ -175,6 +175,15 @@
         "ptz": "Camera PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "cloudStorage": {
+        "keyTableFields": {
+            "size": "Size",
+            "state": "State",
+            "system": "System",
+            "expires": "Expires",
+            "key": "Key"
+        }
+    },
     "common": {
         "account": {
             "created": {
@@ -319,24 +328,24 @@
             "cameras": "máy ảnh",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Kích hoạt lưu trữ đám mây",
+                    "action": "Kích hoạt",
+                    "success": "Bộ nhớ đám mây đã được kích hoạt thành công!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Sửa đổi bộ nhớ đám mây",
+                    "action": "Sửa đổi",
+                    "success": "Đã nâng cấp bộ nhớ đám mây thành công!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Di chuyển bộ nhớ đám mây",
+                    "action": "Di chuyển",
+                    "success": "Đã nâng cấp bộ nhớ đám mây thành công!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Xóa bộ nhớ đám mây?",
+                    "action": "Xóa",
+                    "success": "Đã xóa bộ nhớ đám mây thành công!"
                 }
             },
             "usageLabels": {
