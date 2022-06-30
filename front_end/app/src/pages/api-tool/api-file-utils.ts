@@ -102,11 +102,15 @@ export const getPathAndMethodFromNodeName = (name: string) => {
     return { path, method };
 };
 
-export const removeProprietaryEndpoints = (api: APIDoc) => {
+export const cleanJSON = (api: APIDoc) => {
+    delete api?.components?.schemas;
     Object.keys(api.paths).forEach(path => {
         const apiPath = api.paths[path];
         Object.keys(apiPath).forEach(requestType => {
-            if (apiPath[requestType].description?.slice(0, 17) === '<p><b>Proprietary') {
+            if (apiPath[requestType].deprecated) { // Remove this so that swagger's built in styling for deprecated endpoints doesn't trigger
+                delete apiPath[requestType].deprecated;
+            }
+            if (apiPath[requestType].description?.slice(0, 17) === '<p><b>Proprietary') { // Remove properietary endpoints
                 delete apiPath[requestType];
             }
         });
@@ -116,7 +120,7 @@ export const removeProprietaryEndpoints = (api: APIDoc) => {
 export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: APIDocType) => {
     if (APIDoc.tagsModified) return;
 
-    removeProprietaryEndpoints(APIDoc);
+    cleanJSON(APIDoc);
     addAPITypeToTags(APIDoc, type);
 };
 

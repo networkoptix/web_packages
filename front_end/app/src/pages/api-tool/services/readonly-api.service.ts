@@ -10,7 +10,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
-import { addAPIInfoNodesToMenu, addSeperatedAPIMenu, createMenuContent, mergeAPIDocs, prepareSwaggerAPIDoc, removeProprietaryEndpoints } from '../api-file-utils';
+import { addAPIInfoNodesToMenu, addSeperatedAPIMenu, createMenuContent, mergeAPIDocs, prepareSwaggerAPIDoc, cleanJSON } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
 
 import type { EmitInfo, Store, ReadOnlyAPIStore, Markdown } from './api-tool-service-types';
@@ -114,7 +114,7 @@ export class NxReadonlyAPIService {
         const menus = {};
         try {
             mainJSON = JSON.parse(main);
-            removeProprietaryEndpoints(mainJSON);
+            cleanJSON(mainJSON);
             prepareSwaggerAPIDoc(mainJSON, 'main');
         } catch (error) { // Invalid format, don't add to dropdown
             console.error(error);

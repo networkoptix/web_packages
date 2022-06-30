@@ -30,6 +30,9 @@ export interface APIDoc {
     },
     servers?: { url: string }[],
     tagsModified?: boolean
+    components?: {
+        schemas: Object
+    }
 }
 
 export enum requestTypes {
