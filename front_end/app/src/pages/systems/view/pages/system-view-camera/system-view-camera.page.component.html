@@ -137,7 +137,13 @@
                     ></nx-player-placeholder>
                     <ng-template #unreachable>
                         <nx-player-placeholder
-                            *ngIf="!camera.isOffline && !camera.isUnauthorized"
+                            *ngIf="!camera.isOffline && !camera.isUnauthorized && camera.isVirtual"
+                            svgFileName="placeholder_camera_alert"
+                            [heading]="LANG.common.cameraStates.noData()"
+                            [description]="''"
+                        ></nx-player-placeholder>
+                        <nx-player-placeholder
+                            *ngIf="!camera.isOffline && !camera.isUnauthorized && !camera.isVirtual"
                             svgFileName="placeholder_camera_alert"
                             [heading]="LANG.common.cameraStates.error()"
                             [description]="LANG.common.cameraStates.noFormat()"

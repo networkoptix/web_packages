@@ -737,8 +737,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.showPlayerSection = state.error === '' && (
                     this.camera?.isAuthorized &&
                     this.camera?.isOnline && (
-                        state.mode === PLAYBACK_MODE.STOPPED ||
-                        state.mode === PLAYBACK_MODE.LIVE
+                        !this.camera?.isVirtual &&
+                        (state.mode === PLAYBACK_MODE.STOPPED ||
+                        state.mode === PLAYBACK_MODE.LIVE)
                     ) || (
                         this.camera?.hasArchive &&
                         state.mode === PLAYBACK_MODE.ARCHIVE
