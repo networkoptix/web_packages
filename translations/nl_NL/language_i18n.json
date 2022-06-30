@@ -508,7 +508,7 @@
     "Wrong login or password": "Onjuiste gebruikersnaam of wachtwoord",
     "Wrong password": "Wachtwoord onjuist",
     "Yes, delete existing VMS archives": "Yes, delete existing VMS archives",
-    "You already own this system": "Dit systeem bezit u al",
+    "You already own this system": "You already own this system",
     "You are attempting to reserve more space than there is free space available. This will delete existing VMS archives!": "You are attempting to reserve more space than there is free space available. This will delete existing VMS archives!",
     "You can cancel it anytime without data loss.": "U kunt het op elk moment annuleren zonder gegevensverlies.",
     "You can change the backup mode or select specific cameras in the desktop client.": "U kunt de back-upmodus wijzigen of specifieke camera's selecteren in de desktop client.",
