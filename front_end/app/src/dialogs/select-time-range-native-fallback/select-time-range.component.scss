@@ -8,6 +8,7 @@
             
             &::-webkit-calendar-picker-indicator {
                 font-size : 18px;
+                filter: brightness(70%);
             }
         }
     }

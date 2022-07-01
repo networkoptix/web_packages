@@ -12,8 +12,8 @@
   width: 140px;
   top: 5px;
   padding-left: 5px;
-  background: rgba(var(--dark9--rgb), 0.9);
-  color: var(--light1);
+  background: var(--timeline-playback-indicator-bg);
+  color: var(--timeline-playback-indicator-color);
   pointer-events: none;
   z-index: 12;
   transform: translateX(-50%);
@@ -26,7 +26,7 @@
     content: '';
     width: 2px;
     height: 30px;
-    background-color: rgba(var(--dark9--rgb), 0.9);
+    background-color: var(--timeline-playback-indicator-bg);
     position: absolute;
     left: 50%;
     bottom: -33px;
@@ -50,7 +50,7 @@
     height: 5px;
 
     > polygon {
-      fill: rgba(var(--dark9--rgb), 0.9);
+      fill: var(--timeline-playback-indicator-bg);
     }
   }
 
@@ -89,7 +89,7 @@
     > .side-arrow {
       display: block;
       left: -8px;
-      border-right: 8px solid rgba(var(--dark9--rgb), 0.9);
+      border-right: 8px solid var(--timeline-playback-indicator-bg);
     }
   }
 
@@ -109,7 +109,7 @@
     > .side-arrow {
       display: block;
       right: -8px;
-      border-left: 8px solid rgba(var(--dark9--rgb), 0.9);
+      border-left: 8px solid var(--timeline-playback-indicator-bg);
     }
   }
 }

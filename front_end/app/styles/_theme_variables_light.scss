@@ -19,10 +19,6 @@
     --ribbon-alert-bg : #{$yellow_l2};
     --ribbon-alert-border : #{$yellow_l1};
     --ribbon-alert-color : #{$dark9};
-    
-    --timeline-selection-panel-bg : #{$brand_d1};
-    --timeline-selection-panel-color : #{$light1};
-    --timeline-selection-picker : light;
 
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
@@ -221,15 +217,20 @@
     --left-menu-view-hover-bg    : #{$additional_light3};
     --left-menu-view-selected-bg : #{$light5};
     // end View tab ****************************
-
-    --time-under-mouse-bg            : rgba(var(--light6--rgb), 0.9);
-    --time-under-mouse-color         : #{$dark9};
-    --timeline-bg                    : #{$light1};
-    --timeline-scrollbar-bg          : #{$light16};
-    --timeline-scrollbar-hover-bg    : #{$light14};
-    --timeline-scrollbar-stripe-bg   : #{$dark12};
-    --timeline-scrollbutton-bg       : rgba(var(--dark9--rgb), 0.15);
-    --timeline-scrollbutton-hover-bg : rgba(var(--dark9--rgb), 0.25);
+    
+    --time-under-mouse-bg               : rgba(var(--light6--rgb), 0.9);
+    --time-under-mouse-color            : #{$dark9};
+    --timeline-bg                       : #{$light1};
+    --timeline-scrollbar-bg             : #{$light16};
+    --timeline-scrollbar-hover-bg       : #{$light14};
+    --timeline-scrollbar-stripe-bg      : #{$dark12};
+    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.15);
+    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.25);
+    --timeline-playback-indicator-bg    : rgba(var(--dark9--rgb), 0.9);
+    --timeline-playback-indicator-color : #{$light1};
+    --timeline-selection-panel-bg       : #{$brand_d1};
+    --timeline-selection-panel-color    : #{$light1};
+    --timeline-selection-picker         : light;
 
     --paginator-bg    : #{$light4};
     --paginator-color : #{$light16};

@@ -18,10 +18,6 @@ html[data-theme="dark"] {
     --ribbon-alert-bg : #{$yellow_d2};
     --ribbon-alert-border : #{$yellow_d1};
     --ribbon-alert-color : #E1E7EA; //$light4;
-    
-    --timeline-selection-panel-bg : #{$brand_d3};
-    --timeline-selection-panel-color : #{$light4};
-    --timeline-selection-picker : dark;
 
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;
@@ -220,15 +216,20 @@ html[data-theme="dark"] {
     --left-menu-view-hover-bg    : #263137; //$dark8;
     --left-menu-view-selected-bg : #35464F; //$light16;
     // end View tab ****************************
-
-    --time-under-mouse-bg            : rgba(var(--dark9--rgb), 0.9);
-    --time-under-mouse-color         : #A5B7C0; //$light10;
-    --timeline-bg                    : #171C1F; //$dark5;
-    --timeline-scrollbar-bg          : #2B383F; //$dark9;
-    --timeline-scrollbar-hover-bg    : #263137; //$dark8;
-    --timeline-scrollbar-stripe-bg   : #587785; //$dark18;
-    --timeline-scrollbutton-bg       : rgba(var(--dark9--rgb), 0.15);
-    --timeline-scrollbutton-hover-bg : rgba(var(--dark9--rgb), 0.25);
+    
+    --time-under-mouse-bg               : rgba(var(--dark9--rgb), 0.9);
+    --time-under-mouse-color            : #A5B7C0; //$light10;
+    --timeline-bg                       : #171C1F; //$dark5;
+    --timeline-scrollbar-bg             : #2B383F; //$dark9;
+    --timeline-scrollbar-hover-bg       : #263137; //$dark8;
+    --timeline-scrollbar-stripe-bg      : #587785; //$dark18;
+    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.15);
+    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.25);
+    --timeline-playback-indicator-bg    : #E1E7EA; //$light4;
+    --timeline-playback-indicator-color : #080707; //$dark2
+    --timeline-selection-panel-bg       : #{$brand_d3};
+    --timeline-selection-panel-color    : #{$light4};
+    --timeline-selection-picker         : dark;
 
     --paginator-bg           : #1C2327; //$dark6;
     --paginator-color        : #A5B7C0; //$light10;
