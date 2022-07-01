@@ -165,18 +165,32 @@ form.form-horizontal {
                 display: flex;
                 justify-content: space-between;
                 div {
-                    @include typography.medium12brand;
+                    @include typography.medium12nocolor;
+                    color : var(--progress-bar-heder-title-color);
                 }
                 span {
-                    @include typography.medium12dark9;
+                    @include typography.medium12nocolor;
+                    color : var(--progress-bar-heder-persentage-color);
                 }
             }
-            .reindex-progress-container {
-                height: 4px;
-                background-color: var(--light3) !important;
-                border-radius: 2px;
+            .progress-wrapper {
+                position : relative;
+    
+                .reindex-progress-container {
+                    position         : absolute;
+                    width            : 100%;
+                    height           : 4px;
+                    background-color : var(--progress-bar-color) !important;
+                    border           : 1px solid var(--progress-bar-border-color);
+                    border-radius    : 2px;
+                }
+    
                 .reindex-progress {
-                    background-color: var(--brand-core) !important;
+                    position         : absolute;
+                    height           : 4px;
+                    background-color : var(--progress-bar-reindex-color) !important;
+                    border           : 1px solid var(--progress-bar-reindex-color);
+                    border-radius    : 2px;
                 }
             }
         }

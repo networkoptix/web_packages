@@ -109,6 +109,12 @@ html[data-theme="dark"] {
     --placeholder-accent2-color : #{$light12};
     --placehoder-title-color   : #E1E7EA; //$light4;
     --placehoder-body-color    : #A5B7C0; //light10;
+    
+    --progress-bar-color                  : #4E6977; //$dark16
+    --progress-bar-border-color           : #4E6977; //$dark16
+    --progress-bar-reindex-color          : #2592C3; //$brand_d1;
+    --progress-bar-heder-title-color      : #2592C3; //$brand_d1;
+    --progress-bar-heder-persentage-color : #E1E7EA; //$light4
 
     --switch-disabled-color       : #3A4D57; //$dark12;
     --switch-selected-color       : #32731E; //$green_d1;
