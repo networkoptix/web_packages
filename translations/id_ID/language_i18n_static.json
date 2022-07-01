@@ -182,7 +182,8 @@
             "system": "System",
             "expires": "Expires",
             "key": "Key"
-        }
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {

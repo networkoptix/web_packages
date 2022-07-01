@@ -177,12 +177,13 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
-            "key": "Key"
-        }
+            "size": "Kích thước",
+            "state": "Trạng thái",
+            "system": "Hệ thống",
+            "expires": "Hết hạn",
+            "key": "Khóa"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {

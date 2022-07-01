@@ -177,12 +177,13 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
-            "key": "Key"
-        }
+            "size": "サイズ",
+            "state": "状態",
+            "system": "システム",
+            "expires": "有効期限",
+            "key": "キー"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {

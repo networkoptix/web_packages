@@ -177,12 +177,13 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
+            "size": "Größe",
+            "state": "Zustand",
             "system": "System",
-            "expires": "Expires",
-            "key": "Key"
-        }
+            "expires": "Läuft ab",
+            "key": "Schlüssel"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {
@@ -328,24 +329,24 @@
             "cameras": "kameras",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Cloud-Speicher aktivieren",
+                    "action": "Aktivieren",
+                    "success": "Cloud-Speicher erfolgreich aktiviert!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Cloud-Speicher ändern",
+                    "action": "Ändern",
+                    "success": "Der Cloud-Speicher wurde erfolgreich aktualisiert!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Cloud-Speicher verschieben",
+                    "action": "Verschieben",
+                    "success": "Der Cloud-Speicher wurde erfolgreich aktualisiert!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Cloud-Speicher löschen?",
+                    "action": "Löschen",
+                    "success": "Cloud-Speicher erfolgreich gelöscht!"
                 }
             },
             "usageLabels": {

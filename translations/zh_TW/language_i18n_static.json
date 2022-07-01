@@ -178,11 +178,12 @@
     "cloudStorage": {
         "keyTableFields": {
             "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
+            "state": "狀態",
+            "system": "系統",
+            "expires": "過期",
             "key": "Key"
-        }
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {

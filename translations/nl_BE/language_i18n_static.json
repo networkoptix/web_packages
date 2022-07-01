@@ -177,12 +177,13 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
-            "key": "Key"
-        }
+            "size": "Grootte",
+            "state": "Status",
+            "system": "Systeem",
+            "expires": "Verloopt",
+            "key": "Sleutel"
+        },
+        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
     "common": {
         "account": {
@@ -328,24 +329,24 @@
             "cameras": "camera's",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Cloudopslag activeren",
+                    "action": "Activeer",
+                    "success": "Cloudopslag succesvol geactiveerd!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Cloudopslag wijzigen",
+                    "action": "Aanpassen",
+                    "success": "Cloudopslag succesvol geüpgraded!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Cloud-opslag verplaatsen",
+                    "action": "Verplaatsen",
+                    "success": "Cloudopslag succesvol geüpgraded!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Cloudopslag verwijderen?",
+                    "action": "Verwijderen",
+                    "success": "Cloudopslag succesvol verwijderd!"
                 }
             },
             "usageLabels": {
