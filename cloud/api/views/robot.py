@@ -27,7 +27,7 @@ def get_code(request):
     user_email = ''
     if hasattr(request.user, 'email'):
         user_email = request.user.email
-    if f"${NOPTIX_AUTOQA_EMAIL}@gmail.com" == user_email or \
+    if f"${NOPTIX_AUTOQA_EMAIL}@gmail.com" != user_email or \
             f"${NOPTIX_AUTOQA_EMAIL}+" not in target_email:
         raise APIForbiddenException('Usage of this endpoint is forbidden')
     message = Message.objects.filter(

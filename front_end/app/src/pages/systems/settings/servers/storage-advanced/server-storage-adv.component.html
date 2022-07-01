@@ -38,7 +38,7 @@
                         <tr class="table-row-spacer"></tr>
                         <tr *ngFor="let storage of storages; index as i">
                             <td title="{{storage.url}}">{{storage.url}}</td>
-                            <td>{{friendlyBytes( storage.totalSpace.bits )}}</td>
+                            <td>{{friendlyBytes( Math.max(storage.totalSpace.bits, 0) )}}</td>
                             <td
                                 [ngClass]="{ overwrite: storage.remainingSpace.bits < 0 }"
                             >{{friendlyBytes( Math.max(storage.remainingSpace.bits, 0) )}}</td>
