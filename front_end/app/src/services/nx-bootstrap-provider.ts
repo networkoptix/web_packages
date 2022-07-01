@@ -249,5 +249,7 @@ export class NxBootstrapProvider {
 
             Object.assign(this.CONFIG.featureFlags, featureFlags);
         }
+
+        this.configService.updateConfigUsingOverrides(this.CONFIG);
     }
 }

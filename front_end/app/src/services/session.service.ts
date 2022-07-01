@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSwCacheService } from './sw-cache.service';
 import { WINDOW } from './window-provider';
 
@@ -28,6 +29,9 @@ export class NxSessionService {
 
         // Listens to changes from other browser tabs.
         this.session.observe('loginState').subscribe(() => {
+            // Clear config overrides between sessions
+            this.session.store(NxConfigService.OVERRIDE_KEY, {});
+
             if (!this.window.document.hasFocus()) {
                 // Don't reload on null since that state should show a session expired dialog
                 this.window.location.reload();

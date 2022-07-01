@@ -1,30 +1,109 @@
 import { coerceArray } from '@angular/cdk/coercion';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { LocalStorageService } from 'ngx-webstorage';
 
 import { environment } from '@environments/environment';
 import { FeatureFlagType } from '@services/nx-config/base-config';
+import { WINDOW } from '@services/window-provider';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
+
+const findNode = <T>(targetObject: T, nodes: string[]) => nodes.reduce((ref, nodeName) => ref[nodeName], targetObject);
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxConfigService {
     config: IConfig;
+    static OVERRIDE_KEY = 'configOverrides';
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private http?: HttpClient,
+        @Inject(WINDOW) private window?: Window,
+        private session?: LocalStorageService
+    ) {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
         // previewPath: '',
         // ***************************************************************
 
         this.config = nxConfig;
+
+        this.attachDebugConfigToWindow();
+    }
+
+    public generateDebugConfigProxy() {
+        const window = this.window;
+
+        // @ts-expect-error
+        this.window.resetConfigOverrides = () => this.window.confirm('Do you want to reset overrides?') &&
+            this.session.store(NxConfigService.OVERRIDE_KEY, {}) &&
+            this.window.confirm('Reload page to update config?') &&
+            this.window.location.reload();
+
+        const debugHandlerFactory = ((configRef = this.config, session = this.session) => (nodeNames = []): ProxyHandler<IConfig> => ({
+            set(target, property, value) {
+                const currentNodeString = [...nodeNames, property].join('.');
+                session.store(NxConfigService.OVERRIDE_KEY, { ...session.retrieve(NxConfigService.OVERRIDE_KEY), [currentNodeString]: value });
+                if (window.confirm('Reload window to apply changes?')) {
+                    window.location.reload();
+                }
+                return true;
+            },
+            get(target, property) {
+                const currentNode = [...nodeNames, property];
+                const currentNodeString = currentNode.join('.');
+                const value = findNode(configRef, currentNode);
+                const settingType = typeof value;
+                if (['number', 'boolean', 'string'].includes(settingType)) {
+                    // Replace primitive values with updater
+                    return {
+                        value,
+                        settingType,
+                        get showPromptNewValue() {
+                            const newValue = window.prompt(`Updated Value for "${currentNodeString}"`, value);
+                            session.store(NxConfigService.OVERRIDE_KEY, { ...session.retrieve(NxConfigService.OVERRIDE_KEY), [currentNodeString]: newValue });
+                            if (window.confirm('Reload window to apply changes?')) {
+                                window.location.reload();
+                            }
+                            return newValue;
+                        },
+                        saveSetting(newValue, reload = false) {
+                            session.store(NxConfigService.OVERRIDE_KEY, { ...session.retrieve(NxConfigService.OVERRIDE_KEY), [currentNodeString]: newValue });
+                            if (reload) {
+                                this.window.location.reload();
+                            }
+                        }
+                    };
+                }
+
+                return new Proxy(value, debugHandlerFactory([...nodeNames, property]));
+            }
+        }))();
+
+        return new Proxy(this.config, debugHandlerFactory());
+    }
+
+    private attachDebugConfigToWindow() {
+        if (this.window) {
+            // @ts-expect-error
+            window.debugConfig = this.generateDebugConfigProxy();
+        }
     }
 
     get cloudHost() {
         return this.config.cloudHost;
+    }
+
+    updateConfigUsingOverrides(config = this.config) {
+        Object.entries(this.session.retrieve(NxConfigService.OVERRIDE_KEY)).forEach(([nodesString, value]) => {
+            const nodes = nodesString.split('.');
+            const property = nodes.pop();
+            const target = findNode(config, nodes);
+            target[property] = value;
+        });
     }
 
     getSettings() {

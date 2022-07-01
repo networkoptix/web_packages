@@ -17,6 +17,7 @@ describe('Bootstrap Provider', () => {
 
     const configMock = {
         getConfig: () => nxConfig,
+        updateConfigUsingOverrides: () => {},
         getSettings: []
     };
 
