@@ -48,24 +48,20 @@
                         translate
                         >Transfer to this user is already in process</span
                     >
+                    <span
+                        *ngIf="transferOwnershipForm.errors.userDisabled"
+                        class="input-error"
+                        translate
+                        >User disabled</span
+                    >
                 </div>
             </div>
             <div class="form-group">
                 <p
-                    *ngIf="noUsers; else transferWarning"
                     class="input-error"
                     translate
-                    >There are no users on the system to transfer ownership to.</p
+                    >Once the ownership transfer is completed you will be removed from the system.</p
                 >
-                <ng-template #transferWarning>
-                    <!-- eslint-disable prettier/prettier -->
-                    <p
-                        class="input-error"
-                        translate
-                        >Once the ownership transfer is completed you will be removed from the system.</p
-                    >
-                    <!-- eslint-enable prettier/prettier -->
-                </ng-template>
             </div>
         </div>
         <div class="modal-footer">
@@ -73,7 +69,7 @@
                 [process]="transferOwnership"
                 [form]="transferOwnershipForm"
                 [buttonText]="'Send Request' | translate"
-                [buttonDisabled]="noUsers || !!transferOwnershipForm.errors"
+                [buttonDisabled]="!!transferOwnershipForm.errors"
             ></nx-process-button>
             <nx-cancel-button
                 [process]="transferOwnership"

@@ -20,21 +20,32 @@
 
                 <div class="d-flex align-items-center">
                     <span class="system-owner" *ngIf="!environment.isLocal">
-                        <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
-                        <span>
-                            <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
-                            <ng-container *ngIf="!system.userManager.isMine">
-                                <span class="system-header-bold">{{system.info.ownerFullName}}</span>
-                                <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
-                            </ng-container>
-                        </span>
-                        <span
-                            *ngIf="ownershipTransferEnabled && system.userManager.isMine"
-                            id="change-ownership"
-                            class="ml-1"
-                            (click)="transferOwnership()"
-                            translate
-                        >(change)</span>
+                        <div *ngIf="ownershipOffered" class="mt-2 mb-3">
+                            <span
+                                [innerHTML]="LANG.system.ownerWantsToTransfer({ ownerName: system.info.ownerFullName })"
+                            ></span>
+                        </div>
+                        <ng-container *ngIf="!ownershipOffered">
+                            <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                            <span>
+                                <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
+                                <ng-container *ngIf="!system.userManager.isMine">
+                                    <span class="system-header-bold">{{system.info.ownerFullName}}</span>
+                                    <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                                </ng-container>
+                            </span>
+                            <span
+                                *ngIf="
+                                    ownershipTransferEnabled &&
+                                    system.userManager.isMine &&
+                                    system.userManager.users.length > 2
+                                "
+                                id="change-ownership"
+                                class="ml-1"
+                                (click)="transferOwnership()"
+                                translate
+                            >(change)</span>
+                        </ng-container>
                     </span>
                 </div>
 
@@ -47,7 +58,6 @@
                 </div>
 
                 <ng-container *ngIf="ownershipOffered">
-                    <div class="mb-2 mt-4" translate>The system owner wants to transfer ownership of this system to you</div>
                     <div class="d-flex">
                         <button
                             class="btn btn-primary mr-2"

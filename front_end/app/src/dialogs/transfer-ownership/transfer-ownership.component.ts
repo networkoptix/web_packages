@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 
@@ -17,12 +17,16 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { pickFrom } from '@utils/general';
 
+interface UserItem extends DropdownItem<string> {
+    userEnabled: boolean;
+}
+
 @Component({
     selector: 'nx-modal-transfer-ownership-content',
     templateUrl: './transfer-ownership.component.html',
     styleUrls: ['./transfer-ownership.component.scss']
 })
-export class TransferOwnershipModalContent implements OnInit {
+export class TransferOwnershipModalContent implements OnInit, AfterViewInit {
     system: NxSystem;
     transfers: SystemTransferInfo[];
     closable: boolean = true;
@@ -36,12 +40,8 @@ export class TransferOwnershipModalContent implements OnInit {
     hideErrors: boolean = false;
     transferOwnership: Process;
 
-    userItems: DropdownItem<string>[];
-    selectedUser: DropdownItem<string>;
-
-    get noUsers(): boolean {
-        return !this.userItems?.length;
-    }
+    userItems: UserItem[];
+    selectedUser: UserItem;
 
     constructor(
         configService: NxConfigService,
@@ -71,13 +71,18 @@ export class TransferOwnershipModalContent implements OnInit {
                 name: user.email,
                 value: user.email,
                 help: user.fullName,
+                userEnabled: user.isEnabled,
             }));
-        this.selectedUser = this.userItems?.[0];
 
         const errorCodes = {
             duplicateTransfer: () => {
                 this.form.control.setErrors({
                     duplicateTransfer: true
+                });
+            },
+            userDisabled: () => {
+                this.form.control.setErrors({
+                    userDisabled: true
                 });
             },
         };
@@ -103,9 +108,16 @@ export class TransferOwnershipModalContent implements OnInit {
         );
     }
 
-    selectUser(user: DropdownItem<string>): void {
+    ngAfterViewInit(): void {
+        this.selectUser(this.userItems[0]);
+    }
+
+    selectUser(user: UserItem): void {
         if (!isEqual(user, this.selectedUser)) {
             this.form.control.setErrors(null);
+        }
+        if (!user.userEnabled) {
+            this.form.control.setErrors({ userDisabled: true });
         }
         this.selectedUser = { ...user };
     }

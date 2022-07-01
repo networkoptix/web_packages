@@ -1095,18 +1095,19 @@ export interface ReindexingDone {
 }
 
 export interface LanguageI18NStaticTypesSystem {
-    connected:           (params?: Record<string, string | number>) => string;
-    not_connected:       (params?: Record<string, string | number>) => string;
-    MERGE_FINISHES:      (params?: Record<string, string | number>) => string;
-    mergeUnknownName:    (params?: Record<string, string | number>) => string;
-    mySystemSearch:      (params?: Record<string, string | number>) => string;
-    settings:            Settings;
-    status:              SystemStatus;
-    users:               Users;
-    yourSystem:          (params?: Record<string, string | number>) => string;
-    loggers:             Loggers;
-    loggerDropdownLabel: (params?: Record<string, string | number>) => string;
-    storageToolTips:     StorageToolTips;
+    connected:            (params?: Record<string, string | number>) => string;
+    not_connected:        (params?: Record<string, string | number>) => string;
+    MERGE_FINISHES:       (params?: Record<string, string | number>) => string;
+    mergeUnknownName:     (params?: Record<string, string | number>) => string;
+    mySystemSearch:       (params?: Record<string, string | number>) => string;
+    settings:             Settings;
+    status:               SystemStatus;
+    users:                Users;
+    yourSystem:           (params?: Record<string, string | number>) => string;
+    loggers:              Loggers;
+    loggerDropdownLabel:  (params?: Record<string, string | number>) => string;
+    storageToolTips:      StorageToolTips;
+    ownerWantsToTransfer: (params?: Record<string, string | number>) => string;
 }
 
 export interface Loggers {
