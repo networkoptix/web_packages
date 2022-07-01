@@ -81,6 +81,10 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return this.injector.get(NxStorageService);
     }
 
+    private get window() {
+        return this.injector.get(WINDOW);
+    }
+
     public get isSessionOauth() {
         return !environment.isLocal || this.currentUser?.type === 'cloud';
     }
@@ -170,8 +174,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
             {},
             { withCredentials: 'true' }
         ).pipe(catchError(e => {
-            if (!environment.isLocal) {
-                this.injector.get(WINDOW).location.reload();
+            const location = this.window.location;
+            if (!environment.isLocal &&
+                [401, 403, 422].includes(e.status) &&
+                location.href.includes(this.systemId)
+            ) {
+                location.reload();
             }
             throw e;
         }));
@@ -471,7 +479,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     async redirectOauth(allSystems?: boolean): Promise<void> {
-        const window = this.injector.get(WINDOW);
+        const window = this.window;
         const { href } = window.location;
         const params = new URLSearchParams({
             client_type: 'loginWebadmin',

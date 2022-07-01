@@ -4,7 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { filter, throttleTime } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
@@ -43,7 +43,7 @@ export class NxPageService {
         this.CONFIG = configService.getConfig();
         this.updater$.pipe(
             untilDestroyed(this),
-            debounceTime(50)
+            throttleTime(50)
         ).subscribe(_ => {
             Object.entries(this.metaProperties).forEach(([name, content]) => {
                 const property = `og:${name}`;

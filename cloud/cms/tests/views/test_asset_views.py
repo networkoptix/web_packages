@@ -834,7 +834,7 @@ def test_handle_settings_file(mocker):
     assert handle_settings_file(
         request, form, file, asset) == json_handler_result
     mock_handle_settings_from_json.assert_called_once_with(
-        request, form, file, asset)
+        request, False, form, file, asset)
     mock_handle_settings_from_zip.assert_not_called()
 
     # Test handle zip

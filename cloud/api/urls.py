@@ -79,9 +79,5 @@ urlpatterns = [
         account.AccountCustomPropertyView.as_view()),
     url(r'^custom-properties/(?P<endpoint>.+?)$',
         account.AccountCustomPropertyView.as_view()),
+    url(r'^robot/get_code$', robot.get_code)
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^robot/get_code$', robot.get_code)
-    ]

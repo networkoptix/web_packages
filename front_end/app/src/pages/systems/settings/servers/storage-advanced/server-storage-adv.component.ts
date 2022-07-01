@@ -182,6 +182,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     watchers: Watcher<unknown>[] = [];
     failedToLoad = false;
 
+    Math = Math;
+
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,

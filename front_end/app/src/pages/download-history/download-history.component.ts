@@ -113,7 +113,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.downloadsData[data.type] = this.activeBuilds;
                 }
 
-                this.pageService.pageTitle = new TitleCasePipe().transform(this.noteTypes[0]);
+                this.pageService.pageTitle = new TitleCasePipe().transform(this.currentTab || this.noteTypes[0]);
 
                 setTimeout(() => {
                     this.tabsVisible = true;
