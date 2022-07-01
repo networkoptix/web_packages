@@ -22,6 +22,16 @@
 
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : #{$brand_l1};
+    
+    --storage-size-available : #{$additional_light1};
+    --storage-size-reserved : repeating-linear-gradient(
+                -45deg,
+                #{$light3},
+                #{$light3} 4.25px,
+                #{$light4} 4.25px,
+                #{$light4} 9px
+    );
+    --storage-size-reserved-border : #{$light5};
 
     --search-link-color               : #{$dark9};
     --search-link-hover-color         : #{$dark15};
@@ -118,6 +128,7 @@
     --progress-bar-heder-persentage-color : #{$dark9};
 
     --switch-disabled-color       : #{$light8};
+    --switch-disabled-hover-color : #{$light7};
     --switch-selected-color       : #{$green_main};
     --switch-selected-hover-color : #{$green_l1};
     --switch-button-color         : #{$light1};
@@ -127,6 +138,7 @@
     --switch-warning-color        : #{$red_l1};
     --switch-warning-hover-color  : #{$red_l2};
     --switch-circle-color         : #{$red_d1};
+    --switch-circle-hover-color   : #{$red_d1};
     --switch-circle-disable-color : #{$light12};
 
     --developer-menu-bg : #{$additional_light2};

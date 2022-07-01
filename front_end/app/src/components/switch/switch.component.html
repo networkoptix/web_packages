@@ -18,15 +18,16 @@
                 class="slider round"
                 [ngClass]="{ disable: disabled, 'show-warning': showWarning }"
             ></span>
+
+            <div
+                class="bar"
+                [ngClass]="{ disable: disabled, 'show-warning': showWarning }"
+            ></div>
+            <div
+                class="circle"
+                [ngClass]="{ disable: disabled, 'show-warning': showWarning }"
+            ></div>
         </label>
-        <div
-            class="bar"
-            [ngClass]="{ disable: disabled, 'show-warning': showWarning }"
-        ></div>
-        <div
-            class="circle"
-            [ngClass]="{ disable: disabled, 'show-warning': showWarning }"
-        ></div>
     </div>
     <h4
         *ngIf="label"

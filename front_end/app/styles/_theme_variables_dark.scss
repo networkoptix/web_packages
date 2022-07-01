@@ -21,6 +21,16 @@ html[data-theme="dark"] {
 
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;
+    
+    --storage-size-available : #E1E7EA; //$light4
+    --storage-size-reserved : repeating-linear-gradient(
+                -45deg,
+                #{$light4},
+                #{$light4} 4.25px,
+                #{$light6} 4.25px,
+                #{$light6} 9px
+    );
+    --storage-size-reserved-border : #{$light6};
 
     --search-link-color               : #F5F7F8; // $light2;
     --search-link-hover-color         : #CDD7DC; // $light6;
@@ -117,16 +127,18 @@ html[data-theme="dark"] {
     --progress-bar-heder-persentage-color : #E1E7EA; //$light4
 
     --switch-disabled-color       : #3A4D57; //$dark12;
+    --switch-disabled-hover-color : #445B67; //$dark14;
     --switch-selected-color       : #32731E; //$green_d1;
-    --switch-selected-hover-color : #44A624; //$green_l1};
+    --switch-selected-hover-color : #3A911E; //$green_main};
     --switch-button-color         : #A5B7C0; //light10;
     --switch-bar-color            : #3A911E; //$green_main};
-    --switch-bar-hover-color      : #3A911E; //$green_main};
+    --switch-bar-hover-color      : #44A624; //$green_l1};
     --switch-bar-disable-color    : #263137; //$dark8;
     --switch-warning-color        : #8E1717; //$red_d2;
-    --switch-warning-hover-color  : #C22626; //$red_main;
+    --switch-warning-hover-color  : #AA1E1E; //$red_d1;
     --switch-circle-color         : #AA1E1E; //$red_d1;
-    --switch-circle-disable-color : #263137; //$dark8;
+    --switch-circle-hover-color   : #C22626; //$red_main;
+    --switch-circle-disable-color : #2B383F; //$dark9;
 
     --developer-menu-bg: #171C1F; //$dark5;
     --developer-menu-base-color : #879FAB; //$light13;

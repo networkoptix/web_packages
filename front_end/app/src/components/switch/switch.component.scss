@@ -68,13 +68,22 @@
     background-color: $light8;
 
     &.disable {
-        background-color: $light8;
+        background-color: var(--switch-disabled-color) !important;
+        &:hover {
+            background-color: var(--switch-disabled-hover-color) !important;
+            & + .bar + .circle {
+                border: 2px solid var(--switch-circle-disable-color) !important;
+            }
+        }
     }
 
     &.show-warning {
         background-color: var(--switch-warning-color);
         &:hover {
             background-color: var(--switch-warning-hover-color);
+            & + .bar + .circle {
+                border: 2px solid var(--switch-circle-hover-color);
+            }
         }
     }
 
@@ -101,6 +110,9 @@ input.selected + .slider {
     background-color: var(--switch-selected-color);
     &:hover {
         background-color: var(--switch-selected-hover-color);
+        & + .bar {
+            background-color : var(--switch-bar-hover-color);
+        }
     }
 }
 
@@ -137,7 +149,7 @@ input.selected + .slider:before {
     -o-user-select: none;
     user-select: none;
     height: 9px;
-    bottom: 6px;
+    bottom: 4px;
 }
 
 .bar {
@@ -145,7 +157,7 @@ input.selected + .slider:before {
     &.disable {
         background: $light12;
     }
-
+    
     background: var(--switch-bar-color);
     width: 2px;
     left: 8px;
@@ -157,11 +169,11 @@ input.selected + .slider:before {
     border-radius: 50%;
     width: 9px;
     right: 4px;
-
+    
     &.disable {
-        border: 2px solid var(--switch-circle-disable-color);
+        border: 2px solid var(--switch-circle-disable-color) !important;
     }
-
+    
     &.show-warning {
         border: 2px solid var(--switch-circle-color);
     }

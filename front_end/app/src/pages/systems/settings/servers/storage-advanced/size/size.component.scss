@@ -1,13 +1,7 @@
 @use "../../../../../../styles/typography";
 @use "styles/theme_variables_common" as theme_vars;
 
-$stripes : repeating-linear-gradient(
-                -45deg,
-                var(--light3),
-                var(--light3) 4.25px,
-                var(--light4) 4.25px,
-                var(--light4) 9px
-);
+$stripes : var(--storage-size-reserved);
 
 :host {
     width  : 100%;
@@ -54,7 +48,7 @@ $stripes : repeating-linear-gradient(
         }
 
         &.available {
-            background-color           : var(--additional_light1);
+            background-color           : var(--storage-size-available);
             border                     : 1px solid var(--light3);
             border-bottom-right-radius : 0;
             border-top-right-radius    : 0;
@@ -74,7 +68,7 @@ $stripes : repeating-linear-gradient(
             left                      : auto;
             right                     : 0;
             background                : $stripes;
-            border                    : 1px solid var(--light5);
+            border                    : 1px solid var(--storage-size-reserved-border);
             border-left               : none;
             border-bottom-left-radius : 0;
             border-top-left-radius    : 0;
@@ -130,12 +124,12 @@ $stripes : repeating-linear-gradient(
                 }
 
                 &.available {
-                    fill : var(--additional_light1);
+                    fill : var(--storage-size-available);
                     stroke : var(--light3);
                 }
 
                 &.reserved {
-                    fill : var(--light3);
+                    fill : var(--storage-size-reserved-border);
                     stroke : var(--light5);
                 }
             }
