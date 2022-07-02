@@ -125,7 +125,7 @@
         "setupText": "Настройка необлачной системы",
         "asAccountSubheader": "As",
         "toAccountSubheader": "Куда",
-        "forAccountSubheader": "For {accountEmail}",
+        "forAccountSubheader": "Для {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
         "passwordBackup": "to create backup",

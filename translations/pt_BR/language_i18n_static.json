@@ -50,23 +50,23 @@
             "label": "Personalizado"
         },
         "Live Viewer": {
-            "description": "Só pode visualizar o vídeo ao vivo",
+            "description": "Só pode ver vídeo ao vivo",
             "label": "Visualizador ao vivo"
         },
         "Owner": {
-            "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
-            "label": "Dono"
+            "description": "Acesso irrestrito, incluindo a capacidade de compartilhar e conectar/desconectar o sistema da nuvem",
+            "label": "Proprietário"
         },
         "Viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
             "label": "Visualizador"
         },
         "advancedViewer": {
-            "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc",
+            "description": "Pode visualizar vídeo ao vivo, navegar no arquivo, configurar câmeras, controlar PTZ etc",
             "label": "Visualizador Avançado"
         },
         "cloudAdmin": {
-            "description": "Pode configurar o Sistema e partilhá-lo",
+            "description": "Pode configurar o sistema e compartilhá-lo",
             "label": "Administrador"
         },
         "custom": {
@@ -75,19 +75,19 @@
         },
         "customRole": {
             "description": "Função de usuário personalizada especificada no sistema",
-            "label": "Perfil Personalizado"
+            "label": "Função personalizada"
         },
         "disabled": {
             "description": "O usuário está desabilitado e não pode fazer ‘login’ no sistema",
             "label": "Desabilitado"
         },
         "liveViewer": {
-            "description": "Só pode visualizar o vídeo ao vivo",
+            "description": "Só pode ver vídeo ao vivo",
             "label": "Visualizador ao vivo"
         },
         "owner": {
-            "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
-            "label": "Dono"
+            "description": "Acesso irrestrito, incluindo a capacidade de compartilhar e conectar/desconectar o sistema da nuvem",
+            "label": "Proprietário"
         },
         "viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
@@ -97,7 +97,7 @@
     "account": {
         "account": "Conta",
         "key": "Chave",
-        "accountSavedSuccess": "A sua conta foi gravada com sucesso",
+        "accountSavedSuccess": "Sua conta foi salva com sucesso",
         "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de ativação enviado",
         "agreementAccepted": "O acordo foi aceito",
@@ -105,12 +105,12 @@
         "security": "Segurança",
         "newPasswordLabel": "Nova senha",
         "passwordChangedSuccess": "Senha salva com sucesso",
-        "saveChanges": "Gravar"
+        "saveChanges": "Salvar"
     },
     "activeActions": {
         "resetPassword": "Reset da Senha",
         "sendConfirm": "Reenviar Link de Ativação",
-        "setNewPassword": "Guardar senha",
+        "setNewPassword": "Salvar senha",
         "setNewPasswordLabel": "Nova senha"
     },
     "authorize": {
@@ -457,14 +457,14 @@
             "deleteUser": "Deletar usuário?",
             "failedLoginTo": "Falha ao fazer login em {systemName}",
             "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
-            "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
+            "noClientDetected": "Instale %VMS_NAME% para visualizar seu sistema",
             "removeUser": "Remover usuário",
             "serversDetach": "Desanexar servidor&nbsp;<strong>{ title }</strong>&nbsp;do sistema atual?",
             "serversReset": "Redefinir o servidor&nbsp;<strong>{ title }</strong>&nbsp;para os padrões?",
             "serversRestart": "Reinicie o servidor&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+            "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do portal %CLOUD_NAME% e desative a autenticação de dois fatores para excluir sua conta."
         },
         "twoFactor": {
             "action": "Entrar",
@@ -575,7 +575,7 @@
         "cantChangePasswordPrefix": "Não é possível salvar a senha",
         "cantDeleteAccountOwningSystems": "Não é possível excluir a conta que possui sistemas",
         "cantConnectSystemPrefix": "Não é possível conectar o sistema",
-        "cantDisconnectSystemPrefix": "Não é possível apagar o Sistema",
+        "cantDisconnectSystemPrefix": "Não é possível excluir o sistema",
         "cantEditAdmin": "Este usuário tem permissões de administrador",
         "cantEditYourself": "Alterar as próprias permissões não é permitido",
         "cantGetSystemInfoPrefix": "As informações do sistema não estão disponíveis",
@@ -723,7 +723,7 @@
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "Visualizar câmaras",
+        "view": "Ver câmeras",
         "apiTool": "Ferramenta de teste de API",
         "security": "Segurança",
         "twofaRequired": "Autenticação de dois fatores necessária"
