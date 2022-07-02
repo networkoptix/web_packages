@@ -967,7 +967,8 @@
             "network": "Network, added through OS",
             "smb": "網絡（smb），已透過VMS新增",
             "cloud": "雲端"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong>欲將此系統的擁有權轉讓給您"
     },
     "systemStatuses": {
         "activated": "啟用",

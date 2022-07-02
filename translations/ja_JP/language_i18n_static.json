@@ -183,7 +183,7 @@
             "expires": "有効期限",
             "key": "キー"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "クラウドストレージは録画に使用されていません。<a href=\"{serverSettings}\">サーバー設定</a>に移動して設定してください。"
     },
     "common": {
         "account": {
@@ -967,7 +967,8 @@
             "network": "ネットワーク (OS 経由で追加)",
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> がこのシステムの所有権をあなたに譲渡しようとしています"
     },
     "systemStatuses": {
         "activated": "有効化済み",

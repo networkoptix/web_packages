@@ -967,7 +967,8 @@
             "network": "Network, added through OS",
             "smb": "VMS를 통해 추가된 네트워크(smb)",
             "cloud": "클라우드"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "활성화 됨",

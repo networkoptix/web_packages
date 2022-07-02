@@ -967,7 +967,8 @@
             "network": "Réseau, ajouté via le système d'exploitation",
             "smb": "Réseau (smb), ajouté via VMS",
             "cloud": "Cloud"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> souhaite vous transférer la propriété de ce système"
     },
     "systemStatuses": {
         "activated": "activé",

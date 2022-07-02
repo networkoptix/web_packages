@@ -967,7 +967,8 @@
             "network": "Netwerk, toegevoegd via OS",
             "smb": "Netwerk (smb), toegevoegd via VMS",
             "cloud": "Cloud"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> wil het eigendom van dit systeem aan u overdragen"
     },
     "systemStatuses": {
         "activated": "geactiveerd",

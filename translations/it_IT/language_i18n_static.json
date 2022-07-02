@@ -967,7 +967,8 @@
             "network": "Rete, aggiunta tramite OS",
             "smb": "Rete (smb), aggiunta tramite VMS",
             "cloud": "Cloud"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "attivato",

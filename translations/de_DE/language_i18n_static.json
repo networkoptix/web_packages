@@ -183,7 +183,7 @@
             "expires": "Läuft ab",
             "key": "Schlüssel"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "Der Cloud-Speicher wird nicht für die Aufzeichnung verwendet. Gehen Sie zu \"<a href=\"{serverSettings}\">Server-Einstellungen</a>, um ihn zu konfigurieren."
     },
     "common": {
         "account": {
@@ -967,7 +967,8 @@
             "network": "Netzwerk, hinzugefügt über das Betriebssystem",
             "smb": "Netzwerk (smb), über VMS hinzugefügt",
             "cloud": "Cloud"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> möchte den Besitz an diesem System auf Sie übertragen"
     },
     "systemStatuses": {
         "activated": "aktiviert",

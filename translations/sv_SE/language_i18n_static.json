@@ -183,7 +183,7 @@
             "expires": "Förfaller",
             "key": "Nyckel"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "Molnlagringen används inte för inspelning. Gå till <a href=\"{serverSettings}\">Servers inställningar</a> för att konfigurera den."
     },
     "common": {
         "account": {
@@ -967,7 +967,8 @@
             "network": "Nätverk, tillagt via OS",
             "smb": "Nätverk (smb), läggs till via VMS",
             "cloud": "Moln"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> vill överföra ägandet av detta system till dig"
     },
     "systemStatuses": {
         "activated": "aktiverad",

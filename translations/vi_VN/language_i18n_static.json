@@ -183,7 +183,7 @@
             "expires": "Hết hạn",
             "key": "Khóa"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "Bộ nhớ đám mây không được sử dụng để ghi. Đi tới <a href=\"{serverSettings}\">Cài đặt Máy chủ</a> để định cấu hình."
     },
     "common": {
         "account": {
@@ -967,7 +967,8 @@
             "network": "Mạng, được thêm thông qua hệ điều hành",
             "smb": "Mạng (smb), được thêm vào thông qua VMS",
             "cloud": "Đám mây"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn"
     },
     "systemStatuses": {
         "activated": "đã kích hoạt",

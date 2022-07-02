@@ -967,7 +967,8 @@
             "network": "Sieć, dodana przez system operacyjny",
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> chce przenieść własność tego systemu na Ciebie"
     },
     "systemStatuses": {
         "activated": "aktywny",

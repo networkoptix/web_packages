@@ -967,7 +967,8 @@
             "network": "Network, added through OS",
             "smb": "网络（smb），已通过VMS添加",
             "cloud": "云"
-        }
+        },
+        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
     "systemStatuses": {
         "activated": "激活",
