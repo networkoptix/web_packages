@@ -98,7 +98,7 @@ export class NxConfigService {
     }
 
     updateConfigUsingOverrides(config = this.config) {
-        Object.entries(this.session.retrieve(NxConfigService.OVERRIDE_KEY)).forEach(([nodesString, value]) => {
+        Object.entries(this.session.retrieve(NxConfigService.OVERRIDE_KEY) || {}).forEach(([nodesString, value]) => {
             const nodes = nodesString.split('.');
             const property = nodes.pop();
             const target = findNode(config, nodes);
