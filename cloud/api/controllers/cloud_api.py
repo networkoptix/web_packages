@@ -160,8 +160,14 @@ def auto_refresh_token(no_refresh=False):
                     raise e
         return wrapper
 
+    # This case happens when no parens are used with the decorator
     if callable(no_refresh):
-        return outer_wrapper(no_refresh)
+        # Create a new variable for the decorated function
+        foo = no_refresh
+        # Assign the no refresh variable to a boolean
+        no_refresh = False
+        # Pass the decorated function into the decorator
+        return outer_wrapper(foo)
     else:
         return outer_wrapper
 
