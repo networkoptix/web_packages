@@ -179,7 +179,7 @@ def auto_refresh_token(no_refresh=False):
         # Assign the no refresh variable to a boolean
         no_refresh = False
         # Pass the decorated function into the decorator
-        return outer_wrapper(no_refresh)
+        return outer_wrapper(foo)
     else:
         return outer_wrapper
 
