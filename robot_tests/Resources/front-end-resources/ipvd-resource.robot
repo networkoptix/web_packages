@@ -227,7 +227,7 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT4 RGB}
-    Advanced Search Arrow Should Point    up
+    Advanced Search Arrow Should Point    down
     Wait until Element does Not have Class    ${IPVD ADV SEARCH BUTTON}    selected
     Elements should Not be Visible
     # IPVD Advanced Filters
@@ -252,7 +252,7 @@ Verify IPVD Advanced Search is Open
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
-    Advanced Search Arrow Should Point    down
+    Advanced Search Arrow Should Point    up
     Wait until Element has Class    ${IPVD ADV SEARCH BUTTON}    selected
     Wait until Elements are Visible
     # IPVD Advanced Filters

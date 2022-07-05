@@ -288,8 +288,8 @@ Force Tags        Threaded
     Wait Until Element Is Visible    ${IPVD TABLE}
     IPVD Text Search    Axis
     Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}/span    2 ${IPVD FILTERS APPLIED TEXT}
-    #${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}/span
-    #Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
+    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}/span
+    Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
