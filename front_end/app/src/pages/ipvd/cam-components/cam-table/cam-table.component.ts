@@ -36,7 +36,7 @@ import {
 } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-import type { IpvdParams, Disclaimer, FilteredCamera } from '../../ipvd.types';
+import type { IpvdParams, Disclaimer, FilteredCamera, csvData } from '../../ipvd.types';
 
 function yesNo(bVal: unknown): string {
     if (bVal === undefined || bVal === null) {
@@ -190,9 +190,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.params = this.route.snapshot.queryParams;
         this.setDebugAndBetaMode();
 
-        this.csvFilename = Date.now();
-        this.csvCameraData = this.getCsvData();
-
         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents ||
             this.debug ||
             this.beta;
@@ -201,7 +198,12 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 [this.LANG.ipvd.isAnalyticsSupported()],
                 ['isAnalyticsSupported']
             );
+        } else {
+            this.csvOptions.headers.push('Analytics');
         }
+
+        this.csvFilename = Date.now();
+        this.csvCameraData = this.getCsvData();
 
         this.uriSubscription = this.uri
             .getParams()
@@ -515,21 +517,29 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     getCsvData(): CsvData {
-        return this._elements.map(camera => ({
-            Vendor: camera.vendor,
-            Model: camera.model,
-            Type: camera.hardwareType,
-            'Max Resolution': camera.maxResolution,
-            'Max FPS': camera.maxFps,
-            Codec: camera.primaryCodec,
-            Audio: yesNo(camera.isAudioSupported),
-            '2-Way Audio': yesNo(camera.isTwAudioSupported),
-            PTZ: yesNo(camera.isPtzSupported),
-            'Advanced PTZ': yesNo(camera.isAptzSupported),
-            Fisheye: yesNo(camera.isFisheye),
-            Motion: yesNo(camera.isMdSupported),
-            'I/O': yesNo(camera.isIoSupported)
-        }));
+        return this._elements.map(camera => {
+            const csv: Partial<csvData> = ({
+                Vendor: camera.vendor,
+                Model: camera.model,
+                Type: camera.hardwareType,
+                'Max Resolution': camera.maxResolution,
+                'Max FPS': camera.maxFps,
+                Codec: camera.primaryCodec,
+                Audio: yesNo(camera.isAudioSupported),
+                '2-Way Audio': yesNo(camera.isTwAudioSupported),
+                PTZ: yesNo(camera.isPtzSupported),
+                'Advanced PTZ': yesNo(camera.isAptzSupported),
+                Fisheye: yesNo(camera.isFisheye),
+                Motion: yesNo(camera.isMdSupported),
+                'I/O': yesNo(camera.isIoSupported)
+            });
+
+            if (this.showAnalytics) {
+                csv.Analytics = yesNo(camera.isAnalyticsSupported);
+            }
+
+            return csv;
+        });
     }
 
     getCleanTitle(text: string): string {
