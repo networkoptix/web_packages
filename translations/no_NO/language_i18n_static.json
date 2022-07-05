@@ -177,13 +177,13 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
+            "size": "Størrelse",
+            "state": "Tilstand",
             "system": "System",
-            "expires": "Expires",
-            "key": "Key"
+            "expires": "Utløper",
+            "key": "Nøkkel"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "Skylagringen brukes ikke til opptak. Gå til <a href=\"{serverSettings}\">Serverinnstillinger</a> for å konfigurere den."
     },
     "common": {
         "account": {
@@ -329,24 +329,24 @@
             "cameras": "kameraer",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
-                    "success": "Cloud Storage activated successfully!"
+                    "heading": "Aktiver Sky-lagring",
+                    "action": "Aktiver",
+                    "success": "Sky-lagring er aktivert!"
                 },
                 "modify": {
-                    "heading": "Modify Cloud Storage",
-                    "action": "Modify",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Endre Sky-lagring",
+                    "action": "Endre",
+                    "success": "Sky-lagring ble oppgradert!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "heading": "Flytt skylagring",
+                    "action": "Flytt",
+                    "success": "Sky-lagring ble oppgradert!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
-                    "success": "Cloud Storage deleted successfully!"
+                    "heading": "Slett Sky-lagring?",
+                    "action": "Slett",
+                    "success": "Sky-lagring ble slettet!"
                 }
             },
             "usageLabels": {
@@ -359,16 +359,16 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
-                    "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
+                    "title": "Endre",
+                    "body": "Du kan endre gjeldende Cloud Storage-størrelse i systemet ved å bruke den nye nøkkelen. Alle registrerte data vil bli lagret."
                 },
                 "migrate": {
-                    "title": "Move",
-                    "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
+                    "title": "Flytt",
+                    "body": "Cloud Storage med alle registrerte data kan enkelt overføres til ditt andre system uten aktiv Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
-                    "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
+                    "title": "Slett",
+                    "body": "Du kan fjerne Cloud Storage fra systemet når som helst. Du kan bruke denne nøkkelen senere for reaktivering, hvis du vil."
                 }
             },
             "remove": {
