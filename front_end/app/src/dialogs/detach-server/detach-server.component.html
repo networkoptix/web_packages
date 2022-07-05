@@ -25,18 +25,20 @@
         <div class="modal-body">
             <div class="form-group">
                 <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
-                    <!-- eslint-disable prettier/prettier -->
                     <p
                         class="mb-0"
                         translate
-                        >The server will be detached from this system and added to a new one. Database, local users, configuration, and video archive will remain intact.</p
                     >
-                    <!-- eslint-enable prettier/prettier -->
+                        The server will be detached from this system and added to a new one.
+                        Database, local users, configuration, and video archive will remain intact.
+                    </p>
+
                     <p
                         [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
                         translate
-                        >Cloud users will not be transferred to the new system.</p
                     >
+                        Cloud users will not be transferred to the new system.
+                    </p>
                     <span
                         *ngIf="system.mediaserver.requiresPassword"
                         translate

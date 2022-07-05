@@ -27,18 +27,20 @@
         <div class="modal-body">
             <div class="form-group">
                 <div [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }">
-                    <!-- eslint-disable prettier/prettier -->
                     <p
                         class="mb-0"
                         translate
-                        >All settings for this server will be reset to factory default settings, and it will be detached from this system and added to a new one.</p
                     >
-                    <!-- eslint-enable prettier/prettier -->
+                        All settings for this server will be reset to factory default settings, and
+                        it will be detached from this system and added to a new one.
+                    </p>
+
                     <p
                         [ngClass]="{ 'mb-3': system.mediaserver.requiresPassword }"
                         translate
-                        >Video archive will remain intact.</p
                     >
+                        Video archive will remain intact.
+                    </p>
                     <ng-container *ngIf="system.mediaserver.requiresPassword">
                         <span translate>Enter password for your account to continue</span
                         ><span>.</span>

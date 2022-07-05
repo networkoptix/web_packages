@@ -82,14 +82,16 @@
                 class="input-error"
                 *ngIf="wrongCredentials"
                 translate
-                >Wrong login or password</div
             >
+                Wrong login or password
+            </div>
             <div
                 class="input-error"
                 *ngIf="accountBlocked"
                 translate
-                >Too many attempts. Try again in a minute.</div
             >
+                Too many attempts. Try again in a minute.
+            </div>
         </div>
     </div>
     <div class="modal-footer">
@@ -107,8 +109,9 @@
             <div
                 class="separator"
                 translate
-                >or</div
             >
+                or
+            </div>
             <button
                 class="btn btn-default oauth-login"
                 [disabled]="loading"

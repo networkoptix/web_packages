@@ -3,8 +3,9 @@
         <h1
             class="modal-title"
             translate
-            >Cannot enable mandatory two-factor authentication</h1
         >
+            Cannot enable mandatory two-factor authentication
+        </h1>
         <button
             type="button"
             class="close"
@@ -18,27 +19,28 @@
     </div>
 
     <div class="modal-body">
-        <!-- eslint-disable prettier/prettier -->
-        <p translate
-            >You can enable mandatory two-factor authentication for cloud users only if two-factor authentication is enabled for your account.</p
-        >
-        <!-- eslint-enable prettier/prettier -->
-        <p
-            ><span translate>Enable it in your</span>&nbsp;<a
+        <p translate>
+            You can enable mandatory two-factor authentication for cloud users only if two-factor
+            authentication is enabled for your account.
+        </p>
+
+        <p>
+            <span translate>Enable it in your</span>&nbsp;<a
                 routerLink="/account/security"
                 (click)="close('GOTO_SECURITY')"
                 translate
                 >account settings</a
-            ></p
-        >
+            >
+        </p>
     </div>
     <div class="modal-footer">
         <button
             class="btn btn-primary"
             (click)="close()"
             translate
-            >OK</button
         >
+            OK
+        </button>
     </div>
 </ng-template>
 
@@ -53,15 +55,17 @@
             <h1
                 class="modal-title"
                 translate
-                >Disable mandatory two-factor authentication</h1
             >
+                Disable mandatory two-factor authentication
+            </h1>
         </ng-template>
         <h1
             *ngIf="system2faEnabled; else disable2fa"
             class="modal-title"
             translate
-            >Enable mandatory two-factor authentication</h1
         >
+            Enable mandatory two-factor authentication
+        </h1>
 
         <button
             type="button"
@@ -84,11 +88,12 @@
                     translate="{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system."
                     [translateParams]="{ numUsers: usersWithout2fa }"
                 ></p>
-                <!-- eslint-disable prettier/prettier -->
+
                 <span translate
-                    >Enter a verification code from your authentication app or a backup code to continue</span
+                    >Enter a verification code from your authentication app or a backup code to
+                    continue</span
                 >
-                <!-- eslint-enable prettier/prettier --><span>.</span>
+                <span>.</span>
             </div>
             <input
                 class="form-control"
@@ -106,8 +111,9 @@
                     class="input-error"
                     *ngIf="notAuthorized"
                     translate
-                    >Invalid code</div
                 >
+                    Invalid code
+                </div>
                 <div
                     class="input-error"
                     *ngIf="

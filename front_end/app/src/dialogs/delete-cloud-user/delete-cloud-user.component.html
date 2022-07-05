@@ -7,8 +7,9 @@
         <h1
             class="modal-title"
             translate
-            >Delete Account?</h1
         >
+            Delete Account?
+        </h1>
         <button
             type="button"
             class="close"
@@ -24,11 +25,10 @@
     <div class="modal-body">
         <div class="form-group">
             <div class="modal-paragraph">
-                <!-- eslint-disable prettier/prettier -->
                 <span translate
-                    >Your account and all data associated with it will be permanently deleted without the possibility to restore it.</span
+                    >Your account and all data associated with it will be permanently deleted
+                    without the possibility to restore it.</span
                 >
-                <!-- eslint-enable prettier/prettier -->
             </div>
             <label
                 for="password"
@@ -68,7 +68,8 @@
             class="btn btn-default"
             (click)="close()"
             (mousedown)="clearErrors()"
-            >{{ LANG.dialogs.buttons.cancel() }}</button
         >
+            {{ LANG.dialogs.buttons.cancel() }}
+        </button>
     </div>
 </form>

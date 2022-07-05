@@ -53,8 +53,9 @@
             class="btn btn-primary m-0"
             (click)="close()"
             translate
-            >OK</button
         >
+            OK
+        </button>
     </div>
 </form>
 
@@ -82,8 +83,9 @@
             <p
                 *ngIf="machine.state.show.helpText"
                 class="light-text"
-                >{{ machine.state.template.helpText }}</p
             >
+                {{ machine.state.template.helpText }}
+            </p>
             <div
                 *ngIf="machine.state.show.serverUrlInput"
                 class="d-flex flex-column server-url add-specificity"
@@ -128,8 +130,7 @@
                 [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
                 [innerHTML]="machine.state.template.checkingErrorText"
                 class="error-label"
-            >
-            </p>
+            ></p>
         </div>
         <div class="modal-footer float-right next-button">
             <nx-process-button
@@ -369,13 +370,15 @@
                         'dialogs.merge.warning' | translate: { maxServers: CONFIG.maxServers }
                     "
                 ></p>
-                <!-- eslint-disable prettier/prettier -->
+
                 <p
                     class="error-label"
                     translate
-                    >Systems of such size may be unstable and have troubles with updates and synchronization.</p
                 >
-                <!-- eslint-enable prettier/prettier -->
+                    Systems of such size may be unstable and have troubles with updates and
+                    synchronization.
+                </p>
+
                 <p class="mb-3">
                     {{ 'dialogs.merge.recommendSupport' | translate | translateCut: 0 }}&nbsp;
                     <a

@@ -7,8 +7,9 @@
         <h1
             class="modal-title"
             translate
-            >Connect System to %CLOUD_NAME%</h1
         >
+            Connect System to %CLOUD_NAME%
+        </h1>
         <button
             type="button"
             class="close"
@@ -26,15 +27,17 @@
                 <p
                     class="mb-3"
                     translate
-                    >Please complete cloud login to continue.</p
                 >
+                    Please complete cloud login to continue.
+                </p>
             </ng-template>
             <p
                 *ngIf="codeExists; else noCode"
                 class="mb-3"
                 translate
-                >Enter password to continue.</p
             >
+                Enter password to continue.
+            </p>
 
             <div
                 class="form-group"
@@ -80,15 +83,17 @@
                         <div
                             class="input-error"
                             translate
-                            >Password is required</div
                         >
+                            Password is required
+                        </div>
                     </div>
                     <div *ngIf="wrongPassword">
                         <div
                             class="input-error"
                             translate
-                            >Wrong password</div
                         >
+                            Wrong password
+                        </div>
                     </div>
                 </ng-container>
             </div>

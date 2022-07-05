@@ -124,8 +124,7 @@
                 *ngIf="data.disclaimer"
                 class="form-group"
                 [innerHTML]="data.disclaimer | safe: 'html'"
-            >
-            </div>
+            ></div>
         </form>
     </div>
     <div class="modal-footer">
@@ -141,7 +140,8 @@
             class="btn btn-default"
             (click)="close()"
             translate
-            >Cancel</button
         >
+            Cancel
+        </button>
     </div>
 </form>

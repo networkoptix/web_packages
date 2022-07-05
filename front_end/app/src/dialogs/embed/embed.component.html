@@ -7,8 +7,9 @@
         <h1
             class="modal-title"
             translate
-            >Embed</h1
         >
+            Embed
+        </h1>
         <button
             type="button"
             class="close"
@@ -22,13 +23,15 @@
     </div>
 
     <div class="modal-body">
-        <!-- eslint-disable prettier/prettier -->
         <p
             class="warning-label"
             translate
-            >The credentials of this user will be exposed! You must create a custom "Public User" role with access only to the cameras selected for public use, and assigned only the minimum required viewing permissions. This "Public User" should not have system-wide access of any kind.</p
         >
-        <!-- eslint-enable prettier/prettier -->
+            The credentials of this user will be exposed! You must create a custom "Public User"
+            role with access only to the cameras selected for public use, and assigned only the
+            minimum required viewing permissions. This "Public User" should not have system-wide
+            access of any kind.
+        </p>
 
         <p translate>Enter "Public User" credentials:</p>
 
@@ -125,8 +128,9 @@
                     class="btn btn-default"
                     [ngxClipboard]
                     [cbContent]="embedUrl"
-                    >Copy</button
                 >
+                    Copy
+                </button>
             </div>
         </div>
     </div>
@@ -136,7 +140,8 @@
             class="btn btn-default"
             (click)="close()"
             translate
-            >Close</button
         >
+            Close
+        </button>
     </div>
 </form>
