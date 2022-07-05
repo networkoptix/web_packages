@@ -337,7 +337,6 @@ export class NxSystem extends System {
                     this.getUsers(true, suppressUpdate)
                         .then(() => {
                             this.userManager.ownerEmail = this.info.ownerAccountEmail;
-                            this.userManager.accessRole = this.info.accessRole;
                             this.userManager.checkPermissions();
                         });
                     return systemPromise;

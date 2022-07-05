@@ -230,6 +230,7 @@
             },
             "webadmin": {
               "port": 9001,
+              "publicHost": "localhost:9001",
               "browserTarget": "front-end:build:webadmin"
             }
           }

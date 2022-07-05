@@ -557,9 +557,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     updateUserRole() {
-        let userRole = this.system.accessRole;
-        if (this.system.accessRole in this.LANG.accessRoles) {
-            userRole = this.LANG.accessRoles[this.system.accessRole].label();
+        let userRole = this.system.userManager.accessRole;
+        if (userRole in this.LANG.accessRoles) {
+            userRole = this.LANG.accessRoles[userRole].label();
         }
         return userRole;
     }
