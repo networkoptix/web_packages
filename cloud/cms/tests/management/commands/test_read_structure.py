@@ -138,7 +138,7 @@ class FileTest:
 
 def test_read_cms_strings():
     cms_strings = {
-        f'%{uuid4()}%'
+        f'%{uuid4()}%'.replace('-', '_')
         for _ in range(randint(5, 15))}
     data = ' '.join(
         f'{{{cms_string}}}'

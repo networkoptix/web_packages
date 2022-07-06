@@ -562,7 +562,7 @@ class SystemEmail(models.Model):
             return
 
         from notifications.tasks import send_email
-        kwargs = {'email_type': SystemEmail, 'session': session}
+        kwargs = {'email_type': SystemEmail.MSG_TYPE, 'session': session}
         self.save()
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
