@@ -3,11 +3,9 @@
     class="banner"
     *ngIf="false && !cookieBannerReviewed"
 >
-    <!-- eslint-disable prettier/prettier -->
     <p translate>
-        We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences <a routerLink="/">here</a>. By continuing to use our site you consent to use our cookies.
+        <span [innerHTML]="'cookieWarning' | translate | translateCut:0"></span><a routerLink="/" [innerText]="'cookieWarning' | translate | translateCut:1"></a><span [innerHTML]="'cookieWarning' | translate | translateCut:2"></span>
     </p>
-    <!-- eslint-enable prettier/prettier -->
     <svg-icon
         nx-add-svg-src
         (click)="onCookieBannerClose()"

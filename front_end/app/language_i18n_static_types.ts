@@ -23,6 +23,7 @@ export interface LanguageI18NStaticTypes {
     clientProtocol:        (params?: Record<string, string | number>) => string;
     cloudStorage:          LanguageI18NStaticTypesCloudStorage;
     common:                Common;
+    cookieWarning:         (params?: Record<string, string | number>) => string;
     dashboard:             Dashboard;
     devConsole:            DevConsole;
     dialogs:               Dialogs;
@@ -495,6 +496,7 @@ export interface DialogsMerge {
     urlNotValid:                        (params?: Record<string, string | number>) => string;
     unknownError:                       (params?: Record<string, string | number>) => string;
     warning:                            (params?: Record<string, string | number>) => string;
+    update:                             (params?: Record<string, string | number>) => string;
 }
 
 export interface RESTError {

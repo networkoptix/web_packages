@@ -16,6 +16,7 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { QuicklinkModule } from 'ngx-quicklink';
+import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxTextEditableComponent } from '@components/editable/editable.component';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
@@ -125,6 +126,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         EditorModule,
         SharedComponentsModule,
         PortalModule,
+        NgxTranslateCutModule,
 
         NxGenericDropdownModule,
     ],
