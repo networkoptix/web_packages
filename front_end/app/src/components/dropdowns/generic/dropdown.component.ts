@@ -19,10 +19,6 @@ import { BaseDropdown } from '../injDropdown';
 
 import type { DropdownItem } from './dropdown.component.types';
 
-function additionalHelpSpan(help: string): string {
-    return `<span class="additional-help">${help}</span>`;
-}
-
 /* Usage
  <nx-select [id]="select.id"
      [name]="permissions"
@@ -91,11 +87,6 @@ export class NxGenericDropdown<
     }
 
     ngOnInit(): void {
-        this.items?.forEach(item => {
-            if (item.help && !item.name.includes(item.help)) {
-                item.name += additionalHelpSpan(item.help);
-            }
-        });
         this._items = this.items;
         this.dropdownType = `dropdown-${this.type || 'default'}`;
     }
@@ -116,20 +107,11 @@ export class NxGenericDropdown<
 
     ngOnChanges(changes: NgChanges<NxGenericDropdown>): void {
         if (changes.items?.currentValue) {
-            this.items.forEach(item => {
-                if (item.help && !item.name.includes(item.help)) {
-                    item.name += additionalHelpSpan(item.help);
-                }
-            });
             this._items = this.items;
         }
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected?.currentValue) {
-            const selected = changes.selected.currentValue;
-            if (selected.help && !selected.name.includes('additional-help')) {
-                selected.name += additionalHelpSpan(selected.help);
-            }
-            this._selectedItem = selected;
+            this._selectedItem = changes.selected.currentValue;
         } else if (!this.selected && !changes.selected?.firstChange) {
             this._selectedItem = { name: this.message, value: '0' };
         }
@@ -144,7 +126,10 @@ export class NxGenericDropdown<
 
     filterChanged(value: string): void {
         this.filter = value;
-        this._items = this.items.filter(item => item.name.toLowerCase().includes(this.filter.toLowerCase()));
+        this._items = this.items.filter(item =>
+            item.name.toLowerCase().includes(this.filter.toLowerCase()) ||
+            item.help?.toLowerCase().includes(this.filter.toLowerCase())
+        );
 
         if (!this._items.length) {
             this._items = [<Item>{ name: 'No matches', value: '', disabled: true }];

@@ -35,12 +35,20 @@
                 'ellipsis-mr': merge || ellipsisMargin,
                 ellipsis: !merge
             }"
-            [innerHTML]="
-                allowHTML
-                    ? _selectedItem && _selectedItem.name
-                    : (_selectedItem && _selectedItem.name | unsafe)
-            "
-        ></span>
+        >
+            <span
+                *ngIf="allowHTML && _selectedItem"
+                [outerHTML]="_selectedItem.name"
+            ></span>
+            <ng-container *ngIf="!allowHTML && _selectedItem">
+                {{ _selectedItem.name | unsafe }}
+            </ng-container>
+            <span
+                *ngIf="_selectedItem?.help && !_selectedItem.name.includes(_selectedItem.help)"
+                class="additional-help"
+                >{{ _selectedItem.help }}</span
+            >
+        </span>
         <div class="arrow-flip">
             <svg-icon
                 nx-add-svg-src
@@ -107,6 +115,20 @@
                     >
                     </ng-container>
                 </ng-template>
+                <ng-template #itemText>
+                    <span
+                        *ngIf="allowHTML"
+                        [outerHTML]="item.name"
+                    ></span>
+                    <ng-container *ngIf="!allowHTML">
+                        {{ item.name | unsafe }}
+                    </ng-container>
+                    <span
+                        *ngIf="item.help && !item.name.includes(item.help)"
+                        class="additional-help"
+                        >{{ item.help }}</span
+                    >
+                </ng-template>
                 <ng-template #enabledItem>
                     <a
                         class="dropdown-item inset"
@@ -122,7 +144,9 @@
                             [item]="item"
                             marginLeft="15"
                         ></item-icon>
-                        <span [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"></span>
+                        <span>
+                            <ng-container [ngTemplateOutlet]="itemText"></ng-container>
+                        </span>
                     </a>
                 </ng-template>
                 <ng-template #disabledItem>
@@ -135,10 +159,9 @@
                             [item]="item"
                             marginLeft="15"
                         ></item-icon>
-                        <span
-                            class="disabled"
-                            [innerHTML]="allowHTML ? item.name : (item.name | unsafe)"
-                        ></span>
+                        <span class="disabled">
+                            <ng-container [ngTemplateOutlet]="itemText"></ng-container>
+                        </span>
                     </a>
                 </ng-template>
             </li>
