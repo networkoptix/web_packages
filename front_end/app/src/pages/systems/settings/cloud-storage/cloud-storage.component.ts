@@ -13,6 +13,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { NxMenuService } from '@src/menu/menu.service';
 
 import { NxSettingsService } from '../settings.service';
 
@@ -111,6 +112,7 @@ export class NxCloudStorageComponent {
         private popoverService: NxPopoverService,
         public dialogService: NxDialogsService,
         settingsService: NxSettingsService,
+        menuService: NxMenuService
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
@@ -126,6 +128,8 @@ export class NxCloudStorageComponent {
 
         if (this.type !== 'servers') {
             cloudApi.checkFeatureNotice('cloudStorage', this.dialogService.cloudStorageInfo).toPromise();
+            menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+            menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
         }
     }
 }

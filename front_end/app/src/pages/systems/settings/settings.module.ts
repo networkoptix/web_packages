@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule } from '@components/components.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -78,6 +79,7 @@ export const cloudSettingsRoutes: Routes = [
             },
             {
                 path: 'cloud-storage',
+                canActivate: [SystemGuard],
                 component: NxCloudStorageComponent,
                 canDeactivate: [ApplyGuard]
             },
