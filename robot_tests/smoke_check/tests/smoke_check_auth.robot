@@ -8,7 +8,7 @@ Suite Teardown   Close Browser
 *** Keywords ***
 Auth Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email}=   Get Random Email    ${email base}
+    ${email}=   Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    Auth    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email auth}    ${email}
@@ -25,7 +25,7 @@ Log in and Log out as Existing User
 
 Create Account
     [Tags]    C30440    auth
-    ${random email}=    Get Random Email    ${email base}
+    ${random email}=    Get Random Email Robot    ${email base}
     Set Suite Variable    ${random email}
     Log    Step 1: Fill and send Create account form
     Register    SmokeCheck    NewUser    ${random email}    ${password}

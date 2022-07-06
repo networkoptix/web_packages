@@ -11,7 +11,7 @@ Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
-Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL}
+Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL NO SEND}
 Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
@@ -217,7 +217,7 @@ Validate Log In
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}
     Log In    ${random email}    ${password}      validate=False     button=${button}    exists=${False}
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
@@ -330,34 +330,46 @@ Validate Register Email Received
     Delete Email    ${email}
     Close Mailbox
 
+Get Random Email Robot
+    [Arguments]    ${email}    ${send email}=${FROM EMAIL DEFAULT}
+    ${random email}=    Get Random Email    ${email}    sendemail=${send email}
+    [return]    ${random email}
+
 Get Email Link
-    [Arguments]    ${recipient}    ${link type}    ${timeout}=120
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
-    IF    "${link type}"=="activate"
-        Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ELSE IF    "${link type}"=="restore_password"    
-        Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    [Arguments]    ${recipient}    ${link type}    ${via email}=${FROM EMAIL DEFAULT}    ${timeout}=120
+    IF    ${via_email}
+        Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+        ${email}=   Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
+        IF    "${link type}"=="activate"
+            Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+        ELSE IF    "${link type}"=="restore_password"    
+            Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+        ELSE
+            ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
+            ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
+            Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+        END
+        ${links}=   Get NX Links From Email    ${email}    ${link type}
+        Delete Email    ${email}
+        Close Mailbox
+        Return From Keyword    ${links}
     ELSE
-        ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
-        ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
-        Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+        Get Code From Email    ${recipient}    ${link type}
     END
-    ${links}=   Get NX Links From Email    ${email}    ${link type}
-    Delete Email    ${email}
-    Close Mailbox
-    Return From Keyword    ${links}
-
 Activate
-    [Arguments]    ${email}
-    ${link}=   Get Email Link    ${email}    activate
-    Go To    ${link}
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${from email}=${FROM EMAIL DEFAULT}
+    IF    ${from email}
+        ${link}=   Get Email Link    ${email}    activate
+        Go To    ${link}
 
-    Wait Until Elements Are Visible
-    ...    ${ACTIVATION SUCCESS}
-    ...    ${ACTIVATION SUCCESS ICON}
-    ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
-    Location Should Contain    ${ENV}/authorize/activate
+        Wait Until Elements Are Visible
+        ...    ${ACTIVATION SUCCESS}
+        ...    ${ACTIVATION SUCCESS ICON}
+        ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
+        Location Should Contain    ${ENV}/authorize/activate
+    ELSE
+        Activate Account Via API    ${email}    ${password}
+    END
 
 Validate Activation Success
     ${current url}=   Get Location
@@ -368,18 +380,21 @@ Validate Activation Success
     ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
 
 Register And Activate Account
-    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${act}=api
-    Run Keyword If    '${reg}'=='api'    Register Account    ${first name}    ${last name}    ${email}    ${password}
-    Run Keyword If    '${reg}'=='ui'     Register    ${first name}    ${last name}    ${email}    ${password}
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${from email}=${FROM EMAIL DEFAULT}
+    IF    '${reg}'=='api'    
+        Register Account    ${first name}    ${last name}    ${email}    ${password}
+    ELSE IF   '${reg}'=='ui'     
+        Register    ${first name}    ${last name}    ${email}    ${password}
+    END
     Sleep    1
-    Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
-    Run Keyword If    '${act}'=='ui'     Activate    ${email}
-    Run Keyword If    '${act}'=='ui'     API Log In    ${email}    ${password}
+    Activate    ${email}    ${password}    from email=${from email}
+    
 
 Register and activate account with random email
-    [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=api
-    ${email}=    Get Random Email    ${BASE EMAIL}
-    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    act=${act}
+    [Arguments]    ${first name}    ${last name}    ${password}    ${reg}=api    ${act}=${FROM EMAIL DEFAULT}
+    ${email}=    Get Random Email Robot    ${BASE EMAIL}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}    reg=${reg}    from email=${act}
+    Go to    ${url}
     [Return]    ${email}
 
 Disconnect all systems from account
@@ -477,7 +492,9 @@ Get Cloud User Role
     [Arguments]    ${auth}    ${email}    ${system id}
     @{users}=   Get Cloud System Users   ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        Run Keyword If   '${user}[accountEmail]'=='${email}'    Return From Keyword    ${user}[accessRole]
+        IF   '${user}[accountEmail]'=='${email}'    
+            Return From Keyword    ${user}[accessRole]
+        END
     END
 
 Get Cloud User Id By Email
@@ -976,7 +993,8 @@ Check System Text
     Log Out
     Log in to user and system    ${user}    ${sysId}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${NEW FEATURE MODAL}
+    Click Button    ${NEW FEATURE CLOSE BUTTON}
     IF    "${user}"!="${EMAIL ADMIN}"
         Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
     END

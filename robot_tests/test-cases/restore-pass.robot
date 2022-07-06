@@ -43,7 +43,7 @@ Force Tags
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
 
 5. Should set new password, login with new password
-    [Tags]    email    C26260
+    [Tags]    email    C26260    smoke
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
@@ -83,7 +83,7 @@ Force Tags
 
 8. Non-activated user cannot get to password entry page to restore password
     [Tags]    email    C41871
-    ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Go To    ${url}/authorize
@@ -99,10 +99,10 @@ Force Tags
 
 9. Should allow logged in user visit restore password page
     [Tags]    email
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Activate Account    ${email}    ${password}
+    Activate    ${email}    ${password}
     Log In    ${email}    ${password}    button=${ACTIVATION SUCCESS LOG IN BUTTON}    reset=${True}
     Go To    ${url}/authorize/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
@@ -162,15 +162,14 @@ Force Tags
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
 
 12. Check restore password email links, colors, cloud name, and open link in new tab
-    [Tags]    C26260     deb
+    [Tags]    C26260     deb    smoke
     # We open the mailbox to first delete the activation email so that the restore password email is easily found and not confused
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${user}    ${BASE PASSWORD}
-    Activate Account   ${user}    ${BASE PASSWORD}
-    ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${user}    timeout=120
+    Activate   ${user}    ${BASE PASSWORD}    from email=${True}
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    delete email    ${email}
     # Now for the actual email we are testing...
     Send "Restore Password" Email    ${user}
     ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN

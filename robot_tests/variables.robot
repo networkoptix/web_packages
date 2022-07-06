@@ -317,3 +317,5 @@ ${SERVERS ICON}                    *[name()="svg-icon" and contains(@data-src,"/
 ${SYSTEMS ICON}                    *[name()="svg-icon" and contains(@data-src,"/images/icons/standard/systems.svg")]
 ${PLACEHOLDER ICON}                //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/section/system_settings_placeholder.svg")]
 ${PLACEHOLDER NO SETTINGS}         //*[name()="svg-icon" and contains(@data-src,"/images/placeholders/page/NoSettings.svg")]
+
+${FROM EMAIL DEFAULT}                   ${False}

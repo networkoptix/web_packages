@@ -9,7 +9,7 @@ Suite Teardown   Users Suite Teardown
 Users Suite Setup
     Open browser and go to URL    ${ENV}    False    False
 
-    ${email}=   Get Random Email    ${email base}
+    ${email}=   Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    Users    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email users}    ${email}
@@ -43,7 +43,7 @@ Portal - Share to not registered user
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
 
     Log    Step 1: Share to not registered user(admin permissions)
-    ${new portal user}=   Get Random Email    ${email base}
+    ${new portal user}=   Get Random Email Robot    ${email base}
     Set Suite Variable    ${new portal user}    ${new portal user}
     Share To    ${new portal user}    Administrator
     Log Out
@@ -118,7 +118,7 @@ Portal - Delete user
 Portal - Share to registered user
     [Tags]    C30446    C30648    users
 
-    ${email}=    Get Random Email    ${email base}
+    ${email}=    Get Random Email Robot    ${email base}
     Run Keyword If    'nxvms' not in $env    Run Keywords
         ...    Register And Activate Account    SmokeCheck    ExistingUser1    ${email}    ${password}    AND
         ...    Set Suite Variable    ${email existing user1}    ${email}
@@ -163,7 +163,7 @@ Portal - Share to registered user
 Client - Share to not registered user
     [Tags]    C30447    C30651    users
 
-    ${new cloud user}=    Get Random Email    ${base email}
+    ${new cloud user}=    Get Random Email Robot    ${base email}
     Set Suite Variable    ${new cloud user}
     Log In    ${email users}    ${password}
     Log    Step 1: Share system with not existing user(admin permissions)
@@ -249,7 +249,7 @@ Client - Delete cloud user
 
 Client - Share to registered user
     [Tags]    C30448    C30651    users
-    ${email}=    Get Random Email    ${email base}
+    ${email}=    Get Random Email Robot    ${email base}
     Run Keyword If    'nxvms' not in $env    Run Keywords
         ...    Register And Activate Account    SmokeCheck    ExistingUser2    ${email}    ${password}    AND
         ...    Set Suite Variable    ${email existing user2}    ${email}

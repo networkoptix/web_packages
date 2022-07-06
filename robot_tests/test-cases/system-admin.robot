@@ -63,12 +63,12 @@ Force Tags        system    threaded
     Validate Password Input Error    Wrong password
 
     Log    Step 5 - not existing account
-    ${email}=   Get Random Email    ${BASE EMAIL}
+    ${email}=   Get Random Email Robot    ${BASE EMAIL}
     Connect To Cloud    ${email}    system-admin-variables.${password}    success=False
     Validate Email Input Error    Account not found
 
     Log    Step 6 - not activated account
-    ${email}=   Get Random Email    ${BASE EMAIL}
+    ${email}=   Get Random Email Robot    ${BASE EMAIL}
     Register Account    Not    Activated    ${email}    ${password}
     Connect To Cloud    ${email}    system-admin-variables.${password}    success=False
     Wait until element is visible    ${CONNECT TO CLOUD EMAIL INPUT}/following-sibling::div/div[contains(@class, "input-error")]
@@ -92,7 +92,7 @@ Force Tags        system    threaded
     Should be equal as strings    ${cloud id}    Cannot find cloudSystemID key
 
 6. Local owner can connect system to cloud
-    [Tags]    webadmin
+    [Tags]    webadmin    smoke
     Log in to system    ${local system}    admin
     Validate Cloud Block    False
     Click Button    ${CONNECT TO CLOUD BUTTON}
@@ -547,7 +547,7 @@ Force Tags        system    threaded
     #Wait Until Element Is Not Visible    ${DISCONNECT FORM}
 
 26. Cloud Owner can disconnect System from Cloud
-    [Tags]    C41883   C47020    webadmin    cloud
+    [Tags]    C41883   C47020    webadmin    cloud    smoke
     ${local auth}=   Create List    admin    ${base password}
 
     Log    Step 1

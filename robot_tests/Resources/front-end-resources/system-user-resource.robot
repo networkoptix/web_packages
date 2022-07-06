@@ -7,6 +7,7 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Users Suite Setup
+    Open Browser and go to URL    ${url}
     ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
     #system(name,port,cont,owner,id) 
@@ -36,11 +37,11 @@ Web Admin Suite Setup
     Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Suite Setup
-    Open Browser and go to URL    ${url}
+    Go To    ${url}
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}     65
     Sleep    1
-    Click Link    ${SERVERS LINK}
+    Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
     Log Out
 
@@ -236,7 +237,7 @@ Modify Local Users via Cloud UI
         #${new login} =    Change Login for Local User    Local+${user}_changed
         ${new full name} =    Change Full Name for Local User     Changed User
         ${new permission} =    Change Permission Level for Local User    ${user}    ${email}
-        ${email}=       Get Random Email    ${BASE EMAIL}
+        ${email}=       Get Random Email Robot    ${BASE EMAIL}
         ${new local user email} =     Change Email for Local User    ${email}
 	    #Log To Console    You should be able to save now. ${user}
         #Sleep    100

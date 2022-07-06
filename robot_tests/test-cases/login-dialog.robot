@@ -24,7 +24,7 @@ Force Tags        Threaded
 #    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
 
 3. Allows to log in with existing credentials and to log out
-    [tags]    C24212    C24213    
+    [tags]    C24212    C24213    smoke
     Log In    ${login user}    ${password}
     Log Out
 
@@ -81,7 +81,7 @@ Force Tags        Threaded
 10. Shows non-activated user message when not activated at login; Resend activation button sends email
     [tags]    email    C41865 
     Go To    ${url}/register
-    ${random email}    get random email    ${BASE EMAIL}    extra=sendemail
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    'mark'    'hamill'    ${random email}    ${password}
     Validate Register Success
     Wait Until Element Is Visible    ${LOG IN BTN REGISTER ACCOUNT PAGE}
@@ -233,7 +233,7 @@ Force Tags        Threaded
 21. Log in more than 5 times
     [tags]    C42075
     Go To    ${url}/authorize?client_type=create
-    ${email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
     Activate    ${email}
     Click Element    ${LOG IN BUTTON}
