@@ -11,7 +11,7 @@ import {
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor,
-    FormControl,
+    UntypedFormControl,
     Validator
 } from '@angular/forms';
 
@@ -65,7 +65,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     };
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         return null; // valid
     }
 

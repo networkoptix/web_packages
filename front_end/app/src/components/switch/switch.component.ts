@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {
     ControlValueAccessor,
-    FormControl,
+    UntypedFormControl,
     NG_VALUE_ACCESSOR,
     Validator
 } from '@angular/forms';
@@ -53,7 +53,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     };
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const err = {
             requiredError: {
                 required: true

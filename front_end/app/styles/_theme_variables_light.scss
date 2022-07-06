@@ -2,7 +2,7 @@
 @import "./native-theme/theme_palette";
 @import "_theme_palette";
 
-:root {
+html {
     --body-bg    : #{$additional_light2};
     --alt-body-bg : #{$light1};
     --body-text-color : #{$dark9};

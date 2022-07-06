@@ -12,7 +12,7 @@
 // Components
 @import '../src/components/placeholders/placeholders';
 @import '../src/components/dropdowns/dropdowns';
-@import '../src/dialogs/dialogs';
+//@import '../src/dialogs/dialogs'; // imported in angular.json <- here it's causing an error
 @import '../src/menu/menu.component';
 @import '../src/styles/anchor';
 @import '../src/styles/arrows';

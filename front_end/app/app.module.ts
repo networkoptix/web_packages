@@ -24,7 +24,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { InputTrimModule } from 'ng2-trim-directive';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
@@ -87,7 +86,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             headerName: 'X-CSRFToken'
         }),
         NgxChartsModule,
-        InputTrimModule,
         ComponentsModule,
         MenuModule,
         PopoverModule,

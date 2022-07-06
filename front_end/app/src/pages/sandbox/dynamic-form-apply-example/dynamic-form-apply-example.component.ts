@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { NxToastService } from '@dialogs/toast.service';
 import { NxApplyService } from '@services/apply.service';
@@ -21,7 +21,7 @@ export class DynamicFormApplyExampleComponent {
     saveAll: Process;
 
     options: {};
-    form2Group: FormGroup;
+    form2Group: UntypedFormGroup;
 
     @ViewChild('form3') form3;
     formWatcher: any;
@@ -29,7 +29,7 @@ export class DynamicFormApplyExampleComponent {
 
     constructor(
         configService: NxConfigService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private toastService: NxToastService
@@ -72,6 +72,6 @@ export class DynamicFormApplyExampleComponent {
     }
 
     get fields() {
-        return this.form2Group.get('fields') as FormArray;
+        return this.form2Group.get('fields') as UntypedFormArray;
     }
 }

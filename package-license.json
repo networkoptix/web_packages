@@ -957,7 +957,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@jridgewell/gen-mapping",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@jridgewell/gen-mapping/LICENSE"
         },
-        "@jridgewell/resolve-uri@3.0.8": {
+        "@jridgewell/resolve-uri@3.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/resolve-uri",
             "publisher": "Justin Ridgewell",
@@ -1029,7 +1029,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@types/degit",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@types/degit/LICENSE"
         },
-        "@types/eslint-scope@3.7.3": {
+        "@types/eslint-scope@3.7.4": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/cloud_helper/node_modules/@types/eslint-scope",
@@ -1548,7 +1548,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/camelcase",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001361": {
+        "caniuse-lite@1.0.30001363": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -1925,7 +1925,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.174": {
+        "electron-to-chromium@1.4.180": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -2195,7 +2195,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eslint-visitor-keys",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eslint-visitor-keys/LICENSE"
         },
-        "eslint@8.18.0": {
+        "eslint@8.19.0": {
             "licenses": "MIT",
             "repository": "https://github.com/eslint/eslint",
             "publisher": "Nicholas C. Zakas",
@@ -2516,7 +2516,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/glob",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/glob/LICENSE"
         },
-        "globals@13.15.0": {
+        "globals@13.16.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/globals",
             "publisher": "Sindre Sorhus",
@@ -3227,7 +3227,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/json5",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/json5/LICENSE.md"
         },
-        "jsx-ast-utils@3.3.1": {
+        "jsx-ast-utils@3.3.2": {
             "licenses": "MIT",
             "repository": "https://github.com/jsx-eslint/jsx-ast-utils",
             "publisher": "Ethan Cohen",
@@ -5090,81 +5090,81 @@
             "path": "cloud_portal/front_end/node_modules/@ampproject/remapping",
             "licenseFile": "cloud_portal/front_end/node_modules/@ampproject/remapping/LICENSE"
         },
-        "@angular-devkit/architect@0.1303.7": {
+        "@angular-devkit/architect@0.1400.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/architect",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/architect/LICENSE"
         },
-        "@angular-devkit/build-angular@13.3.7": {
+        "@angular-devkit/build-angular@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/build-angular",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/build-angular/LICENSE"
         },
-        "@angular-devkit/build-webpack@0.1303.7": {
+        "@angular-devkit/build-webpack@0.1400.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/build-webpack",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/build-webpack/LICENSE"
         },
-        "@angular-devkit/core@13.3.7": {
+        "@angular-devkit/core@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/core",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/core/LICENSE"
         },
-        "@angular-devkit/schematics@13.3.7": {
+        "@angular-devkit/schematics@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/schematics",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/schematics/LICENSE"
         },
-        "@angular/animations@13.3.11": {
+        "@angular/animations@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/animations",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/animations/README.md"
         },
-        "@angular/cdk@13.3.9": {
+        "@angular/cdk@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/components",
             "path": "cloud_portal/front_end/node_modules/@angular/cdk",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/cdk/LICENSE"
         },
-        "@angular/cli@13.3.7": {
+        "@angular/cli@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular/cli",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/cli/LICENSE"
         },
-        "@angular/common@13.3.11": {
+        "@angular/common@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/common",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/common/README.md"
         },
-        "@angular/compiler-cli@13.3.11": {
+        "@angular/compiler-cli@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "path": "cloud_portal/front_end/node_modules/@angular/compiler-cli"
         },
-        "@angular/compiler@13.3.11": {
+        "@angular/compiler@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/compiler",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/compiler/README.md"
         },
-        "@angular/core@13.3.11": {
+        "@angular/core@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
@@ -5178,41 +5178,41 @@
             "path": "cloud_portal/front_end/node_modules/@angular/fire",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/fire/README.md"
         },
-        "@angular/forms@13.3.11": {
+        "@angular/forms@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/forms",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/forms/README.md"
         },
-        "@angular/language-service@13.3.11": {
+        "@angular/language-service@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/language-service"
         },
-        "@angular/platform-browser-dynamic@13.3.11": {
+        "@angular/platform-browser-dynamic@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/platform-browser-dynamic",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/platform-browser-dynamic/README.md"
         },
-        "@angular/platform-browser@13.3.11": {
+        "@angular/platform-browser@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/platform-browser",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/platform-browser/README.md"
         },
-        "@angular/router@13.3.11": {
+        "@angular/router@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/router",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/router/README.md"
         },
-        "@angular/service-worker@13.3.11": {
+        "@angular/service-worker@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
@@ -5243,7 +5243,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/compat-data",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/compat-data/LICENSE"
         },
-        "@babel/core@7.16.12": {
+        "@babel/core@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -5251,7 +5251,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/core",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/core/LICENSE"
         },
-        "@babel/generator@7.16.8": {
+        "@babel/generator@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -5891,7 +5891,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-reserved-words",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-reserved-words/LICENSE"
         },
-        "@babel/plugin-transform-runtime@7.16.10": {
+        "@babel/plugin-transform-runtime@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -5955,7 +5955,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-unicode-regex",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-unicode-regex/LICENSE"
         },
-        "@babel/preset-env@7.16.11": {
+        "@babel/preset-env@7.17.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -5977,7 +5977,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/runtime-corejs3",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/runtime-corejs3/LICENSE"
         },
-        "@babel/runtime@7.16.7": {
+        "@babel/runtime@7.17.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -6038,6 +6038,62 @@
             "path": "cloud_portal/front_end/node_modules/@colors/colors",
             "licenseFile": "cloud_portal/front_end/node_modules/@colors/colors/LICENSE"
         },
+        "@csstools/postcss-color-function@1.1.0": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-color-function",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-color-function/LICENSE.md"
+        },
+        "@csstools/postcss-font-format-keywords@1.0.0": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-font-format-keywords",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-font-format-keywords/LICENSE.md"
+        },
+        "@csstools/postcss-hwb-function@1.0.1": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-hwb-function",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-hwb-function/LICENSE.md"
+        },
+        "@csstools/postcss-ic-unit@1.0.0": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-ic-unit",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-ic-unit/LICENSE.md"
+        },
+        "@csstools/postcss-is-pseudo-class@2.0.6": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-is-pseudo-class",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-is-pseudo-class/LICENSE.md"
+        },
+        "@csstools/postcss-normalize-display-values@1.0.0": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-normalize-display-values",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-normalize-display-values/LICENSE.md"
+        },
+        "@csstools/postcss-oklab-function@1.1.0": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "publisher": "Jonathan Neal",
+            "email": "jonathantneal@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-oklab-function",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-oklab-function/LICENSE.md"
+        },
         "@csstools/postcss-progressive-custom-properties@1.3.0": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
@@ -6045,6 +6101,18 @@
             "email": "jonathantneal@hotmail.com",
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-progressive-custom-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-progressive-custom-properties/LICENSE.md"
+        },
+        "@csstools/postcss-stepped-value-functions@1.0.0": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-stepped-value-functions",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-stepped-value-functions/LICENSE.md"
+        },
+        "@csstools/postcss-unset-value@1.0.1": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-unset-value",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-unset-value/LICENSE.md"
         },
         "@csstools/selector-specificity@2.0.1": {
             "licenses": "CC0-1.0",
@@ -6059,7 +6127,7 @@
             "path": "cloud_portal/front_end/node_modules/@dabh/diagnostics",
             "licenseFile": "cloud_portal/front_end/node_modules/@dabh/diagnostics/LICENSE"
         },
-        "@discoveryjs/json-ext@0.5.6": {
+        "@discoveryjs/json-ext@0.5.7": {
             "licenses": "MIT",
             "repository": "https://github.com/discoveryjs/json-ext",
             "publisher": "Roman Dvornov",
@@ -6546,6 +6614,13 @@
             "path": "cloud_portal/front_end/node_modules/@kyleshockey/xml",
             "licenseFile": "cloud_portal/front_end/node_modules/@kyleshockey/xml/LICENSE"
         },
+        "@leichtgewicht/ip-codec@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/martinheidegger/ip-codec",
+            "publisher": "Martin Heidegger",
+            "path": "cloud_portal/front_end/node_modules/@leichtgewicht/ip-codec",
+            "licenseFile": "cloud_portal/front_end/node_modules/@leichtgewicht/ip-codec/LICENSE"
+        },
         "@mark.probst/typescript-json-schema@0.32.0": {
             "licenses": "Apache",
             "repository": "https://github.com/YousefED/typescript-json-schema",
@@ -6574,7 +6649,7 @@
             "path": "cloud_portal/front_end/node_modules/@ngrx/store",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngrx/store/README.md"
         },
-        "@ngtools/webpack@13.3.7": {
+        "@ngtools/webpack@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
@@ -6611,18 +6686,17 @@
             "path": "cloud_portal/front_end/node_modules/@nodelib/fs.walk",
             "licenseFile": "cloud_portal/front_end/node_modules/@nodelib/fs.walk/LICENSE"
         },
-        "@npmcli/fs@1.1.1": {
+        "@npmcli/fs@2.1.0": {
             "licenses": "ISC",
+            "repository": "https://github.com/npm/fs",
             "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/fs",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/fs/LICENSE.md"
         },
-        "@npmcli/git@2.1.0": {
+        "@npmcli/git@3.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/git",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "https://izs.me",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/git",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/git/LICENSE"
         },
@@ -6635,35 +6709,31 @@
             "path": "cloud_portal/front_end/node_modules/@npmcli/installed-package-contents",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/installed-package-contents/LICENSE"
         },
-        "@npmcli/move-file@1.1.2": {
+        "@npmcli/move-file@2.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/npm/move-file",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/move-file",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/move-file/LICENSE.md"
         },
-        "@npmcli/node-gyp@1.0.3": {
+        "@npmcli/node-gyp@2.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/node-gyp",
-            "publisher": "Brian Jenkins",
-            "email": "bonkydog@bonkydog.com",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/node-gyp",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/node-gyp/README.md"
         },
-        "@npmcli/promise-spawn@1.3.2": {
+        "@npmcli/promise-spawn@3.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/promise-spawn",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "https://izs.me",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/promise-spawn",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/promise-spawn/LICENSE"
         },
-        "@npmcli/run-script@2.0.0": {
+        "@npmcli/run-script@3.0.3": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/run-script",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "https://izs.me",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/run-script",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/run-script/LICENSE"
         },
@@ -6764,7 +6834,7 @@
             "path": "cloud_portal/front_end/node_modules/@protobufjs/utf8",
             "licenseFile": "cloud_portal/front_end/node_modules/@protobufjs/utf8/LICENSE"
         },
-        "@schematics/angular@13.3.7": {
+        "@schematics/angular@14.0.4": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
@@ -6853,13 +6923,13 @@
             "path": "cloud_portal/front_end/node_modules/@types/dateformat",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/dateformat/LICENSE"
         },
-        "@types/eslint-scope@3.7.3": {
+        "@types/eslint-scope@3.7.4": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/eslint-scope",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/eslint-scope/LICENSE"
         },
-        "@types/eslint@8.4.3": {
+        "@types/eslint@8.4.5": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/eslint",
@@ -7061,55 +7131,55 @@
             "path": "cloud_portal/front_end/node_modules/@types/yargs",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/yargs/LICENSE"
         },
-        "@typescript-eslint/eslint-plugin@5.30.0": {
+        "@typescript-eslint/eslint-plugin@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/eslint-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/eslint-plugin/LICENSE"
         },
-        "@typescript-eslint/experimental-utils@5.30.0": {
+        "@typescript-eslint/experimental-utils@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/experimental-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/experimental-utils/LICENSE"
         },
-        "@typescript-eslint/parser@5.30.0": {
+        "@typescript-eslint/parser@5.30.3": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/parser",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/parser/LICENSE"
         },
-        "@typescript-eslint/scope-manager@5.30.0": {
+        "@typescript-eslint/scope-manager@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/scope-manager",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/scope-manager/LICENSE"
         },
-        "@typescript-eslint/type-utils@5.30.0": {
+        "@typescript-eslint/type-utils@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/type-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/type-utils/LICENSE"
         },
-        "@typescript-eslint/types@5.30.0": {
+        "@typescript-eslint/types@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/types",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/types/LICENSE"
         },
-        "@typescript-eslint/typescript-estree@5.30.0": {
+        "@typescript-eslint/typescript-estree@5.30.3": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/typescript-estree",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/typescript-estree/LICENSE"
         },
-        "@typescript-eslint/utils@5.30.0": {
+        "@typescript-eslint/utils@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@typescript-eslint/utils/LICENSE"
         },
-        "@typescript-eslint/visitor-keys@5.30.0": {
+        "@typescript-eslint/visitor-keys@5.30.3": {
             "licenses": "MIT",
             "repository": "https://github.com/typescript-eslint/typescript-eslint",
             "path": "cloud_portal/front_end/node_modules/@typescript-eslint/visitor-keys",
@@ -7391,7 +7461,7 @@
             "path": "cloud_portal/front_end/node_modules/ajv-keywords",
             "licenseFile": "cloud_portal/front_end/node_modules/ajv-keywords/LICENSE"
         },
-        "ajv@8.9.0": {
+        "ajv@8.11.0": {
             "licenses": "MIT",
             "repository": "https://github.com/ajv-validator/ajv",
             "publisher": "Evgeny Poberezkin",
@@ -7765,14 +7835,14 @@
             "path": "cloud_portal/front_end/node_modules/body-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/body-parser/LICENSE"
         },
-        "bonjour@3.5.0": {
+        "bonjour-service@1.0.13": {
             "licenses": "MIT",
-            "repository": "https://github.com/watson/bonjour",
-            "publisher": "Thomas Watson Steen",
-            "email": "w@tson.dk",
-            "url": "https://twitter.com/wa7son",
-            "path": "cloud_portal/front_end/node_modules/bonjour",
-            "licenseFile": "cloud_portal/front_end/node_modules/bonjour/LICENSE"
+            "repository": "https://github.com/onlxltd/bonjour-service",
+            "publisher": "ON LX Lited",
+            "email": "team@onlx.ltd",
+            "url": "https://labs.onlx.ltd",
+            "path": "cloud_portal/front_end/node_modules/bonjour-service",
+            "licenseFile": "cloud_portal/front_end/node_modules/bonjour-service/LICENSE"
         },
         "boolbase@1.0.0": {
             "licenses": "ISC",
@@ -7799,7 +7869,7 @@
             "path": "cloud_portal/front_end/node_modules/boxen",
             "licenseFile": "cloud_portal/front_end/node_modules/boxen/license"
         },
-        "brace-expansion@1.1.11": {
+        "brace-expansion@2.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/juliangruber/brace-expansion",
             "publisher": "Julian Gruber",
@@ -7874,13 +7944,6 @@
             "path": "cloud_portal/front_end/node_modules/buffer-from",
             "licenseFile": "cloud_portal/front_end/node_modules/buffer-from/LICENSE"
         },
-        "buffer-indexof@1.1.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/soldair/node-buffer-indexof",
-            "publisher": "Ryan Day",
-            "path": "cloud_portal/front_end/node_modules/buffer-indexof",
-            "licenseFile": "cloud_portal/front_end/node_modules/buffer-indexof/LICENSE"
-        },
         "buffer@5.7.1": {
             "licenses": "MIT",
             "repository": "https://github.com/feross/buffer",
@@ -7890,7 +7953,7 @@
             "path": "cloud_portal/front_end/node_modules/buffer",
             "licenseFile": "cloud_portal/front_end/node_modules/buffer/LICENSE"
         },
-        "builtins@1.0.3": {
+        "builtins@5.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/juliangruber/builtins",
             "path": "cloud_portal/front_end/node_modules/builtins",
@@ -7914,9 +7977,10 @@
             "path": "cloud_portal/front_end/node_modules/bytesish",
             "licenseFile": "cloud_portal/front_end/node_modules/bytesish/README.md"
         },
-        "cacache@15.3.0": {
+        "cacache@16.0.7": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/cacache",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/cacache",
             "licenseFile": "cloud_portal/front_end/node_modules/cacache/LICENSE.md"
         },
@@ -7946,7 +8010,7 @@
             "path": "cloud_portal/front_end/node_modules/camelcase",
             "licenseFile": "cloud_portal/front_end/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001359": {
+        "caniuse-lite@1.0.30001361": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -8044,12 +8108,6 @@
             "publisher": "Trent Mick, Sam Saccone",
             "path": "cloud_portal/front_end/node_modules/chrome-trace-event",
             "licenseFile": "cloud_portal/front_end/node_modules/chrome-trace-event/LICENSE.txt"
-        },
-        "circular-dependency-plugin@5.2.2": {
-            "licenses": "ISC",
-            "repository": "https://github.com/aackerman/circular-dependency-plugin",
-            "path": "cloud_portal/front_end/node_modules/circular-dependency-plugin",
-            "licenseFile": "cloud_portal/front_end/node_modules/circular-dependency-plugin/LICENSE"
         },
         "classnames@2.3.1": {
             "licenses": "MIT",
@@ -8384,7 +8442,7 @@
             "path": "cloud_portal/front_end/node_modules/copy-to-clipboard",
             "licenseFile": "cloud_portal/front_end/node_modules/copy-to-clipboard/LICENSE"
         },
-        "copy-webpack-plugin@10.2.1": {
+        "copy-webpack-plugin@10.2.4": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/copy-webpack-plugin",
             "publisher": "Len Boyette",
@@ -8403,7 +8461,7 @@
             "path": "cloud_portal/front_end/node_modules/core-js-pure",
             "licenseFile": "cloud_portal/front_end/node_modules/core-js-pure/LICENSE"
         },
-        "core-js@3.20.3": {
+        "core-js@3.6.5": {
             "licenses": "MIT",
             "repository": "https://github.com/zloirock/core-js",
             "path": "cloud_portal/front_end/node_modules/core-js",
@@ -8489,7 +8547,7 @@
             "path": "cloud_portal/front_end/node_modules/css-has-pseudo",
             "licenseFile": "cloud_portal/front_end/node_modules/css-has-pseudo/LICENSE.md"
         },
-        "css-loader@6.5.1": {
+        "css-loader@6.7.1": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/css-loader",
             "publisher": "Tobias Koppers @sokra",
@@ -8537,7 +8595,7 @@
             "path": "cloud_portal/front_end/node_modules/css",
             "licenseFile": "cloud_portal/front_end/node_modules/css/LICENSE"
         },
-        "cssdb@5.1.0": {
+        "cssdb@6.6.3": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/cssdb",
             "publisher": "Jonathan Neal",
@@ -8731,7 +8789,7 @@
             "path": "cloud_portal/front_end/node_modules/dateformat",
             "licenseFile": "cloud_portal/front_end/node_modules/dateformat/LICENSE"
         },
-        "debug@4.3.3": {
+        "debug@4.3.4": {
             "licenses": "MIT",
             "repository": "https://github.com/debug-js/debug",
             "publisher": "Josh Junon",
@@ -8756,15 +8814,6 @@
             "url": "github.com/SamVerschueren",
             "path": "cloud_portal/front_end/node_modules/decode-uri-component",
             "licenseFile": "cloud_portal/front_end/node_modules/decode-uri-component/license"
-        },
-        "deep-equal@1.1.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/substack/node-deep-equal",
-            "publisher": "James Halliday",
-            "email": "mail@substack.net",
-            "url": "http://substack.net",
-            "path": "cloud_portal/front_end/node_modules/deep-equal",
-            "licenseFile": "cloud_portal/front_end/node_modules/deep-equal/LICENSE"
         },
         "deep-extend@0.6.0": {
             "licenses": "MIT",
@@ -8924,21 +8973,12 @@
             "path": "cloud_portal/front_end/node_modules/dns-equal",
             "licenseFile": "cloud_portal/front_end/node_modules/dns-equal/LICENSE"
         },
-        "dns-packet@1.3.4": {
+        "dns-packet@5.4.0": {
             "licenses": "MIT",
             "repository": "https://github.com/mafintosh/dns-packet",
             "publisher": "Mathias Buus",
             "path": "cloud_portal/front_end/node_modules/dns-packet",
             "licenseFile": "cloud_portal/front_end/node_modules/dns-packet/LICENSE"
-        },
-        "dns-txt@2.0.2": {
-            "licenses": "MIT",
-            "repository": "https://github.com/watson/dns-txt",
-            "publisher": "Thomas Watson Steen",
-            "email": "w@tson.dk",
-            "url": "https://twitter.com/wa7son",
-            "path": "cloud_portal/front_end/node_modules/dns-txt",
-            "licenseFile": "cloud_portal/front_end/node_modules/dns-txt/LICENSE"
         },
         "doctrine@3.0.0": {
             "licenses": "Apache-2.0",
@@ -9046,7 +9086,7 @@
             "path": "cloud_portal/front_end/node_modules/ee-first",
             "licenseFile": "cloud_portal/front_end/node_modules/ee-first/LICENSE"
         },
-        "electron-to-chromium@1.4.172": {
+        "electron-to-chromium@1.4.177": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -9271,19 +9311,19 @@
             "path": "cloud_portal/front_end/node_modules/es6-weak-map",
             "licenseFile": "cloud_portal/front_end/node_modules/es6-weak-map/LICENSE"
         },
-        "esbuild-linux-64@0.14.22": {
+        "esbuild-linux-64@0.14.38": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/esbuild",
             "path": "cloud_portal/front_end/node_modules/esbuild-linux-64",
             "licenseFile": "cloud_portal/front_end/node_modules/esbuild-linux-64/README.md"
         },
-        "esbuild-wasm@0.14.22": {
+        "esbuild-wasm@0.14.38": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/esbuild",
             "path": "cloud_portal/front_end/node_modules/esbuild-wasm",
             "licenseFile": "cloud_portal/front_end/node_modules/esbuild-wasm/README.md"
         },
-        "esbuild@0.14.22": {
+        "esbuild@0.14.38": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/esbuild",
             "path": "cloud_portal/front_end/node_modules/esbuild",
@@ -10034,7 +10074,7 @@
             "path": "cloud_portal/front_end/node_modules/glob-to-regexp",
             "licenseFile": "cloud_portal/front_end/node_modules/glob-to-regexp/README.md"
         },
-        "glob@7.2.0": {
+        "glob@8.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/node-glob",
             "publisher": "Isaac Z. Schlueter",
@@ -10239,12 +10279,10 @@
             "path": "cloud_portal/front_end/node_modules/hoist-non-react-statics",
             "licenseFile": "cloud_portal/front_end/node_modules/hoist-non-react-statics/LICENSE.md"
         },
-        "hosted-git-info@4.1.0": {
+        "hosted-git-info@5.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/hosted-git-info",
-            "publisher": "Rebecca Turner",
-            "email": "me@re-becca.org",
-            "url": "http://re-becca.org",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/hosted-git-info",
             "licenseFile": "cloud_portal/front_end/node_modules/hosted-git-info/LICENSE"
         },
@@ -10336,7 +10374,7 @@
             "path": "cloud_portal/front_end/node_modules/http-signature",
             "licenseFile": "cloud_portal/front_end/node_modules/http-signature/LICENSE"
         },
-        "https-proxy-agent@5.0.0": {
+        "https-proxy-agent@5.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/TooTallNate/node-https-proxy-agent",
             "publisher": "Nathan Rajlich",
@@ -10394,12 +10432,10 @@
             "path": "cloud_portal/front_end/node_modules/ieee754",
             "licenseFile": "cloud_portal/front_end/node_modules/ieee754/LICENSE"
         },
-        "ignore-walk@4.0.1": {
+        "ignore-walk@5.0.1": {
             "licenses": "ISC",
-            "repository": "https://github.com/isaacs/ignore-walk",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
+            "repository": "https://github.com/npm/ignore-walk",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/ignore-walk",
             "licenseFile": "cloud_portal/front_end/node_modules/ignore-walk/LICENSE"
         },
@@ -10492,12 +10528,10 @@
             "path": "cloud_portal/front_end/node_modules/inherits",
             "licenseFile": "cloud_portal/front_end/node_modules/inherits/LICENSE"
         },
-        "ini@2.0.0": {
+        "ini@3.0.0": {
             "licenses": "ISC",
-            "repository": "https://github.com/isaacs/ini",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
+            "repository": "https://github.com/npm/ini",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/ini",
             "licenseFile": "cloud_portal/front_end/node_modules/ini/LICENSE"
         },
@@ -10509,7 +10543,7 @@
             "path": "cloud_portal/front_end/node_modules/inquirer-autocomplete-prompt",
             "licenseFile": "cloud_portal/front_end/node_modules/inquirer-autocomplete-prompt/LICENSE"
         },
-        "inquirer@8.2.0": {
+        "inquirer@8.2.4": {
             "licenses": "MIT",
             "repository": "https://github.com/SBoudrias/Inquirer.js",
             "publisher": "Simon Boudrias",
@@ -10583,15 +10617,6 @@
             "url": "https://wooorm.com",
             "path": "cloud_portal/front_end/node_modules/is-alphanumerical",
             "licenseFile": "cloud_portal/front_end/node_modules/is-alphanumerical/license"
-        },
-        "is-arguments@1.1.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/inspect-js/is-arguments",
-            "publisher": "Jordan Harband",
-            "email": "ljharb@gmail.com",
-            "url": "http://ljharb.codes",
-            "path": "cloud_portal/front_end/node_modules/is-arguments",
-            "licenseFile": "cloud_portal/front_end/node_modules/is-arguments/LICENSE"
         },
         "is-arrayish@0.2.1": {
             "licenses": "MIT",
@@ -11115,14 +11140,6 @@
             "path": "cloud_portal/front_end/node_modules/jsesc",
             "licenseFile": "cloud_portal/front_end/node_modules/jsesc/LICENSE-MIT.txt"
         },
-        "json-parse-better-errors@1.0.2": {
-            "licenses": "MIT",
-            "repository": "https://github.com/zkat/json-parse-better-errors",
-            "publisher": "Kat Marchán",
-            "email": "kzm@zkat.tech",
-            "path": "cloud_portal/front_end/node_modules/json-parse-better-errors",
-            "licenseFile": "cloud_portal/front_end/node_modules/json-parse-better-errors/LICENSE.md"
-        },
         "json-parse-even-better-errors@2.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/npm/json-parse-even-better-errors",
@@ -11486,6 +11503,15 @@
             "path": "cloud_portal/front_end/node_modules/lodash.padend",
             "licenseFile": "cloud_portal/front_end/node_modules/lodash.padend/LICENSE"
         },
+        "lodash.sortby@4.7.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/lodash/lodash",
+            "publisher": "John-David Dalton",
+            "email": "john.david.dalton@gmail.com",
+            "url": "http://allyoucanleet.com/",
+            "path": "cloud_portal/front_end/node_modules/lodash.sortby",
+            "licenseFile": "cloud_portal/front_end/node_modules/lodash.sortby/LICENSE"
+        },
         "lodash@4.17.21": {
             "licenses": "MIT",
             "repository": "https://github.com/lodash/lodash",
@@ -11542,7 +11568,7 @@
             "path": "cloud_portal/front_end/node_modules/lowlight",
             "licenseFile": "cloud_portal/front_end/node_modules/lowlight/license"
         },
-        "lru-cache@6.0.0": {
+        "lru-cache@7.12.0": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/node-lru-cache",
             "publisher": "Isaac Z. Schlueter",
@@ -11566,7 +11592,7 @@
             "path": "cloud_portal/front_end/node_modules/m3u8-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/m3u8-parser/LICENSE"
         },
-        "magic-string@0.25.7": {
+        "magic-string@0.26.1": {
             "licenses": "MIT",
             "repository": "https://github.com/rich-harris/magic-string",
             "publisher": "Rich Harris",
@@ -11783,7 +11809,7 @@
             "path": "cloud_portal/front_end/node_modules/min-document",
             "licenseFile": "cloud_portal/front_end/node_modules/min-document/LICENCE"
         },
-        "mini-css-extract-plugin@2.5.3": {
+        "mini-css-extract-plugin@2.6.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/mini-css-extract-plugin",
             "publisher": "Tobias Koppers @sokra",
@@ -11796,7 +11822,7 @@
             "path": "cloud_portal/front_end/node_modules/minimalistic-assert",
             "licenseFile": "cloud_portal/front_end/node_modules/minimalistic-assert/LICENSE"
         },
-        "minimatch@3.0.5": {
+        "minimatch@5.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/minimatch",
             "publisher": "Isaac Z. Schlueter",
@@ -11881,12 +11907,9 @@
             "path": "cloud_portal/front_end/node_modules/minizlib",
             "licenseFile": "cloud_portal/front_end/node_modules/minizlib/LICENSE"
         },
-        "mkdirp@0.5.6": {
+        "mkdirp@1.0.4": {
             "licenses": "MIT",
-            "repository": "https://github.com/substack/node-mkdirp",
-            "publisher": "James Halliday",
-            "email": "mail@substack.net",
-            "url": "http://substack.net",
+            "repository": "https://github.com/isaacs/node-mkdirp",
             "path": "cloud_portal/front_end/node_modules/mkdirp",
             "licenseFile": "cloud_portal/front_end/node_modules/mkdirp/LICENSE"
         },
@@ -11921,15 +11944,7 @@
             "path": "cloud_portal/front_end/node_modules/ms",
             "licenseFile": "cloud_portal/front_end/node_modules/ms/license.md"
         },
-        "multicast-dns-service-types@1.1.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/mafintosh/multicast-dns-service-types",
-            "publisher": "Mathias Buus",
-            "url": "@mafintosh",
-            "path": "cloud_portal/front_end/node_modules/multicast-dns-service-types",
-            "licenseFile": "cloud_portal/front_end/node_modules/multicast-dns-service-types/LICENSE"
-        },
-        "multicast-dns@6.2.3": {
+        "multicast-dns@7.2.5": {
             "licenses": "MIT",
             "repository": "https://github.com/mafintosh/multicast-dns",
             "publisher": "Mathias Buus",
@@ -12014,14 +12029,6 @@
             "email": "support@nahkies.co.nz",
             "path": "cloud_portal/front_end/node_modules/ng-qrcode",
             "licenseFile": "cloud_portal/front_end/node_modules/ng-qrcode/LICENSE"
-        },
-        "ng2-trim-directive@2.3.4": {
-            "licenses": "MIT",
-            "repository": "https://github.com/anein/angular2-trim-directive",
-            "publisher": "Alexander Ein",
-            "url": "@alexanderein",
-            "path": "cloud_portal/front_end/node_modules/ng2-trim-directive",
-            "licenseFile": "cloud_portal/front_end/node_modules/ng2-trim-directive/LICENSE"
         },
         "ngx-clipboard@15.1.0": {
             "licenses": "MIT",
@@ -12152,7 +12159,7 @@
             "path": "cloud_portal/front_end/node_modules/node-forge",
             "licenseFile": "cloud_portal/front_end/node_modules/node-forge/LICENSE"
         },
-        "node-gyp-build@4.4.0": {
+        "node-gyp-build@4.5.0": {
             "licenses": "MIT",
             "repository": "https://github.com/prebuild/node-gyp-build",
             "publisher": "Mathias Buus",
@@ -12194,6 +12201,13 @@
             "path": "cloud_portal/front_end/node_modules/nopt",
             "licenseFile": "cloud_portal/front_end/node_modules/nopt/LICENSE"
         },
+        "normalize-package-data@4.0.0": {
+            "licenses": "BSD-2-Clause",
+            "repository": "https://github.com/npm/normalize-package-data",
+            "publisher": "GitHub Inc.",
+            "path": "cloud_portal/front_end/node_modules/normalize-package-data",
+            "licenseFile": "cloud_portal/front_end/node_modules/normalize-package-data/LICENSE"
+        },
         "normalize-path@3.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/jonschlinkert/normalize-path",
@@ -12220,9 +12234,10 @@
             "path": "cloud_portal/front_end/node_modules/npm-bundled",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-bundled/LICENSE"
         },
-        "npm-install-checks@4.0.0": {
+        "npm-install-checks@5.0.0": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/npm/npm-install-checks",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/npm-install-checks",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-install-checks/LICENSE"
         },
@@ -12235,33 +12250,28 @@
             "path": "cloud_portal/front_end/node_modules/npm-normalize-package-bin",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-normalize-package-bin/LICENSE"
         },
-        "npm-package-arg@8.1.5": {
+        "npm-package-arg@9.0.2": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-package-arg",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/npm-package-arg",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-package-arg/LICENSE"
         },
-        "npm-packlist@3.0.0": {
+        "npm-packlist@5.1.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-packlist",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "http://blog.izs.me/",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/npm-packlist",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-packlist/LICENSE"
         },
-        "npm-pick-manifest@6.1.1": {
+        "npm-pick-manifest@7.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-pick-manifest",
-            "publisher": "Kat Marchán",
-            "email": "kzm@sykosomatic.org",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/npm-pick-manifest",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-pick-manifest/LICENSE.md"
         },
-        "npm-registry-fetch@12.0.2": {
+        "npm-registry-fetch@13.1.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-registry-fetch",
             "publisher": "GitHub Inc.",
@@ -12327,13 +12337,6 @@
             "url": "http://substack.net",
             "path": "cloud_portal/front_end/node_modules/object-inspect",
             "licenseFile": "cloud_portal/front_end/node_modules/object-inspect/LICENSE"
-        },
-        "object-is@1.1.5": {
-            "licenses": "MIT",
-            "repository": "https://github.com/es-shims/object-is",
-            "publisher": "Jordan Harband",
-            "path": "cloud_portal/front_end/node_modules/object-is",
-            "licenseFile": "cloud_portal/front_end/node_modules/object-is/LICENSE"
         },
         "object-keys@1.1.1": {
             "licenses": "MIT",
@@ -12486,6 +12489,15 @@
             "path": "cloud_portal/front_end/node_modules/p-is-promise",
             "licenseFile": "cloud_portal/front_end/node_modules/p-is-promise/license"
         },
+        "p-limit@2.3.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/sindresorhus/p-limit",
+            "publisher": "Sindre Sorhus",
+            "email": "sindresorhus@gmail.com",
+            "url": "sindresorhus.com",
+            "path": "cloud_portal/front_end/node_modules/p-limit",
+            "licenseFile": "cloud_portal/front_end/node_modules/p-limit/license"
+        },
         "p-locate@4.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/p-locate",
@@ -12522,12 +12534,10 @@
             "path": "cloud_portal/front_end/node_modules/p-try",
             "licenseFile": "cloud_portal/front_end/node_modules/p-try/license"
         },
-        "pacote@12.0.3": {
+        "pacote@13.3.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/pacote",
-            "publisher": "Isaac Z. Schlueter",
-            "email": "i@izs.me",
-            "url": "https://izs.me",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/pacote",
             "licenseFile": "cloud_portal/front_end/node_modules/pacote/LICENSE"
         },
@@ -12771,19 +12781,19 @@
             "path": "cloud_portal/front_end/node_modules/pngjs",
             "licenseFile": "cloud_portal/front_end/node_modules/pngjs/LICENSE"
         },
-        "portfinder@1.0.28": {
-            "licenses": "MIT",
-            "repository": "https://github.com/http-party/node-portfinder",
-            "publisher": "Charlie Robbins",
-            "email": "charlie.robbins@gmail.com",
-            "path": "cloud_portal/front_end/node_modules/portfinder",
-            "licenseFile": "cloud_portal/front_end/node_modules/portfinder/LICENSE"
-        },
         "postcss-attribute-case-insensitive@5.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/postcss-attribute-case-insensitive",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-attribute-case-insensitive/LICENSE"
+        },
+        "postcss-clamp@4.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/polemius/postcss-clamp",
+            "publisher": "Ivan Menshykov",
+            "email": "ivan.menshykov@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/postcss-clamp",
+            "licenseFile": "cloud_portal/front_end/node_modules/postcss-clamp/LICENSE"
         },
         "postcss-color-functional-notation@4.2.3": {
             "licenses": "CC0-1.0",
@@ -12888,7 +12898,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-image-set-function",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-image-set-function/LICENSE.md"
         },
-        "postcss-import@14.0.2": {
+        "postcss-import@14.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/postcss/postcss-import",
             "publisher": "Maxime Thirouin",
@@ -12962,13 +12972,22 @@
             "path": "cloud_portal/front_end/node_modules/postcss-modules-values",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-modules-values/LICENSE"
         },
-        "postcss-nesting@10.1.9": {
+        "postcss-nesting@10.1.10": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
             "email": "jonathantneal@hotmail.com",
             "path": "cloud_portal/front_end/node_modules/postcss-nesting",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-nesting/LICENSE.md"
+        },
+        "postcss-opacity-percentage@1.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/mrcgrtz/postcss-opacity-percentage",
+            "publisher": "Marc Görtz",
+            "email": "git@marcgoertz.de",
+            "url": "https://marcgoertz.de/",
+            "path": "cloud_portal/front_end/node_modules/postcss-opacity-percentage",
+            "licenseFile": "cloud_portal/front_end/node_modules/postcss-opacity-percentage/LICENSE.md"
         },
         "postcss-overflow-shorthand@3.0.3": {
             "licenses": "CC0-1.0",
@@ -12994,7 +13013,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-place",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-place/LICENSE.md"
         },
-        "postcss-preset-env@7.2.3": {
+        "postcss-preset-env@7.5.0": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -13039,7 +13058,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-value-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-value-parser/LICENSE"
         },
-        "postcss@8.4.5": {
+        "postcss@8.4.13": {
             "licenses": "MIT",
             "repository": "https://github.com/postcss/postcss",
             "publisher": "Andrey Sitnik",
@@ -13070,6 +13089,13 @@
             "publisher": "Lea Verou",
             "path": "cloud_portal/front_end/node_modules/prismjs",
             "licenseFile": "cloud_portal/front_end/node_modules/prismjs/LICENSE"
+        },
+        "proc-log@2.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/npm/proc-log",
+            "publisher": "GitHub Inc.",
+            "path": "cloud_portal/front_end/node_modules/proc-log",
+            "licenseFile": "cloud_portal/front_end/node_modules/proc-log/LICENSE"
         },
         "process-nextick-args@2.0.1": {
             "licenses": "MIT",
@@ -13398,6 +13424,13 @@
             "url": "https://izs.me",
             "path": "cloud_portal/front_end/node_modules/read-package-json-fast",
             "licenseFile": "cloud_portal/front_end/node_modules/read-package-json-fast/LICENSE"
+        },
+        "read-package-json@5.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/npm/read-package-json",
+            "publisher": "GitHub Inc.",
+            "path": "cloud_portal/front_end/node_modules/read-package-json",
+            "licenseFile": "cloud_portal/front_end/node_modules/read-package-json/LICENSE"
         },
         "readable-stream@3.6.0": {
             "licenses": "MIT",
@@ -13771,7 +13804,7 @@
             "path": "cloud_portal/front_end/node_modules/sane",
             "licenseFile": "cloud_portal/front_end/node_modules/sane/README.md"
         },
-        "sass-loader@12.4.0": {
+        "sass-loader@12.6.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/sass-loader",
             "publisher": "J. Tangelder",
@@ -13786,7 +13819,7 @@
             "path": "cloud_portal/front_end/node_modules/sass-rem",
             "licenseFile": "cloud_portal/front_end/node_modules/sass-rem/LICENSE.md"
         },
-        "sass@1.32.8": {
+        "sass@1.53.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sass/dart-sass",
             "publisher": "Natalie Weizenbaum",
@@ -13845,9 +13878,10 @@
             "path": "cloud_portal/front_end/node_modules/selfsigned",
             "licenseFile": "cloud_portal/front_end/node_modules/selfsigned/LICENSE"
         },
-        "semver@7.3.5": {
+        "semver@7.3.7": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/node-semver",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/semver",
             "licenseFile": "cloud_portal/front_end/node_modules/semver/LICENSE"
         },
@@ -14000,12 +14034,12 @@
             "path": "cloud_portal/front_end/node_modules/sisteransi",
             "licenseFile": "cloud_portal/front_end/node_modules/sisteransi/license"
         },
-        "slash@4.0.0": {
+        "slash@3.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/slash",
             "publisher": "Sindre Sorhus",
             "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
+            "url": "sindresorhus.com",
             "path": "cloud_portal/front_end/node_modules/slash",
             "licenseFile": "cloud_portal/front_end/node_modules/slash/license"
         },
@@ -14109,6 +14143,39 @@
             "path": "cloud_portal/front_end/node_modules/space-separated-tokens",
             "licenseFile": "cloud_portal/front_end/node_modules/space-separated-tokens/license"
         },
+        "spdx-correct@3.1.1": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/jslicense/spdx-correct.js",
+            "publisher": "Kyle E. Mitchell",
+            "email": "kyle@kemitchell.com",
+            "url": "https://kemitchell.com",
+            "path": "cloud_portal/front_end/node_modules/spdx-correct",
+            "licenseFile": "cloud_portal/front_end/node_modules/spdx-correct/LICENSE"
+        },
+        "spdx-exceptions@2.3.0": {
+            "licenses": "CC-BY-3.0",
+            "repository": "https://github.com/kemitchell/spdx-exceptions.json",
+            "publisher": "The Linux Foundation",
+            "path": "cloud_portal/front_end/node_modules/spdx-exceptions",
+            "licenseFile": "cloud_portal/front_end/node_modules/spdx-exceptions/README.md"
+        },
+        "spdx-expression-parse@3.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/jslicense/spdx-expression-parse.js",
+            "publisher": "Kyle E. Mitchell",
+            "email": "kyle@kemitchell.com",
+            "url": "https://kemitchell.com",
+            "path": "cloud_portal/front_end/node_modules/spdx-expression-parse",
+            "licenseFile": "cloud_portal/front_end/node_modules/spdx-expression-parse/LICENSE"
+        },
+        "spdx-license-ids@3.0.11": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/jslicense/spdx-license-ids",
+            "publisher": "Shinnosuke Watanabe",
+            "url": "https://github.com/shinnn",
+            "path": "cloud_portal/front_end/node_modules/spdx-license-ids",
+            "licenseFile": "cloud_portal/front_end/node_modules/spdx-license-ids/README.md"
+        },
         "spdy-transport@3.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/spdy-http2/spdy-transport",
@@ -14125,6 +14192,15 @@
             "path": "cloud_portal/front_end/node_modules/spdy",
             "licenseFile": "cloud_portal/front_end/node_modules/spdy/README.md"
         },
+        "sprintf-js@1.0.3": {
+            "licenses": "BSD-3-Clause",
+            "repository": "https://github.com/alexei/sprintf.js",
+            "publisher": "Alexandru Marasteanu",
+            "email": "hello@alexei.ro",
+            "url": "http://alexei.ro/",
+            "path": "cloud_portal/front_end/node_modules/sprintf-js",
+            "licenseFile": "cloud_portal/front_end/node_modules/sprintf-js/LICENSE"
+        },
         "sshpk@1.17.0": {
             "licenses": "MIT",
             "repository": "https://github.com/joyent/node-sshpk",
@@ -14132,11 +14208,10 @@
             "path": "cloud_portal/front_end/node_modules/sshpk",
             "licenseFile": "cloud_portal/front_end/node_modules/sshpk/LICENSE"
         },
-        "ssri@8.0.1": {
+        "ssri@9.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/ssri",
-            "publisher": "Kat Marchán",
-            "email": "kzm@sykosomatic.org",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/ssri",
             "licenseFile": "cloud_portal/front_end/node_modules/ssri/LICENSE.md"
         },
@@ -14301,7 +14376,7 @@
             "path": "cloud_portal/front_end/node_modules/stylus-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/stylus-loader/LICENSE"
         },
-        "stylus@0.56.0": {
+        "stylus@0.57.0": {
             "licenses": "MIT",
             "repository": "https://github.com/stylus/stylus",
             "publisher": "TJ Holowaychuk",
@@ -14364,7 +14439,7 @@
             "path": "cloud_portal/front_end/node_modules/table-layout",
             "licenseFile": "cloud_portal/front_end/node_modules/table-layout/LICENSE"
         },
-        "tapable@2.2.1": {
+        "tapable@1.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/tapable",
             "publisher": "Tobias Koppers @sokra",
@@ -14396,7 +14471,7 @@
             "path": "cloud_portal/front_end/node_modules/terser-webpack-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/terser-webpack-plugin/LICENSE"
         },
-        "terser@5.11.0": {
+        "terser@5.13.1": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/terser/terser",
             "publisher": "Mihai Bazon",
@@ -14659,7 +14734,7 @@
             "path": "cloud_portal/front_end/node_modules/type-check",
             "licenseFile": "cloud_portal/front_end/node_modules/type-check/LICENSE"
         },
-        "type-fest@2.14.0": {
+        "type-fest@2.15.1": {
             "licenses": "(MIT OR CC0-1.0)",
             "repository": "https://github.com/sindresorhus/type-fest",
             "publisher": "Sindre Sorhus",
@@ -14891,10 +14966,19 @@
             "path": "cloud_portal/front_end/node_modules/v8-compile-cache",
             "licenseFile": "cloud_portal/front_end/node_modules/v8-compile-cache/LICENSE"
         },
-        "validate-npm-package-name@3.0.0": {
+        "validate-npm-package-license@3.0.4": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/kemitchell/validate-npm-package-license.js",
+            "publisher": "Kyle E. Mitchell",
+            "email": "kyle@kemitchell.com",
+            "url": "https://kemitchell.com",
+            "path": "cloud_portal/front_end/node_modules/validate-npm-package-license",
+            "licenseFile": "cloud_portal/front_end/node_modules/validate-npm-package-license/LICENSE"
+        },
+        "validate-npm-package-name@4.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/validate-npm-package-name",
-            "publisher": "zeke",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/validate-npm-package-name",
             "licenseFile": "cloud_portal/front_end/node_modules/validate-npm-package-name/LICENSE"
         },
@@ -15020,14 +15104,14 @@
             "path": "cloud_portal/front_end/node_modules/webpack-bundle-analyzer",
             "licenseFile": "cloud_portal/front_end/node_modules/webpack-bundle-analyzer/LICENSE"
         },
-        "webpack-dev-middleware@5.3.0": {
+        "webpack-dev-middleware@5.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/webpack-dev-middleware",
             "publisher": "Tobias Koppers @sokra",
             "path": "cloud_portal/front_end/node_modules/webpack-dev-middleware",
             "licenseFile": "cloud_portal/front_end/node_modules/webpack-dev-middleware/LICENSE"
         },
-        "webpack-dev-server@4.7.3": {
+        "webpack-dev-server@4.9.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/webpack-dev-server",
             "publisher": "Tobias Koppers @sokra",
@@ -15057,7 +15141,7 @@
             "path": "cloud_portal/front_end/node_modules/webpack-subresource-integrity",
             "licenseFile": "cloud_portal/front_end/node_modules/webpack-subresource-integrity/LICENSE"
         },
-        "webpack@5.73.0": {
+        "webpack@5.72.1": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/webpack",
             "publisher": "Tobias Koppers @sokra",
@@ -15162,7 +15246,7 @@
             "path": "cloud_portal/front_end/node_modules/winston-transport",
             "licenseFile": "cloud_portal/front_end/node_modules/winston-transport/LICENSE"
         },
-        "winston@3.8.0": {
+        "winston@3.8.1": {
             "licenses": "MIT",
             "repository": "https://github.com/winstonjs/winston",
             "publisher": "Charlie Robbins",
@@ -15288,7 +15372,7 @@
             "path": "cloud_portal/front_end/node_modules/yargs-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/yargs-parser/LICENSE.txt"
         },
-        "yargs@17.5.1": {
+        "yargs@17.4.1": {
             "licenses": "MIT",
             "repository": "https://github.com/yargs/yargs",
             "path": "cloud_portal/front_end/node_modules/yargs",

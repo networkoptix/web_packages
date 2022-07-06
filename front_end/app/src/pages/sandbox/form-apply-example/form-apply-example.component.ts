@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 import type {
     DropdownItem
@@ -56,7 +56,7 @@ export class FormApplyExampleComponent {
     selectedDDItem: DropdownItem<string>;
 
     tags: any[];
-    form2Group: FormGroup;
+    form2Group: UntypedFormGroup;
 
     constructor(
         configService: NxConfigService,

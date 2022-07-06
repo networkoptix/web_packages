@@ -13,7 +13,7 @@ import {
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
     Validator,
-    FormControl,
+    UntypedFormControl,
     NgModel
 } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -73,7 +73,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     };
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         this.tagWidth = this.addons?.nativeElement.offsetWidth;
 
         if (!c.value) {

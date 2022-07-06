@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {
     ControlValueAccessor,
-    FormControl,
+    UntypedFormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validator
@@ -86,7 +86,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     }
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         const err = {
             requiredError: {
                 required: true

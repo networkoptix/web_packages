@@ -9,7 +9,7 @@ import {
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
     Validator,
-    FormControl
+    UntypedFormControl
 } from '@angular/forms';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -60,7 +60,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     };
 
     // validates the form, returns null when valid else the validation object
-    public validate(c: FormControl) {
+    public validate(c: UntypedFormControl) {
         if (!c.value) {
             return {
                 required: true

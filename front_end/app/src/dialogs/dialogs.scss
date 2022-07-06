@@ -1,6 +1,7 @@
-@use "../styles/typography";
-@use "../../../app/styles/theme_variables_common" as *;
-
+@use "typography" as typography;
+@use "native-theme/theme_palette";
+@use "theme_palette" as colors;
+@use "theme_variables_common" as vars;
 
 @keyframes slide-down-fade-in {
     0% {
@@ -70,9 +71,9 @@ nx-modal-wizard {
         & > .modal-dialog {
             height: 100vh !important;
             margin: 0 auto !important;
-            width: $collapse-webadmin-width !important;
+            width: vars.$collapse-webadmin-width !important;
             max-width: 100vw;
-            @media screen and (max-height: $collapse-webadmin-width), (max-width: $collapse-webadmin-width) {
+            @media screen and (max-height: vars.$collapse-webadmin-width), (max-width: vars.$collapse-webadmin-width) {
                 width: 100vw !important;
                 & > .modal-content {
                         height: 100vh !important;
@@ -100,7 +101,7 @@ nx-modal-wizard {
     &-content {
         border        : none !important;
         border-radius : 2px !important;
-        box-shadow    : 0 1rem 2rem 0 transparentize($dark15, 0.8) !important;
+        box-shadow    : 0 1rem 2rem 0 transparentize(colors.$dark15, 0.8) !important;
     }
 
     &-paragraph,
@@ -112,7 +113,7 @@ nx-modal-wizard {
     }
 
     &-paragraph-light {
-        color: $light16;
+        color: colors.$light16;
         padding-top: 5px;
     }
 
@@ -120,13 +121,13 @@ nx-modal-wizard {
         background-color : var(--card-header-bg);
         border-top       : 1px solid transparent !important;
         border-bottom    : 1px solid var(--border-color) !important;
-        padding          : $modal-title-padding 1rem !important;
+        padding          : vars.$modal-title-padding 1rem !important;
         border-radius    : 2px 2px 0 0 !important;
 
         .modal-title {
             @include typography.medium14nocolor;
             color       : var(--card-header-text);
-            line-height : $modal-title-line-height !important;
+            line-height : vars.$modal-title-line-height !important;
             margin      : 0 !important;
             padding     : 0 !important;
         }

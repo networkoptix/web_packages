@@ -57,6 +57,7 @@
               "app/robots.txt"
             ],
             "styles": [
+              "app/src/dialogs/dialogs.scss",
               "app/styles/main.scss"
             ],
             "scripts": [
@@ -253,6 +254,7 @@
               "app/assets"
             ],
             "styles": [
+              "app/src/dialogs/dialogs.scss",
               "app/styles/main.scss"
             ],
             "stylePreprocessorOptions": {
@@ -426,7 +428,6 @@
       }
     }
   },
-  "defaultProject": "front-end",
   "cli": {
     "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea",
     "cache": {

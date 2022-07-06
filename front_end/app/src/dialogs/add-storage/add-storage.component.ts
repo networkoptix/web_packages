@@ -1,7 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
 import {
-    FormGroup,
-    FormControl,
+    UntypedFormGroup,
+    UntypedFormControl,
     Validators
 } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -37,7 +37,7 @@ export class AddStorageModalContent {
 
     serverId: string;
     storageManager: StorageManager;
-    storageForm: FormGroup;
+    storageForm: UntypedFormGroup;
     cancelPolls: () => any;
     storageFormValueSubscription: Subscription;
 
@@ -77,7 +77,7 @@ export class AddStorageModalContent {
         }
     }
 
-    validateUrl = (control: FormControl): { [key: string]: any; } => {
+    validateUrl = (control: UntypedFormControl): { [key: string]: any; } => {
         const systemNetworkStorage = control.value?.substr(1);
         const smbStorage = `smb:${control.value}`;
         const alreadyExistingUrl = this.storageManager.storageState.locations
@@ -98,13 +98,13 @@ export class AddStorageModalContent {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['serverId', 'storageManager', 'cancelPolls'], this);
 
-        this.storageForm = new FormGroup({
-            url: new FormControl(
+        this.storageForm = new UntypedFormGroup({
+            url: new UntypedFormControl(
                 null,
                 [Validators.required, this.validateUrl.bind(this)]
             ),
-            login: new FormControl(),
-            password: new FormControl()
+            login: new UntypedFormControl(),
+            password: new UntypedFormControl()
         });
 
         this.storageFormValueSubscription =
