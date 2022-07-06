@@ -467,7 +467,7 @@ class CloudPortalAPI(object):
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
         r = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)
-        return r.json()
+        return f"{self.env}/authorize/activate/{r.json()}"
 
     @keyword
     def disconnect_server_via_api(self, auth, sysId, password, email):

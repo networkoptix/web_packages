@@ -10,7 +10,7 @@ Force Tags        Threaded    activate
 *** Test Cases ***
 1. Register and Activate
     [Tags]    email    C24211    C41862    smoke
-    ${email}    Get Random Email Robot    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}    send email=${True}
     Register And Activate Account    mark    hamill    ${email}    ${password}    from email=${True}
     Go to    ${url}
     Log In    ${email}    ${password}

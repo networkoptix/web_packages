@@ -354,12 +354,14 @@ Get Email Link
         Close Mailbox
         Return From Keyword    ${links}
     ELSE
-        Get Code From Email    ${recipient}    ${link type}
+        ${code}=    Get Code From API    ${recipient}    ${link type}
+        ${link}=    set variable    ${ENV}/authorize/${link type}/${code}
+        Return From Keyword    ${link}
     END
 Activate
     [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${from email}=${FROM EMAIL DEFAULT}
     IF    ${from email}
-        ${link}=   Get Email Link    ${email}    activate
+        ${link}=   Get Email Link    ${email}    activate    via email=${from email}
         Go To    ${link}
 
         Wait Until Elements Are Visible
