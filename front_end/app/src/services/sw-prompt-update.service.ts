@@ -5,6 +5,7 @@ import { first, tap, filter, take } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import { environment } from '@environments/environment';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
@@ -32,25 +33,28 @@ export class NxSwPromptUpdateService {
                 this.ribbonService = injector.get(NxRibbonService);
                 this.processService = injector.get(NxProcessService);
             }));
-        updates.available.subscribe(evt => {
-            console.log(`New app version available: ${evt.available.hash}`);
-            this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification(),
-                [{
-                    type: 'process-button',
-                    text: this.LANG.ribbon.newVersionAvailable.installButton(),
-                    value: this.processService.createProcess(() => {
-                        return updates.activateUpdate().then(() => {
-                            this.window.location.reload();
-                        });
-                    })
-                }]);
-        });
-
+        if (environment.production && !environment.isLocal) {
+            updates.available.subscribe(evt => {
+                console.log(`New app version available: ${evt.available.hash}`);
+                this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification(),
+                    [{
+                        type: 'process-button',
+                        text: this.LANG.ribbon.newVersionAvailable.installButton(),
+                        value: this.processService.createProcess(() => {
+                            return updates.activateUpdate().then(() => {
+                                this.window.location.reload();
+                            });
+                        })
+                    }]);
+            });
+        }
         const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));
         const everyMinute$ = interval(60 * 1001);
         const everyMinuteOnceAppIsStable$ = concat(zip(languageSet$, appIsStable$), everyMinute$);
-        everyMinuteOnceAppIsStable$.subscribe(_ => {
-            updates.checkForUpdate();
-        });
+        if (environment.production && !environment.isLocal) {
+            everyMinuteOnceAppIsStable$.subscribe(_ => {
+                updates.checkForUpdate();
+            });
+        }
     }
 }
