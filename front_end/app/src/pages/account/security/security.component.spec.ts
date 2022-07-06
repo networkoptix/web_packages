@@ -92,13 +92,17 @@ describe('NxAccountSecurityComponent', () => {
         });
 
         it('should have header and body', () => {
-            const cardHeader = el.querySelector('nx-block header div h4');
+            const cardHeader = el.querySelector<HTMLHeadingElement>(
+                'nx-block header div h4'
+            );
             const cardHeaderSwitch =
                 el.querySelector('nx-block header div nx-switch');
-            const cardBody = el.querySelector('nx-block nx-section span');
-            expect(cardHeader.innerHTML).toBe('Two-factor authentication');
+            const cardBody = el.querySelector<HTMLSpanElement>(
+                'nx-block nx-section span'
+            );
+            expect(cardHeader.innerText).toBe('Two-factor authentication');
             expect(cardHeaderSwitch).toBeTruthy();
-            expect(cardBody.innerHTML.length).toBeGreaterThan(20);
+            expect(cardBody.innerText.length).toBeGreaterThan(20);
         });
 
         it('should not have verification code elements', () => {

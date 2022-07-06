@@ -41,8 +41,9 @@
             *ngIf="integrationsNode.nodes[1]?.url && integrationsNode.nodes[1].title"
             class="btn btn-default store-button"
             [routerLink]="integrationsNode.nodes[1].url"
-            >{{ integrationsNode.nodes[1].subtitle }}</button
         >
+            {{ integrationsNode.nodes[1].subtitle }}
+        </button>
     </div>
 </ng-template>
 
@@ -54,8 +55,9 @@
         *ngIf="integrationsNode.url; else nonLinkHeader"
         class="heading-link"
         [routerLink]="integrationsNode.url"
-        >{{ integrationsNode.title }}</h2
     >
+        {{ integrationsNode.title }}
+    </h2>
     <ng-template #nonLinkHeader>
         <h2 class="heading-non-link">{{ integrationsNode.title }}</h2>
     </ng-template>
@@ -70,8 +72,9 @@
                 *ngIf="integrationsNode.nodes[0]?.url && integrationsNode.nodes[0].title"
                 class="btn btn-default mr-auto mt-auto"
                 [routerLink]="integrationsNode.nodes[0].url"
-                >{{ integrationsNode.nodes[0].subtitle }}</button
             >
+                {{ integrationsNode.nodes[0].subtitle }}
+            </button>
         </div>
         <ng-container *ngIf="currentWindowWidth > 608">
             <ng-container *ngTemplateOutlet="integrationsBlocks"></ng-container>

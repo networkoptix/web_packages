@@ -1,14 +1,16 @@
-<!-- eslint-disable prettier/prettier -->
 <div
     *ngIf="!outdatedSystem && isLegacy"
     class="mt-2 system-message-warning"
     translate
-    >The system uses the old API version. We recommend that you update the system to the new version in order to get access to new functions.</div
 >
-<!-- eslint-enable prettier/prettier -->
+    The system uses the old API version. We recommend that you update the system to the new version
+    in order to get access to new functions.
+</div>
+
 <div
     *ngIf="outdatedSystem"
     class="mt-2 system-message-error"
     translate
-    >API is not supported for this version of the system</div
 >
+    API is not supported for this version of the system
+</div>

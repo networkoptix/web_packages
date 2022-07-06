@@ -60,8 +60,9 @@
                 class="heading-link"
                 *ngIf="devToolsNode.url; else nonLinkHeader"
                 [routerLink]="devToolsNode.url"
-                >{{ title }}</h2
             >
+                {{ title }}
+            </h2>
             <ng-template #nonLinkHeader>
                 <h2 class="heading">{{ title }}</h2>
             </ng-template>

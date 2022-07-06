@@ -32,8 +32,7 @@
         <div
             class="capability-detail"
             [innerHTML]="capability.asset.shortDescription | safe: 'html'"
-        >
-        </div>
+        ></div>
     </div>
 </ng-template>
 
@@ -45,8 +44,9 @@
         class="heading-link"
         *ngIf="capabilitiesNode.url; else noLinkHeader"
         [routerLink]="capabilitiesNode.url"
-        >{{ capabilitiesNode.title }}</h2
     >
+        {{ capabilitiesNode.title }}
+    </h2>
     <ng-template #noLinkHeader>
         <h2 class="heading-non-link">{{ capabilitiesNode.title }}</h2>
     </ng-template>

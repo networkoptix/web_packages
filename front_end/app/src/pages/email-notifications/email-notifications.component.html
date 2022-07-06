@@ -13,16 +13,18 @@
                     <button
                         class="btn btn-default"
                         (click)="handleSendAnother()"
-                        >Send Another Test</button
                     >
+                        Send Another Test
+                    </button>
                 </ng-template>
                 <button
                     *ngIf="!response; else sendAnother"
                     class="btn btn-primary"
                     [disabled]="!subject"
                     (click)="handleSend()"
-                    >Send Test Notification</button
                 >
+                    Send Test Notification
+                </button>
             </ng-template>
             <nx-stepper
                 [saveButton]="sendButton"
@@ -191,7 +193,8 @@
                                             "
                                             (click)="removeAttachment(index)"
                                             class="attachment"
-                                            >{{ attachment.filename }}
+                                        >
+                                            {{ attachment.filename }}
                                         </div>
                                         <div
                                             class="drop-zone"

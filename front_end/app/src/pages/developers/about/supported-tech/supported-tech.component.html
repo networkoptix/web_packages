@@ -49,8 +49,9 @@
         *ngIf="supportedTechNode.url; else noLinkHeader"
         class="header-link"
         [routerLink]="supportedTechNode.url"
-        >{{ supportedTechNode.title }}</h2
     >
+        {{ supportedTechNode.title }}
+    </h2>
     <ng-template #noLinkHeader>
         <h2 class="header-non-link">{{ supportedTechNode.title }}</h2>
     </ng-template>

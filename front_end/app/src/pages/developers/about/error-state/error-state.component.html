@@ -7,14 +7,14 @@
         *ngFor="let error of node | keyvalue"
         [ngClass]="hasMoreErrors(error.value) ? 'error-block' : 'error-text-wrapper'"
     >
-        <h2 *ngIf="error.key !== 'name'"
-            >{{ error.key }}:
+        <h2 *ngIf="error.key !== 'name'">
+            {{ error.key }}:
             <span
                 *ngIf="!hasMoreErrors(error.value)"
                 class="error-text"
                 >{{ error.value }}</span
-            ></h2
-        >
+            >
+        </h2>
         <ng-container *ngIf="hasMoreErrors(error.value)">
             <ng-container
                 *ngTemplateOutlet="errorLevel; context: { node: error.value, level: level + 1 }"
@@ -28,10 +28,9 @@
     class="error-block-wrapper"
 >
     <div class="error-display-block">
-        <div class="heading bg-warning"
-            >Menu node <span class="brand-title-span">"{{ menuNodeName }}"</span> contains
-            errors</div
-        >
+        <div class="heading bg-warning">
+            Menu node <span class="brand-title-span">"{{ menuNodeName }}"</span> contains errors
+        </div>
         <div class="error-wrapper error-block">
             <h2>Errors:</h2>
             <ng-container

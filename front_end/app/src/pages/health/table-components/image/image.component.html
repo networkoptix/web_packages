@@ -13,8 +13,9 @@
 <div
     *ngIf="time && !show"
     class="header"
-    >{{ time }}</div
 >
+    {{ time }}
+</div>
 <div
     [ngClass]="
         motionPreview
@@ -60,23 +61,27 @@
             <div
                 *ngSwitchCase="'No Image'"
                 translate
-                >NO IMAGE</div
             >
+                NO IMAGE
+            </div>
             <div
                 *ngSwitchCase="'Offline'"
                 translate
-                >OFFLINE</div
             >
+                OFFLINE
+            </div>
             <div
                 *ngSwitchCase="'Unauthorized'"
                 translate
-                >AUTHENTICATION REQUIRED</div
             >
+                AUTHENTICATION REQUIRED
+            </div>
             <div
                 *ngSwitchDefault
                 translate
-                >UNAVAILABLE</div
             >
+                UNAVAILABLE
+            </div>
         </div>
         <ng-template #noMiniPreview>
             <div class="camera-preview-offline"></div>

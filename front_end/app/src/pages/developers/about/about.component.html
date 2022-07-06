@@ -10,8 +10,9 @@
             *ngIf="intro.url; else noLinkHeader"
             [routerLink]="intro.url"
             class="heading-link"
-            >{{ intro.title }}</h1
         >
+            {{ intro.title }}
+        </h1>
         <ng-template #noLinkHeader>
             <h1>{{ intro.title }}</h1>
         </ng-template>

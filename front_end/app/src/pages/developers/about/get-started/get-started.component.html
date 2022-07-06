@@ -31,8 +31,9 @@
         *ngIf="steps.url; else noLinkHeader"
         class="get-started-heading-link"
         [routerLink]="steps.url"
-        >{{ steps.title }}</h2
     >
+        {{ steps.title }}
+    </h2>
     <ng-template #noLinkHeader>
         <h2 class="get-started-heading">{{ steps.title }}</h2>
     </ng-template>

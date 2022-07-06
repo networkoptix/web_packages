@@ -94,8 +94,9 @@
                     class="menu-item"
                     (click)="addWidget()"
                     translate
-                    >Add widget</div
                 >
+                    Add widget
+                </div>
                 <a
                     class="menu-item"
                     (click)="prepareConfigDownload()"
@@ -174,8 +175,9 @@
                     (click)="removeDashboard(dashboard.id)"
                     [ngClass]="{ visible: dragEnabled && menu?.length > 1 }"
                     translate
-                    >Remove</button
                 >
+                    Remove
+                </button>
             </div>
         </ng-container>
     </div>
@@ -184,8 +186,9 @@
         (click)="addDashboard(); showSettings = false"
         class="menu-item add-dashboard pointer"
         translate
-        >Add New Dashboard +</div
     >
+        Add New Dashboard +
+    </div>
 </div>
 
 <div
