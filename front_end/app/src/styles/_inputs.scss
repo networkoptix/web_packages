@@ -71,6 +71,16 @@
         -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
     }
     
+    input {
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus,
+        &:-webkit-autofill:active {
+            -webkit-text-fill-color : var(--input-color);
+            -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
+        }
+    }
+    
     &.ng-untouched {
         input {
             border : 1px solid var(--input-border-color) !important;
