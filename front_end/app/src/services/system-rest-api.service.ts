@@ -20,7 +20,7 @@ import { NxStorageService } from '@services/storage.service';
 import { WINDOW } from '@services/window-provider';
 
 import { NxAppStateService } from './nx-app-state.service';
-import type { APIDocType } from './nx-config/base-config';
+import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
@@ -521,6 +521,14 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     getApiDoc(type: APIDocType = 'main') {
         return this.get<APIDoc>(this.CONFIG.apiDocURL[type]).toPromise();
+    }
+
+    fetchApiToolJSON(route: string) {
+        return this.get<APIDoc>(`/static/${route}`).toPromise();
+    }
+
+    getAPIToolManifest(): Promise<MenuManifest> {
+        return this.get('/static/openapi_manifest.json').toPromise().catch(() => this.CONFIG.apiTool.defaultManifest);
     }
 
     getApiChangelog(): Promise<string> {

@@ -74,7 +74,41 @@ export const nxConfig: IConfig = {
                 type: 'deprecated',
                 displayName: 'Deprecated API'
             }
-        }
+        },
+        defaultManifest: [
+            {
+                name: 'Current API',
+                sections: [
+                    {
+                        name: 'REST',
+                        scheme: 'openapi_v1.json'
+                    },
+                    {
+                        name: 'LEGACY',
+                        scheme: 'openapi_legacy.json'
+                    }
+                ]
+            },
+            {
+                name: 'Deprecated API',
+                sections: [
+                    {
+                        name: 'LEGACY',
+                        scheme: 'openapi_deprecated.json'
+                    }
+                ]
+            }
+        ],
+        legacyManifest: [
+            {
+                name: 'Current API',
+                sections: [
+                    {
+                        scheme: 'openapi_legacy.json'
+                    }
+                ]
+            }
+        ]
     },
     cameraCredentialUpdateTimeout: 1500,
     cameraSettings: {

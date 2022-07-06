@@ -8,7 +8,7 @@ import { catchError, delay, distinctUntilChanged, filter, finalize, retryWhen, t
 
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
-import type { APIDocType } from '@services/nx-config/base-config';
+import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -35,6 +35,7 @@ export class NxAPIToolSystemService {
     currentSystemId$ = new BehaviorSubject<string>(null);
     systemVersion$ = new BehaviorSubject<string>(null);
     systemEmitter$ = new Subject<EmitInfo<NxSystem>>();
+    systemManifest$ = new BehaviorSubject<MenuManifest>(null);
     validSystems: NxSystemWithUserInfo[] = []; // Used for trying all possible systems before showing an error
     manualSystemChange = false;
     systemChangeLockout = false;
@@ -196,6 +197,10 @@ export class NxAPIToolSystemService {
         this.getServersInfo();
     }
 
+    getMenuManifest() {
+        return this.currentSystem.serverManager.getApiToolManifest();
+    }
+
     getServersInfo(): void {
         this.serversLoading$.next(true);
         this.serverSubscription?.unsubscribe();
@@ -225,9 +230,10 @@ export class NxAPIToolSystemService {
             });
     }
 
-    private getServersAndJSONs(): void {
+    private async getServersAndJSONs(): Promise<void> {
         let validServerFound = false;
         this.getServers.updating = true;
+        await this.getMenuManifest();
         const cachedItem = this.retrieveJSONFromLocalStorage('main');
         this.currentSystem.serverManager.getServers().pipe(
             timeout(2500),
@@ -254,7 +260,7 @@ export class NxAPIToolSystemService {
                                 validServerFound = true;
                                 this.serversFinishedLoading();
                             } else {
-                                this.getAPIDoc('main')
+                                this.getAPIDoc('main') // TODO: remove, JSONs being grabbed by manifest
                                     .then(async (response: APIDoc) => {
                                         await this.handleSuccessfulAPIDocGet(server, response);
                                         validServerFound = true;
@@ -371,7 +377,7 @@ export class NxAPIToolSystemService {
         this.serverSubscription?.unsubscribe();
     };
 
-    setQueryParams = (param: string, newValue: string) => {
+    setQueryParams = (param: string, newValue: string | number) => {
         if (environment.isLocal && param === 'system') return;
 
         const queryParams = cloneDeep(this.queryParams);
@@ -426,6 +432,13 @@ export class NxAPIToolSystemService {
     private getAPIDoc(type: APIDocType) {
         return this.currentSystem.serverManager
             .getApiDoc(type);
+    }
+
+    async fetchJSON(route: string) {
+        // this.retrieveJSONFromLocalStorage() // TODO: caching
+        const JSON = await this.currentSystem.serverManager.fetchApiToolJSON(route);
+        return JSON;
+        // TODO: store in cache
     }
 
     async getAPIInfoMarkdown(serverID: string) {

@@ -22,6 +22,10 @@ export const getTagModifier = (type: APIDocType) => {
     }
 };
 
+export const makeTagModifier = (type: any) => {
+    return '-' + type;
+};
+
 export const generateAPIRouteName = (endpoint: string, requestType: string) => {
     return endpoint + ' - ' + requestType.toUpperCase();
 };
@@ -58,14 +62,14 @@ const checkMethodResponseDescription = method => {
     }
 };
 
-export const addAPITypeToTags = (api: APIDoc, type: APIDocType = 'main') => {
+export const addAPITypeToTags = (api: APIDoc, type: number | string) => {
     // We have to change the tags on apis
     // so that swagger can properly differentiate tags with the same name coming from multiple different API files
-    const tagModifier = getTagModifier(type);
+    const tagModifier = makeTagModifier(type);
     api.tagsModified = true;
 
     api.tags.forEach(tag => {
-        tag.name = tag.name + getTagModifier(type);
+        tag.name = tag.name + tagModifier;
     });
 
     Object.keys(api.paths).forEach(endpoint => {
@@ -117,7 +121,7 @@ export const cleanJSON = (api: APIDoc) => {
     });
 };
 
-export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: APIDocType) => {
+export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: number | string) => {
     if (APIDoc.tagsModified) return;
 
     cleanJSON(APIDoc);
@@ -140,6 +144,25 @@ export const createMenuContent = (API: APIDoc, seperator: string = '') => {
     generateMenuNodesFromCategoryTags(API, menuContent);
     generateMenuNodesFromEndpoints(API, menuContent);
     return menuContent;
+};
+
+export const generateMenu = (menu: MenuNodeWithParent[], json: APIDoc) => {
+    generateMenuNodesFromCategoryTags(json, menu);
+    generateMenuNodesFromEndpoints(json, menu);
+    return menu;
+};
+
+export const addSeperator = (menuContent: MenuNodeWithParent[], seperator: string = '') => {
+    menuContent.push(new MenuNode(`${seperator}-seperator`, '', seperator));
+};
+
+export const getFirstNode = (menuNodes: MenuNodeWithParent[]) => {
+    for (const node of menuNodes) {
+        if (!node.name.includes('-seperator')) {
+            return node;
+        }
+    }
+    return menuNodes[menuNodes.length - 1];
 };
 
 /**

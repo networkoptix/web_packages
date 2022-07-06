@@ -18,7 +18,7 @@ import { NxHealthService } from '@pages/health/health.service';
 
 import { Account } from './account.service/account';
 import { NxAppStateService } from './nx-app-state.service';
-import type { APIDocType } from './nx-config/base-config';
+import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
 import * as t from './system-api.types';
 import { User } from './system-api.types';
@@ -425,6 +425,14 @@ export class NxSystemAPI {
         if (type === 'main') {
             return this.get<APIDoc>('/static/openapi_legacy.json').toPromise();
         }
+    }
+
+    fetchApiToolJSON(route: string) {
+        return this.get<APIDoc>(`/static/${route}`).toPromise();
+    }
+
+    getAPIToolManifest(): Promise<MenuManifest> {
+        return Promise.resolve(this.CONFIG.apiTool.legacyManifest);
     }
 
     public getApiPreamble() {

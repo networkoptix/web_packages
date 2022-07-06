@@ -219,7 +219,19 @@ export interface APIToolSettings {
         main: APIType,
         deprecated: APIType
     }
+    defaultManifest: MenuManifest;
+    legacyManifest : MenuManifest;
 }
+
+export interface ManifestItem {
+    name: string;
+    sections: {
+        name?: string,
+        scheme: string
+    }[]
+}
+
+export type MenuManifest = ManifestItem[];
 
 interface APIType {
     type: string,

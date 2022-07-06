@@ -23,7 +23,7 @@ interface ServerDropdownItem extends DropdownItem<string> {
     disabled: boolean;
 }
 
-interface TypeDropdownItem extends DropdownItem<string> {
+interface TypeDropdownItem extends DropdownItem<string | number> {
     disabled: boolean;
 }
 
@@ -103,8 +103,11 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                     name: APIType.displayName,
                     disabled
                 });
-                if (this.openAPIJSONService.currentType === APIType.type) {
+                if (this.openAPIJSONService.currentType === APIType.type.toString()) {
                     this.type = this.types[this.types.length - 1];
+                }
+                if (!this.type) {
+                    this.type = findExistingItem(this.types, this.openAPIJSONService.defaultTypeValue);
                 }
             }
         });
@@ -138,7 +141,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                 const systemToFind = this.APIToolSystemService.currentSystemId || this.readonlyAPIService.currentReadonlyAPI?.api?.id.toString();
                 this.system = findExistingItem(this.systems, systemToFind);
                 this.server = findExistingItem(this.servers, this.APIToolSystemService.currentServerId);
-                this.type = findExistingItem(this.types, this.openAPIJSONService.currentType || 'main') || this.types[0];
+                this.type = findExistingItem(this.types, this.openAPIJSONService.currentType || this.openAPIJSONService.defaultTypeValue) || this.types[0];
             }
         });
 

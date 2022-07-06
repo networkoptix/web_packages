@@ -6,7 +6,7 @@ import { APIDoc } from '@pages/api-tool/api-tool-types';
 import type {
     Logger
 } from '@pages/systems/settings/servers/logger/logger.component.types';
-import type { APIDocType } from '@services/nx-config/base-config';
+import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.types';
 import * as t from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -247,6 +247,15 @@ export class ServerManager {
 
     getApiDoc(type: APIDocType = 'main'): Promise<APIDoc> {
         return this.mediaserver.getApiDoc(type);
+    }
+
+    fetchApiToolJSON(route: string): Promise<APIDoc> {
+        return this.mediaserver.fetchApiToolJSON(route);
+    }
+
+    getApiToolManifest(): Promise<MenuManifest> {
+        const mediaServer = this.mediaserver as NxSystemRestAPI;
+        return mediaServer.getAPIToolManifest();
     }
 
     getApiChangelog(): Promise<string> {

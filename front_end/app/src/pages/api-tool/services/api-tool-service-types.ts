@@ -18,7 +18,7 @@ export interface EmitInfo<Type> {
 
 export interface APIType {
     displayName: string,
-    type: string
+    type: string | number
 }
 
 export interface ServerInfo {
@@ -71,3 +71,7 @@ export type APITypes = {
         displayName: 'Deprecated API'
     }
 };
+
+export interface FetchedJSONs {
+    [key: string]: Promise<APIDoc>
+}
