@@ -183,7 +183,7 @@
             "expires": "Verloopt",
             "key": "Sleutel"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "De cloudopslag die niet wordt gebruikt voor opnamen. Ga naar <a href=\"{serverSettings}\">Servers instellingen</a> om deze te configureren."
     },
     "common": {
         "account": {
