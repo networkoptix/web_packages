@@ -62,6 +62,11 @@ export const cloudSettingsRoutes: Routes = [
                 canDeactivate: [ApplyGuard]
             },
             {
+                path: 'servers/:serverId/advanced',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard]
+            },
+            {
                 path: 'cameras',
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard]

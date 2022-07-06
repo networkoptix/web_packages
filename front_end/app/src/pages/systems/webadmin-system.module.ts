@@ -64,6 +64,11 @@ export const localSettingsRoutes: Routes = [
                 runGuardsAndResolvers: 'always'
             },
             {
+                path: 'servers/:serverId/advanced',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard]
+            },
+            {
                 path: 'cameras',
                 component: NxCamerasComponent,
                 canDeactivate: [ApplyGuard],

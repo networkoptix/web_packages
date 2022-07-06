@@ -6,7 +6,7 @@ import {
     ViewContainerRef,
     Inject,
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { delay, filter, map, retryWhen, switchMap, tap } from 'rxjs/operators';
@@ -55,6 +55,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private route: ActivatedRoute,
+        private router: Router,
         private applyService: NxApplyService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
@@ -102,6 +103,10 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             .subscribe(params => {
                 this.advanced = (params.advanced !== undefined);
             });
+
+        if (!this.advanced) {
+            this.advanced = this.router.url.includes(`servers/${this.route.snapshot.params.serverId}/advanced`);
+        }
 
         this.applyService.initPageWatcher(this.applyContainerRef);
 
