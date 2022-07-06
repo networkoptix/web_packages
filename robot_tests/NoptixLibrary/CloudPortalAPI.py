@@ -24,7 +24,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 @library
 class CloudPortalAPI(object):
 
-    def __init__(self, env='https://cloud-test.hdw.mx', customization='default', password='qweasd 123', email='noptixautoqa+sendemail@gmail.com'):
+    def __init__(self, env='https://cloud-test.hdw.mx', customization='default', password='qweasd 123', email='noptixautoqa@gmail.com'):
         self.env = env
         self.customization = customization
         self.password = password
@@ -130,10 +130,11 @@ class CloudPortalAPI(object):
             return r.json()
 
     @keyword
-    def get_code_from_email(self, email, message_type):
+    def get_code_from_api(self, email, message_type):
         with CloudSession(self.env, self.baseEmail, self.password) as s:
             s.headers.update({"referer": f"{self.env}/authorize"})
             r = s.post(f'{self.env}/api/robot/get_code', json={'email': email, 'type': message_type})
+            logger.trace(r.content)
             return r.json()['code']
 
     @keyword
@@ -461,8 +462,8 @@ class CloudPortalAPI(object):
         return r.json()
 
     @keyword
-    def activate_account(self, email, password):
-        code = self.get_code_from_email(email, "activate_account")
+    def activate_account_via_api(self, email, password):
+        code = self.get_code_from_api(email, "activate_account")
         code = re.sub(r'%3D', '=', code)
         code = re.sub(r'%2B', '+', code)
         r = requests.post(f'{self.env}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code":code}, verify=False)

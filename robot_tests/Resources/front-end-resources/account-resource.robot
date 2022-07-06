@@ -26,6 +26,7 @@ Verify Delete User Dialog
     ...    ${DELETE ACCOUNT HEADER}
 
 Account Suite Setup
+    Open Browser and go to URL    ${url}
     ${owner}=   Register and activate account with random email    mark    hamill    ${password}
     ${no perm}=   Register and activate account with random email    mark    hamill    ${password}
     Set Suite Variable    ${no perm}    ${no perm}
@@ -46,7 +47,7 @@ Account Suite Setup
     
     ${owner email} =    Set Variable    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${owner}")]
 
-    Open Browser and go to URL    ${url}
+    Go to    ${url}
     
 Account Suite Tear Down
     FOR    ${i}    IN RANGE    1    4

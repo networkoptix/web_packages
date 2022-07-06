@@ -22,6 +22,8 @@ import quopri
 from email import message_from_string
 from imaplib import IMAP4, IMAP4_SSL
 from re import findall
+from robot.api import logger
+
 import time
 try:
     from urllib.request import urlopen
@@ -152,8 +154,9 @@ class NoptixImapLibrary(object):
     def get_nx_links_from_email(self, email_index, path):
         body = self.get_email_body(email_index)
         # url = r'href=[\'\"]?(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'.format(path)
-        url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize\/{path})\/[^\'\" >]+)'
+        url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
         res = findall(url, str(body))
+        logger.trace(res)
         return str(res[0][0])
 
     def get_matches_from_email(self, email_index, pattern):

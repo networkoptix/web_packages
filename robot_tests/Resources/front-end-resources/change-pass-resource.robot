@@ -3,12 +3,13 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Setup
+    Open Browser and go to URL    ${url}
     ${email} =    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     ${email} =    Set Suite Variable    ${email}
     Open browser and set user language to current
     
 Open browser and set user language to current
-    Open Browser and go to URL    ${url}
+    Go To    ${url}
     Log In    ${email}    ${password}
     sleep    3
     Log Out

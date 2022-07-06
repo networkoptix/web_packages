@@ -8,16 +8,16 @@ Force Tags    merge_and_licenses
 Merge Suite Setup
     Open Browser and go to URL    ${ENV}    False    False
     # Register test users
-    ${merge owner}=   Get Random Email    ${email base}
+    ${merge owner}=   Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    MergeOwner    ${merge owner}    ${password}
     Set Suite Variable    ${merge owner}    ${merge owner}
     ${owner auth}=   Create List    ${merge owner}    ${password}
     Set Suite Variable    ${owner auth}    ${owner auth}
-    ${merge 1 admin}=   Get Random Email    ${email base}
+    ${merge 1 admin}=   Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    Admin    ${merge 1 admin}    ${password}
-    ${merge 2 adviewer}=   Get Random Email    ${email base}
+    ${merge 2 adviewer}=   Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    AdViewer    ${merge 2 adviewer}    ${password}
-    ${common user}=      Get Random Email    ${email base}
+    ${common user}=      Get Random Email Robot    ${email base}
     Register and activate account    SmokeCheck    Common   ${common user}    ${password}
     Set Suite Variable    ${merge 1 admin}    ${merge 1 admin}
     Set Suite Variable    ${merge 2 adviewer}    ${merge 2 adviewer}
@@ -147,7 +147,7 @@ Merge systems and check the users and the licenses
 
 Add and delete users
     # Add new - portal
-    ${new cloud user}=   Get Random Email    ${email base}
+    ${new cloud user}=   Get Random Email Robot    ${email base}
     Share    ${owner auth}    ${merge 1}[id]    ${ACCESS ROLES}[liveViewer]    ${new cloud user}    ${permissions}[liveViewer]
 
     # Delete existing

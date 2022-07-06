@@ -6,6 +6,7 @@ Resource          storage-resource.robot
 *** Keywords ***
 # Setups and teardowns
 System Admin Suite Setup
+    Open browser and go to URL    ${ENV}
     ${owner}=   Register and activate account with random email    System     Owner    ${BASE PASSWORD}
     ${rand}=   Generate Random String      length=5
     ${system}=   Create Base System    system-admin-${rand}    image=${IMAGE}    owner=${owner}
@@ -15,7 +16,7 @@ System Admin Suite Setup
     Set Suite Variable    ${system}
     Set Suite Variable    ${local system}
     Sleep    30
-    Open browser and go to URL    ${ENV}
+    Go To    ${url}
 
 System Admin Suite Teardown
     Delete Base System    ${system}

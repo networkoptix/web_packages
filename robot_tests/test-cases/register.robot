@@ -8,6 +8,7 @@ Force Tags        Threaded
 
 *** Test Cases ***
 1. Should open register page in anonymous state by clicking Register button on top right corner
+    [tags]    smoke
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/authorize?client_type=create
@@ -15,7 +16,7 @@ Force Tags        Threaded
 
 2. Should open register page from register success page by clicking Register button on top right corner
     [Tags]    email
-    ${email}    Get Random Email        ${BASE EMAIL}     sendemail=${True}
+    ${email}    Get Random Email Robot        ${BASE EMAIL}     sendemail=${True}
     Register    'mark'    'hamill'    ${email}    ${password}
     Activate    ${email}
     Go To    ${url}
@@ -37,7 +38,8 @@ Force Tags        Threaded
     Wait Until Element Is Visible    ${REGISTER FORM}
 
 5. Should register user with correct credentials
-    ${email}    Get Random Email    ${BASE EMAIL}
+    [tags]    smoke
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success
 
@@ -50,14 +52,14 @@ Force Tags        Threaded
 
 7. With valid inputs no errors are displayed
     [tags]    C41557
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
     Input Text    ${REGISTER FIRST NAME INPUT}    ${TEST FIRST NAME}
     Input Text    ${REGISTER LAST NAME INPUT}    ${TEST LAST NAME}
     ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     IF    ${read only} == ${False}
         Input Text    ${REGISTER EMAIL INPUT}    ${email}
     END
@@ -87,7 +89,7 @@ Force Tags        Threaded
     Should Be Equal    '${input type}'    'password'
 
 9. Should respond to Enter key and save data
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     Go To    ${url}/authorize?client_type=create
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
     Input Text    ${REGISTER FIRST NAME INPUT}    mark
@@ -195,14 +197,14 @@ Force Tags        Threaded
 #
 #16. Should remove promo-block on registration form successful submitting form when from=client
 #    [Tags]
-#    ${email}    Get Random Email    ${BASE EMAIL}
+#    ${email}    Get Random Email Robot    ${BASE EMAIL}
 #    Register    mark    hamill    ${email}    ${password}    from=client
 #    Validate Register Success    ${url}/authorize?client_type=create/success?from=client
 #    Element Should Not Be Visible    ${JUMBOTRON}
 #
 #17. Should remove promo-block on registration form successful submitting form when from=mobile
 #    [Tags]
-#    ${email}    Get Random Email    ${BASE EMAIL}
+#    ${email}    Get Random Email Robot    ${BASE EMAIL}
 #    Register    mark    hamill    ${email}    ${password}    from=mobile
 #    Validate Register Success    ${url}/authorize?client_type=create/success?from=mobile
 #    Element Should Not Be Visible    ${JUMBOTRON}
@@ -218,21 +220,21 @@ Force Tags        Threaded
 
 19. Cannot register email that is already registered
     [tags]    C41563
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register Account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and text()="${ACCOUNT ALREADY EXISTS}"]
 
 20 Cannot register email that is already activated
     [tags]    C41563
-    ${email}    Get Random Email    ${BASE EMAIL}
+    ${email}    Get Random Email Robot    ${BASE EMAIL}
     Register and activate account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//p[contains(@class,"error-label") and text()="${ACCOUNT ALREADY EXISTS}"]
 
 21. Check registration email links, colors, cloud name, and user name
-    [tags]    C24211    C43021    Customizations
-    ${email}    Get Random Email    ${BASE EMAIL}    extra=sendemail
+    [tags]    C24211    C43021    Customizations    smoke
+    ${email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Check Language Anonymous
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True

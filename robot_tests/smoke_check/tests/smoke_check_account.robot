@@ -8,7 +8,7 @@ Suite Teardown   Account Suite Teardown
 *** Keywords ***
 Account Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email}=   Get Random Email    ${email base}
+    ${email}=   Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    Acc    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email acc}    ${email}

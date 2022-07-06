@@ -3,7 +3,7 @@ Resource          ../../resource.robot
 
 *** Keywords ***
 Register Random User
-    ${email}=   Get Random Email    ${BASE EMAIL}
+    ${email}=   Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${email}    ${password}
     [Return]    ${email}
 
@@ -24,17 +24,17 @@ Send "Restore Password" Email
 Get Restore Code and Open the Link
     [Arguments]    ${email}    ${restore}=${False}    ${new password}=${EMPTY}
     @{auth}=   Create List   ${BASE EMAIL}    ${password}
-    ${code}=   Get Code From Email    ${email}    restore_password
-    Go To    ${url}/authorize/restore_password/${code}
+    ${link}=   Get Email Link   ${email}    restore_password
+    Go To    ${link}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${RESET NEXT BUTTON}
     Run Keyword If    ${restore} == ${True} and '${new password}' != '${EMPTY}'  Run Keywords
     ...    Input Text    ${RESET PASSWORD INPUT}    ${new password}
     ...    AND    Click Button    ${RESET NEXT BUTTON}
     ...    AND    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS INSTRUCTION}    ${RESET LOGIN BUTTON}
-    [Return]    ${code}
+    [Return]    ${link}
 
 Restore Pass Validation Setup
-    ${user}=   Get Random Email    ${BASE EMAIL}
+    ${user}=   Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${user}    ${password}
     Set Suite Variable     ${user}    ${user}
     Open Restore Password Dialog

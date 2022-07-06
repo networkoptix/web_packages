@@ -7,20 +7,21 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Users Suite Setup
-    ${random} =	   Generate Random String   length=5
+    Open Browser and go to URL    ${url}
+    ${random} =	   Evaluate	    random.randint(0, sys.maxsize)
     Set Suite Variable     ${random}    ${random}
-    #system(name,port,cont,owner,id) 
-    #local auth, cloud auth, server url, 
+    #system(name,port,cont,owner,id)
+    #local auth, cloud auth, server url,
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
     ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     #Create Base Cloud System    image=${IMAGE}
     ${server 1} =    Create Base System    user0-${random}    owner=${owner}
     Set Suite Variable    ${server 1}    ${server 1}
-    
+
     Save User Role    ${server 1['local auth']}    https://${QA BURBANK IP}:${server 1['port']}    Client Custom    NoGlobalPermissions
     ${client custom}=    Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Set Suite Variable    ${client custom}     ${client custom}
-        
+
     ${server 2} =    Create Base System    user1-${random}    owner=${owner}
     Set Suite Variable    ${server 2}    ${server 2}
     # ${system 2}=   Setup Docker System    image=${IMAGE}    cloud email=${system['owner']}
@@ -36,11 +37,11 @@ Web Admin Suite Setup
     Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
 
 Cloud Suite Setup
-    Open Browser and go to URL    ${url}
+    Go To    ${url}
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Wait Until Element is Visible    ${SERVERS LINK}     65
     Sleep    1
-    Click Link    ${SERVERS LINK}
+    Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
     Log Out
 
@@ -61,7 +62,7 @@ Users Teardown
     # Disconnect Server via API    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${password}    ${system['owner']}
     # Disconnect Server via API    ${server 2['cloud auth']}    ${server 2['cloud id']}    ${password}    ${system['owner']}
     # Open Connection    ${QA BURBANK IP}
-    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    # SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     # ${results}    Execute Command    docker container stop ${system['cont']} ${system 2['cont']}
     # ${results}    Execute Command    docker container rm ${system['cont']} ${system 2['cont']}
     # Remove Temporary Users
@@ -136,7 +137,7 @@ Check Special Hint
         Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
     ELSE IF    "${type}"=="Client Custom"
         Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CLIENT CUSTOM}
-    ELSE    
+    ELSE
         Fail    msg=User type did not match any expected types
     END
 
@@ -218,7 +219,7 @@ Verify In Local Users UI
         ELSE IF    '${email}' == 'admin'
 	        Element Text Should Be    //*[@id="componentId"]/span    ${role names}[${user}]
 		ELSE
-            Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..    
+            Elements Should Not Be Visible    //*[@id="componentId"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}/..
         END
     END
 
@@ -236,7 +237,7 @@ Modify Local Users via Cloud UI
         #${new login} =    Change Login for Local User    Local+${user}_changed
         ${new full name} =    Change Full Name for Local User     Changed User
         ${new permission} =    Change Permission Level for Local User    ${user}    ${email}
-        ${email}=       Get Random Email    ${BASE EMAIL}
+        ${email}=       Get Random Email Robot    ${BASE EMAIL}
         ${new local user email} =     Change Email for Local User    ${email}
 	    #Log To Console    You should be able to save now. ${user}
         #Sleep    100

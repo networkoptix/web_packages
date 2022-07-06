@@ -183,7 +183,7 @@ Force Tags        system    Threaded
     [Tags]    C78228    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}
     ...    ELSE    Create List    ${server 1['owner']}    admin
-    ${random user}=   Get Random Email    ${BASE EMAIL}
+    ${random user}=   Get Random Email Robot    ${BASE EMAIL}
     Log    Check Cancel Button
     FOR    ${user}  IN  @{list}
         Log In    ${user}    ${password}
@@ -409,7 +409,7 @@ Force Tags        system    Threaded
 
 14. Edit permission works
     [Tags]    C30657    C47041    webadmin    cloud
-    ${random email}=   Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}    ${permissions}[liveViewer]
@@ -434,7 +434,7 @@ Force Tags        system    Threaded
     END
 
 15. Delete user works
-    [Tags]    email    C41903    webadmin    cloud
+    [Tags]    email    C41903    webadmin    cloud    smoke
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['owner']}    ${server 1}[cloud users][cloudAdmin]
     ...    ELSE    Create List    ${server 1['owner']}    admin    ${server 1}[cloud users][cloudAdmin]    ${server 1}[local users][cloudAdmin][login]
     FOR    ${user}    IN    @{list}
@@ -463,14 +463,15 @@ Force Tags        system    Threaded
     END
 
 16. Share with registered user works and sends him notification
-    [Tags]    email    C41888    cloud
-    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    [Tags]    email    C41888    cloud    smoke
     ${random email}=    Register and activate account with random email    mark     hamil    ${password}
+    ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
+    Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
     Set Account Language    ${random email}    ${password}    ${LANGUAGE}
     Append to List    ${TMP USERS}    ${random email}
+    Go To    ${url}
+    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Verify In System    ${server 1['name']}
-    ${user}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
-    Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
     Share To    ${user}    ${ADMIN TEXT}
     # Might not be necessary after CLOUD-6113
     ${role}=   Get Cloud User Role    ${server 1['cloud auth']}    ${user}    ${server 1['cloud id']}
@@ -513,7 +514,7 @@ Force Tags        system    Threaded
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 17. Share with registered user gives user access to system
-    [Tags]    email    C41888    cloud
+    [Tags]    email    C41888    cloud    smoke
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
     Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    viewer    ${random email}      ${permissions}[viewer]
     Log in to user and system    ${random email}    ${server 1['cloud id']}
@@ -526,17 +527,17 @@ Force Tags        system    Threaded
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
 18. Share with unregistered user - brings them to registration page with code with correct email locked
-    [Tags]    email    C41889    cloud    CLOUD-8643
+    [Tags]    email    C41889    cloud    CLOUD-8643    smoke
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
     Share To    ${random email}    ${ADMIN TEXT}
+    Sleep    3
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     
-    ${code}=   Get Code From Email    ${random email}    system_invite
 
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    ${LOCAL USER NAME HEADER}
@@ -545,10 +546,11 @@ Force Tags        system    Threaded
     
     Log    Step 2
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${random email}    timeout=120
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
-
+    ${invite link}=   Get Nx Links From Email    ${email}    system_invite
+    #${link}=   Get Email Link    ${random email}    system_invite
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
@@ -567,7 +569,7 @@ Force Tags        system    Threaded
     Close Mailbox
 
     Log    Step 5-6
-    Go To    ${url}/authorize/register/${code}
+    Go To    ${invite link}
     Wait Until Elements Are Visible
     ...    ${REGISTER FIRST NAME INPUT}
     ...    ${REGISTER LAST NAME INPUT}
@@ -608,10 +610,10 @@ Force Tags        system    Threaded
     FOR    ${link}  IN  @{activation link}
         check in list    ${expected links}    ${link}
     END
-    ${activation code}=   Get Code From Email    ${random email}    activate_account
+    ${link2}=   Get Email Link    ${random email}    activate_account
     Delete Email    ${email}
     Close Mailbox
-    Go To    ${url}/authorize/activate/${activation code}
+    Go To    ${link2}
     Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
     Go To    ${ENV}/systems/${server 1['cloud id']}
     Go To Users List
@@ -640,7 +642,7 @@ Force Tags        system    Threaded
 
 20. Check share email for registered user
     [Tags]    C47297    cloud
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${random email}    ${BASE PASSWORD}
     Append To List    ${TMP USERS}    ${random email}
     Open Mailbox
@@ -736,7 +738,7 @@ Force Tags        system    Threaded
 
 23. User can be invited with client custom permissions
     [Tags]    webadmin    cloud
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register And Activate Account    users    notification    ${random email}    ${BASE PASSWORD}
     Append To List    ${TMP USERS}    ${random email}
     ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${server 1['owner']}

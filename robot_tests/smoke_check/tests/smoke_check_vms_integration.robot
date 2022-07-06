@@ -8,7 +8,7 @@ Suite Teardown   VMS Suite Teardown
 *** Keywords ***
 VMS Suite Setup
     Open browser and go to URL    ${ENV}    False    False
-    ${email}=    Get Random Email    ${email base}
+    ${email}=    Get Random Email Robot    ${email base}
     Run Keyword If     'nxvms' not in $env    Run Keywords
        ...    Register And Activate Account    SmokeCheck    VMS    ${email}    ${password}    AND
        ...    Set Suite Variable    ${email vms}    ${email}

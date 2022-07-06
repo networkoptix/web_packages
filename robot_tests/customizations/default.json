@@ -10,7 +10,7 @@
     "PRIVACY POLICY URL HREF"    :    "https://www.networkoptix.com/privacy-policy/",
     "PRIVACY POLICY URL FULL"    :    "https://www.networkoptix.com/privacy-policy/",
     "SUPPORT URL"                :    "https://support.networkoptix.com",
-    "WEBSITE URL"                :    "https://www.networkoptix.com",
+    "WEBSITE URL"                :    "https://networkoptix.com",
     "RELEASE NOTES URL"	         :	  "https://www.networkoptix.com/all-nx-witness-release-notes/",
     "RELEASE NOTES LATEST"       :	  "//*[contains(text(),'%version%')]",
     "ABOUT URL"                  :    "/content/about",

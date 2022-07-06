@@ -502,9 +502,9 @@ class TestSystemEmail(BaseModelTest):
         instance.message_html = expected['html_body']
         instance.message_text = expected['text_body']
         assert instance.message == expected
-    
+
     def test_send(self, instance, mocker):
         mock_send_email = mocker.patch('notifications.tasks.send_email')
         session = {'access_token': str(uuid4()), 'refresh_token': str(uuid4())}
         instance.send(session)
-        mock_send_email.assert_called_once_with(instance.id, email_type=self.model_class, session=session)
+        mock_send_email.assert_called_once_with(instance.id, email_type=self.model_class.MSG_TYPE, session=session)

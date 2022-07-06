@@ -8,7 +8,7 @@ Force Tags        account
 
 *** Test Cases ***
 1. Can access the account page from dropdown
-    [Tags]
+    [Tags]    smoke
     Log In    ${no perm}    ${password}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
@@ -51,7 +51,7 @@ Force Tags        account
     Verify in Account Page
 
 6. Changing first name and saving maintains that setting
-    [Tags]    C41573
+    [Tags]    C41573    smoke
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
@@ -73,7 +73,7 @@ Force Tags        account
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 7. Changing last name and saving maintains that setting
-    [Tags]    C41573
+    [Tags]    C41573    smoke
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Verify in Account Page
@@ -222,7 +222,7 @@ Force Tags        account
     Press Keys   None    ENTER
 
 15. Language is changeable on the account page
-    [Tags]    C41574
+    [Tags]    C41574    smoke
     Go To    ${url}/account
     Log In    ${no perm}    ${password}    button=None
     Reload Page
@@ -265,7 +265,7 @@ Force Tags        account
     # ...    is_secure=True
     # Delete All Emails
     # Close Mailbox
-    ${random email}=   Get Random Email    ${BASE EMAIL}    extra=sendemail
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    extra=sendemail
     Register And Activate Account    Mark    Hamill    ${random email}    ${password}
     Go to    ${url}/account
     ${subject}=   Set Variable If   '''${LANGUAGE}'''=='''ru_RU'''    Reset your password    Восстановление пароля

@@ -13,14 +13,14 @@ Force Tags        Threaded
 
 2. works at registration page after submit success
     Go To    ${url}/authorize/register
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}
     Register    mark    hamill    ${random email}    ${password}
     Validate Register Success
     Check Log In    button=${LOG IN BTN REGISTER ACCOUNT PAGE}
 
 3. works at registration page after submit with alert error message
     Go To    ${url}/authorize/register
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${EMAIL ALREADY REGISTERED}
     resource.Log In    user=${email}    password=${password}    button=${LOG IN BTN CREATE ACCOUNT PAGE}
@@ -28,7 +28,7 @@ Force Tags        Threaded
 4. works at registration page on account activation success
     [tags]    email
     Go To    ${url}/authorize/register
-    ${random email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    mark    hamill    ${random email}    ${password}
     Activate    ${random email}
     resource.Log In    user=${random email}    password=${password}    button=${LOG IN BTN ACTIVATE ACCOUNT PAGE}    reset=True
@@ -36,7 +36,7 @@ Force Tags        Threaded
 5. works at registration page on account activation error
 # need to raise a defect, on the second time reloading the activation page error should appear account already activated
     [tags]    email
-    ${random email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
+    ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Go To    ${url}/authorize/register
     Register    'mark'    'hamill'    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
@@ -66,7 +66,7 @@ Force Tags        Threaded
 7. Works at restore password page with password input - before submit
     [tags]    email
     ${new password}=    Set Variable    qweasd 1234
-    ${random email}=   Get Random Email    ${BASE EMAIL}    sendemail=${True}
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Go To    ${url}/authorize/register
     Register    mark    hamill    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
@@ -97,7 +97,7 @@ Force Tags        Threaded
 
 8. Works at restore password page with password input - after submit error
     [tags]    email
-    ${random email}=   Get Random Email    ${BASE EMAIL}    sendemail=${True}
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Go To    ${url}/authorize/register
     Register    mark    hamill    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
@@ -129,7 +129,7 @@ Force Tags        Threaded
 
 9. Works at restore password page with password input - after submit success
     [tags]    email
-    ${random email}=   Get Random Email    ${BASE EMAIL}    sendemail=${True}
+    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Go To    ${url}/authorize/register
     Register    mark    hamill    ${random email}    ${password}
     ${link}    Get Email Link    ${random email}    activate
