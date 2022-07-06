@@ -373,7 +373,9 @@ export class NxSystem extends System {
                 this.canMerge = this.userManager.isMine && 'cloudMerge' in capabilities;
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {
-                    this.cloudStorageSystemEnabled = await this.cloudApi.getCloudStorageUsage(this.info.id).then(() => true, () => false);
+                    // Cloud storage backend is currently not ready. Removed for CB-1657
+                    // this.cloudStorageSystemEnabled = await this.cloudApi.getCloudStorageUsage(this.info.id).then(() => true, () => false);
+                    this.cloudStorageSystemEnabled = false;
                 }
                 this.mergeInfo = response.mergeInfo;
 
