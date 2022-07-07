@@ -5,8 +5,9 @@
     <h1
         class="screen-reader-only"
         translate
-        >List of cameras by manufacturer and device type</h1
     >
+        List of cameras by manufacturer and device type
+    </h1>
     <div
         class="row p-3 m-0"
         [style.display]="mobileDetailMode ? 'none' : 'block'"
@@ -28,8 +29,9 @@
             class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2 col-md-7 col-xl-9"
             *ngIf="!camerasTable.length && activeCamera"
             translate
-            >Nothing Found</div
         >
+            Nothing Found
+        </div>
 
         <ng-container *ngIf="camerasTable.length">
             <div
@@ -90,8 +92,9 @@
         class="row px-3 m-0 mb-3 text-placeholder d-flex align-items-center"
         *ngIf="noResult && !activeCamera"
         translate
-        >Nothing Found</div
     >
+        Nothing Found
+    </div>
 
     <div
         class="row px-3 m-0"

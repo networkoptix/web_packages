@@ -2,18 +2,28 @@
     <div class="svg-wrapper">
         <ng-container *ngIf="componentInitialized">
             <ng-container *ngFor="let layer of layers">
-                <div class="svg-layer"
-                    [ngStyle]="{'width': svgProperties.defaultWidth + 'px', 'height':svgProperties.defaultHeight + 'px', 
-                                'transform': 'scale('+ layer.scale +')', 'transition': isSafari?'transform 120ms':null}"
-                    [ngClass]="[(landingService.introAnimationFinished$ | async) === false && (landingService.backgroundGraphicFinishedLoading$ | async)? 'intro-animation-graphic': '']"
+                <div
+                    class="svg-layer"
+                    [ngStyle]="{
+                        width: svgProperties.defaultWidth + 'px',
+                        height: svgProperties.defaultHeight + 'px',
+                        transform: 'scale(' + layer.scale + ')',
+                        transition: isSafari ? 'transform 120ms' : null
+                    }"
+                    [ngClass]="[
+                        (landingService.introAnimationFinished$ | async) === false &&
+                        (landingService.backgroundGraphicFinishedLoading$ | async)
+                            ? 'intro-animation-graphic'
+                            : ''
+                    ]"
                 >
-                    <svg-icon 
+                    <svg-icon
                         [src]="CONFIG.images.dirLandingGraphic + layer.path"
-                        [applyClass]="true">
+                        [applyClass]="true"
+                    >
                     </svg-icon>
                 </div>
             </ng-container>
         </ng-container>
     </div>
 </div>
-

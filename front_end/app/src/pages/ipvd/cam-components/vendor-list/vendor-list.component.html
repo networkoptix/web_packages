@@ -1,6 +1,12 @@
-<nx-pre-loader *ngIf="!vendors" type="page"></nx-pre-loader>
+<nx-pre-loader
+    *ngIf="!vendors"
+    type="page"
+></nx-pre-loader>
 
-<nx-block *ngIf="vendors" id="vendors">
+<nx-block
+    *ngIf="vendors"
+    id="vendors"
+>
     <header>
         <h4>{{ allVendors.length }} <span translate>manufacturers</span></h4>
     </header>
@@ -9,7 +15,9 @@
         <div
             class="mb-2"
             *ngIf="vendors.length !== allVendors.length"
-        >{{ 'ipvdTopXByVolume' | translate:topXByVolume }}</div>
+        >
+            {{ 'ipvdTopXByVolume' | translate: topXByVolume }}
+        </div>
         <div
             class="float-left mr-1 mb-1"
             *ngFor="let vendor of vendors; trackBy: trackItem"
@@ -19,10 +27,10 @@
                 size="large"
                 link="/ipvd"
                 locked
-                [linkParam]="{vendors: vendor.name}"
+                [linkParam]="{ vendors: vendor.name }"
                 [value]="null"
             >
-                {{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
+                {{ vendor.name }} <span *ngIf="debug">({{ vendor.count }})</span>
             </nx-tag>
         </div>
 
@@ -31,18 +39,26 @@
                 class="btn btn-default"
                 #buttonElement
                 (click)="toggleVendorsShown(buttonElement)"
-            >Show All</button>
+            >
+                Show All
+            </button>
         </div>
     </nx-section>
 </nx-block>
 
-<nx-block *ngIf="numCameras" id="cameras">
+<nx-block
+    *ngIf="numCameras"
+    id="cameras"
+>
     <header>
         <h4>{{ numCameras }} <span translate>devices</span></h4>
     </header>
 
     <nx-section>
-        <div class="float-left mr-1 mb-1" *ngFor="let filter of tagFilters">
+        <div
+            class="float-left mr-1 mb-1"
+            *ngFor="let filter of tagFilters"
+        >
             <!-- Tag is being used as a button here, no internal tag state -->
             <nx-tag
                 element="btn"

@@ -1,5 +1,8 @@
 <div class="block-container mt-3 adjusted-height">
-    <div class="row" *ngIf="systemOnline; else offline">
+    <div
+        class="row"
+        *ngIf="systemOnline; else offline"
+    >
         <div class="col-12 col-md-4 col-xl-3">
             <nx-pre-loader *ngIf="!system; else menu"></nx-pre-loader>
             <ng-template #menu>
@@ -9,7 +12,8 @@
                     [items]="availServers"
                     [selected]="selectedServer"
                     (onSelected)="changeSelectedServer($event)"
-                    class="mb-3">
+                    class="mb-3"
+                >
                 </nx-select>
                 <nx-menu [content]="content"></nx-menu>
             </ng-template>
@@ -29,8 +33,8 @@
 
     <ng-template #offline>
         <nx-page-placeholder
-                class="placeholder-section page-placeholder"
-                type="NO_SETTINGS"
+            class="placeholder-section page-placeholder"
+            type="NO_SETTINGS"
         ></nx-page-placeholder>
     </ng-template>
 </div>

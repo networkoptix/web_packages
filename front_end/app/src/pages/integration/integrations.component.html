@@ -1,6 +1,14 @@
 <div class="intergations">
-    <h1 class="screen-reader-only" translate>List of Integrations</h1>
-    <div class="ml-4 mr-4 pt-3" *ngIf="allElements && CONFIG.integration.filter.limitation <= allElements.length">
+    <h1
+        class="screen-reader-only"
+        translate
+    >
+        List of Integrations
+    </h1>
+    <div
+        class="ml-4 mr-4 pt-3"
+        *ngIf="allElements && CONFIG.integration.filter.limitation <= allElements.length"
+    >
         <nx-search
             name="filterModel"
             [ngModel]="filterModel"

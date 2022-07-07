@@ -1,14 +1,22 @@
-<div class="parent-container" >
+<div class="parent-container">
     <div class="mask-wrapper">
-        <div [ngStyle]="{'transform': 'scale('+ scale +')',
-                         'transition': isSafari?'transform 120ms':null}" 
-             class="svg-layer"
-             [ngClass]="{ 'intro-animation': (landingService.introAnimationFinished$ | async) === false && (landingService.backgroundGraphicFinishedLoading$ | async) === true}" 
-            >
+        <div
+            [ngStyle]="{
+                transform: 'scale(' + scale + ')',
+                transition: isSafari ? 'transform 120ms' : null
+            }"
+            class="svg-layer"
+            [ngClass]="{
+                'intro-animation':
+                    (landingService.introAnimationFinished$ | async) === false &&
+                    (landingService.backgroundGraphicFinishedLoading$ | async) === true
+            }"
+        >
             <svg-icon
                 [src]="CONFIG.images.dirLandingGraphic + 'mask.svg'"
                 class="mask"
-                [applyClass]="true">
+                [applyClass]="true"
+            >
             </svg-icon>
         </div>
     </div>

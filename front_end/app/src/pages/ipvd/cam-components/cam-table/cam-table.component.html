@@ -1,16 +1,19 @@
 <div
     class="scroll-wrapper"
     #nxScrollWrapper
-    [ngClass]="{'table-scroll-fixed':tableScrollFixed}"
+    [ngClass]="{ 'table-scroll-fixed': tableScrollFixed }"
     [style.width]="elementWidth"
 >
-    <nx-pre-loader type="page" *ngIf="!pagedItems.length"></nx-pre-loader>
+    <nx-pre-loader
+        type="page"
+        *ngIf="!pagedItems.length"
+    ></nx-pre-loader>
     <div *ngIf="pagedItems.length">
         <div
             class="nx-table-wrapper"
             id="nx-table"
             #nxTable
-            [ngClass]="{'extended': showAnalytics}"
+            [ngClass]="{ extended: showAnalytics }"
         >
             <div class="table-wrapper">
                 <table class="table table-hover nx-table">
@@ -23,15 +26,22 @@
                                 (click)="toggleHeaderSort(header)"
                             >
                                 <div class="caption d-flex">
-                                    <div class="ellipsis" [innerText]="header"></div>
                                     <div
-                                        [ngClass]="{'cam-table-show': !sortOrderASC}"
-                                        [style.visibility]="header == selectedHeader ? 'visible' : 'hidden'"
+                                        class="ellipsis"
+                                        [innerText]="header"
+                                    ></div>
+                                    <div
+                                        [ngClass]="{ 'cam-table-show': !sortOrderASC }"
+                                        [style.visibility]="
+                                            header == selectedHeader ? 'visible' : 'hidden'
+                                        "
                                     >
                                         <div class="sort-dir arrow-flip">
                                             <svg-icon
                                                 nx-add-svg-src
-                                                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                                                [src]="
+                                                    CONFIG.icons.dirTextButtons + 'arrow_expand.svg'
+                                                "
                                             ></svg-icon>
                                         </div>
                                     </div>
@@ -43,11 +53,11 @@
                         <tr class="table-row-spacer"></tr>
                         <tr
                             *ngFor="let item of pagedItems; trackBy: trackPagedItem"
-                            [ngClass]="{'selected': item.sortKey == selectedCamera}"
-                            (mousedown)="setClickedRow(item);"
+                            [ngClass]="{ selected: item.sortKey == selectedCamera }"
+                            (mousedown)="setClickedRow(item)"
                         >
                             <td
-                                *ngFor="let p of showParametersFor(item); let first=first"
+                                *ngFor="let p of showParametersFor(item); let first = first"
                                 class="text-left"
                             >
                                 <a
@@ -58,7 +68,7 @@
                                         camera: item.model
                                     }"
                                 ></a>
-                                <div *ngIf="!isBoolIcon(item[p]) else icon">
+                                <div *ngIf="!isBoolIcon(item[p]); else icon">
                                     {{ item[p] }}
                                 </div>
                                 <ng-template #icon>
@@ -75,7 +85,10 @@
             </div>
 
             <div class="vertical-align ml-0 clearfix">
-                <nav aria-label="Cameras table navigation" class="pagination-nav pt-3 pb-3">
+                <nav
+                    aria-label="Cameras table navigation"
+                    class="pagination-nav pt-3 pb-3"
+                >
                     <nx-paginator
                         [numPages]="pages"
                         [pagesToShow]="pagerMaxSize"
@@ -83,12 +96,10 @@
                     ></nx-paginator>
                 </nav>
 
-
-
                 <div class="csv">
                     <nx-csv-button
                         [data]="csvCameraData"
-                        filename="camera_list_{{ csvFilename | date:'yyyy-MM-dd' }}"
+                        filename="camera_list_{{ csvFilename | date: 'yyyy-MM-dd' }}"
                         [options]="csvOptions"
                     ></nx-csv-button>
                 </div>
@@ -100,10 +111,10 @@
                     *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd"
                     dir="auto"
                 >
-                    <span>{{'ipvdDisclaimer' | translate:disclaimerParams}} </span>
+                    <span>{{ 'ipvdDisclaimer' | translate: disclaimerParams }} </span>
                     <span
                         #ipvdRequest
-                        [innerHTML]="LANG.ipvdFeedback.request() | safe : 'html'"
+                        [innerHTML]="LANG.ipvdFeedback.request() | safe: 'html'"
                     ></span>
                 </p>
                 <button *ngIf="debug">reset</button>
