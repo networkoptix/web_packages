@@ -177,11 +177,11 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
-            "key": "Key"
+            "size": "Grootte",
+            "state": "Status",
+            "system": "Systeem",
+            "expires": "Verloopt",
+            "key": "Sleutel"
         },
         "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "U bekijkt een verouderd rapport."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard bewerken is ingeschakeld",
         "dashboardLocked": "Dashboard is vergrendeld",
@@ -330,7 +331,7 @@
             "actions": {
                 "activate": {
                     "heading": "Activate Cloud Storage",
-                    "action": "Activate",
+                    "action": "Activeer",
                     "success": "Cloud Storage activated successfully!"
                 },
                 "modify": {
@@ -339,13 +340,13 @@
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
+                    "heading": "Cloud-opslag verplaatsen",
+                    "action": "Verplaatsen",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "heading": "Cloud-opslag verwijderen?",
+                    "action": "Verwijder",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -363,11 +364,11 @@
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "Verplaatsen",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "Verwijder",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -454,7 +455,8 @@
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn."
+            "warning": "Er zullen meer dan <strong>{maxServers}</strong> servers in het samengevoegde systeem zijn.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Tweestapsverificatie zal nu afgedwongen worden voor dit systeem.",

@@ -109,12 +109,12 @@
     },
     "activeActions": {
         "resetPassword": "Reset Password",
-        "sendConfirm": "Resend activation link",
+        "sendConfirm": "Reenvía a ligazón de activación",
         "setNewPassword": "Save password",
         "setNewPasswordLabel": "New password"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
+        "loginCloudHeader": "Conéctate a %CLOUD_NAME%",
         "connectHeader": "Connect System to %CLOUD_NAME%",
         "expiredHeader": "Your session has expired",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
@@ -141,7 +141,7 @@
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "Reset Password",
-        "newPassHeader": "Set New Password",
+        "newPassHeader": "Establece unha nova contrasinal",
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "You are viewing an outdated report."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -454,7 +455,8 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -648,7 +650,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Wrong password",
-        "badUsername": "Account not found",
+        "badUsername": "Conta non atopada",
         "notFound": "Not found",
         "ok": "ok",
         "oldPasswordMistmatch": "Current password is incorrect.",
@@ -659,7 +661,7 @@
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "wrongAuthCode": "Code is expired or incorrect",
-        "wrongCode": "Account is already activated or confirmation code is incorrect",
+        "wrongCode": "A conta xa está activada ou o código de confirmación é erróneo",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
         "wrongParameters": "Some parameters on the form are incorrect",
         "licenseFail": "Failed to activate license. Please try again or contact support.",

@@ -177,11 +177,11 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
+            "size": "Størrelse",
+            "state": "Status",
             "system": "System",
-            "expires": "Expires",
-            "key": "Key"
+            "expires": "Udløber",
+            "key": "Nøgle"
         },
         "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "You are viewing an outdated report."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -330,7 +331,7 @@
             "actions": {
                 "activate": {
                     "heading": "Activate Cloud Storage",
-                    "action": "Activate",
+                    "action": "Aktiver",
                     "success": "Cloud Storage activated successfully!"
                 },
                 "modify": {
@@ -339,13 +340,13 @@
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
+                    "heading": "Flyt Cloud Storage",
+                    "action": "Flyt",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "heading": "Slet Cloud Storage?",
+                    "action": "Slet",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -363,11 +364,11 @@
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "Flyt",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "Slet",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -384,7 +385,7 @@
                 "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
+                "title": "Flyt Cloud Storage",
                 "success": "Storage successfully moved",
                 "errorPrefix": "Error moving cloud storage",
                 "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
@@ -454,7 +455,8 @@
             "urlEmpty": "Indtast serveradresse",
             "urlNotValid": "Indtast en gyldig URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",

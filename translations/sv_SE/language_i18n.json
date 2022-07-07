@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(ändra)",
-    ". By continuing to use our site you consent to use our cookies.": ". Genom att fortsätta att använda vår webbplats samtycker du till att använda våra cookies.",
     "1 professional license channel will be used": "En professionell licenskanal kommer att användas",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Ett enkelt sätt att ansluta till, hantera och utöka alla %VMS_NAME% -system.",
     "API Documentation": "API Dokumentation",
@@ -516,7 +515,6 @@
     "Unable to connect to selected system": "Det går inte att ansluta till valt system",
     "Unlimited user session lifetime threatens overall system security": "Obegränsad livstid för användarsessioner hotar systemets övergripande säkerhet",
     "Update interval in milliseconds": "Uppdateringsintervall i millisekunder",
-    "Update them to the": "Uppdatera dem till",
     "Updated": "Uppdaterad",
     "Updating Results...": "Uppdaterar resultat...",
     "Use Shift + Wheel for horizontal scrolling.": "Använd Shift + Wheel för horisontell rullning.",
@@ -536,7 +534,6 @@
     "WARNING": "VARNING",
     "We could not verify the redirect URL.": "Vi kunde inte verifiera omdirigerings-URL.",
     "We recommend to choose another location for it instead of the system partition.": "Vi rekommenderar att du väljer en annan plats för den istället för systempartitionen.",
-    "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences": "Vi använde cookies för att förbättra din upplevelse på vår webbplats. De hjälper oss också att förstå hur vår webbplats används. Ta reda på mer och ställ in dina cookies-preferenser",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Vi rekommenderar att du installerar de senaste versionerna av Google Chrome eller Mozilla Firefox, men du kan använda någon annan modern webbläsare.",
     "We've sent you an email": "Vi har skickat ett mejl till dig",
     "What to do with current analytics data?": "Vad ska göras med aktuell analysdata?",

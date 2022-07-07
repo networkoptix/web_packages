@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Bạn đang xem một báo cáo lỗi thời."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Chỉnh sửa bảng điều khiển được bật",
         "dashboardLocked": "Bảng điều khiển bị khóa",
@@ -454,7 +455,8 @@
             "urlEmpty": "Nhập địa chỉ máy chủ",
             "urlNotValid": "Nhập URL hợp lệ",
             "unknownError": "Một lỗi không xác định đã xảy ra. Làm mới trang và thử lại. Nếu vấn đề vẫn còn, vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
-            "warning": "Sẽ có nhiều hơn <strong>{maxServers}</strong> máy chủ trong Hệ thống được hợp nhất."
+            "warning": "Sẽ có nhiều hơn <strong>{maxServers}</strong> máy chủ trong Hệ thống được hợp nhất.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Từ bây giờ xác thực hai yếu tố sẽ là bắt buộc đối với hệ thống này.",

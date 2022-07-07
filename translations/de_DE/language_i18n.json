@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(ändern)",
-    ". By continuing to use our site you consent to use our cookies.": ". Durch die weitere Nutzung unserer Website erklären Sie sich mit der Verwendung unserer Cookies einverstanden.",
     "1 professional license channel will be used": "Es wird 1 professioneller Lizenzkanal verwendet",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Eine einfache Möglichkeit, sich mit %VMS_NAME% -Systemen zu verbinden, diese zu verwalten und zu erweitern.",
     "API Documentation": "API-Dokumentation",
@@ -516,7 +515,6 @@
     "Unable to connect to selected system": "Verbindung zum ausgewählten System kann nicht hergestellt werden",
     "Unlimited user session lifetime threatens overall system security": "Unbegrenzte Lebensdauer von Benutzersitzungen gefährdet die Sicherheit des gesamten Systems",
     "Update interval in milliseconds": "Aktualisierungsintervall in Millisekunden",
-    "Update them to the": "Aktualisieren Sie sie auf",
     "Updated": "Aktualisiert",
     "Updating Results...": "Ergebnisse aktualisieren...",
     "Use Shift + Wheel for horizontal scrolling.": "Verwenden Sie Shift + Mausrad für horizontales Scrollen.",
@@ -536,7 +534,6 @@
     "WARNING": "WARNUNG",
     "We could not verify the redirect URL.": "Wir konnten die Weiterleitungs-URL nicht verifizieren.",
     "We recommend to choose another location for it instead of the system partition.": "Wir empfehlen, anstelle der Systempartition einen anderen Speicherort zu wählen.",
-    "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Sie helfen uns auch zu verstehen, wie unsere Website genutzt wird. Erfahren Sie mehr und legen Sie Ihre Cookie-Einstellungen fest",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Wir empfehlen die Installation der neuesten Versionen von Google Chrome oder Mozilla Firefox, aber Sie können auch jeden anderen modernen Webbrowser verwenden.",
     "We've sent you an email": "Wir haben Ihnen eine E-Mail geschickt",
     "What to do with current analytics data?": "Was tun mit aktuellen Analyticsdaten?",

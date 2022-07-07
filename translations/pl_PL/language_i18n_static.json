@@ -177,11 +177,11 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
+            "size": "Rozmiar",
+            "state": "Stan",
             "system": "System",
-            "expires": "Expires",
-            "key": "Key"
+            "expires": "Wygasa",
+            "key": "Klucz"
         },
         "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Przeglądasz nieaktualny raport."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Edycja panelu ustawień jest włączona",
         "dashboardLocked": "Pulpit nawigacyjny jest zablokowany",
@@ -329,23 +330,23 @@
             "cameras": "kamery",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
+                    "heading": "Aktywuj przechowywanie w chmurze",
+                    "action": "Aktywuj",
                     "success": "Cloud Storage activated successfully!"
                 },
                 "modify": {
                     "heading": "Modify Cloud Storage",
-                    "action": "Modify",
+                    "action": "Modyfikuj",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
+                    "heading": "Przenieś magazyn w chmurze",
+                    "action": "Przenieś",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "heading": "Usunąć magazyn w chmurze?",
+                    "action": "Usuń",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -454,7 +455,8 @@
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-            "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów."
+            "warning": "W złączonym systemie będzie więcej niż <strong>{maxServers}</strong> serwerów.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Uwierzytelnianie dwuskładnikowe będzie teraz wymuszone w tym systemie.",

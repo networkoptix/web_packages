@@ -177,7 +177,7 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
+            "size": "大小",
             "state": "狀態",
             "system": "系統",
             "expires": "過期",
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "您目前所查看的是舊版報告。"
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -340,7 +341,7 @@
                 },
                 "move": {
                     "heading": "移動雲端儲存裝置",
-                    "action": "Move",
+                    "action": "移動",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
@@ -363,11 +364,11 @@
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "移動",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "刪除",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -454,7 +455,8 @@
             "urlEmpty": "請輸入伺服器位址",
             "urlNotValid": "請輸入有效的 URL",
             "unknownError": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",

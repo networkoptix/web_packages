@@ -177,11 +177,11 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "cloudStorage": {
         "keyTableFields": {
-            "size": "Size",
-            "state": "State",
-            "system": "System",
-            "expires": "Expires",
-            "key": "Key"
+            "size": "Размер",
+            "state": "Состояние",
+            "system": "Система",
+            "expires": "Срок действия",
+            "key": "Ключ"
         },
         "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
     },
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Вы просматриваете устаревший отчет."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Редактирование панели инструментов включено",
         "dashboardLocked": "Панель управления заблокирована",
@@ -341,11 +342,11 @@
                 "move": {
                     "heading": "Переместить облачное хранилище",
                     "action": "Переместить",
-                    "success": "Cloud Storage upgraded successfully!"
+                    "success": "Облачное хранилище успешно обновлено!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "heading": "Удалить облачное хранилище?",
+                    "action": "Удалить",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -359,15 +360,15 @@
             },
             "information": {
                 "update": {
-                    "title": "Modify",
+                    "title": "Изменить",
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "Переместить",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "Удалить",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -454,7 +455,8 @@
             "urlEmpty": "Адрес сервера",
             "urlNotValid": "Введите правильный URL",
             "unknownError": "Неизвестная ошибка. Обновите страницу и повторите попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -485,7 +487,7 @@
             "twoFactor": {
                 "required": "Two-factor authentication is required.",
                 "configure": "You can configure it in your",
-                "accountLink": "account settings",
+                "accountLink": "настройки учетной записи",
                 "codeRequired": "Требуется код"
             }
         },
@@ -523,7 +525,7 @@
             "action": "Имя пользователя",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
-            "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
+            "wizardWarning": "После включения двухфакторной аутентификации вы не сможете войти в {count, plural, =0{# системы} one{# система} few {# системы} many {# системы} other{# системы}} от %VMS_NAME% клиентов и веб-администратора:",
             "unsupportedSystem": "To log in to this system disable \"Ask for verification code on every login with %CLOUD_NAME% account\" in your <a href=\"/account/security\">account settings</a>."
         }
     },
@@ -965,7 +967,7 @@
             "local": "Локальный",
             "usb": "USB",
             "network": "Network, added through OS",
-            "smb": "Network (smb), added through VMS",
+            "smb": "Сеть (smb), добавленная через VMS",
             "cloud": "Облачный"
         },
         "ownerWantsToTransfer": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"

@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Sie sehen einen veralteten Bericht."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Bearbeitung des Dashboards ist aktiviert",
         "dashboardLocked": "Dashboard ist gesperrt",
@@ -454,7 +455,8 @@
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "warning": "Das zusammengeführte System enthält mehr als <strong>{maxServers}</strong> Server."
+            "warning": "Das zusammengeführte System enthält mehr als <strong>{maxServers}</strong> Server.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Die Zwei-Faktor-Authentifizierung wird nun für dieses System erzwungen.",

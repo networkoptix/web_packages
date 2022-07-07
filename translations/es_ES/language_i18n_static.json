@@ -96,7 +96,7 @@
     },
     "account": {
         "account": "Cuenta",
-        "key": "Key",
+        "key": "Llave",
         "accountSavedSuccess": "Su cuenta se ha guardado",
         "accountSettings": "Ajustes de cuenta",
         "activationLinkSent": "Enlace de activación",
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Estás viendo un informe desactualizado."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -329,8 +330,8 @@
             "cameras": "cámaras",
             "actions": {
                 "activate": {
-                    "heading": "Activate Cloud Storage",
-                    "action": "Activate",
+                    "heading": "Activar almacenamiento en la nube",
+                    "action": "Activar",
                     "success": "Cloud Storage activated successfully!"
                 },
                 "modify": {
@@ -339,13 +340,13 @@
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "move": {
-                    "heading": "Move Cloud Storage",
-                    "action": "Move",
+                    "heading": "Mover almacenamiento en la nube",
+                    "action": "Mover",
                     "success": "Cloud Storage upgraded successfully!"
                 },
                 "delete": {
-                    "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "heading": "¿Eliminar almacenamiento en la nube?",
+                    "action": "borrar",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -363,11 +364,11 @@
                     "body": "You can change the current Cloud Storage size in the System using the new key. All recorded data will be saved."
                 },
                 "migrate": {
-                    "title": "Move",
+                    "title": "Mover",
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "borrar",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -454,7 +455,8 @@
             "urlEmpty": "Introduzca la dirección del servidor",
             "urlNotValid": "Introduzca una URL válida",
             "unknownError": "Se ha producido un error desconocido. Actualice la página y vuelva a intentarlo. Si el problema persiste, póngase en contacto con el servicio de asistencia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-            "warning": "Habrá más de <strong>{maxServers}</strong> servidores en el sistema combinado."
+            "warning": "Habrá más de <strong>{maxServers}</strong> servidores en el sistema combinado.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",

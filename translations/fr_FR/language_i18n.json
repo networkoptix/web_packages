@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(changer)",
-    ". By continuing to use our site you consent to use our cookies.": "En continuant à utiliser notre site, vous consentez à utiliser nos cookies.",
     "1 professional license channel will be used": "1 canal de licence professionnel sera utilisé",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Un moyen simple de se connecter, de gérer et d'étendre n'importe quel système %VMS_NAME%.",
     "API Documentation": "Documentation API",
@@ -516,7 +515,6 @@
     "Unable to connect to selected system": "Impossible de se connecter au système sélectionné",
     "Unlimited user session lifetime threatens overall system security": "La durée de vie illimitée de la session utilisateur menace la sécurité globale du système",
     "Update interval in milliseconds": "Intervalle de mise à jour en millisecondes",
-    "Update them to the": "Les mettre à jour vers le",
     "Updated": "Mis à jour",
     "Updating Results...": "Mise à jour des résultats...",
     "Use Shift + Wheel for horizontal scrolling.": "Utilisez Maj + Roue de la souris pour le défilement horizontal.",
@@ -536,7 +534,6 @@
     "WARNING": "ATTENTION",
     "We could not verify the redirect URL.": "Nous n'avons pas pu vérifier l'URL de redirection.",
     "We recommend to choose another location for it instead of the system partition.": "Nous vous recommandons de choisir un autre emplacement à la place de la partition système.",
-    "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences": "Nous avons utilisé des cookies pour améliorer votre expérience sur notre site. Ils nous aident également à comprendre comment notre site est utilisé. En savoir plus et définir vos préférences de cookies",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Nous vous recommandons d'installer les dernières versions de Google Chrome ou Mozilla Firefox, mais vous pouvez utiliser n'importe quel autre navigateur Web moderne.",
     "We've sent you an email": "Nous vous avons envoyé un e-mail",
     "What to do with current analytics data?": "Que faire des données analytiques actuelles?",

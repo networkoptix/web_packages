@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Esteu veient un informe obsolet."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -454,7 +455,8 @@
             "urlEmpty": "Introduïu l'adreça del servidor",
             "urlNotValid": "Introduïu una URL vàlida",
             "unknownError": "S'ha produït un error desconegut. Actualitzeu la pàgina i torneu-ho a intentar. Si el problema continua, poseu-vos en contacte amb el servei de <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suport</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",

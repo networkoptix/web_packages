@@ -96,7 +96,7 @@
     },
     "account": {
         "account": "Konto",
-        "key": "Key",
+        "key": "Nøkkel",
         "accountSavedSuccess": "Din konto er lagret",
         "accountSettings": "Kontoinnstillinger",
         "activationLinkSent": "Aktiveringslink sendt",
@@ -286,6 +286,7 @@
         },
         "viewingOutdatedReport": "Du ser på en utdatert rapport."
     },
+    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
     "dashboard": {
         "dashboardEditEnabled": "Dashboard editing is enabled",
         "dashboardLocked": "Dashboard is locked",
@@ -293,7 +294,7 @@
         "unlockToMove": "Unlock dashboard to move widgets"
     },
     "devConsole": {
-        "create": "Create"
+        "create": "Opprett"
     },
     "dialogs": {
         "twoFa": {
@@ -411,7 +412,7 @@
             "checking": "Kontrollerer...",
             "cloud": "Cloud",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
-            "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "connectToCloud": "Koble til systemet du ønsker å slå sammen med dette til <strong>%CLOUD_NAME%</strong> eller slå sammen lokalt med <strong>%VMS_NAME%</strong>-klienten.",
             "failedToFindAnySystemHeader": "Kunne ikke finne noe system å slå sammen med",
             "failedToFindAnySystem": "Sørg for at du har eierrollen i Clouden du vil slå sammen med. Eller at systemet du ønsker å slå sammen med er tilgjengelig over det lokale nettverket til gjeldende system.",
             "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
@@ -454,7 +455,8 @@
             "urlEmpty": "Skriv inn serveradressen",
             "urlNotValid": "Angi gyldig URL",
             "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{maxServers}</strong> servers in the merged System.",
+            "update": "Update them to the&nbsp; | latest build |"
         },
         "message": {
             "system2faEnabled": "Two-factor authentication will now be forced for this system.",
@@ -483,7 +485,7 @@
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             },
             "twoFactor": {
-                "required": "Two-factor authentication is required.",
+                "required": "Tofaktorautentisering er nødvendig.",
                 "configure": "You can configure it in your",
                 "accountLink": "account settings",
                 "codeRequired": "Code is required"
@@ -603,14 +605,14 @@
         "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "DUPLICATE_MEDIASERVER_FOUND": "Noen server lister som eksisterende i begge systemene - i den valgte og i den nåværende.<br>Fjern offline og inkompatible servere fra hvert system, og prøv igjen.",
         "EmailAlreadyExists": "Denne e-posten er allerede registrert",
-        "FAIL": "System <strong>{failedSystem}</strong> is offline.",
-        "Connection timed out": "System <strong>{failedSystem}</strong> is offline.",
+        "FAIL": "System <strong>{failedSystem}</strong> er frakoblet.",
+        "Connection timed out": "System <strong>{failedSystem}</strong> er frakoblet.",
         "Bad Gateway": "System <strong>{failedSystem}</strong> is currently unreachable.<br>Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the {downloadHTML}.",
-        "This authorization method is forbidden. Please contact your system administrator.": "This authorization method is forbidden. Please contact your system administrator.",
-        "This user does not exist.": "This user does not exist.",
+        "This authorization method is forbidden. Please contact your system administrator.": "Denne autorisasjonsmetoden er forbudt. Ta kontakt med systemadministratoren din.",
+        "This user does not exist.": "Denne brukeren eksisterer ikke.",
         "The user is disabled. Please contact your system administrator.": "The user is disabled. Please contact your system administrator.",
-        "This user has been disabled by a system administrator.": "This user has been disabled by a system administrator.",
+        "This user has been disabled by a system administrator.": "Denne brukeren har blitt deaktivert av en systemadministrator.",
         "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
         "fail": "{failedSystem} is inaccessible.",
@@ -645,8 +647,8 @@
         "failedToAccessSystem": "Ingen system kan nås via denne lenken. Dette kan skje når et system har blitt koblet fra %CLOUD_NAME%, tilgang til dette systemet er tilbakekalt, systemet i lenken ikke eksisterer, eller hvis du er logget inn på feil konto.",
         "failedToAccessCamera": "No camera can be accessed by this link.",
         "forbidden": "Du har ikke tillatelser til å utføre denne handlingen",
-        "lostConnection": "Connection to {systemName} lost",
-        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
+        "lostConnection": "Tilkoblingen til {systemName} er tapt",
+        "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> er frakoblet.",
         "notAuthorized": "Feil passord",
         "badUsername": "Konto ikke funnet",
         "notFound": "Ikke funnet",
@@ -846,7 +848,7 @@
         },
         "finishingMerge": "Ferdigstiller systemsammenslåing",
         "integration": {
-            "accept": "Accept",
+            "accept": "Godta",
             "reject": "Reject",
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
             "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon.",

@@ -1,7 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(thay đổi)",
-    ". By continuing to use our site you consent to use our cookies.": ". Bằng cách tiếp tục sử dụng trang web của chúng tôi, bạn đồng ý sử dụng cookie của chúng tôi.",
     "1 professional license channel will be used": "1 kênh giấy phép chuyên nghiệp sẽ được sử dụng",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Một cách đơn giản để kết nối, quản lý và mở rộng bất kỳ Hệ thống %VMS_NAME% nào.",
     "API Documentation": "Tài liệu API",
@@ -516,7 +515,6 @@
     "Unable to connect to selected system": "Không thể kết nối với hệ thống đã chọn",
     "Unlimited user session lifetime threatens overall system security": "Thời gian phiên đăng nhập của người dùng không giới hạn đe dọa bảo mật tổng thể của hệ thống",
     "Update interval in milliseconds": "Cập nhật khoảng thời gian tính bằng mili giây",
-    "Update them to the": "Cập nhật chúng lên",
     "Updated": "Được cập nhật",
     "Updating Results...": "Đang cập nhật kết quả...",
     "Use Shift + Wheel for horizontal scrolling.": "Sử dụng Shift + Wheel để cuộn ngang.",
@@ -536,7 +534,6 @@
     "WARNING": "CẢNH BÁO",
     "We could not verify the redirect URL.": "Chúng tôi không thể xác minh URL chuyển hướng.",
     "We recommend to choose another location for it instead of the system partition.": "Chúng tôi khuyến nghị chọn một vị trí khác thay vì phân vùng hệ thống.",
-    "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences": "Chúng tôi sử dụng cookie để cải thiện trải nghiệm của bạn trên trang web của chúng tôi. Chúng cũng giúp chúng tôi hiểu cách trang web của chúng tôi đang được sử dụng. Tìm hiểu thêm và đặt tùy chọn cookie của bạn",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Chúng tôi khuyên bạn nên cài đặt các phiên bản mới nhất của Google Chrome hoặc Mozilla Firefox, bạn cũng có thể sử dụng những trình duyệt web khác.",
     "We've sent you an email": "Chúng tôi đã gửi email cho bạn",
     "What to do with current analytics data?": "Cần làm gì với dữ liệu phân tích hiện tại?",
