@@ -5,8 +5,8 @@
 :host {
     .support-footer {
         overflow       : hidden;
-        background     : var(--alt-body-bg);
-        color          : var(--body-text-color);
+        background     : var(--card-support-bg);
+        color          : var(--card-support-color);
         margin-top     : 88px;
         padding-top    : 48px;
         display        : flex;
@@ -45,9 +45,10 @@
         width           : 100%;
         margin          : 16px 0 0 0;
         flex-grow       : 1;
+        background     : var(--card-support-bg);
 
         @include bootstrap.media-breakpoint-down(sm) {
-            background : var(--alt-body-bg) !important;
+            background : var(--card-support-bg) !important;
         }
 
         &:before, &:after {
@@ -65,6 +66,12 @@
 
         &:after {
             margin-left : -64px;
+        }
+        
+        .left-image, .right-image {
+            svg-icon svg .about-svg {
+                fill : var(--card-support-svg-elem-bg);
+            }
         }
 
         .support-block {
@@ -89,6 +96,10 @@
 
             ::ng-deep .support-body {
                 line-height : 1.23;
+                
+                p {
+                    color : var(--card-support-color);
+                }
 
                 a {
                     text-decoration : none;
@@ -102,15 +113,25 @@
                         max-width      : unset !important;
                         margin         : 40px auto 31px;
                         border-radius  : 5px !important;
-                        box-shadow     : var(--btn-default-shadow) !important;
-                        background     : $light1;
-
-                        &:hover {
-                            box-shadow : var(--btn-default-hover-shadow) !important;
+                        color            : var(--btn-primary-color) !important;
+                        background-color : var(--btn-primary-bg) !important;
+                        box-shadow       : var(--btn-primary-shadow);
+                    
+                        &:hover:not([disabled]):not(.disabled) {
+                            background-color : var(--btn-primary-hover-bg) !important;
+                            box-shadow       : var(--btn-primary-hover-shadow);
                         }
-
-                        &:active {
-                            box-shadow : var(--btn-default-active-shadow) !important;
+                    
+                        &:focus,
+                        &.focus {
+                    
+                        }
+                    
+                        &:active,
+                        &.active {
+                            color            : var(--btn-primary-active-color) !important;
+                            background-color : var(--btn-primary-active-bg) !important;
+                            box-shadow       : var(--btn-primary-active-shadow) !important;
                         }
                     }
                 }
@@ -123,7 +144,7 @@
                 top              : 0;
                 bottom           : -4px;
                 width            : calc(50% + 64px);
-                background       : var(--alt-body-bg);
+                background       : var(--card-support-bg);
                 transform-origin : bottom;
             }
 

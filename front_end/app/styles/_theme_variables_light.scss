@@ -441,7 +441,11 @@ html {
     --card-simple-default-bg : #{$red2};
     --card-simple-default-color : #{$dark9};
     --card-simple-default-border-color : #{$red1};
-
+    
+    --card-support-bg : #{$light1};
+    --card-support-color : #{$dark9};
+    --card-support-svg-elem-bg : #{$light1};
+    
     --card-capability-header-bg : #{$dark11};
     --card-capability-intro-color : #{$light10};
     --card-capability-icon : #{$brand-core};
