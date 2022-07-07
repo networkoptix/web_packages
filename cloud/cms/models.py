@@ -6,6 +6,7 @@ import re
 import sys
 from typing import Any, List
 import uuid
+from contextlib import suppress
 from itertools import chain
 from functools import reduce
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -294,7 +295,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
     return data
 
 
-def check_user_menu_permissions(nodes, user):
+def check_user_menu_permissions(nodes, user, overrides=None):
     for i in reversed(range(len(nodes))):
         node = nodes[i]
         condition = node.pop('condition', None)
@@ -302,7 +303,7 @@ def check_user_menu_permissions(nodes, user):
         beta_permission = Customization.BETA_PERMISSION_MAP.get(
             condition, None)
         if feature_flag := (FLAGS.value_to_key(condition) or SWITCHES.value_to_key(condition)):
-            if not feature_flag_is_active(feature_flag, user):
+            if not feature_flag_is_active(feature_flag, user, overrides):
                 del nodes[i]
                 continue
         elif not condition_met and condition and \
@@ -320,12 +321,12 @@ def check_user_menu_permissions(nodes, user):
                 break
         else:
             node.pop('permissions', None)
-            check_user_menu_permissions(node.get('nodes', []), user)
+            check_user_menu_permissions(node.get('nodes', []), user, overrides)
 
-def feature_flag_is_active(feature_flag, user):
+def feature_flag_is_active(feature_flag, user, overrides=None):
     flag = getattr(FLAGS, feature_flag, None)
     switch = getattr(SWITCHES, feature_flag, None)
-    return flag and flag_is_active_for_user(user, flag) or switch and switch_is_active(switch)
+    return flag and flag_is_active_for_user(user, flag, overrides) or switch and switch_is_active(switch)
 
 
 def cached_doc_menu_map(customization_name, refresh=False):
@@ -343,7 +344,9 @@ def cached_doc_menu_map(customization_name, refresh=False):
     return menu_map
 
 
-def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
+def get_cached_menu(customization_name, name=None, user=None, menu_type=None, request=None):
+    overrides = {header: value for header, value in request.META.items() if header.startswith('HTTP_FEATURE_')} if request else {}
+
     menu_customization = MENU_CACHE[customization_name]
 
     if menu_customization is None:
@@ -356,7 +359,7 @@ def get_cached_menu(customization_name, name=None, user=None, menu_type=None):
             MENU_CACHE[customization_name] = menu_customization = {**menu_customization, **generated}
 
     for menu_name, menu in menu_customization.items():
-        check_user_menu_permissions(menu['nodes'], user)
+        check_user_menu_permissions(menu['nodes'], user, overrides)
 
     if menu_type:
         menu_customization = {name: menu for name, menu in menu_customization.items(
@@ -3234,9 +3237,22 @@ class Flag(AbstractUserFlag):
         flag_cache = get_cache()
         flag_cache.delete_many(keys)
 
-    def is_active_for_user(self, user, customization_name=settings.CUSTOMIZATION):
-        is_active = super(AbstractUserFlag, self).is_active_for_user(user)
-        if is_active:
+    def get_json_key(self):
+        return FLAGS.json_key(FLAGS.value_to_key(self.name))
+
+    def is_active(self, request):
+        if override := request.META.get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
+            with suppress(ValueError):
+                return bool(int(override))
+
+        return super(AbstractUserFlag, self).is_active(request)
+
+    def is_active_for_user(self, user, overrides=None, customization_name=settings.CUSTOMIZATION):
+        if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
+            with suppress(ValueError):
+                return bool(int(override))
+
+        if is_active := super(AbstractUserFlag, self).is_active_for_user(user):
             return is_active
 
         user_ids = self._get_user_ids()
@@ -3244,8 +3260,7 @@ class Flag(AbstractUserFlag):
             return True
 
         if hasattr(user, 'groups'):
-            group_ids = self._get_group_ids()
-            if group_ids:
+            if group_ids := self._get_group_ids():
                 user_groups = set(user.groups.filter(
                     Q(options__all_assets=True, usergroupstoassettype__asset_type__type=AssetType.ASSET_TYPES.cloud_portal) |
                     Q(usergroupstoassetpermissions__asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal,

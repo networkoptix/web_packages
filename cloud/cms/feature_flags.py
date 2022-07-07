@@ -114,9 +114,9 @@ def get_feature_flag_error(flag, user):
     return f'Feature {flag} is currently not enabled for user {user}'
 
 
-def flag_is_active_for_user(user, flag_name):
+def flag_is_active_for_user(user, flag_name, overrides=None):
     flag = get_waffle_flag_model().get(flag_name)
-    return flag.is_active_for_user(user)
+    return flag.is_active_for_user(user, overrides)
 
 
 def check_feature_flag(flags, custom_validator=None, error_class=PermissionError):

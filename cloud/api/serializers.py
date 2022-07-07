@@ -201,7 +201,7 @@ class SettingsSerializer(CustomizationCacheSerializer):
     def extend_settings(self, request):
         from api.views.utils import get_feature_flags
         return {
-            'menus': get_cached_menu(settings.CUSTOMIZATION, user=request.user),
+            'menus': get_cached_menu(settings.CUSTOMIZATION, user=request.user, request=request),
             'docMenuMap': cached_doc_menu_map(customization_name=settings.CUSTOMIZATION),
             'licenseTypes': LicenseType.get_license_types(),
             'featureFlags': get_feature_flags(request)

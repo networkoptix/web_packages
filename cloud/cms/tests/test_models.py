@@ -254,7 +254,7 @@ class TestModelFunctions:
         baker.make(MenuNode, name=f'user1 node', enabled=[self.customization], available=[
                        self.customization], condition=condition, parent_menu=self.menu)
         mocker.patch('cms.feature_flags.FLAGS.value_to_key', lambda node_condition: node_condition == condition)
-        mocker.patch('cms.models.feature_flag_is_active', lambda flag, user: flag and user == user_one)
+        mocker.patch('cms.models.feature_flag_is_active', lambda flag, user, _: flag and user == user_one)
         customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
 
         # user_one gets an extra node because they have permission
