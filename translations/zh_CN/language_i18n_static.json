@@ -142,7 +142,7 @@
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "重置密码",
         "newPassHeader": "设定新密码",
-        "newPassConfirmText": "Password is set!",
+        "newPassConfirmText": "密码已设置!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
         "confirmHeader": "系统连接到 %CLOUD_NAME%!",

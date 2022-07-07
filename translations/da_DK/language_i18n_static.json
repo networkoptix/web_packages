@@ -330,7 +330,7 @@
                 "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
+                "title": "Flyt Cloud Storage",
                 "success": "Storage successfully moved",
                 "errorPrefix": "Error moving cloud storage",
                 "notFound": "Storage was not found. Storage might have been moved or deleted by another user",

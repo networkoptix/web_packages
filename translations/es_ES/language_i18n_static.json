@@ -96,7 +96,7 @@
     },
     "account": {
         "account": "Cuenta",
-        "key": "Key",
+        "key": "Llave",
         "accountSavedSuccess": "Su cuenta se ha guardado",
         "accountSettings": "Ajustes de cuenta",
         "activationLinkSent": "Enlace de activación",
