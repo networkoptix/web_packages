@@ -1925,7 +1925,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.180": {
+        "electron-to-chromium@1.4.181": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -8160,6 +8160,12 @@
             "path": "cloud_portal/front_end/node_modules/cli-width",
             "licenseFile": "cloud_portal/front_end/node_modules/cli-width/LICENSE"
         },
+        "clipboard@2.0.11": {
+            "licenses": "MIT",
+            "repository": "https://github.com/zenorocha/clipboard.js",
+            "path": "cloud_portal/front_end/node_modules/clipboard",
+            "licenseFile": "cloud_portal/front_end/node_modules/clipboard/LICENSE"
+        },
         "cliui@7.0.4": {
             "licenses": "ISC",
             "repository": "https://github.com/yargs/cliui",
@@ -8628,6 +8634,14 @@
             "path": "cloud_portal/front_end/node_modules/d3-array",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-array/LICENSE"
         },
+        "d3-axis@3.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-axis",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-axis",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-axis/LICENSE"
+        },
         "d3-brush@2.1.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-brush",
@@ -8636,6 +8650,22 @@
             "path": "cloud_portal/front_end/node_modules/d3-brush",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-brush/LICENSE"
         },
+        "d3-chord@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-chord",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-chord",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-chord/LICENSE"
+        },
+        "d3-collection@1.0.7": {
+            "licenses": "BSD-3-Clause",
+            "repository": "https://github.com/d3/d3-collection",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-collection",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-collection/LICENSE"
+        },
         "d3-color@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-color",
@@ -8643,6 +8673,22 @@
             "url": "http://bost.ocks.org/mike",
             "path": "cloud_portal/front_end/node_modules/d3-color",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-color/LICENSE"
+        },
+        "d3-contour@4.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-contour",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-contour",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-contour/LICENSE"
+        },
+        "d3-delaunay@6.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-delaunay",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-delaunay",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-delaunay/LICENSE"
         },
         "d3-dispatch@2.0.0": {
             "licenses": "BSD-3-Clause",
@@ -8660,6 +8706,14 @@
             "path": "cloud_portal/front_end/node_modules/d3-drag",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-drag/LICENSE"
         },
+        "d3-dsv@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-dsv",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-dsv",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-dsv/LICENSE"
+        },
         "d3-ease@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-ease",
@@ -8668,6 +8722,22 @@
             "path": "cloud_portal/front_end/node_modules/d3-ease",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-ease/LICENSE"
         },
+        "d3-fetch@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-fetch",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-fetch",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-fetch/LICENSE"
+        },
+        "d3-force@3.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-force",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-force",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-force/LICENSE"
+        },
         "d3-format@2.0.0": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/d3/d3-format",
@@ -8675,6 +8745,14 @@
             "url": "http://bost.ocks.org/mike",
             "path": "cloud_portal/front_end/node_modules/d3-format",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-format/LICENSE"
+        },
+        "d3-geo@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-geo",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-geo",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-geo/LICENSE"
         },
         "d3-hierarchy@2.0.0": {
             "licenses": "BSD-3-Clause",
@@ -8699,6 +8777,38 @@
             "url": "http://bost.ocks.org/mike",
             "path": "cloud_portal/front_end/node_modules/d3-path",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-path/LICENSE"
+        },
+        "d3-polygon@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-polygon",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-polygon",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-polygon/LICENSE"
+        },
+        "d3-quadtree@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-quadtree",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-quadtree",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-quadtree/LICENSE"
+        },
+        "d3-random@3.0.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-random",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-random",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-random/LICENSE"
+        },
+        "d3-scale-chromatic@3.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-scale-chromatic",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-scale-chromatic",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-scale-chromatic/LICENSE"
         },
         "d3-scale@3.3.0": {
             "licenses": "BSD-3-Clause",
@@ -8756,6 +8866,30 @@
             "path": "cloud_portal/front_end/node_modules/d3-transition",
             "licenseFile": "cloud_portal/front_end/node_modules/d3-transition/LICENSE"
         },
+        "d3-voronoi@1.1.4": {
+            "licenses": "BSD-3-Clause",
+            "repository": "https://github.com/d3/d3-voronoi",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-voronoi",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-voronoi/LICENSE"
+        },
+        "d3-zoom@3.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3-zoom",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3-zoom",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3-zoom/LICENSE"
+        },
+        "d3@7.6.1": {
+            "licenses": "ISC",
+            "repository": "https://github.com/d3/d3",
+            "publisher": "Mike Bostock",
+            "url": "https://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/d3",
+            "licenseFile": "cloud_portal/front_end/node_modules/d3/LICENSE"
+        },
         "d@1.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/medikoo/d",
@@ -8764,6 +8898,22 @@
             "url": "http://www.medikoo.com/",
             "path": "cloud_portal/front_end/node_modules/d",
             "licenseFile": "cloud_portal/front_end/node_modules/d/LICENSE"
+        },
+        "dagre-d3@0.6.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/dagrejs/dagre-d3",
+            "publisher": "Chris Pettitt",
+            "email": "chris@samsarin.com",
+            "path": "cloud_portal/front_end/node_modules/dagre-d3",
+            "licenseFile": "cloud_portal/front_end/node_modules/dagre-d3/LICENSE"
+        },
+        "dagre@0.8.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/dagrejs/dagre",
+            "publisher": "Chris Pettitt",
+            "email": "cpettitt@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/dagre",
+            "licenseFile": "cloud_portal/front_end/node_modules/dagre/LICENSE"
         },
         "dashdash@1.14.1": {
             "licenses": "MIT",
@@ -8879,6 +9029,13 @@
             "path": "cloud_portal/front_end/node_modules/del",
             "licenseFile": "cloud_portal/front_end/node_modules/del/license"
         },
+        "delaunator@5.0.0": {
+            "licenses": "ISC",
+            "repository": "https://github.com/mapbox/delaunator",
+            "publisher": "Vladimir Agafonkin",
+            "path": "cloud_portal/front_end/node_modules/delaunator",
+            "licenseFile": "cloud_portal/front_end/node_modules/delaunator/LICENSE"
+        },
         "delay@5.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/sindresorhus/delay",
@@ -8896,6 +9053,12 @@
             "url": "http://debuggable.com/",
             "path": "cloud_portal/front_end/node_modules/delayed-stream",
             "licenseFile": "cloud_portal/front_end/node_modules/delayed-stream/License"
+        },
+        "delegate@3.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/zenorocha/delegate",
+            "path": "cloud_portal/front_end/node_modules/delegate",
+            "licenseFile": "cloud_portal/front_end/node_modules/delegate/readme.md"
         },
         "delegates@1.0.0": {
             "licenses": "MIT",
@@ -10109,11 +10272,25 @@
             "path": "cloud_portal/front_end/node_modules/globby",
             "licenseFile": "cloud_portal/front_end/node_modules/globby/license"
         },
+        "good-listener@1.2.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/zenorocha/good-listener",
+            "path": "cloud_portal/front_end/node_modules/good-listener",
+            "licenseFile": "cloud_portal/front_end/node_modules/good-listener/readme.md"
+        },
         "graceful-fs@4.2.10": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/node-graceful-fs",
             "path": "cloud_portal/front_end/node_modules/graceful-fs",
             "licenseFile": "cloud_portal/front_end/node_modules/graceful-fs/LICENSE"
+        },
+        "graphlib@2.1.8": {
+            "licenses": "MIT",
+            "repository": "https://github.com/dagrejs/graphlib",
+            "publisher": "Chris Pettitt",
+            "email": "cpettitt@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/graphlib",
+            "licenseFile": "cloud_portal/front_end/node_modules/graphlib/LICENSE"
         },
         "graphql@0.11.7": {
             "licenses": "MIT",
@@ -11336,7 +11513,7 @@
             "path": "cloud_portal/front_end/node_modules/karma",
             "licenseFile": "cloud_portal/front_end/node_modules/karma/LICENSE"
         },
-        "katex@0.15.6": {
+        "katex@0.16.0": {
             "licenses": "MIT",
             "repository": "https://github.com/KaTeX/KaTeX",
             "path": "cloud_portal/front_end/node_modules/katex",
@@ -11349,6 +11526,12 @@
             "email": "secoif@gmail.com",
             "path": "cloud_portal/front_end/node_modules/keycode",
             "licenseFile": "cloud_portal/front_end/node_modules/keycode/LICENSE"
+        },
+        "khroma@2.0.0": {
+            "licenses": "MIT*",
+            "repository": "https://github.com/fabiospampinato/khroma",
+            "path": "cloud_portal/front_end/node_modules/khroma",
+            "licenseFile": "cloud_portal/front_end/node_modules/khroma/license"
         },
         "kind-of@6.0.3": {
             "licenses": "MIT",
@@ -11735,6 +11918,13 @@
             "path": "cloud_portal/front_end/node_modules/merge2",
             "licenseFile": "cloud_portal/front_end/node_modules/merge2/LICENSE"
         },
+        "mermaid@9.1.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/knsv/mermaid",
+            "publisher": "Knut Sveidqvist",
+            "path": "cloud_portal/front_end/node_modules/mermaid",
+            "licenseFile": "cloud_portal/front_end/node_modules/mermaid/LICENSE"
+        },
         "messageformat-formatters@2.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/messageformat/messageformat",
@@ -11913,6 +12103,13 @@
             "path": "cloud_portal/front_end/node_modules/mkdirp",
             "licenseFile": "cloud_portal/front_end/node_modules/mkdirp/LICENSE"
         },
+        "moment-mini@2.24.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ksloan/moment-mini",
+            "publisher": "Tim Wood, Iskren Chernev, Moment.js contributors",
+            "path": "cloud_portal/front_end/node_modules/moment-mini",
+            "licenseFile": "cloud_portal/front_end/node_modules/moment-mini/README.md"
+        },
         "moment@2.29.3": {
             "licenses": "MIT",
             "repository": "https://github.com/moment/moment",
@@ -12054,14 +12251,14 @@
             "path": "cloud_portal/front_end/node_modules/ngx-device-detector",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-device-detector/README.md"
         },
-        "ngx-file-drop@13.0.0": {
+        "ngx-file-drop@14.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/georgipeltekov/ngx-file-drop",
             "publisher": "Georgi Peltekov",
             "path": "cloud_portal/front_end/node_modules/ngx-file-drop",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-file-drop/README.md"
         },
-        "ngx-markdown@13.1.0": {
+        "ngx-markdown@14.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/jfcere/ngx-markdown",
             "publisher": "Jean-Francois Cere",
@@ -12076,13 +12273,10 @@
             "path": "cloud_portal/front_end/node_modules/ngx-mask",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-mask/LICENSE"
         },
-        "ngx-quicklink@0.2.7": {
-            "licenses": "MIT",
-            "repository": "https://github.com/mgechev/ngx-quicklink",
-            "publisher": "Minko Gechev",
-            "email": "mgechev@gmail.com",
+        "ngx-quicklink@0.3.0": {
+            "licenses": "MIT*",
             "path": "cloud_portal/front_end/node_modules/ngx-quicklink",
-            "licenseFile": "cloud_portal/front_end/node_modules/ngx-quicklink/LICENSE"
+            "licenseFile": "cloud_portal/front_end/node_modules/ngx-quicklink/README.md"
         },
         "ngx-translate-cut@2.0.0": {
             "licenses": "MIT",
@@ -13707,6 +13901,13 @@
             "path": "cloud_portal/front_end/node_modules/rimraf",
             "licenseFile": "cloud_portal/front_end/node_modules/rimraf/LICENSE"
         },
+        "robust-predicates@3.0.1": {
+            "licenses": "Unlicense",
+            "repository": "https://github.com/mourner/robust-predicates",
+            "publisher": "Vladimir Agafonkin",
+            "path": "cloud_portal/front_end/node_modules/robust-predicates",
+            "licenseFile": "cloud_portal/front_end/node_modules/robust-predicates/LICENSE"
+        },
         "rsvp@4.8.5": {
             "licenses": "MIT",
             "repository": "https://github.com/tildeio/rsvp.js",
@@ -13738,6 +13939,14 @@
             "email": "me@mmalecki.com",
             "path": "cloud_portal/front_end/node_modules/rust-result",
             "licenseFile": "cloud_portal/front_end/node_modules/rust-result/LICENSE"
+        },
+        "rw@1.3.3": {
+            "licenses": "BSD-3-Clause",
+            "repository": "https://github.com/mbostock/rw",
+            "publisher": "Mike Bostock",
+            "url": "http://bost.ocks.org/mike",
+            "path": "cloud_portal/front_end/node_modules/rw",
+            "licenseFile": "cloud_portal/front_end/node_modules/rw/LICENSE"
         },
         "rxfire@6.0.3": {
             "licenses": "Apache-2.0",
@@ -13861,6 +14070,12 @@
             "email": "fedor@indutny.com",
             "path": "cloud_portal/front_end/node_modules/select-hose",
             "licenseFile": "cloud_portal/front_end/node_modules/select-hose/README.md"
+        },
+        "select@1.1.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/zenorocha/select",
+            "path": "cloud_portal/front_end/node_modules/select",
+            "licenseFile": "cloud_portal/front_end/node_modules/select/readme.md"
         },
         "selenium-webdriver@4.1.2": {
             "licenses": "Apache-2.0",
@@ -14367,6 +14582,14 @@
             "path": "cloud_portal/front_end/node_modules/strip-json-comments",
             "licenseFile": "cloud_portal/front_end/node_modules/strip-json-comments/license"
         },
+        "stylis@4.1.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/thysultan/stylis.js",
+            "publisher": "Sultan Tarimo",
+            "email": "sultantarimo@me.com",
+            "path": "cloud_portal/front_end/node_modules/stylis",
+            "licenseFile": "cloud_portal/front_end/node_modules/stylis/LICENSE"
+        },
         "stylus-loader@6.2.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/stylus-loader",
@@ -14546,6 +14769,13 @@
             "url": "http://www.medikoo.com/",
             "path": "cloud_portal/front_end/node_modules/timers-ext",
             "licenseFile": "cloud_portal/front_end/node_modules/timers-ext/LICENSE"
+        },
+        "tiny-emitter@2.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/scottcorgan/tiny-emitter",
+            "publisher": "Scott Corgan",
+            "path": "cloud_portal/front_end/node_modules/tiny-emitter",
+            "licenseFile": "cloud_portal/front_end/node_modules/tiny-emitter/LICENSE"
         },
         "tiny-inflate@1.0.3": {
             "licenses": "MIT",
