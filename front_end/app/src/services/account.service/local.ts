@@ -141,7 +141,8 @@ export class LocalAccount extends BaseAccount {
     requireLogin(): Promise<string | boolean | Account> {
         return this.get()
             .then(account => {
-                return account || !this.loginDialogActive && this.showLoginDialog();
+                !account && !this.loginDialogActive && this.showLoginDialog();
+                return account;
             }).catch(() => {
                 if (!this.loginDialogActive) {
                     return this.showLoginDialog();
