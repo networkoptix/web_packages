@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
@@ -30,6 +31,7 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
     }
 
     constructor(
+        public selection: TimelineSelectionService,
         public playback: PlaybackService,
         public vms: VideoManagementSystemService
     ) {
@@ -50,6 +52,7 @@ export class PlaybackStateIndicatorComponent implements OnInit, OnDestroy {
 
     public handleLiveClick(): void {
         if (this.playback.canPlayLive && this.enabled) {
+            this.selection.reset();
             this.playback.playLive();
         }
     }
