@@ -100,7 +100,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
                         const series = Array.from({ length: 50 }, (_, i) => { return { name: i + 1, value: 0 }; });
                         this.multi.push({
                             name: data.description,
-                            series: series
+                            series
                         });
                         this.multi[this.multi.length - 1].series.push({
                             name: response.reply.uptimeMs,

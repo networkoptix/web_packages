@@ -20,7 +20,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
-        key: key
+        key
     });
     el.dispatchEvent(event);
 }

@@ -79,7 +79,7 @@ export class ConnectCloudModalContent implements OnInit {
         headers = headers.set('Authorization', `Bearer ${accessToken}`);
         return this.http.post<t.CloudResponse>(
             this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect',
-            { name: systemName, email: email },
+            { name: systemName, email },
             { headers }
         );
     }

@@ -43,7 +43,7 @@ export function createCameraNotSelectedState(
     return {
         mode: VMS_MODE.CAMERA_NOT_SELECTED,
         systemId,
-        mediaServers: mediaServers,
+        mediaServers,
         cameras: (mediaServers || []).reduce((acc, ms) => {
             ms.cameras.forEach(c => {
                 acc[c.id] = c;

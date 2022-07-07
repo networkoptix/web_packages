@@ -126,7 +126,7 @@ export class NxBootstrapProvider {
                 menu[name] = {
                     title: name,
                     description: '',
-                    nodes: nodes
+                    nodes
                 };
                 return menu;
             }, {});

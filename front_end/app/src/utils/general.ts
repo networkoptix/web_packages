@@ -205,7 +205,7 @@ export function addPseudoAnchor(
 ): void {
     const newTarget: PseudoAnchorTarget = {
         id: `${target.id}`,
-        target: target,
+        target,
         eventType,
         handler: event => handler(template, event.target as HTMLElement)
     };

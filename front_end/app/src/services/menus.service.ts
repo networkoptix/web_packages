@@ -65,8 +65,8 @@ export class NxMenusService {
         this.menusStructure = Object.entries(this.CONFIG.dynamicMenus || {}).reduce(
             (newMenu, [name, { title, description, nodes }]) => {
                 newMenu[name] = {
-                    title: title,
-                    description: description,
+                    title,
+                    description,
                     nodes: nodes.map(this.translateNode(lang))
                 };
                 return newMenu;

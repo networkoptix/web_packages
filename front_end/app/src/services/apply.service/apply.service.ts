@@ -346,7 +346,7 @@ export class NxApplyService extends DialogBase {
                     : {};
 
             const extNgForm: extNgForm = {
-                form: form,
+                form,
                 originalForm: initialForm,
                 save: saveFunction,
                 discard: discardFunction,

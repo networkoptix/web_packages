@@ -82,7 +82,7 @@ export class FirstPartyWidget extends BaseFirstPartyWidget {
         return {
             identifier: widget.IDENTIFIER,
             title: widget.NAME,
-            sizes: sizes,
+            sizes,
             size: sizes[selectedIndex],
             config: widget.BASE_CONFIG || {}
         } as WidgetCard;

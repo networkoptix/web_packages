@@ -15,7 +15,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 function keyEvent(el: HTMLInputElement, key: string, eventType: string): void {
     const event: KeyboardEvent = new KeyboardEvent(eventType, {
-        key: key
+        key
     });
     el.dispatchEvent(event);
 }

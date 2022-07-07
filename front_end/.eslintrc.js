@@ -19,94 +19,7 @@ function tsExtension(rule, value = 'error') {
 }
 
 module.exports = {
-    extends: ['standard'],
     root: true,
-    parserOptions: {
-        ecmaVersion: 2018,
-        sourceType: 'module',
-    },
-    env: {
-        node: true,
-        browser: true,
-        jasmine: true,
-    },
-    plugins: [
-        'import',
-        // 'node',
-        // 'promise',
-    ],
-    rules: {
-        'accessor-pairs': 'off',
-        'array-bracket-newline': ['error', 'consistent'],
-        'array-element-newline': ['error', 'consistent'],
-        'arrow-parens': ['error', 'as-needed'],
-        camelcase: ['error', {
-            properties: 'never',
-            ignoreDestructuring: true,
-        }],
-        'comma-dangle': ['error', 'only-multiline'],
-        eqeqeq: ['error', 'always'],
-        indent: ['error', 4, {
-            SwitchCase: 1,
-            ignoredNodes: [
-                'TemplateLiteral *',
-                /* Don't enforce indent inside template literals */
-                'PropertyDefinition[decorators] Identifier',
-                /* Incorrectly indents class property with decorator on
-                preceding line */
-            ],
-        }],
-        'multiline-ternary': 'off',
-        'no-case-declarations': 'off',
-        'no-dupe-else-if': 'error',
-        'no-extra-semi': 'error',
-        'no-mixed-operators': 'off',
-        'no-multi-assign': 'error',
-        'no-return-await': 'error',
-        'no-unused-vars': ['error', {
-            varsIgnorePattern: '^_',
-            args: 'none',
-            // argsIgnorePattern: '^_',
-            // TODO: Restore args
-        }],
-        'no-use-before-define': ['error', {
-            functions: true,
-            classes: true,
-            variables: true,
-        }],
-        'no-useless-escape': 'off',
-        'prefer-promise-reject-errors': 'off',
-        'prefer-regex-literals': 'off',
-        semi: ['error', 'always'],
-        'space-before-function-paren': ['error', {
-            anonymous: 'always',
-            named: 'never',
-            asyncArrow: 'always'
-        }],
-
-        'import/no-default-export': 'error',
-        'import/order': ['error', {
-            groups: [
-                'builtin',
-                'external',
-                'internal',
-                'parent',
-                'sibling',
-                'index'
-            ],
-            pathGroups: Object.keys(
-                require('./tsconfig.json').compilerOptions.paths
-            ).map(path => ({
-                pattern: `${path}*`,
-                /* Assuming that tsconfig paths end with single asterisk so
-                that the pattern here will end with double asterisk */
-                group: 'internal'
-            })),
-            pathGroupsExcludedImportTypes: ['internal'],
-            'newlines-between': 'always',
-            alphabetize: { order: 'asc' }
-        }],
-    },
     /* Overrides should be ordered by range of files affected, then by
     range of code affected, from general to specific.
 
@@ -115,6 +28,97 @@ module.exports = {
     override for @typescript-eslint, but above the override for test files,
     which only affects specific TS files. */
     overrides: [
+        {
+            files: ['*.js', '*.ts'],
+            extends: ['standard'],
+            parserOptions: {
+                ecmaVersion: 2020,
+                sourceType: 'module',
+            },
+            env: {
+                node: true,
+                browser: true,
+                jasmine: true,
+            },
+            plugins: [
+                'import',
+                // 'node',
+                // 'promise',
+            ],
+            rules: {
+                'accessor-pairs': 'off',
+                'array-bracket-newline': ['error', 'consistent'],
+                'array-element-newline': ['error', 'consistent'],
+                'arrow-parens': ['error', 'as-needed'],
+                camelcase: ['error', {
+                    properties: 'never',
+                    ignoreDestructuring: true,
+                }],
+                'comma-dangle': ['error', 'only-multiline'],
+                eqeqeq: ['error', 'always'],
+                indent: ['error', 4, {
+                    SwitchCase: 1,
+                    ignoredNodes: [
+                        'TemplateLiteral *',
+                        /* Don't enforce indent inside template literals */
+                        'PropertyDefinition[decorators] Identifier',
+                        /* Incorrectly indents class property with decorator on
+                        preceding line */
+                    ],
+                }],
+                'multiline-ternary': 'off',
+                'no-case-declarations': 'off',
+                'no-dupe-else-if': 'error',
+                'no-extra-semi': 'error',
+                'no-mixed-operators': 'off',
+                'no-multi-assign': 'error',
+                'no-return-await': 'error',
+                'no-unused-vars': ['error', {
+                    varsIgnorePattern: '^_',
+                    args: 'none',
+                    // argsIgnorePattern: '^_',
+                    // TODO: Restore args
+                }],
+                'no-use-before-define': ['error', {
+                    functions: true,
+                    classes: true,
+                    variables: true,
+                }],
+                'no-useless-escape': 'off',
+                'object-shorthand': 'error',
+                'prefer-promise-reject-errors': 'off',
+                'prefer-regex-literals': 'off',
+                semi: ['error', 'always'],
+                'space-before-function-paren': ['error', {
+                    anonymous: 'always',
+                    named: 'never',
+                    asyncArrow: 'always'
+                }],
+
+                'import/no-default-export': 'error',
+                'import/order': ['error', {
+                    groups: [
+                        'builtin',
+                        'external',
+                        'internal',
+                        'parent',
+                        'sibling',
+                        'index'
+                    ],
+                    pathGroups: Object.keys(
+                        require('./tsconfig.json').compilerOptions.paths
+                    ).map(path => ({
+                        pattern: `${path}*`,
+                        /* Assuming that tsconfig paths end with single asterisk so
+                that the pattern here will end with double asterisk */
+                        group: 'internal'
+                    })),
+                    pathGroupsExcludedImportTypes: ['internal'],
+                    'newlines-between': 'always',
+                    alphabetize: { order: 'asc' }
+                }],
+            },
+        },
         {
             /* This override is setup for all TS files */
             files: ['*.ts'],
@@ -260,6 +264,15 @@ module.exports = {
         },
         {
             files: ['*.ts'],
+            extends: [
+                // 'plugin:@angular-eslint/recommended',
+                // 'plugin:@angular-eslint/template/process-inline-templates',
+            ],
+            plugins: ['@angular-eslint'],
+            rules: {},
+        },
+        {
+            files: ['*.ts'],
             plugins: ['rxjs'],
             extends: ['plugin:rxjs/recommended'],
             rules: {
@@ -292,6 +305,20 @@ module.exports = {
                     ignoreTypeReferences: true,
                 }],
             }
+        },
+        {
+            files: ['*.component.html'],
+            // extends: ['plugin:@angular-eslint/template/recommended'],
+            parser: '@angular-eslint/template-parser',
+            plugins: ['@angular-eslint/template'],
+            rules: {}
+        },
+        {
+            files: ['*.component.html'],
+            excludedFiles: ['*inline-template-*.component.html'],
+            // extends: ['plugin:prettier/recommended'],
+            plugins: ['prettier'],
+            rules: {}
         },
     ]
 };

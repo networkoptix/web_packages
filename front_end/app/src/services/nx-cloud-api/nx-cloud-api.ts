@@ -146,8 +146,8 @@ export class NxCloudApiService {
         }
         return this.http.post<t.CloudResponse>(this.configService.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
             name: systemName,
-            email: email,
-            password: password
+            email,
+            password
         }, { headers }).pipe(
             tap(() => {
                 if (accessToken) {
@@ -159,7 +159,7 @@ export class NxCloudApiService {
 
     verify(password) {
         return this.http.post(this.CONFIG.apiBase + '/account/verify', {
-            password: password
+            password
         }).toPromise();
     }
 

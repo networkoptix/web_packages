@@ -121,8 +121,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             }
         }
         this.swaggerMenuDescription = {
-            title: title,
-            description: description
+            title,
+            description
         };
     }
 
@@ -141,7 +141,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 ],
                 plugins: [this.OnResponsesRenderPlugin],
                 spec: this.currentAPIDoc,
-                filter: filter,
+                filter,
                 docExpansion: expand,
                 showExtensions: true,
                 supportedSubmitMethods: this.getSupportedMethods(), // determines which methods can: make requests/show try it out button

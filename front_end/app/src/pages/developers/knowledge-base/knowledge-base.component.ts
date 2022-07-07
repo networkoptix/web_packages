@@ -558,7 +558,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         ) {
             this.router.navigate(
                 ['docs', this.kbService.basePath, this.kbService.kbName, newAssetId],
-                { replaceUrl: true, queryParams: { state: state } }
+                { replaceUrl: true, queryParams: { state } }
             );
         }
 

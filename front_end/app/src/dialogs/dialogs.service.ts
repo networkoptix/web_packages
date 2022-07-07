@@ -405,7 +405,7 @@ export class NxDialogsService extends DialogBase {
     public message(account: NxAccountService, type: string, data: IParams): Promise<any> {
         const config: Partial<DialogConfig> = {
             data: {
-                account: account,
+                account,
                 messageType: type,
                 data,
             }

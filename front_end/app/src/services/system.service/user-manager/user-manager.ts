@@ -94,7 +94,7 @@ export class UserManager {
         const permissions: SystemPermissions = {
             editAdmins: isMine,
             editUsers: isAdmin,
-            isAdmin: isAdmin,
+            isAdmin,
             editCameras: isAdmin,
             viewArchives: isAdmin
         };

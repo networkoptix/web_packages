@@ -132,12 +132,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
             name: systemName,
             settings: Object.entries(systemSettings).map(([name, value]) => ({ name, value })),
             local: {
-                password: password
+                password
             },
             cloud: {
                 systemId: cloudSystemID,
                 authKey: cloudAuthKey,
-                owner: owner
+                owner
             }
         };
         return this.post('/rest/v1/system/setup', config).toPromise();
