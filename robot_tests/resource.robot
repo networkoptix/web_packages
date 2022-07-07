@@ -1286,7 +1286,7 @@ Delete All Text
 
 Skip If Irrelevant
     ${relevant}=   Run keyword and return status    List Should Contain Value    ${TEST TAGS}    ${mode}
-    Skip If    not ${relevant}    Test skipped - not relevant
+    Skip If    not ${relevant}    Test not meant for ${mode}
 
 Input Content Editable Text
     [Arguments]    ${element}    ${text}

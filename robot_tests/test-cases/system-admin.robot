@@ -239,18 +239,21 @@ Force Tags        system    threaded
 
     Log    Get initial system name back
     Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
+    Sleep  1
     ${settings}=   Get Cloud System Settings    ${system}[cloud auth]    ${system}[cloud id]
     Should be equal as strings    ${settings}[name]    ${system}[name]
 
 # System Settings for different users
 15. Correct items are shown for owner
-    [Tags]    C41560    webadmin    cloud
+    [Tags]    C41560    webadmin    cloud    CB-1596
+    [Documentation]     Currently failing due to work around for CB-1596
     Log in to system    ${system}    ${system}[owner]
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Elements Are Visible
         ...    ${SYSTEMS DROPDOWN}
         ...    ${RENAME SYSTEM}
+            # fail on above step due to CB-1596
         ...    ${DISCONNECT FROM NX}
 #        ...    ${expected name}
         ...    ${MERGE BUTTON SYSTEM}
