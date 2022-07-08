@@ -10,10 +10,19 @@
 
 <button (click)="reset()">Reset</button>
 
-<br><br><hr><br><br>
+<br /><br />
+<hr />
+<br /><br />
 
 <h2>Under the hood:</h2>
-<div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between;">
+<div
+    style="
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    "
+>
     <div>
         <h3>State (full, reactive)</h3>
         <pre>{{ state$ | async | json }}</pre>

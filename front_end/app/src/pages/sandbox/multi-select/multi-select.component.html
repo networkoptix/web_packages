@@ -1,4 +1,7 @@
-<div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
     <div class="col-3 p-5">
         <nx-multi-select
             name="ddMultiSelect"
@@ -6,7 +9,8 @@
             [ngModel]="itemsSelected"
             (ngModelChange)="modelChanged($event)"
             canSelectAll
-            canSearch>
+            canSearch
+        >
         </nx-multi-select>
     </div>
     <div class="col-3 p-5">
@@ -15,21 +19,25 @@
             [items]="items"
             [ngModel]="itemsSelected"
             (ngModelChange)="modelChanged($event)"
-            canSelectAll>
+            canSelectAll
+        >
         </nx-multi-select>
     </div>
     <div class="col p-5">
         Labels:
-        <br>
-        {{items | json}}
-        <br>
-        <br>
+        <br />
+        {{ items | json }}
+        <br />
+        <br />
         Selected
-        <br>
-        {{itemsSelected}}
+        <br />
+        {{ itemsSelected }}
     </div>
 </div>
-<div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
     <div class="col-3 p-5">
         <nx-select
             name="ddSSingle"
@@ -37,21 +45,33 @@
             [ngModel]="selectedDDItem"
             (ngModelChange)="ddSingleModelChanged($event)"
             [selected]="selectedDDItem ? selectedDDItem : null"
-            canSearch>
+            canSearch
+        >
         </nx-select>
     </div>
 </div>
-<div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">
-    <div class="row m-0" style="width: 100%;">
-        Dynamic size based on longer menu item: {{ddWidth}}
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
+    <div
+        class="row m-0"
+        style="width: 100%"
+    >
+        Dynamic size based on longer menu item: {{ ddWidth }}
     </div>
-    <br><br>
-    <div class="row m-0" [style.width.px]="ddWidth" style="border: 1px solid gold">
+    <br /><br />
+    <div
+        class="row m-0"
+        [style.width.px]="ddWidth"
+        style="border: 1px solid gold"
+    >
         <nx-select
             [type]="'clear-fit'"
             name="ddGenericSelect"
             [items]="mode"
-            [ngModel]="modeSelected">
+            [ngModel]="modeSelected"
+        >
         </nx-select>
     </div>
 </div>

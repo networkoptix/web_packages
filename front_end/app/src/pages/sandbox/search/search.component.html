@@ -1,4 +1,7 @@
-<div class="mb-3 row m-0 p-3" style="border: 1px solid lightgray">
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
     <nx-search
         class="w-100"
         name="filter"
@@ -6,16 +9,8 @@
         expandable
     ></nx-search>
 
-    <div class="pt-3">
-        Search filter: {{filter.query}}
-    </div>
-    <div class="pt-3">
-        Search selects: {{filter.selects | json}}
-    </div>
-    <div class="pt-3">
-        Search multi-selects: {{filter.multiselects | json}}
-    </div>
-    <div class="pt-3">
-        Search tags: {{filter.tags | json}}
-    </div>
+    <div class="pt-3">Search filter: {{ filter.query }}</div>
+    <div class="pt-3">Search selects: {{ filter.selects | json }}</div>
+    <div class="pt-3">Search multi-selects: {{ filter.multiselects | json }}</div>
+    <div class="pt-3">Search tags: {{ filter.tags | json }}</div>
 </div>

@@ -1,16 +1,37 @@
 <div class="mb-3">
     <h2>Form 3 (dynamic)</h2>
 
-    <button class="btn btn-primary" (click)="addField()">Add</button>
-    <br/>
+    <button
+        class="btn btn-primary"
+        (click)="addField()"
+    >
+        Add
+    </button>
+    <br />
 
-    <form [formGroup]="form2Group" id="form3" name="form3" #form3="ngForm">
+    <form
+        [formGroup]="form2Group"
+        id="form3"
+        name="form3"
+        #form3="ngForm"
+    >
         <div formArrayName="fields">
-            <div class="form-group d-flex" *ngFor="let field of fields.controls; let i=index">
-                <input class="form-control mr-1" type="text" [formControlName]="i">
-                <button class="btn btn-tag" (click)="removeField(i)">Delete</button>
+            <div
+                class="form-group d-flex"
+                *ngFor="let field of fields.controls; let i = index"
+            >
+                <input
+                    class="form-control mr-1"
+                    type="text"
+                    [formControlName]="i"
+                />
+                <button
+                    class="btn btn-tag"
+                    (click)="removeField(i)"
+                >
+                    Delete
+                </button>
             </div>
         </div>
     </form>
 </div>
-

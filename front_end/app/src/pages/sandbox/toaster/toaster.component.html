@@ -1,16 +1,37 @@
 <div class="form-group">
     <nx-checkbox
-            name="autohide"
-            componentId="autohide"
-            [(ngModel)]="autohide"
-            checked>
+        name="autohide"
+        componentId="autohide"
+        [(ngModel)]="autohide"
+        checked
+    >
     </nx-checkbox>
 
     <label for="autohide">Auto hide</label>
 </div>
 <div class="row p-3">
-    <button class="btn btn-default" (click)="notify( 'I\'m info asdas sadasd asd' ,'info')">Info</button>
-    <button class="btn btn-default" (click)="notify('I\'m danger' ,'danger')">Danger</button>
-    <button class="btn btn-default" (click)="notify('I\'m warning' ,'warning')">Warning</button>
-    <button class="btn btn-default" (click)="notify('I\'m success' ,'success')">Success</button>
+    <button
+        class="btn btn-default"
+        (click)="notify('I\'m info asdas sadasd asd', 'info')"
+    >
+        Info
+    </button>
+    <button
+        class="btn btn-default"
+        (click)="notify('I\'m danger', 'danger')"
+    >
+        Danger
+    </button>
+    <button
+        class="btn btn-default"
+        (click)="notify('I\'m warning', 'warning')"
+    >
+        Warning
+    </button>
+    <button
+        class="btn btn-default"
+        (click)="notify('I\'m success', 'success')"
+    >
+        Success
+    </button>
 </div>

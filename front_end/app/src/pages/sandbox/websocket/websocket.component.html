@@ -2,67 +2,104 @@
     <nx-block>
         <header>Group Inputs</header>
         <nx-section>
-            <form class="form" #groupForm="ngForm" novalidate>
+            <form
+                class="form"
+                #groupForm="ngForm"
+                novalidate
+            >
                 <div class="inputs d-block d-md-table w-100 mw-100">
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="group-name" class="control-label m-0 pb-md-2">Group Name</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="group-name"
+                                class="control-label m-0 pb-md-2"
+                                >Group Name</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="group-name"
-                                           name="groupName"
-                                           class="form-control"
-                                           [(ngModel)]="group.name"
-                                           #groupName="ngModel">
+                                    <input
+                                        id="group-name"
+                                        name="groupName"
+                                        class="form-control"
+                                        [(ngModel)]="group.name"
+                                        #groupName="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="group-id" class="control-label m-0 pb-md-2">Group Id</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="group-id"
+                                class="control-label m-0 pb-md-2"
+                                >Group Id</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="group-id"
-                                           name="groupId"
-                                           class="form-control"
-                                           [(ngModel)]="group.groupId" #groupId="ngModel">
+                                    <input
+                                        id="group-id"
+                                        name="groupId"
+                                        class="form-control"
+                                        [(ngModel)]="group.groupId"
+                                        #groupId="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="target-group-id" class="control-label m-0 pb-md-2">Target Group ID (Moving Groups to Group)</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="target-group-id"
+                                class="control-label m-0 pb-md-2"
+                                >Target Group ID (Moving Groups to Group)</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="target-group-id"
-                                           class="form-control"
-                                           name="targetId"
-                                           [(ngModel)]="group.targetId"
-                                           #targetId="ngModel">
+                                    <input
+                                        id="target-group-id"
+                                        class="form-control"
+                                        name="targetId"
+                                        [(ngModel)]="group.targetId"
+                                        #targetId="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="target-system-id" class="control-label m-0 pb-md-2">System ID (Moving System to Group)</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="target-system-id"
+                                class="control-label m-0 pb-md-2"
+                                >System ID (Moving System to Group)</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="target-system-id"
-                                           class="form-control"
-                                           name="systemId"
-                                           [(ngModel)]="group.systemId"
-                                           #systemId="ngModel">
+                                    <input
+                                        id="target-system-id"
+                                        class="form-control"
+                                        name="systemId"
+                                        [(ngModel)]="group.systemId"
+                                        #systemId="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -86,52 +123,80 @@
     <nx-block>
         <header>Aggregate Url</header>
         <nx-section>
-            <form class="form" #aggregatorForm="ngForm" novalidate>
+            <form
+                class="form"
+                #aggregatorForm="ngForm"
+                novalidate
+            >
                 <div class="inputs d-block d-md-table w-100 mw-100">
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="aggregate-url" class="control-label m-0 pb-md-2">Url</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="aggregate-url"
+                                class="control-label m-0 pb-md-2"
+                                >Url</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="aggregate-url"
-                                           class="form-control"
-                                           name="aggregateUrl"
-                                           [(ngModel)]="aggregate.url"
-                                           #aggregateUrl="ngModel">
+                                    <input
+                                        id="aggregate-url"
+                                        class="form-control"
+                                        name="aggregateUrl"
+                                        [(ngModel)]="aggregate.url"
+                                        #aggregateUrl="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="aggregate-group-id" class="control-label m-0 pb-md-2">Aggregate Group Id</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="aggregate-group-id"
+                                class="control-label m-0 pb-md-2"
+                                >Aggregate Group Id</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="aggregate-group-id"
-                                           class="form-control"
-                                           name="aggregateGroupId"
-                                           [(ngModel)]="aggregate.groupId"
-                                           #aggregateGroupId="ngModel">
+                                    <input
+                                        id="aggregate-group-id"
+                                        class="form-control"
+                                        name="aggregateGroupId"
+                                        [(ngModel)]="aggregate.groupId"
+                                        #aggregateGroupId="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group d-block d-md-table-row mb-2">
-                        <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
-                            <label for="aggregate-method" class="control-label m-0 pb-md-2">Request Method</label>
+                        <div
+                            class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0"
+                        >
+                            <label
+                                for="aggregate-method"
+                                class="control-label m-0 pb-md-2"
+                                >Request Method</label
+                            >
                         </div>
                         <div class="d-block d-md-table-cell">
                             <div class="row pb-md-2">
                                 <div class="col-12 col-md-7 pb-2 pb-md-0">
-                                    <input id="aggregate-method"
-                                           class="form-control"
-                                           name="aggregateMethod"
-                                           [(ngModel)]="aggregate.method"
-                                           #aggregateMethod="ngModel">
+                                    <input
+                                        id="aggregate-method"
+                                        class="form-control"
+                                        name="aggregateMethod"
+                                        [(ngModel)]="aggregate.method"
+                                        #aggregateMethod="ngModel"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -141,8 +206,12 @@
         </nx-section>
         <nx-section>
             <div class="d-flex justify-content-between">
-                <button (click)="sendAggregateAction('aggregateSystemsRequest')">All systems</button>
-                <button (click)="sendAggregateAction('aggregateRequestByGroup')">All systems in a group</button>
+                <button (click)="sendAggregateAction('aggregateSystemsRequest')">
+                    All systems
+                </button>
+                <button (click)="sendAggregateAction('aggregateRequestByGroup')">
+                    All systems in a group
+                </button>
             </div>
         </nx-section>
     </nx-block>
