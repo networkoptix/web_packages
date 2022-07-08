@@ -346,7 +346,7 @@
                 },
                 "delete": {
                     "heading": "¿Eliminar almacenamiento en la nube?",
-                    "action": "borrar",
+                    "action": "Borrar",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -368,7 +368,7 @@
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "borrar",
+                    "title": "Borrar",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },

@@ -286,7 +286,7 @@
         },
         "viewingOutdatedReport": "Sie sehen einen veralteten Bericht."
     },
-    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
+    "cookieWarning": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Sie helfen uns auch zu verstehen, wie unsere Website genutzt wird. Erfahren Sie mehr und legen Sie Ihre Cookie-Einstellungen&nbsp; | hier | fest. Wenn Sie unsere Website weiter nutzen, stimmen Sie der Verwendung von Cookies zu.",
     "dashboard": {
         "dashboardEditEnabled": "Bearbeitung des Dashboards ist aktiviert",
         "dashboardLocked": "Dashboard ist gesperrt",
@@ -456,7 +456,7 @@
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
             "warning": "Das zusammengeführte System enthält mehr als <strong>{maxServers}</strong> Server.",
-            "update": "Update them to the&nbsp; | latest build |"
+            "update": "Aktualisieren Sie sie auf den&nbsp; | neuesten Build |"
         },
         "message": {
             "system2faEnabled": "Die Zwei-Faktor-Authentifizierung wird nun für dieses System erzwungen.",
@@ -487,7 +487,7 @@
             "twoFactor": {
                 "required": "Eine Zwei-Faktor-Authentifizierung ist erforderlich.",
                 "configure": "Konfiguration in Ihrer",
-                "accountLink": "Accounteinstellungen",
+                "accountLink": "accounteinstellungen",
                 "codeRequired": "Code ist erforderlich"
             }
         },
@@ -921,7 +921,7 @@
             "sessionLimitDuration": {
                 "hours": "stunden",
                 "minutes": "minuten",
-                "days": "Tage"
+                "days": "tage"
             },
             "warningMessages": {
                 "videoEncryption": "Die Verschlüsselung des Videoverkehrs wird die CPU-Auslastung deutlich erhöhen."
@@ -1273,7 +1273,7 @@
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "Webadmin - %VMS_NAME%"
+            "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
             "title": "Einstellungen - Webadmin - %VMS_NAME%"

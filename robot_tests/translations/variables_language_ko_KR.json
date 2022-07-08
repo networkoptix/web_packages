@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "활성화 이메일 재전송.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "모든 클라우드 사용자가 삭제됩니다",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only via local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "계속 하려면 암호를 입력 합니다",
     "SYSTEM NO ACCESS TEXT": "시스템에 액세스 실패",
     "DISCONNECT FROM CLOUD TEXT": "%PRODUCT_NAME% 에서 연결 끊기",

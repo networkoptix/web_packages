@@ -286,7 +286,7 @@
         },
         "viewingOutdatedReport": "古いレポートを表示しています。"
     },
-    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
+    "cookieWarning": "当サイトでのエクスペリエンスを向上させるためにCookieを使用しました。また、サイトがどのように使用されているかを理解するのにも役立ちます。詳細確認とCookieの設定を&nbsp; |こちら| で行ってください。当サイトの使用を継続することにより、あなたは当サイトのCookie利用に同意したことになります。",
     "dashboard": {
         "dashboardEditEnabled": "ダッシュボード編集が有効です",
         "dashboardLocked": "ダッシュボードはロックされています",
@@ -456,7 +456,7 @@
             "urlNotValid": "有効な URL を入力してください",
             "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> まで問い合わせください。",
             "warning": "統合されたシステムには <strong>{maxServers}</strong> 以上のサーバーが含まれることになります。",
-            "update": "Update them to the&nbsp; | latest build |"
+            "update": "| 最新のビルド |&nbsp; に更新してください"
         },
         "message": {
             "system2faEnabled": "このシステムでは二要素認証が強制されます。",

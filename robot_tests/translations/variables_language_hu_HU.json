@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Aktiváló e-mail újraküldése.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Minden felhő felhasználó törlésre kerül",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only via local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Adja meg a jelszót a folytatáshoz",
     "SYSTEM NO ACCESS TEXT": "Belépés sikertelen",
     "DISCONNECT FROM CLOUD TEXT": "Leválasztás %PRODUCT_NAME% termékről",

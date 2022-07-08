@@ -673,8 +673,8 @@
         "webadmin2faRequired": "Для доступа к этой системе требуется двухфакторная аутентификация. Вы можете включить двухфакторную аутентификацию в настройках вашей <a href=\"{ cloudHost }/account/security\">учетной записи</a>."
     },
     "appHeader": {
-        "mySystems": "My Systems",
-        "systemList": "System List"
+        "mySystems": "Мои системы",
+        "systemList": "Список систем"
     },
     "integration": {
         "Access Control": "Контроль доступа",
@@ -852,7 +852,7 @@
             "reject": "Отказать",
             "backToEditText": "Вернуться к интерфейсам редактирования",
             "previewRibbon": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
-            "publishedRibbon": "This page is the live version that is publicly available."
+            "publishedRibbon": "Эта страница является официальной общедоступной версией."
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
@@ -888,7 +888,7 @@
         "refreshing": "Обновление...",
         "removeMediaserverFailed": "Не удалось удалить сервер из системы.",
         "resetFailed": "Не удалось сбросить сервер. Пожалуйста, проверьте, правильно ли вы ввели пароль, и подключен ли сервер к сети, и попробуйте снова.",
-        "resetSuccessful": "Server {serverName} has been reset to defaults.",
+        "resetSuccessful": "Сервер {serverName} был сброшен до значений по умолчанию.",
         "restartFailed": "При перезапуске сервера произошла ошибка.",
         "restartSuccessful": "Сервер успешно перезапущен.",
         "serverOffline": "Сервер не в сети.",
@@ -896,7 +896,7 @@
         "status": {
             "checking": "проверка...",
             "offline": "не в сети",
-            "resetting": "resetting...",
+            "resetting": "сброс...",
             "restarting": "перезапуск..."
         },
         "successRename": "Имя сервера сохранено."
@@ -910,7 +910,7 @@
     },
     "system": {
         "connected": "Подключено",
-        "not_connected": "Not connected",
+        "not_connected": "Не подключено",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)",
         "mySystemSearch": "ЯМойМоя",

@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Lähetä vahvistussähköposti uudelleen.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Kaikki pilvipalvelun käyttäjät poistetaan",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only via local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Syötä salasanasi jatkaaksesi",
     "SYSTEM NO ACCESS TEXT": "Failed to access system",
     "DISCONNECT FROM CLOUD TEXT": "Disconnect from %PRODUCT_NAME%",

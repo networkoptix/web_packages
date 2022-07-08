@@ -286,7 +286,7 @@
         },
         "viewingOutdatedReport": "Você está visualizando um relatório desatualizado."
     },
-    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
+    "cookieWarning": "Usamos cookies para melhorar sua experiência em nosso site. Eles também nos ajudam a entender como nosso site está sendo usado. Saiba mais e defina suas preferências de cookies&nbsp; | aqui | . Ao continuar a usar nosso site, você concorda em usar nossos cookies.",
     "dashboard": {
         "dashboardEditEnabled": "A edição do painel está habilitada",
         "dashboardLocked": "O painel está bloqueado",
@@ -456,7 +456,7 @@
             "urlNotValid": "Insira um URL válido",
             "unknownError": "Ocorreu um erro desconhecido. Atualize a página e tente novamente. Se o problema persistir, entre em contato com <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
             "warning": "Haverá mais de <strong>{maxServers}</strong> servidores no sistema mesclado.",
-            "update": "Update them to the&nbsp; | latest build |"
+            "update": "Atualize-os para o&nbsp; | última compilação |"
         },
         "message": {
             "system2faEnabled": "A autenticação de dois fatores agora será forçada para este sistema.",

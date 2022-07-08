@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Doğrulama e-postasını yeniden gönder.",
     "FORGOT PASSWORD TEXT": "Forgot Password?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Tüm bulut kullanıcıları silindi",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only through local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only via local network.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Devam etmek için parola girin",
     "SYSTEM NO ACCESS TEXT": "Sisteme erişim sağlanılamadı",
     "DISCONNECT FROM CLOUD TEXT": "Bağlantıyı kes %PRODUCT_NAME%",
