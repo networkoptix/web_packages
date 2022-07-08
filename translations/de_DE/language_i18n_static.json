@@ -435,7 +435,7 @@
             "twoFactor": {
                 "required": "Eine Zwei-Faktor-Authentifizierung ist erforderlich.",
                 "configure": "Konfiguration in Ihrer",
-                "accountLink": "Accounteinstellungen",
+                "accountLink": "accounteinstellungen",
                 "codeRequired": "Code ist erforderlich"
             }
         },
@@ -863,7 +863,7 @@
             "sessionLimitDuration": {
                 "hours": "stunden",
                 "minutes": "minuten",
-                "days": "Tage"
+                "days": "tage"
             },
             "warningMessages": {
                 "videoEncryption": "Die Verschlüsselung des Videoverkehrs wird die CPU-Auslastung deutlich erhöhen."
@@ -1208,7 +1208,7 @@
     "metaDefaultsWebadmin": {
         "default": {
             "site_name": "%VMS_NAME%",
-            "title": "Webadmin - %VMS_NAME%"
+            "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
             "title": "Einstellungen - Webadmin - %VMS_NAME%"

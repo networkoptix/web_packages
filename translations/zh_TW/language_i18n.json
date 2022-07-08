@@ -408,7 +408,7 @@
     "Server is offline due to certificate error": "Server is offline due to certificate error",
     "Server needs to be online to get license activated": "需保持伺服器在線才能啟用授權",
     "Server offline": "伺服器離線",
-    "Server port is required": "請填入通訊埠 (Server port) ",
+    "Server port is required": "請填入通訊埠 (Server port)",
     "Services": "服務",
     "Settings": "設定",
     "Settings displayed below are advanced.": "以下顯示設定為進階選項。",

@@ -374,7 +374,7 @@
     "IP TEXT": "IP",
     "OS TEXT": "作業系統",
     "VERSION TEXT": "版本",
-    "SERVER PORT IS REQUIRED TEXT": "請填入通訊埠 (Server port) ",
+    "SERVER PORT IS REQUIRED TEXT": "請填入通訊埠 (Server port)",
     "PORT TOO LOW TEXT": "若使用小於1024的埠號, 伺服器可能無法連接。",
     "SERVER RESTARTED TEXT": "伺服器重啟成功。",
     "HOURS TEXT": "小時",

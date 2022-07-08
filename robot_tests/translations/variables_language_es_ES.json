@@ -53,7 +53,7 @@
     "REINDEX TOOLTIP SECOND": "Puede cancelarlo en cualquier momento sin pérdida de datos.",
     "REINDEXING MAIN": "Reindexando el almacenamiento principal...",
     "REINDEXING BACKUP": "Reindexando almacenamiento de copia de seguridad...",
-    "REINDEX ARCHIVE MSG TEXT": "Cuando un dispositivo de almacenamiento se mueve, cambia de nombre o se elimina, o cuando un archivo de almacenamiento se elimina, cambia de nombre, tiene una marca de tiempo incorrecta o está dañado de alguna otra manera, este índice se romperá. La Re indexación restaura la relación entre la base de datos y los dispositivos de almacenamiento.",
+    "REINDEX ARCHIVE MSG TEXT": "Cuando un dispositivo de almacenamiento se mueve, cambia de nombre o se elimina, o cuando un archivo de almacenamiento se elimina, cambia de nombre, tiene una marca de tiempo incorrecta o está dañado de alguna otra manera, este índice se romperá. La Re indexación restaura la relación entre la base de datos y los dispositivos de almacenamiento",
     "REINDEX ARCHIVE TEXT": "Reindexar archivo",
     "URL REQUIRED TEXT": "Se requiere URL",
     "INVALID URL TEXT": "URL inválida",
