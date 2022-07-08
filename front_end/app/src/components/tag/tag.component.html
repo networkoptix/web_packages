@@ -1,16 +1,20 @@
 <a
-    [class]="[element, size, badgeType].join(' ')"
     name="tag-{{ name }}"
     id="tag-{{ name }}"
-    [ngClass]="{ static: locked }"
+    [ngClass]="[
+        element,
+        size,
+        badgeType,
+        locked ? 'static' : ''
+    ]"
     [attr.href]="tagHref"
-    (click)="clickable && selectTag()"
+    (click)="clickChange(true)"
 >
     <ng-content></ng-content>
     <span
         *ngIf="selected"
         class="close-button"
-        (click)="$event.stopPropagation(); deselectTag()"
+        (click)="$event.stopPropagation(); clickChange(false)"
     >
         <span class="glyphicon tag-close-icon"></span>
     </span>

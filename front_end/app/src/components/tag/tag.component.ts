@@ -10,7 +10,6 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import type { Params } from '@angular/router';
 
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
-import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
  <nx-tag
@@ -46,32 +45,23 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @IBool() @Input() locked: CoercedBoolInput;
     @Input() link: string;
     @Input() linkParam: Params = {};
-    @IBool() @Input('value') _selected: CoercedBoolInput;
-
-    selected: boolean;
+    @Input('value') selected: boolean;
 
     @Output() onClick = new EventEmitter<boolean>();
 
     public tagHref: string;
-    public badgeType: string;
-    private badgeTypes: {
-        selected: string;
-        unselected: string;
-    };
+
+    get badgeType(): string {
+        if (this.type) {
+            return this.selected
+                ? `badge-${this.type}-selected`
+                : `badge-${this.type}`;
+        } else {
+            return this.selected ? 'badge-selected' : 'badge';
+        }
+    }
 
     ngOnInit(): void {
-        this.badgeTypes = this.type !== undefined
-            ? {
-                selected: `badge-${this.type}-selected`,
-                unselected: `badge-${this.type}`,
-            } : {
-                selected: 'badge-selected',
-                unselected: 'badge',
-            };
-        this.badgeType = this.selected
-            ? this.badgeTypes.selected
-            : this.badgeTypes.unselected;
-
         const params = Object.entries<string>(this.linkParam);
         if (this.link && params.length) {
             const queryParams = params
@@ -81,32 +71,11 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    ngOnChanges(changes: NgChanges<NxTagComponent>): void {
-        if (!!changes._selected?.currentValue !== !!changes._selected?.previousValue) {
-            this[!changes._selected?.currentValue ? 'deselectTag' : 'selectTag'](true);
-        }
-    }
-
-    deselectTag(skipEmit = false): void {
-        if (this.locked) {
+    clickChange(value: boolean): void {
+        if (this.locked || !this.clickable) {
             return;
         }
-        this.selected = false;
-        this.badgeType = this.badgeTypes.unselected;
-        if (!skipEmit) {
-            this.changeState(false);
-        }
-    }
-
-    selectTag(skipEmit = false): void {
-        if (this.locked) {
-            return;
-        }
-        this.selected = true;
-        this.badgeType = this.badgeTypes.selected;
-        if (!skipEmit) {
-            this.changeState(true);
-        }
+        this.changeState(value, true);
     }
 
     // Form control functions
@@ -118,12 +87,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         if (value === undefined) {
             return;
         }
-        // this.selected = value;
-        if (!value) {
-            this.deselectTag();
-        } else {
-            this.selectTag();
-        }
+        this.changeState(value);
     }
 
     /**
@@ -140,9 +104,12 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
      */
     registerOnTouched(_fn: () => void): void {}
 
-    changeState(value: boolean): void {
+    changeState(value: boolean, emitClick: boolean = false): void {
+        this.selected = value;
         // Propagate component's value attribute (model)
         this.propagateChange(value);
-        this.onClick.emit(value);
+        if (emitClick) {
+            this.onClick.emit(value);
+        }
     }
 }
