@@ -367,7 +367,7 @@ Force Tags        system    Threaded
 
     Log    Step 1
     Go to Users List
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Viewer")]/preceding-sibling::span
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span/span[contains(text(), "Viewer")]/ancestor::nx-level-3-item
     Wait until element is visible    ${user in left menu}
     Click Element    ${user in left menu}
     Wait until elements are visible
@@ -399,7 +399,7 @@ Force Tags        system    Threaded
        ...    ${CANCEL BUTTON}
        ...    ${ACCESS LEVEL DROPDOWN MENU}
 
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span[contains(text(), "Administrator")]/preceding-sibling::span
+    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span/span[contains(text(), "Administrator")]/ancestor::nx-level-3-item
     Wait until elements are visible
         ...    ${ACCESS LEVEL DROPDOWN}
         ...    ${NO UNSAVED CHANGES}
@@ -473,10 +473,10 @@ Force Tags        system    Threaded
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
     Verify In System    ${server 1['name']}
     Share To    ${user}    ${ADMIN TEXT}
+    Sleep    10
     # Might not be necessary after CLOUD-6113
     ${role}=   Get Cloud User Role    ${server 1['cloud auth']}    ${user}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-    Sleep    10
 
     Open Mailbox
     ...    host=${BASE HOST}
@@ -534,7 +534,7 @@ Force Tags        system    Threaded
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List
     Share To    ${random email}    ${ADMIN TEXT}
-    Sleep    3
+    sleep    10
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
     

@@ -43,6 +43,8 @@ Cloud Suite Setup
     Sleep    1
     Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
+    Wait Until Element Is Visible    ${NEW FEATURE CLOSE BUTTON}
+    Click Button    ${NEW FEATURE CLOSE BUTTON}
     Log Out
 
 #Users Test Setup
@@ -452,7 +454,7 @@ Change All Local User Permissions
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span[text()="${new permission}"]
+        Wait Until Element is Visible    //span[text()="Local+${user}"]/following-sibling::span/span[text()="${new permission}"]
 	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         ${name} =   Convert To Lowercase    Local+${user}

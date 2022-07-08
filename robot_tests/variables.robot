@@ -146,9 +146,9 @@ ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(te
 ${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-active-status-switch']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
-${REMOVE USER MODAL}                  ${MODAL DIALOG}
-${REMOVE BUTTON}                      ${MODAL DIALOG}//button//span[contains(text(),'${REMOVE BUTTON TEXT}')]
-${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button//span[contains(text(),"${CANCEL BUTTON TEXT}")]
+${REMOVE USER MODAL}                  //nx-modal-remove-user-content
+${REMOVE BUTTON}                      ${REMOVE USER MODAL}//button//span[contains(text(),'${REMOVE BUTTON TEXT}')]
+${REMOVE CANCEL BUTTON}               ${REMOVE USER MODAL}//button//span[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
@@ -156,6 +156,9 @@ ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@cla
 
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
+
+${NEW FEATURE MODAL}                  //nx-modal-new-feature-content
+${NEW FEATURE CLOSE BUTTON}           ${NEW FEATURE MODAL}//button//span[contains(@class,"close-icon")]/../..
 
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
