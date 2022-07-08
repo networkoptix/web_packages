@@ -343,6 +343,13 @@ html {
     --btn-header-webadm-main-color      : #{$additional_light1};
     --btn-header-webadm-main-hover-bg   : #{$dark15};
     --btn-header-webadm-main-active-bg  : #{$dark13};
+    
+    --dialog-bg : #{$light1};
+    --dialog-border-color : #{$additional_light8};
+    --dialog-header-bg : #{$additional_light1};
+    
+    --light-text-color : #{$light16};
+    --light-text-opacity : 1;
 
     --tab-link-hover-bg            : #{$light3};
     --tab-link-hover-bottom-color  : #{$light6};

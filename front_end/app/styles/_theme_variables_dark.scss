@@ -342,6 +342,13 @@ html[data-theme="dark"] {
     --btn-header-webadm-main-color      : #E1E7EA; //$light4;
     --btn-header-webadm-main-hover-bg   : #35464F; //$dark11;
     --btn-header-webadm-main-active-bg  : #49626F; //$dark15;
+    
+    --dialog-bg : #303F47; //$dark10;
+    --dialog-border-color : #35464F; //$dark11;
+    --dialog-header-bg : #1C2327; //$dark6;
+    
+    --light-text-color : #A5B7C0; //light10;
+    --light-text-opacity : .4;
 
     --tab-link-hover-bg           : #35464F; //$dark11;
     --tab-link-hover-bottom-color : #1C2327; //$dark6;

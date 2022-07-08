@@ -118,9 +118,9 @@ nx-modal-wizard {
     }
 
     &-header {
-        background-color : var(--card-header-bg);
+        background-color : var(--dialog-header-bg);
         border-top       : 1px solid transparent !important;
-        border-bottom    : 1px solid var(--border-color) !important;
+        border-bottom    : 1px solid var(--dialog-border-color) !important;
         padding          : vars.$modal-title-padding 1rem !important;
         border-radius    : 2px 2px 0 0 !important;
 
@@ -200,7 +200,7 @@ nx-modal-wizard {
 
     &-body {
         padding          : 1rem 1rem 0 !important;
-        background-color : var(--card-body-bg) !important;
+        background-color : var(--dialog-bg) !important;
 
         label {
             margin  : 0 0 .5rem !important;
@@ -253,7 +253,7 @@ nx-modal-wizard {
 
     &-footer {
         & {
-            background-color : var(--card-body-bg) !important;
+            background-color : var(--dialog-bg) !important;
             justify-content: flex-start !important;
             align-items: center !important;
             padding: 1rem !important;
