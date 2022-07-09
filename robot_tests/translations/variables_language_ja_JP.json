@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "認証メールを再送信",
     "FORGOT PASSWORD TEXT": "パスワードをお忘れですか？",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "クラウドのすべてのユーザーが削除されます",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only via local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "システムはローカルネットワークからのみアクセス可能です。",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "パスワードを入力して続行",
     "SYSTEM NO ACCESS TEXT": "システムにアクセスできませんでした",
     "DISCONNECT FROM CLOUD TEXT": "%PRODUCT_NAME%から切断",

@@ -183,7 +183,7 @@
             "expires": "Expire",
             "key": "Clé"
         },
-        "notUsedWarning": "The cloud storage not used for recording. Go to the <a href=\"{serverSettings}\">Servers settings</a> to configure it."
+        "notUsedWarning": "Le stockage cloud n'est pas utilisé pour l'enregistrement. Allez dans les <a href=\"{serverSettings}\">paramètres des serveurs</a> pour le configurer."
     },
     "common": {
         "account": {
@@ -286,7 +286,7 @@
         },
         "viewingOutdatedReport": "Vous visualisez un rapport obsolète."
     },
-    "cookieWarning": "We used cookies to improve your experience on our site. They also help us to understand how our site is being used. Find out more and set your cookies preferences&nbsp; | here | . By continuing to use our site you consent to use our cookies.",
+    "cookieWarning": "Nous avons utilisé des cookies pour améliorer votre expérience sur notre site et nous aider à comprendre comment notre site est utilisé. En savoir plus et configurer vos préférences de cookies&nbsp; | ici | . En continuant à utiliser notre site, vous consentez à utiliser nos cookies.",
     "dashboard": {
         "dashboardEditEnabled": "L'édition du tableau de bord est activée",
         "dashboardLocked": "Tableau de bord verrouillé",
@@ -456,7 +456,7 @@
             "urlNotValid": "Entrer un URL valide",
             "unknownError": "Une erreur inconnue est survenue. Actualisez la page et réessayez. Si le problème persiste, veuillez contacter le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "Il y aura plus de <strong>{maxServers}</strong> serveurs dans le système fusionné.",
-            "update": "Update them to the&nbsp; | latest build |"
+            "update": "Les mettre à jour vers la&nbsp; | dernière version |"
         },
         "message": {
             "system2faEnabled": "L'authentification à deux facteurs sera maintenant forcée pour ce système.",
