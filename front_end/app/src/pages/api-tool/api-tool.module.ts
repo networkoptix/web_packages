@@ -54,13 +54,7 @@ const appRoutes: Routes = [
         NxSwaggerSpinnerComponent,
         NxSwaggerAPIInformationComponent
     ],
-    bootstrap: [],
-    entryComponents: [
-        NxAPIToolComponent
-    ],
-    exports: [
-        NxAPIToolComponent
-    ]
+    exports: []
 })
 export class NxApiToolModule {
 }

@@ -60,6 +60,14 @@ export interface APIInfoStore {
     [key: string]: APIInfo
 }
 
+export type Markdown = string;
+
+export interface APIToolCacheObject {
+    version: string,
+    json: APIDoc,
+    markdown?: Markdown
+}
+
 export interface APIDropdownItem extends DropdownItem {
     menu     : MenuNodeWithParent[]
 }
