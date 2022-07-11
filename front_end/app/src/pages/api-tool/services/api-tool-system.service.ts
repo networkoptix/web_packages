@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep } from 'lodash-es';
-import { LocalStorageService } from 'ngx-webstorage';
+import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
 import { catchError, delay, distinctUntilChanged, filter, finalize, retryWhen, take, tap, timeout } from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ import { NxUriService } from '@services/uri.service';
 
 import type { APIDoc } from '../api-tool-types';
 
-import type { APIToolCacheObject, EmitInfo, Markdown, ServerInfo } from './api-tool-service-types';
+import type { EmitInfo, IndexDBCacheObject, Markdown, ServerInfo } from './api-tool-service-types';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
 @UntilDestroy()
@@ -93,7 +93,7 @@ export class NxAPIToolSystemService {
         private _route: ActivatedRoute,
         private router: Router,
         private uri: NxUriService,
-        private localStorage: LocalStorageService,
+        private indexedDbService: NgxIndexedDBService,
         private systemsService: NxSystemsService,
     ) {
         this.CONFIG = this.configService.getConfig();
@@ -234,7 +234,7 @@ export class NxAPIToolSystemService {
         let validServerFound = false;
         this.getServers.updating = true;
         await this.getMenuManifest();
-        const cachedItem = this.retrieveJSONFromLocalStorage('main');
+        const cachedFiles = await this.getJSONFromCache('main', this.currentSystemId, this.systemVersion);
         this.currentSystem.serverManager.getServers().pipe(
             timeout(2500),
             take(1),
@@ -252,8 +252,8 @@ export class NxAPIToolSystemService {
                 servers.forEach(server => {
                     if (!validServerFound) { // Loop skips all other servers after a single valid server is found
                         if (server.status !== 'Offline') {
-                            if (cachedItem) {
-                                const { json, markdown } = cachedItem;
+                            if (cachedFiles) {
+                                const { json, markdown } = cachedFiles;
                                 this.setRequestURL(json, server.id);
                                 this.currentServerId = server.id;
                                 markdown ? this.emitServer(server, json, false, '', markdown) : this.emitServer(server, json);
@@ -292,7 +292,7 @@ export class NxAPIToolSystemService {
     async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc): Promise<void> {
         let markdown = await this.getAPIInfoMarkdown(server.id);
         markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
-        this.storeJSONInLocalStorage(json, 'main', markdown);
+        this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json, markdown);
         this.setRequestURL(json, server.id);
         this.currentServerId = this.currentServerId || server.id;
         this.emitServer(server, json, false, '', markdown);
@@ -336,16 +336,19 @@ export class NxAPIToolSystemService {
         let legacyAPI: APIDoc;
         let deprecatedAPI: APIDoc;
 
-        legacyAPI = this.retrieveJSONFromLocalStorage('legacy')?.json;
-        deprecatedAPI = this.retrieveJSONFromLocalStorage('deprecated')?.json;
+        const legacyAPICacheRequest = this.getJSONFromCache('legacy', this.currentSystem.id, this.systemVersion).then(value => { legacyAPI = value?.json; });
+        const deprecatedAPICacheRequest = this.getJSONFromCache('deprecated', this.currentSystem.id, this.systemVersion).then(value => { deprecatedAPI = value?.json; });
+
+        await legacyAPICacheRequest;
+        await deprecatedAPICacheRequest;
 
         // Optional chaining here because getAPIDoc returns undefined if system version is below 5.0
         const legacyAPICall = legacyAPI || this.getAPIDoc('legacy')?.then(response => {
-            this.storeJSONInLocalStorage(response, 'legacy');
+            this.cacheJSON('legacy', this.currentSystem.id, this.systemVersion, response);
             legacyAPI = response;
         });
         const deprecatedAPICall = deprecatedAPI || this.getAPIDoc('deprecated')?.then(response => {
-            this.storeJSONInLocalStorage(response, 'deprecated');
+            this.cacheJSON('deprecated', this.currentSystem.id, this.systemVersion, response);
             deprecatedAPI = response;
         });
         await legacyAPICall;
@@ -460,25 +463,34 @@ export class NxAPIToolSystemService {
         return { APIPreamble, APIChangelog };
     }
 
-    private makeLSKey = (systemId: string, type: APIDocType) => {
-        return systemId + ' api-tool JSON ' + type;
+    private makeCacheKey = (systemId: string, type: APIDocType) => {
+        return systemId + '-api-tool-file-' + type;
     };
 
-    private retrieveJSONFromLocalStorage = (type: APIDocType): APIToolCacheObject => {
+    async getJSONFromCache(type: APIDocType, systemId: string, systemVersion: string) {
         if (this.queryParams.disableCache) return null;
+        const cachedObject = await this.indexedDbService.getByKey('jsons', this.makeCacheKey(systemId, type)).pipe(take(1)).toPromise() as IndexDBCacheObject;
+        if (!cachedObject) { // Not cached
+            return null;
+        }
 
-        const version = this.systemVersion;
-        const cachedItem: APIToolCacheObject = this.localStorage.retrieve(this.makeLSKey(this.currentSystemId, type));
-        if (version !== cachedItem?.version) return null; // invalidate cache if system version changes
-        return cachedItem;
-    };
+        const { version, key } = cachedObject;
+        if (systemVersion !== version) { // System version has changed, invalidate cache
+            this.indexedDbService.deleteByKey('jsons', key).pipe(take(1)).subscribe(() => {});
+            return null;
+        }
+        return cachedObject;
+    }
 
-    private storeJSONInLocalStorage = (json: APIDoc, type: APIDocType, cachedMarkdown: Markdown = null) => {
+    cacheJSON(type: APIDocType, systemId: string, systemVersion: string, json: APIDoc, markdown: Markdown = null) : void {
         if (this.queryParams.disableCache) return null;
-        const version = this.systemVersion;
-        const cacheObject: APIToolCacheObject = cachedMarkdown ? { version, json, markdown: cachedMarkdown } : { version, json };
-        this.localStorage.store(this.makeLSKey(this.currentSystemId, type), cacheObject);
-    };
+        this.indexedDbService.add('jsons', {
+            json,
+            markdown,
+            version: systemVersion,
+            key: this.makeCacheKey(systemId, type)
+        }).pipe(take(1)).subscribe(() => {});
+    }
 
     private disableManualSystemChanging = (): void => {
         this.systemChangeLockout = true;

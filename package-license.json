@@ -768,7 +768,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/code-frame",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/code-frame/LICENSE"
         },
-        "@babel/compat-data@7.18.6": {
+        "@babel/compat-data@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -840,7 +840,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-imports",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/helper-module-imports/LICENSE"
         },
-        "@babel/helper-module-transforms@7.18.6": {
+        "@babel/helper-module-transforms@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -896,7 +896,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/highlight",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/highlight/LICENSE"
         },
-        "@babel/parser@7.18.6": {
+        "@babel/parser@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -912,7 +912,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/template",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/template/LICENSE"
         },
-        "@babel/traverse@7.18.6": {
+        "@babel/traverse@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -920,7 +920,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/@babel/traverse",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/@babel/traverse/LICENSE"
         },
-        "@babel/types@7.18.7": {
+        "@babel/types@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -1441,7 +1441,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/auto-bind",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/auto-bind/license"
         },
-        "ava@4.3.0": {
+        "ava@4.3.1": {
             "licenses": "MIT",
             "repository": "https://github.com/avajs/ava",
             "path": "cloud_portal/cloud_helper/node_modules/ava",
@@ -1548,7 +1548,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/camelcase",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001363": {
+        "caniuse-lite@1.0.30001364": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -1925,7 +1925,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.182": {
+        "electron-to-chromium@1.4.185": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -3542,7 +3542,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/neo-async",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/neo-async/LICENSE"
         },
-        "node-releases@2.0.5": {
+        "node-releases@2.0.6": {
             "licenses": "MIT",
             "repository": "https://github.com/chicoxyzzy/node-releases",
             "publisher": "Sergey Rubanov",
@@ -12427,6 +12427,13 @@
             "publisher": "Georgi Peltekov",
             "path": "cloud_portal/front_end/node_modules/ngx-file-drop",
             "licenseFile": "cloud_portal/front_end/node_modules/ngx-file-drop/README.md"
+        },
+        "ngx-indexed-db@11.0.2": {
+            "licenses": "ISC",
+            "repository": "https://github.com/assuncaocharles/ngx-indexed-db",
+            "publisher": "Charles Assunção",
+            "path": "cloud_portal/front_end/node_modules/ngx-indexed-db",
+            "licenseFile": "cloud_portal/front_end/node_modules/ngx-indexed-db/LICENSE"
         },
         "ngx-markdown@14.0.1": {
             "licenses": "MIT",

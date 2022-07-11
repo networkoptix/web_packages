@@ -55,12 +55,6 @@ export interface Markdown {
     APIChangelog: markdownFile
 }
 
-export interface APIToolCacheObject {
-    version: string,
-    json: APIDoc,
-    markdown?: Markdown
-}
-
 export type APITypes = {
     main: {
         type: 'main',
@@ -71,6 +65,13 @@ export type APITypes = {
         displayName: 'Deprecated API'
     }
 };
+
+export interface IndexDBCacheObject {
+    json: APIDoc,
+    version: string,
+    markdown: Markdown,
+    key: string
+}
 
 export interface FetchedJSONs {
     [key: string]: Promise<APIDoc>
