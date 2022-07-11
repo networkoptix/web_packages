@@ -383,7 +383,7 @@ export class NxCloudApiService {
         return this.http.post<t.CheckEmailExists>(this.CONFIG.apiBase + '/account/check', { email }).toPromise();
     }
 
-    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string, signature?: string) {
+    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string) {
         const body: any = {
             email,
             password,
@@ -393,7 +393,6 @@ export class NxCloudApiService {
         };
         state && (body.state = state);
         scope && (body.scope = scope);
-        signature && (body.signature = signature);
 
         return this.http.post<any>('/oauth/authenticate', body).toPromise();
     }

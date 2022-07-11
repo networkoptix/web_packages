@@ -568,8 +568,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData.redirect_uri, // || 'http://localhost:9000/',
             this.initialData.response_type, // || 'code',
             this.initialData.state,
-            this.initialData.scope,
-            this.initialData.signature
+            this.initialData.scope
         );
     };
 

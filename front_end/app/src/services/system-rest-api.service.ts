@@ -89,10 +89,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
         return !environment.isLocal || this.currentUser?.type === 'cloud';
     }
 
-    private createSignature(message) {
-        return this.post('/rest/v1/system/cloudSignature', { message });
-    }
-
     private get cloudAccessTokenName() {
         return `${this.systemId ? this.systemId + '-' : ''}${this.token}`;
     }
@@ -490,10 +486,6 @@ export class NxSystemRestAPI extends NxSystemAPI {
             grant_type: 'password',
             scope: `${this.CONFIG.cloudHost.replace(/http?s:\/\//, '')}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`
         });
-        if (!allSystems) {
-            const { signature } = await this.createSignature(href).toPromise();
-            params.append('signature', signature);
-        }
         window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
 

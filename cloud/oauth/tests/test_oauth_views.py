@@ -24,27 +24,6 @@ class TestOauthViews:
         assert response.data['errorText'] == 'Parameters are missing'
 
     # Test helper functions
-    def test_check_signature(self, mocker):
-        mock_validate_signature = mocker.patch(
-            'cloud.controllers.cloud_api.System.validate_signature', return_value='validate signature')
-        system_id = '00000000-0000-0000-0000-000000000000'
-        mock_valid_scope = 'cloudSystemId=' + system_id
-        signature = str(uuid4())
-        redirect_uri = str(uuid4())
-
-        # Valid check_signature
-        check_signature(signature, mock_valid_scope, redirect_uri)
-        mock_validate_signature.assert_called_once_with(
-            system_id, signature, redirect_uri)
-
-        # Test exceptions
-        with pytest.raises(APIRequestException, match='Scope is missing a valid system id'):
-            check_signature(signature, '', redirect_uri)
-
-        mock_validate_signature = mocker.patch(
-            'cloud.controllers.cloud_api.System.validate_signature', side_effect=APILogicException('', ''))
-        with pytest.raises(APIRequestException, match='Signature does not match'):
-            check_signature(signature, mock_valid_scope, redirect_uri)
 
     def test_get_param(self):
         query_param_value = str(uuid4())
@@ -69,7 +48,7 @@ class TestOauthViews:
 
     # Each view being tested has a wrapper that provides it a request
     # Authenticate View Tests
-    def authenticate(self, password, response_type, request_data=None, signature=None):
+    def authenticate(self, password, response_type, request_data=None):
         if request_data is None:
             data = {
                 'email': self.email,
@@ -80,8 +59,6 @@ class TestOauthViews:
             }
         else:
             data = request_data
-        if signature:
-            data['signature'] = signature
         # The path doesn't actually do anything here, but a path is required and it may as well be the correct path
         engine = import_module(settings.SESSION_ENGINE)
         request = self.arf.post('/oauth/authenticate', data=data)
@@ -91,9 +68,6 @@ class TestOauthViews:
     def test_valid_authenticate(self, mocker):
         mocker.patch('cloud.controllers.cloud_api.Auth.get_code',
                      return_value={'code': str(uuid4())})
-        mocked_check_signature = mocker.patch(
-            'oauth.views.check_signature', return_value='')
-        test_signature = str(uuid4())
         redirect_uri = f'https://{uuid4()}.com'
         request_data = {
             'email': self.email,
@@ -103,10 +77,7 @@ class TestOauthViews:
             'redirect_uri': redirect_uri
         }
         response = self.authenticate(
-            self.password, Auth.RESPONSE_TYPE.code, request_data, test_signature)
-
-        mocked_check_signature.assert_called_with(
-            test_signature, None, redirect_uri)
+            self.password, Auth.RESPONSE_TYPE.code, request_data)
         assert response.status_code == 200
 
     def test_authenticate_raises_wrong_code(self):
@@ -235,8 +206,6 @@ class TestOauthViews:
         mock_code = str(uuid4())
         mock_get_code = mocker.patch(
             'cloud.controllers.cloud_api.Auth.get_code', return_value={'code': mock_code})
-        mock_check_signature = mocker.patch(
-            'oauth.views.check_signature', return_value=True)
         mock_redirect = mocker.patch(
             'oauth.views.redirect', return_value=Response())
         # Password grant_type and code response type
@@ -249,13 +218,10 @@ class TestOauthViews:
             'password': str(uuid4()),
             'client_id': str(uuid4()),
             'redirect_uri': str(uuid4()),
-            'signature': str(uuid4()),
             'state': str(uuid4()),
         }
         self.token(data)
 
-        mock_check_signature.assert_called_once_with(
-            data['signature'], data['scope'], data['redirect_uri'])
         mock_get_code.assert_called_once_with(
             data['email'],
             data['password'],

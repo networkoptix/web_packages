@@ -17,7 +17,6 @@ client_description = "A registered client_id."
 redirect_uri_description = "Where the endpoint should redirect to after authorization."
 response_type_description = "Valid options are code or token."
 scope_description = "Scope for the oauth token."
-signature_description = "HMAC-SHA256 string used to validate oauth redirect_uri for system."
 
 access_token_param = openapi.Parameter(
     'access_token', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
@@ -39,8 +38,6 @@ response_type_param = openapi.Parameter(
     'response_type', openapi.IN_QUERY, required=True, description=response_type_description, type=openapi.TYPE_STRING)
 scope_param = openapi.Parameter('scope', openapi.IN_QUERY, required=True,
                                 description=scope_description, type=openapi.TYPE_STRING)
-signature_param = openapi.Parameter(
-    'signature', openapi.IN_QUERY, required=True, description=signature_description, type=openapi.TYPE_STRING)
 
 access_token__body = openapi.Schema(type=openapi.TYPE_STRING)
 authorization_code__body = openapi.Schema(
@@ -63,8 +60,6 @@ response_type__body = openapi.Schema(
     description=response_type_description, type=openapi.TYPE_STRING)
 scope__body = openapi.Schema(
     description=scope_description, type=openapi.TYPE_STRING)
-signature__body = openapi.Schema(
-    description=signature_description, type=openapi.TYPE_STRING)
 token__body = openapi.Schema(
     description="An access or refresh token.", type=openapi.TYPE_STRING)
 
@@ -118,18 +113,6 @@ SYSTEM_PATTERN = re.compile(
     r"cloudSystemId=([\w\d]{8}-[\w\d]{4}-[\w\d]{4}-[\w\d]{4}-[\w\d]{12})")
 
 
-def check_signature(signature, scope, redirect_uri):
-    system_id = SYSTEM_PATTERN.search(scope)
-    if not system_id:
-        raise APIRequestException(
-            "Scope is missing a valid system id", error_code=ErrorCodes.bad_request)
-    try:
-        System.validate_signature(system_id.group(1), signature, redirect_uri)
-    except APILogicException:
-        raise APIRequestException(
-            "Signature does not match.", error_code=ErrorCodes.bad_request)
-
-
 def get_param(request, name):
     """Depending on request method it extracts value from query_params or body."""
     if request.method == "GET":
@@ -166,8 +149,7 @@ def build_redirect_url(url, code, state):
                              "password": password__body,
                              "redirect_uri": redirect_uri__body,
                              "response_type": response_type__body,
-                             "scope": scope__body,
-                             "signature": signature__body
+                             "scope": scope__body
                          },
                          required=["client_id", "email", "password", "response_type"]),
                      responses={
@@ -194,9 +176,6 @@ def authenticate(request):
         # could have state be something like this {"customProperty": "some-key-for-app", "value": {"some": "custom value"}}
         # and the AccountCustomProperty.alexa_account_linked could be replaces with a more generic method to handle any property.
         state = None
-
-    if signature := get_param(request, "signature"):
-        check_signature(signature, scope, redirect_uri)
 
     try:
         res = Auth.get_code(email=email,
@@ -320,7 +299,7 @@ def register_client(request):
 @swagger_auto_schema(methods=["GET"],  # auto_schema=None,
                      operation_description="Returns new access and refresh tokens.",
                      manual_parameters=[client_id_param, authorization_code_param, email_param, grant_type_param,
-                                        password_param, refresh_token_param, response_type_param, scope_param, signature_param],
+                                        password_param, refresh_token_param, response_type_param, scope_param],
                      responses={
                          200: successful_token_response
 })
@@ -336,8 +315,7 @@ def register_client(request):
                              "password": password__body,
                              "refresh_token": refresh_token__body,
                              "response_type": response_type__body,
-                             "scope": scope__body,
-                             "signature": signature__body
+                             "scope": scope__body
                          }
 ),
     responses={
@@ -373,9 +351,6 @@ def token(request):
         client_id = get_param(request, "client_id")
         redirect_uri = get_param(request, "redirect_uri")
         state = get_param(request, 'state')
-
-        if signature := get_param(request, "signature"):
-            check_signature(signature, scope, redirect_uri)
 
         if response_type == Auth.RESPONSE_TYPE.code:
             res = Auth.get_code(email, password, client_id=client_id,

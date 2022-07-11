@@ -7,7 +7,6 @@ export interface AuthorizeParams {
     view_type?: 'desktop' | 'mobile' | 'web',
     grant_type?: string,
     scope?: string,
-    signature?: string,
     state?: string,
     code?: string,
     message?: 'passwordReset' | 'activated',
