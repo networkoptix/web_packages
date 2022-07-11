@@ -11,8 +11,16 @@
             novalidate
         >
             <nx-pre-loader *ngIf="loading"></nx-pre-loader>
-            <div *ngIf="!loading && !showLoggers" translate>System is offline. This information is not available.</div>
-            <div *ngFor="let logger of systemLoggers" class="form-group row">
+            <div
+                *ngIf="!loading && !showLoggers"
+                translate
+            >
+                System is offline. This information is not available.
+            </div>
+            <div
+                *ngFor="let logger of systemLoggers"
+                class="form-group row"
+            >
                 <label
                     class="col-12 col-md-4 m-0 pr-0 d-flex align-items-center justify-content-end"
                     [innerText]="LANG.system.loggerDropdownLabel({ loggerName: logger.key })"

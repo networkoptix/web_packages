@@ -10,12 +10,15 @@
         type="error"
         id="certificate-error"
         [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
-        [line1]="'Server is offline due to certificate error' | translate">
+        [line1]="'Server is offline due to certificate error' | translate"
+    >
     </nx-alert-block>
     <div
-        *ngIf="serverOffline ||
+        *ngIf="
+            serverOffline ||
             selectedServer?.internalStatus === CONFIG.servers.status.restarting ||
-            checking"
+            checking
+        "
         class="col-12"
     >
         <ng-container *ngIf="!checking">
@@ -27,7 +30,8 @@
                 [line1]="'Server offline' | translate"
                 [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
-                (onAction)="checkStatus()">
+                (onAction)="checkStatus()"
+            >
             </nx-alert-block>
             <nx-alert-block
                 *ngIf="selectedServer.internalStatus === CONFIG.servers.status.restarting"
@@ -37,7 +41,8 @@
                 [line1]="'Restarting' | translate"
                 [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
                 [btnCaption]="'Check Status' | translate"
-                (onAction)="checkStatus()">
+                (onAction)="checkStatus()"
+            >
             </nx-alert-block>
         </ng-container>
         <nx-alert-block
@@ -46,7 +51,8 @@
             id="checking-active"
             [iconSrc]="CONFIG.icons.dirNonStandard + 'info-alerts.svg'"
             [line1]="'Checking' | translate"
-            (onAction)="checkStatus()">
+            (onAction)="checkStatus()"
+        >
         </nx-alert-block>
     </div>
     <ng-template #preloader>
@@ -61,7 +67,7 @@
             *ngIf="system.isAvailable && !serverOffline; else offlinePlaceholder"
             class="col-12 placeholder-section"
         >
-            <nx-pre-loader ></nx-pre-loader>
+            <nx-pre-loader></nx-pre-loader>
         </div>
     </ng-template>
     <div
@@ -77,7 +83,10 @@
                         [(nameWatcherValue)]="serverNameWatcher.value"
                         [editEnabled]="enableEdit"
                     ></nx-editable-heading>
-                    <div *ngIf="!editMode" class="d-flex pb-2">
+                    <div
+                        *ngIf="!editMode"
+                        class="d-flex pb-2"
+                    >
                         <button
                             *ngIf="system.canViewInfo()"
                             class="server-buttons"
@@ -91,12 +100,16 @@
                                     [applyClass]="true"
                                 ></svg-icon>
                             </span>
-                            <span class="ml-1 header-button-span" translate>Detailed Info</span>
+                            <span
+                                class="ml-1 header-button-span"
+                                translate
+                                >Detailed Info</span
+                            >
                         </button>
                     </div>
                 </div>
                 <div class="col-12 col-md-8 col-lg-8">
-                    <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
+                    <nx-info-block [sectionsOrColumns]="[serverDetails]"></nx-info-block>
                 </div>
             </header>
             <nx-section *ngIf="system.userManager.isMine || system.userManager.permissions.isAdmin">
@@ -107,7 +120,11 @@
                             (click)="restartServer()"
                             [disabled]="restartDisabled || serverUnavailable"
                         >
-                            <span class="ellipsis" translate>Restart</span>
+                            <span
+                                class="ellipsis"
+                                translate
+                                >Restart</span
+                            >
                         </button>
                     </div>
                     <div
@@ -120,14 +137,22 @@
                             [disabled]="detachDisabled || serverUnavailable"
                             *ngIf="system.servers.length > 1"
                         >
-                            <span class="ellipsis" translate>Detach from the System</span>
+                            <span
+                                class="ellipsis"
+                                translate
+                                >Detach from the System</span
+                            >
                         </button>
                         <button
                             class="btn btn-default"
                             (click)="resetServer()"
                             [disabled]="resetDisabled || serverUnavailable"
                         >
-                            <span class="ellipsis" translate>Reset to Defaults</span>
+                            <span
+                                class="ellipsis"
+                                translate
+                                >Reset to Defaults</span
+                            >
                         </button>
                     </div>
                 </div>
@@ -139,9 +164,13 @@
             </header>
             <nx-section>
                 <div class="server-settings pl-3">
-                    <span class="ellipsis text-column" translate>Port</span>
+                    <span
+                        class="ellipsis text-column"
+                        translate
+                        >Port</span
+                    >
                     <div class="server-settings-port">
-                        <div style="width: 85px;">
+                        <div style="width: 85px">
                             <nx-numeric
                                 name="server-port"
                                 [class]="'pl-2'"
@@ -159,25 +188,32 @@
                                 *ngIf="portBusy"
                                 class="input-error"
                                 translate
-                            >Port is busy</span>
+                                >Port is busy</span
+                            >
                             <span
                                 *ngIf="serverPort.invalid && serverPort.touched"
                                 class="input-error"
                                 translate
-                            >Server port is required</span>
+                                >Server port is required</span
+                            >
                         </div>
                     </div>
                 </div>
                 <div class="server-settings pl-3">
-                    <ng-container *ngIf="showAnalytics && (
-                            (dropdownStorages.length && !storagesLoading) ||
-                            storagesLoading
-                        )"
+                    <ng-container
+                        *ngIf="
+                            showAnalytics &&
+                            ((dropdownStorages.length && !storagesLoading) || storagesLoading)
+                        "
                     >
-                        <span class="ellipsis text-column" translate>Analytics DB Storage</span>
+                        <span
+                            class="ellipsis text-column"
+                            translate
+                            >Analytics DB Storage</span
+                        >
                         <nx-select
                             id="system"
-                            class="{{storagesLoading ? 'storages-loading' : ''}}"
+                            class="{{ storagesLoading ? 'storages-loading' : '' }}"
                             [ellipsisMargin]="true"
                             [stillLoading]="checkingForDataAnalytics || storagesLoading"
                             [items]="dropdownStorages"
@@ -187,8 +223,19 @@
                         <ng-container *ngIf="systemStorageChosen">
                             <span></span>
                             <div class="error-label">
-                                <p class="mb-0" translate>Analytics data can take up large amounts of space.</p>
-                                <p class="mb-0" translate>We recommend to choose another location for it instead of the system partition.</p>
+                                <p
+                                    class="mb-0"
+                                    translate
+                                >
+                                    Analytics data can take up large amounts of space.
+                                </p>
+                                <p
+                                    class="mb-0"
+                                    translate
+                                >
+                                    We recommend to choose another location for it instead of the
+                                    system partition.
+                                </p>
                             </div>
                         </ng-container>
                     </ng-container>

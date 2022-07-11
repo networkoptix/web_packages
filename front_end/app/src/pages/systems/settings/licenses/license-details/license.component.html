@@ -1,13 +1,18 @@
-<nx-block type="gray" *ngFor="let license of licenses" class="d-block mt-3">
+<nx-block
+    type="gray"
+    *ngFor="let license of licenses"
+    class="d-block mt-3"
+>
     <header>
-        <h4>{{license.key}}</h4>
+        <h4>{{ license.key }}</h4>
     </header>
     <nx-section>
         <nx-info-block
-                [sectionsOrColumns]="orderedLicense[license.key]"
-                [infoBlockStyle]="infoBlockStyle"
-                [removeTopMargin]="true"
-                [infoLineStyle]="infoLineStyle">
+            [sectionsOrColumns]="orderedLicense[license.key]"
+            [infoBlockStyle]="infoBlockStyle"
+            [removeTopMargin]="true"
+            [infoLineStyle]="infoLineStyle"
+        >
         </nx-info-block>
     </nx-section>
 </nx-block>

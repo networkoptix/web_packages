@@ -1,26 +1,40 @@
-<nx-pre-loader type="page" *ngIf="account && !system && !showPlaceholder"></nx-pre-loader>
+<nx-pre-loader
+    type="page"
+    *ngIf="account && !system && !showPlaceholder"
+></nx-pre-loader>
 
 <div *ngIf="showPlaceholder; else cameras">
     <nx-page-placeholder
-            *ngIf="system?.show404" type="404"
-            withFooter [showMainButton]="true">
+        *ngIf="system?.show404"
+        type="404"
+        withFooter
+        [showMainButton]="true"
+    >
     </nx-page-placeholder>
 
     <nx-page-placeholder
-            *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM"
-            withFooter [showMainButton]="true">
+        *ngIf="systemNoAccess"
+        type="FAILED_TO_ACCESS_SYSTEM"
+        withFooter
+        [showMainButton]="true"
+    >
     </nx-page-placeholder>
 
     <nx-page-placeholder
-            *ngIf="secondaryMerge"
-            type="MERGE" [data]="{ systemName: mergeTargetSystem.name }"
-            withFooter>
+        *ngIf="secondaryMerge"
+        type="MERGE"
+        [data]="{ systemName: mergeTargetSystem.name }"
+        withFooter
+    >
     </nx-page-placeholder>
 
     <nx-page-placeholder
         *ngIf="show2faRequired"
-        type="FAILED_TO_ACCESS_2FA" [data]="{ systemName: systemName }"
-        withFooter [showMainButton]="true">
+        type="FAILED_TO_ACCESS_2FA"
+        [data]="{ systemName: systemName }"
+        withFooter
+        [showMainButton]="true"
+    >
     </nx-page-placeholder>
 </div>
 
@@ -28,12 +42,14 @@
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
-            <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
-                 [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 16px))'}">
+            <div
+                class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+                [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
+            >
                 <nx-pre-loader *ngIf="account && !menuVisible"></nx-pre-loader>
                 <nx-menu
                     *ngIf="menuVisible"
-                    [ngStyle]="{'display' : _menuSearchMode ? 'contents': 'block'}"
+                    [ngStyle]="{ display: _menuSearchMode ? 'contents' : 'block' }"
                     [content]="content"
                     [system]="system"
                     [searchable]="menuSearchable"
@@ -43,7 +59,9 @@
                 ></nx-menu>
             </div>
             <!-- Offset for the fixed menu -->
-            <div class="col-12 col-lg-8 col-xl-7 pt-3 pt-lg-0 px-3 pl-lg-0 pl-xl-3 offset-lg-4 offset-xl-3">
+            <div
+                class="col-12 col-lg-8 col-xl-7 pt-3 pt-lg-0 px-3 pl-lg-0 pl-xl-3 offset-lg-4 offset-xl-3"
+            >
                 <router-outlet></router-outlet>
                 <nx-footer *ngIf="menuVisible"></nx-footer>
             </div>

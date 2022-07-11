@@ -1,11 +1,22 @@
-<div *ngFor="let item of forest" class="system-group">
-
-    <div class="system-group-card" [class]="item.type + ' ' + (item.id === activeItemId ? 'active' : '')">
-        <h3 class="system-group-name"
+<div
+    *ngFor="let item of forest"
+    class="system-group"
+>
+    <div
+        class="system-group-card"
+        [class]="item.type + ' ' + (item.id === activeItemId ? 'active' : '')"
+    >
+        <h3
+            class="system-group-name"
             (dragstart)="onDragStart($event, item.id, item.type)"
             (dragover)="onDragOver($event)"
             (drop)="onDrop($event, item.id)"
-        ><a [routerLink]="(item.type === 'group' ? '/systems/groups/' : '/systems/') + item.id">{{ item.name }}</a></h3>
+        >
+            <a
+                [routerLink]="(item.type === 'group' ? '/systems/groups/' : '/systems/') + item.id"
+                >{{ item.name }}</a
+            >
+        </h3>
     </div>
 
     <div *ngIf="item.type === 'group'">

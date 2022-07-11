@@ -2,31 +2,57 @@
 <ng-template #mainDefault>
     <div class="default-wrapper">
         <div class="heading-icon-wrapper">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + 'cloud_storage.svg'" [applyClass]="true"
-                class="heading-icon" [svgStyle]="{'width.px': '148', 'height.px': '96'}"></svg-icon>
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirCloudStorage + 'cloud_storage.svg'"
+                [applyClass]="true"
+                class="heading-icon"
+                [svgStyle]="{ 'width.px': '148', 'height.px': '96' }"
+            ></svg-icon>
         </div>
         <h2 translate>No active Cloud Storage</h2>
         <span translate>You can activate Cloud Storage in your System.</span>
     </div>
     <div class="default-buttons">
-        <button (click)="dialogService.cloudStorageActivate()" class="btn btn-primary" translate>Activate Cloud
-            Storage</button>
-        <button (click)="dialogService.cloudStorageInfo()" class="btn btn-default" translate>Learn
-            More</button>
+        <button
+            (click)="dialogService.cloudStorageActivate()"
+            class="btn btn-primary"
+            translate
+        >
+            Activate Cloud Storage
+        </button>
+        <button
+            (click)="dialogService.cloudStorageInfo()"
+            class="btn btn-default"
+            translate
+        >
+            Learn More
+        </button>
     </div>
 </ng-template>
 
 <ng-template #actionBlocks>
     <div class="actions">
         <ng-container *ngFor="let actionId of ['update', 'migrate', 'delete']">
-            <div *ngIf="LANG.dialogs.cloudStorage.information[actionId]" class="action" (click)="perform(actionId)">
+            <div
+                *ngIf="LANG.dialogs.cloudStorage.information[actionId]"
+                class="action"
+                (click)="perform(actionId)"
+            >
                 <h4>
-                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirCloudStorage + actionId + '_storage.svg'"
-                        [applyClass]="true" class="action-icon" [svgStyle]="{'width.px': '44', 'height.px': '20'}">
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirCloudStorage + actionId + '_storage.svg'"
+                        [applyClass]="true"
+                        class="action-icon"
+                        [svgStyle]="{ 'width.px': '44', 'height.px': '20' }"
+                    >
                     </svg-icon>
-                    <span>{{('dialogs.cloudStorage.information.' + actionId + '.title') | translate}}</span>
+                    <span>{{
+                        'dialogs.cloudStorage.information.' + actionId + '.title' | translate
+                    }}</span>
                 </h4>
-                <p>{{('dialogs.cloudStorage.information.' + actionId + '.body') | translate}}</p>
+                <p>{{ 'dialogs.cloudStorage.information.' + actionId + '.body' | translate }}</p>
             </div>
         </ng-container>
     </div>
@@ -34,8 +60,8 @@
 
 <ng-template #licenseBlock>
     <div class="license-info-block">
-        <h2>{{license.size}}</h2>
-        <span>{{license.expires}}</span>
+        <h2>{{ license.size }}</h2>
+        <span>{{ license.expires }}</span>
     </div>
 </ng-template>
 
@@ -46,25 +72,42 @@
 <ng-template #usageBlock>
     <div class="usage-info-block">
         <h4>
-            <span *ngIf="usages.length; else notUsed">{{usageMessage}}</span>
+            <span *ngIf="usages.length; else notUsed">{{ usageMessage }}</span>
         </h4>
         <ng-template #activateNotice>
             <div class="usage-popover">
-                <div class="name" translate>Activate to see the usage diagram</div>
+                <div
+                    class="name"
+                    translate
+                >
+                    Activate to see the usage diagram
+                </div>
             </div>
         </ng-template>
-        <div #usageChart class="usage-bar" (mouseenter)="!usages.length && showPopover(activateNotice, usageChart)"
-            (mouseout)="closePopover()">
+        <div
+            #usageChart
+            class="usage-bar"
+            (mouseenter)="!usages.length && showPopover(activateNotice, usageChart)"
+            (mouseout)="closePopover()"
+        >
             <ng-container *ngFor="let usage of usages">
                 <ng-template #usageTooltip>
                     <div class="usage-popover">
-                        <div [style.background]="usage.color" class="legend"></div>
-                        <div class="description">{{usage.title}}</div>
-                        <div class="size">{{usage.size}}</div>
+                        <div
+                            [style.background]="usage.color"
+                            class="legend"
+                        ></div>
+                        <div class="description">{{ usage.title }}</div>
+                        <div class="size">{{ usage.size }}</div>
                     </div>
                 </ng-template>
-                <div #usageHighlight (mouseenter)="showPopover(usageTooltip, usageHighlight)"
-                    (mouseout)="closePopover()" [style.width.%]="usage.size" [style.background]="usage.color"></div>
+                <div
+                    #usageHighlight
+                    (mouseenter)="showPopover(usageTooltip, usageHighlight)"
+                    (mouseout)="closePopover()"
+                    [style.width.%]="usage.size"
+                    [style.background]="usage.color"
+                ></div>
             </ng-container>
         </div>
     </div>
@@ -77,30 +120,62 @@
 </ng-template>
 
 <!-- Alert Blocks -->
-<nx-alert-block *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED && type !== 'servers' && cloudStorageNotUsed && serverSettings"
-    (onAction)="cloudStorageNotUsed = false" type="bright-warning" id="cloud-storage-not-used"
+<nx-alert-block
+    *ngIf="
+        state === CLOUD_STORAGE_STATES.ACTIVATED &&
+        type !== 'servers' &&
+        cloudStorageNotUsed &&
+        serverSettings
+    "
+    (onAction)="cloudStorageNotUsed = false"
+    type="bright-warning"
+    id="cloud-storage-not-used"
     [line1]="'cloudStorage.notUsedWarning' | translate: { serverSettings: serverSettings }"
     [iconSrc]="CONFIG.icons.dirTextButtons + 'info.svg'"
-    [btnIconSrc]="CONFIG.icons.dirTextButtons + 'close.svg'">
+    [btnIconSrc]="CONFIG.icons.dirTextButtons + 'close.svg'"
+>
 </nx-alert-block>
 
 <!-- Main Block-->
 <nx-block [type]="this.type === 'servers' ? 'mt-3' : ''">
     <header class="with-child">
         <h4 translate>Cloud Storage</h4>
-        <span *ngIf="state === CLOUD_STORAGE_STATES.DEFAULT" class="tag" translate>New Feature</span>
-        <button *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED" class="header-buttons" id="detailed-info">
+        <span
+            *ngIf="state === CLOUD_STORAGE_STATES.DEFAULT"
+            class="tag"
+            translate
+            >New Feature</span
+        >
+        <button
+            *ngIf="state === CLOUD_STORAGE_STATES.ACTIVATED"
+            class="header-buttons"
+            id="detailed-info"
+        >
             <span>
-                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'info.svg'" [applyClass]="true">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                    [applyClass]="true"
+                >
                 </svg-icon>
             </span>
-            <span class="ml-1" translate>Detailed Info</span>
+            <span
+                class="ml-1"
+                translate
+                >Detailed Info</span
+            >
         </button>
     </header>
     <nx-section>
         <ng-container [ngSwitch]="state">
-            <ng-container *ngSwitchCase="CLOUD_STORAGE_STATES.DEFAULT" [ngTemplateOutlet]="mainDefault"></ng-container>
-            <ng-container *ngSwitchCase="CLOUD_STORAGE_STATES.ACTIVATED" [ngTemplateOutlet]="mainActivated">
+            <ng-container
+                *ngSwitchCase="CLOUD_STORAGE_STATES.DEFAULT"
+                [ngTemplateOutlet]="mainDefault"
+            ></ng-container>
+            <ng-container
+                *ngSwitchCase="CLOUD_STORAGE_STATES.ACTIVATED"
+                [ngTemplateOutlet]="mainActivated"
+            >
             </ng-container>
         </ng-container>
     </nx-section>
@@ -111,39 +186,94 @@
     <header class="with-child">
         <h4>
             <span translate>Your Keys</span>
-            <svg-icon [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
-                [title]="'Inactive keys can be re-used to activate Cloud Storage on another Systems' | translate"
-                [svgStyle]="{'width.px': '20', 'height.px': '20', 'vertical-align': 'top', 'margin-left.px': '8'}">
+            <svg-icon
+                [src]="CONFIG.icons.dirTextButtons + 'info.svg'"
+                [title]="
+                    'Inactive keys can be re-used to activate Cloud Storage on another Systems'
+                        | translate
+                "
+                [svgStyle]="{
+                    'width.px': '20',
+                    'height.px': '20',
+                    'vertical-align': 'top',
+                    'margin-left.px': '8'
+                }"
+            >
             </svg-icon>
         </h4>
-        <div class="toggle" [ngClass]="{'opened': showKeys}" (click)="showKeys = !showKeys">
-            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+        <div
+            class="toggle"
+            [ngClass]="{ opened: showKeys }"
+            (click)="showKeys = !showKeys"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+            ></svg-icon>
         </div>
     </header>
-    <div *ngIf="showKeys" class="table-wrapper">
-        <table cdk-table [dataSource]="licenses$">
-            <ng-container *ngFor="let field of fields" [cdkColumnDef]="field">
-                <th cdk-header-cell *cdkHeaderCellDef #headingCell class="position-relative"
-                    [ngClass]="{'sorted': field === sortBy}">
+    <div
+        *ngIf="showKeys"
+        class="table-wrapper"
+    >
+        <table
+            cdk-table
+            [dataSource]="licenses$"
+        >
+            <ng-container
+                *ngFor="let field of fields"
+                [cdkColumnDef]="field"
+            >
+                <th
+                    cdk-header-cell
+                    *cdkHeaderCellDef
+                    #headingCell
+                    class="position-relative"
+                    [ngClass]="{ sorted: field === sortBy }"
+                >
                     <div class="header-cell-content">
-                        <span>{{ ('cloudStorage.keyTableFields.' + field) | translate}}</span>
-                        <div class="toggle" [ngClass]="field === sortBy && !asc && 'opened'" (click)="sort(field)">
-                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'">
+                        <span>{{ 'cloudStorage.keyTableFields.' + field | translate }}</span>
+                        <div
+                            class="toggle"
+                            [ngClass]="field === sortBy && !asc && 'opened'"
+                            (click)="sort(field)"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                            >
                             </svg-icon>
                         </div>
                     </div>
                 </th>
-                <td cdk-cell *cdkCellDef="let element">{{field === 'key' ? (element[field] | mask: MASK) :
-                    element[field] }}</td>
+                <td
+                    cdk-cell
+                    *cdkCellDef="let element"
+                >
+                    {{ field === 'key' ? (element[field] | mask: MASK) : element[field] }}
+                </td>
             </ng-container>
             <thead>
-                <tr cdk-header-row *cdkHeaderRowDef="fields"></tr>
+                <tr
+                    cdk-header-row
+                    *cdkHeaderRowDef="fields"
+                ></tr>
             </thead>
 
             <tbody>
-                <tr cdk-row *cdkRowDef="let row; columns: fields; let i = index" class="data-row"></tr>
-                <tr class="data-row" *cdkNoDataRow>
-                    <td class="data-row" colspan="9999">
+                <tr
+                    cdk-row
+                    *cdkRowDef="let row; columns: fields; let i = index"
+                    class="data-row"
+                ></tr>
+                <tr
+                    class="data-row"
+                    *cdkNoDataRow
+                >
+                    <td
+                        class="data-row"
+                        colspan="9999"
+                    >
                         <span>{{ 'No Licenses' | translate }}</span>
                     </td>
                 </tr>

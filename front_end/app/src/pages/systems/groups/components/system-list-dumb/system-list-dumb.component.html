@@ -1,39 +1,48 @@
 <div class="row">
-    <div *ngFor="let system of systems"
+    <div
+        *ngFor="let system of systems"
         class="card card-condensed hoverable"
         (dragstart)="onDragStart($event, system.id, system.type)"
         (dragover)="onDragOver($event)"
     >
         <!-- <div (click)="openSystem(tile)" -->
-        <a [routerLink]="'/systems/' + system.id"
+        <a
+            [routerLink]="'/systems/' + system.id"
             class="card-body d-flex flex-column"
         >
             <h2
                 class="old-h12 d-block"
-                [innerHTML]="system.name | unsafe | highlight:searchString"
+                [innerHTML]="system.name | unsafe | highlight: searchString"
             ></h2>
             <span
                 class="user-name"
-                [innerHTML]="system.ownerFullName | unsafe | highlight:searchString"
+                [innerHTML]="system.ownerFullName | unsafe | highlight: searchString"
             ></span>
             <div class="system-list-bottom-bar">
                 <nx-tag
                     *ngIf="canShowTag(system)"
-                    style="display: block; margin-top: 24px;"
-                    type="{{CONFIG.system.status[system['stateOfHealth']]?.style || CONFIG.system.status.default.style}}"
+                    style="display: block; margin-top: 24px"
+                    type="{{
+                        CONFIG.system.status[system['stateOfHealth']]?.style ||
+                            CONFIG.system.status.default.style
+                    }}"
                 >
-                    <ng-container>{{LANG.systemStatuses[system['stateOfHealth']]() || system['stateOfHealth'] }}</ng-container>
+                    <ng-container>{{
+                        LANG.systemStatuses[system['stateOfHealth']]() || system['stateOfHealth']
+                    }}</ng-container>
                 </nx-tag>
                 <nx-client-button
                     [system]="system"
-                    [actionType]="(system) ? 'default' : 'primary'"
+                    [actionType]="system ? 'default' : 'primary'"
                     *ngIf="canShowButton(system)"
                 ></nx-client-button>
                 <svg-icon
                     *ngIf="needToConfigureTwoFactor(system)"
                     [ngClass]="{ 'margin-system-list-status': canShowTag(system) }"
-                    nx-add-svg-src [src]="CONFIG.icons.dir + 'lock.svg'"
-                    [svgStyle]="{'height.px': '20'}" [applyClass]="true"
+                    nx-add-svg-src
+                    [src]="CONFIG.icons.dir + 'lock.svg'"
+                    [svgStyle]="{ 'height.px': '20' }"
+                    [applyClass]="true"
                 ></svg-icon>
             </div>
         </a>

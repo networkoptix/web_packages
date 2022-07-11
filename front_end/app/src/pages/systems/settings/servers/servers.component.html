@@ -5,7 +5,8 @@
     [line1]="'Storages outdated. Reload page to update.' | translate"
     [btnIconSrc]="CONFIG.icons.dirTextButtons + 'reload.svg'"
     [btnCaption]="'Reload' | translate"
-    (onAction)="window.location.reload()">
+    (onAction)="window.location.reload()"
+>
 </nx-alert-block>
 
 <nx-standard-server-component
@@ -36,9 +37,7 @@
             class="d-block mt-3"
             [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
             [line1]="'Settings displayed below are advanced.' | translate"
-            [line2]="
-                'Changing them may cause server to work incorrectly.' | translate
-            "
+            [line2]="'Changing them may cause server to work incorrectly.' | translate"
             [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
             [btnCaption]="'Hide Advanced Settings' | translate"
             (onAction)="hideAdvancedSettings()"

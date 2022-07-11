@@ -1,12 +1,17 @@
-<div *ngIf="(group$ | async) else page404">
+<div *ngIf="group$ | async; else page404">
     <h1>{{ (group$ | async)?.name }}</h1>
 
     <h2 *ngIf="(group$ | async)?.groups?.length">Child Groups:</h2>
-    <nx-group-list-dumb-component [groups]="(group$ | async).groups" (parentIdChangeRequested)="changeGroupParent($event)">
+    <nx-group-list-dumb-component
+        [groups]="(group$ | async).groups"
+        (parentIdChangeRequested)="changeGroupParent($event)"
+    >
     </nx-group-list-dumb-component>
 
     <h2 *ngIf="(group$ | async)?.systems?.length">Systems:</h2>
-    <nx-system-list-dumb-component [systems]="(group$ | async).systems"></nx-system-list-dumb-component>
+    <nx-system-list-dumb-component
+        [systems]="(group$ | async).systems"
+    ></nx-system-list-dumb-component>
 
     <div *ngIf="!(group$ | async)?.systems?.length && !(group$ | async)?.groups?.length">
         Empty group
@@ -14,5 +19,8 @@
 </div>
 
 <ng-template #page404>
-    <nx-page-placeholder type="404" [withFooter]="false"></nx-page-placeholder>
+    <nx-page-placeholder
+        type="404"
+        [withFooter]="false"
+    ></nx-page-placeholder>
 </ng-template>

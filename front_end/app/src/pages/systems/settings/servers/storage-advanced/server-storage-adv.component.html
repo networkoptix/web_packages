@@ -14,7 +14,10 @@
                     *ngIf="!failedToLoad"
                     class="no-storage-placeholder"
                     translate
-                >No main storage drive was selected for writing - video will not be recorded on this server.</div>
+                >
+                    No main storage drive was selected for writing - video will not be recorded on
+                    this server.
+                </div>
             </ng-container>
             <form
                 *ngIf="!loading"
@@ -37,38 +40,45 @@
                     <tbody>
                         <tr class="table-row-spacer"></tr>
                         <tr *ngFor="let storage of storages; index as i">
-                            <td title="{{storage.url}}">{{storage.url}}</td>
-                            <td>{{friendlyBytes( Math.max(storage.totalSpace.bits, 0) )}}</td>
-                            <td
-                                [ngClass]="{ overwrite: storage.remainingSpace.bits < 0 }"
-                            >{{friendlyBytes( Math.max(storage.remainingSpace.bits, 0) )}}</td>
+                            <td title="{{ storage.url }}">{{ storage.url }}</td>
+                            <td>{{ friendlyBytes(Math.max(storage.totalSpace.bits, 0)) }}</td>
+                            <td [ngClass]="{ overwrite: storage.remainingSpace.bits < 0 }">
+                                {{ friendlyBytes(Math.max(storage.remainingSpace.bits, 0)) }}
+                            </td>
                             <td class="reserved-cell">
                                 <nx-numeric
-                                        style="width: 60px;"
-                                        [name]="'reservedSpace' + i"
-                                        [class]="'w-50 p-0 text-right'"
-                                        [min]="0"
-                                        [max]="storage.maxReserve[storage.reservedSpace.unit]"
-                                        [step]="storage.reservedSpace.unit === 'GB' ? 1 : 0.001"
-                                        [(ngModel)]="storage.reservedSpace.value"
-                                        [ngModelOptions]="{standalone: true}"
-                                        (onChange)="clamp($event, storage)"
-                                        [disabled]="isInacessible(storage)"></nx-numeric>
+                                    style="width: 60px"
+                                    [name]="'reservedSpace' + i"
+                                    [class]="'w-50 p-0 text-right'"
+                                    [min]="0"
+                                    [max]="storage.maxReserve[storage.reservedSpace.unit]"
+                                    [step]="storage.reservedSpace.unit === 'GB' ? 1 : 0.001"
+                                    [(ngModel)]="storage.reservedSpace.value"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    (onChange)="clamp($event, storage)"
+                                    [disabled]="isInacessible(storage)"
+                                ></nx-numeric>
 
                                 <div class="position-relative">
                                     <select
-                                            [id]="'reservedSpaceUnit' + i"
-                                            [attr.name]="'reservedSpaceUnit' + i"
-                                            [(ngModel)]="storage.reservedSpace.unit"
-                                            [ngModelOptions]="{standalone: true}"
-                                            class="form-control input-sm w-50"
-                                            [style]="{
-                                                'margin-left': '-1px',
-                                                'background-color': 'white',
-                                                'min-width': '58px'
-                                            }"
-                                            [disabled]="isInacessible(storage)">
-                                        <option selected value="GB">GB</option>
+                                        [id]="'reservedSpaceUnit' + i"
+                                        [attr.name]="'reservedSpaceUnit' + i"
+                                        [(ngModel)]="storage.reservedSpace.unit"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        class="form-control input-sm w-50"
+                                        [style]="{
+                                            'margin-left': '-1px',
+                                            'background-color': 'white',
+                                            'min-width': '58px'
+                                        }"
+                                        [disabled]="isInacessible(storage)"
+                                    >
+                                        <option
+                                            selected
+                                            value="GB"
+                                        >
+                                            GB
+                                        </option>
                                         <option value="TB">TB</option>
                                     </select>
                                     <div class="arrow-flip">
@@ -79,7 +89,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{storage.storageType}}</td>
+                            <td>{{ storage.storageType }}</td>
                             <td>
                                 <nx-switch
                                     id="isUsedForWriting{{ i }}"
@@ -105,7 +115,9 @@
                 class="btn btn-default ml-2"
                 (click)="resetWatchers()"
                 translate
-            >Cancel</button>
+            >
+                Cancel
+            </button>
         </div>
     </nx-section>
 </nx-block>

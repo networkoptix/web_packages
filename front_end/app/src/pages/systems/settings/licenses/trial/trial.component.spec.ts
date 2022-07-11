@@ -106,11 +106,11 @@ describe('Licenses (Trial)', () => {
 
             it('should have form and description', () => {
                 expect(form).toBeTruthy();
-                const line1 = form.querySelector('#trial_license_line1');
-                const line2 = form.querySelector('#trial_license_line2');
+                const line1 = form.querySelector<HTMLDivElement>('#trial_license_line1');
+                const line2 = form.querySelector<HTMLDivElement>('#trial_license_line2');
 
-                expect(line1.innerHTML).toBe('You have an unused trial license.');
-                expect(line2.innerHTML).toBe('Once activated, it will allow you to record up to 4 cameras for 30 days.');
+                expect(line1.innerText).toBe('You have an unused trial license.');
+                expect(line2.innerText).toBe('Once activated, it will allow you to record up to 4 cameras for 30 days.');
             });
 
             it('should have button w/ caption', () => {

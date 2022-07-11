@@ -1,18 +1,20 @@
 <div class="wrapper">
-
     <aside>
-
         <div class="d-flex">
             <button
                 class="btn btn-default mr-2"
                 (click)="refresh()"
                 translate
-            >Refresh</button>
+            >
+                Refresh
+            </button>
             <button
                 class="btn btn-default mr-2"
                 (click)="initNewGroupDialog()"
                 translate
-            >New group</button>
+            >
+                New group
+            </button>
             <a [routerLink]="'/systems/groups/'">/</a>
         </div>
 
@@ -26,5 +28,4 @@
     <div class="content">
         <router-outlet></router-outlet>
     </div>
-
 </div>
