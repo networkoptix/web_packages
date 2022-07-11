@@ -3,14 +3,20 @@
 @use "../../styles/mixins";
 
 nx-process-button {
+
+    &.login-full-width-wrapper {
+        margin: 0 !important;
+    }
+
     .full-width {
         width: 100% !important;
         max-width: 100% !important;
     }
 
     .login-full-width {
-        width: calc(100vw - 48px) !important;
+        width: 100%;
         max-width: 100% !important;
+        margin: 0;
     }
 
     @include mixins.keyframe(bubblingG) {
