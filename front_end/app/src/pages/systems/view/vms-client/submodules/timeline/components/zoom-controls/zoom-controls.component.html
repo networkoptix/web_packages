@@ -1,14 +1,18 @@
 <div
     class="button zoom-in"
-    [ngClass]="{ 'enabled': !disabled && canZoomIn }"
+    [ngClass]="{ enabled: !disabled && canZoomIn }"
     (mousedown)="startZooming($event, +1)"
     (mouseup)="stopZooming()"
     (dblclick)="strongZoomIn()"
->+</div>
+>
+    +
+</div>
 <div
     class="button zoom-out"
-    [ngClass]="{ 'enabled': !disabled && canZoomOut }"
+    [ngClass]="{ enabled: !disabled && canZoomOut }"
     (mousedown)="startZooming($event, -1)"
     (mouseup)="stopZooming()"
     (dblclick)="fullZoomOut()"
->–</div>
+>
+    –
+</div>

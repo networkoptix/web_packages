@@ -1,27 +1,40 @@
 <nx-pre-loader *ngIf="!initialized; else uninitialized"></nx-pre-loader>
 
 <ng-template #uninitialized>
-
     <nx-page-placeholder
-            *ngIf="initializedWithError; else primary"
-            type="OFFLINE"
-            class="page-placeholder">
+        *ngIf="initializedWithError; else primary"
+        type="OFFLINE"
+        class="page-placeholder"
+    >
     </nx-page-placeholder>
 
     <ng-template #primary>
-        <div class="nx-view-sidebar" *ngIf="hasCameras; else noCameras">
+        <div
+            class="nx-view-sidebar"
+            *ngIf="hasCameras; else noCameras"
+        >
             <media-server-list></media-server-list>
-            <div class="sidebar-toggling-ear--wrapper"
-                 [ngClass]="{ 'shown': isSidebarShown, 'visible': isSidebarShown || showElementsInFSM }"
-                 (click)="handleSidebarTogglingEarClick()">
+            <div
+                class="sidebar-toggling-ear--wrapper"
+                [ngClass]="{ shown: isSidebarShown, visible: isSidebarShown || showElementsInFSM }"
+                (click)="handleSidebarTogglingEarClick()"
+            >
                 <div class="sidebar-toggling-ear">
-                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                    ></svg-icon>
                 </div>
             </div>
         </div>
         <router-outlet *ngIf="hasCameras"></router-outlet>
         <ng-template #noCameras>
-            <div class="no-cameras-placeholder" translate>No Cameras</div>
+            <div
+                class="no-cameras-placeholder"
+                translate
+            >
+                No Cameras
+            </div>
         </ng-template>
     </ng-template>
 </ng-template>

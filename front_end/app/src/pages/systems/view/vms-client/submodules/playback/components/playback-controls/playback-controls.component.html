@@ -1,8 +1,9 @@
 <div
     class="playback-control-button {{ btnClass }}"
     [ngClass]="{
-        'enabled': enabled
+        enabled: enabled
     }"
-    (click)="handleClick()">
+    (click)="handleClick()"
+>
     <span class="glyph"></span>
 </div>

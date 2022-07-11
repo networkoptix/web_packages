@@ -1,5 +1,17 @@
-<span *ngIf="tokenMatches else degenerateCase" class="before-match">{{ beforeMatch }}</span>
-<span *ngIf="tokenMatches" class="match">{{ match }}</span>
-<span *ngIf="tokenMatches" class="afterMatch">{{ afterMatch }}</span>
+<span
+    *ngIf="tokenMatches; else degenerateCase"
+    class="before-match"
+    >{{ beforeMatch }}</span
+>
+<span
+    *ngIf="tokenMatches"
+    class="match"
+    >{{ match }}</span
+>
+<span
+    *ngIf="tokenMatches"
+    class="afterMatch"
+    >{{ afterMatch }}</span
+>
 
 <ng-template #degenerateCase>{{ string }}</ng-template>

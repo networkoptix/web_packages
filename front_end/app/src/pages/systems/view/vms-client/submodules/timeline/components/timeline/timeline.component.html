@@ -1,23 +1,23 @@
 <div
-  class="timeline"
-  [ngClass]="{
-    'dragging': isDragging
-  }"
+    class="timeline"
+    [ngClass]="{
+        dragging: isDragging
+    }"
 >
-  <canvas
-    #canvas
-    (wheel)="canvasWheelHandler($event)"
-    (mousemove)="canvasMouseMoveHandler($event)"
-    (mouseenter)="canvasMouseEnterHandler($event)"
-    (mouseleave)="canvasMouseLeaveHandler($event)"
-    (mousedown)="canvasMouseDownHandler($event)"
-    (mouseup)="canvasMouseUpHandler($event)"
-    (touchmove)="canvasMouseMoveHandler($event)"
-    (touchstart)="canvasMouseDownHandler($event)"
-    (touchend)="canvasMouseUpHandler($event)"
-  ></canvas>
-  <time-under-mouse *ngIf="!isDragging && !hideTimeUnderMouse"></time-under-mouse>
-  <timeline-scrollbar></timeline-scrollbar>
-  <timeline-playback-indicator></timeline-playback-indicator>
-  <timeline-selection *ngIf="archiveSelectionEnabled"></timeline-selection>
+    <canvas
+        #canvas
+        (wheel)="canvasWheelHandler($event)"
+        (mousemove)="canvasMouseMoveHandler($event)"
+        (mouseenter)="canvasMouseEnterHandler($event)"
+        (mouseleave)="canvasMouseLeaveHandler($event)"
+        (mousedown)="canvasMouseDownHandler($event)"
+        (mouseup)="canvasMouseUpHandler($event)"
+        (touchmove)="canvasMouseMoveHandler($event)"
+        (touchstart)="canvasMouseDownHandler($event)"
+        (touchend)="canvasMouseUpHandler($event)"
+    ></canvas>
+    <time-under-mouse *ngIf="!isDragging && !hideTimeUnderMouse"></time-under-mouse>
+    <timeline-scrollbar></timeline-scrollbar>
+    <timeline-playback-indicator></timeline-playback-indicator>
+    <timeline-selection *ngIf="archiveSelectionEnabled"></timeline-selection>
 </div>

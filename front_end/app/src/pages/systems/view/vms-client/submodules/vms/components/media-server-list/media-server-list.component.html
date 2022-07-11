@@ -1,73 +1,114 @@
 <div class="media-server-list">
-
-  <nx-media-server-list-header
-    (ipVisibilityStateChange)="updateShowIP($event)"
-    (filterTokenChange)="updateFilteredList($event)">
-  </nx-media-server-list-header>
-
-  <div class="server-list">
-
-    <div
-      class="server"
-      *ngFor="let server of mediaservers; trackBy: serverID"
-      [ngClass]="{
-        'show-ip': showIP,
-        'expanded': isServerExpanded[server.id],
-        'online': server.status === 'Online',
-        'offline': server.status === 'Offline',
-        'empty': !server.cameras.length
-      }"
+    <nx-media-server-list-header
+        (ipVisibilityStateChange)="updateShowIP($event)"
+        (filterTokenChange)="updateFilteredList($event)"
     >
+    </nx-media-server-list-header>
 
-      <div
-          class="server-name"
-          (click)=changeServerVisibility(server.id)
-          [title]="server.ip"
-      >
-        <svg-icon nx-add-svg-src
-                  [src]="CONFIG.icons.dir + (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')"
-                  [applyClass]="true"></svg-icon>
-        <span class="name" [ngClass]="server.status" [innerHTML]="(server.name | unsafe | highlight:token)"></span>
-        <span *ngIf="showIP" class="ip-info" [innerHTML]="(server.ip | unsafe | highlight:token)"></span>
-        <svg-icon nx-add-svg-src class="expand" [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
-      </div>
-
-      <div class="cameras" *ngIf="isServerExpanded[server.id]">
-        <a
-          class="camera"
-          *ngFor="let camera of server.cameras; trackBy: cameraId"
-          [routerLink]="[camera.id]"
-          [ngClass]="{
-            online: camera.isOnline,
-            live: camera.isLive,
-            recording: camera.isRecording,
-            hasArchive: camera.hasArchive,
-            offline: !camera.isOnline,
-            unauthorized: !camera.isAuthorized,
-            isScheduleEnabled: camera.isScheduleEnabled,
-            error: previewLoaded[camera.id] === -1,
-            selected: camera.id === activeCameraId
-          }"
+    <div class="server-list">
+        <div
+            class="server"
+            *ngFor="let server of mediaservers; trackBy: serverID"
+            [ngClass]="{
+                'show-ip': showIP,
+                expanded: isServerExpanded[server.id],
+                online: server.status === 'Online',
+                offline: server.status === 'Offline',
+                empty: !server.cameras.length
+            }"
         >
-          <div class="preview">
-            <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
-            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
-            <svg-icon nx-add-svg-src
-              *ngIf="!camera.isAuthorized || previewLoaded[camera.id] === -1 || !camera.isOnline"
-              [src]="CONFIG.icons.dirNonStandardView + 'cameras_list_placeholder_' +
-                (!camera.isOnline ?
-                  'offline'
-                  : !camera.isAuthorized ?
-                    'unauthorized'
-                    : 'alert'
-                )
-                + '.svg'"
-              [applyClass]="true"></svg-icon>
-          </div>
-          <span class="name" [ngClass]="camera.status" [innerHTML]="camera.name | unsafe | highlight:token"></span>
-          <span class="ip-info" [innerHTML]="camera.url | unsafe | highlight:token"></span>
-        </a>
-      </div>
+            <div
+                class="server-name"
+                (click)="changeServerVisibility(server.id)"
+                [title]="server.ip"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="
+                        CONFIG.icons.dir +
+                        (server.status === 'Offline' ? 'server_offline.svg' : 'server.svg')
+                    "
+                    [applyClass]="true"
+                ></svg-icon>
+                <span
+                    class="name"
+                    [ngClass]="server.status"
+                    [innerHTML]="server.name | unsafe | highlight: token"
+                ></span>
+                <span
+                    *ngIf="showIP"
+                    class="ip-info"
+                    [innerHTML]="server.ip | unsafe | highlight: token"
+                ></span>
+                <svg-icon
+                    nx-add-svg-src
+                    class="expand"
+                    [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                ></svg-icon>
+            </div>
+
+            <div
+                class="cameras"
+                *ngIf="isServerExpanded[server.id]"
+            >
+                <a
+                    class="camera"
+                    *ngFor="let camera of server.cameras; trackBy: cameraId"
+                    [routerLink]="[camera.id]"
+                    [ngClass]="{
+                        online: camera.isOnline,
+                        live: camera.isLive,
+                        recording: camera.isRecording,
+                        hasArchive: camera.hasArchive,
+                        offline: !camera.isOnline,
+                        unauthorized: !camera.isAuthorized,
+                        isScheduleEnabled: camera.isScheduleEnabled,
+                        error: previewLoaded[camera.id] === -1,
+                        selected: camera.id === activeCameraId
+                    }"
+                >
+                    <div class="preview">
+                        <nx-pre-loader
+                            class="preloader"
+                            *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"
+                        ></nx-pre-loader>
+                        <img
+                            *ngIf="camera.thumbnailUrl"
+                            [src]="camera.thumbnailUrl"
+                            (load)="handlePreviewLoaded(camera.id)"
+                            (error)="handlePreviewError(camera.id)"
+                        />
+                        <svg-icon
+                            nx-add-svg-src
+                            *ngIf="
+                                !camera.isAuthorized ||
+                                previewLoaded[camera.id] === -1 ||
+                                !camera.isOnline
+                            "
+                            [src]="
+                                CONFIG.icons.dirNonStandardView +
+                                'cameras_list_placeholder_' +
+                                (!camera.isOnline
+                                    ? 'offline'
+                                    : !camera.isAuthorized
+                                    ? 'unauthorized'
+                                    : 'alert') +
+                                '.svg'
+                            "
+                            [applyClass]="true"
+                        ></svg-icon>
+                    </div>
+                    <span
+                        class="name"
+                        [ngClass]="camera.status"
+                        [innerHTML]="camera.name | unsafe | highlight: token"
+                    ></span>
+                    <span
+                        class="ip-info"
+                        [innerHTML]="camera.url | unsafe | highlight: token"
+                    ></span>
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

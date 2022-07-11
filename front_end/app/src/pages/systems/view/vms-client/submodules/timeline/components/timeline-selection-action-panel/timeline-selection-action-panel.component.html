@@ -1,33 +1,52 @@
-<div class="duration-selected"
-  *ngIf="selection.range.duration > 0"
-  (click)="handleDurationClick($event)"
-  (dblclick)="handleDurationDoubleClick($event, true)"
+<div
+    class="duration-selected"
+    *ngIf="selection.range.duration > 0"
+    (click)="handleDurationClick($event)"
+    (dblclick)="handleDurationDoubleClick($event, true)"
 >
-  <span class="duration">{{ duration$ | async }}</span>
-  <!-- <span class="duration" (click)="handleDurationClick($event)">{{ duration }}</span> -->
-  selected
+    <span class="duration">{{ duration$ | async }}</span>
+    <!-- <span class="duration" (click)="handleDurationClick($event)">{{ duration }}</span> -->
+    selected
 </div>
 
-<div class="set-time-button" (click)="initSetTimeDialog()">
-  <svg-icon
-      nx-add-svg-src
-      [src]="CONFIG.icons.dir + 'clock.svg'"
-      [svgStyle]="{'width.px': '20', 'height.px': '20', 'margin-top': '-3', 'margin-right': '6'}"
-  ></svg-icon>
-  <span translate>Set Time</span>
+<div
+    class="set-time-button"
+    (click)="initSetTimeDialog()"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="CONFIG.icons.dir + 'clock.svg'"
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20',
+            'margin-top': '-3',
+            'margin-right': '6'
+        }"
+    ></svg-icon>
+    <span translate>Set Time</span>
 </div>
 
-<a class="export-link"
-   [href]="exportUrl" target="_blank"
-   download
-   type="application/octet-stream"
+<a
+    class="export-link"
+    [href]="exportUrl"
+    target="_blank"
+    download
+    type="application/octet-stream"
 >
-  <svg-icon
-      nx-add-svg-src
-      [src]="CONFIG.icons.dir + 'download.svg'"
-      [svgStyle]="{'width.px': '20', 'height.px': '20', 'margin-top': '-3', 'margin-right': '6'}"
-  ></svg-icon>
-  <span translate>Export</span>
+    <svg-icon
+        nx-add-svg-src
+        [src]="CONFIG.icons.dir + 'download.svg'"
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20',
+            'margin-top': '-3',
+            'margin-right': '6'
+        }"
+    ></svg-icon>
+    <span translate>Export</span>
 </a>
 
-<a class="close" (click)="clearSelection()"></a>
+<a
+    class="close"
+    (click)="clearSelection()"
+></a>

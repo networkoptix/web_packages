@@ -1,16 +1,18 @@
 <div *ngIf="!showOverlay && (errorEncryption || errorPlayback); else player">
     <nx-player-placeholder
-            *ngIf="errorEncryption"
-            svgFileName="camera_archive_encrypted"
-            [heading]="LANG.errorCodes.archiveEncrypted()"
-            [description]="LANG.errorCodes.archiveEncryptedMessage()">
+        *ngIf="errorEncryption"
+        svgFileName="camera_archive_encrypted"
+        [heading]="LANG.errorCodes.archiveEncrypted()"
+        [description]="LANG.errorCodes.archiveEncryptedMessage()"
+    >
     </nx-player-placeholder>
 
     <nx-player-placeholder
-            *ngIf="errorPlayback"
-            svgFileName="alert"
-            [heading]="LANG.common.cameraStates.error()"
-            [description]="errorPlaybackDescription">
+        *ngIf="errorPlayback"
+        svgFileName="alert"
+        [heading]="LANG.common.cameraStates.error()"
+        [description]="errorPlaybackDescription"
+    >
     </nx-player-placeholder>
 </div>
 
@@ -18,12 +20,13 @@
     <div
         *ngIf="showOverlay"
         class="overlay"
-        [ngClass]="{ 'active': showOverlay }"
+        [ngClass]="{ active: showOverlay }"
         (dblclick)="onDblClick($event)"
     >
         <nx-pre-loader></nx-pre-loader>
     </div>
-    <player-js *ngIf="playback.subject | async | as: PlaybackStateTemp as playbackState"
+    <player-js
+        *ngIf="playback.subject | async | as: PlaybackStateTemp as playbackState"
         (click)="handleClick($event)"
         (videoEnded)="videoEnded($event)"
         (videoError)="videoErrorEventHandler($event)"

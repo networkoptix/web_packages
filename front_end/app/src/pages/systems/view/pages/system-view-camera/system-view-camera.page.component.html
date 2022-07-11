@@ -18,21 +18,30 @@
         <span class="glyph"></span>
         <span class="name">
             {{ camera.name }}
-            <span *ngIf="CONFIG.allowDebugMode" class="transport">
+            <span
+                *ngIf="CONFIG.allowDebugMode"
+                class="transport"
+            >
                 {{ selectedTransport$ | async | uppercase }},&nbsp;
             </span>
-            <span class="quality">{{ currentQuality(selectedQuality$ | async)}}</span>
+            <span class="quality">{{ currentQuality(selectedQuality$ | async) }}</span>
         </span>
 
         <div class="buttons">
-            <div class="settings-toggler" (click)="toggleSettings($event)">
+            <div
+                class="settings-toggler"
+                (click)="toggleSettings($event)"
+            >
                 <svg viewBox="0 0 36 36">
-                    <path class="st0" d="M34.7,23l-3.5-2c0.2-1,0.4-2,0.4-3s-0.1-2.1-0.4-3l3.5-2c0.5-0.3,0.6-0.9,0.4-1.4l-3-5.2
+                    <path
+                        class="st0"
+                        d="M34.7,23l-3.5-2c0.2-1,0.4-2,0.4-3s-0.1-2.1-0.4-3l3.5-2c0.5-0.3,0.6-0.9,0.4-1.4l-3-5.2
                     c-0.3-0.5-0.9-0.6-1.4-0.4l-3.5,2C25.8,6.6,24,5.6,22,5V0.5C22,0.2,21.8,0,21.5,0h-7C14.2,0,14,0.2,14,0.5V5C12,5.6,10.2,6.6,8.7,8
                     L5.3,6C4.8,5.8,4.2,5.9,3.9,6.4l-3,5.2c-0.3,0.5-0.1,1.1,0.4,1.4l3.5,2c-0.2,1-0.4,2-0.4,3s0.1,2.1,0.4,3l-3.5,2
                     c-0.5,0.3-0.6,0.9-0.4,1.4l3,5.2c0.3,0.5,0.9,0.6,1.4,0.4l3.5-2c1.5,1.4,3.3,2.4,5.3,3.1v4.5c0,0.3,0.2,0.5,0.5,0.5h7
                     c0.3,0,0.5-0.2,0.5-0.5V31c2-0.6,3.8-1.7,5.3-3.1l3.5,2c0.5,0.3,1.1,0.1,1.4-0.4l3-5.2C35.4,23.9,35.2,23.3,34.7,23z M18,25.6
-                    c-4.2,0-7.6-3.4-7.6-7.6s3.4-7.6,7.6-7.6s7.6,3.4,7.6,7.6S22.2,25.6,18,25.6z" />
+                    c-4.2,0-7.6-3.4-7.6-7.6s3.4-7.6,7.6-7.6s7.6,3.4,7.6,7.6S22.2,25.6,18,25.6z"
+                    />
                 </svg>
             </div>
             <div
@@ -54,8 +63,10 @@
         </div>
     </header>
     <nx-camera-details
-            *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails) && cameraDetailsShown"
-            [camera]="camera" (close)="toggleCameraDetails(false)">
+        *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails) && cameraDetailsShown"
+        [camera]="camera"
+        (close)="toggleCameraDetails(false)"
+    >
     </nx-camera-details>
     <div
         class="settings"
@@ -63,10 +74,15 @@
         (click)="stopSettingsClickPropagation($event)"
     >
         <div class="section transportSelection">
-            <div class="caption" translate>Transport</div>
+            <div
+                class="caption"
+                translate
+            >
+                Transport
+            </div>
             <div
                 class="options"
-                *ngIf="(transports$ | async)?.length else noTransportsAvailable"
+                *ngIf="(transports$ | async)?.length; else noTransportsAvailable"
             >
                 <div
                     *ngFor="let st of transports$ | async"
@@ -86,10 +102,15 @@
             </ng-template>
         </div>
         <div class="section qualitySelection">
-            <div class="caption" translate>Quality</div>
+            <div
+                class="caption"
+                translate
+            >
+                Quality
+            </div>
             <div
                 class="options"
-                *ngIf="(visibleQualities$ | async)?.length else noQualitiesAvailable"
+                *ngIf="(visibleQualities$ | async)?.length; else noQualitiesAvailable"
             >
                 <div
                     *ngFor="let q of visibleQualities$ | async"
@@ -101,9 +122,11 @@
                     (click)="selectedQuality = q; settingsShown = false"
                 >
                     <div>
-                        {{ LANG.common.resolution[q.toLowerCase()]
-                            ? (LANG.common.resolution[q.toLowerCase()])()
-                            : q.toLowerCase() }}
+                        {{
+                            LANG.common.resolution[q.toLowerCase()]
+                                ? LANG.common.resolution[q.toLowerCase()]()
+                                : q.toLowerCase()
+                        }}
                     </div>
                 </div>
             </div>
@@ -115,20 +138,30 @@
                 </div>
             </ng-template>
         </div>
-        <div *ngIf="(isLocal || CONFIG.featureFlags.viewCameraDetails)"
-             class="section camera-details-toggler"
-             (click)="toggleCameraDetails()" translate
-        >Camera Details</div>
+        <div
+            *ngIf="isLocal || CONFIG.featureFlags.viewCameraDetails"
+            class="section camera-details-toggler"
+            (click)="toggleCameraDetails()"
+            translate
+        >
+            Camera Details
+        </div>
     </div>
 
-    <div class="player-and-controls-wrapper" [ngClass]="{'slim': !canViewArchives}">
+    <div
+        class="player-and-controls-wrapper"
+        [ngClass]="{ slim: !canViewArchives }"
+    >
         <div class="player-wrapper">
             <player
-                *ngIf="camera && showPlayerSection else noPlayer"
+                *ngIf="camera && showPlayerSection; else noPlayer"
                 (videoDblClick)="onVideoDblClick($event)"
             ></player>
             <ng-template #noPlayer>
-                <div class="offline-message" [style.background-image]="previewUrl">
+                <div
+                    class="offline-message"
+                    [style.background-image]="previewUrl"
+                >
                     <nx-player-placeholder
                         *ngIf="cameraError; else unreachable"
                         svgFileName="placeholder_camera_alert"
@@ -166,7 +199,9 @@
                     </ng-template>
                 </div>
             </ng-template>
-            <timeline-selection-action-panel *ngIf="archiveSelectionEnabled"></timeline-selection-action-panel>
+            <timeline-selection-action-panel
+                *ngIf="archiveSelectionEnabled"
+            ></timeline-selection-action-panel>
         </div>
 
         <div class="controls-wrapper">
@@ -182,22 +217,29 @@
                         class="controls-toggling-ear"
                         (click)="handleControlsTogglingEarClick()"
                     >
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"></svg-icon>
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+                        ></svg-icon>
                     </div>
                 </div>
             </div>
             <div class="controls">
                 <playback-controls [enabled]="enableControls"></playback-controls>
                 <zoom-controls *ngIf="camera.hasArchive && canViewArchives"></zoom-controls>
-                <timeline *ngIf="showTimeline else noArchiveYet"></timeline>
+                <timeline *ngIf="showTimeline; else noArchiveYet"></timeline>
                 <ng-template #noArchiveYet>
                     <nx-pre-loader
                         class="loading-archive-indicator"
-                        *ngIf="getRecordsInProgress else noArchive"
+                        *ngIf="getRecordsInProgress; else noArchive"
                     ></nx-pre-loader>
                     <ng-template #noArchive>
                         <div class="no-archive-message">
-                            <span *ngIf="canViewArchives" translate>No Archive</span>
+                            <span
+                                *ngIf="canViewArchives"
+                                translate
+                                >No Archive</span
+                            >
                         </div>
                     </ng-template>
                 </ng-template>

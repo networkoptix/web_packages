@@ -1,7 +1,10 @@
 <span class="date">{{ date }}</span>
 <span class="time">{{ time }}</span>
 <svg viewbox="0 0 140 5">
-  <polygon [attr.points]="svgArrowPoints"/>
+    <polygon [attr.points]="svgArrowPoints" />
 </svg>
 <div class="bottom-stripe"></div>
-<div class="vertical-line" [ngStyle]="{ 'left.px': verticalLineLeftPx }"></div>
+<div
+    class="vertical-line"
+    [ngStyle]="{ 'left.px': verticalLineLeftPx }"
+></div>
