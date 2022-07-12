@@ -61,6 +61,7 @@ class FLAGS(metaclass=_FlagType):
     cloud_ownership_transfer = ('Cloud Ownership Transfer', 'cloudOwnershipTransfer', '%CLOUD_OWNERSHIP_TRANSFER%')
     new_header = ('New Header', 'newHeader')
     cloud_storage = ('Cloud Storage', 'cloudStorage', '%CLOUD_STORAGE_FEATURE_ENABLED%')
+    log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')

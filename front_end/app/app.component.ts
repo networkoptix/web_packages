@@ -14,6 +14,7 @@ import {
     GuardsCheckStart,
     Router,
 } from '@angular/router';
+import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import type { DeviceInfo } from 'ngx-device-detector';
@@ -255,6 +256,21 @@ export class AppComponent {
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
+        }
+        if (!environment.isLocal && !this.CONFIG.isInIframe &&
+            this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
+            try {
+                LogRocket.init(this.CONFIG.cloudMonitoring.logRocket, {
+                    release: '22.1'
+                });
+                this.CONFIG.cloudMonitoring.isLogRocketActive = true;
+                LogRocket.getSessionURL(sessionURL => {
+                    console.info('Please attach session url below to tickets');
+                    console.info(`Debug session url: ${sessionURL}`);
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
 
         // Updates query params for components without routes.

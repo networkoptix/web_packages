@@ -2,6 +2,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import LogRocket from 'logrocket';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
@@ -407,6 +408,25 @@ export class NxCloudApiService {
         return this.http.get<any>(url);
     }
 
+    private logRocketIdentifyUser = tap((account: Account) => {
+        if (this.CONFIG.cloudMonitoring.isLogRocketActive && account.email) {
+            // Type is only user here and comes from LogRocket
+            const userInfo: { [propName: string]: string | number | boolean } = {
+                email: account.email,
+            };
+            if (account.first_name) {
+                userInfo.name = account.first_name;
+                if (account.last_name) {
+                    userInfo.name = `${account.first_name} ${account.last_name}`;
+                }
+            } else if (account.last_name) {
+                userInfo.name = account.last_name;
+            }
+
+            LogRocket.identify(account.email, userInfo);
+        }
+    });
+
     @swClear('apiFresh', '/account', true)
     login(email: string, password: string, remember: boolean) {
         // clearCache();
@@ -415,13 +435,14 @@ export class NxCloudApiService {
             password,
             remember,
             timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
-        }).toPromise();
+        }).pipe(this.logRocketIdentifyUser).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
     loginCode(code: string) {
         return this.http.post(this.CONFIG.apiBase + '/account/loginCode', { code }).pipe(
-            tap((account: Account) => { this.currentAccount = account; })
+            tap((account: Account) => { this.currentAccount = account; }),
+            this.logRocketIdentifyUser
         ).toPromise();
     }
 
@@ -432,7 +453,9 @@ export class NxCloudApiService {
                 Authorization: `Bearer ${tokensInfo.access_token}`
             }
         };
-        return this.http.post(this.CONFIG.apiBase + '/account/loginTokens', tokensInfo, options).toPromise();
+        return this.http.post(this.CONFIG.apiBase + '/account/loginTokens', tokensInfo, options).pipe(
+            this.logRocketIdentifyUser
+        ).toPromise();
     }
 
     @swClear('apiFresh', '/account', true)
@@ -458,7 +481,8 @@ export class NxCloudApiService {
                     account.isCloud = true;
                     this.currentAccount = account;
                     return account;
-                })
+                },
+                tap(this.logRocketIdentifyUser))
             );
     }
 

@@ -228,6 +228,7 @@ export class NxBootstrapProvider {
 
             this.CONFIG.cloudName = data.cloudName;
             this.CONFIG.googleTagManagerId = data.googleTagManagerId;
+            this.CONFIG.cloudMonitoring.logRocket = data.logRocket;
             this.CONFIG.pushConfig = data.pushConfig;
             this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
             this.CONFIG.trafficRelayHost = data.trafficRelayHost;

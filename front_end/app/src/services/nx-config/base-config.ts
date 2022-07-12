@@ -117,8 +117,9 @@ export interface BaseConfig {
     browserNotSupported: boolean;
     sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;
-    metaDefaults: Record<string, Record<string, string>>,
-    webadminRoutesLookup: RouteCheckTuple[]
+    metaDefaults: Record<string, Record<string, string>>;
+    webadminRoutesLookup: RouteCheckTuple[];
+    cloudMonitoring: CloudMonitoring;
 }
 
 export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string];
@@ -192,7 +193,8 @@ const FeatureFlagKeys = [
     'themesEnabled',
     'paginatorExperimental',
     'newHeader',
-    'cloudStorage'
+    'cloudStorage',
+    'logRocket'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -303,6 +305,11 @@ export interface CloudCapabilities {
     customClientsEnabled: boolean;
     alexaIntegrationEnabled: boolean;
     bookmarksEnabled: boolean;
+}
+
+export interface CloudMonitoring {
+    isLogRocketActive: boolean;
+    logRocket: string;
 }
 
 export interface Company {

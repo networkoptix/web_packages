@@ -118,6 +118,7 @@ class CustomizationCacheSerializer(serializers.Serializer):
     vendorsShown = serializers.CharField(default='30')
     pushConfig = serializers.DictField(default=lambda: {})
     googleTagManagerId = serializers.CharField(default='')
+    logRocket = serializers.CharField(default='')
     trialLicenseKey = serializers.CharField(default='')
 
     def __init__(self, *args, **kwargs):
