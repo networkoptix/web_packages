@@ -13,6 +13,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IBool, CoercedBoolInput } from '@decorators/ibool';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
@@ -58,6 +59,7 @@ export class NxGenericDropdown<
     @Input() type: string;
     @IBool() @Input() hideSelectedItem: CoercedBoolInput = false;
     @IBool() @Input() canSearch: CoercedBoolInput;
+    @Input() noMatchMsg: string;
     @Input() forcePosition: {
         left?: number,
         top?: number,
@@ -78,12 +80,26 @@ export class NxGenericDropdown<
     // Used in merge.component.ts
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
+    get selectedItemHTML(): string {
+        if (!this._selectedItem) {
+            return;
+        }
+        const selectedName = this.allowHTML
+            ? this._selectedItem.name
+            : htmlToEntity(this._selectedItem.name);
+        const selectedHelp = this._selectedItem.help;
+        return selectedHelp && !this._selectedItem.name.includes(selectedHelp)
+            ? selectedName + `<span class="additional-help">${selectedHelp}</span>`
+            : selectedName;
+    }
+
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
         public ref: ElementRef<HTMLElement>
     ) {
         super(languageService, configService);
+        this.noMatchMsg ??= this.LANG.search.noMatches();
     }
 
     ngOnInit(): void {
@@ -117,6 +133,13 @@ export class NxGenericDropdown<
         }
     }
 
+    blockEnter(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+        // Don't trigger form submit while inside search
+    }
+
     handleKeyup(ev: KeyboardEvent, item: Item): void {
         if (ev.key === 'Enter') {
             this.show = false;
@@ -132,7 +155,7 @@ export class NxGenericDropdown<
         );
 
         if (!this._items.length) {
-            this._items = [<Item>{ name: 'No matches', value: '', disabled: true }];
+            this._items = [<Item>{ name: this.noMatchMsg, value: '', disabled: true }];
         }
     }
 }

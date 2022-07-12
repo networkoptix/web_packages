@@ -35,8 +35,8 @@
                     [ngModel]="selectedUser"
                     (ngModelChange)="selectUser($event)"
                     [selected]="selectedUser"
-                    allowHTML
                     canSearch
+                    [noMatchMsg]="LANG.search.userNotFound()"
                     [ngModelOptions]="{ standalone: true }"
                 ></nx-select>
                 <div

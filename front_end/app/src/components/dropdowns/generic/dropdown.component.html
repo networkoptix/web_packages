@@ -35,20 +35,8 @@
                 'ellipsis-mr': merge || ellipsisMargin,
                 ellipsis: !merge
             }"
-        >
-            <span
-                *ngIf="allowHTML && _selectedItem"
-                [outerHTML]="_selectedItem.name"
-            ></span>
-            <ng-container *ngIf="!allowHTML && _selectedItem">
-                {{ _selectedItem.name | unsafe }}
-            </ng-container>
-            <span
-                *ngIf="_selectedItem?.help && !_selectedItem.name.includes(_selectedItem.help)"
-                class="additional-help"
-                >{{ _selectedItem.help }}</span
-            >
-        </span>
+            [innerHTML]="selectedItemHTML"
+        ></span>
         <div class="arrow-flip">
             <svg-icon
                 nx-add-svg-src
@@ -79,6 +67,7 @@
                 [placeholder]="'Search' | translate"
                 [ngModel]="filter"
                 (ngModelChange)="filterChanged($event)"
+                (keypress)="blockEnter($event)"
             />
             <span
                 class="glyphicon close-icon search-clear"
@@ -121,7 +110,7 @@
                         [outerHTML]="item.name"
                     ></span>
                     <ng-container *ngIf="!allowHTML">
-                        {{ item.name | unsafe }}
+                        {{ item.name }}
                     </ng-container>
                     <span
                         *ngIf="item.help && !item.name.includes(item.help)"

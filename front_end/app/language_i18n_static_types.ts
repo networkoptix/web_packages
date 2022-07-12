@@ -1011,6 +1011,8 @@ export interface Search {
     vendor:            (params?: Record<string, string | number>) => string;
     vendors:           (params?: Record<string, string | number>) => string;
     resultsFound:      (params?: Record<string, string | number>) => string;
+    noMatches:         (params?: Record<string, string | number>) => string;
+    userNotFound:      (params?: Record<string, string | number>) => string;
 }
 
 export interface Security {
