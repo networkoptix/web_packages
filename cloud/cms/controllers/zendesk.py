@@ -57,7 +57,10 @@ class CategoryNotFoundException(Exception):
 
 
 class ZendeskNotConfigured(Exception):
-    pass
+    message = 'Zendesk Sync not configured'
+
+class ZendeskInvalidConfiguration(Exception):
+    message = 'Zendesk Sync configuration is invalid. Unable to authorize user.'
 
 test_background_decorator = False
 
@@ -335,7 +338,7 @@ class Importer:
 
 
 class ZendeskBase:
-    def __init__(self, customization_name=settings.CUSTOMIZATION, cloud_portal=None, default_permission_group_id=None):
+    def __init__(self, customization_name=settings.CUSTOMIZATION, cloud_portal=None, default_permission_group_id=None, verify_auth=False):
         self.customization_name = customization_name
         self.cloud_portal = cloud_portal or get_cloud_portal_asset(
             self.customization_name)
@@ -346,6 +349,7 @@ class ZendeskBase:
             '%ZENDESK_PERM_GROUP_ID%')
         if not domain or not api_key:
             raise ZendeskNotConfigured
+
         domain_parts = domain.split('.')
         if len(domain_parts) < 3:
             subdomain = ''
@@ -354,6 +358,12 @@ class ZendeskBase:
             subdomain = '.'.join(domain_parts[:-2])
         self.zen_client = Zenpy(
             domain=domain, subdomain=subdomain, token=api_key, email=email)
+
+        if verify_auth:
+            try:
+                self.zen_client.tickets.recent()
+            except APIException as e:
+                raise ZendeskInvalidConfiguration from e
 
 
 class ZendeskMapper(ZendeskBase):
@@ -994,8 +1004,12 @@ def push_accepted_article_to_zendesk(asset, customization_name=settings.CUSTOMIZ
 
     lang = Language.objects.filter(code='en_US').first()
     doc_json = documentation.generate_doc_json([asset], lang, external_link=True)[0]
-    exporter = Exporter(customization_name=customization_name,
-                        cloud_portal=cloud_portal)
+    try:
+        exporter = Exporter(customization_name=customization_name,
+                            cloud_portal=cloud_portal, verify_auth=True)
+    except ZendeskInvalidConfiguration:
+        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {customization_name}. Unable to Authorize User')
+        return
 
     for zd_article in zd_articles:
         sync_article(zd_article, doc_json, site, exporter)
@@ -1127,9 +1141,14 @@ def process_asset(parent_zd, parent_enabled, zendesk_sync_log, force_update, pos
 
 
 @background
-def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk_sync_log: ZendeskSyncLog = None, force_update=False):
+def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk_sync_log: ZendeskSyncLog = None, force_update=False, verify_auth=False):
     site = parent_zd.site
-    exporter = Exporter(customization_name=site.customization.name)
+    try:
+        exporter = Exporter(customization_name=site.customization.name, verify_auth=verify_auth)
+    except ZendeskInvalidConfiguration:
+        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {site.customization.name}. Unable to Authorize User')
+        return
+
     for _position, node in enumerate(nodes, 1):
         position = _position * 100
         process_node(parent_zd, parent_enabled, zendesk_sync_log,
@@ -1182,7 +1201,12 @@ def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, posi
 
 
 def process_general_section_node(zd_category, nodes_list, sync_log):
-    exporter = Exporter(customization_name=zd_category.site.customization.name)
+    try:
+        exporter = Exporter(customization_name=zd_category.site.customization.name, verify_auth=True)
+    except ZendeskInvalidConfiguration:
+        logger.warning(f'Unable to sync article. Invalid zendesk configuration for {zd_category.site.customization.name}. Unable to Authorize User')
+        return
+
     top_level_assets = [node.asset for node in nodes_list if node.asset]
     general_section_title = zd_category.general_section_title
     general_section = zd_category.zendesksection_set.filter(
@@ -1204,7 +1228,7 @@ def update_customization_structure(menu: Menu, site: ZendeskSite, sync_log=None,
         nodes_list = menu.prefetch_menu().nodes_list
         process_general_section_node(zd_category, nodes_list, sync_log)
         process_nodes(nodes_list, zd_category, menu.zendesk_sync_enabled.filter(id=site.customization_id).first(),
-                      zendesk_sync_log=sync_log, force_update=force_update)
+                      zendesk_sync_log=sync_log, force_update=force_update, verify_auth=True)
 
 
 def sync_menu(menu: Menu, customizations: List[Customization] = None, force_update=True):

@@ -1307,13 +1307,13 @@ class MenuAdmin(nested_admin.NestedModelAdmin):
 
     @check_feature_flag(FLAGS.zendesk_sync, validate_is_superuser)
     def zendesk_mapping(self, request, customization):
-        from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured
+        from cms.controllers.zendesk import ZendeskMapper, ZendeskNotConfigured, ZendeskInvalidConfiguration
         settings_context = Context.objects.get(name='settings', asset_type=get_cloud_portal_asset().asset_type)
         settings_change_page = reverse('admin:change_page', args=(customization_obj.id, settings_context.id)) if (customization_obj := Customization.objects.filter(name=customization).first()) else ''
         try:
-            mapper = ZendeskMapper(customization_name=customization)
-        except ZendeskNotConfigured:
-            return render(request, 'cms/zendesk_mapping.html', {'items': [], 'unmapped': '', 'empty': '', 'error_message': 'Zendesk Sync not configured', 'settings_page': settings_change_page})
+            mapper = ZendeskMapper(customization_name=customization, verify_auth=True)
+        except (ZendeskNotConfigured, ZendeskInvalidConfiguration) as e:
+            return render(request, 'cms/zendesk_mapping.html', {'items': [], 'unmapped': '', 'empty': '', 'error_message': e.message, 'settings_page': settings_change_page})
 
         mapper.build_struct()
         context = {

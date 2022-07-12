@@ -1718,7 +1718,7 @@ def test_update_customization_structure(mocker, db):
     mock_process_general_section.assert_called_once_with(
         category, nodes_list, sync_log)
     mock_process_nodes.assert_called_once_with(
-        nodes_list, category, site.customization, zendesk_sync_log=sync_log, force_update=force_update)
+        nodes_list, category, site.customization, zendesk_sync_log=sync_log, force_update=force_update, verify_auth=True)
 
 
 def test_sync_menu(mocker, db):
