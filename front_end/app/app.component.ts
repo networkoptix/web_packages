@@ -257,7 +257,7 @@ export class AppComponent {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
         }
-        if (!environment.isLocal && !this.CONFIG.isInIframe &&
+        if (!environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver &&
             this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
             try {
                 LogRocket.init(this.CONFIG.cloudMonitoring.logRocket, {
