@@ -12,7 +12,7 @@ Library      SSHLibrary
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL NO SEND}
-Library      NoptixLibrary/ServerAPI.py    ${IMAGE}
+Library      NoptixLibrary/ServerAPI5.py    ${IMAGE}
 Library      NoptixLibrary/LicenseManagement.py    ${LM HOST}/nxlicensed    ${LM AUTH}
 Library      NoptixLibrary/Cloud2fa.py
 Library      pabot.PabotLib
@@ -120,7 +120,7 @@ Log In
 
 Log In Cloud
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${exists}=${True}   ${reset}=${False}    ${2fa}=${False}    ${2fa backup code}=${EMPTY}
-    Sleep    2
+    Sleep    4
     IF    '''${button}''' != "None" 
         Wait Until Element Is Visible    ${button}
     END

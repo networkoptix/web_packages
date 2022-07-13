@@ -64,8 +64,11 @@ Force Tags        system    Threaded
 
     Log    C41898: Step 1
     Go To    ${url}/systems/${server 2['cloud id']}
-    Run Keyword If    '''${mode}'''=='''cloud'''    Log In    ${user 1}    ${password}    button=None
-    ...    ELSE    Log In Web Admin    admin    ${password}
+    IF    '''${mode}'''=='''cloud'''    
+        Log In    ${user 1}    ${password}    button=None
+    ELSE    
+        Log In Web Admin    admin    ${password}
+    END
     Reload Page
     Wait Until Element Is Visible    ${SYSTEM OFFLINE}    65
     Disconnect from my account    ${server 2['name']}

@@ -1,6 +1,6 @@
 *** Variables ***
-${IMAGE}                              ${IMAGE 4.2}
-${IMAGE 5.0}                          5.0_test
+${IMAGE}                              ${IMAGE 5.0}
+${IMAGE 5.0}                          5.0
 ${IMAGE 4.3}                          4.3_test
 ${IMAGE 4.2}                          4.2_test
 ${IMAGE 4.1}                          4.1_test

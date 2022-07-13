@@ -147,8 +147,8 @@ ${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='user-ac
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 
 ${REMOVE USER MODAL}                  //nx-modal-remove-user-content
-${REMOVE BUTTON}                      ${REMOVE USER MODAL}//button//span[contains(text(),'${REMOVE BUTTON TEXT}')]
-${REMOVE CANCEL BUTTON}               ${REMOVE USER MODAL}//button//span[contains(text(),"${CANCEL BUTTON TEXT}")]
+${REMOVE BUTTON}                      ${REMOVE USER MODAL}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
+${REMOVE CANCEL BUTTON}               ${REMOVE USER MODAL}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
