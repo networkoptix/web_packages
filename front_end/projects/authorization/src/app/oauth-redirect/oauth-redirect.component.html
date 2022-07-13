@@ -1,13 +1,33 @@
-<div class="oauth-redirect"
-    [ngClass]="{ 'container-w': viewType === 'web', 'container-d': viewType === 'desktop', 'container-m': viewType === 'mobile' }">
+<div
+    class="oauth-redirect"
+    [ngClass]="{
+        'container-w': viewType === 'web',
+        'container-d': viewType === 'desktop',
+        'container-m': viewType === 'mobile'
+    }"
+>
     <nx-pre-loader *ngIf="!state"></nx-pre-loader>
-    <div class="container" *ngIf="state">
-        <button class="oauth-redirect-btn" *ngIf="state === 'readyToLogin'"
-            (click)="redirectToOAuth()">Log In</button>
-        <div class="oauth-text oauth-error" *ngIf="state === 'noNativeClient'">
+    <div
+        class="container"
+        *ngIf="state"
+    >
+        <button
+            class="oauth-redirect-btn"
+            *ngIf="state === 'readyToLogin'"
+            (click)="redirectToOAuth()"
+        >
+            Log In
+        </button>
+        <div
+            class="oauth-text oauth-error"
+            *ngIf="state === 'noNativeClient'"
+        >
             <p translate>Desktop client connection required</p>
         </div>
-        <div class="oauth-text" *ngIf="state === 'sendingCode'">
+        <div
+            class="oauth-text"
+            *ngIf="state === 'sendingCode'"
+        >
             <p translate>One moment while we log you in</p>
         </div>
     </div>

@@ -293,20 +293,20 @@ describe('NxAuthorizeComponent', () => {
         Object.defineProperty(environment, 'isLocal', { value: true });
         fixture.detectChanges();
         const loginLabel = el.nativeElement.querySelectorAll('label');
-        expect(loginLabel[0].innerHTML).toBe('Login');
+        expect(loginLabel[0].innerText).toBe('Login');
     });
 
     it('should load loginCloud email component', () => {
         fixture.detectChanges();
         const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
+        expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 4 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(1);
-        expect(spans[0].innerHTML).toBe('Create Account');
+        expect(spans[0].innerText).toBe('Create Account');
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Create Account');
@@ -321,11 +321,11 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.connect;
         fixture.detectChanges();
         const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
+        expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.connectSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.connectSubheader());
         const inputMessage = el.nativeElement.querySelector('p');
         expect(inputMessage.innerText).toBe('This account will get owner access level');
         const buttons = el.nativeElement.querySelectorAll('button');
@@ -341,11 +341,11 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.setup;
         fixture.detectChanges();
         const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
+        expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.connectSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.connectSubheader());
         const inputMessage = el.nativeElement.querySelector('p');
         expect(inputMessage.innerText).toBe('This account will get owner access level');
         const buttons = el.nativeElement.querySelectorAll('button');
@@ -361,11 +361,11 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.renewDesktop;
         fixture.detectChanges();
         const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
+        expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.expiredSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.expiredSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('Next');
@@ -378,11 +378,11 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.renewWeb;
         fixture.detectChanges();
         const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
+        expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
         const emailSubHeader = el.nativeElement.querySelector('h4');
-        expect(emailSubHeader.innerHTML).toBe(component.LANG.authorize.expiredSubheader());
+        expect(emailSubHeader.innerText).toBe(component.LANG.authorize.expiredSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Create Account');
@@ -396,14 +396,14 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.password;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -420,17 +420,17 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.password;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 6 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(3);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
         const disconnectMessage = el.nativeElement.querySelectorAll('p');
         expect(disconnectMessage.length).toBe(1);
-        expect(disconnectMessage[0].innerHTML).toBe('to disconnect system from %CLOUD_NAME%');
+        expect(disconnectMessage[0].innerText).toBe('to disconnect system from %CLOUD_NAME%');
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('Log In');
@@ -445,14 +445,14 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.passwordMerge;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 6 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(3);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
         const disconnectMessage = el.nativeElement.querySelectorAll('p');
         expect(disconnectMessage.length).toBe(1);
         expect(disconnectMessage[0].innerText).toBe('to merge systems');
@@ -524,14 +524,14 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.connect;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.connectHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.toAccountSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -547,14 +547,14 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.setup;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.connectHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.connectHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.toAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.toAccountSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -570,14 +570,14 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.renewDesktop;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 7 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(4);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.expiredAccountSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -592,14 +592,14 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.renewWeb;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.expiredHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.expiredHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 7 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(4);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.expiredAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.expiredAccountSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].innerText).toBe('Forgot Password?');
@@ -614,14 +614,14 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.auth;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Verification code');
+        expect(labels[0].innerText).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 7 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(4);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('No access to authentication app?');
@@ -636,9 +636,9 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.auth;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Verification code');
+        expect(labels[0].innerText).toBe('Verification code');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         // const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 5 because of theme test component
         // UNCOMMENT after tests!!!
@@ -657,18 +657,18 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.backup;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Backup code');
+        expect(labels[0].innerText).toBe('Backup code');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.loginCloudHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.loginCloudHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 8 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(5);
-        expect(spans[0].innerHTML).toBe(component.LANG.authorize.asAccountSubheader());
-        expect(spans[2].innerHTML).toBe('Need help?');
+        expect(spans[0].innerText).toBe(component.LANG.authorize.asAccountSubheader());
+        expect(spans[2].innerText).toBe('Need help?');
         const links = el.nativeElement.querySelectorAll('a');
         expect(links.length).toBe(1);
-        expect(links[0].innerHTML).toBe('Contact support');
+        expect(links[0].innerText).toBe('Contact support');
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Use authentication code');
@@ -686,22 +686,22 @@ describe('NxAuthorizeComponent', () => {
         // TODO: current count is 9 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(labels.length).toBe(6);
-        expect(labels[0].innerHTML).toBe('Email');
-        expect(labels[1].innerHTML).toBe('First Name');
-        expect(labels[2].innerHTML).toBe('Last Name');
-        expect(labels[3].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Email');
+        expect(labels[1].innerText).toBe('First Name');
+        expect(labels[2].innerText).toBe('Last Name');
+        expect(labels[3].innerText).toBe('Password');
         const createHeader = el.nativeElement.querySelector('h3');
-        expect(createHeader.innerHTML).toBe(component.LANG.authorize.createAccountHeader());
+        expect(createHeader.innerText).toBe(component.LANG.authorize.createAccountHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 9 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(7);
-        expect(spans[3].innerHTML).toBe('I agree to the');
-        expect(spans[4].innerHTML).toBe('and');
+        expect(spans[3].innerText).toBe('I agree to the');
+        expect(spans[4].innerText).toBe('and');
         const links = el.nativeElement.querySelectorAll('a');
         expect(links.length).toBe(2);
-        expect(links[0].innerHTML).toBe('Terms and Conditions');
-        expect(links[1].innerHTML).toBe('Privacy policy');
+        expect(links[0].innerText).toBe('Terms and Conditions');
+        expect(links[1].innerText).toBe('Privacy policy');
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(3);
         expect(buttons[0].innerText).toBe('Log In');
@@ -728,8 +728,8 @@ describe('NxAuthorizeComponent', () => {
         tick();
         let activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
-        expect(activateHeaders[0].innerHTML).toBe(component.LANG.authorize.activateHeader());
-        expect(activateHeaders[1].innerHTML).toBe(component.LANG.authorize.createdText());
+        expect(activateHeaders[0].innerText).toBe(component.LANG.authorize.activateHeader());
+        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.createdText());
         let contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
         expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.createdAdditional());
@@ -743,10 +743,10 @@ describe('NxAuthorizeComponent', () => {
         fixture.detectChanges();
         activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
-        expect(activateHeaders[1].innerHTML).toBe(component.LANG.authorize.activatedText());
+        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.activatedText());
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
-        expect(contentMessage[0].nativeElement.innerHTML).toBeFalsy();
+        expect(contentMessage[0].nativeElement.innerText).toBeFalsy();
         buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         icons = el.nativeElement.querySelectorAll('svg-icon');
@@ -756,7 +756,7 @@ describe('NxAuthorizeComponent', () => {
         fixture.detectChanges();
         activateHeaders = el.nativeElement.querySelectorAll('h3');
         expect(activateHeaders.length).toBe(2);
-        expect(activateHeaders[1].innerHTML).toBe(component.LANG.authorize.activatedText());
+        expect(activateHeaders[1].innerText).toBe(component.LANG.authorize.activatedText());
         contentMessage = el.queryAll(By.css('.content-message'));
         expect(contentMessage.length).toBe(1);
         expect(contentMessage[0].nativeElement.innerHTML).toBe(component.LANG.authorize.activatedAdditional());
@@ -771,9 +771,9 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.request;
         fixture.detectChanges();
         const emailLabel = el.nativeElement.querySelectorAll('label');
-        expect(emailLabel[0].innerHTML).toBe('Email');
+        expect(emailLabel[0].innerText).toBe('Email');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.passResetHeader());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.passResetHeader());
         // const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 4 because of theme test component
         // UNCOMMENT after tests!!!
@@ -791,14 +791,14 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.reset;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('label');
-        expect(labels[0].innerHTML).toBe('Password');
+        expect(labels[0].innerText).toBe('Password');
         const passwordHeader = el.nativeElement.querySelector('h3');
-        expect(passwordHeader.innerHTML).toBe(component.LANG.authorize.newPassHeader());
+        expect(passwordHeader.innerText).toBe(component.LANG.authorize.newPassHeader());
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 6 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(3);
-        expect(spans[0].innerHTML).toBe('For');
+        expect(spans[0].innerText).toBe('For');
         const buttons = el.nativeElement.querySelectorAll('button');
         expect(buttons.length).toBe(1);
         expect(buttons[0].innerText).toBe('Next');
@@ -811,16 +811,16 @@ describe('NxAuthorizeComponent', () => {
         component.currentState = AuthorizeState.confirm;
         fixture.detectChanges();
         const labels = el.nativeElement.querySelectorAll('button');
-        expect(labels[0].innerHTML).toBe('OK');
+        expect(labels[0].innerText).toBe('OK');
         const emailHeader = el.nativeElement.querySelector('h3');
-        expect(emailHeader.innerHTML).toBe(component.LANG.authorize.connectedText());
+        expect(emailHeader.innerText).toBe(component.LANG.authorize.connectedText());
     });
 
     it('should load loginCloud cloud connect error component', () => {
         component.errorDialog$.next(true);
         fixture.detectChanges();
         const headers = el.nativeElement.querySelectorAll('h3');
-        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        expect(headers[1].innerText).toBe('Cannot connect to %CLOUD_NAME%');
     });
 
     it('should load connectSystemToCloud cloud connect error component', () => {
@@ -829,7 +829,7 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.connect;
         fixture.detectChanges();
         const headers = el.nativeElement.querySelectorAll('h3');
-        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        expect(headers[1].innerText).toBe('Cannot connect to %CLOUD_NAME%');
     });
 
     it('should load setupWizard cloud connect error component', () => {
@@ -838,12 +838,12 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.setup;
         fixture.detectChanges();
         const headers = el.nativeElement.querySelectorAll('h3');
-        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        expect(headers[1].innerText).toBe('Cannot connect to %CLOUD_NAME%');
         const spans = el.nativeElement.querySelectorAll('span');
         // TODO: current count is 5 because of theme test component
         // UNCOMMENT after tests!!!
         // expect(spans.length).toBe(2);
-        expect(spans[1].innerHTML).toBe('Setup Non-cloud System');
+        expect(spans[1].innerText).toBe('Setup Non-cloud System');
     });
 
     it('should load loginToWebadmin cloud connect error component', () => {
@@ -852,7 +852,7 @@ describe('NxAuthorizeComponent', () => {
         component.clientType = ClientType.loginWebadmin;
         fixture.detectChanges();
         const headers = el.nativeElement.querySelectorAll('h3');
-        expect(headers[1].innerHTML).toBe('Cannot connect to %CLOUD_NAME%');
+        expect(headers[1].innerText).toBe('Cannot connect to %CLOUD_NAME%');
     });
 
     // test links that can start with 'http', '?code=', and 'redirect-oauth'

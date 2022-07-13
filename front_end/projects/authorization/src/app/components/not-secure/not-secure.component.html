@@ -1,32 +1,67 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header #emailHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile'}">
-    <svg-icon nx-add-svg-src
-        [ngStyle]="{'minWidth.px': '320', 'minHeight.px': '80'}"
-        [src]="CONFIG.icons.dirSectionPlaceholder + (environment.isLocal ? 'local_header' : 'cloud_header') + (viewType === 'web' ? '' : '_desktop') + '.svg'"
-        [svgStyle]="{'width.px': '320', 'height.px': '80'}"
-        [applyClass]="true"></svg-icon>
-    <h3 class="authorize-header">{{LANG.authorize.loginCloudHeader()}}</h3>
-    <div class="authorize-subheader" *ngIf="loginEmail">
+<header
+    #emailHeader
+    [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }"
+>
+    <svg-icon
+        nx-add-svg-src
+        [ngStyle]="{ 'minWidth.px': '320', 'minHeight.px': '80' }"
+        [src]="
+            CONFIG.icons.dirSectionPlaceholder +
+            (environment.isLocal ? 'local_header' : 'cloud_header') +
+            (viewType === 'web' ? '' : '_desktop') +
+            '.svg'
+        "
+        [svgStyle]="{ 'width.px': '320', 'height.px': '80' }"
+        [applyClass]="true"
+    ></svg-icon>
+    <h3 class="authorize-header">{{ LANG.authorize.loginCloudHeader() }}</h3>
+    <div
+        class="authorize-subheader"
+        *ngIf="loginEmail"
+    >
         <span class="sub-header">{{ LANG.authorize.asAccountSubheader() }}</span>
-        <span class="for-account" (click)="setCurrentState.emit('email')">{{loginEmail}}</span>
+        <span
+            class="for-account"
+            (click)="setCurrentState.emit('email')"
+            >{{ loginEmail }}</span
+        >
     </div>
 </header>
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
-      [ngStyle]="{ 'height': 'calc(100% - ' + emailHeader.offsetHeight + 'px)' }">
+<main
+    [ngClass]="{
+        'main-w': viewType === 'web',
+        'main-d': viewType === 'desktop',
+        'main-m': viewType === 'mobile'
+    }"
+    [ngStyle]="{ height: 'calc(100% - ' + emailHeader.offsetHeight + 'px)' }"
+>
     <form class="text-center form">
         <p translate>We could not verify the redirect URL.</p>
-        <br>
+        <br />
         <p [innerHTML]="'authorize.notSecureText' | translate: { redirectUrl: redirectUrl }"></p>
-        <br>
+        <br />
         <p translate>Make sure your trust this URL.</p>
     </form>
-    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+    <footer
+        [ngClass]="{
+            'footer-w': viewType === 'web',
+            'footer-d': viewType === 'desktop',
+            'footer-m': viewType === 'mobile'
+        }"
+    >
         <div>
-            <button class="btn text-button" type="button" (click)="next()">
+            <button
+                class="btn text-button"
+                type="button"
+                (click)="next()"
+            >
                 <span translate>Accept the risks and continue</span>
-                <svg-icon nx-add-svg-src
+                <svg-icon
+                    nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_right.svg'"
-                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                ></svg-icon>
             </button>
         </div>
     </footer>

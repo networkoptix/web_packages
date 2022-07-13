@@ -1,16 +1,48 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
 <!-- TODO: remove code for connectSystemToCloud; check whether setupWizard still needs this; may just remove the component completely -->
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }">
+<main
+    [ngClass]="{
+        'main-w': viewType === 'web',
+        'main-d': viewType === 'desktop',
+        'main-m': viewType === 'mobile'
+    }"
+>
     <form>
-        <svg-icon nx-add-svg-src
-            [src]="CONFIG.icons.dirSectionPlaceholder + 'success' + (viewType === 'web' ? '' : '_desktop') + '_placeholder.svg'" 
-            [svgStyle]="{'width.px': '280', 'height.px': '120'}"
-            [applyClass]="true"></svg-icon>
-        <h3 class="authorize-header mt-3">{{ clientType === 'setupWizard' ? LANG.authorize.setupConnectedText() : LANG.authorize.connectedText()}}</h3>
+        <svg-icon
+            nx-add-svg-src
+            [src]="
+                CONFIG.icons.dirSectionPlaceholder +
+                'success' +
+                (viewType === 'web' ? '' : '_desktop') +
+                '_placeholder.svg'
+            "
+            [svgStyle]="{ 'width.px': '280', 'height.px': '120' }"
+            [applyClass]="true"
+        ></svg-icon>
+        <h3 class="authorize-header mt-3">
+            {{
+                clientType === 'setupWizard'
+                    ? LANG.authorize.setupConnectedText()
+                    : LANG.authorize.connectedText()
+            }}
+        </h3>
     </form>
-    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+    <footer
+        [ngClass]="{
+            'footer-w': viewType === 'web',
+            'footer-d': viewType === 'desktop',
+            'footer-m': viewType === 'mobile'
+        }"
+    >
         <div class="d-flex justify-content-end w-100">
-            <button class="btn btn-primary on-keypress-enter" type="submit" (click)="confirm()" translate>OK</button>
+            <button
+                class="btn btn-primary on-keypress-enter"
+                type="submit"
+                (click)="confirm()"
+                translate
+            >
+                OK
+            </button>
         </div>
     </footer>
 </main>

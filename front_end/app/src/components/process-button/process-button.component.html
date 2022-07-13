@@ -30,7 +30,11 @@
             <svg-icon
                 nx-add-svg-src
                 [src]="CONFIG.icons.dir + svg.src + '.svg'"
-                [ngClass]="{ 'white-svg': svg.color === 'light1', 'ml-2': !reverseButton, 'mr-2': reverseButton }"
+                [ngClass]="{
+                    'white-svg': svg.color === 'light1',
+                    'ml-2': !reverseButton,
+                    'mr-2': reverseButton
+                }"
                 [svgStyle]="{ 'height.px': svg.height }"
                 [ngStyle]="{ 'minWidth.px': svg.width, 'minHeight.px': svg.height }"
                 [applyClass]="true"

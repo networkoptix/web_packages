@@ -24,20 +24,28 @@
 
 <form *ngIf="machine.currentState === 'thisSystemHasOutdatedServerError'">
     <div class="modal-body">
-        <!-- eslint-disable prettier/prettier -->
-        <p translate
-            >Some of the servers in this system have an outdated software version and can't be merged.</p
-        >
-        <!-- eslint-enable prettier/prettier -->
-        <p><span [innerHTML]="'dialogs.merge.update' | translate | translateCut:0"></span><a routerLink="/download" target="_blank" [innerText]="'dialogs.merge.update' | translate | translateCut:1"></a><span [innerHTML]="'dialogs.merge.update' | translate | translateCut:2"></span></p>
+        <p translate>
+            Some of the servers in this system have an outdated software version and can't be
+            merged.
+        </p>
+        <p>
+            <span [innerHTML]="'dialogs.merge.update' | translate | translateCut: 0"></span
+            ><a
+                routerLink="/download"
+                target="_blank"
+                [innerText]="'dialogs.merge.update' | translate | translateCut: 1"
+            ></a
+            ><span [innerHTML]="'dialogs.merge.update' | translate | translateCut: 2"></span>
+        </p>
     </div>
     <div class="modal-footer">
         <button
             class="btn btn-primary m-0"
             (click)="close()"
             translate
-            >OK</button
         >
+            OK
+        </button>
     </div>
 </form>
 

@@ -1,12 +1,7 @@
 <a
     name="tag-{{ name }}"
     id="tag-{{ name }}"
-    [ngClass]="[
-        element,
-        size,
-        badgeType,
-        locked ? 'static' : ''
-    ]"
+    [ngClass]="[element, size, badgeType, locked ? 'static' : '']"
     [attr.href]="tagHref"
     (click)="clickChange(true)"
 >

@@ -4,7 +4,12 @@
     *ngIf="false && !cookieBannerReviewed"
 >
     <p>
-        <span [innerHTML]="'cookieWarning' | translate | translateCut:0"></span><a routerLink="/" [innerText]="'cookieWarning' | translate | translateCut:1"></a><span [innerHTML]="'cookieWarning' | translate | translateCut:2"></span>
+        <span [innerHTML]="'cookieWarning' | translate | translateCut: 0"></span
+        ><a
+            routerLink="/"
+            [innerText]="'cookieWarning' | translate | translateCut: 1"
+        ></a
+        ><span [innerHTML]="'cookieWarning' | translate | translateCut: 2"></span>
     </p>
     <svg-icon
         nx-add-svg-src

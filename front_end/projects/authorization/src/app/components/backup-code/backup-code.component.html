@@ -1,78 +1,177 @@
 <!-- <nx-pre-loader *ngIf=""></nx-pre-loader> -->
-<header #backupCodeHeader [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }">
-    <svg-icon nx-add-svg-src 
-        [src]="CONFIG.icons.dirSectionPlaceholder + 'cloud_header' + (viewType === 'web' ? '' : '_desktop') + '.svg'" 
-        [svgStyle]="{'width.px': '320', 'height.px': '80'}"
-        [applyClass]="true"></svg-icon>
+<header
+    #backupCodeHeader
+    [ngClass]="{ 'header-d': viewType === 'desktop', 'header-m': viewType === 'mobile' }"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="
+            CONFIG.icons.dirSectionPlaceholder +
+            'cloud_header' +
+            (viewType === 'web' ? '' : '_desktop') +
+            '.svg'
+        "
+        [svgStyle]="{ 'width.px': '320', 'height.px': '80' }"
+        [applyClass]="true"
+    ></svg-icon>
     <div class="for-small">
-        <button *ngIf="smallView"
-            class="btn mobile-back-button" type="button" (click)="setCurrentState.emit('auth')">
-            <svg-icon nx-add-svg-src
+        <button
+            *ngIf="smallView"
+            class="btn mobile-back-button"
+            type="button"
+            (click)="setCurrentState.emit('auth')"
+        >
+            <svg-icon
+                nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                [svgStyle]="{'width.px': '36', 'height.px': '36'}"
-                [applyClass]="true"></svg-icon>
+                [svgStyle]="{ 'width.px': '36', 'height.px': '36' }"
+                [applyClass]="true"
+            ></svg-icon>
         </button>
-        <h3 class="authorize-header">{{header}}</h3>
+        <h3 class="authorize-header">{{ header }}</h3>
     </div>
     <div class="authorize-subheader">
         <div class="d-flex justify-content-center align-items-center">
-            <span class="sub-header">{{subHeader}}</span>
-            <span class="for-account" (click)="setCurrentState.emit('email')">{{loginEmail}}</span>
+            <span class="sub-header">{{ subHeader }}</span>
+            <span
+                class="for-account"
+                (click)="setCurrentState.emit('email')"
+                >{{ loginEmail }}</span
+            >
         </div>
-        <p *ngIf="subHeaderSuffix" class="mt-2 mb-0">{{subHeaderSuffix}}</p>
+        <p
+            *ngIf="subHeaderSuffix"
+            class="mt-2 mb-0"
+        >
+            {{ subHeaderSuffix }}
+        </p>
     </div>
 </header>
-<main [ngClass]="{ 'main-w': viewType === 'web', 'main-d': viewType === 'desktop', 'main-m': viewType === 'mobile' }"
-    [ngStyle]="{ 'height': 'calc(100% - ' + backupCodeHeader.offsetHeight + 'px)' }">
+<main
+    [ngClass]="{
+        'main-w': viewType === 'web',
+        'main-d': viewType === 'desktop',
+        'main-m': viewType === 'mobile'
+    }"
+    [ngStyle]="{ height: 'calc(100% - ' + backupCodeHeader.offsetHeight + 'px)' }"
+>
     <form #backupCodeForm="ngForm">
-        <label for="backupCode" translate>Backup code</label>
+        <label
+            for="backupCode"
+            translate
+            >Backup code</label
+        >
         <div class="backup-code-input">
             <input
                 type="text"
                 id="backupCode"
                 name="backupCode"
-                [ngClass]="{ 'invalid-state': backupCode.invalid && (backupCode.dirty || backupCode.touched) }"
+                [ngClass]="{
+                    'invalid-state': backupCode.invalid && (backupCode.dirty || backupCode.touched)
+                }"
                 [(ngModel)]="code"
                 [readonly]="checkBackupCodeProcess.processing"
                 #backupCode="ngModel"
                 autocomplete="off"
                 required
-                nxFocusMe>
+                nxFocusMe
+            />
         </div>
-        <div class="mt-2 mb-3" *ngIf="backupCode.invalid && (backupCode.dirty || backupCode.touched)">
-            <p *ngIf="backupCode.errors.required" class="error-label mb-0" translate>Enter Backup Code</p>
-            <p *ngIf="backupCode.errors.wrongBackupCode" class="error-label mb-0" translate>Wrong Backup Code</p>
-            <p *ngIf="backupCode.errors.lockedOut" class="error-label mb-0" translate>Too many attempts. Try again in a minute.</p>
+        <div
+            class="mt-2 mb-3"
+            *ngIf="backupCode.invalid && (backupCode.dirty || backupCode.touched)"
+        >
+            <p
+                *ngIf="backupCode.errors.required"
+                class="error-label mb-0"
+                translate
+            >
+                Enter Backup Code
+            </p>
+            <p
+                *ngIf="backupCode.errors.wrongBackupCode"
+                class="error-label mb-0"
+                translate
+            >
+                Wrong Backup Code
+            </p>
+            <p
+                *ngIf="backupCode.errors.lockedOut"
+                class="error-label mb-0"
+                translate
+            >
+                Too many attempts. Try again in a minute.
+            </p>
         </div>
-        <div [ngClass]="{ 'mt-3': !(backupCode.invalid && (backupCode.dirty || backupCode.touched)) }">
-            <p><span translate>Need help?</span>&nbsp;<a [href]="CONFIG.company.links.support" target="_blank">Contact support</a></p>
+        <div
+            [ngClass]="{
+                'mt-3': !(backupCode.invalid && (backupCode.dirty || backupCode.touched))
+            }"
+        >
+            <p>
+                <span translate>Need help?</span>&nbsp;<a
+                    [href]="CONFIG.company.links.support"
+                    target="_blank"
+                    >Contact support</a
+                >
+            </p>
         </div>
     </form>
-    <footer [ngClass]="{ 'footer-w': viewType === 'web', 'footer-d': viewType === 'desktop', 'footer-m': viewType === 'mobile' }">
+    <footer
+        [ngClass]="{
+            'footer-w': viewType === 'web',
+            'footer-d': viewType === 'desktop',
+            'footer-m': viewType === 'mobile'
+        }"
+    >
         <div class="left">
-            <button class="btn text-button no-padding" type="button"
-                (click)="setCurrentState.emit('auth')" [ngClass]="{ 'mt-2': smallView, 'larger-height': needLargerFooter }">
-                <svg-icon nx-add-svg-src
+            <button
+                class="btn text-button no-padding"
+                type="button"
+                (click)="setCurrentState.emit('auth')"
+                [ngClass]="{ 'mt-2': smallView, 'larger-height': needLargerFooter }"
+            >
+                <svg-icon
+                    nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'question.svg'"
-                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
-                    [applyClass]="true"></svg-icon>
-                <span #backToAuthSpan class="pl-1" translate>Use authentication code</span>
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [applyClass]="true"
+                ></svg-icon>
+                <span
+                    #backToAuthSpan
+                    class="pl-1"
+                    translate
+                    >Use authentication code</span
+                >
             </button>
         </div>
         <div class="right">
-            <button *ngIf="!smallView"
-                class="btn text-button" type="button" (click)="setCurrentState.emit('auth')">
-                <svg-icon nx-add-svg-src
+            <button
+                *ngIf="!smallView"
+                class="btn text-button"
+                type="button"
+                (click)="setCurrentState.emit('auth')"
+            >
+                <svg-icon
+                    nx-add-svg-src
                     [src]="CONFIG.icons.dir + 'arrow_back_button.svg'"
-                    [svgStyle]="{'width.px': '20', 'height.px': '20'}"
-                    [applyClass]="true"></svg-icon>
-                <span class="pl-1" translate>Back</span>
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [applyClass]="true"
+                ></svg-icon>
+                <span
+                    class="pl-1"
+                    translate
+                    >Back</span
+                >
             </button>
             <nx-process-button
-                buttonText="{{ (clientType === 'connectSystemToCloud' ? 'Next' : 'Log In') | translate }}"
+                buttonText="{{
+                    (clientType === 'connectSystemToCloud' ? 'Next' : 'Log In') | translate
+                }}"
                 [form]="backupCodeForm"
                 [clickFn]="sendCode"
-                [process]="checkBackupCodeProcess">
+                [process]="checkBackupCodeProcess"
+            >
             </nx-process-button>
         </div>
     </footer>
