@@ -79,7 +79,7 @@ export class NxHeaderLevelTwoComponent {
         return 0;
     }
 
-    scrollMenuItems(direction: 'left' | 'right') {
+    scrollMenuItems(direction: 'left' | 'right'): void {
         const menuItemsEl = this.menuItemsRef.nativeElement;
         const scrollDistance = 300;
         const changedScroll = direction === 'right' ? scrollDistance : (-1 * scrollDistance);
@@ -90,7 +90,7 @@ export class NxHeaderLevelTwoComponent {
         this.navArrowState.right = newScroll < maxScrollLeft;
     }
 
-    checkNavArrowsVisible(checkLeft = false) {
+    checkNavArrowsVisible(checkLeft = false): void {
         setTimeout(() => {
             const menuItemsEl = this.menuItemsRef?.nativeElement;
             if (menuItemsEl) {
@@ -103,7 +103,7 @@ export class NxHeaderLevelTwoComponent {
         }, 0);
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.checkNavArrowsVisible();
         this.contextButtonWidth = this.getContextButtonWidth();
         this.menuItemsWidth = this.menuItemsWidth - this.contextButtonWidth;
@@ -114,7 +114,7 @@ export class NxHeaderLevelTwoComponent {
         this.optimisticSelectedSubNode = node;
     }
 
-    ngOnChanges(changes: NgChanges<NxHeaderLevelTwoComponent>) {
+    ngOnChanges(changes: NgChanges<NxHeaderLevelTwoComponent>): void {
         if (changes.subNodes.currentValue) {
             this.optimisticSelectedSubNode = null;
             const menuItemsEl = this.menuItemsRef?.nativeElement;

@@ -72,17 +72,17 @@ export class BaseCloudStorageActionModalContent {
         },
     ];
 
-    #updateMessages = (license?: LicenseInfo) => {
+    #updateMessages = (license?: LicenseInfo): void => {
         this.licenseMessage = license?.info || '';
         this.licenseWarning = license?.warningText || '';
     };
 
-    updateLicense = (licenseInfo?: LicenseInfo) => {
+    updateLicense = (licenseInfo?: LicenseInfo): void => {
         this.license = licenseInfo?.key?.toUpperCase() || '';
         this.#updateMessages(licenseInfo);
     };
 
-    updateMessage = licenseKey => {
+    updateMessage = (licenseKey): void => {
         const license = this.licenses.find(({ key }) => key.toUpperCase() === licenseKey.toUpperCase());
         this.#updateMessages(license);
     };
@@ -102,7 +102,7 @@ export class BaseCloudStorageActionModalContent {
         this.success = true;
     };
 
-    init = () => {
+    init = (): void => {
         this.showLicenseInput = [CloudStorageActionType.ACTIVATE, CloudStorageActionType.MODIFY].includes(this.actionType);
         this.showSystemsDropdown = CloudStorageActionType.MOVE === this.actionType;
         this.showPasswordInput = CloudStorageActionType.DELETE === this.actionType;

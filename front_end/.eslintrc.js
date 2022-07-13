@@ -213,19 +213,8 @@ module.exports = {
             the number of files affected will grow as files are typed until
             the entire codebase is typed, at which point it can be merged
             into the main TS override. */
-            files: [
-                'app/src/components/search/**/*.ts',
-                'app/src/components/dropdowns/generic/**/*.ts',
-                'app/src/dialogs/create-system-group/**/*.ts',
-                'app/src/dialogs/move-system-to-group/**/*.ts',
-                'app/src/dialogs/system-group-settings/**/*.ts',
-                'app/src/menu/**/*.ts',
-                'app/src/pages/ipvd/**/*.ts',
-                'app/src/pages/systems/groups/**/*.ts',
-                'app/src/pages/systems/settings/servers/**/*.ts',
-                'app/src/pipes/**/*.ts',
-                'app/src/store/**/*.ts',
-            ],
+            files: ['*.ts'],
+            excludedFiles: require('./type-lint-blacklist'),
             extends: ['plugin:@typescript-eslint/recommended'],
             rules: {
                 'nx/explicit-angular-boundary-types': 'error',

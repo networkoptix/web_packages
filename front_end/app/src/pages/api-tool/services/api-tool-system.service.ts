@@ -281,7 +281,7 @@ export class NxAPIToolSystemService {
             });
     }
 
-    handleServerGetError() {
+    handleServerGetError(): void {
         this.getServers.errorCount++;
         this.getServers.updating = false;
         if (this.getServers.errorCount >= this.getServers.errorCountLimit) {

@@ -35,7 +35,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.systemListText = this.isMobile ? this.LANG.appHeader.mySystems() : this.LANG.appHeader.systemList();
     }
 
@@ -43,7 +43,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         this.logoClick.emit(clickType);
     }
 
-    checkLogoState(currentLocation) {
+    checkLogoState(currentLocation): void {
         let newLogoState = logoAreaState.LOGO;
         if (currentLocation?.path === '/systems') {
             newLogoState = logoAreaState.SYSTEMS;
@@ -62,7 +62,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         this.logoState = newLogoState;
     }
 
-    ngOnChanges(changes: NgChanges<NxHeaderLogoAreaComponent>) {
+    ngOnChanges(changes: NgChanges<NxHeaderLogoAreaComponent>): void {
         if (changes.menuOpen?.currentValue !== changes.menuOpen?.previousValue ||
             changes.isProfile?.currentValue !== changes.isProfile?.previousValue) {
             this.checkLogoState(this.headerService.currentLocation);

@@ -126,16 +126,16 @@ export class NxServerLoggerWidgetComponent extends FirstPartyWidget {
         return system;
     };
 
-    toggleLoading() {
+    toggleLoading(): void {
         this.loading = !this.loading;
     }
 
-    updateSystem = (systemDropdown: SystemDropdownItem) => {
+    updateSystem = (systemDropdown: SystemDropdownItem): void => {
         this.selectedSystem$.next(systemDropdown);
         this.card.config.selectedSystem = systemDropdown.value;
     };
 
-    updateServer = (server: SystemDropdownItem) => {
+    updateServer = (server: SystemDropdownItem): void => {
         this.selectedServer$.next(server);
         this.card.config.selectedServer = server.value;
     };

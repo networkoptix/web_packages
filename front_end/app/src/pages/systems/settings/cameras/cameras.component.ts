@@ -588,7 +588,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.motionGridChangeWatcher.originalValue = false;
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
     }
 
     // Update menu options after language is loaded

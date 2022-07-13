@@ -86,7 +86,7 @@ export class NxConfigService {
         return new Proxy(this.config, debugHandlerFactory());
     }
 
-    private attachDebugConfigToWindow() {
+    private attachDebugConfigToWindow(): void {
         if (this.window) {
             // @ts-expect-error
             window.debugConfig = this.generateDebugConfigProxy();
@@ -97,7 +97,7 @@ export class NxConfigService {
         return this.config.cloudHost;
     }
 
-    updateConfigUsingOverrides(config = this.config) {
+    updateConfigUsingOverrides(config = this.config): void {
         Object.entries(this.session.retrieve(NxConfigService.OVERRIDE_KEY) || {}).forEach(([nodesString, value]) => {
             const nodes = nodesString.split('.');
             const property = nodes.pop();

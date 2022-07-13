@@ -90,7 +90,7 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget implements
         this.CONFIG = configService.config;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.system = this.systemService.createSystem(this.accountService.email, this.card.config.selectedSystem);
 
         this.createEvent = this.processService
@@ -138,7 +138,7 @@ export class NxEventGeneratorWidgetComponent extends FirstPartyWidget implements
         };
     }
 
-    clear() {
+    clear(): void {
         this.gegForm.controls.source.markAsUntouched();
         this.gegForm.controls.caption.markAsUntouched();
         this.gegForm.controls.description.markAsUntouched();

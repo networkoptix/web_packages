@@ -117,7 +117,7 @@ export class NxOpenAPIJSONService {
         });
     }
 
-    async handleNewServer(serverInfo: ServerInfo) {
+    async handleNewServer(serverInfo: ServerInfo): Promise<void> {
         const { server, markdown } = serverInfo;
         const manifest = await this.APIToolService.getMenuManifest(); // TODO: cache
         const jsons = this.fetchAllJSONsInManifest(manifest);
@@ -209,7 +209,7 @@ export class NxOpenAPIJSONService {
         };
     }
 
-    storeAPIJson(serverID, json: APIDoc) {
+    storeAPIJson(serverID, json: APIDoc): void {
         this.APIStore[serverID].json = json;
     }
 

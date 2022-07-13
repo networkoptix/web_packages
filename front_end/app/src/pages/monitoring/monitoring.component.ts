@@ -88,7 +88,7 @@ export class NxMonitoringComponent implements OnInit {
             });
     }
 
-    private updateMonitor(system) {
+    private updateMonitor(system): void {
         this.availServers = [];
         // this.selectedServer = undefined;
 
@@ -119,7 +119,7 @@ export class NxMonitoringComponent implements OnInit {
         this.monitoringService.system = system;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.route.params
             .pipe(untilDestroyed(this))
             .subscribe(params => {
@@ -128,7 +128,7 @@ export class NxMonitoringComponent implements OnInit {
             });
     }
 
-    init() {
+    init(): void {
         this.accountService.get().then(account => {
             if (!account) {
                 return;
@@ -171,7 +171,7 @@ export class NxMonitoringComponent implements OnInit {
         });
     }
 
-    changeSelectedServer(item) {
+    changeSelectedServer(item): void {
         this.selectedServer = item;
         this.monitoringService.selectedServerId = item.value;
     }

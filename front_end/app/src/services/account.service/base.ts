@@ -235,7 +235,7 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    redirectAfterLogout(doNotRedirect, skipReload) {
+    redirectAfterLogout(doNotRedirect, skipReload): void {
         if (!doNotRedirect) {
             this.router
                 .navigate([this.CONFIG.redirect.unauthorised])
@@ -320,7 +320,7 @@ export abstract class BaseAccount implements OnDestroy {
 
     // TODO: @Chris check for apply service in logout functions
 
-    logout(doNotRedirect = false, skipReload = false) {
+    logout(doNotRedirect = false, skipReload = false): void {
         this.applyService
             .canMove()
             .then((allowed: boolean) => {

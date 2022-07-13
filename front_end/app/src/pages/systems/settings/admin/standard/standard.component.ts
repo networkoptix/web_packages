@@ -326,7 +326,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         }
     }
 
-    check2fa(event) {
+    check2fa(event): void {
         event.preventDefault();
         this.handleMandatory2fa();
     }

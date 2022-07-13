@@ -198,7 +198,7 @@ export class NxSystemLicensesComponent implements OnInit {
         }
     }
 
-    private buildLicensesInfo(info) {
+    private buildLicensesInfo(info): void {
         const serversTime = info.times;
         const hardwareIds = info.hardwareIds.reply;
         const licensesInfo = info.licensesInfo.licenses;
@@ -280,7 +280,7 @@ export class NxSystemLicensesComponent implements OnInit {
         }
     }
 
-    private getServerInfo() {
+    private getServerInfo(): void {
         if (this.system.currentServerNotBusy) {
             forkJoin({
                 times: this.system.getServerTimes(),

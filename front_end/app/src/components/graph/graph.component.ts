@@ -87,7 +87,7 @@ export class NxMonitoringGraphComponent implements OnChanges {
         }
     }
 
-    private getStats() {
+    private getStats(): void {
         timer(0, this.refreshInterval)
             .pipe(
                 concatMap(() => this.system.serverManager.getStatistics(this.selectedServerId)),

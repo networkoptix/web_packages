@@ -65,7 +65,7 @@ export class NxCloudStorageComponent {
         { size: 29, color: 'orange', title: 'Orange usage description' }
     ];
 
-    sort(column: string) {
+    sort(column: string): void {
         if (this.sortBy === column) {
             this.asc = !this.asc;
         } else {
@@ -89,7 +89,7 @@ export class NxCloudStorageComponent {
 
     perform = (actionId: string) => this.dialogService[`cloudStorage${startCase(actionId)}`]();
 
-    showPopover = <T>(template: TemplateRef<T>, target: HTMLElement) => {
+    showPopover = <T>(template: TemplateRef<T>, target: HTMLElement): void => {
         this.popoverService.open(
             template,
             target,

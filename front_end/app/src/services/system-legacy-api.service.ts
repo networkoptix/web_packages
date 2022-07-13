@@ -435,11 +435,11 @@ export class NxSystemAPI {
         return Promise.resolve(this.CONFIG.apiTool.legacyManifest);
     }
 
-    public getApiPreamble() {
+    public getApiPreamble(): void {
         throw Error(this.notImplementedMsg);
     }
 
-    public getApiChangelog() {
+    public getApiChangelog(): void {
         throw Error(this.notImplementedMsg);
     }
 

@@ -135,7 +135,7 @@ export class LoginWebadminModalContent implements OnInit {
         this.window.location.href = url.toString();
     }
 
-    private displayCloudConnectionError() {
+    private displayCloudConnectionError(): void {
         this.simpleDialogService.notify(
             this.LANG.toastMessage.noInternet(),
             'warning',

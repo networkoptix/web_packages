@@ -38,7 +38,7 @@ export class ReserveSpaceWarningModalContent implements OnInit {
         });
     }
 
-    close = () => {
+    close = (): void => {
         this.dialogRef.close();
     };
 }

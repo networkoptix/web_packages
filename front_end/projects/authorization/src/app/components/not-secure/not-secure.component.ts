@@ -47,7 +47,7 @@ export class NxAuthorizeNotSecureComponent {
         }
     }
 
-    next() {
+    next(): void {
         this.setCurrentState.emit(this.loginEmail ? 'password' : 'email');
     }
 }

@@ -35,18 +35,18 @@ export class NxHeaderMobileComponent {
         });
     }
 
-    toggleMenuOpen() {
+    toggleMenuOpen(): void {
         this.isProfile$.next(false);
         this.menuOpen$.next(!this.menuOpen$.value);
     }
 
-    openProfile() {
+    openProfile(): void {
         this.isProfile$.next(true);
         this.menuOpen$.next(true);
         this.setIconState(this.loggedIn, this.headerService.currentLocation?.path);
     }
 
-    ngOnChanges(changes: NgChanges<NxHeaderMobileComponent>) {
+    ngOnChanges(changes: NgChanges<NxHeaderMobileComponent>): void {
         if (changes.loggedIn?.currentValue) {
             this.setIconState(changes.loggedIn.currentValue, this.headerService.currentLocation?.path);
         }
