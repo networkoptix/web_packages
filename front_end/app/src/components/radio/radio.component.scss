@@ -55,6 +55,10 @@ nx-radio {
                 stroke : var(--radio-color);
                 fill : none;
             }
+            
+            & ~ .label-text {
+                color : var(--radio-color);
+            }
         }
 
         input:hover ~ .check {
@@ -67,7 +71,7 @@ nx-radio {
                 fill : var(--radio-hover-check-color);
             }
     
-            & ~ .text {
+            & ~ .label-text {
                 color : var(--radio-hover-color);
             }
         }
@@ -78,25 +82,40 @@ nx-radio {
                 fill : none;
             }
     
-            & ~ .text {
+            & ~ .label-text {
                 color : var(--radio-active-color) !important;
+            }
+        }
+        
+        input:focus ~ .check {
+            svg .circle-focus {
+                stroke : var(--brand-d1) !important;
+                stroke-width: 2;
+                fill : none;
+                
+                &.outer {
+                    opacity: 0.3;
+                    stroke-width: 1;
+                }
             }
         }
     }
 }
 
-.text {
+.label-text {
     font-family : $font-family-regular;
     cursor      : pointer;
     user-select : none;
+    margin-left : 2px;
+    margin-top  : 1px
 }
 
 .check {
     cursor                      : pointer;
     position                    : relative;
     margin                      : -2px 0 0 0;
-    width                       : 20px;
-    height                      : 20px;
+    width                       : 24px;
+    height                      : 24px;
     -webkit-tap-highlight-color : transparent;
 
     &.checked {
@@ -117,12 +136,7 @@ nx-radio {
         }
     }
 
-    svg {
-        height : 16px;
-        width  : 20px;
-
-        & .dot {
-            display : none;
-        }
+    svg .dot {
+        display : none;
     }
 }

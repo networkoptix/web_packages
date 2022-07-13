@@ -3,8 +3,8 @@
 
 @mixin checkboxSvgColor($box, $mark) {
     svg {
-        height : 16px;
-        width  : 20px;
+        height : 24px;
+        width  : 24px;
 
         & polygon.box {
             fill              : none;
@@ -33,6 +33,10 @@
             stroke-miterlimit : 10;
             display           : none;
         }
+        
+        & rect.focus {
+            display           : none;
+        }
 
         & line.tristate {
             fill              : none;
@@ -58,7 +62,7 @@
         }
 
         & ~ .labelText {
-            color : $hover;
+            color : var(--checkbox-hover-color);
         }
     }
 
@@ -85,6 +89,19 @@
 
         & ~ .labelText {
             color : $checkedHover !important;
+        }
+    }
+    
+    input:focus ~ .tick {
+        svg .focus {
+            display      : block;
+            stroke       : var(--brand-d1) !important;
+            stroke-width : 2;
+            fill         : none;
+            
+            &.outer {
+                opacity : 0.3;
+            }
         }
     }
 
@@ -115,6 +132,11 @@
 }
 
 nx-checkbox {
+    & + label {
+        line-height : 24px;
+        margin-left : 2px;
+    }
+    
     & + label + div.input-error {
         display : none;
     }
@@ -138,10 +160,15 @@ nx-checkbox {
         display : flex;
         float   : left;
         margin  : 0;
+        line-height : 24px;
 
         input[type="checkbox"] {
             position : absolute;
             opacity  : 0;
+            
+            & + .tick + .labelText {
+                color : var(--checkbox-color),;
+            }
         }
 
         &.desktop {
@@ -185,8 +212,8 @@ nx-checkbox {
     .tick {
         cursor                      : pointer;
         position                    : relative;
-        width                       : 22px;
-        height                      : 16px;
+        width                       : 24px;
+        height                      : 24px;
         display                     : flex;
         align-items                 : center;
         -webkit-tap-highlight-color : transparent;

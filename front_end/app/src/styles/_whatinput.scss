@@ -58,7 +58,14 @@
 
     & + .tick {
         outline : none !important;
-        @include outline;
+    }
+}
+
+[data-whatinput="mouse"] input[type=checkbox]:focus:not([disabled]):not(.disabled) {
+    & + .tick {
+        svg .focus {
+            stroke : transparent !important;
+        }
     }
 }
 
@@ -70,7 +77,14 @@
 
     & + .check {
         outline : none !important;
-        @include outline;
+    }
+}
+
+[data-whatinput="mouse"] input[type=radio]:focus:not([disabled]):not(.disabled) {
+    & + .check {
+        svg .circle-focus {
+            stroke : transparent !important;
+        }
     }
 }
 

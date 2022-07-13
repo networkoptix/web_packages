@@ -33,19 +33,19 @@
 }
 
 .border-left {
-    border-left : 1px solid theme_variables_common.$common-border-color;
+    border-left : 1px solid var(--border-color) !important;
 }
 
 .border-right {
-    border-right : 1px solid theme_variables_common.$common-border-color;
+    border-right : 1px solid var(--border-color) !important;
 }
 
 .border-top {
-    border-top : 1px solid theme_variables_common.$common-border-color;
+    border-top : 1px solid var(--border-color) !important;
 }
 
 .border-bottom {
-    border-bottom : 1px solid theme_variables_common.$common-border-color;
+    border-bottom : 1px solid var(--border-color) !important;
 }
 
 .light-color {
@@ -63,6 +63,6 @@
     }
 
     .border-left-md {
-        border-left : 1px solid theme_variables_common.$common-border-color;
+        border-left : 1px solid var(--border-color) !important;
     }
 }

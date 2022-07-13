@@ -61,7 +61,6 @@
                     required
                 >
                 </nx-checkbox>
-
                 <label for="fldAgree">I agree to T&C (required)</label>
                 <!--component: {{spyAgree | json}}-->
                 <div class="help-block input-error input-error--required">Required</div>
@@ -69,32 +68,32 @@
 
             <br />
 
-            <div class="form-group">
+            <div class="radio-group mb-3">
                 <nx-radio
                     name="blah"
                     componentId="blah1"
                     value="blah1"
                     [(ngModel)]="blah"
+                    label="Blah1 - internal"
                 >
                 </nx-radio>
-                <label for="blah1">blah1</label>
-                <br />
+           </div>
+            <div class="radio-group">
                 <nx-radio
                     name="blah"
                     componentId="blah2"
                     value="blah2"
                     [(ngModel)]="blah"
-                    >blah2
-                </nx-radio>
+                ></nx-radio>
                 <label for="blah2">blah2</label>
-                <br />
+            </div>
+            <div class="radio-group">
                 <nx-radio
                     name="blah"
                     componentId="blah3"
                     value="blah3"
                     [(ngModel)]="blah"
-                    >blah3
-                </nx-radio>
+                ></nx-radio>
                 <label for="blah3">blah3</label>
             </div>
 
@@ -124,28 +123,18 @@
                     componentId="group3"
                     value="Tsanko"
                     [(ngModel)]="group"
+                    label="Tsanko"
                     disabled
-                    >Tsanko
-                </nx-radio>
-                <label
-                    for="group3"
-                    disabled
-                    >Tsanko</label
-                >
+                ></nx-radio>
                 <br />
                 <nx-radio
                     name="group2"
                     componentId="group4"
                     value="Evgeny"
                     [(ngModel)]="group"
+                    label="Evgeny"
                     disabled
-                    >Evgeny
-                </nx-radio>
-                <label
-                    for="group4"
-                    disabled
-                    >Evgeny</label
-                >
+                ></nx-radio>
             </div>
 
             <br />
