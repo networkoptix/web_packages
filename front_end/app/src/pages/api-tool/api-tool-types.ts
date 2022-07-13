@@ -44,3 +44,11 @@ export enum requestTypes {
     PATCH = 'patch',
     OPTIONS = 'options'
 }
+
+export type Markdown = string;
+
+export interface APIToolCacheObject {
+    version: string,
+    json: APIDoc,
+    markdown?: Markdown
+}
