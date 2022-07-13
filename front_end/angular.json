@@ -158,6 +158,10 @@
                 {
                   "replace": "app/src/services/account.service/index.ts",
                   "with": "app/src/services/account.service/index.webadmin.ts"
+                },
+                {
+                  "replace": "app/src/routeGuards/authGuard.ts",
+                  "with": "app/src/routeGuards/authGuard.webadmin.ts"
                 }
               ],
               "index": {
