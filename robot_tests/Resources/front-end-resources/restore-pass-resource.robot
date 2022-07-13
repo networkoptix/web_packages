@@ -34,6 +34,7 @@ Get Restore Code and Open the Link
     [Return]    ${link}
 
 Restore Pass Validation Setup
+    Open Browser and go to URL    ${url}
     ${user}=   Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${user}    ${password}
     Set Suite Variable     ${user}    ${user}
@@ -48,7 +49,7 @@ Restart
     Open Restore Password Dialog
 
 Open Restore Password Dialog
-    Open Browser and go to URL    ${url}/authorize
+    Open Browser and Go to URL    ${url}/authorize
     Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${user}

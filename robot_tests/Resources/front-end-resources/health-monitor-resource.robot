@@ -26,6 +26,7 @@ Upload Json
     Sleep    0.2
 
 Health Monitor Suite Setup
+    Open Browser and go to URL      ${url}
     ${owner}=   Register and activate account with random email    mark    hamill    ${password}
     ${random}=   Generate Random String      length=5
     ${server 1}=   Create Base System    HM1-${random}    owner=${owner}
@@ -33,7 +34,7 @@ Health Monitor Suite Setup
     Set Suite Variable    ${server 1}    ${server 1}
     Set Suite Variable    ${server 2}    ${server 2}
     Stop Docker Server    ${server 2}[id]
-    Open Browser and go to URL    ${ENV}
+    Go to    ${ENV}
     Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[owner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
 
@@ -143,12 +144,13 @@ Health Monitor Suite Teardown
 
 
 Health Monitor Details Setup
+    Open Browser and Go To URL    ${url}
     ${random}=    Generate Random String      length=5
     ${owner}=    Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
     ${server} =    Create Base System      hmdetails-${random}    owner=${owner}
     Set Suite Variable    &{server}    &{server}
     Run Keyword If    '''${mode}'''=='''cloud'''    Run Keywords
-    ...    Open Browser and Go To URL    ${url}
+    ...    Go to    ${url}
     ...    AND    Log in to user and system     ${server['owner']}    ${server['cloud id']}    password=${password}
     ...    AND    Sleep    20
     ...    AND    Wait Until Element is Visible    ${SERVERS LINK}    300

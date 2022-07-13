@@ -4,6 +4,7 @@ Suite Setup       View Page Suite Setup
 Test Setup        View Page Test Setup
 Test Teardown     restart and log out
 Suite Teardown    Run Keyword and Ignore Error    View Suite Teardown
+Force Tags        cameras
 
 
 

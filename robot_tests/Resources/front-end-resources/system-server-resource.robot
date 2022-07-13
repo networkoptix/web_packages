@@ -76,13 +76,13 @@ Verify Add Storage Dialog
     ...    ${AS MODAL CANCEL BUTTON}
 
 Server Advanced Settings Suite Setup
+    Open Browser and go to URL    ${url}
     ${random} =	   Generate Random String   length=5
     Set Suite Variable     ${random}    ${random}
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
     ${server} =    Create Base System    servers_advanced-${random}    owner=${owner}    storage string=-v recordings:/recordings  
     Set Suite Variable    &{server}    &{server} 
-    Open Browser and go to URL    ${url}
-    
+    Go to    ${url}
     Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server}[owner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
     Sleep    20
@@ -120,11 +120,11 @@ Server Advanced Settings Suite Teardown
     Delete Base System    ${server}
 
 Server Settings Suite Setup
+    Open Browser and go to URL    ${url}
     ${owner}=    Register and activate account with random email    mark    hamil    ${password}
     Set Suite Variable    ${user in charge}    ${owner}
     @{auth}=    Create List    ${user in charge}    ${password}
     Set Suite Variable    ${auth}
-
     Open Connection    ${QA BURBANK IP}
     SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     # We setup one server manually here because we need 2 ports
@@ -140,31 +140,26 @@ Server Settings Suite Setup
     END
     ${id}=   Execute Command    docker run -d --restart always -p ${port 1}:7001 -p ${extra port}:7002 --name servers1-${random} -e VMS=${vms} ${IMAGE}
     ${cont id 1}=    Evaluate    $id[:12]
-
     Sleep    5
     Setup Local System    https://${QA BURBANK IP}:${port 1}    ${password}    servers1-${random}
     ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${port 1}    ${server auth}    Server ${cont id 1}
     ${server 1}=   Create Dictionary    contId=${cont id 1}    port=${port 1}    serverId=${server 1 id}
-
     IF    '''${mode}'''=='''cloud'''
         ${server 2}=    Create Base System    servers2-${random}    owner=${user in charge}
     ELSE
         ${server 2}=    Create Base System    servers2-${random}
     END
     ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${server 2}[port]    ${server auth}    Server ${server 2}[id]
-
     IF    '''${mode}'''=='''cloud'''
         ${server 3}=    Create Base System    servers3-${random}    owner=${user in charge}
     ELSE
         ${server 3}=    Create Base System    servers3-${random}
     END
-
     Change server name via API    ${server auth}    server 1    ${server 1 id}    https://${QA BURBANK IP}:${port 1}
     Change server name via API    ${server 2}[local auth]    server 2    ${server 2 id}    https://${QA BURBANK IP}:${server 2}[port]
     FOR    ${i}    IN RANGE    1    4
         Set Suite Variable    ${server ${i}}
     END
-
     IF    '''${mode}'''=='''cloud'''
         system-server-resource.Cloud Suite Setup
     ELSE
@@ -197,8 +192,7 @@ Web Admin Suite Setup
     Execute Command Remotely    docker container stop ${server 2}[id]
 
 Cloud Suite Setup
-
-    Open Browser and go to URL    ${ENV}
+    Go to    ${ENV}
 
     ${sysId1}=   Connect System to Cloud    ${server auth}    https://${QA BURBANK IP}:${server 1}[port]    2serverstest1    ${user in charge}    ${password}
     Set To Dictionary    ${server 1}    sysId=${sysId1}

@@ -34,6 +34,7 @@ Storage Suite Setup
     ${console} =    Set Variable If    '${loglevel}' != 'INFO'    yes    no
     Set Suite Variable    ${console}    ${console}    
     Log    Storage Suite Setup    DEBUG      console=${console}   
+    Open Browser and go to URL    ${url}
     ${owner} =    Register and activate account with random email    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${BASE PASSWORD}
     Log    owner created ..... | PASS |    DEBUG      console=${console}
     #${storage string} =    Set Variable    -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /data/:/opt/networkoptix/mediaserver/var -v /video:/recordings
@@ -87,7 +88,7 @@ Storage Suite Setup
     Log    disk-invalid deleted ..... | PASS |    DEBUG      console=${console}
     Sleep    90
     Log    server restarted ..... | PASS |    DEBUG      console=${console}
-    Open Browser and go to URL    ${url}
+    Go to    ${url}
     Turn On Recording    ${server 1['owner']}    ${server 1['cloud id']}
     Verify Storages    5    owner=${server 1['owner']}    system=${server 1['cloud id']}    login=${TRUE}
     Verify Storages    1    owner=${server 1['owner']}    system=${server 2['cloud id']}    login=${TRUE}

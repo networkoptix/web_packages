@@ -148,6 +148,7 @@ Bring Camera Online
     Execute Command Remotely   docker exec -d ${docker name} iptables -D INPUT -s ${Camera IP} -j DROP
 
 Camera Suite Setup
+    Open Browser and go to URL    ${url}
     #system(name,port,cont,owner,id) 
     #local auth, cloud auth, server url, 
     #users('cloudAdmin, viewer, liveViewer, advancedViewer, custom)
@@ -240,7 +241,7 @@ Camera Suite Setup
     ${no perm}=    Register and activate account with random email    mark   hamill    ${BASE PASSWORD}
     Set Suite Variable    ${no perm}    ${no perm}
     Set Suite Variable    ${custom cameras}    ${custom cameras}
-    Open Browser and go to URL    ${url}
+    Go to    ${url}
     #Run Keyword If    '''${mode}'''=='''cloud'''    Cloud Suite Setup
     #...    ELSE    Web Admin Suite Setup
     Take Camera Offline    ${system}[name]    192.168.0.201
