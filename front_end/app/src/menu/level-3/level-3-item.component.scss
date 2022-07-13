@@ -34,7 +34,7 @@
         &.focus {
             &, * {
                 // overwrite whatinput's focus outline
-                background-color : $light8 !important;
+                background-color : var(--left-menu-l3-bg) !important;
                 outline          : none !important;
                 box-shadow       : none !important;
             }
@@ -42,7 +42,7 @@
         &:focus {
             &, * {
                 // overwrite whatinput's focus outline
-                background-color : $light6;
+                background-color : var(--left-menu-l3-bg);
                 outline          : none !important;
                 box-shadow       : none !important;
             }
