@@ -179,6 +179,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 }
                 this.healthService.system = this.system;
                 infoPromise.then(() => {
+                    if (environment.isLocal && !account) {
+                        return;
+                    }
                     if (this.system.isOnline) {
                         this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
                     }
