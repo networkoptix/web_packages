@@ -143,6 +143,10 @@ export abstract class BaseAccount implements OnDestroy {
             this.dialogs.notify(this.LANG.toastMessage.loggingIn(), 'success', false);
             this.loginTokens(this.tokens).then(() => { });
         });
+
+        this.localStorage.observe('theme').subscribe(() => {
+            this.window.location.reload();
+        });
     }
 
     private loginTokens(tokens) {

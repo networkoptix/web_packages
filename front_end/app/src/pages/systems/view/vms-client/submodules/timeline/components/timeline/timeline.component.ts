@@ -7,7 +7,7 @@ import {
     OnDestroy,
     HostListener
 } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -46,9 +46,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
 
     protected _state: TimelineServiceStatus;
-    protected _stateSubscription: Subscription;
     private updateCanvas = new Subject();
     private unsub$ = new Subject();
+    private _animationTimeout;
 
     constructor(
         protected configService: NxConfigService,
@@ -59,7 +59,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         public timeUnderMouse: TimelineTimeUnderMouseService,
         protected selection: TimelineSelectionService
     ) {
-        this._onTimelineStatusChange = this._onTimelineStatusChange.bind(this);
         this.archiveSelectionEnabled = this.configService.flagsEnabled(
             'archiveSelection'
         );
@@ -78,9 +77,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     protected _pinchDestructor: Function;
 
     public ngOnInit(): void {
-        this._stateSubscription = this.timeline.subject.subscribe(
-            this._onTimelineStatusChange
-        );
+        this.timeline.subject
+            .pipe(takeUntil(this.unsub$))
+            .subscribe(() => this._onTimelineStatusChange);
+
         this._animationFrameRequestHandler =
             requestAnimationFrame(() => this.onAnimationFrame());
     }
@@ -92,7 +92,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 
-        setTimeout(() => {
+        this._animationTimeout = setTimeout(() => {
             this._animationFrameRequestHandler =
                 requestAnimationFrame(() => this.onAnimationFrame());
         }, this.timeline.renderFps);
@@ -100,8 +100,8 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.unsub$.next(true);
-        this._stateSubscription.unsubscribe();
         cancelAnimationFrame(this._animationFrameRequestHandler);
+        clearTimeout(this._animationTimeout);
         this._pinchDestructor && this._pinchDestructor();
     }
 
