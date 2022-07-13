@@ -61,12 +61,7 @@ export class TransferOwnershipModalContent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.userItems = this.system.userManager.users
-            .filter(user =>
-                user.email && // Discard local admin
-                user.email !== this.system.userManager.currentOwner.email
-                // Discard system owner
-            )
+        this.userItems = this.system.userManager.nonOwners({ cloud: true })
             .map(user => ({
                 name: user.email,
                 value: user.email,

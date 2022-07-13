@@ -68,7 +68,7 @@
                                 *ngIf="
                                     ownershipTransferEnabled &&
                                     system.userManager.isMine &&
-                                    system.userManager.users.length > 2
+                                    system.userManager.nonOwners({ cloud: true }).length
                                 "
                                 id="change-ownership"
                                 class="ml-1"

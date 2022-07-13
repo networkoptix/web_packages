@@ -69,6 +69,18 @@ export class UserManager {
         return this.users.find(user => user.isCloudOwner);
     }
 
+    nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxSystemUser[] {
+        return this.users.filter(user => {
+            if (user.isCloud && cloud) {
+                return !user.isCloudOwner;
+            } else if (!user.isCloud && local) {
+                return !user.isLocalOwner;
+            } else {
+                return false;
+            }
+        });
+    }
+
     isAdmin(user: NxSystemRole) {
         return user.permissions &&
             user.permissions.includes(this.CONFIG.accessRoles.globalAdminPermissionFlag);
