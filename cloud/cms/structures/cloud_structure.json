@@ -225,10 +225,24 @@
             }
           },
           {
-            "label": "Portal header logo",
+            "label": "Light Theme - Portal header logo",
             "name": "static/images/logo.png",
             "value": "",
-            "description": "Logo for branding. ",
+            "description": "Light Theme logo for branding. ",
+            "type": "image",
+            "meta": {
+              "background": "white",
+              "format": "png",
+              "height_le": 72,
+              "height_ge": 64,
+              "size": 5242880
+            }
+          },
+          {
+            "label": "Dark Theme - Portal header logo",
+            "name": "static/images/dark_logo.png",
+            "value": "",
+            "description": "Dark Theme logo for branding. ",
             "type": "image",
             "meta": {
               "background": "white",
