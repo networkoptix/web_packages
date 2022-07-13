@@ -6,7 +6,7 @@ $pressedColor: $textColor;
   display: block;
   position: absolute;
   left: 0;
-  top: 5px;
+  top: -46px;
   height: 45px;
   width: 140px;
   padding-left: 5px;
@@ -44,11 +44,11 @@ $pressedColor: $textColor;
   > .vertical-line {
     content: "";
     width: 2px;
-    height: 30px;
+    height: 83px;
     background-color: $usualBackground;
     position: absolute;
     left: 50%;
-    bottom: -33px;
+    bottom: -85px;
     transform: translateX(-50%);
   }
 

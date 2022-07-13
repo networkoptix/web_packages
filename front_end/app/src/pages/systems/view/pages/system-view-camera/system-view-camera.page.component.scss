@@ -421,7 +421,8 @@ $border-color: var(--light6);
       .controls-toggling-ear--wrapper {
         position : absolute;
         top      : -16px;
-        left     : calc(50% - 70px / 2);
+        // left     : calc(50% - 70px / 2);
+        right    : 32px;
         width    : 16px;
         height   : 40px;
 
