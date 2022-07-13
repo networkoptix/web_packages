@@ -874,7 +874,9 @@
         "selected": "{count, plural, =0{# ausgewählt} one{# ausgewählt} other{# ausgewählt}}",
         "vendor": "Hersteller",
         "vendors": "Hersteller",
-        "resultsFound": "{count, plural, =0{# Ergebnisse} one{# Ergebnis} other{# Ergebnisse}} gefunden"
+        "resultsFound": "{count, plural, =0{# Ergebnisse} one{# Ergebnis} other{# Ergebnisse}} gefunden",
+        "noMatches": "No matches",
+        "userNotFound": "User not found"
     },
     "servers": {
         "analyticsDataPolicyError": "Fehler beim Löschen oder Speichern von Analyticsdaten",

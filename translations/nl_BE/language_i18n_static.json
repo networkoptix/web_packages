@@ -874,7 +874,9 @@
         "selected": "{count, plural, =0{# geselecteerd} one{# geselecteerd} other{# geselecteerd}}",
         "vendor": "Fabrikant",
         "vendors": "Fabrikanten",
-        "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}"
+        "resultsFound": "{count, plural, =0{# resultaten} one{# resultaat} other{# resultaten}}",
+        "noMatches": "No matches",
+        "userNotFound": "User not found"
     },
     "servers": {
         "analyticsDataPolicyError": "Fout bij het verwijderen of bijhouden van analysegegevens",

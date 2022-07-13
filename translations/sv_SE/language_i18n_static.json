@@ -874,7 +874,9 @@
         "selected": "{count, plural, =0{# valda} one{# valda} other{# valda}}",
         "vendor": "Tillverkare",
         "vendors": "Tillverkare",
-        "resultsFound": "{count, plural, =0{# Resultat} one{# Resultat} other{# Resultat}} hittades"
+        "resultsFound": "{count, plural, =0{# Resultat} one{# Resultat} other{# Resultat}} hittades",
+        "noMatches": "No matches",
+        "userNotFound": "User not found"
     },
     "servers": {
         "analyticsDataPolicyError": "Fel vid borttagning eller bevarande av analysdata",

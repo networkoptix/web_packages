@@ -874,7 +874,9 @@
         "selected": "{count, plural, =0{# selecionado} one{# selecionado} other{# selecionado}}",
         "vendor": "Fabricante",
         "vendors": "Fabricantes",
-        "resultsFound": "{count, plural, =0{# Resultados} one{#Resultado} other{# Resultados}} encontrado"
+        "resultsFound": "{count, plural, =0{# Resultados} one{#Resultado} other{# Resultados}} encontrado",
+        "noMatches": "No matches",
+        "userNotFound": "User not found"
     },
     "servers": {
         "analyticsDataPolicyError": "Erro ao excluir ou manter dados analíticos",
