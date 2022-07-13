@@ -303,6 +303,7 @@ class CMSAdmin(admin.ModelAdmin):
 class AssetTypeAdmin(CMSAdmin):
     list_display = ('name', 'type', 'asset_type_settings', 'can_preview', 'single_customization',)
     list_display_links = ('name', 'type')
+    change_form_template = 'cms/asset_type_change_form.html'
 
     def asset_type_settings(self, obj):
         return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
