@@ -3,8 +3,8 @@
         <div
             class="carousel-item"
             *ngFor="let screenshot of screenshots; let i = index"
-            [ngClass]="{ active: i == currentIndex }"
-            [@visibilityChange]="i == currentIndex ? 'enter' : 'leave'"
+            [ngClass]="{ active: i === currentIndex }"
+            [@visibilityChange]="i === currentIndex ? 'enter' : 'leave'"
         >
             <div class="carousel-img">
                 <img
@@ -44,7 +44,7 @@
         <div
             class="carousel-preview-item"
             *ngFor="let screenshot of screenshots; let i = index"
-            [ngClass]="{ active: i == currentIndex }"
+            [ngClass]="{ active: i === currentIndex }"
         >
             <div
                 class="carousel-img"

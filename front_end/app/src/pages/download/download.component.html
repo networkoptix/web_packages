@@ -28,10 +28,10 @@
                             [id]="platform.name"
                             [routerLink]="'/download/' + platform.name"
                             [routerLinkActive]="'active'"
-                            [attr.aria-selected]="platform.name == activePlatform.name"
+                            [attr.aria-selected]="platform.name === activePlatform.name"
                             aria-disabled="false"
                             [attr.aria-controls]="
-                                platform.name == activePlatform.name
+                                platform.name === activePlatform.name
                                     ? platform.name + '-panel'
                                     : undefined
                             "
@@ -112,13 +112,13 @@
                                     class="installers"
                                     *ngIf="otherPackages.length > 0"
                                 >
-                                    <h5 *ngIf="activePlatform?.name != 'sdk'">
+                                    <h5 *ngIf="activePlatform?.name !== 'sdk'">
                                         <b translate>Other packages:</b>
                                     </h5>
                                     <div
                                         class="links mb-1"
                                         *ngFor="let otherPackage of otherPackages; let i = index"
-                                        [ngClass]="{ 'a-link': i % 3 != 2 }"
+                                        [ngClass]="{ 'a-link': i % 3 !== 2 }"
                                     >
                                         <a [href]="otherPackage.url">{{ otherPackage.niceName }}</a>
                                     </div>
@@ -143,7 +143,7 @@
                     *ngFor="let platform of downloads.mobile"
                 >
                     <a
-                        *ngIf="LANG.downloads.mobile[platform.name].link() != 'disabled'"
+                        *ngIf="LANG.downloads.mobile[platform.name].link() !== 'disabled'"
                         class="mobile-link"
                         [ngClass]="platform.os"
                         [href]="LANG.downloads.mobile[platform.name].link()"

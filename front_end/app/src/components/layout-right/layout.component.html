@@ -10,8 +10,8 @@
     <div
         class="card-columns pl-2 pr-2"
         [class.no-toggle]="!toggle"
-        [class.toggle-on]="toggle == 'on'"
-        [class.toggle-off]="toggle == 'off'"
+        [class.toggle-on]="toggle === 'on'"
+        [class.toggle-off]="toggle === 'off'"
     >
         <ng-content select="[first-element]"></ng-content>
         <div class="right-sidemenu d-inline-block">

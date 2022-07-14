@@ -69,14 +69,14 @@
                     <h4>
                         <span
                             *ngIf="
-                                activeCamera.analyticsEvents.length == 0 ||
+                                activeCamera.analyticsEvents.length === 0 ||
                                 activeCamera.analyticsEvents.length > 1
                             "
                             translate
                             >Analytics Events</span
                         >
                         <span
-                            *ngIf="activeCamera.analyticsEvents.length == 1"
+                            *ngIf="activeCamera.analyticsEvents.length === 1"
                             translate
                             >Analytics Event</span
                         >

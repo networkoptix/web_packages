@@ -14,13 +14,13 @@
             <div
                 class="block-section-keys"
                 [style.max-width.%]="block.maxParamWidth || 100"
-                [ngClass]="{ 'clear-flex': infoLineStyle == 'condensed' }"
+                [ngClass]="{ 'clear-flex': infoLineStyle === 'condensed' }"
             >
                 <p
                     *ngFor="let line of block.lines; let lineIndex = index"
                     [ngClass]="infoBlockStyle === 'dark' && 'dark'"
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
-                    [ngStyle]="{ display: line.show == false ? 'none' : 'flex' }"
+                    [ngStyle]="{ display: line.show === false ? 'none' : 'flex' }"
                     [title]="line.name"
                 >
                     {{ line.name }}
@@ -31,7 +31,7 @@
                     *ngFor="let line of block.lines; let lineIndex = index"
                     [ngClass]="line.customClass"
                     [style.min-height.px]="getLookup(columnIndex, blockIndex, lineIndex)"
-                    [ngStyle]="{ display: line.show == false ? 'none' : 'flex' }"
+                    [ngStyle]="{ display: line.show === false ? 'none' : 'flex' }"
                     [title]="line.tooltip || line.name + '-' + line.value"
                 >
                     {{ line.value

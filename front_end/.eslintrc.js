@@ -649,11 +649,21 @@ module.exports = {
         {
             files: ['*.ts'],
             extends: [
-                // 'plugin:@angular-eslint/recommended',
+                'plugin:@angular-eslint/recommended',
                 // 'plugin:@angular-eslint/template/process-inline-templates',
             ],
             plugins: ['@angular-eslint'],
-            rules: {},
+            rules: {
+                // TODO: Evaluate whether we want these or not
+                '@angular-eslint/component-class-suffix': 'off',
+                '@angular-eslint/contextual-lifecycle': 'off',
+                '@angular-eslint/directive-class-suffix': 'off',
+                '@angular-eslint/no-empty-lifecycle-method': 'off',
+                '@angular-eslint/no-input-rename': 'off',
+                '@angular-eslint/no-output-native': 'off',
+                '@angular-eslint/no-output-on-prefix': 'off',
+                '@angular-eslint/use-lifecycle-interface': 'off',
+            },
         },
         {
             files: ['*.ts'],
@@ -692,10 +702,11 @@ module.exports = {
         },
         {
             files: ['*.component.html'],
-            // extends: ['plugin:@angular-eslint/template/recommended'],
             parser: '@angular-eslint/template-parser',
             plugins: ['@angular-eslint/template'],
             rules: {}
+            // Not going to activate any template rules, they seem
+            // buggy on fix. Keeping the override for the parser.
         },
         {
             files: ['*.component.html'],

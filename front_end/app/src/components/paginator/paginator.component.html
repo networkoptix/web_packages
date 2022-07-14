@@ -22,7 +22,7 @@
     }"
     class="btn btn-default page-num-btn assemble-{{ idx }}"
     id="{{
-        idx == 0
+        idx === 0
             ? 'paginator-tile-first'
             : idx === (pages$ | async).length - 1
             ? 'paginator-tile-last'

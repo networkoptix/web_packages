@@ -82,8 +82,8 @@
                                         <div
                                             [ngClass]="{ 'dynamic-table-show': !sortOrderASC }"
                                             [style.visibility]="
-                                                headerGroup.id == selectedGroup &&
-                                                header.id == selectedHeader
+                                                headerGroup.id === selectedGroup &&
+                                                header.id === selectedHeader
                                                     ? 'visible'
                                                     : 'hidden'
                                             "
@@ -107,7 +107,7 @@
                         <tr class="table-row-spacer"></tr>
                         <tr
                             *ngFor="let item of pagedItems; trackBy: trackItem"
-                            [ngClass]="{ selected: item == selectedEntity }"
+                            [ngClass]="{ selected: item === selectedEntity }"
                             (click)="setClickedRow(item)"
                         >
                             <ng-container

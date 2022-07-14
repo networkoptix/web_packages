@@ -53,7 +53,7 @@
 
                     <ng-template
                         [ngTemplateOutlet]="healthLinks"
-                        *ngIf="mediaLayoutClass != 'mobileLayout'"
+                        *ngIf="mediaLayoutClass !== 'mobileLayout'"
                     ></ng-template>
                 </div>
             </div>
@@ -63,7 +63,7 @@
 
                     <ng-template
                         [ngTemplateOutlet]="healthLinks"
-                        *ngIf="mediaLayoutClass == 'mobileLayout'"
+                        *ngIf="mediaLayoutClass === 'mobileLayout'"
                     >
                     </ng-template>
                 </div>

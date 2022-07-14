@@ -36,7 +36,7 @@
                 <a
                     href
                     class="dropdown-item inset"
-                    [ngClass]="{ selected: role.optionLabel == selection }"
+                    [ngClass]="{ selected: role.optionLabel === selection }"
                     (click)="show = false; changePermission(role)"
                 >
                     <span>{{ role.optionLabel }}</span>

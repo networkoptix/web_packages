@@ -116,7 +116,7 @@
                         size="large"
                         name="tag"
                         [clickable]="false"
-                        *ngIf="type.id != 'mine'"
+                        *ngIf="type.id !== 'mine'"
                         >{{ type.label }}</nx-tag
                     >
                 </h3>
@@ -346,7 +346,7 @@
                                         <div
                                             *ngIf="
                                                 plugin.requirementsAndCompatibility.testedVersions
-                                                    .length == 1
+                                                    .length === 1
                                             "
                                         >
                                             <label class="group-label">{{

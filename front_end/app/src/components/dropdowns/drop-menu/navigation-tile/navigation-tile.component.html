@@ -20,7 +20,7 @@
         <div class="section-title">
             <h5
                 class="section-title-text"
-                [ngClass]="{ 'no-link': node.url == '' }"
+                [ngClass]="{ 'no-link': node.url === '' }"
                 [routerLink]="!node.new_window && node.url?.startsWith('/') ? node.url : undefined"
             >
                 {{ node.display_name || node.name }}
