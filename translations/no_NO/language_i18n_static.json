@@ -875,8 +875,8 @@
         "vendor": "Produsent",
         "vendors": "Produsenter",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
-        "noMatches": "No matches",
-        "userNotFound": "User not found"
+        "noMatches": "Ingen treff",
+        "userNotFound": "Bruker ikke funnet"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",

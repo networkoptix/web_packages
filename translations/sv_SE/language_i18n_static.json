@@ -875,8 +875,8 @@
         "vendor": "Tillverkare",
         "vendors": "Tillverkare",
         "resultsFound": "{count, plural, =0{# Resultat} one{# Resultat} other{# Resultat}} hittades",
-        "noMatches": "No matches",
-        "userNotFound": "User not found"
+        "noMatches": "Inga träffar",
+        "userNotFound": "Användaren kunde inte hittas"
     },
     "servers": {
         "analyticsDataPolicyError": "Fel vid borttagning eller bevarande av analysdata",

@@ -875,8 +875,8 @@
         "vendor": "メーカー",
         "vendors": "メーカー",
         "resultsFound": "{count, plural, =0{# 件の結果} one{# 件の結果} other{# 件の結果}}",
-        "noMatches": "No matches",
-        "userNotFound": "User not found"
+        "noMatches": "一致なし",
+        "userNotFound": "ユーザーが見つかりません"
     },
     "servers": {
         "analyticsDataPolicyError": "分析データの削除または保持中にエラーが発生しました。",

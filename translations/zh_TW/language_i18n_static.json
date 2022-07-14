@@ -875,8 +875,8 @@
         "vendor": "製造商",
         "vendors": "製造商",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
-        "noMatches": "No matches",
-        "userNotFound": "User not found"
+        "noMatches": "沒有相符項目",
+        "userNotFound": "使用者不存在"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",
