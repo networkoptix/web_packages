@@ -380,7 +380,7 @@ class ZendeskMapper(ZendeskBase):
 
         if is_article:
             article_params['labels'] = ','.join(
-                str(ZendeskArticleLabel.objects.get_or_create(site=self.site, name=label)[0].id) for label in item.label_names)
+                str(getattr(ZendeskArticleLabel.objects.filter(site=self.site, name=label).first(), 'id', ZendeskArticleLabel.objects.create(site=self.site, name=label).id)) for label in item.label_names)
 
         return {
             k: v for k, v in
@@ -626,8 +626,13 @@ class Exporter(ZendeskBase):
         zenpy_article.title = zd_article.title
 
         if not zenpy_article.id:
-            zenpy_article = self.zen_client.help_center.articles.create(
-                zd_article.section.section_id, zenpy_article)
+            try:
+                zenpy_article = self.zen_client.help_center.articles.create(
+                    zd_article.section.section_id, zenpy_article)
+            except RecordNotFoundException:
+                zenpy_section = self.sync_section(zd_article.section, delete=False)
+                zenpy_article = self.zen_client.help_center.articles.create(
+                    zenpy_section.id, zenpy_article)
 
         else:
             try:
@@ -662,7 +667,7 @@ class Exporter(ZendeskBase):
         zenpy_translation.title = zd_article.title
         return zenpy_translation
 
-    def _get_update_attachment_handler(self, existing_attachments, zenpy_article, portal_url):
+    def _get_update_attachment_handler(self, existing_attachments, zenpy_article, portal_url, asset):
         def _handler(body, file_info):
             attachment = next(filter(lambda attachment: attachment.file_name ==
                                     file_info['external_file_name'], existing_attachments), None)
@@ -678,7 +683,7 @@ class Exporter(ZendeskBase):
                 except (ZenpyException, ValueError, OSError, APIException) as exception:
                     # ZenpyException: Most likely from a file being too large.
                     # ValueError or OSError: Most likely an ExternalFile is missing it's file.
-                    logger.warning(f'Error creating attachment. Asset: {zd_article and zd_article.asset.id} '
+                    logger.warning(f'Error creating attachment. Asset: {asset.id}'
                                    f'Zenpy Article ID: {zenpy_article.id}, '
                                    f'Ext File ID: {external_file.id}, '
                                    f'File name: {file_info["external_file_name"]}, '
@@ -702,12 +707,12 @@ class Exporter(ZendeskBase):
 
         return _handler
 
-    def _update_body_with_attachments(self, content, zenpy_article, portal_url):
+    def _update_body_with_attachments(self, content, zenpy_article, portal_url, asset):
         attachments_changed = False
         body = '<br>'.join(block['contentHTML'] for block in content['blocks'])
         existing_attachments = list(
             self.zen_client.help_center.attachments(zenpy_article.id))
-        update_attachment = self._get_update_attachment_handler(existing_attachments, zenpy_article, portal_url)
+        update_attachment = self._get_update_attachment_handler(existing_attachments, zenpy_article, portal_url, asset)
 
         for file_info in content.get('external_files', []):
             if updated_body := update_attachment(body, file_info):
@@ -728,7 +733,7 @@ class Exporter(ZendeskBase):
         portal_url = conf["cloud_portal"]["url"]
 
         abandoned_attachments, updated_body, attachments_changed = self._update_body_with_attachments(
-            content, zenpy_article, portal_url)
+            content, zenpy_article, portal_url, zd_article.asset)
 
         if abandoned_attachments:
             self._clean_attachments(abandoned_attachments)
@@ -820,6 +825,7 @@ class Exporter(ZendeskBase):
         return zenpy_section
 
     def _update_zenpy_section_from_data(self, zenpy_section, zd_section):
+        zd_section = ZendeskSection.objects.get(id=zd_section.id)
         zenpy_section.category_id = zd_section.get_parent_category_id()
         zenpy_section.parent_section_id = getattr(
             zd_section.parent_section, 'section_id', None)
@@ -830,14 +836,18 @@ class Exporter(ZendeskBase):
             try:
                 zenpy_section = self.zen_client.help_center.sections.update(
                     zenpy_section)
-                return zenpy_section
+                return self._update_zd_and_return_zenpy(zenpy_section, zd_section)
+
             except RecordNotFoundException:
                 zenpy_section.id = None
 
         zenpy_section = self.zen_client.help_center.sections.create(
             zenpy_section)
-        zd_section.section_id = zenpy_section.id
+        return self._update_zd_and_return_zenpy(zenpy_section, zd_section)
 
+    def _update_zd_and_return_zenpy(self, zenpy_section, zd_section):
+        zd_section.section_id = zenpy_section.id
+        zd_section.save()
         return zenpy_section
 
     def _get_section_translation(self, zenpy_section):
@@ -864,7 +874,7 @@ class Exporter(ZendeskBase):
         return zenpy_translation
 
     @retry(block_final_exception=True)
-    def sync_section(self, zd_section: ZendeskSection, delete=True):
+    def sync_section(self, zd_section: ZendeskSection, delete=True, return_zd_section=False):
         if not (initial_zenpy_section := self._check_and_get_zenpy_section(zd_section, delete)):
             return
 
@@ -877,8 +887,9 @@ class Exporter(ZendeskBase):
             zenpy_section, zd_section, zenpy_translation)
 
         zd_section.needs_sync = False
+        zd_section.section_id = zenpy_section.id
         zd_section.save()
-        return zenpy_section
+        return zd_section if return_zd_section else zenpy_section
 
     def _check_and_get_zenpy_category(self, zd_category, delete):
         zenpy_category = None
@@ -1023,7 +1034,7 @@ def update_zd_section(node: MenuNode, site: ZendeskSite, parent_zd: ZendeskCateg
     zd_section.save()
 
     if zd_section.sync:
-        exporter.sync_section(zd_section, delete=not enabled or not parent_enabled)
+        zd_section = exporter.sync_section(zd_section, delete=not enabled or not parent_enabled, return_zd_section=True)
 
     return zd_section
 
@@ -1086,7 +1097,8 @@ def check_if_article_can_sync(zendesk_sync_log, node):
     review_id = node.asset.version_id(
         zendesk_sync_log.zendesk_site.customization.name)
     review = AssetCustomizationReview.objects.filter(version=review_id).first()
-    zd_article = node.zendeskarticle_set.filter(
+    zd_article = node.asset.zendeskarticle_set.filter(
+        site=zendesk_sync_log.zendesk_site).first() or node.zendeskarticle_set.filter(
         site=zendesk_sync_log.zendesk_site).first()
     sync_enabled = getattr(zd_article, 'sync', True)
 

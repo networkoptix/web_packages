@@ -981,7 +981,7 @@ class TestExporter:
             'id': external_file.id
         }
         body = f'/{original_url}'
-        zenpy_article, *existing_attachments = [
+        zenpy_article, asset,  *existing_attachments = [
             mocker.MagicMock(file_name=str(uuid4()))
             for _ in range(randint(5, 15))]
         attachment_to_handle = choice(existing_attachments)
@@ -989,10 +989,10 @@ class TestExporter:
         file_info['external_file_name'] = attachment_to_handle.file_name
 
         assert exporter._get_update_attachment_handler(
-            existing_attachments, zenpy_article, portal_url)(body, file_info) == replacement
+            existing_attachments, zenpy_article, portal_url, asset)(body, file_info) == replacement
 
     def test_update_body_with_attachments(self, mocker, get_exporter_instance, db):
-        portal_url, update_attachment, zenpy_article, existing_attachments, *external_files = [
+        portal_url, update_attachment, zenpy_article, asset, existing_attachments, *external_files = [
             mocker.MagicMock() for _ in range(5, 15)]
         updated_body = str(uuid4())
         exporter = get_exporter_instance()
@@ -1005,7 +1005,7 @@ class TestExporter:
 
         # Test no attachments
         no_attachment_result = exporter._update_body_with_attachments(
-            content, zenpy_article, portal_url)
+            content, zenpy_article, portal_url, asset)
         assert no_attachment_result == ([], '', False)
 
         # Test add attachments and has existing
@@ -1013,7 +1013,7 @@ class TestExporter:
         existing_attachments.return_value = attachments_to_clean
         content['external_files'] = external_files
         attachment_result = exporter._update_body_with_attachments(
-            content, zenpy_article, portal_url)
+            content, zenpy_article, portal_url, asset)
         assert attachment_result == (attachments_to_clean, updated_body, True)
 
     def test_clean_attachments(self, mocker, get_exporter_instance, db):
@@ -1060,7 +1060,7 @@ class TestExporter:
         mock_get_config.assert_called_once_with(
             zd_article.site.customization.name)
         mock_update_body.assert_called_once_with(
-            content, zenpy_article, portal_url)
+            content, zenpy_article, portal_url, zd_article.asset)
         mock_clean_attachments.assert_called_once_with(
             abandoned_attachments)
         mock_update.assert_called_once_with(
@@ -1214,7 +1214,7 @@ class TestExporter:
         updated_zenpy = exporter._update_zenpy_section_from_data(
             zenpy_section, zd_section)
         assert updated_zenpy.id == expected_id
-        assert zd_section.section_id == expected_id
+        assert ZendeskSection.objects.get(pk=zd_section.pk).section_id == expected_id
         assert updated_zenpy.category_id == category_id
         assert updated_zenpy.parent_section_id == parent_section_id
         assert updated_zenpy.position == position
@@ -1477,6 +1477,8 @@ def test_update_zd_section(mocker, get_exporter_instance, db):
         ZendeskSection, site=site, parent_category=parent_zd, section_id=randint(1, 1000), menu_node__enabled=[customization], menu_node__name=updated_name, needs_sync=True)
     menu_node = section.menu_node
     mock_sync_section = mocker.patch.object(exporter, 'sync_section')
+    mock_sync_section.return_value.position = position
+    mock_sync_section.return_value.name = updated_name
 
     updated_zd_section = update_zd_section(
         menu_node, site, parent_zd, exporter, customization, position)
@@ -1486,7 +1488,6 @@ def test_update_zd_section(mocker, get_exporter_instance, db):
     assert updated_zd_section.name == updated_name
     assert mock_sync_section.call_count == 1
     assert not delete
-    assert sync_section is updated_zd_section
 
 
 def test_update_zd_article(mocker, get_exporter_instance, db):
