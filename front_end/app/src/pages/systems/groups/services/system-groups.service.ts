@@ -10,15 +10,14 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import * as GroupActions from '../store/groups/groups.actions';
 import { ListItem, SystemsItem } from '../store/groups/groups.types';
 
-interface ISocketIncomingMessage {
-    action: string,
-    data: Record<string, string> | Array<Record<string, string>>,
-} // TODO: more detailed typed message types
-
-interface ISocketOutgoingMessage {
-    action: string,
-    [_: string]: unknown;
-}
+import {
+    socketIncomingActionType,
+    ISocketIncomingMessage,
+} from './incoming-message-types';
+import {
+    socketOutgoingActionType,
+    ISocketOutgoingMessage
+} from './outgoing-message-types';
 
 @Injectable({
     providedIn: 'root'
@@ -68,8 +67,8 @@ export class NxSystemGroupsService {
         NxSystemGroupsService.connection$.next(data);
     }
 
-    public act(action: string, data: Record<string, unknown> = {}): void {
-        this.send({ action, ...data });
+    public act(action: socketOutgoingActionType, data: Record<string, unknown> = {}): void {
+        this.send({ action, ...data } as ISocketOutgoingMessage);
     }
 
     public move(id: string, newParentId: string, type: string): void {
@@ -84,7 +83,7 @@ export class NxSystemGroupsService {
     }
 
     protected _onSocketMessage({ action, data }: ISocketIncomingMessage): void {
-        switch (action) {
+        switch (action as socketIncomingActionType) {
             case 'list_groups':
                 this.store.dispatch(GroupActions.loadList({
                     list: data as unknown as Array<ListItem>
