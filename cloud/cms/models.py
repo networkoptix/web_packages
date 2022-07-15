@@ -206,8 +206,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                   '%SHOW_ANALYTICS_EVENTS%', '%SORT_SUPPORTED_DEVICES_BY_POPULARITY%', '%SUPPORT_LINK%',
                   '%PRIVACY_LINK%', '%SUPPORTED_RESOLUTIONS%', '%SUPPORTED_HARDWARE_TYPES%', '%SEARCH_TAGS%',
                   '%TESTED_OPERATING_SYSTEMS%', '%VENDORS_SHOWN%', '%GOOGLE_TAG_MANAGER_ID%', '%LOGROCKET_PROJECT%',
-                  '%FULLSTORY_ID%'
-                  '%TRIAL_LICENSE_KEY%']
+                  '%FULLSTORY_ID%', '%TRIAL_LICENSE_KEY%']
         cloud_capabilities = ['%REVIEWS_ENABLED%', '%SMTP_DISABLED%']
         ds_data = asset.read_all_global_values(global_vars + email + config + cloud_capabilities)
 
