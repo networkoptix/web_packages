@@ -12,7 +12,8 @@
         >
             <img
                 [alt]="environment.isLocal ? CONFIG.vmsName : CONFIG.cloudName + ' logo'"
-                src="{{ CONFIG.previewPath }}/static/images/logo.png"
+                [src]="logoSrc"
+                onerror="this.onerror=null;this.src='/static/images/logo.png'"
             />
         </a>
     </div>

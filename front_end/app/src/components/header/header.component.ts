@@ -91,6 +91,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     loginState;
     hideWebAdmin = false;
     newHeader = false;
+    logoSrc: string;
 
     // Observables used to manage component view states for adaptive views
     showIcon$ = new BehaviorSubject(true);
@@ -133,8 +134,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private cookieService: CookieService
     ) {
         this.CONFIG = configService.getConfig();
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.LANG = languageService.translations;
+
+        this.newHeader = this.CONFIG.featureFlags.newHeader;
         this.menusService.getMenu('header', true)
             .pipe(untilDestroyed(this))
             .subscribe(header => {
@@ -292,6 +294,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     ngOnInit(): void {
+        this.logoSrc = `/static/images/${this.CONFIG.isDarkTheme ? 'dark_' : ''}logo.png`;
+
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.inline = params.inline !== 'undefined';
         });
