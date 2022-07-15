@@ -16,7 +16,7 @@ export class FeatureFlagDirective {
 
     constructor(
         private vcr: ViewContainerRef,
-        private tpl: TemplateRef<any>,
+        private tpl: TemplateRef<unknown>,
         private configService: NxConfigService
     ) {
     }

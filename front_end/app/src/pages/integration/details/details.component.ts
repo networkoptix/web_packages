@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import type { RibbonActionInput } from '@components/ribbon/ribbon.types';
+import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { MessageParams } from '@dialogs/message/message.component.types';
 import { NxAccountService } from '@services/account.service';
@@ -126,7 +126,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                 // eslint-disable-next-line camelcase
                                 if (this.plugin.pending || this.plugin.draft || this.plugin.canEdit || this.account?.can_publish_integration) {
-                                    const ribbonActions: RibbonActionInput[] = [];
+                                    const ribbonActions: RibbonAction[] = [];
 
                                     // eslint-disable-next-line camelcase
                                     if (this.plugin.pending && this.account?.can_publish_integration) {
@@ -156,7 +156,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     if (this.plugin.canEdit) {
                                         ribbonActions.push({
                                             type: 'link',
-                                            text: this.LANG.ribbon.integration.backToEditText,
+                                            text: this.LANG.ribbon.integration.backToEditText(),
                                             value: this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
                                         });
                                     }

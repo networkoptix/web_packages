@@ -12,6 +12,7 @@ import { MockProvider, MockModule } from 'ng-mocks';
 import { of } from 'rxjs';
 
 import { NxMenusService } from '@services/menus.service';
+import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
@@ -63,13 +64,13 @@ describe('NxFooterComponent', () => {
             subtitle: '',
             url: '/download'
         }
-    ];
+    ] as MenuNode[];
 
     const menuMock = {
         getMenu: () => of({
             nodes: footers
         }),
-        cleanEmptyNodes: (footer: any) => footer
+        cleanEmptyNodes: (footer: MenuNode) => footer
     };
 
     beforeEach(waitForAsync(() => {

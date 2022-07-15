@@ -21,6 +21,7 @@ import {
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
+import type { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -87,7 +88,7 @@ describe('NxHeaderComponent', () => {
                 }
             ]
         }),
-        cleanEmptyNodes: (header: any) => header.nodes
+        cleanEmptyNodes: (header: MenuNode) => header.nodes
     };
     const headerMock = {
         systemIdSubject: of(''),

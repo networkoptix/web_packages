@@ -8,5 +8,5 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class NxAdditionalSystemsTileComponent {
     @Input() additionalSystems$: BehaviorSubject<number>;
-    @Input() width = 240;
+    @Input() width: number = 240;
 }

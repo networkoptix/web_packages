@@ -26,7 +26,7 @@ class TestHostComponent {
 describe('NxContentBlockComponent', () => {
     let wrapperComponent: TestHostComponent;
     let fixture: ComponentFixture<TestHostComponent>;
-    let el;
+    let el: HTMLDivElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -50,33 +50,39 @@ describe('NxContentBlockComponent', () => {
     });
 
     it('should have card wrapper', () => {
-        const card = el.querySelector('.card');
+        const card = el.querySelector<HTMLDivElement>('.card');
         expect(card.className).toContain('mb-3 extended-header');
     });
 
     it('should have card header', () => {
-        const header = el.querySelector('.card .card--header');
+        const header = el.querySelector<HTMLDivElement>('.card .card--header');
         expect(header.className).toContain('extended-header');
         expect(header.querySelector('header').innerHTML).toBe('HEADER');
     });
 
     it('should have card footer', () => {
-        const footer = el.querySelector('.card .card--footer');
+        const footer = el.querySelector<HTMLDivElement>('.card .card--footer');
         expect(footer.querySelector('footer').innerHTML).toBe('FOOTER');
     });
 
     it('should have card body', () => {
-        const body = el.querySelector('.card nx-section .card--body');
+        const body = el.querySelector<HTMLDivElement>(
+            '.card nx-section .card--body'
+        );
         expect(body.className).toContain('section clearfix');
     });
 
     it('should have card body subheader hidden', () => {
-        const body = el.querySelector('.card nx-section .card--body .card--body-subheader');
+        const body = el.querySelector<HTMLDivElement>(
+            '.card nx-section .card--body .card--body-subheader'
+        );
         expect(body.hidden).toBeTrue();
     });
 
     it('should have card body content', () => {
-        const body = el.querySelector('.card nx-section .card--body .card--body-content');
+        const body = el.querySelector<HTMLDivElement>(
+            '.card nx-section .card--body .card--body-content'
+        );
         expect(body.innerHTML).toBe('BODY');
     });
 });

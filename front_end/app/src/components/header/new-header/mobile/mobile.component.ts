@@ -21,7 +21,7 @@ export class NxHeaderMobileComponent {
     @Input() menuNodes: MenuNode[] = [];
     menuOpen$ = new BehaviorSubject(false);
     isProfile$ = new BehaviorSubject(false);
-    iconState: any;
+    iconState: mobileIconState;
     CONFIG: IConfig;
     constructor(configService: NxConfigService, public headerService: NxHeaderService) {
         this.CONFIG = configService.getConfig();

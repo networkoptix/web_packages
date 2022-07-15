@@ -33,7 +33,7 @@ class TestHostComponent {
 describe('NxAlertBlockComponent (error)', () => {
     let wrapperComponent: TestHostComponent;
     let fixture: ComponentFixture<TestHostComponent>;
-    let el;
+    let el: HTMLDivElement;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -61,7 +61,7 @@ describe('NxAlertBlockComponent (error)', () => {
     });
 
     it('should have card wrapper', () => {
-        const card = el.querySelector('.card');
+        const card = el.querySelector<HTMLDivElement>('.card');
         expect(card.className).toContain('simple-error');
     });
 

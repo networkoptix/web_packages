@@ -1,4 +1,4 @@
-export function setupServers() {
+export function setupServers(): unknown {
     return {
         addParams: [
             {

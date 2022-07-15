@@ -52,7 +52,11 @@ export class RestartServerModalContent {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
         public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) private dialogData: {
+            system: NxSystem;
+            serverName: string;
+            serverId: string;
+        },
         @Inject(WINDOW) private window: Window,
         injector: Injector,
     ) {

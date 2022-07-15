@@ -9,7 +9,8 @@ export class NxScrollHelperDirective {
     ) {}
 
     @HostListener('scroll', ['$event'])
-    public onListenerTriggered(event: any): void {
-        this.scrollMechanicsService.windowScroll = event.target.scrollTop;
+    public onListenerTriggered(event: Event): void {
+        this.scrollMechanicsService.windowScroll =
+            (event.target as HTMLElement).scrollTop;
     }
 }

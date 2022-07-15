@@ -1,7 +1,7 @@
 import {
     ComponentFixture,
     TestBed,
-    waitForAsync
+    waitForAsync,
 } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockProvider } from 'ng-mocks';
@@ -14,7 +14,7 @@ import { NxCarouselComponent } from './carousel.component';
 describe('NxCarouselComponent', () => {
     let component: NxCarouselComponent;
     let fixture: ComponentFixture<NxCarouselComponent>;
-    let el;
+    let el: HTMLDivElement;
 
     const screenshots = [{
         id: 'Screenshot1',
@@ -56,7 +56,7 @@ describe('NxCarouselComponent', () => {
     });
 
     it('should have wrapper', () => {
-        const carousel = el.querySelector('.carousel');
+        const carousel = el.querySelector<HTMLDivElement>('.carousel');
         expect(carousel.className).toContain('slide embed-responsive-item');
     });
 
@@ -81,7 +81,9 @@ describe('NxCarouselComponent', () => {
     });
 
     it('should have img(s)', () => {
-        const images = el.querySelectorAll('.carousel .carousel-item .carousel-img img');
+        const images = el.querySelectorAll<HTMLImageElement>(
+            '.carousel .carousel-item .carousel-img img'
+        );
         expect(images.length).toBe(2);
         expect(images[0].src).toBe(screenshots[0].value);
         expect(images[0].alt).toBe(screenshots[0].caption);
@@ -92,14 +94,18 @@ describe('NxCarouselComponent', () => {
 
     it('should left nav be clickable', () => {
         const spy = spyOn(component, 'previousElement');
-        const button = el.querySelector('.carousel .carousel-control-prev');
+        const button = el.querySelector<HTMLDivElement>(
+            '.carousel .carousel-control-prev'
+        );
         button.dispatchEvent(new MouseEvent('click'));
         expect(spy.calls.count()).toBe(1, 'previousElement method should be called once');
     });
 
     it('should right nav be clickable', () => {
         const spy = spyOn(component, 'nextElement');
-        const button = el.querySelector('.carousel .carousel-control-next');
+        const button = el.querySelector<HTMLDivElement>(
+            '.carousel .carousel-control-next'
+        );
         button.dispatchEvent(new MouseEvent('click'));
         expect(spy.calls.count()).toBe(1, 'nextElement method should be called once');
     });

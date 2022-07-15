@@ -27,7 +27,7 @@ xdescribe('NxCookieBannerComponent', () => {
     // let el: DebugElement;
 
     const configMock = { getConfig: () => nxConfig };
-    let localStorageMockStore = {};
+    let localStorageMockStore: Record<string, unknown> = {};
     const localStorageMock = {
         retrieve: (key: string) => !!localStorageMockStore[key],
         store: (key: string) => { localStorageMockStore[key] = true; }

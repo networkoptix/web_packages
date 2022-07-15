@@ -1,2 +1,2 @@
 
-export const iAmLibModule = () => 'I can be published if private is set to false';
+export const iAmLibModule = (): string => 'I can be published if private is set to false';

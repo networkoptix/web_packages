@@ -45,7 +45,7 @@ export class NxOverlayModalComponent implements OnInit {
 
     timeoutUntilRefresh$ = new BehaviorSubject(5);
     checking$ = new BehaviorSubject(false);
-    private refresh$ = new Subject();
+    private refresh$ = new Subject<'refresh' | false>();
 
     routeSubscription: Subscription;
     systemAvailableSubscription: Subscription;

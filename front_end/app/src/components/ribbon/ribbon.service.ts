@@ -7,7 +7,7 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
-import type { RibbonActionInput } from './ribbon.types';
+import type { RibbonAction } from './ribbon.types';
 
 @Injectable({ providedIn: 'root' })
 export class NxRibbonService {
@@ -32,7 +32,7 @@ export class NxRibbonService {
 
     show(
         message,
-        actions: RibbonActionInput[],
+        actions: RibbonAction[],
         type?,
         updateFunction?,
         systemOnly = false
@@ -52,13 +52,6 @@ export class NxRibbonService {
         ) {
             return;
         }
-        actions.forEach(action => {
-            if (action.type === 'link') {
-                action.text = (typeof action.text === 'function')
-                    ? action.text()
-                    : action.text;
-            }
-        });
         const msg = (typeof message === 'function') ? message() : message;
 
         this.context = {

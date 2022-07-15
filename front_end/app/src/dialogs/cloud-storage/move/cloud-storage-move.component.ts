@@ -39,5 +39,5 @@ export class CloudStorageMoveModalContent extends BaseCloudStorageActionModalCon
         this.actionProcess = this.processService.createProcess(() => Promise.resolve(), {}, this.showSuccess);
     }
 
-    close = () => this.dialogRef.close();
+    close = (): void => this.dialogRef.close();
 }

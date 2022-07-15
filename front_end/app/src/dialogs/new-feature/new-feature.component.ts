@@ -40,5 +40,5 @@ export class NewFeatureInformationModalContent<T> {
         }
     }
 
-    close = () => this.dialogRef.close();
+    close = (): void => this.dialogRef.close();
 }

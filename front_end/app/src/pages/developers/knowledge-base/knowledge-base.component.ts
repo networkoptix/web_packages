@@ -33,7 +33,7 @@ import type {
     RelatedLinks
 } from '@components/developers-menu/developers-menu-types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import type { RibbonActionInput } from '@components/ribbon/ribbon.types';
+import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { MenuNode } from '@services/menus.service.types';
@@ -350,10 +350,10 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     showRibbon(id, state, reviewId?): void {
-        const draftActions: RibbonActionInput[] = [
+        const draftActions: RibbonAction[] = [
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText,
+                text: this.LANG.ribbon.integration.backToEditText(),
                 value: this.CONFIG.integration.adminLink.replace('%ID%', id) +
                     this.router.url.split('?')[0] +
                     encodeURIComponent('?state=draft'),
@@ -382,7 +382,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     };
 
-    private addReviewActions(reviewId: any, draftActions: RibbonActionInput[]) {
+    private addReviewActions(reviewId: any, draftActions: RibbonAction[]) {
         const process = this.processService.createProcess(() => {
             return this.cloudApi.acceptReview(reviewId);
         }, {
@@ -397,7 +397,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         ];
     }
 
-    private getReviewActions(process: Process, reviewId: any): RibbonActionInput[] {
+    private getReviewActions(process: Process, reviewId: any): RibbonAction[] {
         return [
             {
                 type: 'process-button',

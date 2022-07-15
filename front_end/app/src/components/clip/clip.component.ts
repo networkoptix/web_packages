@@ -18,7 +18,7 @@ export class ClipComponent {
         this.internalPoster = config.getConfig()?.icons.dirNonStandardView + 'placeholder_camera_offline.svg';
     }
 
-    handler(e): void {
+    handler(e: ErrorEvent | Event): void {
         switch (e.type) {
             case 'error':
                 this.posterLoadingError = true;

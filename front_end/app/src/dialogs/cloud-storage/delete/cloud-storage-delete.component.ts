@@ -42,5 +42,5 @@ export class CloudStorageDeleteModalContent extends BaseCloudStorageActionModalC
         this.license = this.licenses[0].key;
     }
 
-    close = () => this.dialogRef.close();
+    close = (): void => this.dialogRef.close();
 }

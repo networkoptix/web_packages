@@ -66,7 +66,7 @@ export class NxNewHeaderComponent implements OnChanges {
         this.selectedNode = this.nodes.find(node => node.url === '/systems') || this.selectedNode;
     }
 
-    findNodeBasedOnURL(nodes: MenuNode[], url: string) {
+    findNodeBasedOnURL(nodes: MenuNode[], url: string): MenuNode {
         return nodes?.find(node => node?.nodes.find(subNode => subNode.url === url)) || this.selectedNode;
     }
 

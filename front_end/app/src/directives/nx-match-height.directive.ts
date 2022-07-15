@@ -53,7 +53,11 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
     }
 
     // Gets called periodically by SetInterval until a height difference is detected
-    initialHeightDiffers(parent: HTMLElement, className: string, initialHeight: number) {
+    initialHeightDiffers(
+        parent: HTMLElement,
+        className: string,
+        initialHeight: number
+    ): boolean {
         const children = parent.getElementsByClassName(className);
         Array.from(children).forEach((child: HTMLElement) => {
             child.style.height = 'initial';

@@ -11,7 +11,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 })
 export class Client2faWarningModalContent {
     LANG: LanguageI18NStaticTypes;
-    targets = [];
 
     constructor(
         language: NxLanguageProviderService,

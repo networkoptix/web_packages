@@ -55,7 +55,10 @@ export class DisconnectModalContent {
         private systemApiService: NxSystemAPIService,
         private toastService: NxToastService,
         public dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) private dialogData: {
+            account: NxAccountService;
+            system: NxSystem;
+        },
         @Inject(WINDOW) private window: Window,
     ) {
         this.LANG = language.translations;

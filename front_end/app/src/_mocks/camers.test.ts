@@ -1,4 +1,4 @@
-export function setupCameras() {
+export function setupCameras(): unknown[] {
     return [
         {
             audioEnabled: false,

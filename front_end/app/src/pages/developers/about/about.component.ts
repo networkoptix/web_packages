@@ -6,7 +6,7 @@ import { filter, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import type { RibbonActionInput } from '@components/ribbon/ribbon.types';
+import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
@@ -204,10 +204,10 @@ export class NxAboutComponent {
     }
 
     showRibbon(id, state): void {
-        const ribbonActions: RibbonActionInput[] = [
+        const ribbonActions: RibbonAction[] = [
             {
                 type: 'link',
-                text: this.LANG.ribbon.integration.backToEditText,
+                text: this.LANG.ribbon.integration.backToEditText(),
                 value: this.CONFIG.developers.landing.adminLink.replace('%ID%', id)
             }
         ];

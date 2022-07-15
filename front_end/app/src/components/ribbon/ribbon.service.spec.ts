@@ -7,7 +7,7 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 
 import { NxRibbonService } from './ribbon.service';
-import type { RibbonActionInput } from './ribbon.types';
+import type { RibbonAction } from './ribbon.types';
 
 describe('NxRibbonService', () => {
     let ribbonService: NxRibbonService;
@@ -54,7 +54,7 @@ describe('NxRibbonService', () => {
         }));
 
     it('show() should emit data to contextSubject', () => {
-        const actions: RibbonActionInput[] = [{
+        const actions: RibbonAction[] = [{
             type: 'link',
             text: 'Go back',
             value: '/admin/cms/asset'

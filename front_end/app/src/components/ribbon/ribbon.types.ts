@@ -15,7 +15,3 @@ interface RibbonLinkAction {
 }
 
 export type RibbonAction = RibbonProcessAction | RibbonLinkAction;
-
-export interface RibbonActionInput extends Omit<RibbonAction, 'text'> {
-  text: string | Function;
-}

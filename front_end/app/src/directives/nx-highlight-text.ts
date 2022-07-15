@@ -2,7 +2,7 @@ import { PipeTransform, Pipe } from '@angular/core';
 
 @Pipe({ name: 'highlight' })
 export class HighlightPipe implements PipeTransform {
-    transform(text: string, search): string {
+    transform(text: string, search?: string): string {
         if (!search) {
             return text;
         }
