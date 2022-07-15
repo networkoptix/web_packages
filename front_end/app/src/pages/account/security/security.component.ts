@@ -16,13 +16,10 @@ import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
-import { NxApplyService } from '@services/apply.service';
-import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxProcessService } from '@services/process.service';
 import type {
     NxSystemWithUserInfo
 } from '@services/system.service/system-types';
@@ -53,8 +50,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     subV5Systems: NxSystemWithUserInfo[] = [];
 
     targets: PseudoAnchorTarget[] = [];
-
-    verificationWatcher = new Watcher<boolean>();
+    verificationCode: boolean;
 
     @ViewChild('twoFaSystemsSpan') twoFaSystemsSpan: ElementRef;
     @ViewChild('v5WarningSpan') v5WarningSpan: ElementRef;
@@ -69,8 +65,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        private applyService: NxApplyService,
-        private processService: NxProcessService,
         private accountService: NxAccountService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
@@ -91,7 +85,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
         this.account2faEnabled = this.account.account2faEnabled;
         this.totpExistsForAccount = this.account.totpExistsForAccount;
-        this.verificationWatcher.value = this.account2faEnabled;
 
         this.systemsService.systemsSubject
             .pipe(untilDestroyed(this))
@@ -118,35 +111,23 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                 this.clearPopoverTargets();
                 this.setPopoverTargets();
             });
+    }
 
-        this.applyService.initPageWatcher(
-            this.applyContainer,
-            this.processService.createProcess(
-                () => {
-                    return this.dialogs
-                        .toggleVerificationCode(this.verificationWatcher.value)
-                        .then(action => {
-                            if (action === 'canceled') {
-                                return Promise.reject('dialogCancel');
-                            } else {
-                                this.account2faEnabled = (action === 'enabled');
-                                this.updateVerificationOriginal();
-                                this.accountService.get(true).catch(e => {});
-                            }
-                        });
-                },
-                { errorCodes: { dialogCancel: () => {} } },
-                () => {},
-                () => {}
-            ),
-            () => {
-                this.applyService.reset();
-            },
-            [this.verificationWatcher],
-            undefined,
-            undefined,
-            true
-        );
+    toggleVerification(value) {
+        if (value === undefined) {
+            // checkbox not initialized
+            return;
+        }
+        this.dialogs
+            .toggleVerificationCode(value)
+            .then(action => {
+                if (action === 'canceled') {
+                    this.verificationCode = !this.verificationCode;
+                } else {
+                    this.account2faEnabled = (action === 'enabled');
+                    this.accountService.get(true).catch(e => {});
+                }
+            });
     }
 
     private clearPopoverTargets(): void {
@@ -206,13 +187,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.clearPopoverTargets();
     }
 
-    updateVerificationOriginal(newValue?: boolean): void {
-        if (newValue !== undefined) {
-            this.verificationWatcher.value = newValue;
-        }
-        this.verificationWatcher.originalValue = this.verificationWatcher.value;
-    }
-
     switchToggle(targetState: boolean): void {
         this.account2faEnabled = targetState;
         this.totpExistsForAccount = targetState;
@@ -224,11 +198,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     const newState = (action === 'enabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
-                    if (action !== 'canceled') {
-                        this.updateVerificationOriginal(newState);
-                    }
                     this.accountService.get(true).catch(_ => {});
-                    this.applyService.reset();
                     setTimeout(() => {
                         this.setPopoverTargets();
                     });
@@ -240,11 +210,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     const newState = !(action === 'disabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
-                    if (action !== 'canceled') {
-                        this.updateVerificationOriginal(newState);
-                    }
                     this.accountService.get(true).catch(_ => {});
-                    this.applyService.reset();
                 });
         }
     }

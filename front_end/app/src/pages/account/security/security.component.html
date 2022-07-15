@@ -13,9 +13,8 @@
                     <h4
                         class="ml-3"
                         translate
+                        >Two-factor authentication</h4
                     >
-                        Two-factor authentication
-                    </h4>
                 </div>
             </header>
 
@@ -96,7 +95,8 @@
                     <div class="tfauth-checkbox mt-3 mb-3">
                         <nx-checkbox
                             componentId="skip-tfauth"
-                            [(ngModel)]="verificationWatcher.value"
+                            [(ngModel)]="verificationCode"
+                            (onClick)="toggleVerification($event)"
                         ></nx-checkbox>
 
                         <label
@@ -109,7 +109,7 @@
 
                     <div
                         class="tfauth-v5-warning"
-                        *ngIf="subV5Systems.length && verificationWatcher.value"
+                        *ngIf="subV5Systems.length && verificationCode"
                     >
                         <h4
                             class="mt-0"

@@ -29,11 +29,9 @@ import { NxPopoverService } from '@components/popover/popover.service';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAccountService } from '@services/account.service';
-import { NxApplyService } from '@services/apply.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
-import { NxProcessService } from '@services/process.service';
 import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxMenuService } from '@src/menu/menu.service';
@@ -64,8 +62,6 @@ describe('NxAccountSecurityComponent', () => {
             providers: [
                 MockProvider(NxConfigService),
                 MockProvider(NxLanguageProviderService),
-                MockProvider(NxApplyService),
-                MockProvider(NxProcessService),
                 MockProvider(NxAccountService),
                 MockProvider(NxDialogsService),
                 MockProvider(NxMenuService),
@@ -151,14 +147,14 @@ describe('NxAccountSecurityComponent', () => {
 
         it('should have a warning with at least one v5.0 system if checkbox is checked', () => {
             component.subV5Systems = [{ name: 'foo' } as NxSystemWithUserInfo];
-            component.verificationWatcher.value = true;
+            component.verificationCode = true;
             fixture.detectChanges();
             const warning = el.querySelector('.tfauth-v5-warning');
             expect(warning).toBeTruthy();
         });
         it('should not have a warning with at least one v5.0 system if checkbox is unchecked', () => {
             component.subV5Systems = [{ name: 'foo' } as NxSystemWithUserInfo];
-            component.verificationWatcher.value = false;
+            component.verificationCode = false;
             fixture.detectChanges();
             const warning = el.querySelector('.tfauth-v5-warning');
             expect(warning).toBeNull();
