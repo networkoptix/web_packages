@@ -677,6 +677,8 @@ export const nxConfig: IConfig = {
         customClientsEnabled: false
     },
     cloudMonitoring: {
+        fullStory: '',
+        isFullStoryActive: false,
         isLogRocketActive: false,
         logRocket: ''
     },

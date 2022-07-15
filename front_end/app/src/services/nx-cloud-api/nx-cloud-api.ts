@@ -2,6 +2,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import * as FullStory from '@fullstory/browser';
 import LogRocket from 'logrocket';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
@@ -409,7 +410,8 @@ export class NxCloudApiService {
     }
 
     private logRocketIdentifyUser = tap((account: Account) => {
-        if (this.CONFIG.cloudMonitoring.isLogRocketActive && account.email) {
+        const { isLogRocketActive, isFullStoryActive } = this.CONFIG.cloudMonitoring;
+        if ((isLogRocketActive || isFullStoryActive) && account.email) {
             // Type is only user here and comes from LogRocket
             const userInfo: { [propName: string]: string | number | boolean } = {
                 email: account.email,
@@ -422,8 +424,12 @@ export class NxCloudApiService {
             } else if (account.last_name) {
                 userInfo.name = account.last_name;
             }
-
-            LogRocket.identify(account.email, userInfo);
+            if (isLogRocketActive) {
+                LogRocket.identify(account.email, userInfo);
+            }
+            if (isFullStoryActive) {
+                FullStory.identify(account.email, userInfo);
+            }
         }
     });
 

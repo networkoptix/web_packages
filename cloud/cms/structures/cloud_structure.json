@@ -913,6 +913,15 @@
             "advanced": true
           },
           {
+            "label": "FullStory Org ID",
+            "name": "%FULLSTORY_ID%",
+            "description": "String used for identifying the FullStory ord ID",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true
+          },
+          {
             "label": "Enable review emails",
             "name": "%REVIEWS_ENABLED%",
             "description": "Sends review emails to portal managers when enabled.",

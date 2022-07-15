@@ -194,7 +194,8 @@ const FeatureFlagKeys = [
     'paginatorExperimental',
     'newHeader',
     'cloudStorage',
-    'logRocket'
+    'logRocket',
+    'fullStory'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -308,6 +309,8 @@ export interface CloudCapabilities {
 }
 
 export interface CloudMonitoring {
+    fullStory: string;
+    isFullStoryActive: boolean;
     isLogRocketActive: boolean;
     logRocket: string;
 }
