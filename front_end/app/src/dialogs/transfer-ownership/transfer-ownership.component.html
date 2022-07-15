@@ -57,13 +57,16 @@
                     >
                 </div>
             </div>
-            <div class="form-group">
-                <p
-                    class="input-error"
-                    translate
-                >
-                    Once the ownership transfer is completed you will be removed from the system.
-                </p>
+            <div class="warning-block">
+                <h5 translate>
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                        [svgStyle]="{ 'height.px': 20, 'width.px': 20 }"
+                    ></svg-icon>
+                    WARNING
+                </h5>
+                <p translate>Once the ownership transfer is completed you will be removed from the system.</p>
             </div>
         </div>
         <div class="modal-footer">
