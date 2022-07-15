@@ -18,6 +18,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
+import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxTextEditableComponent } from '@components/editable/editable.component';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxHTMLComponent } from '@components/html-input/html-input.component';
@@ -131,6 +132,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxGenericDropdownModule,
     ],
     declarations: [
+        NxSearchableDropdown,
         NxThreeDotDropdown,
         NxLanguageDropdown,
         NxHeaderLanguageDropdown,
@@ -243,6 +245,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
     ],
     exports: [
         QuicklinkModule,
+        NxSearchableDropdown,
         NxThreeDotDropdown,
         NxGenericDropdownModule,
         NxLanguageDropdown,

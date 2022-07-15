@@ -60,7 +60,7 @@ const appRoutes: Routes = [
                 canDeactivate: [ApplyGuard]
             },
             {
-                path: 'multi-select',
+                path: 'dropdowns',
                 component: MultiSelectComponent,
             },
             {

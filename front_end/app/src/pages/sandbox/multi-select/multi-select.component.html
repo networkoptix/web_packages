@@ -39,6 +39,7 @@
     style="border: 1px solid lightgray"
 >
     <div class="col-3 p-5">
+        <h4 >Simple select</h4>
         <nx-select
             name="ddSSingle"
             [items]="itemsDDSingle"
@@ -48,6 +49,21 @@
             canSearch
         >
         </nx-select>
+    </div>
+    <div class="col-4 p-5">
+        <h4 >Searchable select</h4>
+        <nx-searchable-select
+            name="ddSearchableSingle"
+            [items]="itemsSearchableDDSingle"
+            [ngModel]="selectedSearchableDDItem"
+            (ngModelChange)="ddSearchableModelChanged($event)"
+        >
+        </nx-searchable-select>
+    </div>
+    <div class="col-5 p-5">
+        <h4 >Searchable selected</h4>
+        <hr/>
+        {{selectedSearchableDDItem | json}}
     </div>
 </div>
 <div

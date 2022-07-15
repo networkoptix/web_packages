@@ -13,8 +13,9 @@
             width: 18px;
             height: 18px;
             g polyline{
-                stroke: $dark9;
+                stroke: var(--btn-dropdown-toggle-color);
                 stroke-width: 2px;
+                fill: none;
             }
         }
     }

@@ -1,0 +1,28 @@
+@use "../../../styles/typography";
+@use "../../../styles/mixins";
+@use "../../../../styles/theme_variables_common" as *;
+
+nx-searchable-select {
+    width: 100%;
+    display: block;
+    
+    .form-control {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 32px !important;
+        white-space: nowrap;
+    }
+    
+    .dropdown-menu--list {
+        max-height: 210px !important;
+    }
+
+    .additional-help {
+        @include typography.regular13light;
+        margin-left: 0.25rem;
+    }
+
+    .selected .additional-help {
+        color : $light1 !important;
+    }
+}

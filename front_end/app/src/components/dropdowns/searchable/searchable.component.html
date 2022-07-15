@@ -1,0 +1,103 @@
+<div
+    class="dropdown {{ dropdownType }}"
+    [ngClass]="{
+        'dropdown-show': show
+    }"
+    (nxClickElsewhere)="finalizeSelect()"
+>
+    <div >
+        <div
+            #searchBox
+            class="form-control"
+            [id]="id"
+            (keyup)="filterChanged()"
+            contentEditable="true"
+            [innerHTML]="itemToDisplay"
+        ></div>
+
+        <div
+            class="arrow-flip"
+            (click)="show = !show"
+            data-toggle="dropdown"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
+            ></svg-icon>
+        </div>
+    </div>
+
+    <div
+        class="dropdown-menu"
+        [nxArrowNav]="show"
+        [style]="{
+            display: show ? 'inline-block' : 'none',
+            width: '100%'
+        }"
+        [attr.aria-labelledby]="id"
+    >
+        <ul class="dropdown-menu--list">
+            <li
+                class="dropdown-item-container"
+                *ngFor="let item of _items; trackBy: trackItem"
+            >
+                <ng-container
+                    [ngTemplateOutlet]="dropdownRow"
+                ></ng-container>
+                <ng-template
+                    #dropdownRow
+                    [ngSwitch]="item.name"
+                >
+                    <hr
+                        *ngSwitchCase="'horizontal'"
+                    />
+                    <div
+                        *ngSwitchCase="'seperator'"
+                        class="seperator"
+                    ></div>
+                    <ng-container
+                        *ngSwitchDefault
+                        [ngTemplateOutlet]="!item.disabled ? enabledItem : disabledItem"
+                    >
+                    </ng-container>
+                </ng-template>
+                <ng-template #itemText>
+                    <span
+                        [outerHTML]="item.value"
+                    ></span>
+                    <span
+                        *ngIf="item.name"
+                        class="additional-help"
+                        [innerHTML]="item.name"
+                        ></span
+                    >
+                </ng-template>
+                <ng-template #enabledItem>
+                    <a
+                        class="dropdown-item inset"
+                        (keyup)="handleKeyup($event, item)"
+                        tabindex="0"
+                        [ngClass]="{
+                            selected: _selectedItem && _selectedItem.value === item.value
+                        }"
+                        (click)="change(item)"
+                    >
+                        <span>
+                            <ng-container [ngTemplateOutlet]="itemText"></ng-container>
+                        </span>
+                    </a>
+                </ng-template>
+                <ng-template #disabledItem>
+                    <a
+                        class="dropdown-item inset disabled"
+                        (click)="show = false"
+                    >
+                        <span class="disabled">
+                            <ng-container [ngTemplateOutlet]="itemText"></ng-container>
+                        </span>
+                    </a>
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -21,6 +21,8 @@ export class MultiSelectComponent {
     ddWidth: number;
     itemsDDSingle: DropdownItem<string>[];
     selectedDDItem: DropdownItem<string>;
+    itemsSearchableDDSingle: DropdownItem<string>[];
+    selectedSearchableDDItem: DropdownItem<string>;
 
     constructor(
         private menuService: NxMenuService,
@@ -28,7 +30,7 @@ export class MultiSelectComponent {
 
     ngOnInit(): void {
         this.menuService.section = 'components';
-        this.menuService.detail = 'multiSelect';
+        this.menuService.detail = 'dropdowns';
 
         this.items = [
             { label: 'Administrator', id: 'qwerty1' },
@@ -67,6 +69,30 @@ export class MultiSelectComponent {
 
         this.selectedDDItem = { value: '0', name: 'All' };
 
+        this.itemsSearchableDDSingle = [
+            { value: 'test@test.com', name: 'Johnny Test' },
+            { value: 'test1@test.com', name: 'Test Test Test Test Test Test Test' },
+            { value: 'test2@test.com', name: 'Test 2' },
+            { value: 'test3@test.com', name: 'Test 3' },
+            { value: 'test4@test.com', name: 'Test 4' },
+            { value: 'test5@test.com', name: 'Test 5' },
+            { value: 'test6@test.com', name: 'Test 6' },
+            { value: 'test7@test.com', name: 'Test 7' },
+            { value: 'test8@test.com', name: 'Test 8' },
+            { value: 'test9@test.com', name: 'Test 9' },
+            { value: 'test10@test.com', name: 'Test 10' },
+            { value: 'test11@test.com', name: 'Test 11' },
+            { value: 'test12@test.com', name: 'Test 12' },
+            { value: 'test13@test.com', name: 'Test 13' },
+            { value: 'test14@test.com', name: 'Test 14' },
+            { value: 'test15@test.com', name: 'Test 15' },
+            { value: 'test16@test.com', name: 'Test 16' },
+            { value: 'test17@test.com', name: 'Test 17' },
+            { value: 'test18@test.com', name: 'Test 18' },
+            { value: 'test19@test.com', name: 'Test 19' },
+            { value: 'test20@test.com', name: 'Test 20' },
+        ];
+
         this.mode = [
             { name: 'Main', value: 'qwerty2' },
             { name: 'Backup', value: 'qwerty3' },
@@ -92,5 +118,10 @@ export class MultiSelectComponent {
     ddSingleModelChanged(result: DropdownItem<string>): void {
         // ensure 'change' will be triggered
         this.selectedDDItem = { ...result };
+    }
+
+    ddSearchableModelChanged(result: DropdownItem<string>): void {
+        // ensure 'change' will be triggered
+        this.selectedSearchableDDItem = { ...result };
     }
 }

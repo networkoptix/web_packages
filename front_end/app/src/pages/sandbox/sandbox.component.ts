@@ -56,9 +56,9 @@ export class NxSandboxComponent {
                             label: 'Apply service (section)',
                             path: '/apply-service-section'
                         }, {
-                            id: 'multiSelect',
-                            label: 'Multi select',
-                            path: '/multi-select'
+                            id: 'dropdowns',
+                            label: 'Dropdowns',
+                            path: '/dropdowns'
                         }, {
                             id: 'demoLayout',
                             label: 'Demo layout',
