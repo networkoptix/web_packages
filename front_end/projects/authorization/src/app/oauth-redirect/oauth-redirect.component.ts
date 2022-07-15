@@ -29,7 +29,7 @@ export class NxOAuthRedirectComponent implements OnInit {
     initialData: AuthorizeParams;
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
-    state: 'sendingCode' | 'readyToLogin' | 'noNativeClient';
+    state: 'readyToLogin' | 'noNativeClient' | undefined;
 
     private setupDefaults(configService): void {
         this.CONFIG = configService.getConfig();
@@ -58,14 +58,13 @@ export class NxOAuthRedirectComponent implements OnInit {
                 this.localStorageService.store('client_type', client_type);
                 this.viewType = view_type || 'desktop';
                 if (code) {
-                    this.state = 'sendingCode';
+                    this.state = undefined;
                     this.localStorageService.clear('client_type');
                     if (client_type === 'system2faAuth') {
                         nativeClient.twoFaVerified(code);
                     } else {
                         nativeClient.setCode(code);
                     }
-                    setTimeout(() => { this.state = undefined; }, 3000);
                 } else {
                     this.state = 'readyToLogin';
                 }
@@ -74,7 +73,7 @@ export class NxOAuthRedirectComponent implements OnInit {
             this.route.queryParams.subscribe(async (params: any) => {
                 this.initialData = cloneDeep(params);
                 this.viewType = this.initialData.view_type || 'desktop';
-                this.state = 'sendingCode';
+                this.state = undefined;
             });
         } else {
             this.state = 'noNativeClient';

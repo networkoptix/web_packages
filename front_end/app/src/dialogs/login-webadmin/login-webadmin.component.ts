@@ -80,6 +80,8 @@ export class LoginWebadminModalContent implements OnInit {
     accountNotOnSystem: boolean;
     account2faRequired: boolean;
 
+    private readonly urlUpdateTimeout: number = 150;
+
     @ViewChild('loginForm', { static: true }) loginForm: NgForm;
 
     private setupDefaults(): void {
@@ -354,7 +356,8 @@ export class LoginWebadminModalContent implements OnInit {
     tokenLogin(token: string): void {
         this.account.mediaServerApi.loginTokenUrl(token)
             .subscribe(() => {
-                this.window.location.reload();
+                // If the page reloads too soon. Webadmin redirects to /
+                setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
             }, () => {
                 this.loading = false;
             });
