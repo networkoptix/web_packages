@@ -17,7 +17,7 @@ export class FeatureInterceptor implements HttpInterceptor {
     constructor(
         session: LocalStorageService
     ) {
-        this.#featureFlagOverrides = session.retrieve(NxConfigService.OVERRIDE_KEY);
+        this.#featureFlagOverrides = session.retrieve(NxConfigService.OVERRIDE_KEY) || {};
         session.observe(NxConfigService.OVERRIDE_KEY).subscribe(overrides => {
             this.#featureFlagOverrides = overrides;
         });
