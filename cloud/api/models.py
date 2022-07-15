@@ -148,7 +148,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['registeredDate', 'createdDate']
 
     def save(self, *args, **kwargs):
-        self.is_staff |= self.email.endswith(settings.SUPERUSER_DOMAIN)
+        if not self.pk:
+            self.is_staff |= self.email.endswith(settings.SUPERUSER_DOMAIN)
         super().save(*args, **kwargs)
         self.add_to_all_releases_group()
 
