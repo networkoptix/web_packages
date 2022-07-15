@@ -2,7 +2,6 @@
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { environment } from '@environments/environment';
 import { MenuNode } from '@services/menus.service.types';
-import type { APIDocType } from '@services/nx-config/base-config';
 
 import type { APIDoc, method } from './api-tool-types';
 
@@ -11,19 +10,9 @@ import type { APIDoc, method } from './api-tool-types';
 const RTSPRoute = '/{deviceId}';
 const RTSPMethod = 'rtsp';
 
-export const getTagModifier = (type: APIDocType) => {
-    switch (type) {
-        case 'deprecated':
-            return '-D';
-        case 'legacy':
-            return '-L';
-        case 'main':
-            return '-M';
-    }
-};
-
 export const makeTagModifier = (type: any) => {
-    return '-' + type;
+    const tag = isNaN(type) ? type[0] : type; // TODO: remove once all types are numbers and not strings
+    return '-' + tag;
 };
 
 export const generateAPIRouteName = (endpoint: string, requestType: string) => {
@@ -130,6 +119,16 @@ export const prepareSwaggerAPIDoc = (APIDoc: APIDoc, type: number | string) => {
 
 export const mergeAPIDocs = (mainAPI: APIDoc, mergingAPI: APIDoc) => {
     mainAPI.tags = [...mainAPI.tags, ...mergingAPI.tags];
+    for (const path of Object.keys(mainAPI.paths)) { // Duplicate paths on different APIs that get merged need to have their tags merged as well
+        const mergingRoute = mergingAPI.paths[path];
+        if (mergingRoute) {
+            for (const requestType of Object.keys(mainAPI.paths[path])) {
+                const mainAPITags = mainAPI.paths[path][requestType].tags;
+                const mergingAPITags = mergingRoute[requestType]?.tags;
+                mergingRoute[requestType].tags = [...mainAPITags, ...mergingAPITags];
+            }
+        }
+    }
     mainAPI.paths = Object.assign(mainAPI.paths, mergingAPI.paths);
 };
 

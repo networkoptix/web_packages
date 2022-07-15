@@ -8,6 +8,7 @@ export interface MethodInfo {
     },
     summary: string,
     tags: string[]
+    deprecated?: boolean;
 }
 
 export type method = [string, MethodInfo];
@@ -26,7 +27,9 @@ export interface APIDoc {
                 [key:string]: any
             }[],
     paths : {
-        [key:string]: MethodInfo,
+        [key:string]: {
+            [key:string]: MethodInfo
+        }
     },
     servers?: { url: string }[],
     tagsModified?: boolean
