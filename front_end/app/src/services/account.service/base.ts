@@ -144,9 +144,13 @@ export abstract class BaseAccount implements OnDestroy {
             this.loginTokens(this.tokens).then(() => { });
         });
 
-        this.localStorage.observe('theme').subscribe(() => {
-            this.window.location.reload();
-        });
+        const currentTheme = this.localStorage.retrieve('theme');
+        this.localStorage.observe('theme')
+            .subscribe((theme: string) => {
+                if (currentTheme !== theme) {
+                    this.window.location.reload();
+                }
+            });
     }
 
     private loginTokens(tokens) {
