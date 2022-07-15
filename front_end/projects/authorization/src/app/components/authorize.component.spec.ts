@@ -13,6 +13,7 @@ import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { MockProvider } from 'ng-mocks';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { of } from 'rxjs';
@@ -27,6 +28,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
+import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -243,7 +245,8 @@ describe('NxAuthorizeComponent', () => {
                 { provide: LocalStorageService, useValue: localStorageMock },
                 { provide: DeviceDetectorService, useValue: deviceServiceMock },
                 { provide: WINDOW, useValue: window },
-                { provide: NxMenusService, useValue: menuMock }
+                { provide: NxMenusService, useValue: menuMock },
+                MockProvider(NxThemeService),
             ]
         }).compileComponents()
             .then(() => {

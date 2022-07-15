@@ -33,6 +33,7 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 
@@ -109,45 +110,14 @@ export class AppComponent {
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
+        private themeService: NxThemeService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
 
         if (this.CONFIG.featureFlags.themesEnabled) {
-            let themeSelected = this.localStorageService.retrieve('theme');
-            const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
-
-            darkThemeMq.addEventListener('change', e => {
-                themeSelected = this.localStorageService.retrieve('theme');
-                if (themeSelected !== 'auto') {
-                    return;
-                }
-                NxConfigService.isDarkTheme = e.matches;
-                if (e.matches) {
-                    this.window.document.documentElement.setAttribute('data-theme', 'dark');
-                } else {
-                    this.window.document.documentElement.setAttribute('data-theme', 'light');
-                }
-            });
-
-            if (
-                themeSelected === 'auto' ||
-                themeSelected === null
-            ) {
-                !themeSelected && this.localStorageService.store('theme', 'auto');
-                if (darkThemeMq.matches) {
-                    NxConfigService.isDarkTheme = true;
-                    this.window.document.documentElement.setAttribute('data-theme', 'dark');
-                }
-            } else {
-                const theme = this.localStorageService.retrieve('theme');
-                NxConfigService.isDarkTheme = theme === 'dark';
-                this.window.document.documentElement.setAttribute(
-                    'data-theme',
-                    theme
-                );
-            }
+            this.themeService.initTheme();
         }
 
         const url = new URL(this.window.location.href.replace('#/', ''));

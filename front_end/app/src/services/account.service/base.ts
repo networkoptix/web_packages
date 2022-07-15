@@ -5,7 +5,7 @@ import { isEqual } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, filter } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, take } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
@@ -16,6 +16,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxThemeService } from '@services/theme.service';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -74,6 +75,7 @@ export abstract class BaseAccount implements OnDestroy {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
+        themeService: NxThemeService,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
         protected cloudApi: NxCloudApiService,
@@ -104,6 +106,12 @@ export abstract class BaseAccount implements OnDestroy {
                         .then(account => {
                             // prevent stale loginState
                             if (account) {
+                                this.cloudApi.getCustomAccountProperty('theme', account.email)
+                                    .pipe(
+                                        take(1))
+                                    .subscribe(result => {
+                                        themeService.setTheme(result.theme, account.email);
+                                    });
                                 this.startAccountPoll();
                             } else {
                                 this.clearLoginState();
@@ -487,18 +495,20 @@ export abstract class BaseAccount implements OnDestroy {
     // TODO: Need to refine return value
     protected startAccountPoll(): void {
         this.stopAccountPoll();
-        this.accountPollSubscription = this.accountPoll.pipe(
-            catchError(res => {
-                if (res?.error?.resultCode === 'badUsername') {
-                    return this.dialogs.expiredSession()
-                        .afterClosed()
-                        .then(() => this.logoutHelper(true));
-                }
-                return of(undefined);
-            })
-        ).subscribe((account: Account) => {
-            this.account = account;
-        });
+        this.accountPollSubscription = this.accountPoll
+            .pipe(
+                distinctUntilChanged(),
+                catchError(res => {
+                    if (res?.error?.resultCode === 'badUsername') {
+                        return this.dialogs.expiredSession()
+                            .afterClosed()
+                            .then(() => this.logoutHelper(true));
+                    }
+                    return of(undefined);
+                })
+            ).subscribe((account: Account) => {
+                this.account = account;
+            });
     }
 
     protected stopAccountPoll(): void {

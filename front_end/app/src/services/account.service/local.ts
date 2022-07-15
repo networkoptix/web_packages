@@ -16,6 +16,7 @@ import { NxPollService } from '../poll.service';
 import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
+import { NxThemeService } from '../theme.service';
 import { NxUriService } from '../uri.service';
 import { WINDOW } from '../window-provider';
 
@@ -30,6 +31,7 @@ export class LocalAccount extends BaseAccount {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
+        themeService: NxThemeService,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
         protected cookieService: CookieService,
@@ -50,6 +52,7 @@ export class LocalAccount extends BaseAccount {
             configService,
             languageService,
             locationService,
+            themeService,
             document,
             window,
             cloudApi,

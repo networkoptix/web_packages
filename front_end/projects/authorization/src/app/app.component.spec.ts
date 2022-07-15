@@ -5,6 +5,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
 
 import { AppComponent } from './app.component';
@@ -21,6 +22,7 @@ describe('AppComponent', () => {
                 { provide: NxConfigService, useValue: configMock },
                 MockProvider(LocalStorageService),
                 MockProvider(WINDOW),
+                MockProvider(NxThemeService),
             ],
             declarations: [
                 AppComponent

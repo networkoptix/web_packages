@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { NxSwCacheService } from '@services/sw-cache.service';
-import { SystemGroupsDataService } from '@services/system-groups-data.service';
+// import { SystemGroupsDataService } from '@services/system-groups-data.service';
+import { NxThemeService } from '@services/theme.service';
 
 import { NxAccountService } from './account.service';
 import { NxApplyService } from './apply.service';
@@ -41,7 +42,7 @@ import { NxUtilsService } from './utils.service/utils.service';
         NxScrollMechanicsService,
         NxSwCacheService,
         NxSwPromptUpdateService,
-        SystemGroupsDataService
+        NxThemeService,
     ],
     exports: []
 })
