@@ -369,9 +369,11 @@ html[data-theme="dark"] {
     --dropdown-menu-bg : #121517; //dark4;
     --drop-menu-systems-bg    : #171C1F; //$dark5;
     --drop-menu-navigation-bg : #212A2F; //$dark7;
+    
+    --dropdown-item-color: #A5B7C0; //$light10
     --dropdown-item-active-bg : #2B383F; //$dark9;
-    --dropdown-item-hover-bg : #35464F; //dark11;
-    --dropdown-item-hover-color : #E1E7EA; //$light4;
+    --dropdown-item-hover-bg : #212A2F; //dark7;
+    --dropdown-item-hover-color : #A5B7C0; //$light10
     --dropdown-item-selected-bg    : #35464F; //dark11;
     --dropdown-item-selected-color : #E1E7EA; //$light4;
 

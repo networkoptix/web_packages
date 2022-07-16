@@ -178,7 +178,7 @@ header {
 
             .dropdown-item {
                 @include typography.medium13nocolor;
-                color : var(--label-color);
+                color : var(--dropdown-item-color);
                 display         : flex;
                 align-items     : center;
                 padding         : 0;
