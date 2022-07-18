@@ -18,7 +18,7 @@ export interface EmitInfo<Type> {
 
 export interface APIType {
     displayName: string,
-    type: string | number
+    type: number
 }
 
 export interface ServerInfo {

@@ -23,7 +23,7 @@ interface ServerDropdownItem extends DropdownItem<string> {
     disabled: boolean;
 }
 
-interface TypeDropdownItem extends DropdownItem<string | number> {
+interface TypeDropdownItem extends DropdownItem<number> {
     disabled: boolean;
 }
 
@@ -103,7 +103,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
                     name: APIType.displayName,
                     disabled
                 });
-                if (this.openAPIJSONService.currentType === APIType.type.toString()) {
+                if (this.openAPIJSONService.currentType === APIType.type) {
                     this.type = this.types[this.types.length - 1];
                 }
                 if (!this.type) {
@@ -153,7 +153,7 @@ export class NxAPIToolDropdownsComponent implements OnInit {
 
         this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(readonlyAPI => !!readonlyAPI)).subscribe(readonlyAPI => {
             this.type = this.types[0];
-            this.openAPIJSONService.currentType = 'main';
+            this.openAPIJSONService.currentType = 1;
         });
     }
 

@@ -1,3 +1,4 @@
+import ast
 import hashlib
 import json
 from json.decoder import JSONDecodeError
@@ -75,6 +76,31 @@ PORTAL_MANAGER_PERMISSIONS = [
 ]
 INTEGRATIONS_DEV_PERMISSIONS = [
     'edit_content', 'change_asset', 'change_assetcustomizationreview']
+
+DEFAULT_MANIFEST = """[
+            {
+                "name": "Current API",
+                "sections": [
+                    {
+                        "name": "REST",
+                        "scheme": "openapi_v1.json"
+                    },
+                    {
+                        "name": "LEGACY",
+                        "scheme": "openapi_legacy.json"
+                    }
+                ]
+            },
+            {
+               "name": "Deprecated API",
+               "sections": [
+                    {
+                        "name": "LEGACY",
+                        "scheme": "openapi_deprecated.json"
+                    }
+                ]
+            }
+        ]"""
 
 
 def get_name_factory(base_group_name):
@@ -3167,6 +3193,7 @@ class ReadOnlyAPI(models.Model):
     type = models.IntegerField(
        choices=API_TYPES, default=API_TYPES.VMS)
     enabled = models.BooleanField(default=True)
+    manifest = models.TextField(default=DEFAULT_MANIFEST, help_text="Content manifest")
 
     def save(self, *args, **kwargs):
         if self.id:
@@ -3176,33 +3203,54 @@ class ReadOnlyAPI(models.Model):
 
         super().save(*args, **kwargs)
 
+    def clean(self):
+        try:
+            json.loads(self.manifest)
+        except JSONDecodeError:
+            raise ValidationError({'content': 'Content is not valid JSON'})
 
     def __str__(self):
         return f"{self.name} - {self.version}"
 
 class ReadOnlyAPIFile(models.Model):
-    FILE_TYPES = Choices((0, "main", "Main JSON"), (1, "legacy", "Legacy JSON"), (2, "deprecated", "Deprecated JSON"), (3, "preamble_markdown", "Preamble Markdown File"), (4, "changelog_markdown", "Changelog Markdown File"))
+    class Meta:
+        verbose_name = "Readonly API file"
 
+    FILE_TYPES = Choices((0, "json", "JSON"),  (1, "preamble_markdown", "Preamble Markdown File"), (2, "changelog_markdown", "Changelog Markdown File"))
     readonly_api = models.ForeignKey(ReadOnlyAPI, on_delete=models.CASCADE)
     filename = models.CharField(max_length=46)
     type = models.IntegerField(
-        choices=FILE_TYPES, default=FILE_TYPES.main)
+        choices=FILE_TYPES, default=FILE_TYPES.json)
     content = models.TextField(blank=True, help_text="File contents")
 
     def clean(self):
-        if self.type not in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
+        if self.type in [self.FILE_TYPES.json]:
             try:
                 json.loads(self.content)
             except JSONDecodeError:
                 raise ValidationError({'content': 'Content is not valid JSON'})
+            manifest = json.loads(self.readonly_api.manifest)
+            filename_found = False
+            try:
+                for type in manifest:
+                    for section in type['sections']:
+                        if section['scheme'] == self.filename:
+                            filename_found = True
+            except Exception:
+                raise ValidationError({'content': 'Error parsing manifest to validate file name'})
+            if not filename_found:
+                raise ValidationError({'content': 'File name does not exist in manifest'})
+
 
     def validate_unique(self, exclude=None):
-        existing_file = ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id)
-        if existing_file:
-            raise ValidationError('This file type already exists for this Readonly API')
-        super(ReadOnlyAPIFile, self).validate_unique(exclude=exclude)
+        if self.type in [self.FILE_TYPES.preamble_markdown, self.FILE_TYPES.changelog_markdown]:
+            existing_file = ReadOnlyAPIFile.objects.filter(type=self.type, readonly_api=self.readonly_api).exclude(id=self.id)
+            if existing_file:
+                raise ValidationError('This file type already exists for this Readonly API')
+            super(ReadOnlyAPIFile, self).validate_unique(exclude=exclude)
 
-
+    def __str__(self):
+        return f"{self.readonly_api.name}'s {self.filename}"
 
 class Flag(AbstractUserFlag):
     FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'

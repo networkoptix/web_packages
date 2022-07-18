@@ -8,8 +8,6 @@ import { filter } from 'rxjs/operators';
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import type { MenuNode } from '@services/menus.service.types';
 import { MenuManifest, MenuStructure } from '@services/nx-config/base-config';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { findMenuNode } from '@utils/nx';
 
 import { addAPIInfoNodesToMenu, addSeperator, generateMenu, getFirstNode, mergeAPIDocs, prepareSwaggerAPIDoc } from '../api-file-utils';
@@ -22,14 +20,12 @@ import { NxReadonlyAPIService } from './readonly-api.service';
 @UntilDestroy()
 @Injectable()
 export class NxOpenAPIJSONService {
-    CONFIG: IConfig;
     currentAPIDoc$ = new BehaviorSubject<APIDoc>(null);
-    currentType$ = new BehaviorSubject<string | number>(null); // TODO: change all instances to a number and update type
+    currentType$ = new BehaviorSubject<number>(null);
     currentMarkdown: Markdown;
     queuedServerChange: string = null;
     APIStore: Store<APIData> = {}; // Storing JSONs, API Info (part of jsons), and Menus for developers-menu
     APIInfoNodes = ['APIInformation', 'APIPreamble', 'APIChangelog'];
-    APITypes: { [key: string]: APIType }; // TODO: remove, used only for readonlyAPIs
     isInfoNode = false; // info nodes don't display swagger routes
     isMarkdownNode = false;
     isReadOnly = false;
@@ -44,7 +40,7 @@ export class NxOpenAPIJSONService {
     set currentAPIDoc(api: APIDoc) { this.currentAPIDoc$.next(api); }
 
     get currentType() { return this.currentType$.value; }
-    set currentType(type: string | number) {
+    set currentType(type: number) {
         this.APIToolService.setQueryParams('type', type.toString());
         this.currentType$.next(type);
     }
@@ -76,11 +72,9 @@ export class NxOpenAPIJSONService {
         });
     }
 
-    constructor(configService: NxConfigService,
-                private APIToolService: NxAPIToolSystemService,
+    constructor(private APIToolService: NxAPIToolSystemService,
                 private readonlyAPIService: NxReadonlyAPIService,
                 private router: Router) {
-        this.APITypes = configService.getConfig()?.apiTool.apiTypes;
         this.currentType = this.APIToolService.queryParams.type || this.defaultTypeValue;
 
         this.APIToolService.serverEmitter$.pipe(untilDestroyed(this)).subscribe(({ info, disabled, error }) => {
@@ -119,7 +113,7 @@ export class NxOpenAPIJSONService {
 
     async handleNewServer(serverInfo: ServerInfo): Promise<void> {
         const { server, markdown } = serverInfo;
-        const manifest = await this.APIToolService.getMenuManifest(); // TODO: cache
+        const manifest = await this.APIToolService.getMenuManifest();
         const jsons = this.fetchAllJSONsInManifest(manifest);
         this.createAPIStore(server.id);
         if (markdown) {
@@ -152,7 +146,6 @@ export class NxOpenAPIJSONService {
 
         if (this.queuedServerChange === server.id) {
             // Handles race condition where the currentServer is changed to this server before it is ready to display
-            // because it is waiting on legacy and deprecated API calls
             this.changeServer(server.id);
             this.queuedServerChange = null;
         }
@@ -186,13 +179,15 @@ export class NxOpenAPIJSONService {
     }
 
     setReadonlyAPI = (readonlyAPI: ReadOnlyAPIStore): void => {
-        for (const type of Object.keys(readonlyAPI.menus)) {
-            this.emitAPIType(this.APITypes[type]);
+        const manifest = JSON.parse(readonlyAPI.api.manifest) as MenuManifest;
+        for (let i = 0; i < manifest.length; i++) {
+            const apiType = { displayName: manifest[i].name, type: i + 1 };
+            this.emitAPIType(apiType);
         }
         this.isReadOnly = true;
         this.currentAPIDoc = readonlyAPI.api.content;
         this.currentMarkdown = readonlyAPI.markdown || null;
-        this.setMenuNodes(readonlyAPI.menus[this.APITypes.main.type]);
+        this.setMenuNodes(readonlyAPI.menus[1]);
     };
 
     setMenuNodes = (menu: MenuNodeWithParent[]): void => {
@@ -236,7 +231,7 @@ export class NxOpenAPIJSONService {
         this.currentAPIDoc.info = info;
     };
 
-    setAPIType = (serverID: string | undefined, type: string | number): void => {
+    setAPIType = (serverID: string | undefined, type: number): void => {
         this.currentType = type;
         const isSystem = !!serverID;
         const store = isSystem ? this.APIStore : this.readonlyAPIService.readonlyAPIStore;

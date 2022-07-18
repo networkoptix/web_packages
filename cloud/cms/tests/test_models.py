@@ -1896,6 +1896,10 @@ class TestReadOnlyAPI:
         enabled = self.model._meta.get_field('enabled')
         assert enabled.default == True
 
+    def test_manifest(self):
+        manifest = self.model._meta.get_field('manifest')
+        assert manifest.help_text == 'Content manifest'
+
 
 class TestReadOnlyAPIFile:
     @pytest.fixture(autouse=True)
@@ -1925,12 +1929,10 @@ class TestReadOnlyAPIFile:
         return baker.prepare(ReadOnlyAPIFile, content=invalid_json, type=file_type)
 
     def test_clean_raises_validation_error(self):
-        json_types = [ReadOnlyAPIFile.FILE_TYPES.main, ReadOnlyAPIFile.FILE_TYPES.legacy, ReadOnlyAPIFile.FILE_TYPES.deprecated]
-        for type in json_types:
-            readonlyfile = self.make_model_with_invalid_json(type)
+        readonlyfile = self.make_model_with_invalid_json(ReadOnlyAPIFile.FILE_TYPES.json)
 
-            with pytest.raises(ValidationError):
-                readonlyfile.clean()
+        with pytest.raises(ValidationError):
+            readonlyfile.clean()
 
     def test_clean_does_not_raise_validation_error(self):
         non_json_types = [ReadOnlyAPIFile.FILE_TYPES.preamble_markdown, ReadOnlyAPIFile.FILE_TYPES.changelog_markdown]
@@ -1943,7 +1945,8 @@ class TestReadOnlyAPIFile:
                 pytest.fail('Unexpected Validation error')
 
     def test_validate_unique(self):
-        file_type = randint(0, len(ReadOnlyAPIFile.FILE_TYPES) - 1)
+        unique_types = [ReadOnlyAPIFile.FILE_TYPES.preamble_markdown, ReadOnlyAPIFile.FILE_TYPES.changelog_markdown]
+        file_type = choice(unique_types)
         first_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)
         first_readonly.save()
         second_readonly = baker.make(ReadOnlyAPIFile, type=file_type, readonly_api=self.readonly_api)

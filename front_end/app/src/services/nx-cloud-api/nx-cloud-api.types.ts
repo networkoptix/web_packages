@@ -201,13 +201,14 @@ export interface ReadOnlyAPI {
     enabled: boolean,
     type: ReadOnlyAPIType,
     name: string,
-    version: string
+    version: string,
+    manifest: string
 }
 
 export interface ReadOnlyAPIDetail extends ReadOnlyAPI {
     files: [{
         filename: string,
-        type: 'Main JSON' | 'Legacy JSON' | 'Deprecated JSON' | 'Preamble Markdown File' | 'Changelog Markdown File'
+        type: 'JSON' | 'Preamble Markdown File' | 'Changelog Markdown File'
         content: APIDoc | string
     }]
 }

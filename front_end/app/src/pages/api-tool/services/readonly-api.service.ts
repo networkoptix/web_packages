@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Subject } from 'rxjs';
 
+import { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { ReadOnlyAPI } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { APIDocType, FeatureFlagStrings } from '@services/nx-config/base-config';
+import { ReadOnlyAPI, ReadOnlyAPIDetail } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { FeatureFlagStrings, MenuManifest } from '@services/nx-config/base-config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { isUUID } from '@utils/general';
 
-import { addAPIInfoNodesToMenu, addSeperatedAPIMenu, createMenuContent, mergeAPIDocs, prepareSwaggerAPIDoc, cleanJSON } from '../api-file-utils';
+import { addAPIInfoNodesToMenu, mergeAPIDocs, prepareSwaggerAPIDoc, addSeperator, generateMenu } from '../api-file-utils';
 import { APIDoc } from '../api-tool-types';
 
 import type { EmitInfo, Store, ReadOnlyAPIStore, Markdown } from './api-tool-service-types';
@@ -64,18 +66,10 @@ export class NxReadonlyAPIService {
         }
         const readonlyAPI = await this.api.getReadOnlyAPI(id).toPromise();
         if (readonlyAPI) {
-            let openapiJSON, legacyJSON, deprecatedJSON, APIPreamble, APIChangelog;
+            const manifest = JSON.parse(readonlyAPI.manifest);
+            let APIPreamble, APIChangelog;
             for (const file of readonlyAPI.files) {
                 switch (file.type) {
-                    case 'Main JSON':
-                        openapiJSON = file.content;
-                        break;
-                    case 'Legacy JSON':
-                        legacyJSON = file.content;
-                        break;
-                    case 'Deprecated JSON':
-                        deprecatedJSON = file.content;
-                        break;
                     case 'Preamble Markdown File':
                         APIPreamble = file.content;
                         break;
@@ -86,7 +80,7 @@ export class NxReadonlyAPIService {
                         break;
                 }
             }
-            const preparedReadOnlyAPI = this.prepareReadonlyAPI(openapiJSON, legacyJSON, deprecatedJSON, !!(APIPreamble && APIChangelog));
+            const preparedReadOnlyAPI = this.prepareReadonlyAPI(manifest, readonlyAPI, !!(APIPreamble && APIChangelog));
             let markdown: Markdown;
             if (APIPreamble && APIChangelog) {
                 markdown = {
@@ -108,41 +102,31 @@ export class NxReadonlyAPIService {
         return false;
     }
 
-    prepareReadonlyAPI(main: string, legacy: string, deprecated: string, hasMarkdown: boolean) {
-        const apiTypes = this.CONFIG.apiTool.apiTypes;
-        let mainJSON: APIDoc;
+    prepareReadonlyAPI(manifest: MenuManifest, readonlyAPI: ReadOnlyAPIDetail, hasMarkdown: boolean) {
+        let combinedJSON: APIDoc;
         const menus = {};
-        try {
-            mainJSON = JSON.parse(main);
-            cleanJSON(mainJSON);
-            prepareSwaggerAPIDoc(mainJSON, 'main');
-        } catch (error) { // Invalid format, don't add to dropdown
-            console.error(error);
-            return false;
-        }
-        const mainMenu = createMenuContent(mainJSON);
-        if (legacy) {
-            try {
-                const legacyJSON = JSON.parse(legacy);
-                prepareSwaggerAPIDoc(legacyJSON, 'legacy');
-                mergeAPIDocs(mainJSON, legacyJSON);
-                addSeperatedAPIMenu(legacyJSON, mainMenu, 'LEGACY');
-            } catch (error) {
-                // Dont handle legacy JSON
+        for (let i = 0; i < manifest.length; i++) {
+            const item = manifest[i];
+            const type = i + 1;
+            const menu: MenuNodeWithParent[] = [];
+            for (const section of item.sections) {
+                if (section.name) {
+                    addSeperator(menu, section.name);
+                }
+                const json: APIDoc = JSON.parse(cloneDeep(readonlyAPI.files.find(file => file.filename === section.scheme).content as string));
+                prepareSwaggerAPIDoc(json, type);
+                if (!combinedJSON) {
+                    combinedJSON = json;
+                } else {
+                    mergeAPIDocs(combinedJSON, json);
+                }
+                generateMenu(menu, json);
+                menus[i + 1] = menu;
             }
-        }
-        addAPIInfoNodesToMenu(mainJSON, mainMenu, hasMarkdown);
-        menus[apiTypes.main.type] = mainMenu;
-        if (deprecated) {
-            const deprecatedJSON: APIDoc = JSON.parse(deprecated);
-            prepareSwaggerAPIDoc(deprecatedJSON, apiTypes.deprecated.type as APIDocType);
-            mergeAPIDocs(mainJSON, deprecatedJSON);
-            const deprecatedMenu = createMenuContent(deprecatedJSON, hasMarkdown ? 'LEGACY' : '');
-            addAPIInfoNodesToMenu(deprecatedJSON, deprecatedMenu, hasMarkdown);
-            menus[apiTypes.deprecated.type] = deprecatedMenu;
+            addAPIInfoNodesToMenu(combinedJSON, menu, hasMarkdown);
         }
         return {
-            json: mainJSON,
+            json: combinedJSON,
             menus
         };
     }

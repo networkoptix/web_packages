@@ -1527,11 +1527,11 @@ class CustomClientAdmin(admin.ModelAdmin):
 class FlagAdmin(WaffleFlagAdmin):
     pass
 
-class ReadOnlyAPIFileInline(admin.TabularInline):
-    model = ReadOnlyAPIFile
-
-
 @admin.register(ReadOnlyAPI)
 class ReadOnlyAPIAdmin(CMSAdmin):
-    inlines = [ReadOnlyAPIFileInline]
+    pass
+
+@admin.register(ReadOnlyAPIFile)
+class ReadOnlyAPIFileAdmin(CMSAdmin):
+    pass
 

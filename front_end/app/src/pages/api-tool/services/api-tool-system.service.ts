@@ -24,7 +24,7 @@ import { NxUriService } from '@services/uri.service';
 
 import type { APIDoc } from '../api-tool-types';
 
-import type { EmitInfo, IndexDBCacheObject, Markdown, ServerInfo } from './api-tool-service-types';
+import type { EmitInfo, IndexDBCacheObject, ServerInfo } from './api-tool-service-types';
 import { NxReadonlyAPIService } from './readonly-api.service';
 
 @UntilDestroy()
@@ -292,7 +292,7 @@ export class NxAPIToolSystemService {
     async handleSuccessfulAPIDocGet(server: NxSystemServer, json: APIDoc): Promise<void> {
         let markdown = await this.getAPIInfoMarkdown(server.id);
         markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
-        this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json, markdown);
+        this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json);
         this.setRequestURL(json, server.id);
         this.currentServerId = this.currentServerId || server.id;
         this.emitServer(server, json, false, '', markdown);
@@ -330,31 +330,6 @@ export class NxAPIToolSystemService {
             // No more valid systems left
             this.showError();
         }
-    }
-
-    async getLegacyAPIDocs() {
-        let legacyAPI: APIDoc;
-        let deprecatedAPI: APIDoc;
-
-        const legacyAPICacheRequest = this.getJSONFromCache('legacy', this.currentSystem.id, this.systemVersion).then(value => { legacyAPI = value?.json; });
-        const deprecatedAPICacheRequest = this.getJSONFromCache('deprecated', this.currentSystem.id, this.systemVersion).then(value => { deprecatedAPI = value?.json; });
-
-        await legacyAPICacheRequest;
-        await deprecatedAPICacheRequest;
-
-        // Optional chaining here because getAPIDoc returns undefined if system version is below 5.0
-        const legacyAPICall = legacyAPI || this.getAPIDoc('legacy')?.then(response => {
-            this.cacheJSON('legacy', this.currentSystem.id, this.systemVersion, response);
-            legacyAPI = response;
-        });
-        const deprecatedAPICall = deprecatedAPI || this.getAPIDoc('deprecated')?.then(response => {
-            this.cacheJSON('deprecated', this.currentSystem.id, this.systemVersion, response);
-            deprecatedAPI = response;
-        });
-        await legacyAPICall;
-        await deprecatedAPICall;
-
-        return { legacyAPI, deprecatedAPI };
     }
 
     emitAllSystems(systems: NxSystemWithUserInfo[]): void {
@@ -438,10 +413,12 @@ export class NxAPIToolSystemService {
     }
 
     async fetchJSON(route: string) {
-        // this.retrieveJSONFromLocalStorage() // TODO: caching
-        const JSON = await this.currentSystem.serverManager.fetchApiToolJSON(route);
+        let JSON = (await this.getJSONFromCache(route, this.currentSystem.id, this.systemVersion))?.json;
+        if (!JSON) {
+            JSON = await this.currentSystem.serverManager.fetchApiToolJSON(route);
+            this.cacheJSON(route, this.currentSystem.id, this.systemVersion, JSON);
+        }
         return JSON;
-        // TODO: store in cache
     }
 
     async getAPIInfoMarkdown(serverID: string) {
@@ -463,13 +440,13 @@ export class NxAPIToolSystemService {
         return { APIPreamble, APIChangelog };
     }
 
-    private makeCacheKey = (systemId: string, type: APIDocType) => {
-        return systemId + '-api-tool-file-' + type;
+    private makeCacheKey = (systemId: string, scheme: string) => {
+        return systemId + '-api-tool-file-' + scheme;
     };
 
-    async getJSONFromCache(type: APIDocType, systemId: string, systemVersion: string) {
+    async getJSONFromCache(route: string, systemId: string, systemVersion: string): Promise<IndexDBCacheObject> {
         if (this.queryParams.disableCache) return null;
-        const cachedObject = await this.indexedDbService.getByKey('jsons', this.makeCacheKey(systemId, type)).pipe(take(1)).toPromise() as IndexDBCacheObject;
+        const cachedObject = await this.indexedDbService.getByKey('jsons', this.makeCacheKey(systemId, route)).pipe(take(1)).toPromise() as IndexDBCacheObject;
         if (!cachedObject) { // Not cached
             return null;
         }
@@ -482,13 +459,12 @@ export class NxAPIToolSystemService {
         return cachedObject;
     }
 
-    cacheJSON(type: APIDocType, systemId: string, systemVersion: string, json: APIDoc, markdown: Markdown = null) : void {
+    cacheJSON(route: string, systemId: string, systemVersion: string, json: APIDoc) : void {
         if (this.queryParams.disableCache) return null;
         this.indexedDbService.add('jsons', {
             json,
-            markdown,
             version: systemVersion,
-            key: this.makeCacheKey(systemId, type)
+            key: this.makeCacheKey(systemId, route)
         }).pipe(take(1)).subscribe(() => {});
     }
 
