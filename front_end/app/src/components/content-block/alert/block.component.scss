@@ -180,6 +180,14 @@
         border           : 1px solid var(--card-simple-warning-border-color);
         margin-bottom    : 8px;
         line-height      : 18px;
+        
+        svg-icon svg .st0, svg-icon svg .st1 {
+            stroke : var(--card-simple-warning-color);
+        }
+        
+        button span {
+            color : var(--card-simple-warning-color);
+        }
 
         .card--header {
             display : none;

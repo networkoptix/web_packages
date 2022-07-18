@@ -148,6 +148,7 @@
 
 	@include generateVarAndRgb(--yellow_main, $yellow_main);
 	@include generateVarAndRgb(--yellow_d1, $yellow_d1);
+	@include generateVarAndRgb(--yellow_d2, $yellow_d2);
 
 	@include generateVarAndRgb(--shadow, $shadow);
 	@include generateVarAndRgb(--shadow_d1, $shadow_d1);

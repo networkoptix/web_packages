@@ -16,8 +16,8 @@ html[data-theme="dark"] {
     --ribbon-color  : #{$light4};
 
     --ribbon-alert-bg : #{$yellow_d2};
-    --ribbon-alert-border : #{$yellow_d1};
-    --ribbon-alert-color : #E1E7EA; //$light4;
+    --ribbon-alert-border : #{$yellow_d2};
+    --ribbon-alert-color : #1C2327; //$dark6;
 
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : #2592C3; //$brand_d1;
@@ -433,16 +433,16 @@ html[data-theme="dark"] {
     --card-body-bg   : #121517; //$dark4;
     --card-hover-bg : #263137; //$dark8;
 
-    --card-simple-info-bg           : rgba(var(--brand_d2--rgb), .1);
-    --card-simple-info-border-color : rgba(var(--brand_d2--rgb), .3);
+    --card-simple-info-bg           : var(--brand_d3);
+    --card-simple-info-border-color : var(--brand_d3);
     --card-simple-info-color        : #E1E7EA; //$light4;
 
-    --card-simple-warning-bg           : rgba(var(--yellow_d1--rgb), .1);
-    --card-simple-warning-border-color : rgba(var(--yellow_d1--rgb), .3);
-    --card-simple-warning-color        : #A5B7C0; //$light10;
+    --card-simple-warning-bg           : var(--yellow_d2);
+    --card-simple-warning-border-color : var(--yellow_d2);
+    --card-simple-warning-color        : #1C2327; //$dark6;
 
-    --card-simple-error-bg           : rgba(var(--red_main--rgb), .1); // rgba(#{$red_main}, .1);
-    --card-simple-error-border-color : rgba(var(--red_main--rgb), .3);
+    --card-simple-error-bg           : var(--red_d3);
+    --card-simple-error-border-color : var(--red_d3);
     --card-simple-error-color        : #E1E7EA; //$light4;
 
     --card-simple-default-bg           : #C22626; //$red_main;
