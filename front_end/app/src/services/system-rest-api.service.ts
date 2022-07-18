@@ -47,6 +47,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private readonly refreshToken = 'refreshToken';
     private injector: Injector;
 
+    private vmsToken: string;
+
     constructor(
         http: HttpClient,
         configService: IConfig,
@@ -200,7 +202,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private clearTokens(): void {
         const storageService = this.storageService;
         this.cookieService.delete(this.cloudAccessTokenName);
-        this.cookieService.delete('x-runtime-guid');
+        this.cookieService.delete(this.token);
         storageService.clear(this.cloudToken);
         storageService.clear(this.refreshToken);
         this.accessToken = '';
@@ -262,7 +264,12 @@ export class NxSystemRestAPI extends NxSystemAPI {
         // if (!environment.isLocal && this.authGet) {
         //     params.auth = this.authGet;
         // }
-        headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
+        if (this.vmsToken) {
+            headers = headers.set(this.token, this.vmsToken);
+        }
+        if (this.accessToken) {
+            headers = headers.set('Authorization', `Bearer ${this.accessToken}`);
+        }
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
@@ -278,7 +285,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
     private buildHeader(customHttpHeaders: IParams<string> = {}) {
         const accessToken = this.accessToken;
         let headers = new HttpHeaders();
-        headers = headers.set('x-runtime-guid', accessToken);
+        headers = headers.set(this.token, accessToken || this.vmsToken || '');
 
         // Not used for the time being.
         // headers = headers.set('Authorization', `Bearer ${accessToken}`);
@@ -394,10 +401,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
                     });
                     return this.currentUser;
                 });
-        } else if (environment.isLocal && !this.CONFIG.newSystem && this.accessToken) { // Local system mode ???
-            const endpoint = `/rest/v1/login/sessions/${this.accessToken}`;
+        } else if (environment.isLocal && !this.CONFIG.newSystem) { // Local system mode ???
+            const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
             this.userRequest = this.get<t.NormalResponse<t.User>>(endpoint, {}, customHeaders).toPromise()
                 .then((result: any) => {
+                    if (!this.accessToken) {
+                        this.vmsToken = result.token;
+                    }
                     return this.get<t.NormalResponse<t.User[]>>('/rest/v1/users', { name: result.username }).toPromise();
                 })
                 .then(result => {
@@ -508,7 +518,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
             ).toPromise();
         }
         this.clearTokens();
-        return this.delete(`/rest/v1/login/sessions/${accessToken}`).toPromise();
+        return this.delete(`/rest/v1/login/sessions/${accessToken || this.vmsToken}`).toPromise();
     }
 
     getApiDoc(type: APIDocType = 'main') {

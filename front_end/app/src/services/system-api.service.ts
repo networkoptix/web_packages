@@ -18,6 +18,7 @@ import { NxUriCacheService } from './uri-cache.service';
 })
 export class NxSystemAPIService {
     CONFIG: IConfig;
+    localApi: NxSystemAPI;
     // systemConnections: { [serverId: string]: NxSystemAPI };
 
     constructor(
@@ -54,8 +55,11 @@ export class NxSystemAPIService {
         //     );
         //     this.systemConnections[sysServe]
         // }
+        if (environment.isLocal && this.localApi && !(user || systemId || serverId)) {
+            return this.localApi as S;
+        }
         if (useRest || environment.isLocal) {
-            return new NxSystemRestAPI(
+            const serverApi = new NxSystemRestAPI(
                 this.http,
                 this.CONFIG,
                 this.location,
@@ -69,6 +73,10 @@ export class NxSystemAPIService {
                 this.appState,
                 this.injector
             ) as S;
+            if (environment.isLocal && !this.localApi) {
+                this.localApi = serverApi;
+            }
+            return serverApi;
         } else {
             return new NxSystemAPI(
                 this.http,
