@@ -1,10 +1,10 @@
 *** Variables ***
 ${IMAGE}                              ${IMAGE 5.0}
+${IMAGE 5.1}                          5.1
 ${IMAGE 5.0}                          5.0
 ${IMAGE 4.3}                          4.3_test
 ${IMAGE 4.2}                          4.2_test
-${IMAGE 4.1}                          4.1_test
-${IMAGE 4.0}                          4.0_test
+
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx

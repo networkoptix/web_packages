@@ -9,7 +9,7 @@ ${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"c
 ${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")]
 ${MERGE NEXT BUTTON}                  ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${NEXT TEXT}")]
 ${OTHER SYSTEM}                       Other System...
-${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1[contains(text(), "${MERGE SYSTEMS TEXT}")]
+${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1/span[contains(text(), "${MERGE SYSTEMS TEXT}")]
 ${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
 ${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-height'][2]
