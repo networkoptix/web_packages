@@ -62,13 +62,13 @@ ${RESET PASSWORD INPUT}               //nx-authorize-reset-password-component//f
 ${RESET PASSWORD NEXT BUTTON}         //nx-authorize-reset-password-component//footer//nx-process-button//button[@type="submit"]
 ${RESET PASSWORD SUCCESS MESSAGE}     //nx-authorize-reset-password-component//form//h3[(text()= '${RESET SUCCESS MESSAGE TEXT}')]
 
-${LOG IN NAV BAR}                     //header//nx-new-header//a[contains(text(),'${LOG IN BUTTON TEXT}')]
+${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
 #Header
 ${HEADER ICON LINK}                   //nx-header/header//div[@class='app-header-left']//a[contains(@class, 'navbar-brand')]
 ${LOGO ICON}                          ${HEADER ICON LINK}/img
 ${LOGO ICON SOURCE}                   ${ENV}/static/images/logo.png
-${LARGE ACCOUNT DROPDOWN}             //header//nx-account-settings-select//a[contains(@class,"user-section")]
+${LARGE ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and not(contains(@class,'small-icon-overrides'))]
 ${SMALL ACCOUNT DROPDOWN}             //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown" and contains(@class,'small-icon-overrides')]
 ${LARGE CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and not(contains(@class, 'small-button'))]
 ${SMALL CREATE ACCOUNT BUTTON}        //header//a[@href='/register' and contains(@class, 'small-button')]
