@@ -7,6 +7,13 @@
 
     #change-ownership {
         cursor: pointer;
-        @include typography.regular13light16;
+        @include typography.regular13nocolor;
+        color: var(--light-text-color); // light16
+    }
+
+    #cancel-transfers {
+        cursor: pointer;
+        @include typography.regular13nocolor;
+        color: var(--badge-danger-bright-bg);
     }
 }
