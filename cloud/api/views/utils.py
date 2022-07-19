@@ -84,6 +84,8 @@ def get_settings_from_cache():
         'vendorsShown': customization_cache.get('vendors_shown', '30'),
         'pushConfig': customization_cache.get('push_config', {}),
         'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
+        'logRocket': customization_cache.get('log_rocket', ''),
+        'fullStory': customization_cache.get('full_story', ''),
         'trialLicenseKey': customization_cache.get('trial_license_key', ''),
     }
 

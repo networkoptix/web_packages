@@ -14,6 +14,8 @@ import {
     GuardsCheckStart,
     Router,
 } from '@angular/router';
+import * as FullStory from '@fullstory/browser';
+import LogRocket from 'logrocket';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import type { DeviceInfo } from 'ngx-device-detector';
@@ -213,6 +215,36 @@ export class AppComponent {
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
+        }
+
+        if (!environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver) {
+            if (this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
+                try {
+                    LogRocket.init(this.CONFIG.cloudMonitoring.logRocket);
+                    this.CONFIG.cloudMonitoring.isLogRocketActive = true;
+                    LogRocket.getSessionURL(sessionURL => {
+                        console.info('LR: Please attach session url below to tickets');
+                        console.info(`LR - Debug session url: ${sessionURL}`);
+                    });
+                } catch (e) {
+                    console.error('LogRocket failed to init');
+                    console.error(e);
+                }
+            }
+            if (this.CONFIG.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
+                try {
+                    FullStory.init({ orgId: this.CONFIG.cloudMonitoring.fullStory });
+                    // eslint-disable-next-line dot-notation
+                    this.window['_fs_ready'] = () => {
+                        this.CONFIG.cloudMonitoring.isFullStoryActive = true;
+                        console.info('FS: Please attach session url below to tickets');
+                        console.info(`FS - Debug session url: ${FullStory.getCurrentSessionURL(true)}`);
+                    };
+                } catch (e) {
+                    console.error('FullStory failed to init');
+                    console.error(e);
+                }
+            }
         }
 
         // Updates query params for components without routes.

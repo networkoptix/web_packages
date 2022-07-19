@@ -598,6 +598,12 @@ export const nxConfig: IConfig = {
         healthMonitorCacheTimeout: 60,
         customClientsEnabled: false
     },
+    cloudMonitoring: {
+        fullStory: '',
+        isFullStoryActive: false,
+        isLogRocketActive: false,
+        logRocket: ''
+    },
     cloudName: '',
     cloudHost: '',
     cloudSystemId: '',

@@ -107,7 +107,8 @@ export interface BaseConfig {
     sessionFreshnessSec: number;
     // loggersConfig: LoggersConfig;
     metaDefaults: Record<string, Record<string, string>>,
-    webadminRoutesLookup: RouteCheckTuple[]
+    webadminRoutesLookup: RouteCheckTuple[],
+    cloudMonitoring: CloudMonitoring;
 }
 
 export type RouteCheckTuple = [lookup?: RegExp, replacementUrl?: string, additionalMessage?: string]
@@ -177,6 +178,8 @@ const FeatureFlagKeys = [
     'dashboardRedirect',
     'cloudOwnershipTransfer',
     'viewCameraDetails',
+    'logRocket',
+    'fullStory'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];
@@ -256,6 +259,13 @@ export interface CloudCapabilities {
     customClientsEnabled: boolean;
     alexaIntegrationEnabled: boolean;
     bookmarksEnabled: boolean;
+}
+
+export interface CloudMonitoring {
+    fullStory: string;
+    isFullStoryActive: boolean;
+    isLogRocketActive: boolean;
+    logRocket: string;
 }
 
 export interface Company {
