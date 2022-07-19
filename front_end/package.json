@@ -1,6 +1,7 @@
 {
   "name": "cloud-portal",
   "version": "22.1.0",
+  "sideEffects": false,
   "engines": {
     "npm": ">=8 <9",
     "node": "=16.13.1",
@@ -106,6 +107,7 @@
     "ngx-cookie-service": "~13.2.1",
     "ngx-device-detector": "~3.0.0",
     "ngx-file-drop": "14.0.1",
+    "ngx-hover-preload": "^0.0.3",
     "ngx-indexed-db": "~11.0.2",
     "ngx-markdown": "14.0.1",
     "ngx-mask": "~13.1.15",

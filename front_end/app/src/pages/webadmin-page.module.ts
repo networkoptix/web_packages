@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { QuicklinkStrategy } from 'ngx-quicklink';
+import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -78,7 +78,7 @@ const lazyRoutes: Routes = [
             scrollPositionRestoration: 'enabled',
             anchorScrolling: 'enabled',
             enableTracing: false,
-            preloadingStrategy: QuicklinkStrategy,
+            preloadingStrategy: HoverPreloadStrategy,
             onSameUrlNavigation: 'reload',
             relativeLinkResolution: 'legacy'
         })

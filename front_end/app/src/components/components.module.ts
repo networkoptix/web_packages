@@ -15,7 +15,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { QuicklinkModule } from 'ngx-quicklink';
+import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
@@ -114,7 +114,7 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         PipesModule,
         CdkStepperModule,
         AngularSvgIconModule.forRoot(),
-        QuicklinkModule,
+        HoverPreloadModule,
         CdkTableModule,
         CdkStepperModule,
         CdkTreeModule,
@@ -244,7 +244,6 @@ import { NxThirdPartyWidgetComponent } from './widgets/third-party/third-party-w
         NxServerLoggerWidgetComponent
     ],
     exports: [
-        QuicklinkModule,
         NxSearchableDropdown,
         NxThreeDotDropdown,
         NxGenericDropdownModule,
