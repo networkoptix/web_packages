@@ -96,8 +96,7 @@ def auto_refresh_token(no_refresh=False):
                 access_token = request.get("access_token")
                 refresh_token = request.get("refresh_token")
             else:
-                raise TypeError(
-                    "Arg request should be of type request or dict")
+                raise TypeError("Arg request should be of type request or dict")
 
             ip = ""
             if hasattr(request, "META"):
@@ -126,18 +125,11 @@ def auto_refresh_token(no_refresh=False):
                     response_data = res.json()
                 if not refresh_token:
                     if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
-                        raise APINotAuthorisedException(
-                            response_data["errorText"], response_data["resultCode"])
-                    elif response_data and response_data["resultCode"] == ErrorCodes.bad_request.value:
-                        raise APIRequestException(
-                            response_data["errorText"],
-                            response_data["resultCode"],
-                            error_data={"code": int(response_data["errorDetail"])})
+                        raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                     else:
                         raise e
                 elif no_refresh and response_data:
-                    raise APINotAuthorisedException(
-                        response_data["errorText"], response_data["resultCode"])
+                    raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
 
             try:
                 tokens = Auth.get_refresh_token(refresh_token, ip=ip)
@@ -149,25 +141,23 @@ def auto_refresh_token(no_refresh=False):
                 kwargs["headers"] = {
                     "Authorization": f"Bearer {access_token}"
                 }
-                res = func(request, *args, **kwargs)
-                res.raise_for_status()
-                return res
             # Handles error for refreshing token.
             except (APINotAuthorisedException, APINotAuthorisedException, APINotAuthorisedException) as e:
                 kill_tokens(request, Auth.delete_token_no_refresh)
                 kill_session(request)
                 raise e
 
+            try:
+                res = func(request, *args, **kwargs)
+                res.raise_for_status()
+                return res
             # Handles http error for wrapped request function.
             except requests.exceptions.HTTPError as e:
                 response_data = None
                 if res.headers.get('content-type') == 'application/json':
                     response_data = res.json()
                 if response_data and response_data["resultCode"] in INVALID_SESSION_ERRORS:
-                    kill_tokens(request, Auth.delete_token)
-                    kill_session(request)
-                    raise APINotAuthorisedException(
-                        response_data["errorText"], response_data["resultCode"])
+                    raise APINotAuthorisedException(response_data["errorText"], response_data["resultCode"])
                 else:
                     raise e
         return wrapper
