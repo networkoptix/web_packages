@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(wijzig)",
     "1 professional license channel will be used": "Er wordt 1 professioneel licentiekanaal gebruikt",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Een eenvoudige manier om te verbinden, beheren en uit te breiden van een %VMS_NAME% systeem.",
@@ -89,7 +90,6 @@
     "Cameras menu": "Camera's menu",
     "Can't activate license: only one NVR license is allowed per System": "Kan licentie niet activeren: slechts één NVR licentie is toegestaan per systeem",
     "Cancel": "Annuleren",
-    "Cancel ownership transfer": "Eigendomsoverdracht annuleren",
     "Cannot connect to %CLOUD_NAME%": "Kan geen verbinding maken met %CLOUD_NAME%",
     "Cannot enable mandatory two-factor authentication": "Kan de verplichte tweestapsverificatie niet inschakelen",
     "Cannot scan QR code?": "Kunt u de QR-code niet scannen?",

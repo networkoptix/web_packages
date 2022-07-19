@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(thay đổi)",
     "1 professional license channel will be used": "1 kênh giấy phép chuyên nghiệp sẽ được sử dụng",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Một cách đơn giản để kết nối, quản lý và mở rộng bất kỳ Hệ thống %VMS_NAME% nào.",
@@ -89,7 +90,6 @@
     "Cameras menu": "Menu camera",
     "Can't activate license: only one NVR license is allowed per System": "Không thể kích hoạt giấy phép: chỉ cho phép một giấy phép NVR trên mỗi Hệ thống",
     "Cancel": "Hủy bỏ",
-    "Cancel ownership transfer": "Hủy chuyển đổi quyền sở hữu",
     "Cannot connect to %CLOUD_NAME%": "Không thể kết nối với %CLOUD_NAME%",
     "Cannot enable mandatory two-factor authentication": "Không thể bật xác thực hai yếu tố bắt buộc",
     "Cannot scan QR code?": "Không thể quét mã QR?",

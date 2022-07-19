@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(изменить)",
     "1 professional license channel will be used": "Будет использован 1 канал профессиональной лицензии",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Простой способ подключения, управления и расширения любой системы %VMS_NAME%.",
@@ -89,7 +90,6 @@
     "Cameras menu": "Меню камер",
     "Can't activate license: only one NVR license is allowed per System": "Невозможно активировать лицензию: для каждой системы разрешена только одна лицензия NVR",
     "Cancel": "Отмена",
-    "Cancel ownership transfer": "Отменить смену владельца",
     "Cannot connect to %CLOUD_NAME%": "Не могу подключиться к %CLOUD_NAME%",
     "Cannot enable mandatory two-factor authentication": "Не удается включить обязательную двухфакторную аутентификацию",
     "Cannot scan QR code?": "Не удается отсканировать QR-код?",

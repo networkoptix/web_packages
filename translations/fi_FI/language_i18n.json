@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(change)",
     "1 professional license channel will be used": "1 professional license channel will be used",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -89,7 +90,6 @@
     "Cameras menu": "Kamerat-valikko",
     "Can't activate license: only one NVR license is allowed per System": "Can't activate license: only one NVR license is allowed per System",
     "Cancel": "Peruuta",
-    "Cancel ownership transfer": "Cancel ownership transfer",
     "Cannot connect to %CLOUD_NAME%": "Ei voi muodostaa yhteyttä %CLOUD_NAME%",
     "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
     "Cannot scan QR code?": "Cannot scan QR code?",

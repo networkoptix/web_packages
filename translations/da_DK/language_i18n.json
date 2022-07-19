@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(ændre)",
     "1 professional license channel will be used": "1 professionel licens vil blive brugt",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "En enkel måde at oprette forbindelse til, administrere og udvide et hvilket som helst %VMS_NAME% -system på.",
@@ -89,7 +90,6 @@
     "Cameras menu": "Kamera menu",
     "Can't activate license: only one NVR license is allowed per System": "Kan ikke aktivere licens: Kun én NVR-licens er tilladt pr. System",
     "Cancel": "Annuller",
-    "Cancel ownership transfer": "Annuller overførsel af ejerskab",
     "Cannot connect to %CLOUD_NAME%": "Kan ikke oprette forbindelse til %CLOUD_NAME%",
     "Cannot enable mandatory two-factor authentication": "Cannot enable mandatory two-factor authentication",
     "Cannot scan QR code?": "Kan du ikke scanne QR-koden?",

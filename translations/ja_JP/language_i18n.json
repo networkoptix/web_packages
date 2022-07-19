@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(変更)",
     "1 professional license channel will be used": "プロフェッショナルライセンスチャンネルを1つ使用します",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "%VMS_NAME% システムへの接続、管理、拡張を行うシンプルな方法です。",
@@ -89,7 +90,6 @@
     "Cameras menu": "カメラメニュー",
     "Can't activate license: only one NVR license is allowed per System": "ライセンスを有効化できません：NVRライセンスはシステムごとに1つのみ利用可能です",
     "Cancel": "キャンセル",
-    "Cancel ownership transfer": "所有権の譲渡をキャンセル",
     "Cannot connect to %CLOUD_NAME%": "%CLOUD_NAME% に接続できません",
     "Cannot enable mandatory two-factor authentication": "強制二要素認証を有効化できません",
     "Cannot scan QR code?": "QRコードをスキャンできませんか？",

@@ -1,5 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
+    "(cancel)": "(cancel)",
     "(change)": "(change)",
     "1 professional license channel will be used": "將使用 1 個專業版授權",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -89,7 +90,6 @@
     "Cameras menu": "攝影機功能選單",
     "Can't activate license: only one NVR license is allowed per System": "無法啟用授權：每個系統僅允許一個NVR授權",
     "Cancel": "取消",
-    "Cancel ownership transfer": "取消系統所有權轉移",
     "Cannot connect to %CLOUD_NAME%": "無法連接到 %CLOUD_NAME%",
     "Cannot enable mandatory two-factor authentication": "無法強制啟用雙重驗證",
     "Cannot scan QR code?": "Cannot scan QR code?",
