@@ -1,7 +1,7 @@
-@use "typography" as typography;
-@use "native-theme/theme_palette";
-@use "theme_palette" as colors;
-@use "theme_variables_common" as vars;
+@use "../styles/typography" as typography;
+@use "../../styles/native-theme/theme_palette";
+@use "../../styles/theme_palette" as colors;
+@use "../../styles/theme_variables_common" as vars;
 
 @keyframes slide-down-fade-in {
     0% {

@@ -1,5 +1,5 @@
 @use '../../../styles/typography';
-@use "../../../app/styles/theme_variables_common" as *;
+@use "../../../../styles/theme_variables_common" as *;
 
 .logger-wrapper {
     overflow-y: auto;

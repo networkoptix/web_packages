@@ -1,4 +1,4 @@
-@use "../styles/typography";
+@use "../../styles/typography";
 @use "../../../styles/theme_variables_common" as *;
 
 :host {
@@ -15,11 +15,11 @@
                         transparentize($light3, 0.85) 24px
         ) !important;
     }
-    
+
     .preview-wrapper {
         margin : 0 auto;
     }
-    
+
     .dashboard-card {
         height        : 100%;
         border        : 1px solid var(--border-color);
@@ -27,19 +27,19 @@
         background    : var(--alt-body-bg);
         box-shadow    : 0 0 6px 2px $light7;
     }
-    
+
     .heading {
         background      : var(--body-bg);
         border-bottom   : 1px solid var(--border-color);
         display         : flex;
         justify-content : space-between;
         border-radius   : 6px 6px 0 0;
-        
+
         & span {
             padding : 8px;
             color   : white !important;
         }
-        
+
         nx-select {
             min-width : 0;
             width     : auto;

@@ -29,7 +29,6 @@ import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.componen
 import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { DetachServerModalContent } from './detach-server/detach-server.component';
-import { NxDialogsService } from './dialogs.service';
 import { DisconnectModalContent } from './disconnect/disconnect.component';
 import { DownloadAsyncModalContent } from './download-async/download-async.component';
 import { EditModalContent } from './edit/edit.component';
@@ -108,9 +107,7 @@ import { WizardModalContent } from './wizard/wizard.component';
         CloudStorageActivateModalContent,
         CloudStorageModifyModalContent
     ],
-    providers: [
-        NxDialogsService,
-    ],
+    providers: [],
     exports: [
         GenericDialogModule
     ]

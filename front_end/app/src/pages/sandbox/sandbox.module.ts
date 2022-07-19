@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
-import { DialogsModule } from '@dialogs/dialogs.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -110,7 +109,6 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         TranslateModule,
-        DialogsModule,
         CommonModule,
         FormsModule,
         ComponentsModule,

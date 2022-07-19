@@ -20,48 +20,12 @@ import { StorageManager } from '@services/system.service/storage-manager/storage
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
 
-import { AddStorageModalContent } from './add-storage/add-storage.component';
-import { AddUserModalContent } from './add-user/add-user.component';
-import { AddWidgetModalContent } from './add-widget/add-widget.component';
-import { ChangePasswordModalContent } from './change-password/change-password.component';
-import { ChangeStorageModalContent } from './change-storage/change-storage.component';
-import { Client2faWarningModalContent } from './client-2fa-warning/client-2fa-warning.component';
-import { CloudStorageActivateModalContent } from './cloud-storage/activate/cloud-storage-activate.component';
-import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
-import { CloudStorageModifyModalContent } from './cloud-storage/modify/cloud-storage-modify.component';
-import { CloudStorageMoveModalContent } from './cloud-storage/move/cloud-storage-move.component';
-import { ConnectCloudModalContent } from './connect-cloud/connect-cloud.component';
-import { CreateSystemGroupModalContent } from './create-system-group/create-system-group.component';
-import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
-import { DetachServerModalContent } from './detach-server/detach-server.component';
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
 import { DIALOG_SIZE, defaultConfig, infoDialogConfig, cloudStorageActionDialogConfig } from './dialog-ref';
-import { DisconnectModalContent } from './disconnect/disconnect.component';
-import { EditModalContent } from './edit/edit.component';
-import { GenericModalContent } from './generic/generic.component';
-import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
-import { MergeModalContent } from './merge/merge.component';
-import { MessageModalContent } from './message/message.component';
-import { NewFeatureInformationModalContent } from './new-feature/new-feature.component';
-import { RemoveSystemModalContent } from './remove-system/remove-system.component';
-import { RemoveUserModalContent } from './remove-user/remove-user.component';
-import { ReserveSpaceWarningModalContent } from './reserve-space-warning/reserve-space-warning.component';
-import { ResetBackupModalContent } from './reset-backup/reset-backup.component';
-import { ResetServerModalContent } from './reset-server/reset-server.component';
-import { RestartServerModalContent } from './restart-server/restart-server.component';
-import { SelectTimeRangeModalContent } from './select-time-range-native-fallback/select-time-range.component';
 import { NxToastService } from './toast.service';
-import {
-    TransferOwnershipModalContent
-} from './transfer-ownership/transfer-ownership.component';
-import { TwoFAModalContent } from './two-fa/two-fa.component';
-import {
-    UpdateCameraCredentialsModalContent
-} from './update-camera-credentials/update-camera-credentials.component';
-import { WizardModalContent } from './wizard/wizard.component';
 
-import '@dialogs/dialogs.scss';
+// import '@dialogs/dialogs.scss';
 
 interface IParams<Value = any> {
     [key: string]: Value;
@@ -116,7 +80,7 @@ export class NxDialogsService extends DialogBase {
         return this.toastService.show(message, options);
     }
 
-    public alert(message: string, title: string, footerClass?: string) {
+    public async alert(message: string, title: string, footerClass?: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 message: this.domSanitizer.bypassSecurityTrustHtml(message),
@@ -132,18 +96,21 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(GenericModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public confirm(
+    public async confirm(
         message: string,
         title: string,
         actionLabel: string,
         actionType?: string,
         cancelLabel?: string,
         footerClass?: string
-    ): any {
+    ) {
         const config: Partial<DialogConfig> = {
             data: {
                 message: message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '',
@@ -159,11 +126,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(GenericModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./generic/generic.component').then(m => m.GenericModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public addWidget(gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
+    public async addWidget(gridSize, gridGap, widgets, dashboardMenu: DashboardConfiguration[], activeDashboard, updateSelectedDashboard: (id: string) => void) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.LARGE,
             data: {
@@ -177,11 +147,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(AddWidgetModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./add-widget/add-widget.component').then(m => m.AddWidgetModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public addStorage(
+    public async addStorage(
         serverId: string,
         storageManager: StorageManager,
         cancelPolls: () => any
@@ -195,11 +168,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(AddStorageModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./add-storage/add-storage.component').then(m => m.AddStorageModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public edit(modalContent: ModalContent) {
+    public async edit(modalContent: ModalContent) {
         const config: Partial<DialogConfig> = {
             data: {
                 heading: modalContent.heading,
@@ -212,7 +188,10 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(EditModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./edit/edit.component').then(m => m.EditModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
@@ -235,7 +214,7 @@ export class NxDialogsService extends DialogBase {
         //     .afterClosed();
     }
 
-    public changeStorage(system: NxSystem) {
+    public async changeStorage(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -243,21 +222,36 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(ChangeStorageModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./change-storage/change-storage.component').then(m => m.ChangeStorageModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    #cloudStorageActionMethodFactory = <T>(modalContent: ComponentType<T>) => () => this.open(modalContent, cloudStorageActionDialogConfig).afterClosed();
+    #cloudStorageActionMethodFactory = <T>(modalContent: () => Promise<ComponentType<T>>) => async () => {
+        await this.preloadDialogsModule();
+        const component = await modalContent();
+        return this.open(component, cloudStorageActionDialogConfig).afterClosed();
+    };
 
-    public cloudStorageActivate = this.#cloudStorageActionMethodFactory(CloudStorageActivateModalContent);
+    public cloudStorageActivate = this.#cloudStorageActionMethodFactory(
+        () => import('./cloud-storage/activate/cloud-storage-activate.component').then(m => m.CloudStorageActivateModalContent)
+    );
 
-    public cloudStorageUpdate = this.#cloudStorageActionMethodFactory(CloudStorageModifyModalContent);
+    public cloudStorageUpdate = this.#cloudStorageActionMethodFactory(
+        () => import('./cloud-storage/modify/cloud-storage-modify.component').then(m => m.CloudStorageModifyModalContent)
+    );
 
-    public cloudStorageDelete = this.#cloudStorageActionMethodFactory(CloudStorageDeleteModalContent);
+    public cloudStorageDelete = this.#cloudStorageActionMethodFactory(
+        () => import('./cloud-storage/delete/cloud-storage-delete.component').then(m => m.CloudStorageDeleteModalContent)
+    );
 
-    public cloudStorageMigrate = this.#cloudStorageActionMethodFactory(CloudStorageMoveModalContent);
+    public cloudStorageMigrate = this.#cloudStorageActionMethodFactory(
+        () => import('./cloud-storage/move/cloud-storage-move.component').then(m => m.CloudStorageMoveModalContent)
+    );
 
-    connectLocalToCloud(
+    async connectLocalToCloud(
         account: NxAccountService,
         system: NxSystem,
     ) {
@@ -269,11 +263,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(ConnectCloudModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./connect-cloud/connect-cloud.component').then(m => m.ConnectCloudModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public addUser(system: NxSystem) {
+    public async addUser(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -281,11 +278,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(AddUserModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./add-user/add-user.component').then(m => m.AddUserModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public disconnect(account: NxAccountService, system: NxSystem) {
+    public async disconnect(account: NxAccountService, system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 account,
@@ -294,11 +294,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(DisconnectModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./disconnect/disconnect.component').then(m => m.DisconnectModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public removeUser(system: NxSystem, user: NxSystemUser) {
+    public async removeUser(system: NxSystem, user: NxSystemUser) {
         const config: Partial<DialogConfig> = {
             data: {
                 user,
@@ -307,11 +310,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(RemoveUserModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./remove-user/remove-user.component').then(m => m.RemoveUserModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public removeSystem(system: NxSystem) {
+    public async removeSystem(system: NxSystem) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -319,25 +325,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(RemoveSystemModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./remove-system/remove-system.component').then(m => m.RemoveSystemModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public restartServer(system: NxSystem, serverId: string, serverName: string) {
-        const config: Partial<DialogConfig> = {
-            data: {
-                system,
-                serverId,
-                serverName,
-            }
-        };
-        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-
-        return this.open(RestartServerModalContent, dialogConfig)
-            .afterClosed();
-    }
-
-    public detachServer(system: NxSystem, serverId: string, serverName: string) {
+    public async restartServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -347,11 +342,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(DetachServerModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./restart-server/restart-server.component').then(m => m.RestartServerModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public resetServer(system: NxSystem, serverId: string, serverName: string) {
+    public async detachServer(system: NxSystem, serverId: string, serverName: string) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -361,11 +359,31 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(ResetServerModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./detach-server/detach-server.component').then(m => m.DetachServerModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public changePassword(system: NxSystem, user: NxSystemUser) {
+    public async resetServer(system: NxSystem, serverId: string, serverName: string) {
+        const config: Partial<DialogConfig> = {
+            data: {
+                system,
+                serverId,
+                serverName,
+            }
+        };
+        const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+
+        await this.preloadDialogsModule();
+        const component = await import('./reset-server/reset-server.component').then(m => m.ResetServerModalContent);
+
+        return this.open(component, dialogConfig)
+            .afterClosed();
+    }
+
+    public async changePassword(system: NxSystem, user: NxSystemUser) {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
@@ -373,22 +391,27 @@ export class NxDialogsService extends DialogBase {
             }
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        await this.preloadDialogsModule();
+        const component = await import('./change-password/change-password.component').then(m => m.ChangePasswordModalContent);
 
-        return this.open(ChangePasswordModalContent, dialogConfig)
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public wizard() {
+    public async wizard() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(WizardModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./wizard/wizard.component').then(m => m.WizardModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
+    public async merge(account: NxAccountService, system: NxSystem, systems: NxSystem[]) {
         const config: Partial<DialogConfig> = {
             data: {
                 user: account,
@@ -398,11 +421,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(MergeModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./merge/merge.component').then(m => m.MergeModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public message(account: NxAccountService, type: string, data: IParams): Promise<any> {
+    public async message(account: NxAccountService, type: string, data: IParams): Promise<any> {
         const config: Partial<DialogConfig> = {
             data: {
                 account,
@@ -412,7 +438,10 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(MessageModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./message/message.component').then(m => m.MessageModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
@@ -425,7 +454,7 @@ export class NxDialogsService extends DialogBase {
     //         .afterClosed();
     // }
 
-    public deleteCloudUser(cloudApi: NxCloudApiService) {
+    public async deleteCloudUser(cloudApi: NxCloudApiService) {
         const config: Partial<DialogConfig> = {
             data: {
                 cloudApi,
@@ -433,11 +462,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(DeleteCloudUserModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./delete-cloud-user/delete-cloud-user.component').then(m => m.DeleteCloudUserModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public updateCameraCredentials(
+    public async updateCameraCredentials(
         camera: ICamera,
         system: NxSystem,
         updateCallback: () => Promise<any>
@@ -450,12 +482,14 @@ export class NxDialogsService extends DialogBase {
             }
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
+        await this.preloadDialogsModule();
+        const component = await import('./update-camera-credentials/update-camera-credentials.component').then(m => m.UpdateCameraCredentialsModalContent);
 
-        return this.open(UpdateCameraCredentialsModalContent, dialogConfig)
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public resetBackupToDefaultSettings(
+    public async resetBackupToDefaultSettings(
         system: NxSystem,
         setDefaultBackupSettings: () => Promise<any>
     ) {
@@ -467,11 +501,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(ResetBackupModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./reset-backup/reset-backup.component').then(m => m.ResetBackupModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public newCode2FA() {
+    public async newCode2FA() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -480,11 +517,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(TwoFAModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public off2FA(num2FaSystems: number) {
+    public async off2FA(num2FaSystems: number) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -494,11 +534,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(TwoFAModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    passwordVerificationCode(newPassword: string, oldPassword: string) {
+    async passwordVerificationCode(newPassword: string, oldPassword: string) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -509,11 +552,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(TwoFAModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public wizard2FA() {
+    public async wizard2FA() {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -522,11 +568,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(TwoFAModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    toggleVerificationCode(enable: boolean) {
+    async toggleVerificationCode(enable: boolean) {
         const config: Partial<DialogConfig> = {
             width: DIALOG_SIZE.SMALL,
             data: {
@@ -535,11 +584,14 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(TwoFAModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public toggleSystem2fa(
+    public async toggleSystem2fa(
         system: NxSystem,
         system2faEnabled: boolean,
     ): Promise<any> {
@@ -552,19 +604,25 @@ export class NxDialogsService extends DialogBase {
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(Mandatory2faModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public selectTimeRange() {
+    public async selectTimeRange() {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(SelectTimeRangeModalContent, dialogConfig)
+        await this.preloadDialogsModule();
+        const component = await import('./select-time-range-native-fallback/select-time-range.component').then(m => m.SelectTimeRangeModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public transferOwnership(
+    public async transferOwnership(
         system: NxSystem,
         transfers: SystemTransferInfo[],
     ): Promise<void> {
@@ -575,26 +633,42 @@ export class NxDialogsService extends DialogBase {
             }
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        return this.open(TransferOwnershipModalContent, dialogConfig)
+
+        await this.preloadDialogsModule();
+        const component = await import('./transfer-ownership/transfer-ownership.component').then(m => m.TransferOwnershipModalContent);
+
+        return this.open(component, dialogConfig)
             .afterClosed();
     }
 
-    public createSystemGroup(): Promise<void> {
+    public async createSystemGroup(): Promise<void> {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        return this.open(CreateSystemGroupModalContent, dialogConfig).afterClosed();
+
+        await this.preloadDialogsModule();
+        const component = await import('./create-system-group/create-system-group.component').then(m => m.CreateSystemGroupModalContent);
+
+        return this.open(component, dialogConfig).afterClosed();
     }
 
-    public client2faWarning(): Promise<void> {
+    public async client2faWarning(): Promise<void> {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        return this.open(Client2faWarningModalContent, dialogConfig).afterClosed();
+
+        await this.preloadDialogsModule();
+        const component = await import('./client-2fa-warning/client-2fa-warning.component').then(m => m.Client2faWarningModalContent);
+
+        return this.open(component, dialogConfig).afterClosed();
     }
 
-    public reserveSpaceWarning(): Promise<string | void> {
+    public async reserveSpaceWarning(): Promise<string | void> {
         const config: Partial<DialogConfig> = {};
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
-        return this.open(ReserveSpaceWarningModalContent, dialogConfig).afterClosed();
+
+        await this.preloadDialogsModule();
+        const component = await import('./reserve-space-warning/reserve-space-warning.component').then(m => m.ReserveSpaceWarningModalContent);
+
+        return this.open(component, dialogConfig).afterClosed();
     }
 
     // New Feature Info ModalContent
@@ -609,11 +683,16 @@ export class NxDialogsService extends DialogBase {
      */
     #newFeatureMethodFactory = <T>(
         template: string | TemplateRef<T>
-    ) => () => this.open(
-        NewFeatureInformationModalContent, {
-            ...infoDialogConfig,
-            data: { template }
-        }).afterClosed();
+    ) => async () => {
+        await this.preloadDialogsModule();
+        const component = await import('./new-feature/new-feature.component').then(m => m.NewFeatureInformationModalContent);
+
+        return this.open(
+            component, {
+                ...infoDialogConfig,
+                data: { template }
+            }).afterClosed();
+    };
 
     public cloudStorageInfo = this.#newFeatureMethodFactory('cloudStorage');
 }

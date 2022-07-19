@@ -4,11 +4,13 @@ import { Injector } from '@angular/core';
 
 import { DialogConfig } from './dialog-config';
 import { defaultConfig, DIALOG_DATA, DialogRef } from './dialog-ref';
+import { DialogsModule } from './dialogs.module';
 
 export class DialogBase {
     private overlay: Overlay;
     private injector: Injector;
     private dialog: DialogRef;
+    private dialogsModule: DialogsModule;
 
     constructor(
         overlay: Overlay,
@@ -16,6 +18,11 @@ export class DialogBase {
     ) {
         this.overlay = overlay;
         this.injector = injector;
+    }
+
+    public async preloadDialogsModule(): Promise<DialogsModule> {
+        this.dialogsModule ||= await import('./dialogs.module').then(m => m.DialogsModule);
+        return this.dialogsModule;
     }
 
     open<T>(component: ComponentType<T>, config: DialogConfig = defaultConfig): DialogRef {
