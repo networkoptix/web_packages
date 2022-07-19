@@ -1925,7 +1925,7 @@
             "path": "cloud_portal/cloud_helper/node_modules/eastasianwidth",
             "licenseFile": "cloud_portal/cloud_helper/node_modules/eastasianwidth/README.md"
         },
-        "electron-to-chromium@1.4.194": {
+        "electron-to-chromium@1.4.195": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -13582,6 +13582,13 @@
             "url": "https://mathiasbynens.be/",
             "path": "cloud_portal/front_end/node_modules/punycode",
             "licenseFile": "cloud_portal/front_end/node_modules/punycode/LICENSE-MIT.txt"
+        },
+        "purgecss@4.1.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/FullHuman/purgecss",
+            "publisher": "Ffloriel",
+            "path": "cloud_portal/front_end/node_modules/purgecss",
+            "licenseFile": "cloud_portal/front_end/node_modules/purgecss/LICENSE"
         },
         "q@1.4.1": {
             "licenses": "MIT",

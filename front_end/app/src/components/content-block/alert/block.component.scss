@@ -185,6 +185,10 @@
             stroke : var(--card-simple-warning-color);
         }
         
+        a {
+            color: var(--card-simple-warning-color);
+        }
+        
         button span {
             color : var(--card-simple-warning-color);
         }
@@ -202,15 +206,7 @@
             background-color : var(--card-simple-warning-bg);
         }
     }
-
-    &.simple-bright-warning {
-        @extend .simple-warning;
-
-        &, & .card--body, .card--footer  {
-            background-color: $yellow_main;
-        }
-    }
-
+    
     &.simple-info {
         @include typography.regular13nocolor;
         color : var(--card-simple-msg-color);
