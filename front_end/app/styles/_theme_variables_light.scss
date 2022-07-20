@@ -427,6 +427,19 @@ html {
     --promo-tile-img-1-path : url("/static/images/promo/landing_promo_1.svg");
     --promo-tile-img-2-path : url("/static/images/promo/landing_promo_2.svg");
     --promo-tile-img-3-path : url("/static/images/promo/landing_promo_3.svg");
+    
+    --toast-danger-bg : #f8d7da;
+    --toast-danger-color : #721c24;
+    --toast-danger-border-color : #f5c6cb;
+    --toast-success-bg : #d4edda;
+    --toast-success-color : #155724;
+    --toast-success-border-color : #c3e6cb;
+    --toast-warning-bg : #fff3cd;
+    --toast-warning-color : #856404;
+    --toast-warning-border-color : #ffeeba;
+    --toast-info-bg : #d1ecf1;
+    --toast-info-color : #0c5460;
+    --toast-info-border-color : #bee5eb;
 
     --card-shadow: 0 2px 5px 0 #{$light4};
     --card-active-shadow: 0 2px 5px 0 #{$light10};
@@ -438,6 +451,7 @@ html {
     --card-simple-info-bg           : rgba(var(--brand_core--rgb), .1);
     --card-simple-info-border-color : rgba(var(--brand_core--rgb), .3);
     --card-simple-info-color        : #{$dark9};
+    --card-simple-info-svg-color    : #{$brand-core};
 
     --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
@@ -446,6 +460,7 @@ html {
     --card-simple-error-bg : rgba(var(--red_l2--rgb), .1);
     --card-simple-error-border-color : rgba(var(--red_l2--rgb), .3);
     --card-simple-error-color : #{$dark9};
+    --card-simple-error-svg-color    : #{$red-main};
 
     --card-simple-default-bg : #{$red2};
     --card-simple-default-color : #{$dark9};

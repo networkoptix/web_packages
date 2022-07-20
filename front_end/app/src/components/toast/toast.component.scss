@@ -32,28 +32,27 @@
     margin-bottom : 8px;
 }
 
-// TODO: Add these colors to a variables
 .alert-success {
-    color            : #155724;
-    background-color : #d4edda;
-    border-color     : #c3e6cb;
+    color            : var(--toast-success-color);
+    background-color : var(--toast-success-bg);
+    border-color     : var(--toast-success-border-color);
 }
 
 .alert-warning {
-    color            : #856404;
-    background-color : #fff3cd;
-    border-color     : #ffeeba;
+    color            : var(--toast-warning-color);
+    background-color : var(--toast-warning-bg);
+    border-color     : var(--toast-warning-border-color);
 }
 
 .alert-danger {
-    color            : #721c24;
-    background-color : #f8d7da;
-    border-color     : #f5c6cb;
+    color            : var(--toast-danger-color);
+    background-color : var(--toast-danger-bg);
+    border-color     : var(--toast-danger-border-color);
 }
 
 .alert-info {
-    color            : #0c5460;
-    background-color : #d1ecf1;
-    border-color     : #bee5eb;
+    color            : var(--toast-info-color);
+    background-color : var(--toast-info-bg);
+    border-color     : var(--toast-info-border-color);
 }
 

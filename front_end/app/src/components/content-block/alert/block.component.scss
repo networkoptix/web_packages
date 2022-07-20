@@ -166,6 +166,11 @@
         .card--body {
             background-color : var(--card-simple-error-bg);
             border-top       : 1px solid var(--card-simple-error-border-color);
+            
+            svg-icon svg .st0 {
+                stroke: none;
+                fill: var(--card-simple-error-svg-color);
+            }
         }
 
         .card--footer {
@@ -200,6 +205,11 @@
         .card--body {
             background-color : var(--card-simple-warning-bg);
             border-top       : 1px solid var(--card-simple-warning-border-color);
+            
+            svg-icon svg .st0 {
+                stroke: none;
+                fill: var(--card-simple-warning-color);
+            }
         }
 
         .card--footer {
@@ -209,9 +219,9 @@
     
     &.simple-info {
         @include typography.regular13nocolor;
-        color : var(--card-simple-msg-color);
-        background-color : rgba(var(--brand-core--rgb), .1);
-        border           : 1px solid rgba(var(--brand-core--rgb), .3);
+        color : var(--card-simple-info-color);
+        background-color : var(--card-simple-info-bg);
+        border           : 1px solid var(--card-simple-info-bg);
         margin-bottom    : 8px;
         line-height      : 18px;
 
@@ -222,6 +232,11 @@
         .card--body {
             background-color : rgba(var(--brand-core--rgb), .1);
             border-top       : 1px solid rgba(var(--brand-core--rgb), .3);
+            
+            svg-icon svg .st0 {
+                stroke: none;
+                fill: var(--card-simple-info-svg-color);
+            }
         }
 
         .card--footer {

@@ -425,6 +425,19 @@ html[data-theme="dark"] {
     --promo-tile-img-1-path : url("/static/images/promo/landing_promo_dark_1.svg");
     --promo-tile-img-2-path : url("/static/images/promo/landing_promo_dark_2.svg");
     --promo-tile-img-3-path : url("/static/images/promo/landing_promo_dark_3.svg");
+    
+    --toast-danger-bg : var(--red_d3);
+    --toast-danger-color : #E1E7EA; //$light4;
+    --toast-danger-border-color : var(--red_d3);
+    --toast-success-bg : #32731E; //$green_d1;
+    --toast-success-color : #E1E7EA; //$light4;
+    --toast-success-border-color : #32731E; //$green_d1;
+    --toast-warning-bg : var(--yellow_d2);
+    --toast-warning-color : #1C2327; //$dark6;
+    --toast-warning-border-color : var(--yellow_d2);
+    --toast-info-bg : var(--brand_d3);
+    --toast-info-color : #E1E7EA; //$light4;
+    --toast-info-border-color : var(--brand_d3);
 
     --card-shadow : none;
     --card-active-shadow : 0 2px 5px 0 #1C2327; //$dark6;
@@ -436,6 +449,7 @@ html[data-theme="dark"] {
     --card-simple-info-bg           : var(--brand_d3);
     --card-simple-info-border-color : var(--brand_d3);
     --card-simple-info-color        : #E1E7EA; //$light4;
+    --card-simple-info-svg-color    : #E1E7EA; //$light4;
 
     --card-simple-warning-bg           : var(--yellow_d2);
     --card-simple-warning-border-color : var(--yellow_d2);
@@ -444,6 +458,7 @@ html[data-theme="dark"] {
     --card-simple-error-bg           : var(--red_d3);
     --card-simple-error-border-color : var(--red_d3);
     --card-simple-error-color        : #E1E7EA; //$light4;
+    --card-simple-error-svg-color    : #E1E7EA; //$light4;
 
     --card-simple-default-bg           : #C22626; //$red_main;
     --card-simple-default-color        : #E1E7EA; //$light4;
