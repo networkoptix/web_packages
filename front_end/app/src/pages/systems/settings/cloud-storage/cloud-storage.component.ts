@@ -1,5 +1,5 @@
 import {
-    Component, Input, TemplateRef, ViewContainerRef,
+    Component, Input, OnInit, TemplateRef, ViewContainerRef,
 } from '@angular/core';
 import { startCase } from 'lodash';
 import { BehaviorSubject, filter, take } from 'rxjs';
@@ -33,8 +33,8 @@ const mockLicenses = [
     templateUrl: './cloud-storage.component.html',
     styleUrls: ['./cloud-storage.component.scss']
 })
-export class NxCloudStorageComponent {
-    @Input() type: 'servers';
+export class NxCloudStorageComponent implements OnInit {
+    @Input() type: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -107,12 +107,12 @@ export class NxCloudStorageComponent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        cloudApi: NxCloudApiService,
+        settingsService: NxSettingsService,
+        private cloudApi: NxCloudApiService,
         private viewContainerRef: ViewContainerRef,
         private popoverService: NxPopoverService,
         public dialogService: NxDialogsService,
-        settingsService: NxSettingsService,
-        menuService: NxMenuService
+        private menuService: NxMenuService,
     ) {
         this.CONFIG = configService.config;
         this.LANG = languageService.translations;
@@ -125,11 +125,13 @@ export class NxCloudStorageComponent {
                 this.serverSettings = `/systems/${system.id}/servers`;
             });
         }
+    }
 
+    ngOnInit(): void {
         if (this.type !== 'servers') {
-            cloudApi.checkFeatureNotice('cloudStorage', this.dialogService.cloudStorageInfo).toPromise();
-            menuService.section = this.CONFIG.menus.systemSettings.admin.id;
-            menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
+            this.cloudApi.checkFeatureNotice('cloudStorage', this.dialogService.cloudStorageInfo).toPromise();
+            this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+            this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
         }
     }
 }
