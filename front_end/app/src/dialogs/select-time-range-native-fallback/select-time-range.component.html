@@ -34,15 +34,13 @@
                     class="form-control"
                     name="start-date"
                     type="date"
-                    [ngModel]="startDate"
-                    (ngModelChange)="handleChange($event, 'start', 'Date')"
+                    [(ngModel)]="startDate"
                 />
                 <input
                     class="form-control ml-2"
                     name="start-time"
                     type="time"
-                    [ngModel]="startTime"
-                    (ngModelChange)="handleChange($event, 'start', 'Time')"
+                    [(ngModel)]="startTime"
                 />
             </div>
         </div>
@@ -58,15 +56,13 @@
                     class="form-control"
                     name="end-date"
                     type="date"
-                    [ngModel]="endDate"
-                    (ngModelChange)="handleChange($event, 'end', 'Date')"
+                    [(ngModel)]="endDate"
                 />
                 <input
                     class="form-control ml-2"
                     name="end-time"
                     type="time"
-                    [ngModel]="endTime"
-                    (ngModelChange)="handleChange($event, 'end', 'Time')"
+                    [(ngModel)]="endTime"
                 />
             </div>
         </div>

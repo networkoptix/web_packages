@@ -18,8 +18,6 @@ export class SelectTimeRangeModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     hideErrors = true;
-    start: Date;
-    end: Date;
     startDate: string;
     startTime: string;
     endDate: string;
@@ -32,7 +30,6 @@ export class SelectTimeRangeModalContent {
         private configService: NxConfigService,
         private selection: TimelineSelectionService,
         private dialogRef: DialogRef,
-        // @Inject(DIALOG_DATA) private dialogData: never,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
@@ -43,22 +40,10 @@ export class SelectTimeRangeModalContent {
         return this.close(false);
     };
 
-    public handleChange(v: string, a: 'start' | 'end', b: 'Date' | 'Time'): void {
-        this[a + b] = v;
-        switch (a) {
-            case 'start':
-                this.start = new Date(this.startDate + 'T' + this.startTime);
-                break;
-            case 'end':
-                this.end = new Date(this.endDate + 'T' + this.endTime);
-                break;
-        }
-    }
-
     public save = $event => {
         $event.preventDefault();
-        const start = this.start.getTime();
-        const end = this.end.getTime();
+        const start = new Date(this.startDate + 'T' + this.startTime).getTime();
+        const end = new Date(this.endDate + 'T' + this.endTime).getTime();
         if (start > end) {
             return this.close({ start: end, end: start });
         } else {
@@ -67,14 +52,14 @@ export class SelectTimeRangeModalContent {
     };
 
     ngOnInit(): void {
-        this.start = new Date(this.selection.range.start - this._timezoneOffset);
-        this.end = new Date(this.selection.range.end - this._timezoneOffset);
+        const start = new Date(this.selection.range.start - this._timezoneOffset);
+        const end = new Date(this.selection.range.end - this._timezoneOffset);
 
-        this.startDate = this.start.toISOString().slice(0, 10);
-        this.startTime = this.start.toISOString().slice(11, 19);
+        this.startDate = start.toISOString().slice(0, 10);
+        this.startTime = start.toISOString().slice(11, 19);
 
-        this.endDate = this.end.toISOString().slice(0, 10);
-        this.endTime = this.end.toISOString().slice(11, 19);
+        this.endDate = end.toISOString().slice(0, 10);
+        this.endTime = end.toISOString().slice(11, 19);
     }
 
     private get _timezoneOffset() {
