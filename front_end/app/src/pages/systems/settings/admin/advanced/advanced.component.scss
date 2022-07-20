@@ -1,6 +1,6 @@
-@use "~bootstrap/scss/bootstrap";
 @use "../../../../../styles/typography";
 @use "../../../../../../styles/theme_variables_common" as theme_vars;
+@use "bootstrap_utils" as bootstrap;
 
 :host {
     .server-info {

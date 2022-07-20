@@ -1,7 +1,7 @@
 @use "../../styles/theme_variables_common" as *;
 @use "../styles/typography";
 @use "../../src/components/content-block/content-block.component";
-@use "app/src/styles/_bootstrap_utils" as bootstrap;
+@use "bootstrap_utils" as bootstrap;
 
 .section-placeholder {
     position: relative;
@@ -107,7 +107,7 @@
     // IE11
     @media all and (-ms-high-contrast : none), (-ms-high-contrast : active) {
         .promo-block {
-            @include media-breakpoint-up(sm) {
+            @include bootstrap.media-breakpoint-up(sm) {
                 flex : 0 0 31.4% !important;
             }
         }
@@ -121,7 +121,7 @@
         margin     : 0 8px 16px;
         background : var(--promo-tile-bg);
 
-        @include media-breakpoint-up(sm) {
+        @include bootstrap.media-breakpoint-up(sm) {
             flex : 0 0 calc(100% / 3 - 16px);
         }
 
@@ -196,7 +196,7 @@ landing-display-component {
             flex-grow: 1 !important;
         }
         &:nth-of-type(4n) {
-            @include media-breakpoint-up(sm) {
+            @include bootstrap.media-breakpoint-up(sm) {
                 max-width: calc((100% / 3 - 16px) * 2) !important;
             }
         }

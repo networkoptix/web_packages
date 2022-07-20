@@ -1,7 +1,6 @@
 @use "../../../styles/typography";
 @use "../../../../styles/theme_variables_common" as *;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 nx-system-metrics-component {
     .gridMetricContent {
@@ -10,7 +9,7 @@ nx-system-metrics-component {
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
         height: 100%;
 
-        @include media-breakpoint-down(xl) {
+        @include bootstrap.media-breakpoint-down(xl) {
             grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
         }
 
@@ -23,7 +22,7 @@ nx-system-metrics-component {
             &--with-panel {
                 grid-template-columns: $grid-table-width $grid-panel-width;
 
-                @include media-breakpoint-down(xl) {
+                @include bootstrap.media-breakpoint-down(xl) {
                     grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
                 }
 
@@ -70,7 +69,7 @@ nx-system-metrics-component {
                         width         : 70%;
                         padding-right : 1rem;
 
-                        @include media-breakpoint-down(xxl) {
+                        @include bootstrap.media-breakpoint-down(xxl) {
                             width : 55%;
                         }
                     }
@@ -78,7 +77,7 @@ nx-system-metrics-component {
                     .gridMetricContentPanelComponent {
                         padding-left : 0;
 
-                        @include media-breakpoint-down(lg) {
+                        @include bootstrap.media-breakpoint-down(lg) {
                             width : 100%;
                         }
                     }

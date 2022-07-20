@@ -1,6 +1,6 @@
 @use "../../../styles/typography";
 @use "../../../../styles/theme_variables_common" as *;
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 nx-system-alerts-component {
 
@@ -10,7 +10,7 @@ nx-system-alerts-component {
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
         height: 100%;
 
-        @include media-breakpoint-down(xl) {
+        @include bootstrap.media-breakpoint-down(xl) {
             grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
         }
 
@@ -23,7 +23,7 @@ nx-system-alerts-component {
             &--with-panel {
                 grid-template-columns: $grid-table-width $grid-panel-width;
 
-                @include media-breakpoint-down(xl) {
+                @include bootstrap.media-breakpoint-down(xl) {
                     grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
                 }
 
@@ -72,7 +72,7 @@ nx-system-alerts-component {
                         width         : 70%;
                         padding-right : 1rem;
 
-                        @include media-breakpoint-down(xxl) {
+                        @include bootstrap.media-breakpoint-down(xxl) {
                             width : 55%;
                         }
                     }
@@ -81,7 +81,7 @@ nx-system-alerts-component {
                         width : 30%;
                         margin-left : 0;
 
-                        @include media-breakpoint-down(lg) {
+                        @include bootstrap.media-breakpoint-down(lg) {
                             width : 100%;
                         }
                     }
@@ -99,7 +99,7 @@ nx-system-alerts-component {
     .card-container {
         min-width: 135px;
         max-width: 165px;
-        @include media-breakpoint-down(lg) {
+        @include bootstrap.media-breakpoint-down(lg) {
             min-width: 165px;
         }
         // If grid-breakpoint sm is used at a width of 567px the bottom card takes entire row
@@ -110,7 +110,7 @@ nx-system-alerts-component {
     }
 
     .data-wrapper {
-        @include media-breakpoint-down(md) {
+        @include bootstrap.media-breakpoint-down(md) {
             width: 100%;
         }
 
@@ -132,12 +132,12 @@ nx-system-alerts-component {
             max-width : none;
             flex-grow : 1;
 
-            @include media-breakpoint-down(lg) {
+            @include bootstrap.media-breakpoint-down(lg) {
                 min-width : 100px;
                 padding-right: 0;
             }
 
-            @include media-breakpoint-down(xl) {
+            @include bootstrap.media-breakpoint-down(xl) {
                 min-width     : 100px;
             }
 
@@ -154,7 +154,7 @@ nx-system-alerts-component {
                 min-width : 300px;
                 flex-grow : 2;
 
-                @include media-breakpoint-down(xl) {
+                @include bootstrap.media-breakpoint-down(xl) {
                     min-width : 160px;
                 }
             }

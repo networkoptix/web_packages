@@ -1,14 +1,13 @@
 @use "../../styles/typography";
 @use "../../../styles/theme_variables_common" as *;
 @use "../../styles/buttons" as *;
-
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 .page-wrapper {
     min-height: 100%;
     background: var(--alt-body-bg) !important;
     
-    @include media-breakpoint-down(sm) {
+    @include bootstrap.media-breakpoint-down(sm) {
         background: var(--body-bg) !important;
         overflow-x: hidden;
 	}
@@ -23,7 +22,7 @@
     background: var(--developer-menu-bg);
     height: 100% !important;
 
-	@include media-breakpoint-down(sm) {
+	@include bootstrap.media-breakpoint-down(sm) {
 		height        : auto !important;
         top: 0;
         left: 0;
@@ -31,13 +30,13 @@
         width: 100vw !important;
 	}
  
-	@include media-breakpoint-up(md) {
+	@include bootstrap.media-breakpoint-up(md) {
 		position : fixed;
 		left     : 0;
 		width    : calc((100% - #{$scrollbar-height}) / 3)
 	}
 
-	@include media-breakpoint-up(xl) {
+	@include bootstrap.media-breakpoint-up(xl) {
 		width     : calc((100% - #{$scrollbar-height}) / 4);
 		max-width : calc(#{$fluid-container-max-width} / 4);
 	}
@@ -51,17 +50,17 @@
         grid-row: 1 / -1;
         width: 100%;
 
-        @include media-breakpoint-up(md) {
+        @include bootstrap.media-breakpoint-up(md) {
             position: sticky;
             top: 0;
             margin: -8px 16px 0px 0px;
             grid-column: span 4;
         }
-        @include media-breakpoint-up(xl) {
+        @include bootstrap.media-breakpoint-up(xl) {
             grid-column: span 3;
         }
 
-        @include media-breakpoint-down(sm){
+        @include bootstrap.media-breakpoint-down(sm){
             margin: 0 16px;
         }
 
@@ -90,7 +89,7 @@
     background : var(--alt-body-bg) !important;
 }
 
-@include media-breakpoint-down(sm) {
+@include bootstrap.media-breakpoint-down(sm) {
     .block-container {
         padding: 0 0 !important;
     }

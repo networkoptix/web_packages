@@ -76,6 +76,7 @@
               "styles": false,
               "vendor": false
             },
+            "aot":true,
             "optimization": false,
             "namedChunks": true
           },

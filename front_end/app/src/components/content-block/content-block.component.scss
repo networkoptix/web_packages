@@ -1,6 +1,6 @@
 @use "../../styles/typography";
 @use "../../../styles/theme_variables_common" as *;
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "../../styles/bootstrap_utils" as bootstrap;
 
 .card {
     box-shadow   : none;
@@ -14,7 +14,7 @@
         z-index: 99;
         margin-top: -2px; // box-shadow eats 2 px at top
 
-        @include media-breakpoint-down(md) {
+        @include bootstrap.media-breakpoint-down(md) {
             // HM specific code ...
             box-shadow: none;
         }
@@ -29,7 +29,7 @@
         border-bottom    : 1px solid var(--border-color);
         position         : relative;
 
-        @include media-breakpoint-down(md) {
+        @include bootstrap.media-breakpoint-down(md) {
             height : auto !important;
         }
 
@@ -55,7 +55,7 @@
         }
     }
 
-    @include media-breakpoint-down(md) {
+    @include bootstrap.media-breakpoint-down(md) {
         .card--header.fixed-header {
             height : 3rem !important;
 
@@ -340,7 +340,7 @@
                 @include typography.medium17dark9;
             }
         }
-        @include media-breakpoint-up(md) {
+        @include bootstrap.media-breakpoint-up(md) {
             .card--header {
                 align-items: start;
                 min-width: 216px;

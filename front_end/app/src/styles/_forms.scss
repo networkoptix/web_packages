@@ -1,7 +1,5 @@
 @use "../../styles/_theme_variables_common" as *;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 @import "~sass-rem/rem";
 
 .form-horizontal {
@@ -9,7 +7,7 @@
         display       : flex;
         margin-bottom : 0.5rem;
 
-        @include media-breakpoint-down(sm) {
+        @include bootstrap.media-breakpoint-down(sm) {
             margin-bottom : 1rem;
         }
 
@@ -25,7 +23,7 @@
         text-align    : right;
         margin-bottom : 0;
 
-        @include media-breakpoint-down(sm) {
+        @include bootstrap.media-breakpoint-down(sm) {
             margin-bottom : .5rem;
         }
     }

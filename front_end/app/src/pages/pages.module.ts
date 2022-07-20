@@ -10,6 +10,7 @@ import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
+import { NxLandingComponent } from '@pages/landing/landing.component';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -28,7 +29,7 @@ import {
 const lazyRoutes: Routes = [
     {
         path: '',
-        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule),
+        component: NxLandingComponent,
         pathMatch: 'full'
     },
     {
@@ -82,6 +83,14 @@ const lazyRoutes: Routes = [
         // data: {
         //     flags: FeatureFlagStrings.systemGroups
         // },
+    },
+    {
+        path: 'download',
+        loadChildren: () => import('./download/download.module').then(m => m.DownloadModule)
+    },
+    {
+        path: 'downloads',
+        loadChildren: () => import('./download-history/download-history.module').then(m => m.DownloadHistoryModule)
     },
     {
         path: 'sandbox',

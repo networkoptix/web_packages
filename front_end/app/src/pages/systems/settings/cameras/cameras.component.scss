@@ -2,9 +2,7 @@
 @use "../../../../styles/mixins";
 @use "../../../../../styles/theme_variables_common" as *;
 @use "styles/src-variables/pages/cameras" as *;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 .camera-settings-info {
     font-family: $font-family-regular;
@@ -17,7 +15,7 @@
         grid-row-gap          : .5rem;
         grid-template-columns : max-content 240px;
 
-        @include media-breakpoint-down(sm) {
+        @include bootstrap.media-breakpoint-down(sm) {
             grid-template-columns : 1fr;
         }
 
@@ -26,10 +24,10 @@
             align-items     : center;
             justify-content : flex-end;
 
-            @include media-breakpoint-down(sm) {
+            @include bootstrap.media-breakpoint-down(sm) {
                 justify-content : flex-start;
             }
-            @include media-breakpoint-down(xs) {
+            @include bootstrap.media-breakpoint-down(xs) {
                 margin-bottom: 0 !important;
                 .error-span {
                     padding-left: 0;
@@ -39,7 +37,7 @@
         &-with-warning {
             @extend .grid-container;
             grid-template-columns : max-content 240px max-content;
-            @include media-breakpoint-down(xs) {
+            @include bootstrap.media-breakpoint-down(xs) {
                 grid-template-columns : 1fr;
             }
             .grid-item {
@@ -54,7 +52,7 @@
         flex-direction : column;
         align-items: flex-start;
 
-        @include media-breakpoint-up(lg) {
+        @include bootstrap.media-breakpoint-up(lg) {
             flex-direction : row;
             align-items    : center;
         }
@@ -64,7 +62,7 @@
             .camera-buttons {
                 @include mixins.details-buttons;
 
-                @include media-breakpoint-down(lg) {
+                @include bootstrap.media-breakpoint-down(lg) {
                     &:first-of-type {
                         padding-left : 0 !important;
                     }
@@ -72,7 +70,7 @@
             }
         }
     }
-    @include media-breakpoint-down(xs) {
+    @include bootstrap.media-breakpoint-down(xs) {
         div.camera-feed-img {
             width: 100% !important;
             height: 100% !important;

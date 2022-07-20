@@ -1,6 +1,7 @@
 @use "./typography";
 @use "../../styles/theme_variables_common" as *;
 @use "./mixins";
+@use "bootstrap_utils" as bootdtrap;
 
 .form-control {
     display          : block !important;
@@ -105,7 +106,7 @@
     @include typography.regular13error;
     line-height : 1rem;
 
-    @include media-breakpoint-down(sm) {
+    @include bootdtrap.media-breakpoint-down(sm) {
         margin-top : .5rem;
     }
 }

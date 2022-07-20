@@ -1,4 +1,5 @@
 @use "../../styles/theme_variables_common";
+@use "bootstrap_utils" as bootstrap;
 
 ::-moz-selection { /* Code for Firefox */
     color      : var(--body-text-color);
@@ -56,7 +57,7 @@
     display : none;
 }
 
-@include media-breakpoint-up(md) {
+@include bootstrap.media-breakpoint-up(md) {
     .flex-md {
         display     : flex;
         align-items : stretch;

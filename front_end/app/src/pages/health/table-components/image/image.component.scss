@@ -1,5 +1,5 @@
 @use "../../../../../styles/_theme_variables_common" as *;
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "../../../../styles/bootstrap_utils" as bootstrap;
 
 img {
     max-height: 100%;
@@ -53,7 +53,7 @@ img {
     justify-content: center;
     height: 120px !important;
     background: var(--light2);
-    @include media-breakpoint-down(xs) {
+    @include bootstrap.media-breakpoint-down(xs) {
         height: 100% !important;
     }
 }

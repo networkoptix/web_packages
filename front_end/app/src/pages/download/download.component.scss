@@ -1,7 +1,6 @@
 @use "../../styles/typography";
 @use "../../../styles/theme_variables_common" as *;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 :host {
     .installers {
@@ -11,12 +10,12 @@
                 float : left;
             }
             
-            @include media-breakpoint-down(lg) {
+            @include bootstrap.media-breakpoint-down(lg) {
                 width : 50% !important;
                 float : left;
             }
             
-            @include media-breakpoint-down(sm) {
+            @include bootstrap.media-breakpoint-down(sm) {
                 width : 100% !important;
                 float : left;
             }

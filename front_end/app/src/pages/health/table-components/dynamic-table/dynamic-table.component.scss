@@ -1,8 +1,7 @@
 @use "../../../../styles/typography";
 @use "../../../../../styles/theme_variables_common" as *;
 @use "../../../../components/tag/tag.component" as *;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 nx-dynamic-table {
   cursor: default;
@@ -43,7 +42,7 @@ nx-dynamic-table {
       float      : right;
       margin-top : 24px;
 
-      @include media-breakpoint-down(md) {
+      @include bootstrap.media-breakpoint-down(md) {
         width         : 100%;
         margin-top    : 0;
         margin-bottom : 1rem;
@@ -343,7 +342,7 @@ nx-dynamic-table {
   }
 
   .vendor {
-    @include media-breakpoint-down(md) {
+    @include bootstrap.media-breakpoint-down(md) {
       background-color : var(--light4);
     }
   }

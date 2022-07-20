@@ -1,7 +1,6 @@
 @use "../../../styles/typography";
 @use "../../../../styles/theme_variables_common" as *;
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 nx-system-health-component {
 
@@ -90,19 +89,19 @@ nx-system-health-component {
       width: 100%;
     }
 
-    @include media-breakpoint-down(sm) {
+    @include bootstrap.media-breakpoint-down(sm) {
       height: auto !important;
     }
 
     // replicate col-lg-3
-    @include media-breakpoint-up(lg) {
+    @include bootstrap.media-breakpoint-up(lg) {
       position: fixed;
       left: 0;
       width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 12 * 3)
     }
 
     // replicate col-xl-2
-    @include media-breakpoint-up(xl) {
+    @include bootstrap.media-breakpoint-up(xl) {
       width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 12 * 2);
     }
   }

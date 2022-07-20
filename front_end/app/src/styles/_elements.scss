@@ -1,8 +1,7 @@
 @use "./typography";
-// @import '../../styles/custom/custom_palette';
-// @import '../../styles/theme_palette';
 @use "./mixins";
 @use "../../styles/theme_variables_common" as *;
+@use "bootstrap_utils" as bootstrap;
 
 svg {
     pointer-events : none;
@@ -87,7 +86,7 @@ svg {
     display : none !important;
 }
 
-@include media-breakpoint-up(sm) {
+@include bootstrap.media-breakpoint-up(sm) {
     .hoverable .hover-visible {
         visibility : hidden;
     }

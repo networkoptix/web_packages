@@ -1,6 +1,6 @@
 @use "../../../../../styles/typography";
 @use "../../../../../../styles/theme_variables_common" as *;
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 .server-info {
     font-family : $font-family-regular;
@@ -101,7 +101,7 @@
     height: 32px;
     text-align: right;
 
-    @include media-breakpoint-down(sm) {
+    @include bootstrap.media-breakpoint-down(sm) {
         height: 16px;
     }
 }

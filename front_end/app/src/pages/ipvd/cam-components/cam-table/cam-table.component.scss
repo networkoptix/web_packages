@@ -1,20 +1,19 @@
 @use "../../../../../styles/theme_variables_common" as *;
 @use "../../../../components/tag/tag.component" as *;
 @use "../../../../styles/typography";
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/mixins/breakpoints";
+@use "bootstrap_utils" as bootstrap;
 
 nx-cam-table {
     .table-scroll-fixed {
         position : fixed;
         top      : 48px + 16px; // header + padding
 
-        @include media-breakpoint-up(md) {
+        @include bootstrap.media-breakpoint-up(md) {
             // calculate 7 columns grid to fit fixed positioned table
             width : calc(((100% - (#{$grid-gutter-width} * 2)) / 12.16 * 7));
         }
 
-        @include media-breakpoint-up(xl) {
+        @include bootstrap.media-breakpoint-up(xl) {
             // calculate 8 columns grid to fit fixed positioned table
             width : calc(((100% - (#{$grid-gutter-width} * 2)) / 10.76 * 8));
         }
@@ -27,7 +26,7 @@ nx-cam-table {
       float : right;
       margin-top : 24px;
 
-      @include media-breakpoint-down(md) {
+      @include bootstrap.media-breakpoint-down(md) {
         width         : 100%;
         margin-top    : 0;
         margin-bottom : 1rem;
@@ -208,7 +207,7 @@ nx-cam-table {
   }
 
   .vendor {
-    @include media-breakpoint-down(md) {
+    @include bootstrap.media-breakpoint-down(md) {
       background-color: var(--light4);
     }
   }

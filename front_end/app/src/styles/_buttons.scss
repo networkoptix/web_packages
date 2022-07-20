@@ -1,10 +1,8 @@
 @use "../styles/typography";
-// @import '../../styles/custom/custom_palette';
-// @import '../../styles/theme_palette';
 @use "../../styles/theme_variables_common" as *;
 @use "../styles/mixins";
+@use "bootstrap_utils" as bootstrap;
 @forward "../../styles/theme_variables_common";
-@import "~bootstrap/scss/mixins";
 
 @mixin button {
     font-family     : $font-family-medium;
@@ -469,21 +467,21 @@ button, .btn {
 }
 
 .btn-collapse {
-    @include media-breakpoint-down(md) {
+    @include bootstrap.media-breakpoint-down(md) {
         padding : 0 .75rem;
     }
 
     .glyphicon {
         display : block;
         margin  : 0;
-        @include media-breakpoint-up(md) {
+        @include bootstrap.media-breakpoint-up(md) {
             display : none;
         }
     }
 
     .btn-caption {
         display : none;
-        @include media-breakpoint-up(md) {
+        @include bootstrap.media-breakpoint-up(md) {
             display : block;
         }
     }
