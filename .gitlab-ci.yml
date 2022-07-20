@@ -473,8 +473,8 @@ check-node-licenses:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - cloud/**/package.json
-        - front_end/**/package.json
+        - cloud/**/package-lock.json
+        - front_end/**/package-lock.json
   script:
     - npx recursive-check-licenses -a licenses_whitelist.json -e licenses_excluded_packages.json -ci true
 
