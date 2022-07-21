@@ -98,7 +98,7 @@
 
     <div
         class="row px-3 m-0"
-        *ngIf="vendors && !camerasTable.length && !noResult && hasNoSearch"
+        *ngIf="vendors.length && !camerasTable.length && !noResult && hasNoSearch"
     >
         <nx-vendor-list
             [vendors]="vendors"
