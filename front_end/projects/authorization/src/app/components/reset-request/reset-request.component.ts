@@ -40,7 +40,7 @@ export class NxAuthorizeResetRequestComponent implements OnInit, OnChanges, OnDe
     @Input() resetRequestProcess: Process;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendEmail: any;
+    sendEmail: () => void;
     @ViewChild('resetPasswordForm', { static: false }) resetPasswordForm: NgForm;
     @ViewChild('email', { static: false }) resetPasswordEmail: NgModel;
 

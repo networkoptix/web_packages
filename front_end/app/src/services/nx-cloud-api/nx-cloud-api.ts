@@ -8,6 +8,10 @@ import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
 
+import type {
+    AuthorizeParams,
+    AuthenticateResp,
+} from '@authorization/src/app/components/authorize.component.types';
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
@@ -209,7 +213,7 @@ export class NxCloudApiService {
     getStaticLanding() {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as 'text'
+            responseType: 'text' as const
         };
         return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
@@ -217,7 +221,7 @@ export class NxCloudApiService {
     getStatic(url) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'application/text' }),
-            responseType: 'text' as 'text'
+            responseType: 'text' as const
         };
         return this.http.get(url, httpOptions);
     }
@@ -385,18 +389,30 @@ export class NxCloudApiService {
         return this.http.post<t.CheckEmailExists>(this.CONFIG.apiBase + '/account/check', { email }).toPromise();
     }
 
-    authenticate(email: string, password: string, clientId: string, redirectUrl: string, responseType: string, state?: string, scope?: string) {
-        const body: any = {
+    authenticate(
+        email: string,
+        password: string,
+        clientId: string,
+        redirectUrl: string,
+        responseType: string,
+        state?: string,
+        scope?: string
+    ): Promise<AuthenticateResp> {
+        const body: AuthorizeParams & { password: string } = {
             email,
             password,
             client_id: clientId,
             redirect_uri: redirectUrl,
             response_type: responseType
         };
-        state && (body.state = state);
-        scope && (body.scope = scope);
+        if (state) {
+            body.state = state;
+        }
+        if (scope) {
+            body.scope = scope;
+        }
 
-        return this.http.post<any>('/oauth/authenticate', body).toPromise();
+        return this.http.post('/oauth/authenticate', body).toPromise();
     }
 
     verifyCode(verification_code: string, code: string) {

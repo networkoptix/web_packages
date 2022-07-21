@@ -347,17 +347,7 @@ const typeLintBlacklist = [
     'app/src/utils/protocolcheck.ts',
     'app/src/utils/state-manager.ts',
     'app/src/utils/utils.spec.ts',
-    'app/test.ts',
-    'projects/authorization/src/app/components/activate-account/activate-account.component.ts',
-    'projects/authorization/src/app/components/auth-code/auth-code.component.ts',
-    'projects/authorization/src/app/components/authorize.component.ts',
-    'projects/authorization/src/app/components/backup-code/backup-code.component.ts',
-    'projects/authorization/src/app/components/create-account/create-account.component.ts',
-    'projects/authorization/src/app/components/email/email.component.ts',
-    'projects/authorization/src/app/components/password/password.component.ts',
-    'projects/authorization/src/app/components/reset-password/reset-password.component.ts',
-    'projects/authorization/src/app/components/reset-request/reset-request.component.ts',
-    'projects/authorization/src/app/oauth-redirect/oauth-redirect.component.ts'
+    'app/test.ts'
 ];
 
 /**

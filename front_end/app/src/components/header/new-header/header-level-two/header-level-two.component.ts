@@ -21,7 +21,7 @@ export class NxHeaderLevelTwoComponent {
     @ViewChild('menuItems', { static: true }) menuItemsRef: ElementRef<HTMLElement>;
     @ViewChild('contextButton') contextButtonRef: ElementRef<HTMLElement>;
     @Input() subNodes: MenuNode[];
-    @Output() systemNav = new EventEmitter<Boolean>();
+    @Output() systemNav = new EventEmitter<boolean>();
     CONFIG: IConfig;
     logoState = logoAreaState.LOGO;
     menuItemsWidth: number;

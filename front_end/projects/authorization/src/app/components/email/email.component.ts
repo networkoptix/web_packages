@@ -8,6 +8,7 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
@@ -38,12 +39,12 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
     @Output() loginEmailChange = new EventEmitter<string>();
     @Input() emailProcess: Process;
     @Input() errorCode: string;
-    @Input() reactivate: () => Promise<any>;
+    @Input() reactivate: () => Promise<void>;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendEmail: any;
+    sendEmail: () => void;
     isMobile = true;
-    @ViewChild('emailForm', { static: false }) emailForm: HTMLFormElement;
+    @ViewChild('emailForm', { static: false }) emailForm: NgForm;
     header: string;
     subHeader: string;
     templateText: {
@@ -62,7 +63,7 @@ export class NxAuthorizeEmailComponent implements OnInit, OnDestroy, OnChanges {
         this.CONFIG = configService.getConfig();
     }
 
-    private handleErrors(changes): void {
+    private handleErrors(changes: NgChanges<NxAuthorizeEmailComponent>): void {
         const { email } = this.emailForm?.controls;
         if (!email) {
             return;

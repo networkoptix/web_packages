@@ -9,6 +9,7 @@ import {
     ViewChild,
     ElementRef,
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -43,9 +44,9 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     @Input() window: Window;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendCode: any;
-    @ViewChild('backupCodeForm', { static: false }) backupCodeForm: HTMLFormElement;
-    @ViewChild('backToAuthSpan', { static: false }) backToAuthSpan: ElementRef;
+    sendCode: () => void;
+    @ViewChild('backupCodeForm', { static: false }) backupCodeForm: NgForm;
+    @ViewChild('backToAuthSpan', { static: false }) backToAuthSpan: ElementRef<HTMLSpanElement>;
     needLargerFooter = false;
     header: string;
     subHeader: string;

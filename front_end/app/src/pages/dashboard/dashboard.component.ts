@@ -212,7 +212,7 @@ export class NxDashboardComponent implements DashboardGroup {
 
     async updateDashboard(dashboardUrl) {
         if (!dashboardUrl) {
-            return false as false;
+            return false as const;
         }
 
         // Used to prevent cors issue when developing locally
@@ -226,7 +226,7 @@ export class NxDashboardComponent implements DashboardGroup {
                 'Unable to download dashboard requested dashboard, please check link and try again. If you keep having issues try downloading the dashboard first and applying config directly.',
                 options
             );
-            return false as false;
+            return false as const;
         }) as Promise<Record<any, any>>;
         return downloaded;
     }

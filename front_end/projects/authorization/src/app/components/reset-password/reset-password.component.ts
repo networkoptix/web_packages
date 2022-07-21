@@ -7,6 +7,7 @@ import {
     Output,
     OnChanges,
 } from '@angular/core';
+// import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -37,9 +38,9 @@ export class NxAuthorizeResetPasswordComponent implements OnInit, OnChanges, OnD
     @Output() passwordChange = new EventEmitter<string>();
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
     // @Input() errorCode: string;
-    weakPassword = null;
-    sendPassword: any;
-    // @ViewChild('resetForm', { static: false }) resetForm: HTMLFormElement;
+    weakPassword: boolean = null;
+    sendPassword: () => void;
+    // @ViewChild('resetForm', { static: false }) resetForm: NgForm;
 
     constructor(
         language: NxLanguageProviderService,

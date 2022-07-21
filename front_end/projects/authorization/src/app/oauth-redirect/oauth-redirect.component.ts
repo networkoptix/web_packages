@@ -31,11 +31,6 @@ export class NxOAuthRedirectComponent implements OnInit {
     viewType: 'desktop' | 'mobile' | 'web';
     state: 'readyToLogin' | 'noNativeClient' | undefined;
 
-    private setupDefaults(configService): void {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.translations;
-    }
-
     constructor(configService: NxConfigService,
                 private route: ActivatedRoute,
                 private pageService: NxPageService,
@@ -45,14 +40,15 @@ export class NxOAuthRedirectComponent implements OnInit {
                 private deviceService: DeviceDetectorService,
                 @Inject(WINDOW) public window: Window
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.language.translations;
     }
 
     ngOnInit(): void {
         this.pageService.pageTitle = this.LANG.pageTitles.default?.();
 
         if (this.window.nativeClient) {
-            this.route.queryParams.subscribe(async (params: any) => {
+            this.route.queryParams.subscribe(async (params: AuthorizeParams) => {
                 this.initialData = cloneDeep(params);
                 const { client_type, code, view_type } = this.initialData;
                 this.localStorageService.store('client_type', client_type);
@@ -70,7 +66,7 @@ export class NxOAuthRedirectComponent implements OnInit {
                 }
             });
         } else if (this.deviceService.isMobile()) {
-            this.route.queryParams.subscribe(async (params: any) => {
+            this.route.queryParams.subscribe(async (params: AuthorizeParams) => {
                 this.initialData = cloneDeep(params);
                 this.viewType = this.initialData.view_type || 'desktop';
                 this.state = undefined;

@@ -59,3 +59,8 @@ export enum ClientType {
     openClient = 'openClientFromCloud',
     system2faAuth = 'system2faAuth',
 }
+
+export interface AuthenticateResp {
+    code?: string;
+    link?: string;
+}

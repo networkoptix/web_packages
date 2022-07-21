@@ -64,11 +64,11 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     @Input() errorCode: [inputType: string, errorCode: string];
     hideErrors: boolean;
-    weakPassword = null;
+    weakPassword: boolean = null;
     termsAndConditions = false;
 
     @Input() createAccountProcess: Process;
-    onCreateSubmit: any;
+    onCreateSubmit: () => void;
 
     @ViewChild('createAccountForm', { static: false }) createForm: NgForm;
 
@@ -119,7 +119,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
 
     ngOnDestroy(): void {}
 
-    externalLinkForDesktop(relativePath: string) {
+    externalLinkForDesktop(relativePath: string): false | undefined {
         if (this.window.nativeClient) {
             nativeClient.openUrlInBrowser(relativePath);
             return false;

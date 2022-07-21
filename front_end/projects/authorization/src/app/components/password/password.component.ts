@@ -8,6 +8,7 @@ import {
     OnChanges,
     ViewChild,
 } from '@angular/core';
+import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -42,8 +43,8 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     @Input() errorCode: string;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
-    sendPassword: any;
-    @ViewChild('passwordForm', { static: false }) passwordForm: HTMLFormElement;
+    sendPassword: () => void;
+    @ViewChild('passwordForm', { static: false }) passwordForm: NgForm;
     passwordToggle = true;
     header: string;
     subHeader: string;

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
     Component,
     ElementRef,
@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, fromEvent, of } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -26,10 +26,12 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import type { ModuleInformationReply } from '@services/system-api.types';
 import { WINDOW } from '@services/window-provider';
 
 import {
     AuthorizeParams,
+    AuthenticateResp,
     AuthorizeState,
     ClientType
 } from './authorize.component.types';
@@ -48,7 +50,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     AuthorizeState = AuthorizeState;
 
-    content: any = {};
+    // content = {};
     footerItems: { name: string, url: string }[];
     companyLink: string;
     companyName: string;
@@ -126,7 +128,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     handleKeyboardEvent(event: KeyboardEvent): void {
         // Mobile Chrome doesn't use "code" ... maybe some others -- TT
         if (['Enter', 'NumpadEnter'].includes(event.code)) {
-            this.elem.nativeElement.querySelector('button.on-keypress-enter').click();
+            this.elem.nativeElement
+                .querySelector<HTMLButtonElement>('button.on-keypress-enter')
+                .click();
         }
     }
 
@@ -138,7 +142,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private cloudService: NxCloudApiService,
         private processService: NxProcessService,
         private router: Router,
-        private elem: ElementRef,
+        private elem: ElementRef<HTMLElement>,
         private title: Title,
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
@@ -148,21 +152,24 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    private verifyRedirectUrlHelper(systemId) {
+    private verifyRedirectUrlHelper(systemId: string): Observable<boolean> {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);
         const redirectPort = new URL(this.initialData.redirect_uri).port;
         return this.httpClient.get(`https://${systemUrl}/rest/v1/servers/*/info`)
             .pipe(
                 untilDestroyed(this),
-                map((servers: any) => {
-                    return servers?.some(({ port, remoteAddresses }) => redirectPort === port.toString() && remoteAddresses
-                        .some(address => this.initialData.redirect_uri.includes(address))
+                map((servers: ModuleInformationReply[]) => {
+                    return servers?.some(({ port, remoteAddresses }) =>
+                        redirectPort === port.toString() &&
+                        remoteAddresses.some(address =>
+                            this.initialData.redirect_uri.includes(address)
+                        )
                     );
                 }),
                 catchError(() => of(false)));
     }
 
-    private checkRedirectUrl() {
+    private checkRedirectUrl(): Promise<boolean> {
         const { scope } = this.initialData;
         let verifiedCheck = of(true);
         if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
@@ -198,7 +205,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.fromInvite = this.action === 'register';
             }
         }
-        this.route.queryParams.subscribe(async (params: any) => {
+        this.route.queryParams.subscribe(async (params: AuthorizeParams) => {
             this.initialData = cloneDeep(params);
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
@@ -272,20 +279,28 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         });
     }
 
-    handleCloudConnectionError(err: any, process: Process): void {
+    handleCloudConnectionError(
+        err: HttpErrorResponse | string | ProgressEvent,
+        process: Process
+    ): void {
         if (err && (
-            [500, 503, 504].includes(err.status) ||
-            err.message?.includes('timeout') ||
+            [500, 503, 504].includes((err as HttpErrorResponse).status) ||
+            (err as HttpErrorResponse).message?.includes('timeout') ||
             (typeof err === 'string' && err.includes('Error occured while trying to proxy to:')) || // occurs when wifi on machine turned off
             err instanceof ProgressEvent // occurs when virtual machine connection turned off (offline testing)
         )) {
-            this.errorType = err.status === 503 ? 'maintenance' : 'connection';
+            this.errorType = (err as HttpErrorResponse).status === 503
+                ? 'maintenance'
+                : 'connection';
             this.errorDialogProcess = process;
             this.errorDialog$.next(true);
         }
     }
 
-    handleLoginSuccess = async ({ link = this.redirectLink, code = this.loginCode }: { link?: string, code?: string }) => {
+    handleLoginSuccess = async ({
+        link = this.redirectLink,
+        code = this.loginCode
+    }: AuthenticateResp): Promise<void> => {
         // bypass for code or backup code for resetPassword workflow
         if (this.action === 'restore_password' && [AuthorizeState.auth, AuthorizeState.backup].includes(this.currentState)) {
             this.errorDialog$.value && this.errorDialog$.next(false);
@@ -334,7 +349,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     };
 
-    handleVerificationExpiration(process): void {
+    handleVerificationExpiration(process: Process): void {
         if (this.loginEmail && this.loginPassword) {
             this.login().then(
                 ({ code, link }) => {
@@ -560,7 +575,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         });
     }
 
-    login = () => {
+    login = (): Promise<AuthenticateResp> => {
         return this.cloudService.authenticate(
             this.loginEmail,
             this.loginPassword,
@@ -579,7 +594,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
     };
 
-    reactivate = () => {
+    reactivate = (): Promise<void> => {
         if (this.blockResendingActivation) {
             return;
         }

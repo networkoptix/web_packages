@@ -34,7 +34,7 @@ export class NxAuthorizeActivateAccountComponent implements OnInit, OnDestroy {
     @Input() loginEmail: string;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
     @Input() checkActivationProcess: Process;
-    @Input() checkIfActivated: () => {};
+    @Input() checkIfActivated: () => void;
     @Input() loginProcess: Process;
     @Input() activated$: Observable<boolean>;
     @Input() fromEmail$: Observable<boolean>;

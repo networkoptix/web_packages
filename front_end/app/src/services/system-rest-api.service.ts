@@ -576,6 +576,8 @@ export class NxSystemRestAPI extends NxSystemAPI {
     }
 
     // serverId can be a server id, this, or *
+    getServerInfo(serverId: '*'): Observable<t.ModuleInformationReply[]>;
+    getServerInfo(serverId: string): Observable<t.ModuleInformationReply>;
     getServerInfo(serverId: string) {
         return this.get(`/rest/v1/servers/${serverId}/info`);
     }

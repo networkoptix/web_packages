@@ -32,7 +32,8 @@
       "@utils/*": ["src/utils/*"],
       "@src/*": ["src/*"],
       "@lib/*": ["lib/*"],
-      "@app/*": ["*"]
+      "@app/*": ["*"],
+      "@authorization/*": ["../projects/authorization/*"]
     },
     "typeRoots": [
       "node_modules/@types"
