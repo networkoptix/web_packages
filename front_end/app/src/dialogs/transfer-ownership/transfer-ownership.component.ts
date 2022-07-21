@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { isEqual } from 'lodash-es';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import type {
-    DropdownItem
-} from '@components/dropdowns/generic/dropdown.component.types';
+    SearchableDropdownItem
+} from '@components/dropdowns/searchable/searchable.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -17,7 +16,7 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { pickFrom } from '@utils/general';
 
-interface UserItem extends DropdownItem<string> {
+interface UserItem extends SearchableDropdownItem {
     userEnabled: boolean;
 }
 
@@ -26,7 +25,7 @@ interface UserItem extends DropdownItem<string> {
     templateUrl: './transfer-ownership.component.html',
     styleUrls: ['./transfer-ownership.component.scss']
 })
-export class TransferOwnershipModalContent implements OnInit, AfterViewInit {
+export class TransferOwnershipModalContent implements OnInit {
     system: NxSystem;
     transfers: SystemTransferInfo[];
     closable: boolean = true;
@@ -103,12 +102,8 @@ export class TransferOwnershipModalContent implements OnInit, AfterViewInit {
         );
     }
 
-    ngAfterViewInit(): void {
-        this.selectUser(this.userItems[0]);
-    }
-
     selectUser(user: UserItem): void {
-        if (!isEqual(user, this.selectedUser)) {
+        if (user.value !== this.selectedUser?.value) {
             this.form.control.setErrors(null);
         }
         if (!user.userEnabled) {

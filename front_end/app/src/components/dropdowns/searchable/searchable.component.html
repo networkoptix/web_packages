@@ -3,17 +3,27 @@
     [ngClass]="{
         'dropdown-show': show
     }"
-    (nxClickElsewhere)="finalizeSelect()"
+    (nxClickElsewhere)="clickedElsewhere()"
 >
     <div>
         <div
-            #searchBox
             class="form-control"
             [id]="id"
-            (keyup)="filterChanged()"
-            contentEditable="true"
-            [innerHTML]="itemToDisplay"
-        ></div>
+            (click)="focusSearchInput($event)"
+        >
+            <span
+                id="search-input"
+                #searchInput
+                contentEditable="true"
+                (input)="onSearchInput($event)"
+                (keypress)="blockSearchEnter($event)"
+            ></span>
+            <span
+                *ngIf="helpText"
+                class="additional-help"
+                >{{ helpText }}</span
+            >
+        </div>
 
         <div
             class="arrow-flip"
@@ -58,22 +68,22 @@
                     </ng-container>
                 </ng-template>
                 <ng-template #itemText>
-                    <span [outerHTML]="item.value"></span>
+                    <span [innerHTML]="item.highlightedName || item.name | safe: 'html'"></span>
                     <span
-                        *ngIf="item.name"
+                        *ngIf="item.help"
                         class="additional-help"
-                        [innerHTML]="item.name"
+                        [innerHTML]="item.highlightedHelp || item.help"
                     ></span>
                 </ng-template>
                 <ng-template #enabledItem>
                     <a
                         class="dropdown-item inset"
-                        (keyup)="handleKeyup($event, item)"
+                        (keypress)="handleItemKeypress($event, item)"
                         tabindex="0"
                         [ngClass]="{
                             selected: _selectedItem && _selectedItem.value === item.value
                         }"
-                        (click)="change(item)"
+                        (click)="selectItem(item)"
                     >
                         <span>
                             <ng-container [ngTemplateOutlet]="itemText"></ng-container>

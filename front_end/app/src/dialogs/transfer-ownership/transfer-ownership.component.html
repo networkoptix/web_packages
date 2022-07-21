@@ -28,9 +28,9 @@
                 <label
                     for="newSystemOwner"
                     translate
-                    >New system owner email</label
+                    >New system owner:</label
                 >
-                <nx-select
+                <nx-searchable-select
                     [items]="userItems"
                     [ngModel]="selectedUser"
                     (ngModelChange)="selectUser($event)"
@@ -38,7 +38,7 @@
                     canSearch
                     [noMatchMsg]="LANG.search.userNotFound()"
                     [ngModelOptions]="{ standalone: true }"
-                ></nx-select>
+                ></nx-searchable-select>
                 <div
                     class="col-12 ml-n2 d-flex"
                     *ngIf="transferOwnershipForm.errors"
@@ -76,7 +76,7 @@
                 [process]="transferOwnership"
                 [form]="transferOwnershipForm"
                 [buttonText]="'Send Request' | translate"
-                [buttonDisabled]="!!transferOwnershipForm.errors"
+                [buttonDisabled]="!selectedUser || !!transferOwnershipForm.errors"
             ></nx-process-button>
             <nx-cancel-button
                 [process]="transferOwnership"

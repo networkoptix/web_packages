@@ -9,16 +9,14 @@ import {
     ViewChild
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { cloneDeep } from 'lodash-es';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { htmlToEntity } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
-import type { DropdownItem } from './searchable.component.types';
+import type { SearchableDropdownItem as Item } from './searchable.component.types';
 
 /* Usage
  <nx-searchable-select
@@ -45,9 +43,7 @@ import type { DropdownItem } from './searchable.component.types';
         }
     ]
 })
-export class NxSearchableDropdown<
-    Item extends DropdownItem<string> = DropdownItem<string>
-> extends BaseDropdown {
+export class NxSearchableDropdown extends BaseDropdown {
     @Input() id: string = 'searchableSelect';
     @Input() items: Item[];
     @Input() selected: Item | false;
@@ -56,57 +52,23 @@ export class NxSearchableDropdown<
 
     @Output() onSelected = new EventEmitter<Item>();
 
-    dropdownType: string;
-    itemToDisplay: string;
-    filter: string = '';
+    dropdownType: string = 'default';
     _items: Item[];
+    helpText: string = '';
 
-    @ViewChild('searchBox', { static: false })
-    searchBox: ElementRef<HTMLDivElement>;
-
-    selectedItemHTML(item: Item): string {
-        if (!item) {
-            return;
-        }
-        const selectedValue = htmlToEntity(item.value);
-        const selectedName = item.name;
-
-        return selectedName && !item.value.includes(selectedName)
-            ? selectedValue + `<span class="additional-help">${selectedName}</span>`
-            : selectedValue;
-    }
+    @ViewChild('searchInput', { static: false })
+    searchInput: ElementRef<HTMLSpanElement>;
 
     constructor(
         languageService: NxLanguageProviderService,
         configService: NxConfigService,
-        public ref: ElementRef<HTMLElement>
     ) {
         super(languageService, configService);
         this.noMatchMsg ??= this.LANG.search.noMatches();
     }
 
     ngOnInit(): void {
-        this.dropdownType = `dropdown-${this.type || 'default'}`;
-    }
-
-    change(item: Item): void {
-        this.show = false;
-        this._items = [...this.items];
-        if (this.filter.length) {
-            item = this.revertChanges(item);
-        }
-        this.itemToDisplay = this.selectedItemHTML(item);
-        this.filter = '';
-        this._selectedItem = item;
-        this.onSelected.emit(item);
-        this.onChangeCallback(this._selectedItem);
-    }
-
-    revertChanges(item: Item): Item {
-        item.value = item.value.replace(/<([^>]+)>/gi, '');
-        item = this.items.find(_item => _item.value === item.value);
-
-        return item;
+        this.dropdownType = `dropdown-${this.type}`;
     }
 
     ngOnChanges(changes: NgChanges<NxSearchableDropdown>): void {
@@ -121,54 +83,98 @@ export class NxSearchableDropdown<
         }
     }
 
-    handleKeyup(ev: KeyboardEvent, item: Item): void {
-        if (ev.key === 'Enter') {
-            this.show = false;
-            this.change(item);
-        }
-    }
+    onSearchInput(_event: Event): void {
+        let { innerText } = this.searchInput.nativeElement;
+        this.helpText = '';
 
-    filterChanged(): void {
         // long strings may produce line break when deleted
-        this.filter = this.searchBox.nativeElement.innerText.replace(/\n/g, '');
+        innerText = innerText.replace(/\n/g, '');
+        const regex = new RegExp(innerText, 'gi');
 
-        if (this.filter.length) {
-            const regex = new RegExp(this.filter, 'gi');
-
-            this._items = cloneDeep(this.items).filter(item =>
-                item.value.toLowerCase().includes(this.filter.toLowerCase()) ||
-                item.name?.toLowerCase().includes(this.filter.toLowerCase())
-            ).map(_item => this.highlighted(_item, regex));
+        if (innerText) {
+            this._items = this.items
+                .filter(item =>
+                    regex.test(item.name) ||
+                    item.help && regex.test(item.help)
+                ).map(item => this.highlighted(item, regex));
         } else {
-            this._items = [...this.items];
-            this.itemToDisplay = '';
+            this.resetHighlighting();
         }
 
         if (!this._items.length) {
-            this._items = [<Item>{ value: this.noMatchMsg, name: '', disabled: true }];
+            this._items = [{ name: this.noMatchMsg, value: undefined, disabled: true }];
         }
 
         this.show = true;
     }
 
+    selectItem(item: Item): void {
+        this.show = false;
+        this.resetHighlighting();
+        this._selectedItem = item;
+        this.searchInput.nativeElement.innerText = item.name;
+        this.helpText = item?.help;
+        this.onSelected.emit(item);
+        this.onChangeCallback(this._selectedItem);
+    }
+
+    private resetHighlighting(): void {
+        this._items = this.items.map(item => {
+            delete item.highlightedName;
+            delete item.highlightedHelp;
+            return item;
+        });
+    }
+
+    blockSearchEnter(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+        // Don't allow newline
+
+        if (this._items.length === 1) {
+            this.selectItem(this._items[0]);
+        }
+    }
+
+    focusSearchInput(event: MouseEvent): void {
+        if (
+            event.target !== this.searchInput.nativeElement &&
+            !this.searchInput.nativeElement.innerText
+        ) {
+            this.searchInput.nativeElement.focus();
+        }
+        // Assist user in focusing on input span if no text to click
+    }
+
+    handleItemKeypress(ev: KeyboardEvent, item: Item): void {
+        if (ev.key === 'Enter') {
+            this.show = false;
+            this.selectItem(item);
+        }
+    }
+
     private highlighted(item: Item, regex: RegExp): Item {
-        item.value = item.value.replace(
+        item.highlightedName = item.name.replace(
             regex,
             match => `<span class="highlighted">${match}</span>`
         );
 
-        if (item.name) {
-            item.name = item.name.replace(
-                regex,
-                match => `<span class="highlighted">${match}</span>`
-            );
-        }
+        item.highlightedHelp = item.help?.replace(
+            regex,
+            match => `<span class="highlighted">${match}</span>`
+        );
 
         return item;
     }
 
-    finalizeSelect(): void {
-        this.itemToDisplay = this.selectedItemHTML(this._selectedItem);
+    clickedElsewhere(): void {
+        if (this._selectedItem?.name) {
+            this.searchInput.nativeElement.innerText = this._selectedItem.name;
+        }
+        if (this._selectedItem?.help) {
+            this.helpText = this._selectedItem.help;
+        }
         this.show = false;
     }
 }

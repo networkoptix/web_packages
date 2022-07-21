@@ -5,16 +5,24 @@
 nx-searchable-select {
     width: 100%;
     display: block;
-    
+
     .form-control {
         overflow: hidden;
-        text-overflow: ellipsis;
+        // text-overflow: ellipsis;
         padding-right: 32px !important;
         white-space: nowrap;
+
+        #search-input {
+            outline: none !important;
+        }
     }
-    
+
     .dropdown-menu--list {
         max-height: 210px !important;
+    }
+
+    .error {
+        color: var(--input-error-color);
     }
 
     .additional-help {
