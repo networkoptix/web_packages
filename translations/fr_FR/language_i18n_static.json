@@ -1115,7 +1115,7 @@
         "smtpHost": "Hôte SMTP",
         "smtpPort": "Port SMTP",
         "smtpSimple": "SMTP simple",
-        "smtpTimeout": "Délai d’attente SMTP",
+        "smtpTimeout": "Délai  SMTP",
         "smtpUser": "Utilisateur SMTP",
         "statisticsAllowed": "Envoyer des statistiques d'utilisation et des rapports d'erreur anonymes",
         "statisticsReportLastNumber": "Rapport statistique - dernier numéro",
