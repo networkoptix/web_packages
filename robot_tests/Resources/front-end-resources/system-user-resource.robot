@@ -43,8 +43,7 @@ Cloud Suite Setup
     Sleep    1
     Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
-    Wait Until Element Is Visible    ${NEW FEATURE CLOSE BUTTON}
-    Click Button    ${NEW FEATURE CLOSE BUTTON}
+    #Dismiss New Feature Modal
     Log Out
 
 #Users Test Setup

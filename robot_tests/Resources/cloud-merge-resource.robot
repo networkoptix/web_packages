@@ -73,12 +73,15 @@ Validate Choose Primary Dialog
     #...    ${MERGE TAKE SYSTEM NAME}
     #...    ${MERGE GO BACK BUTTON}
     ...    ${MERGE NEXT BUTTON}
-    Run Keyword If    ${from target}    Wait Until Elements Are Visible
-        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem" and text()="${system 1}"]//span[@class="check unchecked"]
-        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem" and text()="${system 2}"]//span[@class="check checked"]
-        ...    ELSE    Wait Until Elements Are Visible
-            ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem" and text()="${system 1}"]//span[@class="check checked"]
-            ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem" and text()="${system 2}"]//span[@class="check unchecked"]
+    IF    ${from target}    
+        Wait Until Elements Are Visible
+        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem"]//span[@class="check unchecked"]/following-sibling::span[text()="${system 1}"]/..
+        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem"]//span[@class="check checked"]/following-sibling::span[text()="${system 2}"]/..
+    ELSE    
+        Wait Until Elements Are Visible
+        ...    ${MERGE RADIO FIRST SYSTEM}//label[@for="firstSystem"]//span[@class="check checked"]/following-sibling::span[text()="${system 1}"]/..
+        ...    ${MERGE RADIO SECOND SYSTEM}//label[@for="secondSystem"]//span[@class="check unchecked"]/following-sibling::span[text()="${system 2}"]/..
+    END
 
 Validate Confirm Merge Dialog
     [Arguments]    ${system 1}    ${system 2}

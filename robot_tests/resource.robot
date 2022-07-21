@@ -995,8 +995,8 @@ Check System Text
     Log Out
     Log in to user and system    ${user}    ${sysId}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${NEW FEATURE MODAL}
-    Click Button    ${NEW FEATURE CLOSE BUTTON}
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Dismiss New Feature Modal
     IF    "${user}"!="${EMAIL ADMIN}"
         Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
     END
@@ -1079,12 +1079,16 @@ Create Base System
     ${local auth}=   Create List    admin    ${password}
     ${server}=   Create Docker Server    ${container name}    ${custom port}    image=${image}     storage string=${storage string}    network=${network}    
     Sleep    5
-    Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
+    IF    '5.0' == $image or '5.1' == $image
+        Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
+    ELSE
+        Setup Local System 42   https://${QA BURBANK IP}:${server}[port]    ${password}    ${container name}
+    END
     # Slow    REST Setup Local System    https://${QA BURBANK IP}:${server}[port]    ${BASE PASSWORD}    ${container name}    timeout=5
     Set To Dictionary    ${server}    name=${container name}
     # If cloud is true connect to cloud and get the cloud ID
     ${cloud auth}=   Run Keyword If    $owner    Create List    ${owner}    ${password}
-    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${password}
+    ${system id}=   Run Keyword if    $owner    Connect System to Cloud    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${container name}    ${owner}    ${password}    img=${image}
     # If add users is true add local users.  Add cloud users if both are true.
     @{local users}=    Get Dictionary Keys    ${role names}
     ${local users}=    Run Keyword If    $add_users    Create Local Users Via API    ${local auth}    https://${QA BURBANK IP}:${server}[port]    ${local users}   ${password}
@@ -1366,9 +1370,9 @@ Create system and attach to cloud
     [Return]    ${bind json["id"]}
     
 Connect System to Cloud
-    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}
+    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}    ${cloud host}=${ENV}    ${img}=${IMAGE}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
-    IF    '5' in $IMAGE
+    IF    '5' in $img
         ${system id}=   API Connect To Cloud    ${cloud auth}   ${server ip}    ${cloud host}    ${system name}
         Return From Keyword    ${system id}
     ELSE

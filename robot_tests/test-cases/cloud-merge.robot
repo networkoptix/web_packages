@@ -13,7 +13,7 @@ Force Tags        merge
     Log    Test Setup
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    ${system}=   Create Base System    cloud_merge_${rs}   image=${IMAGE 4.2}    owner=${owner email}    add users=True
+    ${system}=   Create Base System    cloud_merge_${rs}   image=${IMAGE 5.0}    owner=${owner email}    add users=True
     Append To List    ${test systems}    ${system}
 
     Log    Step 1: Log in as owner
@@ -39,20 +39,20 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
     
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
     ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
-    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
-    ${system 6}=   Create Base System    cloud_merge_${rs}_6    image=${IMAGE 4.1}    add users=${False}
-    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    network=host    add users=${False}    customPort=7001
+    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 5.1}    owner=${owner email}    add users=${False}
+    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
+    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
+    #${system 6}=   Create Base System    cloud_merge_${rs}_6    image=${IMAGE 5.0}    add users=${False}
+    #${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 5.1}    network=host    add users=${False}    customPort=7002
 #    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    add users=${False}
 
-    FOR    ${i}    IN RANGE    1    8
+    FOR    ${i}    IN RANGE    1    5
         Append To List    ${test systems}    ${system ${i}}
     END
 
-    Rename Server     https://${QA BURBANK IP}:${system 7}[port]    ${system 7}[local auth]    ServerName
+    #Rename Server     https://${QA BURBANK IP}:${system 7}[port]    ${system 7}[local auth]    ServerName
 
     Sleep    60
     Stop Docker Server    ${system 4}[id]
@@ -75,10 +75,7 @@ Force Tags        merge
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 3}[name]")]//following-sibling::span[contains(text(), "incompatible")]
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 4}[name]")]//following-sibling::span[contains(text(), "offline")]
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 5}[name]")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 6}[name]")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 7}[name]")]//following-sibling::span[contains(text(), "incompatible")]
 #    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 8}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a[span="${OTHER SYSTEM}"]
     ...    timeout=10
     Element should not be visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 1}[name]")]
 #    ${sys 7 description}=    Get Text    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 7}[name]")]//following-sibling::span
@@ -90,14 +87,9 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.2}
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}
-    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 4.1}
-    FOR    ${i}    IN RANGE    1    6
-        Append To List    ${test systems}    ${system ${i}}
-    END
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 5.0}    owner=${owner email}
+
     Sleep    60
 
     Log    Step 1
@@ -109,36 +101,24 @@ Force Tags        merge
 
     # One of compatible systems is chosen by default
     ${sys 2 shown}=   Run keyword and return status    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 2}[name]")]    timeout=30
-    IF    ${sys 2 shown} == ${False}
-        Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 3}[name]")]
-    END
 
     Click Button    ${MERGE SYSTEM DROPDOWN}
     Validate Check Merge Dialog
-    Run keyword and continue on failure    Wait Until Elements Are Visible
+    Wait Until Elements Are Visible
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 2}[name]")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 3}[name]")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 4}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 5}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a[span="${OTHER SYSTEM}"]
+
+    ...    ${MERGE NEXT BUTTON}
+
     Element should not be visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 1}[name]")]
-
-    Log    Step 2
-    Choose System From Dropdown    ${system 2}[name]
-
-    Log    Step 3 - cannot be automated - no DOM element for auto-populated url
-
-    Log    Step 4
-    Input Text    ${MERGE FORM SERVER URL INPUT}    https://${QA BURBANK IP}:${system 2}[port]
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${OTHER SYSTEM}")]
+    
 
 4. Merge Dialog - Dropdown has two sections(no local systems)
     [Tags]    C70981    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -293,83 +273,77 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 4.1}    owner=${owner email}    add users=${False}
-    FOR    ${i}    IN RANGE    1    5
-        Append To List    ${test systems}    ${system ${i}}
-    END
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
+
     Sleep    60
 
     Log In    ${owner email}    ${BASE PASSWORD}
 
-    FOR    ${i}    IN    1    3
-        ${j}=   Evaluate    ${i}+1
-        ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system ${i}}[port]    ${system ${i}}[local auth]    Server ${system ${i}}[id]
-        ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system ${j}}[port]    ${system ${j}}[local auth]    Server ${system ${j}}[id]
+    ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 1}[id]
+    ${server 2 id}=   Get Server Id    https://${QA BURBANK IP}:${system 2}[port]    ${system 2}[local auth]    Server ${system 2}[id]
+    Log    Step 1: Open System 1 page
+    ${url}=   Set Variable If
+        ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system 1}[cloud id]
+        ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system 1}[port]
+    Go To    ${url}
+    Reload Page
+    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
 
-        Log    Step 1: Open System 1 page
-        ${url}=   Set Variable If
-            ...    '''${mode}'''== '''cloud'''    ${ENV}/systems/${system ${i}}[cloud id]
-            ...    '''${mode}'''=='''webadmin'''    https://${QA BURBANK IP}:${system ${i}}[port]
-        Go To    ${url}
-        Reload Page
-        Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
+    Log    Step 2: Press merge button and check the dialog state
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+    Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
+    Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//span[text()="${system 2}[name]"]
 
-        Log    Step 2: Press merge button and check the dialog state
-        Click Button    ${MERGE BUTTON SYSTEM}
-        Validate Check Merge Dialog
-        Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
-        Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//span[text()="${system ${j}}[name]"]
+    Log    Step 3: Select System 2 and press 'Next'
+    Choose System From Dropdown    ${system 2}[name]
+    Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+    Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
 
-        Log    Step 3: Select System 2 and press 'Next'
-        Choose System From Dropdown    ${system ${j}}[name]
-        Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
-        Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-        Validate Choose Primary Dialog    ${system ${i}}[name]    ${system ${j}}[name]
-
-        Log    Step 4: Select system 2 as primary an press 'Next'
-        Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
-        Validate Confirm Merge Dialog    ${system ${i}}[name]    ${system ${j}}[name]
-
-        Log    Step 5: Enter correct password and press 'Merge Systems'
-        Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
+    Log    Step 4: Select system 2 as primary an press 'Next'
+    Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
+        #Validate Confirm Merge Dialog    ${system 1}[name]    ${system 2}[name]
+#
+        #Log    Step 5: Enter correct password and press 'Merge Systems'
+        #Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
         Slow    Click Button    ${MERGE SYSTEMS BUTTON}    timeout=1
 # TODO: figure out failure
 #        Gives false negative results
 #        Element Should Be Disabled    ${MERGE BUTTON SYSTEM}
 #        Element Should Be Disabled    ${DISCONNECT FROM NX}
 
-        Log    Step 6: Enter correct password and press 'Merge Systems'
-        Validate Merge    ${system ${i}}[name]    ${system ${j}}[name]
-        Wait Until Elements Are Enabled    ${MERGE BUTTON SYSTEM}    ${DISCONNECT FROM NX}
-        Slow    Reload page    timeout=5
+    Log    Step 6: Enter correct password and press 'Merge Systems'
+    Validate Merge    ${system 1}[name]    ${system 2}[name]
+    Wait Until Elements Are Enabled    ${MERGE BUTTON SYSTEM}    ${DISCONNECT FROM NX}
+    Slow    Reload page    timeout=5
 
-        Log    Step 7: Verify systems are actually merged
-        Click Link    ${SERVERS LINK}
-#        Click Element    //a[@id="${server ${i} id}"]//span[contains(text(), "Server ${system ${i}}[id]")]
-        Verify On Servers Page
-        Select Server By Name    Server ${system ${i}}[id]
-        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system ${i}}[id]")]
-        Wait Until Element Is Not Visible    ${OFFLINE BANNER}
-        Select Server By Name    Server ${system ${j}}[id]
-#        Click Element    //a[@id="${server ${j} id}"]//span[contains(text(), "Server ${system ${j}}[id]")]
-        Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system ${j}}[id]")]
-        Wait Until Element Is Not Visible    ${OFFLINE BANNER}
+    Log    Step 7: Verify systems are actually merged
+    Wait Until Element Is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+#       Click Element    //a[@id="${server 1 id}"]//span[contains(text(), "Server ${system 1}[id]")]
+    #Dismiss New Feature Modal
+    Verify On Servers Page
+    Select Server By Name    Server ${system 1}[id]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[id]")]
+    Wait Until Element Is Not Visible    ${OFFLINE BANNER}
+    Select Server By Name    Server ${system 2}[id]
+#       Click Element    //a[@id="${server 2 id}"]//span[contains(text(), "Server ${system 2}[id]")]
+    Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 2}[id]")]
+    Wait Until Element Is Not Visible    ${OFFLINE BANNER}
 
-        Log    Step 8: Verify secondary system is not available anymore
-        Go To    ${url}
-        Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
-        Click Button    ${MERGE BUTTON SYSTEM}
-        Validate Check Merge Dialog
-        Click Button    ${MERGE SYSTEM DROPDOWN}
-        Element Should Not Be Visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system ${j}}[name]")]
-        Continue For Loop If     '''${mode}''' == '''webadmin'''
-        Go To    ${ENV}/systems/
-        Wait Until Element Is Visible    //h2[contains(text(), "${system ${i}}[name]")]
-        Wait Until Element Is Not Visible    //h2[contains(text(), "${system ${j}}[name]")]
-    END
+    Log    Step 8: Verify secondary system is not available anymore
+    Go To    ${url}
+    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+    Click Button    ${MERGE SYSTEM DROPDOWN}
+    Element Should Not Be Visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 2}[name]")]
+    Continue For Loop If     '''${mode}''' == '''webadmin'''
+    Go To    ${ENV}/systems/
+    Wait Until Element Is Visible    //h2[contains(text(), "${system 1}[name]")]
+    Wait Until Element Is Not Visible    //h2[contains(text(), "${system 2}[name]")]
 
 9. Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must
@@ -379,9 +353,7 @@ Force Tags        merge
 
     ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    FOR    ${i}    IN RANGE    1    3
-        Append To List    ${test systems}    ${system ${i}}
-    END
+
     Sleep    60
 
     ${server 1 id}=   Get Server Id    https://${QA BURBANK IP}:${system 1}[port]    ${system 1}[local auth]    Server ${system 1}[id]

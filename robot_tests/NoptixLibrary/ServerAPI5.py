@@ -54,6 +54,21 @@ class ServerAPI5(ServerAPI):
             if r.status_code != 200:
                 raise APIError(f'Cannot setup local system: {r.status_code}')
             self.set_system_settings(["admin","qweasd 123"], serverUrl, {"statisticsAllowed": False})
+    
+    @keyword
+    def setup_local_system_42(self, server_url, new_password, system_name):
+        logger.trace("4.2")
+        body = {
+            "password": new_password,
+            "systemName": system_name
+        }
+        r = requests.post(f"{server_url}/api/setupLocalSystem", auth=HTTPBasicAuth("admin", "admin"), json=body,
+                          verify=False)
+
+        auth = ("admin", new_password)
+        self.set_system_settings_42(auth, server_url, {"statisticsAllowed": 'false'})
+
+        return r.json()
 
     @keyword
     def get_server_id(self, serverUrl, auth, serverName=None):
@@ -153,6 +168,16 @@ class ServerAPI5(ServerAPI):
             r = s.patch(f'{serverUrl}/rest/v1/system/settings', json=settings, auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
             s.delete(f"{serverUrl}/rest/v1/login/sessions")
             return r.json()
+
+    @keyword
+    def set_system_settings_42(self, auth, serverUrl, settings):
+        query = "/api/systemSettings?"
+        for key, val in zip(settings.keys(), settings.values()):
+            settings[key] = str(val).lower()
+        #    query = query + f'{key}={val}&'
+        #query = query[:-1]
+        r = requests.get(f'{serverUrl}{query}', params=settings, auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
+        return r.json()
 
     @keyword
     def get_system_settings_from_server(self, auth, serverUrl):
