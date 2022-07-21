@@ -1057,6 +1057,7 @@ Create Docker Server
     Set to Dictionary    ${server}    port=${port}
     ${name}=   Execute Command    docker ps --format "{{.Names}}" -f "id=${id}"
     Set to Dictionary    ${server}    name=${name}
+    ${timeout kill er} =   Execute Command    echo "docker container stop ${server}[name]" | at now +90min    return_stdout=${False}   return_stderr=${True}
     Close Connection
     Release Lock   create_server_lock
     [Return]    ${server}
@@ -1581,3 +1582,7 @@ Click
     ELSE
         Fail    Button, Element or Link are the only allowed types.
     END
+
+Dismiss New Feature Modal
+    Wait Until Element Is Visible    ${NEW FEATURE CLOSE BUTTON}    timeout=2
+    Click Button    ${NEW FEATURE CLOSE BUTTON}

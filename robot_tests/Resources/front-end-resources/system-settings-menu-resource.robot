@@ -4,6 +4,7 @@ Resource          system-admin-resource.robot
 
 *** Keywords ***
 System Settings Menu Test Setup
+    Run Keyword and Ignore Error    Dismiss New Feature Modal
     Log Out
     Log in to system    ${system 1}    ${system 1}[owner]
     Wait Until Element is Visible    ${SERVERS LINK}

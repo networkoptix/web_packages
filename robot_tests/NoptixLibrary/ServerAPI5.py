@@ -362,3 +362,32 @@ class ServerAPI5(ServerAPI):
             time.sleep(1)
             r = s.post(f'{serverUrl}/ec2/saveCameraUserAttributes',json=cameraJson, verify=False)
             return r.json()
+
+    @keyword
+    def get_storages_via_api(self, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": "admin", "password": "qweasd 123", "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            r = s.get(f'{serverUrl}/rest/v1/servers/this/storages?_format=JSON', verify=False)
+            logger.trace(r.text)
+            return r.json()
+
+    @keyword
+    def save_storages_via_api(self, data, serverUrl):
+        with requests.Session() as s:
+            credentials = {"username": "admin", "password": "qweasd 123", "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            token = r.json().get("token")
+            listOfResponses = []
+            for storage in data:
+                s.headers.update({'Authorization': "Bearer " + token})
+                time.sleep(1)
+                logger.trace(storage)
+                r = s.patch(f'{serverUrl}/rest/v1/servers/this/storages/{storage["id"]}', json=storage, verify=False)
+                logger.info(r.json())
+                listOfResponses.append(r.json())
+                assert r.status_code == 200, f'Endpoint rest/v1/servers/this/storages/{storage["id"]} is {r.status_code}'
+            return listOfResponses
