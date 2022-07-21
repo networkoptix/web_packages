@@ -52,7 +52,7 @@
     <p class="master-description">
         識別またはシステムを見つけるのために役立ちます
     </p>
-    <form class="master-controls" name="forms.systemNameForm" novalidate>
+    <form class="master-controls" name="forms.systemNameForm" novalidate ng-submit="next()">
         <div class="form-group" validate-field>
             <input ng-model="settings.systemName" name="systemName" type="text" class="form-control"
                    placeholder="システム名" required auto-focus>
@@ -63,7 +63,7 @@
                 システム名が必要です
             </div>
         </div>
-
+        <input type="submit" hidden/>
     </form>
     <p class="vertical-bottom">
         <a href="" ng-click="next('advanced', true)">拡張システム設定</a>
@@ -73,7 +73,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
     <h2>拡張システム設定</h2>
-    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate>
+    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
                 <label class="nx-checkbox">
@@ -111,6 +111,7 @@
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
         </div>
+        <input type="submit" hidden/>
     </form>
 </div>
 
@@ -185,7 +186,8 @@
 
     <h2><span class="product-name add-version">{{Config.cloud.productName}}</span> へログイン</h2>
 
-    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}">
+    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
                    type="email" placeholder="Email" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
@@ -195,11 +197,25 @@
                    type="password" autocomplete="new-password" required placeholder="パスワード" ng-change="clearCloudError()">
         </div>
 
-        <div class="checkbox text-left" ng-if="settings.thickClient">
-            <labe>
-                <input ng-model="settings.savePassword" type="checkbox">
-                ログインを維持
-            </labe>
+        <div class="new-style-checkbox" ng-if="settings.thickClient">
+            <label class="nx-checkbox">
+                <input type="checkbox"
+                       id="stayLoggedIn"
+                       ng-model="settings.savePassword">
+
+                <span class="tick"
+                      ng-class="{'checked' : settings.savePassword}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                        </svg>
+                    </span>
+            </label>
+            <label class="control-label mb-0" for="stayLoggedIn">
+                <span>ログインを維持</span>
+            </label>
         </div>
 
         <div class="form-group has-error"
@@ -234,6 +250,7 @@
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
     <h2>管理者パスワードを設定</h2>
     <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete>
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
             <!-- <input ng-model="settings.localLogin" name="localLogin" class="form-control"
                    type="text" placeholder="Login" required readonly> -->
@@ -247,17 +264,31 @@
             <input ng-model="settings.localPasswordConfirmation" name="localPasswordConfirmation" class="form-control"
                    type="password" autocomplete="new-password" placeholder="パスワード（確認）" required>
         </div>
-        <div class="checkbox text-left" ng-if="settings.thickClient">
-            <labe>
-                <input ng-model="settings.savePassword" type="checkbox">
-                パスワードを保存
-            </labe>
+        <div class="new-style-checkbox" ng-if="settings.thickClient">
+            <label class="nx-checkbox">
+                <input type="checkbox"
+                       id="savePassword"
+                       ng-model="settings.savePassword">
+
+                <span class="tick"
+                      ng-class="{'checked' : settings.savePassword}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                        </svg>
+                    </span>
+            </label>
+            <label class="control-label mb-0" for="savePassword">
+                <span>パスワードを保存</span>
+            </label>
         </div>
 
         <div class="form-group"
              ng-if="(!forms.localForm.localLogin.$touched || forms.localForm.localLogin.$valid) &&
-+                    !forms.localForm.passwordInput.$dirty &&
-+                    !forms.localForm.localPasswordConfirmation.$touched">
+                     !forms.localForm.passwordInput.$dirty &&
+                     !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
                 パスワードには異なる種類の文字を含む、少なくとも 8 シンボルが必要です
             </div>
@@ -298,7 +329,8 @@
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
     <h2>サーバーを既存のシステムに接続します</h2>
-    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete>
+    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
 
             <input type="text" ng-model="settings.remoteSystem" name="remoteSystemName"
@@ -309,10 +341,10 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
- placeholder="既存のシステム URL (https://host:port)"
+                   placeholder="既存のシステム URL (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
- class="form-control">
+                   class="form-control">
 
             <p class="help-block text-left">
                 {{settings.remoteSystem.hint}}
@@ -499,6 +531,16 @@
 </div>
 
 <div class="panel-footer" ng-hide="activeStep.noFooter">
+    <button class="btn btn-primary pull-right"
+            ng-if="activeStep.next"
+            ng-disabled="lockNextButton"
+            auto-focus
+            ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
+    <button class="btn btn-primary pull-right"
+            ng-if="activeStep.finish"
+            ng-disabled="lockNextButton"
+            auto-focus
+            ng-click="finish()">Finish</button>
     <button class="btn btn-default"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
@@ -507,14 +549,4 @@
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"
             ng-click="back()"><span class="glyphicon glyphicon-arrow-left"></span></button>
-    <button class="btn btn-primary pull-right"
-            ng-if="activeStep.next"
-            ng-disabled="lockNextButton"
-            auto-focus
- ng-click="next()">Next <span class="glyphicon glyphicon-arrow-right"></span></button>
-    <button class="btn btn-primary pull-right"
-            ng-if="activeStep.finish"
-            ng-disabled="lockNextButton"
-            auto-focus
- ng-click="finish()">Finish</button>
 </div>
