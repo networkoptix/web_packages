@@ -81,7 +81,8 @@
                                 *ngIf="
                                     ownershipTransferEnabled &&
                                     system.userManager.isMine &&
-                                    transfers.length"
+                                    transfers.length
+                                "
                                 id="cancel-transfers"
                                 class="ml-1 btn-text"
                                 (click)="$event.preventDefault(); cancelOwnershipTransfer()"

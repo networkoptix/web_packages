@@ -53,6 +53,8 @@
     "lint:all": "eslint app --ext .ts --fix",
     "lint:auth": "eslint projects/authorization/src --ext .ts --ignore-pattern *.spec.ts",
     "lint:auth:all": "eslint projects/authorization/src --ext .ts --fix",
+    "lint-templates": "eslint . --ext .component.html --fix",
+    "lint-templates:ci": "eslint --ext .component.html",
     "esprint": "node esprintLimiter.js",
     "esprint4": "esprint check --fix --workers=4",
     "esprint8": "esprint check --fix --workers=8",

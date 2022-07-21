@@ -5,7 +5,7 @@
     }"
     (nxClickElsewhere)="finalizeSelect()"
 >
-    <div >
+    <div>
         <div
             #searchBox
             class="form-control"
@@ -41,16 +41,12 @@
                 class="dropdown-item-container"
                 *ngFor="let item of _items; trackBy: trackItem"
             >
-                <ng-container
-                    [ngTemplateOutlet]="dropdownRow"
-                ></ng-container>
+                <ng-container [ngTemplateOutlet]="dropdownRow"></ng-container>
                 <ng-template
                     #dropdownRow
                     [ngSwitch]="item.name"
                 >
-                    <hr
-                        *ngSwitchCase="'horizontal'"
-                    />
+                    <hr *ngSwitchCase="'horizontal'" />
                     <div
                         *ngSwitchCase="'seperator'"
                         class="seperator"
@@ -62,15 +58,12 @@
                     </ng-container>
                 </ng-template>
                 <ng-template #itemText>
-                    <span
-                        [outerHTML]="item.value"
-                    ></span>
+                    <span [outerHTML]="item.value"></span>
                     <span
                         *ngIf="item.name"
                         class="additional-help"
                         [innerHTML]="item.name"
-                        ></span
-                    >
+                    ></span>
                 </ng-template>
                 <ng-template #enabledItem>
                     <a

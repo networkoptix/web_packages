@@ -98,6 +98,16 @@ no-changes:
       changes:
         - front_end/projects/authorization/src/**/*
 
+.templates-changes:
+  extends: .retries
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.component.html
+
 .frontend-node:
   extends: .frontend-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
@@ -108,6 +118,10 @@ no-changes:
 
 .authorization-node:
   extends: .authorization-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.templates-node:
+  extends: .templates-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .django-python:
@@ -198,6 +212,14 @@ auth-lint-check:
     - cd front_end
     - npm ci
     - npm run lint:ci:auth projects/authorization/src
+
+templates-lint-check:
+  extends: .templates-node
+  stage: check
+  script:
+    - cd front_end
+    - npm ci
+    - npm run lint-templates:ci .
 
 django-unit-test-slow:
   extends: .django-unit-test
@@ -365,6 +387,15 @@ on-auth-lint:
         - front_end/projects/authorization/src/**/*
       when: on_failure
 
+on-templates-lint:
+  extends: .fail-on-frontend
+  needs: ["templates-lint-check"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/**/*.component.html
+      when: on_failure
+
 on-language-check:
   extends: .fail-on-frontend
   needs: ["language-check"]
@@ -484,6 +515,6 @@ fail-on-license-check:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - cloud/**/package.json
-        - front_end/**/package.json
+        - cloud/**/package-lock.json
+        - front_end/**/package-lock.json
       when: on_failure

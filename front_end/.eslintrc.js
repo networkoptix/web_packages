@@ -678,9 +678,15 @@ module.exports = {
         {
             files: ['*.component.html'],
             excludedFiles: ['*inline-template-*.component.html'],
-            // extends: ['plugin:prettier/recommended'],
+            extends: ['plugin:prettier/recommended'],
             plugins: ['prettier'],
-            rules: {}
+            rules: {
+                'prettier/prettier': ['error', {
+                    parser: 'angular',
+                    printWidth: 100,
+                    singleAttributePerLine: true,
+                }]
+            }
         },
     ]
 };
