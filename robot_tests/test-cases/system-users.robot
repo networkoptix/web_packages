@@ -529,7 +529,7 @@ Force Tags        system    Threaded
     Element Should Not Be Visible    ${RENAME SYSTEM}
     Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
 
-18. Share with unregistered user - brings them to registration page with code with correct email locked
+18. Share with unregistered user - Verify email recieved
     [Tags]    email    C41889    cloud    CLOUD-8643    smoke
     Log    Step 1
     Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
@@ -540,8 +540,6 @@ Force Tags        system    Threaded
     sleep    10
     ${role}=   Get Cloud User Role  ${server 1['cloud auth']}    ${random email}    ${server 1['cloud id']}
     Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-    
-
     Wait Until Element Is Visible     //span[contains(text(),"${random email}")]
     ${text}=   Get Text    ${LOCAL USER NAME HEADER}
     Should Be Empty    ${text}
@@ -558,19 +556,22 @@ Force Tags        system    Threaded
     Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
     Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
-   
     ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
     ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
     Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+
     Log    Step 3-4
     ${links}    Get Links From Email    ${email}
-    @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate   
+    @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate
     FOR    ${link}  IN  @{links}
         check in list    ${expected links}    ${link}
     END
     Delete Email    ${email}
     Close Mailbox
 
+18.5 New user brought to registration page with code and with correct email locked after having a system shared
+    [Tags]   email    C41889    cloud    CLOUD-8643    smoke
+    [Setup]    Share System With New User And Grab Email Link
     Log    Step 5-6
     Go To    ${invite link}
     Wait Until Elements Are Visible
@@ -579,7 +580,6 @@ Force Tags        system    Threaded
     ...    ${REGISTER PASSWORD INPUT}
     ...    ${CREATE ACCOUNT BUTTON}
     ...    ${REGISTER EMAIL INPUT LOCKED}
-
     ${populated email}=   Get Value    ${REGISTER EMAIL INPUT LOCKED} 
     Should be equal as strings    ${populated email}    ${random email}
     Input Text    ${REGISTER FIRST NAME INPUT}    ${TEST FIRST NAME}

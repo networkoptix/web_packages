@@ -43,7 +43,7 @@ Cloud Suite Setup
     Sleep    1
     Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
-    #Dismiss New Feature Modal
+    Run Keyword And Ignore Error    Dismiss New Feature Modal
     Log Out
 
 #Users Test Setup
@@ -574,3 +574,17 @@ Reset
     ELSE
         Open Browser and go to URL    https://${QA BURBANK IP}:${server 1['port']}
     END
+
+Share System With New User And Grab Email Link
+    Log in to user and system    ${server 1['owner']}    ${server 1['cloud id']}
+    ${random email} =   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
+    Append To List    ${TMP USERS}    ${random email}
+    Go To Users List    
+    Share To    ${random email}    ${ADMIN TEXT}
+    Sleep    10      
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True    
+    ${email} =    Wait For Email    recipient=${random email}    timeout=120
+    ${invite link}=   Get Nx Links From Email    ${email}    system_invite     
+    Set Test Variable     ${invite link}    ${invite link}    
+    Delete Email    ${email}   
+    Close Mailbox
