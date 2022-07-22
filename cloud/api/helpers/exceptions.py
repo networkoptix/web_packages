@@ -55,6 +55,7 @@ class ErrorCodes(Enum):
     unknown_error = 'unknownError'
     unsupported_media_type = 'unsupportedMediaType'
     credentials_removed_permanently = 'credentialsRemovedPermanently'
+    user_password_required = 'userPasswordRequired'
 
     response_serialization_error = 'responseSerializationError'
     deserialization_error = 'deserializationError'
