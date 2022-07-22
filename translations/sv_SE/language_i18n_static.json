@@ -876,7 +876,7 @@
         "vendors": "Tillverkare",
         "resultsFound": "{count, plural, =0{# Resultat} one{# Resultat} other{# Resultat}} hittades",
         "noMatches": "Inga träffar",
-        "userNotFound": "Användaren kunde inte hittas"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fel vid borttagning eller bevarande av analysdata",

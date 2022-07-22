@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(annuleer)",
     "(change)": "(wijzig)",
     "1 professional license channel will be used": "Er wordt 1 professioneel licentiekanaal gebruikt",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Een eenvoudige manier om te verbinden, beheren en uitbreiden van elk %VMS_NAME% systeem.",
@@ -324,7 +324,7 @@
     "New License": "Nieuwe licentie",
     "New Password": "Nieuw wachtwoord",
     "New group": "Nieuwe groep",
-    "New system owner email": "E-mailadres van nieuwe systeemeigenaar",
+    "New system owner:": "Nieuwe systeem eigenaar:",
     "Next": "Volgende",
     "No Archive": "Geen archief",
     "No Bookmarks Available": "Geen bladwijzers beschikbaar",

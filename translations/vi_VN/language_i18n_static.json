@@ -876,7 +876,7 @@
         "vendors": "Nhà sản xuất của",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "Không có kết quả nào khớp",
-        "userNotFound": "Không tìm thấy người dùng"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Lỗi khi xóa hoặc giữ dữ liệu phân tích",

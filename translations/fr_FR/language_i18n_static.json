@@ -876,7 +876,7 @@
         "vendors": "Fabricants",
         "resultsFound": "{count, plural, =0{# Résultat} one{# Résultat} other{# Résultats}} trouvé",
         "noMatches": "Aucune correspondance.",
-        "userNotFound": "Utilisateur introuvable"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Erreur lors de la suppression ou de la conservation des données d'analyse",

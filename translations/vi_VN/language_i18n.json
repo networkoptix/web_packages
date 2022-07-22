@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(hủy bỏ)",
     "(change)": "(thay đổi)",
     "1 professional license channel will be used": "1 kênh giấy phép chuyên nghiệp sẽ được sử dụng",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Một cách đơn giản để kết nối, quản lý và mở rộng bất kỳ Hệ thống %VMS_NAME% nào.",
@@ -324,7 +324,7 @@
     "New License": "Giấy phép mới",
     "New Password": "Mật khẩu mới",
     "New group": "Nhóm mới",
-    "New system owner email": "Email mới của chủ hệ thống",
+    "New system owner:": "Chủ sở hữu hệ thống mới:",
     "Next": "Kế tiếp",
     "No Archive": "Không có lưu trữ",
     "No Bookmarks Available": "Không có Dấu trang",

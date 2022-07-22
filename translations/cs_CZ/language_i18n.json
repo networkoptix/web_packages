@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(zrušit)",
     "(change)": "(change)",
     "1 professional license channel will be used": "Bude použita 1 profesionální licence",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -324,7 +324,7 @@
     "New License": "Nová licence",
     "New Password": "Nové heslo",
     "New group": "New group",
-    "New system owner email": "New system owner email",
+    "New system owner:": "New system owner:",
     "Next": "Další",
     "No Archive": "Žádný archiv",
     "No Bookmarks Available": "No Bookmarks Available",

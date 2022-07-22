@@ -875,8 +875,8 @@
         "vendor": "Hersteller",
         "vendors": "Hersteller",
         "resultsFound": "{count, plural, =0{# Ergebnisse} one{# Ergebnis} other{# Ergebnisse}} gefunden",
-        "noMatches": "No matches",
-        "userNotFound": "User not found"
+        "noMatches": "Keine Treffer",
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Fehler beim Löschen oder Speichern von Analyticsdaten",

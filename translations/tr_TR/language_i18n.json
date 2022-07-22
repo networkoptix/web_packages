@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(i̇ptal)",
     "(change)": "(change)",
     "1 professional license channel will be used": "1 pro lisans kullanılacak",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -324,7 +324,7 @@
     "New License": "Yeni Lisans",
     "New Password": "Yeni Parola",
     "New group": "New group",
-    "New system owner email": "New system owner email",
+    "New system owner:": "New system owner:",
     "Next": "İleri",
     "No Archive": "Arşiv yok",
     "No Bookmarks Available": "No Bookmarks Available",

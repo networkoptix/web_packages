@@ -346,7 +346,7 @@
                 },
                 "delete": {
                     "heading": "Delete Cloud Storage?",
-                    "action": "Delete",
+                    "action": "حذف",
                     "success": "Cloud Storage deleted successfully!"
                 }
             },
@@ -368,7 +368,7 @@
                     "body": "Cloud Storage with all recorded data can be easily transferred to your other System without active Cloud Storage."
                 },
                 "delete": {
-                    "title": "Delete",
+                    "title": "حذف",
                     "body": "You can remove Cloud Storage from the System at any time. You can use this key later for reactivation, if you want."
                 }
             },
@@ -876,7 +876,7 @@
         "vendors": "Manufacturers",
         "resultsFound": "{count, plural, =0{# Results} one{# Result} other{# Results}} found",
         "noMatches": "No matches",
-        "userNotFound": "User not found"
+        "userNotFound": "<span class=\"error\">User not found</span>"
     },
     "servers": {
         "analyticsDataPolicyError": "Error deleting or keeping analytics data",

@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(ยกเลิก)",
     "(change)": "(change)",
     "1 professional license channel will be used": "จะใช้ช่องทางใบอนุญาตระดับมืออาชีพ 1 ช่อง",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -324,7 +324,7 @@
     "New License": "ใบอนุญาติใหม่",
     "New Password": "สร้างรหัสผ่านใหม่",
     "New group": "New group",
-    "New system owner email": "New system owner email",
+    "New system owner:": "New system owner:",
     "Next": "ถัดไป",
     "No Archive": "ไม่มีที่เก็บถาวร",
     "No Bookmarks Available": "No Bookmarks Available",

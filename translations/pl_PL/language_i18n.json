@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(anuluj)",
     "(change)": "(zmiana)",
     "1 professional license channel will be used": "Wykorzystany zostanie 1 kanał licencyjny typu Pro",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Prosty sposób na łączenie się, zarządzanie i rozbudowę dowolnego systemu %VMS_NAME%.",
@@ -324,7 +324,7 @@
     "New License": "Nowa licencja",
     "New Password": "Nowe hasło",
     "New group": "Nowa grupa",
-    "New system owner email": "E-mail właściciela systemu",
+    "New system owner:": "Nowy właściciel systemu:",
     "Next": "Dalej",
     "No Archive": "Brak archiwum",
     "No Bookmarks Available": "Brak dostępnych zakładek",

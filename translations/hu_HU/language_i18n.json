@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(mégsem)",
     "(change)": "(change)",
     "1 professional license channel will be used": "1 professzionális licenc kerül felhasználásra",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -324,7 +324,7 @@
     "New License": "Új licenc",
     "New Password": "Új Jelszó",
     "New group": "New group",
-    "New system owner email": "New system owner email",
+    "New system owner:": "New system owner:",
     "Next": "Következő",
     "No Archive": "Nincs rögzítés",
     "No Bookmarks Available": "No Bookmarks Available",

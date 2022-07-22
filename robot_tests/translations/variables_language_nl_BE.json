@@ -13,7 +13,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Activerings-e-mail opnieuw verzenden.",
     "FORGOT PASSWORD TEXT": "Wachtwoord vergeten?",
     "DISCONNECT FORM ALL USERS WILL BE DELETED TEXT": "Alle cloud gebruikers zullen worden verwijderd",
-    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "System will be accessible only via local network.",
+    "DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT": "Het systeem zal alleen toegankelijk zijn via het lokale netwerk.",
     "DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT": "Voer uw wachtwoord in om door te gaan",
     "SYSTEM NO ACCESS TEXT": "Het is niet gelukt toegang te krijgen tot het systeem",
     "DISCONNECT FROM CLOUD TEXT": "Verbinding verbreken met %PRODUCT_NAME%",

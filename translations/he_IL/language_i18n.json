@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(ביטול)",
     "(change)": "(change)",
     "1 professional license channel will be used": "רישיון PROFESSIONAL אחד ינוצל",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "A simple way to connect to, manage and expand any %VMS_NAME% System.",
@@ -324,7 +324,7 @@
     "New License": "רשיון חדש",
     "New Password": "סיסמא חדשה",
     "New group": "New group",
-    "New system owner email": "New system owner email",
+    "New system owner:": "New system owner:",
     "Next": "הבא",
     "No Archive": "ללא ארכיון",
     "No Bookmarks Available": "No Bookmarks Available",

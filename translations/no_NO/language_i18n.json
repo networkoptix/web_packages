@@ -1,6 +1,6 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
-    "(cancel)": "(cancel)",
+    "(cancel)": "(avbryt)",
     "(change)": "(endre)",
     "1 professional license channel will be used": "1 profesjonell lisenskanal vil bli brukt",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "En enkel måte å koble til, administrere og utvide et hvilket som helst %VMS_NAME%-system.",
@@ -324,7 +324,7 @@
     "New License": "Ny lisens",
     "New Password": "Nytt passord",
     "New group": "New group",
-    "New system owner email": "New system owner email",
+    "New system owner:": "Ny systemeier:",
     "Next": "Neste",
     "No Archive": "Ingen Opptak",
     "No Bookmarks Available": "No Bookmarks Available",
