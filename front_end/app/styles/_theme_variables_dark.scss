@@ -11,8 +11,8 @@ html[data-theme="dark"] {
     --header-webadm-bg           : #212A2F; //$dark7;
     --header-webadm-border-color : transparent;
 
-    --ribbon-bg     : #{$brand_d3};
-    --ribbon-border : #{$brand_d4};
+    --ribbon-bg     : var(--brand-d3);
+    --ribbon-border : var(--brand-d4);
     --ribbon-color  : #{$light4};
 
     --ribbon-alert-bg : #{$yellow_d2};
@@ -20,7 +20,7 @@ html[data-theme="dark"] {
     --ribbon-alert-color : #1C2327; //$dark6;
 
     --image-box-border-color : #303F47; //$dark10;
-    --image-box-selected-border-color : #2592C3; //$brand_d1;
+    --image-box-selected-border-color : var(--brand-d1);
     
     --storage-size-available : #E1E7EA; //$light4
     --storage-size-reserved : repeating-linear-gradient(
@@ -84,19 +84,19 @@ html[data-theme="dark"] {
     --popover-color        : #E1E7EA; //$light4;
 
     --radio-color              : #A5B7C0; //$light10;
-    --radio-check-color        : #2592C3; //$brand_d1;
+    --radio-check-color        : var(--brand-d1);
     --radio-hover-color        : #E1E7EA; //$light4;
-    --radio-hover-check-color  : #2FA2DB; //$brand_core;
+    --radio-hover-check-color  : var(--brand-core);
     --radio-active-color       : #A5B7C0; //$light10;
-    --radio-active-check-color : #39B2EF; //$brand_l1;
+    --radio-active-check-color : var(--brand-l1);
     --radio-active-hover-color : #E1E7EA; //$light4;
 
     --checkbox-color              : #A5B7C0; //$light10;
-    --checkbox-check-color        : #2592C3; //$brand_d1;
+    --checkbox-check-color        : var(--brand-d1);
     --checkbox-hover-color        : #E1E7EA; //$light4;
-    --checkbox-hover-check-color  : #2FA2DB; //$brand_core;
+    --checkbox-hover-check-color  : var(--brand-core);
     --checkbox-active-color       : #F5F7F8; //$light2;
-    --checkbox-active-check-color : #39B2EF; //$brand_l1;
+    --checkbox-active-check-color : var(--brand-l1);
     --checkbox-active-hover-color : #E1E7EA; //$light4;
 
     --auth-header-bg : #1C2327; //$dark6;
@@ -122,8 +122,8 @@ html[data-theme="dark"] {
     
     --progress-bar-color                  : #4E6977; //$dark16
     --progress-bar-border-color           : #4E6977; //$dark16
-    --progress-bar-reindex-color          : #2592C3; //$brand_d1;
-    --progress-bar-heder-title-color      : #2592C3; //$brand_d1;
+    --progress-bar-reindex-color          : var(--brand-d1);
+    --progress-bar-heder-title-color      : var(--brand-d1);
     --progress-bar-heder-persentage-color : #E1E7EA; //$light4
 
     --switch-disabled-color       : #3A4D57; //$dark12;
@@ -151,9 +151,9 @@ html[data-theme="dark"] {
     --arch-svg-level2-fill              : #3A4D57; //$dark12;
     --arch-svg-level3-fill              : #171C1F; //$dark5;
     --arch-svg-spacer-fill              : #0D0E0F; //$dark3;
-    --arch-svg-cloud-fill               : #{$brand_d2};
+    --arch-svg-cloud-fill               : var(--brand-d2);
     --arch-svg-cloud-color              : #F5F7F8; //$light2;
-    --arch-svg-cloud-relay-fill         : #{$brand_d5};
+    --arch-svg-cloud-relay-fill         : var(--brand-d5);
     --arch-svg-cloud-relay-color        : #E1E7EA; //$light4;
     --arch-svg-third-party-fill         : #212A2F; //$dark7;
     --arch-svg-built-in-fill            : #171C1F; //$dark5;
@@ -245,7 +245,7 @@ html[data-theme="dark"] {
     --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.25);
     --timeline-playback-indicator-bg    : #E1E7EA; //$light4;
     --timeline-playback-indicator-color : #080707; //$dark2
-    --timeline-selection-panel-bg       : #{$brand_d3};
+    --timeline-selection-panel-bg       : var(--brand-d3);
     --timeline-selection-panel-color    : #{$light4};
     --timeline-selection-picker         : dark;
 
@@ -309,17 +309,17 @@ html[data-theme="dark"] {
     --btn-default-focus-shadow      : #{$light14};
     --btn-default-focus-outline-rgb : 125, 151, 164; //$light14;
 
-    --btn-primary-bg                : #2FA2DB; //$brand_core;
+    --btn-primary-bg                : var(--brand-core);
     --btn-primary-color             : #F5F7F8; //$light2;
     --btn-primary-shadow            : none;
-    --btn-primary-hover-bg          : #1B82AD; //$brand_d2;
+    --btn-primary-hover-bg          : var(--brand-d2);
     --btn-primary-hover-color       : #F5F7F8; //$light2;
-    --btn-primary-hover-shadow      : inset 0 -1px 0 0 #117297; //$brand_d3;
-    --btn-primary-active-bg         : #076281; //$brand-d4;
+    --btn-primary-hover-shadow      : inset 0 -1px 0 0 var(--brand-d3);
+    --btn-primary-active-bg         : var(--brand-d4);
     --btn-primary-active-color      : #F5F7F8; //$light2;
-    --btn-primary-active-shadow     : inset 0 1px 0 0 #076281; //$brand-d4;
-    --btn-primary-focus-shadow      : #{$brand_l1};
-    --btn-primary-focus-outline-rgb : 57, 178, 239; //$brand_l1;
+    --btn-primary-active-shadow     : inset 0 1px 0 0 var(--brand-d4);
+    --btn-primary-focus-shadow      : var(--brand-l1);
+    --btn-primary-focus-outline-rgb : var(--brand_l1--rgb);
 
     --btn-danger-bg                : #741414; //$red_d3;
     --btn-danger-color             : #F5F7F8; //$light2;
@@ -354,7 +354,7 @@ html[data-theme="dark"] {
     --tab-link-hover-bottom-color : #1C2327; //$dark6;
     --tab-link-active-bg           : #171C1F; //$dark5;
     --tab-link-active-bottom-color : #171C1F; //$dark5;
-    --tab-link-selected-color       : #2FA2DB; //$brand-core;
+    --tab-link-selected-color       : var(--brand-core);
 
     --tab-link-webadm-color               : #E1E7EA; //$light4;
     --tab-link-webadm-hover-bg            : #35464F; //dark11;
@@ -470,7 +470,7 @@ html[data-theme="dark"] {
 
     --card-capability-header-bg : #1C2327; //$dark6;
     --card-capability-intro-color : #A5B7C0; //$light10;
-    --card-capability-icon        : #2592C3; //$brand-d1;
+    --card-capability-icon        : var(--brand-d1);
 
     --support-lang-wrapper-bg    : #121517; //$dark4
     --support-lang-wrapper-color : #A5B7C0; //$light10;
@@ -509,16 +509,16 @@ html[data-theme="dark"] {
     --badge-warning-bright-bg    : #E1A700; //$yellow_d1;
     --badge-success-bg        : #2A551E; //$green_d2;
     --badge-success-bright-bg : #3A911E; //$green_main;
-    --badge-brand-bg : #{$brand_d2};
-    --badge-info-bg : #{$brand_d4};
+    --badge-brand-bg : var(--brand-d2);
+    --badge-info-bg : var(--brand-d4);
     --badge-integration-bg : #3F545F; //$dark13;
     --badge-integration-color : #E1E7EA; //$light4;
 
     --grey-section-bg : #1C2327; //$dark6;
     --grey-section-sep-color : #35464F; //$dark11;
 
-    --dashboard-add-widget-color : #{$brand_d2};
-    --dashboard-widget-hover-color : #{$brand_core};
+    --dashboard-add-widget-color : var(--brand-d2);
+    --dashboard-widget-hover-color : var(--brand-core);
     --dashboard-settings-menu-bg : #1C2327; //$dark6;
     --dashboard-settings-menu-shadow : none;
 }

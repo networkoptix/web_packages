@@ -12,8 +12,8 @@ html {
     --header-webadm-bg           : #{$dark14};
     --header-webadm-border-color : transparent;
 
-    --ribbon-bg     : #{$brand_d1};
-    --ribbon-border : #{$brand_d2};
+    --ribbon-bg     : var(--brand-d1);
+    --ribbon-border : var(--brand-d2);
     --ribbon-color  : #{$light1};
 
     --ribbon-alert-bg : #{$yellow_l2};
@@ -21,7 +21,7 @@ html {
     --ribbon-alert-color : #{$dark9};
 
     --image-box-border-color : #{$light6};
-    --image-box-selected-border-color : #{$brand_l1};
+    --image-box-selected-border-color : var(--brand-l1);
     
     --storage-size-available : #{$additional_light1};
     --storage-size-reserved : repeating-linear-gradient(
@@ -85,19 +85,19 @@ html {
     --popover-color        : #{$dark9};
 
     --radio-color              : #{$dark11};
-    --radio-check-color        : #{$brand_core};
+    --radio-check-color        : var(--brand-core);
     --radio-hover-color        : #{$dark3};
-    --radio-hover-check-color  : #{$brand_core};
+    --radio-hover-check-color  : var(--brand-core);
     --radio-active-color       : #{$dark11};
-    --radio-active-check-color : #{$brand_core};
+    --radio-active-check-color : var(--brand-core);
     --radio-active-hover-color : #{$dark3};
 
     --checkbox-color              : #{$dark9};
-    --checkbox-check-color        : #{$brand_core};
+    --checkbox-check-color        : var(--brand-core);
     --checkbox-hover-color        : #{$dark1};
-    --checkbox-hover-check-color  : #{$brand_core};
+    --checkbox-hover-check-color  : var(--brand-core);
     --checkbox-active-color       : #{$dark9};
-    --checkbox-active-check-color : #{$brand_core};
+    --checkbox-active-check-color : var(--brand-core);
     --checkbox-active-hover-color : #{$dark1};
 
     --auth-header-bg       : #{$additional_light1};
@@ -112,7 +112,7 @@ html {
     --horizontal-sep-color : #{$light6};
     --label-color          : #{$dark9};
 
-    --placehoder-cloud-color   : #{$brand_core};
+    --placehoder-cloud-color   : var(--brand-core);
     --placehoder-cloud-opacity : .1;
     --placeholder-accent-color : #{$dark7};
     --placeholder-light-color : #{$light1};
@@ -123,8 +123,8 @@ html {
     
     --progress-bar-color                  : #{$light4};
     --progress-bar-border-color           : #{$light6};
-    --progress-bar-reindex-color          : #{$brand_core};
-    --progress-bar-heder-title-color      : #{$brand_core};
+    --progress-bar-reindex-color          : var(--brand-core);
+    --progress-bar-heder-title-color      : var(--brand-core);
     --progress-bar-heder-persentage-color : #{$dark9};
 
     --switch-disabled-color       : #{$light8};
@@ -145,7 +145,7 @@ html {
     --developer-menu-base-color : #{$dark10};
 
     // *** arch svg ***********************
-    --arch-svg-dash-stroke              : #{$brand_l4};
+    --arch-svg-dash-stroke              : var(--brand-l4);
     --arch-svg-solid-path-arrow-fill    : #{$dark1};
     --arch-svg-level1-fill              : #{$light10};
     --arch-svg-level1-color             : #{$dark9};
@@ -246,7 +246,7 @@ html {
     --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.25);
     --timeline-playback-indicator-bg    : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-color : #{$light1};
-    --timeline-selection-panel-bg       : #{$brand_d1};
+    --timeline-selection-panel-bg       : var(--brand-d1);
     --timeline-selection-panel-color    : #{$light1};
     --timeline-selection-picker         : light;
 
@@ -310,17 +310,17 @@ html {
     --btn-default-focus-shadow      : #{$light14};
     --btn-default-focus-outline-rgb : 125, 151, 164; //$light14;
 
-    --btn-primary-bg                : #{$brand_core};
+    --btn-primary-bg                : var(--brand-core);
     --btn-primary-color             : #{$light1};
-    --btn-primary-shadow            : inset 0 -1px 0 0 #{$brand-d2};
-    --btn-primary-hover-bg          : #{$brand-d1};
+    --btn-primary-shadow            : inset 0 -1px 0 0 var(--brand-d2);
+    --btn-primary-hover-bg          : var(--brand-d1);
     --btn-primary-hover-color       : #{$light1};
-    --btn-primary-hover-shadow      : inset 0 -1px 0 0 #{$brand-d3};
-    --btn-primary-active-bg         : #{$brand-d2};
+    --btn-primary-hover-shadow      : inset 0 -1px 0 0 var(--brand-d3);
+    --btn-primary-active-bg         : var(--brand-d2);
     --btn-primary-active-color      : #{$light1};
-    --btn-primary-active-shadow     : inset 0 1px 0 0 #{$brand-d4};
-    --btn-primary-focus-shadow      : #{$brand-d1};
-    --btn-primary-focus-outline-rgb : 37, 146, 195; //$brand-d1;
+    --btn-primary-active-shadow     : inset 0 1px 0 0 var(--brand-d4);
+    --btn-primary-focus-shadow      : var(--brand-d1);
+    --btn-primary-focus-outline-rgb : var(--brand_d1--rgb);
 
     --btn-danger-bg                : #{$red_main};
     --btn-danger-color             : #{$light1};
@@ -355,7 +355,7 @@ html {
     --tab-link-hover-bottom-color  : #{$light6};
     --tab-link-active-bg           : #{$light3};
     --tab-link-active-bottom-color : #{$light6};
-    --tab-link-selected-color      : #{$brand-core};
+    --tab-link-selected-color      : var(--brand-core);
 
     --tab-link-webadm-color               : #{$additional_light1};
     --tab-link-webadm-hover-bg            : #{$dark15};
@@ -451,7 +451,7 @@ html {
     --card-simple-info-bg           : rgba(var(--brand_core--rgb), .1);
     --card-simple-info-border-color : rgba(var(--brand_core--rgb), .3);
     --card-simple-info-color        : #{$dark9};
-    --card-simple-info-svg-color    : #{$brand-core};
+    --card-simple-info-svg-color    : var(--brand-core);
 
     --card-simple-warning-bg           : rgba(var(--yellow_main--rgb), .1);
     --card-simple-warning-border-color : rgba(var(--yellow_main--rgb), .3);
@@ -472,7 +472,7 @@ html {
     
     --card-capability-header-bg : #{$dark11};
     --card-capability-intro-color : #{$light10};
-    --card-capability-icon : #{$brand-core};
+    --card-capability-icon : var(--brand-core);
 
     --support-lang-wrapper-bg : #{$light4};
     --support-lang-wrapper-color : #{$light16};
@@ -486,7 +486,7 @@ html {
     --input-hover-color        : #{$dark9};
     --input-hover-border-color : #{$light8};
     --input-focus-color        : #{$dark9};
-    --input-focus-border-color : #{$brand-core};
+    --input-focus-border-color : var(--brand-core);
     --input-active-bg           : #{$light1};
     --input-active-color        : #{$dark9};
     --input-active-border-color : #{$light6};
@@ -511,16 +511,16 @@ html {
     --badge-warning-bright-bg : #{$yellow_main};
     --badge-success-bg        : #{$green_main};
     --badge-success-bright-bg : #{$green_l2};
-    --badge-brand-bg : #{$brand_d2};
-    --badge-info-bg  : #{$brand_core};
+    --badge-brand-bg : var(--brand-d2);
+    --badge-info-bg  : var(--brand-core);
     --badge-integration-bg : #{$light4};
     --badge-integration-color : #{$light16};
 
     --grey-section-bg: var(--light4);
     --grey-section-sep-color: var(--light6);
 
-    --dashboard-add-widget-color : #{$brand_core};
-    --dashboard-widget-hover-color : #{$brand_l4};
+    --dashboard-add-widget-color : var(--brand-core);
+    --dashboard-widget-hover-color : var(--brand-l4);
     --dashboard-settings-menu-bg : #{$light4};
     --dashboard-settings-menu-shadow : 6px 0 6px -6px #{$light7};
 }
