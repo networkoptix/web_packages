@@ -53,6 +53,7 @@ export class NxSearchableDropdown extends BaseDropdown {
     @Output() onSelected = new EventEmitter<Item>();
 
     dropdownType: string = 'default';
+    filter: string = '';
     _items: Item[];
     helpText: string = '';
 
@@ -69,29 +70,28 @@ export class NxSearchableDropdown extends BaseDropdown {
 
     ngOnInit(): void {
         this.dropdownType = `dropdown-${this.type}`;
+        this._selectedItem = { name: '', value: undefined, disabled: true };
     }
 
     ngOnChanges(changes: NgChanges<NxSearchableDropdown>): void {
         if (changes.items?.currentValue) {
             this._items = [...this.items];
         }
-        // detect changes in list of items and changes in selected to support clear option
+
         if (changes.selected?.currentValue) {
             this._selectedItem = changes.selected.currentValue;
-        } else if (!this.selected && !changes.selected?.firstChange) {
-            this._selectedItem = { name: '', value: '' };
         }
     }
 
     onSearchInput(_event: Event): void {
-        let { innerText } = this.searchInput.nativeElement;
+        this.filter = this.searchInput.nativeElement.innerText;
         this.helpText = '';
 
         // long strings may produce line break when deleted
-        innerText = innerText.replace(/\n/g, '');
-        const regex = new RegExp(innerText, 'gi');
+        this.filter = this.filter.replace(/\n/g, '');
+        const regex = new RegExp(this.filter, 'gi');
 
-        if (innerText) {
+        if (this.filter) {
             this._items = this.items
                 .filter(item =>
                     regex.test(item.name) ||
@@ -110,12 +110,30 @@ export class NxSearchableDropdown extends BaseDropdown {
 
     selectItem(item: Item): void {
         this.show = false;
+        this.filter = '';
         this.resetHighlighting();
         this._selectedItem = item;
         this.searchInput.nativeElement.innerText = item.name;
         this.helpText = item?.help;
         this.onSelected.emit(item);
         this.onChangeCallback(this._selectedItem);
+    }
+
+    clearSelectedItem(): void {
+        this._selectedItem = { name: '', value: undefined };
+        this.filter = '';
+        this.helpText = '';
+        this.searchInput.nativeElement.innerText = '';
+        this._items = [...this.items];
+        this.onSelected.emit(this._selectedItem);
+        this.onChangeCallback(this._selectedItem);
+    }
+
+    toggle(): void {
+        this.show = !this.show;
+        if (this.show) {
+            this.searchInput.nativeElement.focus();
+        }
     }
 
     private resetHighlighting(): void {
@@ -132,7 +150,7 @@ export class NxSearchableDropdown extends BaseDropdown {
         }
         // Don't allow newline
 
-        if (this._items.length === 1) {
+        if (this._items.length === 1 && this._items[0].value !== undefined) {
             this.selectItem(this._items[0]);
         }
     }

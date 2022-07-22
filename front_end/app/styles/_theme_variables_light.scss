@@ -270,9 +270,9 @@ html {
 
     --btn-clear-bg    : transparent;
     --btn-clear-color : #{$dark9};
-    --btn-clear-hover-bg  : rgba(var(--light16--rgb), .1);
+    --btn-clear-hover-bg  : transparent;
     --btn-clear-hover-color  : #{$dark9};
-    --btn-clear-active-bg : rgba(var(--light16--rgb), .15);
+    --btn-clear-active-bg : transparent;
     --btn-clear-active-color : #{$dark9};
 
     --btn-dropdown-toggle-bg             : #{$light4};

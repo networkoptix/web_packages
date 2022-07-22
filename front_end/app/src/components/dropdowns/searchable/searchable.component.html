@@ -15,26 +15,47 @@
                 id="search-input"
                 #searchInput
                 contentEditable="true"
+                [ngStyle]="{ display: _selectedItem.value ? 'initial' : 'block' }"
                 (input)="onSearchInput($event)"
                 (keypress)="blockSearchEnter($event)"
             ></span>
             <span
                 *ngIf="helpText"
+                #searchInputHelp
                 class="additional-help"
                 >{{ helpText }}</span
             >
+            <p
+                *ngIf="!show && !_selectedItem.value && !filter"
+                (click)="toggle()"
+                class="placeholder"
+                translate
+            >
+                Email
+            </p>
         </div>
 
-        <div
-            class="arrow-flip"
-            (click)="show = !show"
+        <button
+            *ngIf="!_selectedItem.value && !filter"
+            class="inset arrow-flip btn btn-clear"
+            (click)="toggle()"
             data-toggle="dropdown"
         >
             <svg-icon
                 nx-add-svg-src
                 [src]="CONFIG.icons.dirTextButtons + 'arrow_expand.svg'"
             ></svg-icon>
-        </div>
+        </button>
+        <button
+            class="inset search-clear btn btn-clear"
+            *ngIf="_selectedItem.value || filter"
+            (click)="clearSelectedItem()"
+        >
+            <svg-icon
+                [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            ></svg-icon>
+        </button>
     </div>
 
     <div
