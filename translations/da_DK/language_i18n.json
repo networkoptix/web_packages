@@ -519,7 +519,7 @@
     "You cannot log in to this system from %VMS_NAME% Client": "You cannot log in to this system from %VMS_NAME% Client",
     "You have an unused trial license.": "Du har en ubrugt prøvelicens.",
     "You have no Systems connected to %CLOUD_NAME%": "Du har ingen systemer forbundet til %CLOUD_NAME%",
-    "You will be logged out": "You will be logged out",
+    "You will be logged out": "Du er blevet logget ud",
     "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your access level": "Dit adgangsniveau",

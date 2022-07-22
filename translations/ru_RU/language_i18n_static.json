@@ -433,7 +433,7 @@
                 "ipvd_feedback_page": "Отзыв о странице камер"
             },
             "twoFactor": {
-                "required": "Two-factor authentication is required.",
+                "required": "Требуется двухфакторная аутентификация.",
                 "configure": "You can configure it in your",
                 "accountLink": "настройки учетной записи",
                 "codeRequired": "Требуется код"
@@ -925,7 +925,7 @@
     "toastMessage": {
         "cloudUnavailable": "Что-то пошло не так. Пожалуйста, обновите страницу и повторите попытку.",
         "nameFail": "Failed to change {type} name",
-        "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
+        "noConnection": "Восстановите соединение с %CLOUD_NAME% и повторите попытку.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Не удалось применить изменения",
         "reviewAccepted": "The review has been accepted",
