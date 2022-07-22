@@ -34,7 +34,7 @@ export class NxLearnMoreComponent implements OnChanges {
         this.visible = this.renderLearnMore();
     }
 
-    renderLearnMore = () => {
+    renderLearnMore = (): boolean => {
         if (
             this.scrollPosition > this.isVisibleBreakpoints.scrollPosition ||
             this.screenHeight < this.isVisibleBreakpoints.screenHeight

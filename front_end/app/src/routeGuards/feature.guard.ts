@@ -20,7 +20,7 @@ export class FeatureGuard implements CanActivate, CanLoad {
     constructor(private configService: NxConfigService, private cookieService: CookieService) {
     }
 
-    enabled(route: Route | ActivatedRouteSnapshot) {
+    enabled(route: Route | ActivatedRouteSnapshot): boolean {
         const { flags, override } = route.data;
         const flagEnabled = this.configService.flagsEnabled(flags);
         const hasOverride = override && this.cookieService.get(override);

@@ -22,7 +22,7 @@ function addBlurListener(
     // eslint-disable-next-line prefer-const
     let timeoutID: number;
 
-    function onBlur() {
+    function onBlur(): void {
         clearTimeout(timeoutID);
         target.removeEventListener('blur', onBlur);
         successCb();

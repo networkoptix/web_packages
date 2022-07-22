@@ -24,7 +24,7 @@ import { NxHealthService } from '../health.service';
     styleUrls: ['update-info.component.scss']
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
-    @Output() updateHealth = new EventEmitter();
+    @Output() updateHealth = new EventEmitter<boolean>();
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

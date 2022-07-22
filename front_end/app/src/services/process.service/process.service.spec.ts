@@ -16,7 +16,7 @@ import { NxProcessService } from './process.service';
 describe('Process service', () => {
     let process: jasmine.SpyObj<NxProcessService>;
     let toast: jasmine.SpyObj<NxToastService>;
-    let toastSpy;
+    let toastSpy: jasmine.Spy<NxToastService['show']>;
     const toastOptions = { autohide: true, classname: 'danger', delay: 3000 };
 
     const configMock = { getConfig: () => nxConfig };

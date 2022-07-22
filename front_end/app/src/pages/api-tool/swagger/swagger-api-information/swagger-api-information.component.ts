@@ -9,7 +9,7 @@ import { MarkdownComponent } from 'ngx-markdown';
 })
 export class NxSwaggerAPIInformationComponent {
     @ViewChild('markdownRef') markdown: MarkdownComponent;
-    @Input() data = '';
+    @Input() data: string = '';
 
     modifyElements(): void {
         if (this.markdown) {

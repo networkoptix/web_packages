@@ -28,7 +28,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
         this.CONFIG = configService.getConfig();
     }
 
-    handleCode(code): void {
+    handleCode(code: string): void {
         this.storageService.store(this.CONFIG.oauthStore.code, code);
         this.window.close();
     }

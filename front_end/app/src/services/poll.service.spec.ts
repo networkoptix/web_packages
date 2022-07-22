@@ -20,7 +20,7 @@ describe('Poll service', () => {
 
     it('should create poll and call f()', fakeAsync(() => {
         let count = 0;
-        const test = () => {
+        const test = (): void => {
             count++;
         };
 

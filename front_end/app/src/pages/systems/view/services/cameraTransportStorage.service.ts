@@ -19,7 +19,7 @@ export class CameraTransportStorageService {
         });
     }
 
-    public get(cameraId: string) {
+    public get(cameraId: string): PlaybackTransport {
         return this.localStorageService.retrieve(
             `${this.user}_transport_${cameraId}`
         );

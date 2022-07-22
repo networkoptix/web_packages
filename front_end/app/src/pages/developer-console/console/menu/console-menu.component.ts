@@ -29,7 +29,7 @@ export class NxDevConsoleMenuComponent {
 
     showAdditionalLinks = false;
     loading = true;
-    cancel$ = new Subject();
+    cancel$ = new Subject<'cancel'>();
 
     constructor(
         configService: NxConfigService,

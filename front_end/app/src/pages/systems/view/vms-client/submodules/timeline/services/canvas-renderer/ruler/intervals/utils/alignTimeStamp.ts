@@ -9,7 +9,7 @@ export function alignTimeStamp(
     t: timeStampMs,
     d: IrregularLengthInterval,
     alignment: 'left' | 'right' = 'left'
-) {
+): number {
     const date = new Date(t);
     const incIfRight = alignment === 'right' ? 1 : 0;
     const round = Math[{

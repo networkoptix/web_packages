@@ -1,4 +1,5 @@
 type MarkFunctionProperties<Component> = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   [Key in keyof Component]: Component[Key] extends Function ? never : Key;
 };
 

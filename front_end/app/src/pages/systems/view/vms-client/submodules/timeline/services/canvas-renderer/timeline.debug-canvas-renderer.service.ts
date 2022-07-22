@@ -16,7 +16,7 @@ export class TimelineDebugCanvasRendererService {
     ) {
     }
 
-    protected get cfg() {
+    protected get cfg(): typeof cfg {
         return cfg;
     }
 

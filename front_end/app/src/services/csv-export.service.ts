@@ -17,7 +17,7 @@ export class NxCsvExtractService {
      * @param fileName File name to save as.
      * @param fileType File type to save as.
      */
-    private static saveAsFile(buffer: any, fileName: string, fileType: string): void {
+    private static saveAsFile(buffer: BlobPart, fileName: string, fileType: string): void {
         const data: Blob = new Blob([buffer], { type: fileType });
         FileSaver.saveAs(data, fileName);
     }

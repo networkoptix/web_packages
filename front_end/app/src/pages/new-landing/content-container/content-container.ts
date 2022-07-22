@@ -146,7 +146,7 @@ export class NxContentContainerComponent implements AfterViewInit {
 
     }
 
-    determineBlockType(type: 'small' | 'wide') {
+    determineBlockType(type: 'small' | 'wide'): 'small' | 'wide' | 'adaptive' {
         if (this.screenWidth > 769) {
             return type;
         }

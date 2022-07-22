@@ -10,7 +10,7 @@ import { filter, switchMap, takeUntil } from 'rxjs/operators';
  */
 export class StateManager<State, GetStateArgs> {
     private _state$ = new BehaviorSubject<State>(null);
-    private tearDown$ = new Subject<any>();
+    private tearDown$ = new Subject<void>();
     private _args$ = new BehaviorSubject<GetStateArgs>(null);
 
     state$ = this._state$.pipe(filter(state => state !== null));

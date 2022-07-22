@@ -15,7 +15,7 @@ export function findMenuNode(
     conditionalFunction: (node: MenuNode) => boolean
 ): MenuNode {
     let foundNode: MenuNode = null;
-    const findNode = (node: MenuNode) => {
+    const findNode = (node: MenuNode): void => {
         if (conditionalFunction(node)) {
             foundNode = node;
             return;

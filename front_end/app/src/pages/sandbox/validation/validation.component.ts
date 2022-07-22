@@ -10,7 +10,10 @@ import { NxMenuService } from '@src/menu/menu.service';
     styleUrls: ['validation.component.scss']
 })
 export class ValidationComponent {
-    data;
+    data = {
+        newPassword: '',
+        email: ''
+    };
     change: Process;
     restore: Process;
 
@@ -22,11 +25,6 @@ export class ValidationComponent {
     ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'validation';
-
-        this.data = {
-            newPassword: '',
-            email: ''
-        };
 
         this.change = this.processService.createProcess(() => {
             return Promise.resolve(true);

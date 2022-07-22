@@ -14,7 +14,7 @@ export class MenuNode {
     public draft?: boolean;
     public pending?: boolean;
     public indented?: boolean;
-    public asset_type?: any;
+    public asset_type?: string;
     public order?: number;
     public state?: 'pending' | 'draft';
     public breadcrumbs: MenuNode[];
