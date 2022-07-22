@@ -416,6 +416,15 @@ export abstract class BaseAccount implements OnDestroy {
         }
     };
 
+    public async handleRefreshTokenLogin(refreshToken) {
+        const url = new URL(this.window.location.href);
+        url.searchParams.delete('refresh_token');
+        const { code }: any = await this.cloudApi.getTokensFromCloud(refreshToken, 'refresh_token', 'code').toPromise();
+        url.searchParams.set('code', code);
+        this.window.history.pushState({ url: url.toString() }, '', url.toString());
+        return this.handleCodeLogin(code);
+    }
+
     public async handleCodeLogin(code: string) {
         const account = await this.get();
         if (!account || !account.is_authenticated) {

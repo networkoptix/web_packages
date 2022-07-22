@@ -122,8 +122,14 @@ export class AppComponent {
 
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
+
         const code = url.searchParams.get('code');
-        if (!this.environment.isLocal && auth) {
+        const refreshToken = url.searchParams.get('refresh_token');
+        if (!this.environment.isLocal && refreshToken) {
+            this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {
+                this.appStateService.ready = true;
+            });
+        } else if (!this.environment.isLocal && auth) {
             this.accountService.handleAuthKeyLogin(auth);
         } else if (
             !this.environment.isLocal &&
@@ -132,7 +138,17 @@ export class AppComponent {
         ) {
             this.accountService.handleCodeLogin(code);
         } else {
-            this.appStateService.ready = true;
+            try {
+                // Expected to throw when js client api doesn't exist or doesn't allow cloud tokens
+                // @ts-expect-error vms does not exist on window
+                this.window.vms.auth.cloudToken().then(
+                    this.accountService.handleRefreshTokenLogin
+                ).finally(() => {
+                    this.appStateService.ready = true;
+                });
+            } catch (_) {
+                this.appStateService.ready = true;
+            }
         }
 
         /* No real need to update often unless some browser have major upgrade

@@ -763,11 +763,12 @@ export class NxCloudApiService {
         return this.http.get<any>(this.CONFIG.apiBase + '/account/timeSincePassword');
     }
 
-    getTokensFromCloud(code: string) {
+    getTokensFromCloud(code: string, grant_type: 'authorization_code' | 'refresh_token' = 'authorization_code', response_type: 'token' | 'code' = null) {
+        response_type ||= grant_type === 'refresh_token' ? 'code' : 'token';
         const params = {
-            code,
-            grant_type: 'authorization_code',
-            response_type: 'token'
+            [grant_type.replace('authorization_', '')]: code,
+            grant_type,
+            response_type
         };
         return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params });
     }
