@@ -507,8 +507,10 @@ html {
     --badge-selected-color : #{$light1};
     --badge-danger-bg    : #{$red_main};
     --badge-danger-bright-bg    : #{$error};
+    --badge-danger-bright-color : #{$light1};
     --badge-warning-bg        : #{$yellow_d1};
     --badge-warning-bright-bg : #{$yellow_main};
+    --badge-warning-bright-color : #{$light1};
     --badge-success-bg        : #{$green_main};
     --badge-success-bright-bg : #{$green_l2};
     --badge-brand-bg : var(--brand-d2);

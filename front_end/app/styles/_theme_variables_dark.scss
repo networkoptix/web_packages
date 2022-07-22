@@ -505,10 +505,12 @@ html[data-theme="dark"] {
     --badge-selected-color : #EBEFF1; //$light3;
     --badge-danger-bg    : #5E1010; //$red_d4;
     --badge-danger-bright-bg : #8E1717; //$red_d2;
+    --badge-danger-bright-color : #E1E7EA; //$light4;
     --badge-warning-bg           : #E1A700; //$yellow_d1;
     --badge-warning-bright-bg    : #E1A700; //$yellow_d1;
+    --badge-warning-bright-color : #1C2327; //$dark6;
     --badge-success-bg        : #2A551E; //$green_d2;
-    --badge-success-bright-bg : #3A911E; //$green_main;
+    --badge-success-bright-bg : #32731E; //$green_d1;
     --badge-brand-bg : var(--brand-d2);
     --badge-info-bg : var(--brand-d4);
     --badge-integration-bg : #3F545F; //$dark13;
