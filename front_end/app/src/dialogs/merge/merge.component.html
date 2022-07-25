@@ -333,8 +333,10 @@
             <svg-icon
                 nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'arrow_left.svg'"
+                [svgStyle]="{ 'margin-right': '16px' }"
                 [applyClass]="true"
             ></svg-icon>
+            <ng-container>{{ 'Back' | translate }}</ng-container>
         </button>
         <button
             class="btn btn-primary svg-icon next-button"
