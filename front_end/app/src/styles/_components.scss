@@ -213,10 +213,14 @@ landing-display-component {
     .ngx-charts {
         float  : none !important;
         height : 500px;
+        
+        .tick text {
+            fill : var(--body-text-color) !important;
+        }
     }
     
     .chart-legend .legend-labels {
-        background-color : $additional_light1;
-        border: 1px solid $light4;
+        background-color : var(--svg-legend-bg);
+        border: 1px solid var(--svg-legend-border-color);
     }
 }
