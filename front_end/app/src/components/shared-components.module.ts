@@ -6,36 +6,23 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxContentBlockComponent } from '@components/content-block/content-block.component';
-import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
-import { NxRadioComponent } from '@components/radio/radio.component';
-import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
-import { NxToast } from '@components/toast/toast.component';
-import { NxToastsContainer } from '@components/toast/toast.container';
-import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
-import { NxCheckboxComponent } from './checkbox/checkbox.component';
-import { NxEmailComponent } from './email-input/email.component';
-import { NxFooterComponent } from './footer/footer.component';
-import {
-    NxPasswordTagValidationComponent
-} from './password-input-tag-validation/password-tag-validation.component';
-import {
-    NxPasswordValidationComponent
-} from './password-input-validation/password-validation.component';
-import { NxPasswordComponent } from './password-input/password.component';
-import {
-    NxPreLoaderComponent
-} from './placeholders/pre-loader/pre-loader.component';
-import {
-    NxProcessButtonComponent
-} from './process-button/process-button.component';
-import {
-    NxProcessCancelButtonComponent
-} from './process-cancel-Button/process-cancel-button.component';
-import { NxTagComponent } from './tag/tag.component';
+import { CheckboxModule } from './checkbox/checkbox.module';
+import { ContentBlockModule } from './content-block/content-block.module';
+import { EmailModule } from './email-input/email.module';
+import { FooterModule } from './footer/footer.module';
+import { PasswordTagValidationModule } from './password-input-tag-validation/password-tag-validation.module';
+import { PasswordValidationModule } from './password-input-validation/password-validation.module';
+import { PasswordModule } from './password-input/password.module';
+import { PreLoaderModule } from './placeholders/pre-loader/pre-loader.module';
+import { ProcessButtonModule } from './process-button/process-button.module';
+import { RadioModule } from './radio/radio.module';
+import { ThemeSwitcherModule } from './theme-switcher/theme-switcher.module';
+import { ToastContainerModule } from './toast/toast-container.module';
+import { ToastModule } from './toast/toast.module';
+import { TooltipModule } from './tooltip/tooltip.module';
 
 @NgModule({
     imports: [
@@ -44,70 +31,43 @@ import { NxTagComponent } from './tag/tag.component';
         RouterModule,
         TranslateModule,
         FormsModule,
-        DirectivesModule,
-        PipesModule,
         AngularSvgIconModule.forRoot(),
+        ContentBlockModule,
+        DirectivesModule,
+        FooterModule,
+        PipesModule,
+        PreLoaderModule,
+        ProcessButtonModule,
+        PasswordValidationModule,
+        PasswordModule,
+        PasswordTagValidationModule,
+        RadioModule,
+        CheckboxModule,
+        EmailModule,
+        ToastModule,
+        ToastContainerModule,
+        ThemeSwitcherModule,
+        TooltipModule,
     ],
     declarations: [
-        NxCheckboxComponent,
-        NxEmailComponent,
-        NxFooterComponent,
-        NxPasswordComponent,
-        NxPasswordTagValidationComponent,
-        NxPasswordValidationComponent,
-        NxPreLoaderComponent,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxTagComponent,
-        NxToast,
-        NxToastsContainer,
-        NxTooltipComponent,
-        NxToastsContainer,
-        NxToast,
-        NxThemeSwitcherComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
-        NxRadioComponent,
     ],
     providers: [
-        NxCheckboxComponent,
-        NxEmailComponent,
-        NxFooterComponent,
-        NxPasswordComponent,
-        NxPasswordTagValidationComponent,
-        NxPasswordValidationComponent,
-        NxPreLoaderComponent,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxTagComponent,
-        NxToastsContainer,
-        NxTooltipComponent,
-        NxToastsContainer,
-        NxToast,
-        NxThemeSwitcherComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
-        NxRadioComponent,
     ],
     exports: [
-        NxCheckboxComponent,
-        NxEmailComponent,
-        NxFooterComponent,
-        NxPasswordComponent,
-        NxPasswordTagValidationComponent,
-        NxPasswordValidationComponent,
-        NxPreLoaderComponent,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
-        NxTagComponent,
-        NxToastsContainer,
-        NxTooltipComponent,
-        NxToastsContainer,
-        NxToast,
-        NxThemeSwitcherComponent,
-        NxContentBlockComponent,
-        NxContentBlockSectionComponent,
-        NxRadioComponent,
+        ContentBlockModule,
+        FooterModule,
+        PreLoaderModule,
+        ProcessButtonModule,
+        PasswordValidationModule,
+        PasswordModule,
+        PasswordTagValidationModule,
+        RadioModule,
+        CheckboxModule,
+        EmailModule,
+        ToastModule,
+        ToastContainerModule,
+        ThemeSwitcherModule,
+        TooltipModule,
     ]
 })
 export class SharedComponentsModule {
