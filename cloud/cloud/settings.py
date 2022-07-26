@@ -780,6 +780,12 @@ NOTIFICATIONS_CONFIG = {
     'ipvd_feedback_detail': {
         'engine': 'email'
     },
+    'ownership_transfer_invite': {
+        'engine': 'email'
+    },
+    'ownership_transfer_response': {
+        'engine': 'email'
+    },
     'push_notification': {
         'queue': 'push-notification'
     },

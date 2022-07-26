@@ -22,7 +22,7 @@ cloud_storages:
     url: 'https://$CLOUD_PORTAL_HOST/cdb/storages'
 
 trafficRelay:
-    host: 'relay-bur.vmsproxy.hdw.mx'
+    host: 'relay.relay.cloud.hdw.mx'
 
 bucket: 'cloud-portal'
 

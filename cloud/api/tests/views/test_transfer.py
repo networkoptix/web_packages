@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from api.views.transfer import *
+from api.views.systems import cloud_api
 from conftest import generate_uuids
 import pytest
 
 
 class TestTransferViews:
     ownership_transfer_mock_path = 'cloud.controllers.cloud_api.OwnershipTransfer.'
+    ownership_email_response_mock = 'api.views.transfer.'
 
     @pytest.fixture()
     def create_user(self, django_user_model):
@@ -36,6 +38,7 @@ class TestTransferViews:
         system_id = generate_uuids(1)
 
         view = TransferSystemActions().as_view()
+        mocker.patch(self.ownership_email_response_mock + 'send_ownership_transfer_email')
         request = arf.post(f'/transfer/{system_id}', {'newOwnerEmail': self.user.email})
         request.user = self.user
         request.session = {}
@@ -56,6 +59,8 @@ class TestTransferViews:
 
         assert view(request, system_id).status_code == 400
         assert not mock_act_on.called
+
+        mocker.patch(self.ownership_email_response_mock + 'send_ownership_transfer_response_email')
 
         request = arf.put(f'/transfer/{system_id}', {'action': action})
         request.user = self.user
