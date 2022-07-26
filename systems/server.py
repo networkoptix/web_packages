@@ -730,7 +730,7 @@ def server_health():
     return 'OK', 200
 
 
-if __name__ == "__main__" or True:
+if __name__ == "__main__":
     @app.route('/')
     async def index():
         return await current_app.send_static_file('index.html')
