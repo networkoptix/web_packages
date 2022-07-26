@@ -255,10 +255,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def custom_client_vms_assets(self):
-        return Asset.objects.filter(
+        return Asset.objects.filter(models.Q(
             asset_type__type=AssetType.ASSET_TYPES.vms,
-            customizations__in=UserGroupsToAssetPermissions.get_customizations_with_permission(self, 'custom_clients')
-        )
+            customizations__in=UserGroupsToAssetPermissions.get_customizations_with_permission(
+                self, 'custom_clients')) | models.Q(asset_type__type=AssetType.ASSET_TYPES.vms, customizations__name=settings.CUSTOMIZATION)
+        ).distinct()
 
     @property
     def is_portal_manager(self):

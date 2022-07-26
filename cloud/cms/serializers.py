@@ -4,7 +4,7 @@ from django.core import validators, exceptions
 from rest_framework import serializers, fields
 from cms.controllers.modify_db import save_unrevisioned_records
 
-from cms.models import Asset, Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON
+from cms.models import Asset, Context, DataStructure, AssetType, CustomClient, Customization, OpenAPIJSON, get_vms_asset
 import re
 
 
@@ -245,6 +245,8 @@ class CustomClientSerializer(serializers.ModelSerializer):
             self.fields['base_vms'].read_only = True
         else:
             self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets
+            self.fields['base_vms'].required = False
+            self.fields['base_vms'].default = get_vms_asset()
 
 
 class FieldeManifestSerialzier(serializers.Serializer):
