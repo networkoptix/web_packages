@@ -348,8 +348,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.systemInfoSubscription?.unsubscribe();
                             this.systemSubscription.unsubscribe();
                         }
+
                         this.systemSubscription = this.systemsService.systemsSubject
                             .subscribe((systems) => {
+                                if (this.systemsService.userDisconnectSystem) {
+                                    // don't trigger this.systemNoAccess
+                                    this.systemsService.userDisconnectSystem = false;
+                                    return;
+                                }
                                 const system = systems.find((system) =>
                                     system.id === this.systemId
                                 );

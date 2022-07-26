@@ -385,6 +385,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }
                 }
             }).catch(_ => _);
+
         if (this.system.userManager.isMine) {
             if (!this.system.cloudStorageCapable) {
                 return handleDisconnect();
@@ -429,6 +430,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     updateAndGoToSystems = () => {
         // this.userDisconnectSystem = true;
+        this.systemsService.userDisconnectSystem = true;
         this.systemsService
             .forceUpdateSystems(this.accountService.email)
             .subscribe(() => {

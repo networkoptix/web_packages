@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
-import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
+import { of, ReplaySubject, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -38,6 +38,8 @@ export class NxSystemsService implements OnDestroy {
         secondary: undefined
     };
 
+    private _userDisconnectSystem: boolean = false;
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -56,6 +58,14 @@ export class NxSystemsService implements OnDestroy {
             this.systemsSubject.next([]);
         }
         this.mergingSystems = new Set();
+    }
+
+    get userDisconnectSystem(): boolean {
+        return this._userDisconnectSystem;
+    }
+
+    set userDisconnectSystem(value: boolean) {
+        this._userDisconnectSystem = value;
     }
 
     get isPolling() {
