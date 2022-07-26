@@ -29,9 +29,9 @@
 </div>
 
 <div class="panel-body text-center panel-body-big" ng-if="stepIs('start')">
-    <div ng-class="{'vertical-bottom':!settings.liteClient, 'master-description': settings.liteClient}">
+    <div>
         <h2>Débuter avec {{Config.productName}}</h2>
-        <p>Veuillez d'abord configurer le serveur.<br>
+        <p class="master-description">Veuillez d'abord configurer le serveur.<br>
             Choisissez une option.</p>
         <div class="spacer" ng-if="!settings.liteClient"><br><br><br></div>
         <button class="btn btn-primary" autofocus ng-click="next()">Configuration Nouveau Système</button>
@@ -63,7 +63,7 @@
                 Nom Système nécessaire
             </div>
         </div>
-
+        <input type="submit" hidden/>
     </form>
     <p class="vertical-bottom">
         <a href="" ng-click="next('advanced', true)">Paramètres système avancés</a>
@@ -73,7 +73,7 @@
 
 <div class="panel-body text-center" ng-if="stepIs('advanced')">
     <h2>Paramètres système avancés</h2>
-    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate>
+    <form class="master-controls wide text-left" name="forms.advancedSettings" novalidate ng-submit="next('systemName', true)">
         <div class="form-group" ng-repeat="(setting, value) in systemSettings">
             <div class="new-style-checkbox" ng-if="Config.settingsConfig[setting].type == 'checkbox' ">
                 <label class="nx-checkbox">
@@ -111,6 +111,7 @@
                    ng-model="systemSettings[setting]"
                    class="form-control input-sm"/>
         </div>
+        <input type="submit" hidden/>
     </form>
 </div>
 
@@ -185,7 +186,8 @@
 
     <h2>Connecter sur <span class="product-name add-version">{{Config.cloud.productName}}</span></h2>
 
-    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}">
+    <form class="master-controls" name="forms.cloudForm" novalidate ng-class="{'has-error':settings.cloudError}" ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
             <input ng-model="settings.cloudEmail" name="cloudEmail" class="form-control"
                    type="email" placeholder="Courriel" autocomplete="new-password" required auto-focus ng-change="clearCloudError()">
@@ -195,11 +197,25 @@
                    type="password" autocomplete="new-password" required placeholder="Mot de passe" ng-change="clearCloudError()">
         </div>
 
-        <div class="checkbox text-left" ng-if="settings.thickClient">
-            <labe>
-                <input ng-model="settings.savePassword" type="checkbox">
-                Rester connecté
-            </labe>
+        <div class="new-style-checkbox" ng-if="settings.thickClient">
+            <label class="nx-checkbox">
+                <input type="checkbox"
+                       id="stayLoggedIn"
+                       ng-model="settings.savePassword">
+
+                <span class="tick"
+                      ng-class="{'checked' : settings.savePassword}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                        </svg>
+                    </span>
+            </label>
+            <label class="control-label mb-0" for="stayLoggedIn">
+                <span>Stay logged in</span>
+            </label>
         </div>
 
         <div class="form-group has-error"
@@ -233,7 +249,8 @@
 
 <div class="panel-body text-center" ng-if="stepIs('localLogin')">
     <h2>Mettre en place un mot de passe administrateur</h2>
-    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete>
+    <form class="master-controls" name="forms.localForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden/>
         <div class="form-group" validate-field>
             <!-- <input ng-model="settings.localLogin" name="localLogin" class="form-control"
                    type="text" placeholder="Login" required readonly> -->
@@ -247,17 +264,32 @@
             <input ng-model="settings.localPasswordConfirmation" name="localPasswordConfirmation" class="form-control"
                    type="password" autocomplete="new-password" placeholder="Répéter mot de passe" required>
         </div>
-        <div class="checkbox text-left" ng-if="settings.thickClient">
-            <labe>
-                <input ng-model="settings.savePassword" type="checkbox">
-                Sauvergarder mot de passe
-            </labe>
+
+        <div class="new-style-checkbox" ng-if="settings.thickClient">
+            <label class="nx-checkbox">
+                <input type="checkbox"
+                       id="savePassword"
+                       ng-model="settings.savePassword">
+
+                <span class="tick"
+                      ng-class="{'checked' : settings.savePassword}">
+
+                        <svg viewBox="0 0 18 16">
+                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>
+                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>
+                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>
+                        </svg>
+                    </span>
+            </label>
+            <label class="control-label mb-0" for="savePassword">
+                <span>Sauvergarder mot de passe</span>
+            </label>
         </div>
 
         <div class="form-group"
              ng-if="(!forms.localForm.localLogin.$touched || forms.localForm.localLogin.$valid) &&
-+                    !forms.localForm.passwordInput.$dirty &&
-+                    !forms.localForm.localPasswordConfirmation.$touched">
+                     !forms.localForm.passwordInput.$dirty &&
+                     !forms.localForm.localPasswordConfirmation.$touched">
             <div class="help-block">
                 Mot de passe doit contenir différents types de caractères et avoir au moins 8 charactères
             </div>
@@ -298,9 +330,9 @@
 
 <div class="panel-body text-center" ng-hide="!stepIs('merge')">
     <h2>Connecter le serveur sur le système existant</h2>
-    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete>
-        <div class="form-group" validate-field>
-
+    <form class="master-controls wide text-left" name="forms.remoteSystemForm" novalidate disable-autocomplete ng-submit="next()">
+        <input type="submit" hidden/>
+        <div class="form-group" validate-field >
             <input type="text" ng-model="settings.remoteSystem" name="remoteSystemName"
                    uib-typeahead="system as system.visibleName for system in discoveredUrls | filter: {isNew:false, visibleName: $viewValue} | limitTo:8"
                    uib-typeahead-input-formatter="getSystemName($model)"
@@ -309,10 +341,10 @@
                    uib-typeahead-show-hint="true"
                    uib-typeahead-focus-first="false"
                    uib-typeahead-focus
- placeholder="URL du système existante (https://host:port)"
+                   placeholder="Existing System URL (https://host:port)"
                    ng-change="clearRemoteError()"
                    required
- class="form-control">
+                   class="form-control">
 
             <p class="help-block text-left">
                 {{settings.remoteSystem.hint}}
@@ -498,6 +530,16 @@
 </div>
 
 <div class="panel-footer" ng-hide="activeStep.noFooter">
+    <button class="btn btn-primary pull-right"
+            ng-if="activeStep.next"
+            ng-disabled="lockNextButton"
+            auto-focus
+            ng-click="next()">Suivant<span class="glyphicon glyphicon-arrow-right"></span></button>
+    <button class="btn btn-primary pull-right"
+            ng-if="activeStep.finish"
+            ng-disabled="lockNextButton"
+            auto-focus
+            ng-click="finish()">Terminer</button>
     <button class="btn btn-default"
             ng-if="activeStep.cancel"
             ng-disabled="lockNextButton"
@@ -505,15 +547,5 @@
     <button class="btn btn-default"
             ng-if="activeStep.back"
             ng-disabled="lockNextButton"
-            ng-click="back()"><span class="glyphicon glyphicon-arrow-left"> </span></button>
-    <button class="btn btn-primary pull-right"
-            ng-if="activeStep.next"
-            ng-disabled="lockNextButton"
-            auto-focus
- ng-click="next()">Suivant<span class="glyphicon glyphicon-arrow-right"></span></button>
-    <button class="btn btn-primary pull-right"
-            ng-if="activeStep.finish"
-            ng-disabled="lockNextButton"
-            auto-focus
- ng-click="finish()">Terminer</button>
+            ng-click="back()"><span class="glyphicon glyphicon-arrow-left"></span></button>
 </div>
