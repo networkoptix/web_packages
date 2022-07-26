@@ -72,11 +72,6 @@ require('what-input');
                 *ngIf="(!appStateService.ready && !newSystem) || loading"
             ></nx-pre-loader>
             <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
-            <!-- test component - REMOVE AFTER TESTING -->
-            <div style="position: absolute; bottom : 20px; left : 20px; z-index : 99999;">
-                <nx-theme-switcher-component layout="test"></nx-theme-switcher-component>
-            </div>
-            <!-- end test component - REMOVE AFTER TESTING -->
         </ng-container>`,
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
