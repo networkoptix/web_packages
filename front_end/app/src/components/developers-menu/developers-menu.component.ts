@@ -52,7 +52,6 @@ export class NxDevelopersMenuComponent implements OnInit {
     firstUrl = '';
     highlightedTopNode: string;
     searchQuery$ = new BehaviorSubject('');
-    queryChanged = false;
 
     constructor(
         configService: NxConfigService,
@@ -186,7 +185,6 @@ export class NxDevelopersMenuComponent implements OnInit {
 
     updateSearchQuery({ query }): void {
         if (query !== '' && query === this.searchQuery$.value) return;
-        this.queryChanged = true;
         this.searchQuery$.next(query);
     }
 
@@ -261,7 +259,7 @@ export class NxDevelopersMenuComponent implements OnInit {
             if (menu?.nodes?.length) {
                 this.displayedMenuNodes = menu.nodes;
                 this.menuNodes = menu.nodes;
-                if (this.searchEnabled && this.uriService.queryParams.search && !this.queryChanged) {
+                if (this.searchEnabled && this.uriService.queryParams.search) {
                     this.filterMenuItems(this.uriService.queryParams.search);
                 }
                 if (this.service.activeNode) {
