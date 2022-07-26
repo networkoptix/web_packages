@@ -392,9 +392,11 @@ def proxy(request, system_id, system_url):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def system_groups_users_management(request):
-    require_params(request, ('systems', 'users'))
-    systems = request.data.get('systems')
-    users = request.data.get('users')
+    require_params(request, ('systems',))
+    systems = request.data.get('systems', [])
+    users = request.data.get('users', [])
+    if len(users) == 0:
+        return api_success();
     for system_id in systems:
         for user in users:
             cloud_api.System.share(
