@@ -47,8 +47,8 @@
 
     &:focus {
         background-color: var(--input-active-bg) !important;
-        color : var(--input-active-color) !important;
-        border-color : var(--input-active-border-color) !important;
+        color : var(--input-focus-color) !important;
+        border-color : var(--input-focus-border-color) !important;
         box-shadow   : none;
     }
 
