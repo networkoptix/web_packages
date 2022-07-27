@@ -17,6 +17,7 @@
     transition       : none !important;
     box-shadow       : none !important;
     padding          : $padding-base-vertical $padding-input-horizontal !important;
+    caret-color      : var(--input-color) !important;
 
     @include mixins.placeholder ();
     
@@ -64,6 +65,8 @@
 }
 
 .form-component {
+    caret-color : var(--input-color) !important;
+    
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
@@ -73,6 +76,9 @@
     }
     
     input {
+        border: 1px solid var(--input-border-color) !important;
+        caret-color : var(--input-color) !important;
+        
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
@@ -165,6 +171,8 @@ input.hide-errors {
     transition       : none !important;
     box-shadow       : none !important;
     padding          : $padding-base-vertical $padding-input-horizontal !important;
+    caret-color      : var(--input-color) !important;
+    
     @include mixins.placeholder ();
     
     &:-webkit-autofill,

@@ -36,6 +36,7 @@
             background    : transparent !important;
             outline       : none !important;
             box-shadow    : none !important;
+            caret-color   : var(--input-color) !important;
 
             &:focus::placeholder {
                 color: transparent !important;
