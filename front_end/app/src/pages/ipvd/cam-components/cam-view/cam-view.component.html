@@ -14,11 +14,15 @@
                 <span>{{ activeCamera.vendor }}</span>
                 <span class="ml-1">{{ activeCamera.model }}</span>
             </h4>
-            <span
-                class="glyphicon close-icon detailsClose"
+            <button
+                type="button"
+                class="close detailsClose"
+                data-dismiss="modal"
+                aria-label="Close"
                 (click)="closeView()"
             >
-            </span>
+                <div class="close-content"></div>
+            </button>
         </header>
 
         <nx-section>

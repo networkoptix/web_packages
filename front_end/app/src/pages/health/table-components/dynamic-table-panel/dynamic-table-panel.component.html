@@ -11,11 +11,15 @@
             <h4 class="panel-title">
                 <span [innerText]="name"></span>
             </h4>
-            <span
-                class="glyphicon close-icon detailsClose"
+            <button
+                type="button"
+                class="close detailsClose"
+                data-dismiss="modal"
+                aria-label="Close"
                 (click)="closeView()"
             >
-            </span>
+                <div class="close-content"></div>
+            </button>
         </header>
         <ng-container *ngIf="panelParams.id === 'cameras' && !healthService.importedData">
             <nx-image-section [cameraInfo]="healthLayoutService.activeEntity"></nx-image-section>
