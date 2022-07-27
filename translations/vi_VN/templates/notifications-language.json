@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "Phản hồi trang camera{{#message.asset}} cho {{{message.asset}}}{{/message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "Ownership transfer for {{message.system_name}}"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} có phiên bản mới để xem xét"
   },

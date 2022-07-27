@@ -20,6 +20,12 @@
   "ipvd_feedback": {
     "emailSubject": "Kameraside Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
+  "ownership_transfer_invite": {
+    "emailSubject": "Ownership transfer for {{message.system_name}}"
+  },
+  "ownership_transfer_response": {
+    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+  },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} har en ny version at gennemgå"
   },
