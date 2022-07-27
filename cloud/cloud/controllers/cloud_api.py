@@ -31,7 +31,8 @@ INVALID_SESSION_ERRORS = [ErrorCodes.bad_username.value,
                           ErrorCodes.not_found.value,
                           ErrorCodes.account_not_activated.value,
                           ErrorCodes.forbidden.value,
-                          ErrorCodes.user_password_required.value]
+                          ErrorCodes.user_password_required.value,
+                          ErrorCodes.vms_request_failure.value]
 
 
 # Todo: Once cloud_db supports basic and digest switch to true.
