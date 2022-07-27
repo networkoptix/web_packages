@@ -221,6 +221,14 @@ landing-display-component {
     
     .chart-legend .legend-labels {
         background-color : var(--svg-legend-bg);
-        border: 1px solid var(--svg-legend-border-color);
+        border           : 1px solid var(--svg-legend-border-color);
+        
+        .legend-label {
+            color : var(--body-text-color);
+    
+            .active .legend-label-text {
+                color : var(--body-text-color);
+            }
+        }
     }
 }
