@@ -43,7 +43,7 @@ Cloud Suite Setup
     Sleep    1
     Click    Link    ${SERVERS LINK}
     Verify on Servers Page    timeout=95
-    Run Keyword And Ignore Error    Dismiss New Feature Modal
+    #Dismiss New Feature Modal
     Log Out
 
 #Users Test Setup

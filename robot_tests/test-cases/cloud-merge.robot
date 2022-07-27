@@ -337,10 +337,8 @@ Force Tags        merge
     Go To    ${url}
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    timeout=60
     Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog
-    Click Button    ${MERGE SYSTEM DROPDOWN}
-    Element Should Not Be Visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 2}[name]")]
-    Continue For Loop If     '''${mode}''' == '''webadmin'''
+    Wait Until Elements Are Visible    ${MERGE DIALOG}    ${MERGE SERVER NOT FOUND}     ${MERGE SERVER NOT FOUND BODY}    ${MERGE FAILED OK BUTTON}
+    Click Button    ${MERGE FAILED OK BUTTON}
     Go To    ${ENV}/systems/
     Wait Until Element Is Visible    //h2[contains(text(), "${system 1}[name]")]
     Wait Until Element Is Not Visible    //h2[contains(text(), "${system 2}[name]")]

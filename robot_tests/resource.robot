@@ -1503,7 +1503,7 @@ Remove User Permissions
     Wait Until Element Is Visible    ${REMOVE BUTTON}
     Click Button    ${REMOVE BUTTON}
 #    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
-    Wait Until Element Is Not Visible    ${User In List}
+    Wait Until Elements Are Not Visible    ${User In List}    ${REMOVE USER MODAL}
 
 Select user in Users List
     [Arguments]    ${user email address}

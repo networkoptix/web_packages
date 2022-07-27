@@ -20,5 +20,6 @@ Resource     front-end-variables/login-variables.robot
 Resource     front-end-variables/system-users-variables.robot
 Resource     front-end-variables/activate-variables.robot
 Resource     front-end-variables/downloads-variables.robot
+Resource     front-end-variables/cloud-merge-variables.robot
 Resource     front-end-variables/history-variables.robot
 Resource     front-end-variables/integrations-getintouch-form-validation-variables.robot

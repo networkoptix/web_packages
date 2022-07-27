@@ -2,7 +2,7 @@
 Variables    getvars.py
 Resource     variables/front-end-variables.robot
 Resource     variables/cms-variables.robot
-Resource     variables/cloud-merge-variables.robot
+#Resource     variables/cloud-merge-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast')]//span[contains(@class,'toast-content')]

@@ -586,7 +586,7 @@ Force Tags        system    threaded
 
     Log     C47020: checking that system is disconnected from cloud on the server side
     Restart Server    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
-    Sleep    10
+    Sleep   65
     ${cloud system id}=   Get Cloud System Id    https://${QA BURBANK IP}:${system}[port]    ${system}[local auth]
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
