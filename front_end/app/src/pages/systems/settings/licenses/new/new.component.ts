@@ -193,7 +193,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     };
 
                     if (server.status !== 'Online') {
-                        option.help = `&mdash;&nbsp;${server.status}`;
+                        option.help = ` - ${server.status}`;
                     }
 
                     return option;
