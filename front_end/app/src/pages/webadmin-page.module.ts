@@ -7,7 +7,6 @@ import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
 
-import { Nx500Module } from './500/500.module';
 // import { NxDebugModule } from './debug/debug.module';
 import {
     NonSupportedBrowserModule
@@ -57,6 +56,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
     },
     {
+        path: '500',
+        loadChildren: () => import('./500/500.module').then(m => m.Nx500Module)
+    },
+    {
         path: '404',
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
     },
@@ -72,7 +75,6 @@ const lazyRoutes: Routes = [
         PipesModule,
         NonSupportedBrowserModule,
         // NxDebugModule,
-        Nx500Module,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation: 'enabledNonBlocking',
             scrollPositionRestoration: 'enabled',
@@ -92,7 +94,6 @@ const lazyRoutes: Routes = [
     exports: [
         NonSupportedBrowserModule,
         // NxDebugModule,
-        Nx500Module,
         RouterModule
     ]
 })

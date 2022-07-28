@@ -67,9 +67,7 @@ const appRoutes: Routes = [
         NxAccountComponent
     ],
     bootstrap: [],
-    exports: [
-        NxAccountComponent
-    ]
+    exports: []
 })
 export class NxAccountModule {
 }

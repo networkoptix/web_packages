@@ -1,3 +1,4 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -20,7 +21,8 @@ import { NxUrlValidatorDirective } from './nx-url-validator';
 
 @NgModule({
     imports: [
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        OverlayModule
     ],
     declarations: [
         NxArrowNavDirective,

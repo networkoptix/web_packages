@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -22,7 +23,8 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         ComponentsModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        SectionPlaceholderModule
     ],
     providers: [
     ],

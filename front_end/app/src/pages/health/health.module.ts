@@ -7,6 +7,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ComponentsModule } from '@components/components.module';
+import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { PaginatorModule } from '@components/paginator/paginator.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -86,7 +90,11 @@ const appRoutes: Routes = [
         NgxFileDropModule,
         PipesModule,
         RouterModule.forChild(appRoutes),
-        MenuModule
+        MenuModule,
+        PagePlaceHolderModule,
+        PaginatorModule,
+        InfoBlockModule,
+        SearchModule
     ],
     providers: [NxHealthLayoutService],
     declarations: [

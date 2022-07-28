@@ -10,7 +10,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { Nx503Component } from './503.component';
 
 const appRoutes: Routes = [
-    { path: '503', component: Nx503Component }
+    { path: '', component: Nx503Component }
 ];
 
 @NgModule({

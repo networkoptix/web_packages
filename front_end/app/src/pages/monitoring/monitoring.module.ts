@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { MonitoringGraphModule } from '@components/graph/graph.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -40,6 +42,8 @@ const appRoutes: Routes = [
         ComponentsModule,
         RouterModule.forChild(appRoutes),
         MenuModule,
+        PagePlaceHolderModule,
+        MonitoringGraphModule
     ],
     providers: [
         NxMonitoringService,

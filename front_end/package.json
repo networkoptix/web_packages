@@ -31,6 +31,8 @@
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",
     "bundle-report": "npm run lang && ng build --configuration production --stats-json && webpack-bundle-analyzer dist/stats.json -s gzip",
     "bundle-report:auth": "npm run lang && ng build authorization --configuration production --stats-json && webpack-bundle-analyzer dist/authorization/stats.json -s gzip",
+    "explore:js": "source-map-explorer ./dist/*.js",
+    "explore:css": "source-map-explorer ./dist/*.css",
     "postbuild": "./cloud-portal-postbuild.sh",
     "postbuild-webadmin": "./cloud-portal-postbuild.sh true",
     "set-node-version": "npx n 16.13.1",
@@ -128,6 +130,7 @@
     "zone.js": "~0.11.5"
   },
   "devDependencies": {
+    "source-map-explorer": "^2.5.2",
     "@angular-devkit/build-angular": "14.0.4",
     "@angular-eslint/builder": "14.0.1",
     "@angular-eslint/eslint-plugin": "14.0.1",

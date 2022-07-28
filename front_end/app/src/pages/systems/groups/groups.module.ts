@@ -9,6 +9,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
 import { ComponentsModule } from '@components/components.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -35,6 +36,7 @@ import { groupsReducer } from './store/groups/groups.reducer';
         AngularSvgIconModule.forRoot(),
         DragDropModule,
         StoreModule.forFeature('groups', groupsReducer),
+        PagePlaceHolderModule
     ],
     providers: [
         CookieService,

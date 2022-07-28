@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { PaginatorModule } from '@components/paginator/paginator.module';
+import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -31,7 +33,9 @@ const appRoutes: Routes = [
         PipesModule,
         ReactiveFormsModule,
         RouterModule.forChild(appRoutes),
-        AngularSvgIconModule
+        AngularSvgIconModule,
+        PaginatorModule,
+        SearchModule
     ],
     providers: [
         IpvdSearchService

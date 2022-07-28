@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -28,7 +29,8 @@ const appRoutes: Routes = [
         PipesModule,
         FormsModule,
         BookmarksListModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        SearchModule
     ],
     providers: [],
     declarations: [

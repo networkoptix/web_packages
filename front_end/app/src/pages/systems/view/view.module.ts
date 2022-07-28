@@ -5,6 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { PlayerPlaceholderModule } from '@components/placeholders/player/player-placeholder.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { ComponentsModule } from '../../../components/components.module';
@@ -35,7 +37,9 @@ import { VmsClientModule } from './vms-client/vms-client.module';
         VmsClientTimelineModule,
         VmsClientVmsModule,
         VmsClientModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        PagePlaceHolderModule,
+        PlayerPlaceholderModule
     ],
     providers: [
         CookieService,

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -105,7 +106,8 @@ export const cloudSettingsRoutes: Routes = [
         NxSystemLicensesModule,
         NxCamerasModule,
         MenuModule,
-        RouterModule.forChild(cloudSettingsRoutes)
+        RouterModule.forChild(cloudSettingsRoutes),
+        PagePlaceHolderModule
     ],
     providers: [
         NxSettingsService

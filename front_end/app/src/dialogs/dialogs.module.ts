@@ -10,6 +10,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { ComponentsModule } from '@components/components.module';
+import { DynamicWidgetModule } from '@components/dynamic-widget/dynamic-widget.module';
+import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { TransferOwnershipModalContent } from '@dialogs/transfer-ownership/transfer-ownership.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -67,7 +69,9 @@ import { WizardModalContent } from './wizard/wizard.component';
         QrCodeModule,
         GenericDialogModule,
         NgxTranslateCutModule,
-        NgxMaskModule
+        NgxMaskModule,
+        DynamicWidgetModule,
+        InfoBlockModule
     ],
     declarations: [
         LoginWebadminModalContent,
@@ -109,7 +113,8 @@ import { WizardModalContent } from './wizard/wizard.component';
     ],
     providers: [],
     exports: [
-        GenericDialogModule
+        GenericDialogModule,
+        DynamicWidgetModule
     ]
 })
 export class DialogsModule {

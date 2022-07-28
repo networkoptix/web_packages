@@ -8,6 +8,8 @@ import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { ComponentsModule } from '@components/components.module';
+import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
@@ -56,7 +58,9 @@ const dbConfig: DBConfig = {
         AngularSvgIconModule.forRoot(),
         NgxIndexedDBModule.forRoot(dbConfig),
         RouterModule.forChild(appRoutes),
-        FormsModule
+        FormsModule,
+        PagePlaceHolderModule,
+        DevelopersMenuModule
     ],
     providers: [],
     declarations: [

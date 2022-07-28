@@ -10,26 +10,13 @@ import { FeatureGuard } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
-import { NxLandingComponent } from '@pages/landing/landing.component';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { PipesModule } from '@src/pipes/pipes.module';
-
-import { Nx500Module } from './500/500.module';
-import { Nx503Module } from './503/503.module';
-import { NxAccountModule } from './account/account.module';
-// import { NxDebugModule } from './debug/debug.module';
-import {
-    DownloadHistoryModule
-} from './download-history/download-history.module';
-import { DownloadModule } from './download/download.module';
-import {
-    NonSupportedBrowserModule
-} from './non-supported-browser/non-supported-browser.module';
 
 const lazyRoutes: Routes = [
     {
         path: '',
-        component: NxLandingComponent,
+        loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule),
         pathMatch: 'full'
     },
     {
@@ -172,6 +159,14 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module) // It's a dummy load. Route guard actually redirect to the oauth app
     },
     {
+        path: '500',
+        loadChildren: () => import('./500/500.module').then(m => m.Nx500Module)
+    },
+    {
+        path: '503',
+        loadChildren: () => import('./503/503.module').then(m => m.Nx503Module)
+    },
+    {
         path: '404',
         loadChildren: () => import('./404/404.module').then(m => m.Nx404Module)
     },
@@ -195,13 +190,6 @@ const lazyRoutes: Routes = [
     imports: [
         DirectivesModule,
         PipesModule,
-        DownloadModule,
-        DownloadHistoryModule,
-        NonSupportedBrowserModule,
-        NxAccountModule,
-        // NxDebugModule,
-        Nx500Module,
-        Nx503Module,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation: 'enabledNonBlocking',
             scrollPositionRestoration: 'enabled',
@@ -218,15 +206,7 @@ const lazyRoutes: Routes = [
         AuthGuard,
         RedirectAuthGuard
     ],
-    exports: [
-        DownloadModule,
-        DownloadHistoryModule,
-        NonSupportedBrowserModule,
-        // NxDebugModule,
-        Nx500Module,
-        Nx503Module,
-        RouterModule
-    ]
+    exports: []
 })
 
 export class PagesModule {

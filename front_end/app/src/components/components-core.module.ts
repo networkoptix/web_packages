@@ -1,6 +1,4 @@
 import { CdkAccordionModule } from '@angular/cdk/accordion';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -11,7 +9,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
@@ -26,7 +23,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
 
 @NgModule({
     imports: [
-        NgxChartsModule,
         CommonModule,
         TranslateModule,
         RouterModule,
@@ -41,9 +37,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         CdkTreeModule,
         NgxFileDropModule,
         EditorModule,
-        CdkAccordionModule,
-        DragDropModule,
-        OverlayModule,
         TextFieldModule,
         EditorModule,
         PortalModule,
@@ -56,7 +49,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
     ],
     exports: [
-        NgxChartsModule,
         CommonModule,
         TranslateModule,
         RouterModule,
@@ -70,8 +62,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         NgxFileDropModule,
         EditorModule,
         CdkAccordionModule,
-        DragDropModule,
-        OverlayModule,
         TextFieldModule,
         EditorModule,
         PortalModule,

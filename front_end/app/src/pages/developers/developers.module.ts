@@ -6,9 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
+import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { DevelopersGuard } from '@guards/developersGuard';
-import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { Nx404Component } from '../404/404.component';
@@ -78,7 +79,8 @@ const appRoutes: Routes = [
         NxAboutModule,
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
-        MenuModule
+        DevelopersMenuModule,
+        SearchModule
     ],
     providers: [],
     declarations: [
@@ -90,4 +92,4 @@ const appRoutes: Routes = [
         NxKnowledgeBaseComponent
     ]
 })
-export class NxDevelopersModule {}
+export class NxDevelopersModule { }

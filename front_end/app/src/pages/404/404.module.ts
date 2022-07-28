@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -20,6 +21,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         PipesModule,
+        PagePlaceHolderModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [],

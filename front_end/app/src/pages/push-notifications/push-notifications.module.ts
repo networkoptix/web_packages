@@ -38,9 +38,7 @@ export function initializeApp(CONFIG: NxConfigService) {
     ],
     bootstrap: [
     ],
-    exports: [
-        PushComponent
-    ]
+    exports: []
 })
 export class PushNotificationsModule {
 }

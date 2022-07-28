@@ -7,7 +7,6 @@ import { SubscriptionLike } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { ModalContent } from '@components/console-table/console-table.component.types';
-// import { WidgetCard } from '@components/widgets/helper-classes';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';

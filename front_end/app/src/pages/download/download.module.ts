@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -28,7 +29,8 @@ const appRoutes: Routes = [
         DirectivesModule,
         PipesModule,
         AngularSvgIconModule.forRoot(),
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        SectionPlaceholderModule
     ],
     providers: [
         OsResolver
@@ -37,9 +39,7 @@ const appRoutes: Routes = [
         DownloadComponent
     ],
     bootstrap: [],
-    exports: [
-        DownloadComponent
-    ]
+    exports: []
 })
 export class DownloadModule {
 }

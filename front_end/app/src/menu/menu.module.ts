@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -28,6 +29,7 @@ import { NxMenuComponent } from './menu.component';
         ComponentsModule,
         DirectivesModule,
         PipesModule,
+        SearchModule
     ],
     declarations: [
         NxMenuComponent,

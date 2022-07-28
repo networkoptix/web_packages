@@ -6,6 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { SectionPlaceholderModule } from '@components/placeholders/section/section-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -34,7 +37,10 @@ import {
         DirectivesModule,
         PipesModule,
         AngularSvgIconModule.forRoot(),
-        NxCloudStorageModule
+        NxCloudStorageModule,
+        PagePlaceHolderModule,
+        SectionPlaceholderModule,
+        InfoBlockModule
     ],
     providers: [
     ],

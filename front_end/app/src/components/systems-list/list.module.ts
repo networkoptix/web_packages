@@ -6,6 +6,7 @@ import { FooterModule } from '@components/footer/footer.module';
 import { NoSystemsModule } from '@components/no-systems/no-systems.module';
 import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SearchModule } from '@components/search/search.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 import { TagModule } from '@components/tag/tag.module';
 
@@ -21,6 +22,7 @@ import { NxSystemsListComponent } from './list.component';
         NoSystemsModule,
         PreLoaderModule,
         TagModule,
+        SearchModule
     ],
     declarations: [
         NxSystemsListComponent
@@ -33,4 +35,4 @@ import { NxSystemsListComponent } from './list.component';
     ]
 })
 
-export class SystemListModule {}
+export class SystemListModule { }

@@ -1,4 +1,3 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutModule } from '@angular/cdk/layout';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
@@ -23,7 +22,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CookieService } from 'ngx-cookie-service';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
@@ -55,7 +53,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
-import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 import { systemsReducer } from '@src/store/systems/systems.reducer';
 
@@ -79,15 +76,12 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
         FormsModule,
         ReactiveFormsModule,
         LayoutModule,
-        DragDropModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
             headerName: 'X-CSRFToken'
         }),
-        NgxChartsModule,
         ComponentsModule,
-        MenuModule,
         PopoverModule,
         DirectivesModule,
         PipesModule,

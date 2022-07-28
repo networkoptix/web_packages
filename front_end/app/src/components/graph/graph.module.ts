@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
@@ -15,6 +16,7 @@ import { NxMonitoringGraphComponent } from './graph.component';
         ContentBlockModule,
         ContentBlockSectionModule,
         SectionPlaceholderModule,
+        NgxChartsModule,
     ],
     declarations: [
         NxMonitoringGraphComponent
@@ -27,4 +29,4 @@ import { NxMonitoringGraphComponent } from './graph.component';
     ]
 })
 
-export class MonitoringGraphModule {}
+export class MonitoringGraphModule { }

@@ -1,4 +1,3 @@
-import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
@@ -47,7 +46,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             }
         }),
         NgxWebstorageModule.forRoot(),
-        OverlayModule,
         GenericDialogModule,
         NxOAuthRedirectModule,
         NxAuthorizeModule,

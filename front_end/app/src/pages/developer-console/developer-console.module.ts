@@ -6,9 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { ConsoleTableModule } from '@components/console-table/console-table.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
-import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxDevConsoleComponent } from './console/console.component';
@@ -52,9 +52,9 @@ const appRoutes: Routes = [
         DirectivesModule,
         FormsModule,
         PipesModule,
+        ConsoleTableModule,
         AngularSvgIconModule.forRoot(),
-        RouterModule.forChild(appRoutes),
-        MenuModule
+        RouterModule.forChild(appRoutes)
     ],
     providers: [],
     declarations: [
@@ -65,4 +65,4 @@ const appRoutes: Routes = [
     bootstrap: [],
     exports: []
 })
-export class NxDeveloperConsoleModule {}
+export class NxDeveloperConsoleModule { }

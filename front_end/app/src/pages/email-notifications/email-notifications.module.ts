@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ComponentsModule } from '@components/components.module';
+import { StepperModule } from '@components/stepper/stepper.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -26,7 +27,8 @@ const appRoutes: Routes = [
         PipesModule,
         FormsModule,
         NgxFileDropModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        StepperModule
     ],
     providers: [],
     declarations: [

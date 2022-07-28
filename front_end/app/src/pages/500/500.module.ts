@@ -4,13 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { Nx500Component } from './500.component';
 
 const appRoutes: Routes = [
-    { path: '500', component: Nx500Component }
+    { path: '', component: Nx500Component }
 ];
 
 @NgModule({
@@ -20,6 +21,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
         PipesModule,
+        PagePlaceHolderModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [],

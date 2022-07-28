@@ -1,3 +1,4 @@
+import { Overlay } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';
@@ -7,15 +8,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { last } from 'lodash-es';
-import { MockProvider, MockModule } from 'ng-mocks';
+import { MockProvider, MockModule, MockDirective } from 'ng-mocks';
 import { LocalStorageService } from 'ngx-webstorage';
 import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
 import { ComponentsModule } from '@components/components.module';
+import { PaginatorModule } from '@components/paginator/paginator.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { SearchModule } from '@components/search/search.module';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxMenusService } from '@services/menus.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
@@ -71,6 +76,7 @@ describe('NxConsoleTableComponent', () => {
             .configureTestingModule({
                 declarations: [
                     NxConsoleTableComponent,
+                    MockDirective(NxTooltipDirective),
                 ],
                 providers: [
                     MockProvider(NxConfigService),
@@ -82,6 +88,7 @@ describe('NxConsoleTableComponent', () => {
                     MockProvider(NxUriCacheService),
                     MockProvider(NxMenusService),
                     MockProvider(NxHeaderService),
+                    MockProvider(Overlay)
                 ],
                 imports: [
                     MockModule(CommonModule),
@@ -90,9 +97,12 @@ describe('NxConsoleTableComponent', () => {
                     HttpClientTestingModule,
                     TranslateModule.forRoot(),
                     ComponentsModule,
-                    MockModule(DirectivesModule),
+                    DirectivesModule,
                     MockModule(PipesModule),
-                    RouterTestingModule
+                    RouterTestingModule,
+                    PaginatorModule,
+                    PreLoaderModule,
+                    SearchModule
                 ]
             })
             .compileComponents();

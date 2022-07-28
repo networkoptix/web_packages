@@ -27,9 +27,7 @@ const appRoutes: Routes = [
         NxLandingComponent
     ],
     bootstrap: [],
-    exports: [
-        NxLandingComponent,
-    ]
+    exports: []
 })
 export class LandingModule {
 }

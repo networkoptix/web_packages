@@ -6,6 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { InfoBlockModule } from '@components/info-block/info-block.module';
+import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -13,7 +16,6 @@ import { NxCamerasComponent } from './cameras.component';
 import {
     NxMotionDetectionOverlay
 } from './motion-detection-overlay/motion-detection-overlay.component';
-
 @NgModule({
     imports: [
         CommonModule,
@@ -23,7 +25,10 @@ import {
         ComponentsModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        PagePlaceHolderModule,
+        OpenClientSectionPlaceholderModule,
+        InfoBlockModule
     ],
     providers: [
     ],

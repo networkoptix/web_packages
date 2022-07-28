@@ -1,3 +1,4 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -17,6 +18,7 @@ import { NxBookmarksWidgetComponent } from './bookmarks-widget.component';
         PreLoaderModule,
         StepperModule,
         TagModule,
+        OverlayModule
     ],
     declarations: [
         NxBookmarksWidgetComponent
@@ -29,4 +31,4 @@ import { NxBookmarksWidgetComponent } from './bookmarks-widget.component';
     ]
 })
 
-export class BookmarksWidgetModule {}
+export class BookmarksWidgetModule { }

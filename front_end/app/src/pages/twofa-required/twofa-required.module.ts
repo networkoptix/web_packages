@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ComponentsModule } from '@components/components.module';
+import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 
 import { TwofaRequiredComponent } from './twofa-required.component';
 
@@ -16,6 +17,7 @@ const routes: Routes = [
         CommonModule,
         ComponentsModule,
         RouterModule.forChild(routes),
+        PagePlaceHolderModule
     ]
 })
 export class TwofaRequiredModule { }
