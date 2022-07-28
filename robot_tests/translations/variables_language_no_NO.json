@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Du kan bare slå sammen systemer der du er eieren",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Koble system du vil slå sammen med denne til %PRODUCT_NAME% eller slå sammen lokalt ved hjelp av %VMS_NAME% klient",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% er frakoblet og kan ikke slås sammen med den nåværende",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "The systems have mismatching software versions. Please update both of them to the latest build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "Både det valgte og det gjeldende systemet er koblet til %PRODUCT_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "This system is connected to Nx Cloud, but has a different owner. Cloud systems can only be merged if the owner account is the same.",

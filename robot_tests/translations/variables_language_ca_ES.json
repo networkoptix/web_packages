@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Només podeu combinar sistemes dels quals sigueu propietari",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Connecteu el sistema que voleu combinar amb aquest a %PRODUCT_NAME% o combineu-los localment utilitzant el client %VMS_NAME%",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% està desconnectat i no es pot combinar amb l'actual",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "The systems have mismatching software versions. Please update both of them to the latest build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "El sistema seleccionat i l'actual estan connectats a %PRODUCT_NAME% i tenen propietaris diferents. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "Aquest sistema està connectat a Nx Cloud, però té un propietari diferent. Els sistemes al núvol només es poden combinar si el compte del propietari és el mateix.",

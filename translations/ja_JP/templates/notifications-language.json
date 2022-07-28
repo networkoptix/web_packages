@@ -21,10 +21,10 @@
     "emailSubject": "{{{message.asset}}}{{/message.asset}}のカメラページフィードバック{{#message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "{{message.system_name}} の所有権移転"
   },
   "ownership_transfer_response": {
-    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+    "emailSubject": "{{message.system_name}} の所有権移転 - {{message.status}}"
   },
   "review_version": {
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} に新しいバージョンがあります。"

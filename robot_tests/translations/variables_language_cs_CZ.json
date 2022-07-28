@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Systémy můžete sloučit pouze tam, kde jste vlastníkem",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Připojte systém, který chcete sloučit s tímto systémem do %PRODUCT_NAME% nebo sloučení proveďte lokálně pomocí %VMS_NAME% klienta",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% je offline a nelze jej sloučit s aktuálním",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "The systems have mismatching software versions. Please update both of them to the latest build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "Vybraný i aktuální systém jsou připojeny k %PRODUCT_NAME% a mají různé vlastníky. Cloudové systémy mohou být sloučeny pouze v případě, že vlastnický účet je stejný.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "This system is connected to Nx Cloud, but has a different owner. Cloud systems can only be merged if the owner account is the same.",

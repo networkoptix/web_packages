@@ -1,1 +1,1 @@
-{{ message.user_full_name }} ({{ message.user_email }}) has {{ message.status }} your request to transfer ownership for {{ message.system_name }}
+{{ message.user_full_name }} ({{ message.user_email }}) は、{{ message.system_name }} の所有権移転リクエストに応答しました: {{ message.status }}

@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "소유자 인 시스템 만 머지 할 수 있습니다",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "시스템에 연결하여 당신이 원하는 %PRODUCT_NAME% 클라우드나 로컬시시스템을 %VMS_NAME%클라이언트로 병합하세요",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME%은 (는) 오프라인 상태이므로 현 시스템과 머지 할 수 없습니다",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "The systems have mismatching software versions. Please update both of them to the latest build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "선택한 시스템과 현재 시스템이 모두 %PRODUCT_NAME% 연결되어 있고 다른 소유자가 있습니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "이 시스템은 VIVEex-Link에 연결되어 있지만 소유자가 다릅니다. 링크 클라우드 시스템은 소유자 계정이 동일한 경우에만 병합 할 수 있습니다.",

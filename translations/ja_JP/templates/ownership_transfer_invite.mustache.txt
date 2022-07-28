@@ -1,7 +1,7 @@
-Hello, {{message.user_full_name}}
+{{message.user_full_name}} さん、こんにちは。
 
-{{message.current_owner_full_name}} ({{message.current_owner_email}}) invites you to become the system owner of {{message.system_name}}.
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) は、あなたが {{message.system_name}} のシステムオーナーになるよう求めています。
 
-Log in and process the request on the system settings page
+ログイン後、システム設定ページでリクエストを処理してください
 
 {{config.portal_url}}/systems/{{message.system_id}}

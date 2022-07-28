@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "当您的权限为所有者时，便可以合并系统",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "请至%PRODUCT_NAME%连接您要与此系统合并的另一系统，或透过%VMS_NAME%客户端应用程式于本地合并",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% 处于离线状态，无法与当前系统合并。",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "系统的软件版本不相容。请更新为最新版本。",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "连接到 %PRODUCT_NAME%的所选系统和当前系统分属不同所有者。仅当所有者帐户相同时，才可以合并云系统。",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "This system is connected to Nx Cloud, but has a different owner. Cloud systems can only be merged if the owner account is the same.",

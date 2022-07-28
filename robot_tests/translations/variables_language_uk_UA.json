@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Ви можете об’єднати тільки ті системи, якими володієте",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Підключіть систему, яку ви хочете з'єднати з цим, до %PRODUCT_NAME% або об'єднати локально за допомогою %VMS_NAME% клієнта",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% офлайн і не може бути об’єднана з обраною",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "The systems have mismatching software versions. Please update both of them to the latest build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "І вибрана, і поточна система підключені до %PRODUCT_NAME% і мають різних власників. Хмарні системи можна об’єднати, лише якщо обліковий запис власника однаковий.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "Ця система підключена до Nx Cloud, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",

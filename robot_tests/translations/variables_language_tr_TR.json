@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Yalnızca sahibi olduğunuz Sistemleri birleştirebilirsiniz",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "%PRODUCT_NAME% yada client kullanarak sistemleri birleştirmek için istediğiniz %VMS_NAME% bağlayın",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% çevrimdışı ve geçerli olanla birleştirilemez",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "The systems have mismatching software versions. Please update both of them to the latest build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "Hem seçilen hem de mevcut sistem %PRODUCT_NAME% bağlı ve farklı sahiplere sahip. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "Bu sistem Nx Cloud'a bağlıdır, ancak farklı bir sahibi vardır. Bulut sistemleri yalnızca sahip hesabı aynıysa birleştirilebilir.",

@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Bạn chỉ có thể hợp nhất Hệ thống nơi bạn là chủ sở hữu",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Kết nối Hệ thống bạn muốn kết hợp với hệ thống này với %PRODUCT_NAME% hoặc hợp nhất cục bộ bằng %VMS_NAME% Client",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% ngoại tuyến và không thể hợp nhất với tên hiện tại",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "Các hệ thống có phiên bản phần mềm không giống nhau. Vui lòng cập nhật cả hai lên bản dựng mới nhất.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "Cả hệ thống được chọn và hệ thống hiện tại được kết nối với %PRODUCT_NAME% và có chủ sở hữu khác nhau. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "Hệ thống này được kết nối với Nx Cloud, nhưng có một chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",

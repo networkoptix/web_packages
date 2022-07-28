@@ -1,7 +1,7 @@
-<h1>Hello, {{message.user_full_name}}</h1>
+<h1>{{message.user_full_name}} さん、こんにちは。</h1>
 
-<p>{{ message.current_owner_full_name }} ({{ message.current_owner_email }}) invites you to become the system owner of {{message.system_name}}.</p>
+<p>{{ message.current_owner_full_name }} ({{ message.current_owner_email }}) は、あなたが {{message.system_name}} のシステムオーナーになるよう求めています。</p>
 
-<p>Log in and process the request on the system settings page</p>
+<p>ログイン後、システム設定ページでリクエストを処理してください</p>
 
-<a class="btn" href="{{config.portal_url}}/systems/{{ message.system_id }}">Go To System</a>
+<a class="btn" href="{{config.portal_url}}/systems/{{ message.system_id }}">システムに移動</a>

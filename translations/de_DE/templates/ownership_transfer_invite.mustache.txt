@@ -1,7 +1,7 @@
-Hello, {{message.user_full_name}}
+Hallo, {{message.user_full_name}}
 
-{{message.current_owner_full_name}} ({{message.current_owner_email}}) invites you to become the system owner of {{message.system_name}}.
+{{message.current_owner_full_name}} ({{message.current_owner_email}}) lädt Sie ein, der Systembesitzer von {{message.system_name}} zu werden.
 
-Log in and process the request on the system settings page
+Melden Sie sich an und bearbeiten Sie den Antrag auf der Seite mit den Systemeinstellungen
 
 {{config.portal_url}}/systems/{{message.system_id}}

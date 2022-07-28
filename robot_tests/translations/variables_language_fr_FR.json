@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Vous ne pouvez fusionner que les systèmes dont vous êtes le propriétaire",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Connectez le Système que vous voulez fusionner avec celui-ci à %PRODUCT_NAME% ou fusionnez localement en utilisant %VMS_NAME% Client",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% est hors ligne et ne peut pas être fusionné avec le système actuel",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "Les systèmes ne correspondent pas aux versions logicielles. Veuillez les mettre à jour vers la dernière version.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "Le système sélectionné et le système actuel sont connectés à %PRODUCT_NAME% et ont des propriétaires différents. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "Ce système est connecté à Nx Cloud, mais a un autre propriétaire. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",

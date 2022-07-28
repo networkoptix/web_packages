@@ -260,6 +260,8 @@
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Puoi solo unire i sistemi in cui sei il proprietario",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Connetti il ​​sistema che vuoi unire con questo a %PRODUCT_NAME% o unisci localmente usando %VMS_NAME% Client",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% non è in linea e non può essere unito a quello corrente",
+    "FAILED TO FIND SYSTEM TO MERGE": "Failed to find any system to merge with",
+    "FAILED TO FIND MERGE BODY": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
     "SYSTEMS HAVE MISMATCHING VERSIONS TEXT": "I sistemi hanno versioni software non corrispondenti. Si prega di aggiornare entrambi all'ultima build.",
     "SYSTEMS HAVE DIFFERENT OWNERS TEXT": "Sia il sistema selezionato che quello corrente sono collegati a %PRODUCT_NAME% e hanno proprietari diversi. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
     "THIS SYSTEM HAS DIFFERENT OWNER TEXT": "Questo sistema è collegato a, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
