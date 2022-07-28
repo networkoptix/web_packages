@@ -11,7 +11,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, fromEvent } from 'rxjs';
 import { take } from 'rxjs/operators';
-import SwaggerUI from 'swagger-ui';
+import type SwaggerUI from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
@@ -126,12 +126,19 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         };
     }
 
+    #swaggerUI: SwaggerUI;
+
+    private async getSwagger(): SwaggerUI {
+        this.#swaggerUI ||= await import('swagger-ui').then(m => m.default);
+        return this.#swaggerUI;
+    }
+
     private initSwagger(filter: string | string[], expand = 'list') {
         if (filter === '' || filter?.length === 0) {
             return;
         }
         // wait for the DOM element
-        setTimeout(() => {
+        this.getSwagger().then(SwaggerUI => {
             this.swagger = new SwaggerUI({
                 dom_id: '#swagger-ui',
                 layout: 'BaseLayout',

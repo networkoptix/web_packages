@@ -2,7 +2,8 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
-import { filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
@@ -21,11 +22,11 @@ export class NxNewHeaderComponent implements OnChanges {
     @Input() nodes: MenuNode[];
     @Input() systems: NxSystem[];
     @Input() loginState: boolean;
-    @Input() width: number;
+    @Input() width: Observable<number>;
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
     loggedIn = false;
-    isMobile: boolean = false;
+    isMobile$: Observable<boolean>;
 
     constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
@@ -77,7 +78,9 @@ export class NxNewHeaderComponent implements OnChanges {
         }
 
         if (changes.width?.currentValue) {
-            this.isMobile = changes.width.currentValue < 576;
+            this.isMobile$ = changes.width.currentValue.pipe(
+                map(width => width < 576)
+            );
         }
     }
 }

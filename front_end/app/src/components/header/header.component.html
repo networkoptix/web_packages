@@ -176,11 +176,7 @@
     *ngIf="viewHeader"
     (nxClickElsewhere)="headerService.show$ = false"
 >
-    <nx-new-header
-        *ngIf="newHeader"
-        [nodes]="headerService.nodes"
-        [width]="windowWidth$ | async"
-    ></nx-new-header>
+    <ng-template #newHeaderRef></ng-template>
     <nav
         *ngIf="!newHeader"
         class="navbar navbar-default nav-override"
@@ -268,7 +264,8 @@
             >
                 <ng-container
                     *ngTemplateOutlet="rightNav; context: { showSmall: showSmallRightNav$ | async }"
-                ></ng-container>
+                >
+                </ng-container>
                 <ul
                     class="nav navbar-nav navbar-right auth-visible"
                     *ngIf="dropdownsVisible"

@@ -3,7 +3,9 @@ import {
     OnDestroy,
     OnInit,
     Renderer2,
-    Inject
+    Inject,
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
 import {
     ActivatedRoute,
@@ -93,6 +95,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     newHeader = false;
     logoSrc: string;
 
+    @ViewChild('newHeader', { read: ViewContainerRef }) newHeaderRef: ViewContainerRef;
+
     // Observables used to manage component view states for adaptive views
     showIcon$ = new BehaviorSubject(true);
     showSmallRightNav$ = new BehaviorSubject(false);
@@ -137,6 +141,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.LANG = languageService.translations;
 
         this.newHeader = this.CONFIG.featureFlags.newHeader;
+        if (this.newHeader) {
+            this.lazyLoadNewHeader();
+        }
         this.menusService.getMenu('header', true)
             .pipe(untilDestroyed(this))
             .subscribe(header => {
@@ -276,6 +283,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.system.stopPoll();
             this.system = undefined;
         }
+    }
+
+    private async lazyLoadNewHeader() {
+        await import('./new-header/new-header.module').then(m => m.NewHeaderModule);
+        const { NxNewHeaderComponent } = await import('./new-header/new-header.component');
+        const compRef = this.newHeaderRef.createComponent(NxNewHeaderComponent);
+        compRef.instance.nodes = this.headerService.nodes;
+        compRef.instance.width = this.windowWidth$;
     }
 
     updateBreadcrumbSizes = wrapper => this.breadcrumbWidth$.next(

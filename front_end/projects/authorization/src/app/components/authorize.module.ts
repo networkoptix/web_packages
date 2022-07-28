@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { SharedComponentsModule } from '@components/shared-components.module';
+import { ToastContainerModule } from '@components/toast/toast-container.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -43,7 +44,8 @@ export const authorizedRoutes: Routes = [
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule.forRoot(),
         DirectivesModule,
-        PipesModule
+        PipesModule,
+        ToastContainerModule
     ],
     providers: [
     ],

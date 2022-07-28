@@ -22,7 +22,7 @@ import { TypeResolver } from './type-resolver';
 
 const appRoutes: Routes = [
     {
-        path: 'account',
+        path: '',
         component: NxAccountComponent,
         canActivate: [AuthGuard],
         children: [

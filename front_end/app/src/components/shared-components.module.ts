@@ -20,7 +20,6 @@ import { PreLoaderModule } from './placeholders/pre-loader/pre-loader.module';
 import { ProcessButtonModule } from './process-button/process-button.module';
 import { RadioModule } from './radio/radio.module';
 import { ThemeSwitcherModule } from './theme-switcher/theme-switcher.module';
-import { ToastContainerModule } from './toast/toast-container.module';
 import { ToastModule } from './toast/toast.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 
@@ -45,7 +44,6 @@ import { TooltipModule } from './tooltip/tooltip.module';
         CheckboxModule,
         EmailModule,
         ToastModule,
-        ToastContainerModule,
         ThemeSwitcherModule,
         TooltipModule,
     ],
@@ -65,7 +63,6 @@ import { TooltipModule } from './tooltip/tooltip.module';
         CheckboxModule,
         EmailModule,
         ToastModule,
-        ToastContainerModule,
         ThemeSwitcherModule,
         TooltipModule,
     ]

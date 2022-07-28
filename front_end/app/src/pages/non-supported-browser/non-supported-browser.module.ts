@@ -8,7 +8,7 @@ import { PipesModule } from '@src/pipes/pipes.module';
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
 const appRoutes: Routes = [
-    { path: 'browser', component: NonSupportedBrowserComponent }
+    { path: '', component: NonSupportedBrowserComponent }
 ];
 
 @NgModule({

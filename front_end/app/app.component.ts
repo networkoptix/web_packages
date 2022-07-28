@@ -5,6 +5,7 @@ import {
     ViewEncapsulation,
     ViewChild,
     ElementRef,
+    ViewContainerRef
 } from '@angular/core';
 import {
     ActivationEnd,
@@ -21,7 +22,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import type { DeviceInfo } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 import { fromEvent } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, take } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
@@ -43,11 +44,8 @@ require('what-input');
     selector: 'nx-app',
     template: `
         <div *ngIf="!reauthorizing" class="headerContainer" (resize)="headerResize($event)">
-            <nx-header *ngIf="
-                (appStateService.ready || environment.isLocal) &&
-                !CONFIG.browserNotSupported
-            "></nx-header>
-            <nx-ribbon></nx-ribbon>
+            <ng-template #header></ng-template>
+            <ng-template #ribbon></ng-template>
         </div>
         <div
             class="outerContainer"
@@ -61,17 +59,17 @@ require('what-input');
                 cdkScrollable
                 #mainContainer
             >
-                <nx-cookie-banner></nx-cookie-banner>
+                <ng-template #cookieBanner></ng-template>
                 <router-outlet></router-outlet>
             </div>
         </div>
         <ng-container *ngIf="!reauthorizing">
-            <nx-overlay-modal *ngIf="appStateService.ready && environment.isLocal"></nx-overlay-modal>
+            <ng-template #overlayModal></ng-template>
             <nx-pre-loader
                 type="page"
                 *ngIf="(!appStateService.ready && !newSystem) || loading"
             ></nx-pre-loader>
-            <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
+            <ng-template #appToast></ng-template>
         </ng-container>`,
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -90,6 +88,43 @@ export class AppComponent {
     readonly environment = environment;
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
+    @ViewChild('header', { read: ViewContainerRef }) header: ViewContainerRef;
+    @ViewChild('overlayModal') overlayModalRef: ViewContainerRef;
+    @ViewChild('appToast', { read: ViewContainerRef }) appToast: ViewContainerRef;
+    @ViewChild('ribbon', { read: ViewContainerRef }) ribbon: ViewContainerRef;
+    @ViewChild('cookieBanner', { read: ViewContainerRef }) cookieBanner: ViewContainerRef;
+
+    lazyLoadHeader = async (): Promise<void> => {
+        await import('./src/components/header/header.module').then(m => m.HeaderModule);
+        const { NxHeaderComponent } = await import('./src/components/header/header.component');
+        this.header.createComponent(NxHeaderComponent);
+    };
+
+    lazyLoadComponents = async (): Promise<void> => {
+        const idle = (): Promise<unknown> => new Promise(resolve => requestIdleCallback(resolve));
+
+        await idle();
+        await import('./src/components/toast/toast-container.module').then(m => m.ToastContainerModule);
+        const { NxToastsContainer } = await import('./src/components/toast/toast.container');
+        this.appToast.createComponent(NxToastsContainer);
+
+        await idle();
+        await import('./src/components/cookie-banner/cookie-banner.module').then(m => m.CookieBannerModule);
+        const { NxCookieBannerComponent } = await import('./src/components/cookie-banner/cookie-banner.component');
+        this.cookieBanner.createComponent(NxCookieBannerComponent);
+
+        await idle();
+        await import('./src/components/ribbon/ribbon.module').then(m => m.RibbonModule);
+        const { NxRibbonComponent } = await import('./src/components/ribbon/ribbon.component');
+        this.ribbon.createComponent(NxRibbonComponent);
+
+        if (environment.isLocal) {
+            await idle();
+            await import('./src/components/overlay-modal/overlay-modal.module').then(m => m.OverlayModalModule);
+            const { NxOverlayModalComponent } = await import('./src/components/overlay-modal/overlay-modal.component');
+            this.overlayModalRef.createComponent(NxOverlayModalComponent);
+        }
+    };
 
     constructor(
         bootstrapProvider: NxBootstrapProvider,
@@ -106,10 +141,22 @@ export class AppComponent {
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
         private themeService: NxThemeService,
-        @Inject(WINDOW) private window: Window,
+        @Inject(WINDOW) private window: Window
     ) {
-        this.reauthorizing = this.window.location.href.includes('cloud-authorize');
         this.CONFIG = configService.getConfig();
+        this.reauthorizing = this.window.location.href.includes('cloud-authorize');
+
+        if (!this.CONFIG.browserNotSupported) {
+            if (environment.isLocal || this.appStateService.ready) {
+                this.lazyLoadHeader();
+            } else {
+                this.appStateService.readySubject.pipe(
+                    filter(ready => ready),
+                    take(1)
+                ).subscribe(() => this.lazyLoadHeader());
+            }
+            this.lazyLoadComponents();
+        }
 
         if (this.CONFIG.featureFlags.themesEnabled) {
             this.themeService.initTheme();

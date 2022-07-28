@@ -1,4 +1,4 @@
-<ng-container *ngIf="!isMobile">
+<ng-container *ngIf="!(isMobile$ | async)">
     <nx-header-level-one
         [menuNodes]="displayedNodes"
         [selectedNode]="selectedNode"
@@ -14,7 +14,7 @@
 </ng-container>
 
 <nx-header-mobile
-    *ngIf="isMobile"
+    *ngIf="isMobile$ | async"
     [loggedIn]="loggedIn"
     [menuNodes]="displayedNodes"
 ></nx-header-mobile>

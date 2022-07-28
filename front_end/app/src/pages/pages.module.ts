@@ -20,6 +20,10 @@ const lazyRoutes: Routes = [
         pathMatch: 'full'
     },
     {
+        path: 'account',
+        loadChildren: () => import('./account/account.module').then(m => m.NxAccountModule)
+    },
+    {
         path: 'systems/:systemId/advanced',
         loadChildren: () => import('./systems/settings/settings.module').then(m => m.NxSettingsModule)
     },
@@ -143,6 +147,10 @@ const lazyRoutes: Routes = [
     {
         path: 'agreement',
         loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
+    },
+    {
+        path: 'browser',
+        loadChildren: () => import('./non-supported-browser/non-supported-browser.module').then(m => m.NonSupportedBrowserModule)
     },
     {
         path: 'cloud-authorize',
