@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "Dostępna jest nowa wersja %CLOUD_NAME%",
-            "installButton": "Zainstaluj teraz"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."

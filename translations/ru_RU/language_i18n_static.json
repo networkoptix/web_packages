@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "Система не в сети. Некоторые настройки могут быть недоступны.",
         "systemsMerging": "Эта система в настоящее время участвует в операции объединения."

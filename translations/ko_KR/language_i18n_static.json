@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "시스템이 오프라인 상태입니다. 일부 설정을 사용하지 못할 수 있습니다.",
         "systemsMerging": "이 시스템은 현재 병합 작업에 관여하고 있습니다."

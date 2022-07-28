@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "Система відключена. Деякі налаштування можуть бути недоступні.",
         "systemsMerging": "Зараз ця система бере участь в операції злиття."

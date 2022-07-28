@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "可用新版本%CLOUD_NAME%",
-            "installButton": "立即安装"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "系统离线。某些设置可能无法使用。",
         "systemsMerging": "此系统正在合并中。"

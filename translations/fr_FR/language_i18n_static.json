@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "Une nouvelle version de %CLOUD_NAME% est disponible",
-            "installButton": "Installer maintenant"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
