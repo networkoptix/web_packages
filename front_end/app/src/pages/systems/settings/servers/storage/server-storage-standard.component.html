@@ -355,7 +355,9 @@
                             <div
                                 class="progress-bar reindex-progress"
                                 role="progressbar"
-                                [ngStyle]="{ width: (percentMainDone * 100).toFixed() + '%' }"
+                                [ngStyle]="{
+                                    width: (percentMainDone * 100).toFixed() + '%'
+                                }"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
                             ></div>
@@ -391,14 +393,18 @@
                                 <div translate>Reindexing Backup Storage...</div>
                                 <span>{{ percentBackupDone | percent: '1.0-0':locale }}</span>
                             </div>
-                            <div class="progress reindex-progress-container">
-                                <div
-                                    class="progress-bar reindex-progress"
-                                    role="progressbar"
-                                    [ngStyle]="{ width: (percentBackupDone * 100).toFixed() + '%' }"
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
-                                ></div>
+                            <div class="progress-wrapper">
+                                <div class="progress reindex-progress-container">
+                                    <div
+                                        class="progress-bar reindex-progress"
+                                        role="progressbar"
+                                        [ngStyle]="{
+                                            width: (percentBackupDone * 100).toFixed() + '%'
+                                        }"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                    ></div>
+                                </div>
                             </div>
                         </div>
                         <button
