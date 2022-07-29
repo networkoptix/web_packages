@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import FileSaver from 'file-saver';
 import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
@@ -28,7 +29,6 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxUriService } from '@services/uri.service';
-import { NxUtilsService } from '@services/utils.service/utils.service';
 import { WINDOW } from '@services/window-provider';
 import { NxMenuService } from '@src/menu/menu.service';
 import type { Content } from '@src/menu/menu.types';
@@ -74,7 +74,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private router: Router,
         private uriService: NxUriService,
         private menuService: NxMenuService,
-        private utilsService: NxUtilsService,
         private ribbonService: NxRibbonService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private sourceService: NxAppSourceService,
@@ -531,7 +530,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             filename = `report-${this.reportSnapshot.time}.json`;
         }
 
-        this.utilsService.saveAs(this.reportSnapshot, filename, 'text/json');
+        const data = new Blob([this.reportSnapshot], { type: 'text/json' });
+        FileSaver.saveAs(data, filename);
     }
 
     fileDropped(files: NgxFileDropEntry[]): void {

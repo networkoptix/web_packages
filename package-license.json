@@ -2979,6 +2979,12 @@
             "path": "cloud_portal/front_end/node_modules/@types/express",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/express/LICENSE"
         },
+        "@types/file-saver@2.0.5": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/file-saver",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/file-saver/LICENSE"
+        },
         "@types/hast@2.3.4": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",

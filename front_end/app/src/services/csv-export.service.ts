@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as FileSaver from 'file-saver';
+import FileSaver from 'file-saver';
 
 import { CVS_OPTIONS } from './csv-export.service.types';
 

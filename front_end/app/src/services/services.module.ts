@@ -18,7 +18,6 @@ import { NxSearchService } from './search.service';
 import { NxSwPromptUpdateService } from './sw-prompt-update.service';
 import { NxSystemsService } from './systems.service';
 import { NxUrlProtocolService } from './url-protocol.service';
-import { NxUtilsService } from './utils.service/utils.service';
 
 @NgModule({
     imports: [
@@ -32,7 +31,6 @@ import { NxUtilsService } from './utils.service/utils.service';
         NxApplyService,
         NxLanguageProviderService,
         NxConfigService,
-        NxUtilsService,
         NxPageService,
         NxSystemsService,
         NxAccountService,
