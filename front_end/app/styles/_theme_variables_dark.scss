@@ -126,6 +126,8 @@ html[data-theme="dark"] {
     --progress-bar-heder-title-color      : var(--brand-d1);
     --progress-bar-heder-persentage-color : #E1E7EA; //$light4
 
+    --switch-slider-bg            : #3A4D57; //$dark12;
+    --switch-slider-hover-bg      : #445B67; //$dark14;
     --switch-disabled-color       : #3A4D57; //$dark12;
     --switch-disabled-hover-color : #445B67; //$dark14;
     --switch-selected-color       : #32731E; //$green_d1;
@@ -134,9 +136,15 @@ html[data-theme="dark"] {
     --switch-bar-color            : #3A911E; //$green_main};
     --switch-bar-hover-color      : #44A624; //$green_l1};
     --switch-bar-disable-color    : #263137; //$dark8;
+    
     --switch-warning-color        : #8E1717; //$red_d2;
     --switch-warning-hover-color  : #AA1E1E; //$red_d1;
-    --switch-circle-color         : #AA1E1E; //$red_d1;
+    
+    --switch-circle-off-color         : #263137; //$dark9;
+    --switch-circle-off-hover-color   : #C22626; //$red_main;
+    --switch-circle-off-disable-color : #2B383F; //$dark9;
+    
+    --switch-circle-color         : #263137; //$dark9;
     --switch-circle-hover-color   : #C22626; //$red_main;
     --switch-circle-disable-color : #2B383F; //$dark9;
 

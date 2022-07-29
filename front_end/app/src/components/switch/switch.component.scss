@@ -1,180 +1,192 @@
 @use "../../../styles/_theme_variables_common" as *;
 
-.switch {
-    width : 33px !important;
-    display: inline-block;
-
-    &-element {
-        position : relative;
-        display  : inline-block;
-        width : 33px !important;
-        height   : 17px;
-        margin   : 0;
-
-        & input {
-            opacity : 0;
-            width   : 0;
-            height  : 0;
+:host {
+    .switch {
+        width   : 33px !important;
+        display : inline-block;
+        
+        &-element {
+            position : relative;
+            display  : inline-block;
+            width    : 33px !important;
+            height   : 17px;
+            margin   : 0;
+            
+            & input {
+                opacity : 0;
+                width   : 0;
+                height  : 0;
+            }
         }
-    }
-
-    &-with-label {
-        padding: 16px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        &:hover {
-            .switch {
-                .switch-element {
-                    .slider {
-                        background-color: $light7;
-                        &.disable {
-                            background-color: $light6 !important;
+        
+        &-with-label {
+            padding     : 16px;
+            cursor      : pointer;
+            display     : inline-flex;
+            align-items : center;
+            
+            &:hover {
+                .switch {
+                    .switch-element {
+                        .slider {
+                            background-color : $light7;
+                            
+                            &.disable {
+                                background-color : $light6 !important;
+                            }
+                            
+                            &.show-warning {
+                                background-color : $red_l2 !important;
+                            }
                         }
-                        &.show-warning {
-                            background-color: $red_l2 !important;
+                        
+                        input.selected + .slider {
+                            background-color : $green_l1 !important;
                         }
-                    }
-                    input.selected + .slider {
-                        background-color: $green_l1 !important;
-                    }
-
-                    input:focus + .slider {
-                        box-shadow: 0 0 1px $green_l1 !important;
+                        
+                        input:focus + .slider {
+                            box-shadow : 0 0 1px $green_l1 !important;
+                        }
                     }
                 }
             }
         }
+        
+        &-label {
+            cursor                : pointer;
+            margin                : 0;
+            -webkit-touch-callout : none;
+            -webkit-user-select   : none;
+            -moz-user-select      : none;
+            -ms-user-select       : none;
+            user-select           : none;
+        }
     }
-
-    &-label {
-        cursor: pointer;
-        margin: 0;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: $light8;
-
-    &.disable {
-        background-color: var(--switch-disabled-color) !important;
+    
+    .slider {
+        position         : absolute;
+        cursor           : pointer;
+        top              : 0;
+        left             : 0;
+        right            : 0;
+        bottom           : 0;
+        background-color : var(--switch-slider-bg);
+        
+        &.disable {
+            background-color : var(--switch-disabled-color) !important;
+            
+            &:hover {
+                background-color : var(--switch-disabled-hover-color) !important;
+                
+                & + .bar + .circle {
+                    border : 2px solid var(--switch-circle-disable-color) !important;
+                }
+            }
+        }
+        
+        &.show-warning {
+            background-color : var(--switch-warning-color);
+            
+            &:hover {
+                background-color : var(--switch-warning-hover-color);
+                
+                & + .bar + .circle {
+                    border : 2px solid var(--switch-circle-hover-color);
+                }
+            }
+        }
+        
         &:hover {
-            background-color: var(--switch-disabled-hover-color) !important;
-            & + .bar + .circle {
-                border: 2px solid var(--switch-circle-disable-color) !important;
+            background-color : var(--switch-slider-hover-bg);
+            
+            & + .circle {
+                border-color : var(--switch-circle-disable-color);
+            }
+        }
+        
+        &:before {
+            position         : absolute;
+            content          : "";
+            height           : 15px;
+            width            : 15px;
+            left             : 1px;
+            bottom           : 1px;
+            background-color : var(--switch-button-color);
+            z-index          : 1;
+        }
+    }
+    
+    .slider:hover + .bar + .circle {
+        border-color : var(--switch-circle-disable-color);
+    }
+    
+    input.selected + .slider {
+        &.disable {
+            background-color : var(--switch-disabled-color);
+        }
+        
+        background-color : var(--switch-selected-color);
+        
+        &:hover {
+            background-color : var(--switch-selected-hover-color);
+            
+            & + .bar {
+                background-color : var(--switch-bar-hover-color);
             }
         }
     }
-
-    &.show-warning {
-        background-color: var(--switch-warning-color);
-        &:hover {
-            background-color: var(--switch-warning-hover-color);
-            & + .bar + .circle {
-                border: 2px solid var(--switch-circle-hover-color);
-            }
+    
+    input.selected + .slider:before {
+        -webkit-transform : translateX(16px);
+        -ms-transform     : translateX(16px);
+        transform         : translateX(16px);
+    }
+    
+    .slider.round {
+        border-radius : 34px;
+    }
+    
+    .slider.round:before {
+        border-radius : 50%;
+    }
+    
+    .slider-icon {
+        position            : absolute;
+        pointer-events      : None;
+        -moz-user-select    : none;
+        -khtml-user-select  : none;
+        -webkit-user-select : none;
+        -o-user-select      : none;
+        user-select         : none;
+        height              : 9px;
+        bottom              : 4px;
+    }
+    
+    .bar {
+        @extend .slider-icon;
+        
+        &.disable {
+            background : $light12;
         }
+        
+        background : var(--switch-bar-color);
+        width      : 2px;
+        left       : 8px;
     }
-
-    &:hover {
-        background-color: $light7;
-    }
-
-    &:before {
-        position: absolute;
-        content: "";
-        height: 15px;
-        width: 15px;
-        left: 1px;
-        bottom: 1px;
-        background-color: var(--switch-button-color);
-        z-index: 1;
-    }
-}
-
-input.selected + .slider {
-    &.disable {
-        background-color: var(--switch-disabled-color);
-    }
-    background-color: var(--switch-selected-color);
-    &:hover {
-        background-color: var(--switch-selected-hover-color);
-        & + .bar {
-            background-color : var(--switch-bar-hover-color);
+    
+    .circle {
+        @extend .slider-icon;
+        border        : 2px solid var(--switch-circle-color);
+        border-radius : 50%;
+        width         : 9px;
+        right         : 4px;
+        
+        &.disable {
+            border : 2px solid var(--switch-circle-off-disable-color) !important;
         }
-    }
-}
-
-input:focus + .slider {
-    &.disable {
-        background-color: $light8;
-    }
-    box-shadow: 0 0 1px $green_l1;
-    &:hover {
-        box-shadow: 0 0 1px $green_l1;
-    }
-}
-
-input.selected + .slider:before {
-    -webkit-transform: translateX(16px);
-    -ms-transform: translateX(16px);
-    transform: translateX(16px);
-}
-
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}
-
-.slider-icon {
-    position: absolute;
-    pointer-events: None;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
-    user-select: none;
-    height: 9px;
-    bottom: 4px;
-}
-
-.bar {
-    @extend .slider-icon;
-    &.disable {
-        background: $light12;
-    }
-    
-    background: var(--switch-bar-color);
-    width: 2px;
-    left: 8px;
-}
-
-.circle {
-    @extend .slider-icon;
-    border: 2px solid $light12;
-    border-radius: 50%;
-    width: 9px;
-    right: 4px;
-    
-    &.disable {
-        border: 2px solid var(--switch-circle-disable-color) !important;
-    }
-    
-    &.show-warning {
-        border: 2px solid var(--switch-circle-color);
+        
+        &.show-warning {
+            border : 2px solid var(--switch-warning-hover-color);
+        }
     }
 }
