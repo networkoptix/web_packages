@@ -164,6 +164,7 @@ export class NxSystemsListComponent implements OnInit {
         return item?.id;
     }
 
+    // Remove this once system-card is fixed
     getSystemOwnerName(
         system: NxSystemWithUserInfo,
         currentEmail: string
@@ -213,7 +214,7 @@ export class NxSystemsListComponent implements OnInit {
             !this.isActive('/health');
     }
 
-    openSystem(system: NxSystemWithUserInfo): void {
+    openSystem = (system: NxSystemWithUserInfo): void => {
         if (this.linkHandler) {
             this.linkHandler({
                 url: this.menusService.getUrl(system.id, this.endpoint),
@@ -232,8 +233,9 @@ export class NxSystemsListComponent implements OnInit {
                 })
                 .catch(err => { console.error(err); });
         }
-    }
+    };
 
+    // Remove the three below once system-card is fixed
     canShowTag(system: NxSystemWithUserInfo): boolean {
         return system.stateOfHealth !== this.CONFIG.system.status.online &&
             !!this.LANG.systemStatuses;

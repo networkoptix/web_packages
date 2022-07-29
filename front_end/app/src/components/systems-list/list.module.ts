@@ -8,6 +8,7 @@ import { ClientButtonModule } from '@components/open-client-button/client-button
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { SearchModule } from '@components/search/search.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
+import { SystemCardModule } from '@components/system-card/system-card.module';
 import { TagModule } from '@components/tag/tag.module';
 
 import { NxSystemsListComponent } from './list.component';
@@ -21,6 +22,7 @@ import { NxSystemsListComponent } from './list.component';
         FooterModule,
         NoSystemsModule,
         PreLoaderModule,
+        SystemCardModule,
         TagModule,
         SearchModule
     ],

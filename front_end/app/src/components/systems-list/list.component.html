@@ -40,6 +40,16 @@
                 </h1>
             </div>
             <div class="row">
+                <!-- <system-card
+                    *ngFor="let system of filteredSystems; trackBy: trackItem"
+                    [system]="system"
+                    [size]="size"
+                    [systemsToShow]="systemsToShow"
+                    [userEmail]="userEmail"
+                    [search]="search.value"
+                    [account]="account"
+                    [openSystem]="openSystem"
+                ></system-card> -->
                 <ng-container *ngFor="let system of filteredSystems; trackBy: trackItem">
                     <div
                         *ngIf="!systemsToShow || systemsToShow.includes(system.id)"

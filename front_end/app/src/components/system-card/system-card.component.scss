@@ -1,0 +1,45 @@
+@use "../../../styles/theme_variables_common" as theme_vars;
+@use "../../styles/_mixins";
+
+.system-button {
+    user-select : none;
+    cursor      : pointer;
+    overflow    : hidden;
+
+    h2 {
+        @include mixins.ellipsis;
+        color : var(--card-header-text) !important;
+    }
+
+    .card-condensed {
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-body-bg);
+
+            &:hover {
+                background-color : var(--card-hover-bg);
+            }
+        }
+    }
+
+    .user-name {
+        font-size     : theme_vars.$h6-font-size;
+        line-height   : 16px;
+        display       : block;
+        margin-bottom : 12px;
+    }
+}
+
+.system-list-bottom-bar {
+    display: flex;
+
+    svg-icon {
+        margin-top: 24px;
+        margin-left: -3px;
+    }
+
+    .margin-system-list-status {
+        margin-left: 4px;
+    }
+}
