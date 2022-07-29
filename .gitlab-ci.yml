@@ -424,7 +424,9 @@ on-auth-lint:
 
 on-nx-lint-build-check:
   extends: .fail-on-frontend
-  needs: ["nx-lint-build-check"]
+  needs:
+    - job: nx-lint-build-check
+      optional: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
@@ -466,7 +468,9 @@ on-frontend-test:
 
 on-nx-lint-test:
   extends: .fail-on-frontend
-  needs: ["nx-lint-test"]
+  needs:
+    - job: nx-lint-test
+      optional: true
 
 on-django-checks:
   extends: .fail-on-backend
