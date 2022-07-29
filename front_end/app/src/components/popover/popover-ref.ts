@@ -11,13 +11,13 @@ import { PopoverConfig } from './popover-config';
 /**
  * Reference to a popover opened via the Popover service.
  */
-export class PopoverRef<T = any> {
-    private afterClosed$ = new Subject<T>();
+export class PopoverRef {
+    private afterClosed$ = new Subject<void>();
 
     constructor(
         private overlayRef: OverlayRef,
         private positionStrategy: FlexibleConnectedPositionStrategy,
-        public config: PopoverConfig,
+        public config: PopoverConfig<unknown>,
         public targetId: string,
     ) {
         if (!config.disableClose) {
@@ -37,8 +37,8 @@ export class PopoverRef<T = any> {
         }
     }
 
-    close(dialogResult?: T): void {
-        this.afterClosed$.next(dialogResult);
+    close(): void {
+        this.afterClosed$.next();
         this.afterClosed$.complete();
 
         this.overlayRef.dispose();

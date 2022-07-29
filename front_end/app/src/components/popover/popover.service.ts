@@ -1,6 +1,8 @@
 import {
     Overlay,
-    ConnectionPositionPair
+    ConnectionPositionPair,
+    FlexibleConnectedPositionStrategy,
+    OverlayConfig
 } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
@@ -14,7 +16,7 @@ import { PopoverConfig, POS_STRATEGY } from './popover-config';
 import { PopoverRef } from './popover-ref';
 import { NxPopoverComponent } from './popover/popover.component';
 
-const defaultConfig: PopoverConfig = {
+const defaultConfig: PopoverConfig<never> = {
     hasBackdrop: false,
     backdropClass: '',
     disableClose: false,
@@ -31,22 +33,26 @@ const defaultConfig: PopoverConfig = {
 })
 export class NxPopoverService {
     popoverRef: PopoverRef;
-    close$ = new Subject();
+    close$ = new Subject<boolean>();
 
     constructor(
         private overlay: Overlay,
     ) {
     }
 
-    private generatePopoverRefs(
-        config: Partial<PopoverConfig<any>>,
-        positionStrategy,
-        popoverConfig: PopoverConfig<any>,
+    private generatePopoverRefs<T>(
+        hasBackdrop: OverlayConfig['hasBackdrop'],
+        panelClass: OverlayConfig['panelClass'],
+        positionStrategy: FlexibleConnectedPositionStrategy,
+        popoverConfig: PopoverConfig<T>,
         target: HTMLElement,
-    ) {
+    ): {
+        popover: NxPopoverComponent;
+        popoverRef: PopoverRef
+    } {
         const overlayRef = this.overlay.create({
-            hasBackdrop: config.hasBackdrop,
-            panelClass: config.panelClass,
+            hasBackdrop,
+            panelClass,
             positionStrategy,
             scrollStrategy: this.overlay.scrollStrategies.reposition()
         });
@@ -57,7 +63,9 @@ export class NxPopoverService {
         return { popover, popoverRef };
     }
 
-    private generatePositions(popoverConfig: PopoverConfig<any>) {
+    private generatePositions(
+        popoverConfig: PopoverConfig<unknown>
+    ): ConnectionPositionPair[] {
         const arrowSize = popoverConfig.arrowSize;
         const arrowOffset = popoverConfig.arrowOffset;
         const panelOffset = arrowSize / 2;
@@ -125,12 +133,12 @@ export class NxPopoverService {
         return positions;
     }
 
-    private renderPopover(
-        template: TemplateRef<any>,
+    private renderPopover<T>(
+        template: TemplateRef<unknown>,
         popover: NxPopoverComponent,
         viewContainerRef: ViewContainerRef,
-        config: Partial<PopoverConfig<any>>,
-        popoverRef: PopoverRef<any>,
+        config: Partial<PopoverConfig<T>>,
+        popoverRef: PopoverRef,
     ): void {
         // rendering a provided template dynamically
         // if we need to render a component - here is the place to add it
@@ -146,17 +154,17 @@ export class NxPopoverService {
         );
     }
 
-    open(
-        template: TemplateRef<any>,
+    open<T = never>(
+        template: TemplateRef<unknown>,
         target: HTMLElement,
-        config: Partial<PopoverConfig> = {},
+        config: Partial<PopoverConfig<T>> = {},
         viewContainerRef?: ViewContainerRef,
         delayTime = 300,
         closeExisting = true
-    ): NxPopoverService {
+    ): this {
         this.close$.next(closeExisting);
-        const popoverConfig: PopoverConfig = { ...defaultConfig, ...config };
-        const positions: ConnectionPositionPair[] = this.generatePositions(popoverConfig);
+        const popoverConfig: PopoverConfig<T> = { ...defaultConfig, ...config };
+        const positions = this.generatePositions(popoverConfig);
 
         const positionStrategy = this.overlay
             .position()
@@ -169,16 +177,28 @@ export class NxPopoverService {
             .pipe(
                 takeUntil(this.close$.pipe(filter(val => !!val)))
             ).subscribe(() => {
-                const { popover, popoverRef } = this.generatePopoverRefs(config, positionStrategy, popoverConfig, target);
+                const { popover, popoverRef } = this.generatePopoverRefs(
+                    config.hasBackdrop,
+                    config.panelClass,
+                    positionStrategy,
+                    popoverConfig,
+                    target
+                );
 
-                this.renderPopover(template, popover, viewContainerRef, config, popoverRef);
+                this.renderPopover(
+                    template,
+                    popover,
+                    viewContainerRef,
+                    config,
+                    popoverRef
+                );
                 this.popoverRef = popoverRef;
             });
 
         return this;
     }
 
-    close(closeExisting = true) {
+    close(closeExisting = true): string {
         this.close$.next(closeExisting);
         const targetId = this.popoverRef?.targetId;
         this.popoverRef?.close();

@@ -23,9 +23,11 @@ import {
 export class NxPopoverComponent extends BasePortalOutlet {
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 
-    template: Portal<any>;
+    template: Portal<unknown>;
 
-    attachComponentPortal<T>(componentPortal: ComponentPortal<any>): ComponentRef<T> {
+    attachComponentPortal<T>(
+        componentPortal: ComponentPortal<T>
+    ): ComponentRef<T> {
         return this.portalOutlet.attachComponentPortal(componentPortal);
     }
 

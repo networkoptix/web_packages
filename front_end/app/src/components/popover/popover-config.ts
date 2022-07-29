@@ -6,7 +6,7 @@ export enum POS_STRATEGY {
     BOTTOM
 }
 
-export interface PopoverConfig<T = any> {
+export interface PopoverConfig<T = never> {
     hasBackdrop: boolean
     backdropClass: string;
     data?: T;
