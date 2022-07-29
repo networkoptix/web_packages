@@ -1,10 +1,10 @@
-const { RuleTester } = require('@typescript-eslint/utils/dist/ts-eslint');
+const { ESLintUtils } = require('@typescript-eslint/utils');
 
-const rule = require('../rules/only-export-injectable');
+const rule = require('../../dist/rules/only-export-injectable');
 
 const { joinLines } = require('./utils');
 
-const ruleTester = new RuleTester({
+const ruleTester = new ESLintUtils.RuleTester({
     parser: require.resolve('@typescript-eslint/parser'),
 });
 

@@ -87,6 +87,7 @@ no-changes:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - front_end/**/*.spec.ts
+        - front_end/eslint-plugin-nx/**/*
 
 .authorization-changes:
   extends: .retries
@@ -97,6 +98,17 @@ no-changes:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - front_end/projects/authorization/src/**/*
+        - front_end/eslint-plugin-nx/**/*
+
+.nx-lint-changes:
+  extends: .retries
+  needs:
+    - job: docker:build-node-chrome
+      optional: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/eslint-plugin-nx/**/*
 
 .templates-changes:
   extends: .retries
@@ -107,6 +119,7 @@ no-changes:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - front_end/**/*.component.html
+        - front_end/eslint-plugin-nx/**/*
 
 .frontend-node:
   extends: .frontend-changes
@@ -118,6 +131,10 @@ no-changes:
 
 .authorization-node:
   extends: .authorization-changes
+  image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
+
+.nx-lint-node:
+  extends: .nx-lint-changes
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
 
 .templates-node:
@@ -213,6 +230,15 @@ auth-lint-check:
     - npm ci
     - npm run lint:ci:auth projects/authorization/src
 
+nx-lint-build-check:
+  extends: .nx-lint-node
+  stage: check
+  script:
+    - cd front_end
+    - npm ci
+    - cd eslint-plugin-nx
+    - npm run build-check
+
 templates-lint-check:
   extends: .templates-node
   stage: check
@@ -270,6 +296,15 @@ authorization-unit-test:
     reports:
       junit: authorization/reports/*.xml
       cobertura: authorization/coverage/test-karma/cobertura-coverage.xml
+
+nx-lint-test:
+  extends: .nx-lint-node
+  stage: test
+  script:
+    - cd front_end
+    - npm ci
+    - cd eslint-plugin-nx
+    - npm run test:ci
 
 webadmin:
   extends: .frontend-changes
@@ -387,6 +422,15 @@ on-auth-lint:
         - front_end/projects/authorization/src/**/*
       when: on_failure
 
+on-nx-lint-build-check:
+  extends: .fail-on-frontend
+  needs: ["nx-lint-build-check"]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - front_end/eslint-plugin-nx/**/*
+      when: on_failure
+
 on-templates-lint:
   extends: .fail-on-frontend
   needs: ["templates-lint-check"]
@@ -419,6 +463,10 @@ on-authorization-test:
 on-frontend-test:
   extends: .fail-on-frontend
   needs: ["frontend-unit-test"]
+
+on-nx-lint-test:
+  extends: .fail-on-frontend
+  needs: ["nx-lint-test"]
 
 on-django-checks:
   extends: .fail-on-backend

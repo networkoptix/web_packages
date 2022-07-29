@@ -1,10 +1,10 @@
-const { RuleTester } = require('@typescript-eslint/utils/dist/ts-eslint');
+const { ESLintUtils } = require('@typescript-eslint/utils');
 
-const rule = require('../rules/no-untyped-init');
+const rule = require('../../dist/rules/no-untyped-init');
 
 const { classWrapper } = require('./utils');
 
-const ruleTester = new RuleTester({
+const ruleTester = new ESLintUtils.RuleTester({
     parser: require.resolve('@typescript-eslint/parser'),
 });
 

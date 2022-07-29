@@ -8,27 +8,32 @@
  * @author Andrew Wu
  */
 
-'use strict';
+import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-const { isUntypedValue } = require('./utils');
+import { createRule, isUntypedValue } from './utils';
+import type { AngularDecorator } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------------
 
 const forTypes = [
-    'ForStatement',
-    'ForOfStatement',
-    'ForInStatement',
+    AST_NODE_TYPES.ForStatement,
+    AST_NODE_TYPES.ForOfStatement,
+    AST_NODE_TYPES.ForInStatement,
 ];
 
 // ----------------------------------------------------------------------------
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'no-untyped-init',
     meta: {
+        docs: {
+            description: 'Require types for properties/variables without initial values or where types cannot be inferred from initial values',
+            recommended: false
+        },
         type: 'problem',
         schema: [],
         messages: {
@@ -36,8 +41,13 @@ module.exports = {
             untypedDeclaration: 'Untyped declaration.',
         },
     },
-    create: function (context) {
-        function reportNode(node, expression, messageId) {
+    defaultOptions: [],
+    create(context) {
+        function reportNode(
+            node: TSESTree.Node,
+            expression: TSESTree.Expression,
+            messageId: 'untypedProp' | 'untypedDeclaration'
+        ): void {
             if (expression === null || isUntypedValue(expression)) {
                 context.report({
                     node,
@@ -55,10 +65,11 @@ module.exports = {
 
                 /* Inputs and outputs are handled
                 by explicit-angular-boundary-types rule */
-                const isInputOrOutput = decorators && decorators.some(d =>
-                    d.expression.callee.name === 'Input' ||
-                    d.expression.callee.name === 'Output'
-                );
+                const isInputOrOutput = decorators
+                    ?.some((d: AngularDecorator) =>
+                        d.expression.callee.name === 'Input' ||
+                        d.expression.callee.name === 'Output'
+                    );
                 if (isInputOrOutput) {
                     return;
                 }
@@ -83,4 +94,4 @@ module.exports = {
             },
         };
     }
-};
+});

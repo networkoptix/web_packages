@@ -1,11 +1,11 @@
-const { RuleTester } = require('@typescript-eslint/utils/dist/ts-eslint');
+const { ESLintUtils } = require('@typescript-eslint/utils');
 
-const rule = require('../rules/explicit-angular-boundary-types');
+const rule = require('../../dist/rules/explicit-angular-boundary-types');
 
 const { classWrapper } = require('./utils');
 
-const ruleTester = new RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
+const ruleTester = new ESLintUtils.RuleTester({
+    parser: '@typescript-eslint/parser',
 });
 
 ruleTester.run('explicit-angular-boundary-types', rule, {

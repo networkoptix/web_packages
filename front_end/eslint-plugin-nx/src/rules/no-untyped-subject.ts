@@ -5,9 +5,9 @@
  * @author Andrew Wu
  */
 
-'use strict';
+import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-const { isUntypedValue } = require('./utils');
+import { createRule, isUntypedValue } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -17,16 +17,21 @@ const { isUntypedValue } = require('./utils');
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'no-untyped-subject',
     meta: {
+        docs: {
+            description: 'Require generics for RxJS subjects where type cannot be inferred from an initial value',
+            recommended: false
+        },
         type: 'problem',
         schema: [],
         messages: {
             untypedSubject: 'Untyped subject.'
         },
     },
-    create: function (context) {
+    defaultOptions: [],
+    create(context) {
         return {
             PropertyDefinition(node) {
                 const { typeAnnotation, value } = node;
@@ -34,8 +39,9 @@ module.exports = {
                     return;
                 }
                 if (
-                    value.type === 'NewExpression' &&
-                    value.callee.name.endsWith('Subject') &&
+                    value.type === AST_NODE_TYPES.NewExpression &&
+                    (value.callee as TSESTree.Identifier)
+                        .name.endsWith('Subject') &&
                     !value.typeParameters &&
                     !typeAnnotation
                     // Subject type annotations require a generic argument
@@ -53,4 +59,4 @@ module.exports = {
             }
         };
     }
-};
+});

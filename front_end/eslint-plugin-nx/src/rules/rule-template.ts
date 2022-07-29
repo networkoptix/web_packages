@@ -4,7 +4,7 @@
  * @author
  */
 
-'use strict';
+import { createRule } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -14,17 +14,22 @@
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'rule-name',
     meta: {
+        docs: {
+            description: '',
+            recommended: false
+        },
         type: 'problem',
         schema: [],
         messages: {},
-        // fixable: true,
+        // fixable: 'code',
         // hasSuggestions: true,
     },
-    create: function (context) {
+    defaultOptions: [],
+    create(context) {
         return {
         };
     }
-};
+});

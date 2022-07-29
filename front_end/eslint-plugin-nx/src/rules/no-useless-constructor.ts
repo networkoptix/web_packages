@@ -9,15 +9,21 @@
  * @author Andrew Wu
  */
 
-'use strict';
+import { TSESTree } from '@typescript-eslint/utils';
+
+import { createRule } from './utils';
 
 // ----------------------------------------------------------------------------
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'no-useless-constructor',
     meta: {
+        docs: {
+            description: 'A custom implementation of the no-useless-constructor rule that ignores constructors if the class extends another class',
+            recommended: false,
+        },
         type: 'problem',
         schema: [],
         messages: {
@@ -27,16 +33,17 @@ module.exports = {
         // fixable: true,
         hasSuggestions: true,
     },
-    create: function (context) {
+    defaultOptions: [],
+    create(context) {
         return {
-            /**
-             * @param {import('@typescript-eslint/utils')
-             * .TSESTree.MethodDefinition} node
-             */
-            'ClassBody > MethodDefinition[kind="constructor"]'(node) {
+            'ClassBody > MethodDefinition[kind="constructor"]'(
+                node: TSESTree.MethodDefinition
+            ) {
                 // Ignore if class extends another class
                 // MethodDefinition => ClassBody => ClassDeclaration
-                if (node.parent.parent.superClass) {
+                if (
+                    (node.parent.parent as TSESTree.ClassDeclaration).superClass
+                ) {
                     return;
                 }
 
@@ -52,7 +59,7 @@ module.exports = {
                         messageId: 'useless',
                         suggest: [{
                             messageId: 'removeUseless',
-                            fix: function (fixer) {
+                            fix(fixer) {
                                 return fixer.remove(node);
                             },
                         }],
@@ -61,4 +68,4 @@ module.exports = {
             }
         };
     }
-};
+});

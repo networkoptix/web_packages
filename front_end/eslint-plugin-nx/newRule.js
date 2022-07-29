@@ -8,17 +8,17 @@ if (!newRuleName) {
 }
 
 const ignore = [
-    'rule-template.js',
-    'utils.js',
+    'rule-template.ts',
+    'utils.ts',
 ];
-const existingRules = fs.readdirSync(path.join(__dirname, 'rules'))
+const existingRules = fs.readdirSync(path.join(__dirname, 'src', 'rules'))
     .filter(file => !ignore.includes(file))
     .map(file => path.parse(file).name);
 if (existingRules.includes(newRuleName)) {
     console.error('Rule already exists.');
     process.exit(1);
 }
-if (ignore.includes(`${newRuleName}.js`)) {
+if (ignore.includes(`${newRuleName}.ts`)) {
     console.error('Reserved file name.');
     process.exit(1);
 }
@@ -28,10 +28,14 @@ if (!/^[a-z]+(-[a-z]+)*$/.test(newRuleName)) {
     process.exit(1);
 }
 
-fs.copyFileSync('./rules/rule-template.js', `./rules/${newRuleName}.js`);
-const testFile = fs.readFileSync('./tests/test-template.js', 'utf8');
+const ruleFile = fs.readFileSync('./src/rules/rule-template.ts', 'utf8');
 fs.writeFileSync(
-    `./tests/${newRuleName}.test.js`,
+    `./src/rules/${newRuleName}.ts`,
+    ruleFile.replace(/rule-name/g, newRuleName)
+);
+const testFile = fs.readFileSync('./src/tests/test-template.ts', 'utf8');
+fs.writeFileSync(
+    `./src/tests/${newRuleName}.test.ts`,
     testFile.replace(/rule-name/g, newRuleName)
 );
 

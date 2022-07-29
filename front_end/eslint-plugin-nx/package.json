@@ -1,9 +1,12 @@
 {
     "name": "eslint-plugin-nx",
     "version": "0.1.0",
-    "main": "index.js",
+    "main": "dist/index.js",
     "license": "ISC",
     "scripts": {
-        "test": "cd .. && npx jasmine eslint-plugin-nx/tests/**/*.test.js"
+        "test": "npm run build && cd .. && npx jasmine eslint-plugin-nx/src/tests/**/*.test.ts",
+        "test:ci": "cd .. && npx jasmine eslint-plugin-nx/src/tests/**/*.test.ts",
+        "build": "tsc",
+        "build-check": "mv ./dist ./dist-copy; npm run build; distdiff=$(diff -r ./dist ./dist-copy); if [ ! -z \"$distdiff\" ]; then exit 1; fi"
     }
 }

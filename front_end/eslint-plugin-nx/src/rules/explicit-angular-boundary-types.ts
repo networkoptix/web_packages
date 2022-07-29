@@ -4,7 +4,10 @@
  * @author Andrew Wu
  */
 
-'use strict';
+import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
+
+import { createRule } from './utils';
+import type { AngularDecorator } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -12,13 +15,21 @@
 
 const primitives = ['boolean', 'number', 'string'];
 
+type TypeAnnotation = TSESTree.TSTypeAnnotation & {
+    typeAnnotation: TSESTree.TSTypeReference;
+};
+
 // ----------------------------------------------------------------------------
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'explicit-angular-boundary-types',
     meta: {
+        docs: {
+            description: 'Require component inputs and outputs be explicitly typed',
+            recommended: false
+        },
         type: 'problem',
         schema: [], // no options
         hasSuggestions: true,
@@ -28,19 +39,16 @@ module.exports = {
             missingOutput: 'Missing Output generic.',
         }
     },
-    create: function (context) {
+    defaultOptions: [],
+    create(context) {
         return {
-            /**
-             * @param {import('@typescript-eslint/utils')
-             * .TSESTree.PropertyDefinition} node
-             */
-            'PropertyDefinition[decorators]': function (node) {
-                const isInput = node.decorators.some(d =>
+            'PropertyDefinition[decorators]'(node: TSESTree.PropertyDefinition) {
+                const isInput = node.decorators.some((d: AngularDecorator) =>
                     d.expression.callee.name === 'Input'
                 );
                 if (isInput && !node.typeAnnotation) {
                     const { value } = node;
-                    if (value !== null && value.type === 'Literal') {
+                    if (value !== null && value.type === AST_NODE_TYPES.Literal) {
                         const valueType = typeof value.value;
                         if (primitives.includes(valueType)) {
                             context.report({
@@ -48,7 +56,7 @@ module.exports = {
                                 messageId: 'missingInput',
                                 suggest: [{
                                     messageId: 'inferType',
-                                    fix: function (fixer) {
+                                    fix(fixer) {
                                         return fixer.insertTextAfter(
                                             node.key,
                                             `: ${valueType}`
@@ -71,11 +79,12 @@ module.exports = {
                     return;
                 }
 
-                const isOutput = node.decorators.some(d =>
+                const isOutput = node.decorators.some((d: AngularDecorator) =>
                     d.expression.callee.name === 'Output'
                 );
                 if (isOutput) {
-                    const { value, typeAnnotation } = node;
+                    const typeAnnotation = node.typeAnnotation as TypeAnnotation;
+                    const value = node.value as TSESTree.NewExpression;
                     if (!value) {
                         // Not initialized yet
                     } else if (!typeAnnotation) {
@@ -98,4 +107,4 @@ module.exports = {
             }
         };
     }
-};
+});

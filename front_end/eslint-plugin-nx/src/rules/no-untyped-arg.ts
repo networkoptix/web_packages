@@ -8,41 +8,53 @@
  * @author Andrew Wu
  */
 
-'use strict';
+import { TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-const { isUntypedValue } = require('./utils');
+import { createRule, isUntypedValue } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------------
 
 const namedParents = [
-    'VariableDeclarator',
-    'MethodDefinition',
-    'PropertyDefinition',
+    AST_NODE_TYPES.VariableDeclarator,
+    AST_NODE_TYPES.MethodDefinition,
+    AST_NODE_TYPES.PropertyDefinition,
 ];
 
 const nonAssignments = [
-    'Identifier',
-    'ObjectPattern',
-    'RestElement',
+    AST_NODE_TYPES.Identifier,
+    AST_NODE_TYPES.ObjectPattern,
+    AST_NODE_TYPES.RestElement,
 ];
+type NonAssignment = TSESTree.Identifier
+    | TSESTree.ObjectPattern
+    | TSESTree.RestElement;
+
+type FunctionLike = TSESTree.FunctionDeclaration
+    | TSESTree.FunctionExpression
+    | TSESTree.ArrowFunctionExpression;
 
 // ----------------------------------------------------------------------------
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'no-untyped-arg',
     meta: {
+        docs: {
+            description: 'Require types on named function arguments without types or informative default parameters',
+            recommended: false
+        },
         type: 'problem',
         schema: [],
         messages: {
             untypedArg: 'Untyped argument.',
         },
     },
-    create: function (context) {
-        function checkForUntypedArgs(node) {
+    defaultOptions: [],
+    create(context) {
+        function checkForUntypedArgs(node: FunctionLike): void {
             const { id, parent, params } = node;
 
             const isNamed = id !== null || namedParents.includes(parent.type);
@@ -53,14 +65,14 @@ module.exports = {
             params.forEach(param => {
                 if (
                     nonAssignments.includes(param.type) &&
-                    !param.typeAnnotation
+                    !(param as NonAssignment).typeAnnotation
                 ) {
                     context.report({
                         node: param,
                         messageId: 'untypedArg'
                     });
                 } else if (
-                    param.type === 'AssignmentPattern' &&
+                    param.type === AST_NODE_TYPES.AssignmentPattern &&
                     !param.left.typeAnnotation &&
                     isUntypedValue(param.right)
                 ) {
@@ -84,4 +96,4 @@ module.exports = {
             },
         };
     }
-};
+});

@@ -9,7 +9,10 @@
  * @author Andrew Wu
  */
 
-'use strict';
+import { TSESTree } from '@typescript-eslint/utils';
+
+import { createRule } from './utils';
+import type { AngularDecorator } from './utils';
 
 // ----------------------------------------------------------------------------
 // Helpers
@@ -26,24 +29,32 @@ const injectableDecorators = [
 // Rule Definition
 // ----------------------------------------------------------------------------
 
-/** @type {import('@typescript-eslint/utils').TSESLint.RuleModule} */
-module.exports = {
+export = createRule({
+    name: 'only-export-injectable',
     meta: {
+        docs: {
+            description: 'Disallow exporting anything other than the injectable in files with an injectable',
+            recommended: false,
+        },
         type: 'problem',
         schema: [], // no options
+        messages: {
+            onlyExportInjectable: 'Files with injectables should only export the injectable.'
+        },
     },
-    create: function (context) {
-        const nonInjectables = [];
+    defaultOptions: [],
+    create(context) {
+        const nonInjectables: TSESTree.Node[] = [];
         let injectableFile = false;
 
-        function reportNode(node) {
+        function reportNode(node: TSESTree.Node): void {
             context.report({
                 node,
-                message: 'Files with injectables should only export the injectable.',
+                messageId: 'onlyExportInjectable',
             });
         }
 
-        function handleNonInjectable(node) {
+        function handleNonInjectable(node: TSESTree.Node): void {
             if (injectableFile) {
                 reportNode(node);
             } else {
@@ -52,15 +63,16 @@ module.exports = {
         }
 
         return {
-            ExportNamedDeclaration: function (node) {
+            ExportNamedDeclaration(node) {
                 // Export from another file
                 if (node.declaration === null) {
                     handleNonInjectable(node);
                     return;
                 }
 
-                const { decorators } = node.declaration;
-                const isInjectable = decorators && decorators.some(d =>
+                const { decorators } =
+                    node.declaration as TSESTree.ClassDeclaration;
+                const isInjectable = decorators?.some((d: AngularDecorator) =>
                     injectableDecorators.includes(d.expression.callee.name)
                 );
 
@@ -75,4 +87,4 @@ module.exports = {
             },
         };
     }
-};
+});
