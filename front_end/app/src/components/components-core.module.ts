@@ -13,7 +13,6 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { HoverPreloadModule } from 'ngx-hover-preload';
-import { QuicklinkModule } from 'ngx-quicklink';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { DirectivesModule } from '@directives/directives.module';
@@ -31,7 +30,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         PipesModule,
         HoverPreloadModule,
         AngularSvgIconModule.forRoot(),
-        QuicklinkModule,
         CdkTableModule,
         CdkStepperModule,
         CdkTreeModule,
@@ -56,7 +54,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         DirectivesModule,
         PipesModule,
         CdkStepperModule,
-        QuicklinkModule,
         CdkTableModule,
         CdkTreeModule,
         NgxFileDropModule,
@@ -67,6 +64,7 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         PortalModule,
         NgxTranslateCutModule,
         NxGenericDropdownModule,
+        HoverPreloadModule
     ]
 })
 

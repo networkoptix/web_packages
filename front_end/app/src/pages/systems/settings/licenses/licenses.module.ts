@@ -8,6 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -30,9 +31,10 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         PipesModule,
         AngularSvgIconModule.forRoot(),
         OverlayModule,
-        NgxMaskModule,
+        NgxMaskModule.forRoot(),
         PagePlaceHolderModule,
-        InfoBlockModule
+        InfoBlockModule,
+        ContentBlockModule
     ],
     providers: [
     ],

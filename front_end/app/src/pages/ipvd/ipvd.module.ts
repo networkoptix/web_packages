@@ -1,3 +1,4 @@
+import { LayoutModule } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -6,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -35,7 +37,9 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         AngularSvgIconModule,
         PaginatorModule,
-        SearchModule
+        SearchModule,
+        ContentBlockModule,
+        LayoutModule
     ],
     providers: [
         IpvdSearchService

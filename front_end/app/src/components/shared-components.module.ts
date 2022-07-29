@@ -10,7 +10,6 @@ import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { CheckboxModule } from './checkbox/checkbox.module';
-import { ContentBlockModule } from './content-block/content-block.module';
 import { EmailModule } from './email-input/email.module';
 import { FooterModule } from './footer/footer.module';
 import { PasswordTagValidationModule } from './password-input-tag-validation/password-tag-validation.module';
@@ -31,7 +30,6 @@ import { TooltipModule } from './tooltip/tooltip.module';
         TranslateModule,
         FormsModule,
         AngularSvgIconModule.forRoot(),
-        ContentBlockModule,
         DirectivesModule,
         FooterModule,
         PipesModule,
@@ -52,7 +50,6 @@ import { TooltipModule } from './tooltip/tooltip.module';
     providers: [
     ],
     exports: [
-        ContentBlockModule,
         FooterModule,
         PreLoaderModule,
         ProcessButtonModule,

@@ -63,9 +63,7 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeAuthCodeComponent,
         NxAuthorizeBackupCodeComponent
     ],
-    exports: [
-        NxAuthorizeComponent
-    ]
+    exports: []
 })
 export class NxAuthorizeModule {
 }

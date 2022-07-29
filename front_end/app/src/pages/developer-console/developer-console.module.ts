@@ -7,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
 import { ConsoleTableModule } from '@components/console-table/console-table.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -54,7 +55,8 @@ const appRoutes: Routes = [
         PipesModule,
         ConsoleTableModule,
         AngularSvgIconModule.forRoot(),
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        ContentBlockModule
     ],
     providers: [],
     declarations: [

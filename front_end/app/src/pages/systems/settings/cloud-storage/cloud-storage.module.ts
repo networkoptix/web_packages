@@ -8,6 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxMaskModule } from 'ngx-mask';
 
 import { ComponentsModule } from '@components/components.module';
+import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -20,11 +22,13 @@ import { NxCloudStorageComponent } from './cloud-storage.component';
         FormsModule,
         TranslateModule,
         ComponentsModule,
-        NgxMaskModule,
+        NgxMaskModule.forRoot(),
         CdkTableModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        AlertBlockModule,
+        ContentBlockModule
     ],
     providers: [
     ],

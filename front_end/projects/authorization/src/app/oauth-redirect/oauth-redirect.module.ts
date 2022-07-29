@@ -27,9 +27,7 @@ const appRoutes: Routes = [
         NxOAuthRedirectComponent
     ],
     bootstrap: [],
-    exports: [
-        NxOAuthRedirectComponent
-    ]
+    exports: []
 })
 export class NxOAuthRedirectModule {
 }

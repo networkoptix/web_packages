@@ -8,6 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
 import { NoSystemsModule } from '@components/no-systems/no-systems.module';
+import { ClientButtonModule } from '@components/open-client-button/client-button.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
 import { SearchModule } from '@components/search/search.module';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
         PagePlaceHolderModule,
         SystemListModule,
         NoSystemsModule,
-        SearchModule
+        SearchModule,
+        ClientButtonModule
     ],
     providers: [
     ],

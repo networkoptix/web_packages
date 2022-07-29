@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import Hls from 'hls.js';
+import { isSupported } from 'hls.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, Subscription, timer, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
@@ -240,7 +240,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     rtsp: 'video/webm'
                 };
                 const video = this.document.createElement('video');
-                const isHlsSupported = Hls.isSupported();
+                const isHlsSupported = isSupported();
                 this.transports = <PlaybackTransport[]>Object.keys(
                     transportsAndResolutions
                 ).filter(transport => (

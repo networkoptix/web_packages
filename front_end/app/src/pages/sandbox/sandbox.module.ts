@@ -5,6 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { AlertBlockModule } from '@components/content-block/alert/block.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { SearchableModule } from '@components/dropdowns/searchable/searchable.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
@@ -121,7 +124,10 @@ const appRoutes: Routes = [
         ReactiveFormsModule,
         RouterModule.forChild(appRoutes),
         NgrxDemoModule,
-        SearchModule
+        SearchModule,
+        SearchableModule,
+        AlertBlockModule,
+        ContentBlockModule
     ],
     providers: [
     ],

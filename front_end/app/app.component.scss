@@ -3,6 +3,8 @@
 @use "styles/css-variables/theme_palette" as *;
 @use "styles/css-variables/theme_variables" as *;
 @import "~@angular/cdk/overlay-prebuilt.css";
+@import "styles/theme_variables_light";
+@import "styles/theme_variables_dark";
 
 nx-app {
     .mainContainer {

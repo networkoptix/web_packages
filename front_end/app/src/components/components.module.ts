@@ -3,7 +3,6 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { NgModule } from '@angular/core';
 import { TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { QuicklinkModule } from 'ngx-quicklink';
 
 import { SharedComponentsModule } from '@components/shared-components.module';
 // import { HeaderModule } from './header/header.module';
@@ -30,7 +29,6 @@ import { NxGenericDropdownModule } from './dropdowns/generic/dropdown.module';
         NxImageComponent,
     ],
     exports: [
-        QuicklinkModule,
         NxGenericDropdownModule,
         NxImageComponent,
         SharedComponentsModule,

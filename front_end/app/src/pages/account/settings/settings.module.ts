@@ -6,6 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { ThemeSwitcherModule } from '@components/theme-switcher/theme-switcher.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -19,7 +21,9 @@ import { PipesModule } from '@src/pipes/pipes.module';
         ComponentsModule,
         DirectivesModule,
         PipesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        ThemeSwitcherModule,
+        ContentBlockModule
     ],
     providers: [],
     declarations: [

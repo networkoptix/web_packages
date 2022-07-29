@@ -1,11 +1,10 @@
-import { LayoutModule } from '@angular/cdk/layout';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import {
     Location,
     PathLocationStrategy,
     HashLocationStrategy,
     LocationStrategy,
-    CommonModule,
+    // CommonModule,
     DatePipe
 } from '@angular/common';
 import {
@@ -16,14 +15,15 @@ import {
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, Title } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { HoverPreloadModule } from 'ngx-hover-preload';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import {
     TranslateMessageFormatCompiler,
@@ -31,9 +31,10 @@ import {
 } from 'ngx-translate-messageformat-compiler';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
-import { ComponentsModule } from '@components/components.module';
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { PopoverModule } from '@components/popover/popover.module';
-import { DirectivesModule } from '@directives/directives.module';
+// import { DirectivesModule } from '@directives/directives.module';
+import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
 import { AuthGuard } from '@guards/authGuard';
 import { BookmarksGuard } from '@guards/bookmarksGuard';
@@ -53,7 +54,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
-import { PipesModule } from '@src/pipes/pipes.module';
+// import { PipesModule } from '@src/pipes/pipes.module';
 import { systemsReducer } from '@src/store/systems/systems.reducer';
 
 import { AppComponent } from './app.component';
@@ -63,28 +64,17 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
 }
 
-export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
-
 @NgModule({
     imports: [
-        CommonModule,
         BrowserModule,
-
         StoreModule.forRoot({ systems: systemsReducer }),
-
-        BrowserAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        LayoutModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
             headerName: 'X-CSRFToken'
         }),
-        ComponentsModule,
         PopoverModule,
-        DirectivesModule,
-        PipesModule,
+        RouterModule,
         ServiceModule,
         AngularFireModule,
         AngularFireMessagingModule,
@@ -95,7 +85,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             }
         }),
         NgxTranslateCutModule.forRoot(),
-        NgxMaskModule.forRoot(options),
         NgxWebstorageModule.forRoot(),
         // Need to find a different way to choose page module for webadmin
         environment.isLocal ? WebadminPageModule : PagesModule,
@@ -104,6 +93,9 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
             registrationStrategy: 'registerImmediately'
         }),
         CdkScrollableModule,
+        HoverPreloadModule,
+        PreLoaderModule,
+        ResizeModule
     ],
     providers: [
         Location,

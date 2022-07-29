@@ -9,7 +9,7 @@ import {
     ViewEncapsulation,
     OnChanges,
 } from '@angular/core';
-import videojs from 'video.js';
+import type videojs from 'video.js';
 
 import { NgChanges } from '@utils/ng-changes';
 import {
@@ -48,7 +48,12 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     private hasPlayed = false;
     protected transport = '';
 
-    initPlayer(): void {
+    // For lazy loading player
+    #videojs: videojs;
+
+    async initPlayer(): Promise<void> {
+        if (this.player) return;
+
         let videoJsAutoRetry = 0;
         let stallTimer;
         const waitingTime = 8 * 1000;
@@ -62,7 +67,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             stallTimer = undefined;
         };
 
-        this.player = videojs(this.videoView.nativeElement, options);
+        this.#videojs ||= await import('video.js').then(m => m.default);
+
+        this.player = this.#videojs(this.videoView.nativeElement, options);
 
         this.player.on('canplay', () => {
             this.player.play();
@@ -128,7 +135,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
                 this.transport = this.sourceUrl?.includes('m3u8') ? 'hls' : 'webm';
             }
             this._calculateRotation();
-            this._reactOnPlaybackStateChange(prevMode);
+            this.initPlayer().then(() => this._reactOnPlaybackStateChange(prevMode));
         }
     }
 
@@ -148,7 +155,6 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     }
 
     protected _reactOnPlaybackStateChange(prevMode: number): void {
-        !this.player && this.initPlayer();
         const isPaused = this.player.paused() || false;
         switch (this.mode) {
             case PLAYBACK_MODE.STOPPED:

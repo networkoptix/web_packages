@@ -7,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PaginatorModule } from '@components/paginator/paginator.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
@@ -94,7 +95,8 @@ const appRoutes: Routes = [
         PagePlaceHolderModule,
         PaginatorModule,
         InfoBlockModule,
-        SearchModule
+        SearchModule,
+        ContentBlockModule
     ],
     providers: [NxHealthLayoutService],
     declarations: [

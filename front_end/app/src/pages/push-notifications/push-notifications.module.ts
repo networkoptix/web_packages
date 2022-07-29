@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { PipesModule } from '@src/pipes/pipes.module';
@@ -29,7 +30,8 @@ export function initializeApp(CONFIG: NxConfigService) {
         DirectivesModule,
         PipesModule,
         FormsModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        ContentBlockModule
     ],
     providers: [
     ],

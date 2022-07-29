@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { DevelopersMenuModule } from '@components/developers-menu/developers-menu.module';
 import { SearchModule } from '@components/search/search.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -80,7 +81,8 @@ const appRoutes: Routes = [
         AngularSvgIconModule.forRoot(),
         RouterModule.forChild(appRoutes),
         DevelopersMenuModule,
-        SearchModule
+        SearchModule,
+        ContentBlockModule
     ],
     providers: [],
     declarations: [

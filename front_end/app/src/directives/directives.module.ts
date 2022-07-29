@@ -13,16 +13,17 @@ import { NxIntersectionObserver } from './nx-intersection.directive';
 import { NxMatchHeightDirective } from './nx-match-height.directive';
 import { NxProjectedCodeBlock } from './nx-projected-code-block.directive';
 import { NxProjectedLinkHandler } from './nx-projected-link-handler.directive';
-import { NxResizeObserver } from './nx-resize.directive';
 import { NxScrollHelperDirective } from './nx-scroll-helper';
 import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxTooltipDirective } from './nx-tooltip.directive';
 import { NxUrlValidatorDirective } from './nx-url-validator';
+import { ResizeModule } from './resize/resize.module';
 
 @NgModule({
     imports: [
         AngularSvgIconModule.forRoot(),
-        OverlayModule
+        OverlayModule,
+        ResizeModule
     ],
     declarations: [
         NxArrowNavDirective,
@@ -33,7 +34,6 @@ import { NxUrlValidatorDirective } from './nx-url-validator';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
         NxEditableDirective,
-        NxResizeObserver,
         NxAddSvgSrc,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
@@ -51,14 +51,14 @@ import { NxUrlValidatorDirective } from './nx-url-validator';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
         NxEditableDirective,
-        NxResizeObserver,
         NxAddSvgSrc,
         NxIntersectionObserver,
         NxProjectedLinkHandler,
         NxProjectedCodeBlock,
         NxTooltipDirective,
         NxMatchHeightDirective,
-        FeatureFlagDirective
+        FeatureFlagDirective,
+        ResizeModule
     ]
 })
 export class DirectivesModule {

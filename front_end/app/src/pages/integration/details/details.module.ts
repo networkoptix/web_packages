@@ -5,6 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { ComponentsModule } from '@components/components.module';
+import { ContentBlockModule } from '@components/content-block/content-block.module';
+import { TagModule } from '@components/tag/tag.module';
 import { MenuModule } from '@src/menu/menu.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
@@ -36,7 +38,9 @@ const appRoutes: Routes = [
         AngularSvgIconModule,
         RouterModule.forChild(appRoutes),
         PipesModule,
-        DirectivesModule
+        DirectivesModule,
+        TagModule,
+        ContentBlockModule
     ],
     providers: [],
     declarations: [
