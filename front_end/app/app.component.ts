@@ -89,7 +89,7 @@ export class AppComponent {
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
     @ViewChild('header', { read: ViewContainerRef }) header: ViewContainerRef;
-    @ViewChild('overlayModal') overlayModalRef: ViewContainerRef;
+    @ViewChild('overlayModal', { read: ViewContainerRef }) overlayModalRef: ViewContainerRef;
     @ViewChild('appToast', { read: ViewContainerRef }) appToast: ViewContainerRef;
     @ViewChild('ribbon', { read: ViewContainerRef }) ribbon: ViewContainerRef;
     @ViewChild('cookieBanner', { read: ViewContainerRef }) cookieBanner: ViewContainerRef;

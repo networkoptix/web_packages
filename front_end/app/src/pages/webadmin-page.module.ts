@@ -2,15 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
+import { LoginWebadminModule } from '@components/login-webadmin/login-webadmin.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 // import { NxDebugModule } from './debug/debug.module';
-import {
-    NonSupportedBrowserModule
-} from './non-supported-browser/non-supported-browser.module';
 
 const lazyRoutes: Routes = [
     {
@@ -56,6 +54,10 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./cloud-owner-authorization/cloud-owner-authorization.module').then(m => m.CloudOwnerAuthorizationModule)
     },
     {
+        path: 'browser',
+        loadChildren: () => import('./non-supported-browser/non-supported-browser.module').then(m => m.NonSupportedBrowserModule)
+    },
+    {
         path: '500',
         loadChildren: () => import('./500/500.module').then(m => m.Nx500Module)
     },
@@ -73,8 +75,6 @@ const lazyRoutes: Routes = [
     imports: [
         DirectivesModule,
         PipesModule,
-        NonSupportedBrowserModule,
-        // NxDebugModule,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation: 'enabledNonBlocking',
             scrollPositionRestoration: 'enabled',
@@ -83,17 +83,15 @@ const lazyRoutes: Routes = [
             preloadingStrategy: HoverPreloadStrategy,
             onSameUrlNavigation: 'reload',
             relativeLinkResolution: 'legacy'
-        })
+        }),
+        LoginWebadminModule
     ],
-    declarations: [
-    ],
+    declarations: [],
     providers: [
         ApplyGuard,
         AuthGuard
     ],
     exports: [
-        NonSupportedBrowserModule,
-        // NxDebugModule,
         RouterModule
     ]
 })

@@ -8,12 +8,12 @@ import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import {
+    LoginWebadminModalContent
+} from '@components/login-webadmin/login-webadmin.component';
 import { DialogBase } from '@dialogs/dialog-base';
 import { DialogConfig } from '@dialogs/dialog-config';
 import { defaultConfig, DIALOG_SIZE } from '@dialogs/dialog-ref';
-import {
-    LoginWebadminModalContent
-} from '@dialogs/login-webadmin/login-webadmin.component';
 import { NxSimpleDialogsService } from '@dialogs/simple-dialogs.service';
 import { environment } from '@environments/environment';
 import type { NxAccountService } from '@services/account.service';
@@ -22,7 +22,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxBootstrapProvider } from './nx-bootstrap-provider';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-import type{ NxSystem } from './system.service/system';
+import type { NxSystem } from './system.service/system';
 
 @Injectable({
     providedIn: 'root'

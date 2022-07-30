@@ -104,7 +104,7 @@ export class LoginWebadminModalContent implements OnInit {
         private router: Router,
         private cookieService: CookieService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData: any,
+        @Inject(DIALOG_DATA) private dialogData,
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) protected window: Window
     ) {
@@ -205,7 +205,7 @@ export class LoginWebadminModalContent implements OnInit {
         }
         this.password = '';
 
-        const showAccountBlockedError = () => {
+        const showAccountBlockedError = (): void => {
             this.loginForm.controls.login_password.markAsPristine();
             this.loginForm.controls.login_password.markAsUntouched();
 
@@ -215,7 +215,7 @@ export class LoginWebadminModalContent implements OnInit {
             });
         };
 
-        const showWrongCredentialsError = () => {
+        const showWrongCredentialsError = (): void => {
             this.password = '';
             this.wrongCredentials = true;
             this.loginForm.controls.login_email.setErrors({
@@ -240,7 +240,7 @@ export class LoginWebadminModalContent implements OnInit {
         returns an Observable which makes the first argument () => Observable,
         but NxProcessService.createProcess() expects Observable
         or () => PromiseLike */
-        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error, @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.login = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
@@ -295,7 +295,7 @@ export class LoginWebadminModalContent implements OnInit {
                             [this.CONFIG.redirect.authorised],
                             { replaceUrl: isRootPath }
                         ).then(() => {
-                        // ensure language reload as translations are loaded on page load
+                            // ensure language reload as translations are loaded on page load
                             this.window.location.reload();
                         });
                 });
@@ -363,7 +363,7 @@ export class LoginWebadminModalContent implements OnInit {
             });
     }
 
-    close = (msg): void => {
+    close = (msg: string): void => {
         this.dialogRef.close(msg);
     };
 }

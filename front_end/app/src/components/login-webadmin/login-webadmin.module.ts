@@ -1,0 +1,31 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
+import { ProcessButtonModule } from '@components/process-button/process-button.module';
+import { PipesModule } from '@src/pipes/pipes.module';
+
+import { LoginWebadminModalContent } from './login-webadmin.component';
+
+@NgModule({
+    imports: [
+        PreLoaderModule,
+        AngularSvgIconModule.forRoot(),
+        ProcessButtonModule,
+        PipesModule,
+        TranslateModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule
+    ],
+    declarations: [
+        LoginWebadminModalContent
+    ],
+    exports: [
+        LoginWebadminModalContent
+    ]
+})
+export class LoginWebadminModule { }

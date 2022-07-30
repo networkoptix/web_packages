@@ -39,7 +39,6 @@ import { DownloadAsyncModalContent } from './download-async/download-async.compo
 import { EditModalContent } from './edit/edit.component';
 import { EmbedModalContent } from './embed/embed.component';
 import { GenericDialogModule } from './generic/generic.module';
-import { LoginWebadminModalContent } from './login-webadmin/login-webadmin.component';
 import { Mandatory2faModalContent } from './mandatory-2fa/mandatory-2fa.component';
 import { MergeModalContent } from './merge/merge.component';
 import { MessageModalContent } from './message/message.component';
@@ -80,7 +79,6 @@ import { WizardModalContent } from './wizard/wizard.component';
         TagModule
     ],
     declarations: [
-        LoginWebadminModalContent,
         DisconnectModalContent,
         AddUserModalContent,
         AddStorageModalContent,
