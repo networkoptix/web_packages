@@ -40,76 +40,25 @@
                 </h1>
             </div>
             <div class="row">
-                <!-- <system-card
-                    *ngFor="let system of filteredSystems; trackBy: trackItem"
-                    [system]="system"
-                    [size]="size"
-                    [systemsToShow]="systemsToShow"
-                    [userEmail]="userEmail"
-                    [search]="search.value"
-                    [account]="account"
-                    [openSystem]="openSystem"
-                ></system-card> -->
                 <ng-container *ngFor="let system of filteredSystems; trackBy: trackItem">
                     <div
                         *ngIf="!systemsToShow || systemsToShow.includes(system.id)"
-                        class="col-sm-12 mb-3 mb-lg-0 system-button"
+                        class="col-sm-12 mb-3 mb-lg-0"
                         [ngClass]="{
                             'col-lg-4 col-xl-3': size === 'full',
                             'col-md-6': size !== 'compact',
                             'col-12': size === 'compact'
                         }"
                     >
-                        <div class="card card-condensed hoverable">
-                            <div
-                                class="card-body"
-                                (click)="openSystem(system)"
-                            >
-                                <h2
-                                    class="old-h12 d-block"
-                                    [innerHTML]="system.name | unsafe | highlight: search.value"
-                                ></h2>
-                                <span
-                                    class="user-name"
-                                    [innerHTML]="
-                                        getSystemOwnerName(system, userEmail)
-                                            | unsafe
-                                            | highlight: search.value
-                                    "
-                                ></span>
-                                <div class="system-list-bottom-bar">
-                                    <nx-tag
-                                        style="display: block; margin-top: 24px"
-                                        [clickable]="false"
-                                        type="{{
-                                            CONFIG.system.status[system.stateOfHealth]?.style ||
-                                                CONFIG.system.status.default.style
-                                        }}"
-                                        *ngIf="canShowTag(system)"
-                                    >
-                                        <ng-container>{{
-                                            LANG.systemStatuses[system.stateOfHealth]() ||
-                                                system.stateOfHealth
-                                        }}</ng-container>
-                                    </nx-tag>
-                                    <nx-client-button
-                                        [system]="system"
-                                        [actionType]="system ? 'default' : 'primary'"
-                                        *ngIf="canShowButton(system)"
-                                    ></nx-client-button>
-                                    <svg-icon
-                                        [ngClass]="{
-                                            'margin-system-list-status': canShowTag(system)
-                                        }"
-                                        *ngIf="needToConfigureTwoFactor(system)"
-                                        nx-add-svg-src
-                                        [src]="CONFIG.icons.dir + 'lock.svg'"
-                                        [svgStyle]="{ 'height.px': '20' }"
-                                        [applyClass]="true"
-                                    ></svg-icon>
-                                </div>
-                            </div>
-                        </div>
+                        <system-card
+                            [system]="system"
+                            [size]="size"
+                            [systemsToShow]="systemsToShow"
+                            [userEmail]="userEmail"
+                            [search]="search.value"
+                            [account]="account"
+                            [openSystem]="openSystem"
+                        ></system-card>
                     </div>
                 </ng-container>
             </div>
