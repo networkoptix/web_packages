@@ -492,3 +492,14 @@ class ServerAPI5(ServerAPI):
                 listOfResponses.append(r.json())
                 assert r.status_code == 200, f'Endpoint rest/v1/servers/this/storages/{storage["id"]} is {r.status_code}'
             return listOfResponses
+
+    @keyword
+    def detach_server_from_cloud(self, serverUrl, auth):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            body= {
+                "password":f"{auth[1]}"
+            }
+            r = s.post(f'{serverUrl}/rest/v1/system/cloudUnbind', json=body, verify=False)
+            return r

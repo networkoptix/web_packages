@@ -367,7 +367,7 @@ Connect To Cloud
 Evaluate System Settings via API
     [Arguments]    ${auth}    ${server url}    ${key}    ${expected value}
     ${settings}=   Get System Settings From Server    ${auth}    ${server url}
-    IF    '${IMAGE}' == '5.0_test'
+    IF    '${IMAGE}' == '5.0'
         ${expected value}=   Convert To String    ${expected value}
         ${expected value}=   Replace String    ${expected value}    empty    ${EMPTY}
         ${expected value}=   Replace String    ${expected value}    true    True

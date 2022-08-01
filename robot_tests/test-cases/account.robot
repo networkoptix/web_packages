@@ -499,7 +499,9 @@ Force Tags        account
     Go To    ${url}/register
     Register    mark    hamil    ${random email}    ${password}    
     Activate    ${random email}
-    Click Button      ${LOG IN BUTTON}
+    
+    Wait Until Element Is Visible    ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
+    Click Button      ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
     Log In    ${random email}    ${password}    button=None    reset=${True}
 
 28. Deletion attempt when Delete Account button is disabled (via API)
