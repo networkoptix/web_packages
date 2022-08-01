@@ -253,7 +253,9 @@ django-unit-test-slow:
     when: always
     reports:
       junit: cloud/slow-report.xml
-      cobertura: cloud/slow-coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: cloud/slow-coverage.xml
   script:
     - pytest -m "not integration" -m slow --create-db --junitxml=slow-report.xml --cov="." --cov-report xml:slow-coverage.xml --cov-report term
 
@@ -263,7 +265,9 @@ django-unit-test-fast:
     when: always
     reports:
       junit: cloud/fast-report.xml
-      cobertura: cloud/fast-coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: cloud/fast-coverage.xml
   script:
     - pytest -m "not integration" -m "not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
 
@@ -280,7 +284,9 @@ frontend-unit-test:
   artifacts:
     reports:
       junit: front_end/reports/*.xml
-      cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/test-karma/cobertura-coverage.xml
 
 authorization-unit-test:
   extends: .frontend-node
@@ -295,7 +301,9 @@ authorization-unit-test:
   artifacts:
     reports:
       junit: authorization/reports/*.xml
-      cobertura: authorization/coverage/test-karma/cobertura-coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: authorization/coverage/test-karma/cobertura-coverage.xml
 
 nx-lint-test:
   extends: .nx-lint-node
