@@ -61,5 +61,9 @@
   "48542": {
     "name": "pyjwt",
     "note": "| PyJWT is a Python implementation of RFC 7519. PyJWT supports multiple different JWT signing algorithms. With JWT, an attacker submitting the JWT token can choose the used signing algorithm. The PyJWT library requires that the application chooses what algorithms are supported. The application can specify 'jwt.algorithms.get_default_algorithms()' to get support for all algorithms, or specify a single algorithm. The issue is not that big as 'algorithms=jwt.algorithms.get_default_algorithms()' has to be used. Users should upgrade to v2.4.0 to receive a patch for this issue. As a workaround, always be explicit with the algorithms that are accepted and expected when decoding. Conflicts with apns2 0.7.2 requires PyJWT<2.0.0,>=1.4.0"
+  },
+  "49733": {
+    "name": "django",
+    "note": "Django 3.2.14 and 4.0.6 include a fix for CVE-2022-34265: Potential SQL injection via Trunc(kind) and Extract(lookup_name) arguments. https://www.djangoproject.com/weblog/2022/jul/04/security-releases"
   }
 }
