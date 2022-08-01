@@ -93,7 +93,10 @@ export abstract class BaseAccount implements OnDestroy {
         protected bootstrapProviderService: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
-        languageService.translateSubject.subscribe(lang => { this.LANG = lang; });
+        this.LANG = languageService.translations;
+        // language provider will be ready at this point
+        // we don't support dynamic lang switch ... ==TT
+        // languageService.translateSubject.subscribe(lang => { this.LANG = lang; });
         this.location = locationService;
         this.loginDialogActive = false;
 

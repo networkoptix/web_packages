@@ -31,9 +31,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
-        languageService.translateSubject.subscribe(translation => {
-            this.LANG = translation;
-        });
+        this.LANG = languageService.translations;
     }
 
     ngOnDestroy(): void {}

@@ -82,8 +82,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
             return this.cloudApiService.changeLanguage(this.langCode);
         }, {}).then(result => {
             this.storageService.langChanged = true;
-            // Attempt to fix https://networkoptix.atlassian.net/browse/CLOUD-9340
-            // cannot be reproduced locally
             setTimeout(() => {
                 this.window.location.reload();
             });
