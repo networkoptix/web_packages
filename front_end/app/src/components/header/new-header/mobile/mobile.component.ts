@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -21,9 +22,12 @@ export class NxHeaderMobileComponent {
     @Input() menuNodes: MenuNode[] = [];
     menuOpen$ = new BehaviorSubject(false);
     isProfile$ = new BehaviorSubject(false);
+    currentSystemMenu: MenuNode;
     iconState: mobileIconState;
     CONFIG: IConfig;
-    constructor(configService: NxConfigService, public headerService: NxHeaderService) {
+    constructor(configService: NxConfigService,
+                public headerService: NxHeaderService,
+                menusService: NxMenusService) {
         this.CONFIG = configService.getConfig();
 
         this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {

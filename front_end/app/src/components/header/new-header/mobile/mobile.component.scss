@@ -3,6 +3,7 @@
 .mobile-header {
     display: flex;
     width: 100%;
+    position: sticky;
     height: 60px;
     background-color: var(--header-level-two-bg);
     border-bottom: 1px solid var(--mobile-header-border-one);

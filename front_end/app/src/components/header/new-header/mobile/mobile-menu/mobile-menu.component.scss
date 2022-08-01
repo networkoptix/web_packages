@@ -5,10 +5,11 @@
     position: absolute;
     background-color: var(--mobile-header-bg);
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 32px);
     z-index: 3;
 
     .menu-items {
+        background-color: var(--mobile-header-bg);
         .menu-item {
             width: 100%;
             .node-name {
@@ -81,4 +82,18 @@
             color: var(--mobile-header-logout-btn-color);
         }
     }
+}
+
+.logout-wrapper {
+    bottom: 24px;
+    position: fixed;
+    width: 100%;
+}
+.logout-button {
+    width: 194px;
+    margin: auto;
+    background-color: $dark12 !important;
+    border-radius: 2px;
+    @include typography.regular14nocolor;
+    color: $light2;
 }

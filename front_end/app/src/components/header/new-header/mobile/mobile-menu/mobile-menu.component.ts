@@ -1,12 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { cloneDeep } from 'lodash-es';
+import { filter } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
+import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { AccountDropdown } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 
+@UntilDestroy()
 @Component({
     selector: 'nx-mobile-menu',
     templateUrl: './mobile-menu.component.html',
@@ -19,14 +24,27 @@ export class NxMobileHeaderMenuComponent {
   @Input() isProfile = false;
   @Output() nodeClicked = new EventEmitter<boolean>();
   profileMenu: MenuNode[];
+  currentSystemMenu: MenuNode;
+  showCurrentSystem = false;
 
   CONFIG: IConfig;
 
   constructor(public headerService: NxHeaderService,
               private configService: NxConfigService,
-              private accountService: NxAccountService) {
+              private accountService: NxAccountService,
+              menusService: NxMenusService) {
       this.CONFIG = this.configService.getConfig();
       this.profileMenu = this.makeProfileMenu(this.CONFIG.accountDropdown);
+
+      menusService.currentSystemNode$.pipe(filter(node => !!node), untilDestroyed(this)).subscribe(node => {
+          if (headerService.currentLocation?.path?.includes('/systems/')) { // specific system page
+              this.currentSystemMenu = cloneDeep({ ...node, name: 'systems' });
+          }
+      });
+
+      headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
+          this.showCurrentSystem = currentLocation?.path.includes('/systems/');
+      });
   }
 
   nodeClick(node: MenuNode, event: any): void {
