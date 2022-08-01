@@ -56,7 +56,6 @@ export class NxSystemsListComponent implements OnInit {
     filteredSystems: NxSystemWithUserInfo[];
     account: Account;
     endpoint: Endpoint = {};
-    userEmail: string;
     searchChanged = new Subject<void>();
 
     static SYSTEMS_BASE = '/systems';
@@ -108,7 +107,6 @@ export class NxSystemsListComponent implements OnInit {
         this.accountService.get().then(account => {
             if (account?.email) {
                 this.account = account;
-                this.userEmail = account.email;
                 this.systemsService.getSystems(account.email);
             }
 
@@ -162,14 +160,6 @@ export class NxSystemsListComponent implements OnInit {
 
     trackItem(index: number, item: NxSystemWithUserInfo): string | undefined {
         return item?.id;
-    }
-
-    // Remove this once system-card is fixed
-    getSystemOwnerName(
-        system: NxSystemWithUserInfo,
-        currentEmail: string
-    ): string {
-        return this.systemsService.getSystemOwnerName(system, currentEmail);
     }
 
     hasMatch(str: string, search: string): boolean {
@@ -234,20 +224,4 @@ export class NxSystemsListComponent implements OnInit {
                 .catch(err => { console.error(err); });
         }
     };
-
-    // Remove the three below once system-card is fixed
-    canShowTag(system: NxSystemWithUserInfo): boolean {
-        return system.stateOfHealth !== this.CONFIG.system.status.online &&
-            !!this.LANG.systemStatuses;
-    }
-
-    canShowButton(system: NxSystemWithUserInfo): boolean {
-        return this.LANG.system &&
-            system.stateOfHealth === this.CONFIG.system.status.online &&
-            !this.needToConfigureTwoFactor(system);
-    }
-
-    needToConfigureTwoFactor(system: NxSystemWithUserInfo): boolean {
-        return system.system2faEnabled && !this.account?.sessionVerified;
-    }
 }

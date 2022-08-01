@@ -16,8 +16,6 @@ import { NxSystemsService } from '@services/systems.service';
 export class SystemCardComponent {
     @Input() system: NxSystemWithUserInfo;
     @Input() size: 'full' | 'mid' | 'compact';
-    @Input() systemsToShow: string[];
-    @Input() userEmail: string;
     @Input() search: string;
     @Input() account: Account;
     @Input() openSystem: (system: NxSystemWithUserInfo) => void;
@@ -44,25 +42,25 @@ export class SystemCardComponent {
         this.CONFIG = configService.config;
     }
 
-    getSystemOwnerName(
-        system: NxSystemWithUserInfo,
-        currentEmail: string
-    ): string {
-        return this.systemsService.getSystemOwnerName(system, currentEmail);
+    getSystemOwnerName(): string {
+        return this.systemsService.getSystemOwnerName(
+            this.system,
+            this.account.email
+        );
     }
 
-    canShowTag(system: NxSystemWithUserInfo): boolean {
-        return system.stateOfHealth !== this.CONFIG.system.status.online &&
+    canShowTag(): boolean {
+        return this.system.stateOfHealth !== this.CONFIG.system.status.online &&
             !!this.LANG.systemStatuses;
     }
 
-    canShowButton(system: NxSystemWithUserInfo): boolean {
+    canShowButton(): boolean {
         return this.LANG.system &&
-            system.stateOfHealth === this.CONFIG.system.status.online &&
-            !this.needToConfigureTwoFactor(system);
+            this.system.stateOfHealth === this.CONFIG.system.status.online &&
+            !this.needToConfigureTwoFactor();
     }
 
-    needToConfigureTwoFactor(system: NxSystemWithUserInfo): boolean {
-        return system.system2faEnabled && !this.account?.sessionVerified;
+    needToConfigureTwoFactor(): boolean {
+        return this.system.system2faEnabled && !this.account?.sessionVerified;
     }
 }

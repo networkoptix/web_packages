@@ -9,27 +9,27 @@
         ></h2>
         <span
             class="user-name"
-            [innerHTML]="getSystemOwnerName(system, userEmail) | unsafe | highlight: search"
+            [innerHTML]="getSystemOwnerName() | unsafe | highlight: search"
         ></span>
         <div class="system-list-bottom-bar">
             <nx-tag
                 style="display: block; margin-top: 24px"
                 [clickable]="false"
                 [type]="tagType"
-                *ngIf="canShowTag(system)"
+                *ngIf="canShowTag()"
             >
                 <ng-container>{{ systemState }}</ng-container>
             </nx-tag>
             <nx-client-button
                 [system]="system"
                 [actionType]="system ? 'default' : 'primary'"
-                *ngIf="canShowButton(system)"
+                *ngIf="canShowButton()"
             ></nx-client-button>
             <svg-icon
                 [ngClass]="{
-                    'margin-system-list-status': canShowTag(system)
+                    'margin-system-list-status': canShowTag()
                 }"
-                *ngIf="needToConfigureTwoFactor(system)"
+                *ngIf="needToConfigureTwoFactor()"
                 nx-add-svg-src
                 [src]="CONFIG.icons.dir + 'lock.svg'"
                 [svgStyle]="{ 'height.px': '20' }"
