@@ -4,17 +4,23 @@ Resource          system-camera-resource.robot
 Resource          system-server-resource.robot
 
 *** Variables ***
-#${QA BURBANK IP}     10.1.5.34
+${QA BURBANK IP}     10.1.5.34
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${storage string 1}    --mount type=bind,source="/home/qaburbank/disk-invalid",target=/invalid
 ${storage string 2}    ${EMPTY}
-${camera}      00-09-18-64-EE-7D
-${camera url}    10.1.5.168
-${camera manufacturer}    3100
-${camera user}    admin
-${camera password}    QAbur777$
-${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+#${camera}      00-09-18-64-EE-7D
+#${camera url}    10.1.5.168
+#${camera manufacturer}    3100
+#${camera user}    admin
+#${camera password}    QAbur777$
+#${camera resourceId}    {a836b98b-65e2-2304-57e9-a09fc55a50a4}
+${camera}      00-02-D1-7E-59-52
+${camera url}    10.1.5.217
+${camera manufacturer}    VIVOTEK
+${camera user}    root
+${camera password}    QAbur777%
+${camera resourceId}   {d6aa35d3-6153-d3cf-8d89-6c4e3f5095f6}
 ${disk location}    /media/nxwitness-storages/disk1
 ${backup initialized}    ${FALSE}
 ${change focus}    //h4[contains(text(),"Storage")]
@@ -26,6 +32,7 @@ ${drives}    5
 Storage Suite Setup
     # ${value} sets the correct value needed to Turn On Analytics based on server version (currently the script below only supporting 4.3 and 4.1)
     ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 4.3}'    [\"{beee013e-d913-8f47-144f-2092371ee118}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
+    ${value} =    Set Variable If    '${IMAGE}' == '${IMAGE 5.0}'    [\"{177334ce-ee4d-9856-bde8-c212b8c5cd7d}\"]    [\"{687611a2-fd30-94e7-7f4c-8705642b0bcc}\"]
     Set Suite Variable     ${value}    ${value}
     ${random} =	   Generate Random String      length=5
     Set Suite Variable     ${random}    ${random}
@@ -130,20 +137,36 @@ Verify Storages
 
 Turn on Recording
     [Arguments]    ${owner}    ${system}
-    Log in to user and system    ${owner}     ${system}
-    Go To Cameras
-    Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Toggle Recording
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Verify Recording Controls Are Open
-    Click Element    ${RECORD ALWAYS RADIO BUTTON}/..
-    Wait Until Element is Visible    ${SAVE BUTTON}
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Click Button    ${SAVE BUTTON}
-    Sleep    2
-    Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
-    Log Out
+    IF    ${IMAGE} == ${IMAGE 5.0} or ${IMAGE} == ${IMAGE 5.1}
+        Start Recording API    https://${QA BURBANK IP}:${server 1['port']}    ${server 1['local auth']}    ${camera resourceId}
+        Log in to user and system    ${owner}     ${system}
+        Go To Cameras
+        ${status} =     Run Keyword and Return Status     Wait Until Element Is Visible    //span[contains(text(), "Edit Credentials")]    timeout=15
+        IF    ${status}
+            Click Element    //span[contains(text(), "Edit Credentials")]
+            Wait Until Element Is Visible    //input[@id="cameraPasswordCredentials"]
+            Input Text    //input[@id="cameraPasswordCredentials"]    ${camera password}
+            Click Button    //button[@type="submit"]
+            Wait Until Element is Not Visible    //h1[contains(text(), "Authentication Credentials")]
+        END
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Log Out
+    ELSE
+        Log in to user and system    ${owner}     ${system}
+        Go To Cameras
+        Wait Until Element is Visible with Retry    ${ENABLED RECORDING SLIDER}
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Toggle Recording
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Verify Recording Controls Are Open
+        Click Element    ${RECORD ALWAYS RADIO BUTTON}/..
+        Wait Until Element is Visible    ${SAVE BUTTON}
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Click Button    ${SAVE BUTTON}
+        Sleep    2
+        Run Keyword If    '${console}' == 'yes'    Capture Page Screenshot
+        Log Out
+    END
     Log    recording turned on ..... | PASS |    DEBUG      console=${console}
 
 Set Default Storage Config

@@ -475,8 +475,8 @@ Force Tags        storage
     Click    Button      ${STORAGE MAIN MODE}/parent::button
     Wait Until Element is Visible    ${STORAGE BACKUP MENU ITEM}
     Wait Until Elements Are Visible
-    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${BACKUP}"]
-    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and text()="${NOT IN USE}"]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and contains(text(),"${BACKUP}")]
+    ...    ${STORAGE DROPDOWN}//span[contains(@class, "disabled") and contains(text(),"${NOT IN USE}")]
 
 19. Change Storage from Main to Backup
     [Setup]     Test Setup      disk3    disk1

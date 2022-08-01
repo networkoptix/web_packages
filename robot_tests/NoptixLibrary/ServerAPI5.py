@@ -212,8 +212,10 @@ class ServerAPI5(ServerAPI):
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             f = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             logger.trace(f.json())
-            r = s.post(f'{serverUrl}/rest/v1/servers/this/restart', auth=HTTPBasicAuth(auth[0], auth[1]), verify=False)
-            s.delete(f"{serverUrl}/rest/v1/login/sessions")
+            token = f.json().get("token")
+            s.headers.update({'Authorization': "Bearer " + token})
+            time.sleep(1)
+            r = s.post(f'{serverUrl}/rest/v1/servers/this/restart', verify=False)
             assert r.status_code == 200
 
     @keyword
@@ -330,6 +332,11 @@ class ServerAPI5(ServerAPI):
             body = {"ip": cam_ip, "credentials":{"user": camuser, "password": campassword}, "mode": "addFoundDevices"}
             r = s.post(f'{serverUrl}/rest/v1/devices/*/searches', json=body, verify=False)
             assert r.status_code == 200, f"Endpoint /rest/v1/devices/*/searches status code is {r.status_code}"
+            payload = {"credentials":{"user": camuser, "password": campassword}}
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{uniqueId}', json=payload, verify=False)
+            logger.debug(r.text)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
 
     @keyword
     def get_cameras(self, auth, serverUrl):
@@ -342,13 +349,82 @@ class ServerAPI5(ServerAPI):
             return r.json()
 
     @keyword
-    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth=['admin','QAbur777$']):
+    def set_camera_attribute(self, serverUrl, auth, cameraId, attribute, value, camera_auth=['root','QAbur777%']):
         with requests.Session() as s:
             credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
             r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
             time.sleep(1)
             body = {f"{attribute}": value, "credentials":{"user": camera_auth[0], "password": camera_auth[1]}}
             r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=body, verify=False)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
+
+    @keyword
+    def modify_device_record(self, serverUrl, auth, cameraId, payload):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            time.sleep(1)
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=payload, verify=False)
+            logger.debug(r.text)
+            assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
+            return r.json()
+
+    @keyword
+    def start_recording_api(self, serverUrl, auth, cameraId, camera_auth=['root','QAbur777%']):
+        with requests.Session() as s:
+            credentials = {"username": auth[0], "password": auth[1], "setCookie": True}
+            payload = {"credentials":{"user": camera_auth[0], "password": camera_auth[1]},
+                       "schedule": {"isEnabled": True},
+                       "tasks":
+                        [
+                           {
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 2,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 3,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 4,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 5,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 6,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           },
+                           {
+                               "dayOfWeek": 7,
+                               "endTime": 86400,
+                               "fps": 30,
+                               "streamQuality": "low"
+                           }
+                       ]
+                    }
+            r = s.post(f"{serverUrl}/rest/v1/login/sessions", json=credentials, verify=False)
+            time.sleep(1)
+            r = s.patch(f'{serverUrl}/rest/v1/devices/{cameraId}', json=payload, verify=False)
+            logger.debug(r.text)
             assert r.status_code == 200, f"Endpoint /rest/v1/devices status code is {r.status_code}"
             return r.json()
 
