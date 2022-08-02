@@ -2,6 +2,7 @@
 @use "../../../../styles/theme_variables_common" as *;
 @use "../../../styles/buttons" as *;
 @use "bootstrap_utils" as bootstrap;
+@import "~swagger-ui/dist/swagger-ui.css";
 
 :host {
 	@include bootstrap.media-breakpoint-down(sm){
@@ -583,9 +584,6 @@
 				&:first-child {
 					padding-right: 8px !important;
 				}
-			}
-			&:last-child {
-				display:none
 			}
 		}
 		.prop-type, .property.primitive, .prop-format, .model {
