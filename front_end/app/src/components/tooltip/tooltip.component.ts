@@ -22,7 +22,7 @@ export class NxTooltipComponent extends BasePortalOutlet {
 
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 
-    template: Portal<any>;
+    template: Portal<unknown>;
 
     attachTemplate(portal: TemplatePortal): void {
         this.template = portal;
@@ -32,7 +32,7 @@ export class NxTooltipComponent extends BasePortalOutlet {
         this._text = text;
     }
 
-    attachComponentPortal<T>(componentPortal: ComponentPortal<any>): ComponentRef<T> {
+    attachComponentPortal<T>(componentPortal: ComponentPortal<T>): ComponentRef<T> {
         return this.portalOutlet.attachComponentPortal(componentPortal);
     }
 

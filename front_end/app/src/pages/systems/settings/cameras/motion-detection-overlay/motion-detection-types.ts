@@ -18,7 +18,7 @@ export class Area {
      * Finds if area borders another area
      * @param zone zone to check against
      */
-    public borders(zone: Area) {
+    public borders(zone: Area): boolean {
         if (this.sensitivity !== zone.sensitivity) return false;
         return !(this.x + this.width + 1 <= zone.x ||
             this.y + this.height + 1 <= zone.y ||
@@ -31,7 +31,7 @@ export class Area {
      * @param x
      * @param y
      */
-    public surrounds(x: number, y: number) {
+    public surrounds(x: number, y: number): boolean {
         const endX = this.x + this.width;
         const endY = this.y + this.height;
         return this.x <= x && x <= endX && this.y <= y && y <= endY;

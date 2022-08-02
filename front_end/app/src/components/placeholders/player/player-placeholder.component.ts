@@ -23,8 +23,8 @@ import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
     @Input() height: string;
-    @Input() heading: any;
-    @Input() description: any;
+    @Input() heading: string;
+    @Input() description: string;
 
     @Input() showSettingsLink?: boolean;
     @Input() system?: NxSystem;

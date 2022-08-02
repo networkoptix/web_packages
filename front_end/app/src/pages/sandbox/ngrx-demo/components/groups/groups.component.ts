@@ -22,11 +22,11 @@ export class NgrxDemoGroupsComponent {
         this.store.dispatch(GroupActions.reset());
     }
 
-    changeGroupName({ groupId, newName }): void {
+    changeGroupName({ groupId, newName }: { groupId: string; newName: string }): void {
         this.store.dispatch(GroupActions.setGroupName({ groupId, name: newName }));
     }
 
-    changeGroupParent({ groupId, newParentId }): void {
+    changeGroupParent({ groupId, newParentId }: { groupId: string; newParentId: string }): void {
         this.store.dispatch(GroupActions.setGroupParent({ groupId, parentId: newParentId }));
     }
 }

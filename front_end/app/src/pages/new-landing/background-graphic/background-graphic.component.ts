@@ -57,7 +57,7 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
     }
 
     // Calculates the size of the backgrounGraphics
-    layerSize = (original: number, layer: number) => {
+    layerSize = (original: number, layer: number): number => {
         const {
             scrollSpeedCoefficient,
             layerDistanceCoefficient
@@ -72,7 +72,7 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
     };
 
     // Converts layer size to scale
-    getScale = (layer: number) => {
+    getScale = (layer: number): number => {
         const { defaultWidth } = this.svgProperties;
         return 0.25 * (this.layerSize(defaultWidth, layer) / (defaultWidth));
     };

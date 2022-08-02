@@ -4,23 +4,19 @@ import {
     ElementRef,
     Input,
     OnChanges,
-    OnInit,
 } from '@angular/core';
 
+import { CoercedBoolInput, IBool } from '@decorators/ibool';
 import { NgChanges } from '@utils/ng-changes';
 
 @Directive({ selector: '[nxFocusMe]' })
 // directives do support AfterViewInit
 // ... this hook is fired by the parent component
-export class NxFocusMeDirective implements OnInit, AfterViewInit, OnChanges {
-    @Input() timeout = 0;
-    @Input() setFocus; // force focus for elements encapsulated
+export class NxFocusMeDirective implements AfterViewInit, OnChanges {
+    @Input() timeout: number = 0;
+    @IBool() @Input() setFocus: CoercedBoolInput; // force focus for elements encapsulated
 
-    constructor(private _elementRef: ElementRef) {}
-
-    ngOnInit(): void {
-        this.setFocus = (this.setFocus !== undefined) ? this.setFocus : true;
-    }
+    constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
     ngAfterViewInit(): void {
         // Timeout is needed for directly navigated pages

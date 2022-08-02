@@ -4,9 +4,9 @@ function degToRad(x: deg): rad {
     return Math.PI / 180 * x;
 }
 
-const cache = {};
+const cache: Record<string, number> = {};
 
-export function getSlopeWidth(angle: deg, h: px) {
+export function getSlopeWidth(angle: deg, h: px): number {
     const cacheKey = `(${angle}, ${h})`;
     if (cacheKey in cache) {
         return cache[cacheKey];

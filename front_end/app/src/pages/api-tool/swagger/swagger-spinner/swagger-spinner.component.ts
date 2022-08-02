@@ -14,11 +14,11 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 export class NxSwaggerSpinnerComponent implements OnInit, OnDestroy {
     @Input() opblock: HTMLElement;
     @Input() initialIsVisible: boolean; // Single API routes should start with the spinner visible
-    @Input() swaggerLoading: BehaviorSubject<any>;
+    @Input() swaggerLoading: BehaviorSubject<boolean>;
 
     classMutationObserver: MutationObserver;
     isVisible = false;
-    cachedLoading;
+    cachedLoading: Element;
     CONFIG: IConfig;
 
     constructor(private configService: NxConfigService) {

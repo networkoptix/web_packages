@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'ip_info'
 })
 export class IpInfoPipe implements PipeTransform {
-    public transform(url) {
+    public transform(url: string): string {
         if (url.includes('://')) {
             url = url.split('://')[1];
         }

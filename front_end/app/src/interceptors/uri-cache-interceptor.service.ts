@@ -1,4 +1,5 @@
 import {
+    HttpEvent,
     HttpHandler,
     HttpInterceptor,
     HttpRequest,
@@ -16,7 +17,10 @@ import { NxUriCacheService } from '@services/uri-cache.service';
 export class NxUriCachingInterceptor implements HttpInterceptor {
     constructor(private cacheRegistrationService: NxUriCacheService) {}
 
-    public intercept(httpRequest: HttpRequest<any>, handler: HttpHandler) {
+    public intercept(
+        httpRequest: HttpRequest<unknown>,
+        handler: HttpHandler
+    ): Observable<HttpEvent<unknown>> {
         // Don't cache if
         // 1. It's not a GET request
         // 2. If URI is not supposed to be cached

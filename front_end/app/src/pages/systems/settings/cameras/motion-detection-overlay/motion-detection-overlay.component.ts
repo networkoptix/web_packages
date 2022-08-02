@@ -34,7 +34,8 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('selectionCanvas') selectionCanvas: ElementRef<HTMLCanvasElement>;
-    @HostListener('contextmenu', ['$event']) preventContext = event => event.preventDefault();
+    @HostListener('contextmenu', ['$event'])
+    preventContext = (event: Event): void => event.preventDefault();
     unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;

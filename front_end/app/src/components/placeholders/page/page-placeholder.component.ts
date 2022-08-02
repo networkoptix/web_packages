@@ -44,8 +44,8 @@ export class NxPagePlaceholderComponent implements OnInit {
     @IBool() @Input() withFooter: CoercedBoolInput;
     @IBool() @Input() constrainWidth: CoercedBoolInput;
     @Input() data: { systemName: string };
-    @Input() showMainButton = false;
-    @Input() addPadding = true;
+    @IBool() @Input() showMainButton: CoercedBoolInput = false;
+    @IBool() @Input() addPadding: CoercedBoolInput = true;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

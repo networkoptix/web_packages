@@ -21,10 +21,10 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
-    @Input() wrapperHeight = 203;
+    @Input() wrapperHeight: number = 203;
     @Input() height: string;
     @Input() width: string;
-    @Input() translatedMessage: any;
+    @Input() translatedMessage: string;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;

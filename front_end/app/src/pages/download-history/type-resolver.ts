@@ -3,11 +3,11 @@ import { Resolve, Router } from '@angular/router';
 import { EMPTY as empty } from 'rxjs';
 
 @Injectable()
-export class TypeResolver implements Resolve<any> {
+export class TypeResolver implements Resolve<never> {
     constructor(private router: Router) {
     }
 
-    resolve() {
+    resolve(): typeof empty {
         this.router
             .navigate(['/downloads/releases'])
             .catch(error => {

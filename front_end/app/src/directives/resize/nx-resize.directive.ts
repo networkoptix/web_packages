@@ -6,7 +6,8 @@ import {
     OnDestroy
 } from '@angular/core';
 
-const entriesMap = new WeakMap();
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+const entriesMap = new WeakMap<Element, NxResizeObserver>();
 
 interface Size {
     width: number,
@@ -27,14 +28,14 @@ export class NxResizeObserver implements OnDestroy {
     @Output() resize = new EventEmitter<Size>();
 
     constructor(
-        private el: ElementRef
+        private el: ElementRef<Element>
     ) {
         const target = this.el.nativeElement;
         entriesMap.set(target, this);
         observer.observe(target);
     }
 
-    _resizeCallback({ contentRect: { width, height } }: { contentRect: Size }): void {
+    _resizeCallback({ contentRect: { width, height } }: ResizeObserverEntry): void {
         this.resize.emit({ width, height });
     }
 

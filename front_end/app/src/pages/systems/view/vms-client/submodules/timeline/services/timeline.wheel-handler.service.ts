@@ -24,7 +24,7 @@ export class TimelineWheelHandlerService {
         this.timeUnderMouse.handleMouseMove(e);
     }
 
-    protected _sanitizeOffset(offset) {
+    protected _sanitizeOffset(offset: number): number {
         if (offset > 0) {
             if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
                 offset = this.timeline.fullRange.end - this.timeline.visibleRange.end;

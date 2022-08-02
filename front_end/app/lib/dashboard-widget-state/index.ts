@@ -8,8 +8,8 @@ import type { System } from './types';
 export class SharedWidgetState {
     state$ = new BehaviorSubject(0);
 
-    increment = (val = 1) => this.state$.next(this.state$.value + val);
-    decrement = (val = 1) => this.state$.next(this.state$.value - val);
+    increment = (val: number = 1): void => this.state$.next(this.state$.value + val);
+    decrement = (val: number = 1): void => this.state$.next(this.state$.value - val);
 
     constructor(
         public systems$: Observable<System[]>,

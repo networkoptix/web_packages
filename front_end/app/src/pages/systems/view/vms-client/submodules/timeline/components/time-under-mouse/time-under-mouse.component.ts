@@ -91,7 +91,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         }
     }
 
-    public get svgArrowPoints() {
+    public get svgArrowPoints(): string {
         const wwm = PRIMARY_WIDTH + 2 * MARGIN; // widthWithMargins
         const aw = ARROW_WIDTH; // arrowWidth
 
@@ -126,7 +126,7 @@ export class TimeUnderMouseComponent implements OnInit, OnDestroy {
         return `${tl},0 ${tr},0 ${b},5`;
     }
 
-    public get verticalLineLeftPx() {
+    public get verticalLineLeftPx(): number {
         let result = PRIMARY_WIDTH / 2;
         const offset = this._visualOffset - this._honestOffset;
         if (Math.abs(offset) > 0) {

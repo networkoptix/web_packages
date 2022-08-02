@@ -22,11 +22,11 @@ import { NxSystem } from '@services/system.service/system';
 })
 export class NxOpenClientSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
-    @Input() wrapperHeight = 203;
+    @Input() wrapperHeight: number = 203;
     @Input() height: string;
     @Input() width: string;
     @Input() system: NxSystem;
-    @Input() translatedMessage: any;
+    @Input() translatedMessage: string;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;

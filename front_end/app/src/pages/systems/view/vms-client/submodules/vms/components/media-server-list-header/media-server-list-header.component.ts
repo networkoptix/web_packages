@@ -9,8 +9,8 @@ const COOKIE_NAME = 'nx_show_ips';
     styleUrls: ['media-server-list-header.component.scss']
 })
 export class NxMediaServerListHeaderComponent implements OnInit {
-    @Output() ipVisibilityStateChange = new EventEmitter();
-    @Output() filterTokenChange = new EventEmitter();
+    @Output() ipVisibilityStateChange = new EventEmitter<boolean>();
+    @Output() filterTokenChange = new EventEmitter<string>();
 
     constructor(
         protected cookieService: CookieService

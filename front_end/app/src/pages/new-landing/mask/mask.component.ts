@@ -20,7 +20,7 @@ import { NxLandingService } from '../landing.service';
     styleUrls: ['./mask.component.scss']
 })
 export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-    @Input() scrollPosition = 820;
+    @Input() scrollPosition: number = 820;
     componentInitialized = false;
     scale = 2;
     isSafari: boolean;
@@ -41,7 +41,7 @@ export class NxMaskComponent implements OnInit, OnChanges, AfterViewInit, OnDest
         this.isSafari = platform.SAFARI;
     }
 
-    getMaskScale = (scrollPosition: number) => {
+    getMaskScale = (scrollPosition: number): number => {
         const {
             scrollSpeedCoefficient,
             maskCoefficient

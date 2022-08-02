@@ -29,10 +29,10 @@ import { NgChanges } from '@utils/ng-changes';
 @Directive({ selector: '[nxTooltip]' })
 export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     private overlayRef: OverlayRef;
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<boolean>();
     private positionStrategy: FlexibleConnectedPositionStrategy;
 
-    @Input('nxTooltip') content: string | TemplateRef<any>;
+    @Input('nxTooltip') content: string | TemplateRef<unknown>;
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,

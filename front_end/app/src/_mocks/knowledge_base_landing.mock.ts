@@ -3,11 +3,12 @@ import { EMPTY } from 'rxjs';
 
 import {
     AboutStructure,
+    AboutStructureNode,
     AboutTemplates
 } from '@pages/developers/about/about.component.types';
 import { MenuStructure } from '@services/nx-config/base-config';
 
-export const getMockLanding = () => mockAboutNodes;
+export const getMockLanding = (): AboutStructure => mockAboutNodes;
 
 /***
  * Get first node by templateType, optionally filter by nodeName. Useful for testing different versions of nodes.
@@ -15,7 +16,7 @@ export const getMockLanding = () => mockAboutNodes;
 export const getMockSection = (
     templateType: AboutTemplates,
     nodeName?: string
-) =>
+): AboutStructureNode =>
     mockAboutNodes.find(
         ({ template, node: { title } }) =>
             (template === templateType && !nodeName) || nodeName === title

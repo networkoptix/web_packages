@@ -72,7 +72,7 @@ export class NxHeaderLevelTwoComponent {
         }
     }
 
-    getContextButtonWidth() {
+    getContextButtonWidth(): number {
         if (this.contextButtonRef?.nativeElement) {
             return this.contextButtonRef.nativeElement.getBoundingClientRect().width;
         }
@@ -109,7 +109,7 @@ export class NxHeaderLevelTwoComponent {
         this.menuItemsWidth = this.menuItemsWidth - this.contextButtonWidth;
     }
 
-    nodeClick(node: MenuNode, event: any): void {
+    nodeClick(node: MenuNode, event: MouseEvent): void {
         this.headerService.handleNav(node, event);
         this.optimisticSelectedSubNode = node;
     }

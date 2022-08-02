@@ -10,7 +10,7 @@ export class NxArrowNavDirective {
     @Input() nxArrowNav: boolean;
 
     constructor(
-        private _elementRef: ElementRef
+        private _elementRef: ElementRef<HTMLElement>
     ) {
     }
 
@@ -25,7 +25,7 @@ export class NxArrowNavDirective {
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeydown(e): void {
+    onKeydown(e: KeyboardEvent): void {
         // filter events
         if (![38, 40].includes(e.keyCode)) {
             return;
@@ -33,9 +33,10 @@ export class NxArrowNavDirective {
 
         // proceed only if open
         if (this._elementRef.nativeElement.parentElement.className.includes('show')) {
-            const elements = this._elementRef.nativeElement.querySelectorAll('.dropdown-item-container');
+            const elements = this._elementRef.nativeElement
+                .querySelectorAll<HTMLLIElement>('.dropdown-item-container');
             let fdElm = this._elementRef.nativeElement.querySelector(':focus');
-            let idx;
+            let idx: number;
 
             if (fdElm) {
                 fdElm = fdElm.parentElement;
@@ -57,7 +58,7 @@ export class NxArrowNavDirective {
             const elm = elements[idx];
 
             if (elm?.firstElementChild) {
-                elm.firstElementChild.focus();
+                (elm.firstElementChild as HTMLElement).focus();
             }
         }
     }
