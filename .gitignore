@@ -16,6 +16,7 @@ front_end/pnpm-lock.yaml
 front_end/app/images/promo
 front_end/app/images/favicon.ico
 front_end/app/images/logo.png
+front_end/app/images/dark_logo.png
 front_end/app/images/logo_small.png
 front_end/app/styles/custom
 front_end/app/styles/*.css
