@@ -158,8 +158,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=${False}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.1}    owner=${owner email}    network=custom1    add users=${False}
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    network=custom1    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 5.1}    owner=${owner email}    network=custom1    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -177,6 +177,7 @@ Force Tags        merge
 
 6. Merge Dialog - Attempt to merge auto-discovered system - back - Attempt to merge Cloud system
     [Tags]    C76480    merge_dialog
+    Skip    No more auto discoverd systems
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
@@ -213,8 +214,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    network=custom1    add users=${False}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=custom1    add users=${False}
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    network=custom1    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 5.0}    owner=${owner email}    network=custom1    add users=${False}
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END
@@ -245,7 +246,7 @@ Force Tags        merge
     Validate Check Merge Dialog
     Choose System From Dropdown    ${system 2}[name]
     Click Button    ${MERGE NEXT BUTTON}
-    Validate Admin Password Dialog
+    #Validate Admin Password Dialog
 
     Log    Step 6
     Click Button    ${MERGE X BUTTON}
@@ -349,8 +350,8 @@ Force Tags        merge
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
 
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
+    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
+    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
 
     Sleep    60
 
@@ -368,14 +369,14 @@ Force Tags        merge
     Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
     Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
-
+ 
     Log    Step 2
     Choose Primary System    from target=True
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
-    Validate Confirm Merge Dialog    ${system 2}[name]    ${system 1}[name]
+    #Validate Confirm Merge Dialog    ${system 2}[name]    ${system 1}[name]
 
     Log    Step 3
-    Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
+   # Slow    Input Text    ${MERGE PASSWORD INPUT}    ${BASE PASSWORD}    timeout=1
     Click Button    ${MERGE SYSTEMS BUTTON}
 
     Log    Step 4
