@@ -151,7 +151,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     }
 
     public initSetTimeDialog(): void {
-        const dialog = this.dialogs.selectTimeRange();
+        const dialog = this.dialogs.selectTimeRange(this.selection);
         dialog.then(this._onTimeSetDialogDone);
     }
 

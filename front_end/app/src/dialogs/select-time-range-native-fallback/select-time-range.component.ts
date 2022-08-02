@@ -1,13 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, Inject, Input } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
-import { DialogRef } from '@dialogs/dialog-ref';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { pickFrom } from '@utils/general';
 import {
     TimelineSelectionService
 } from '@vms-client/submodules/timeline/services/timeline.selection.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
+
+const DATE_FORMAT_STRING = 'yyyy-MM-dd';
+const TIME_FORMAT_STRING = 'HH:mm:ss';
 
 @Component({
     selector: 'nx-modal-select-time-range',
@@ -16,23 +20,28 @@ import {
 })
 export class SelectTimeRangeModalContent {
     LANG: LanguageI18NStaticTypes;
-    CONFIG: IConfig;
     hideErrors = true;
     startDate: string;
     startTime: string;
     endDate: string;
     endTime: string;
 
+    selection: TimelineSelectionService;
+
     @Input() closable = true;
 
     constructor(
         private language: NxLanguageProviderService,
-        private configService: NxConfigService,
-        private selection: TimelineSelectionService,
         private dialogRef: DialogRef,
+        private vms: VideoManagementSystemService,
+        private datepipe: DatePipe,
+        @Inject(DIALOG_DATA) private dialogData: {
+            selection: TimelineSelectionService,
+        },
     ) {
-        this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.translations;
+
+        pickFrom(this.dialogData, ['selection'], this);
     }
 
     public closeModal = $event => {
@@ -42,8 +51,8 @@ export class SelectTimeRangeModalContent {
 
     public save = $event => {
         $event.preventDefault();
-        const start = new Date(this.startDate + 'T' + this.startTime).getTime();
-        const end = new Date(this.endDate + 'T' + this.endTime).getTime();
+        const start = this.vms.untweakT(new Date(this.startDate + 'T' + this.startTime).getTime());
+        const end = this.vms.untweakT(new Date(this.endDate + 'T' + this.endTime).getTime());
         if (start > end) {
             return this.close({ start: end, end: start });
         } else {
@@ -52,18 +61,13 @@ export class SelectTimeRangeModalContent {
     };
 
     ngOnInit(): void {
-        const start = new Date(this.selection.range.start - this._timezoneOffset);
-        const end = new Date(this.selection.range.end - this._timezoneOffset);
+        const tweakedTStart = new Date(this.vms.tweakT(this.selection.range.start));
+        const tweakedTEnd = new Date(this.vms.tweakT(this.selection.range.end));
 
-        this.startDate = start.toISOString().slice(0, 10);
-        this.startTime = start.toISOString().slice(11, 19);
-
-        this.endDate = end.toISOString().slice(0, 10);
-        this.endTime = end.toISOString().slice(11, 19);
-    }
-
-    private get _timezoneOffset() {
-        return new Date().getTimezoneOffset() * 60 * 1000;
+        this.startDate = this.datepipe.transform(tweakedTStart, DATE_FORMAT_STRING);
+        this.startTime = this.datepipe.transform(tweakedTStart, TIME_FORMAT_STRING);
+        this.endDate = this.datepipe.transform(tweakedTEnd, DATE_FORMAT_STRING);
+        this.endTime = this.datepipe.transform(tweakedTEnd, TIME_FORMAT_STRING);
     }
 
     close = (msg: boolean | {}): void => {

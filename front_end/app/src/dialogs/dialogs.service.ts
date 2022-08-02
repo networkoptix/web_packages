@@ -18,6 +18,7 @@ import type { ICamera } from '@services/system.service/camera-manager/camera-man
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemUser } from '@services/system.service/user-manager/user-manager-types';
+import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { DialogBase } from './dialog-base';
 import { DialogConfig } from './dialog-config';
@@ -610,8 +611,12 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async selectTimeRange() {
-        const config: Partial<DialogConfig> = {};
+    public async selectTimeRange(selection: TimelineSelectionService) {
+        const config: Partial<DialogConfig> = {
+            data: {
+                selection
+            }
+        };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
         await this.preloadDialogsModule();

@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
 
 import {
@@ -28,7 +29,7 @@ import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handl
 const DATE_FORMAT_STRING = 'dd mmmm yyyy';
 const TIME_FORMAT_STRING = 'HH:MM:ss';
 
-const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;
+const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
 
 @Component({
     selector: 'timeline-selection',
@@ -40,6 +41,11 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     protected selectionSubscription: Subscription;
     protected selectionStatus: TimelineSelectionServiceStatus;
 
+    leftDate: string = '';
+    leftTime: string = '';
+    rightDate: string = '';
+    rightTime: string = '';
+
     @ViewChild('selectedRange')
     protected selectedRangeView: ElementRef<HTMLDivElement>;
 
@@ -49,33 +55,25 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     @ViewChild('rightEar')
     protected rightEarView: ElementRef<HTMLDivElement>;
 
-    public get dateStrings() {
+    private dateStrings(): void {
         if (!this.selectionStatus || !this.selectionStatus.isActive) {
-            return {
-                left: {
-                    date: '',
-                    time: ''
-                },
-                right: {
-                    date: '',
-                    time: ''
-                }
-            };
+            this.leftDate = '';
+            this.leftTime = '';
+            this.rightDate = '';
+            this.rightTime = '';
+        } else {
+            const tweakedTStart = this.vms.tweakT(this.selectionStatus.range.start);
+            const tweakedTEnd = this.vms.tweakT(this.selectionStatus.range.end);
+            this.leftDate = dateFormat(tweakedTStart, DATE_FORMAT_STRING);
+            this.leftTime = dateFormat(tweakedTStart, TIME_FORMAT_STRING);
+            this.rightDate = dateFormat(tweakedTEnd, DATE_FORMAT_STRING);
+            this.rightTime = dateFormat(tweakedTEnd, TIME_FORMAT_STRING);
         }
-        return {
-            left: {
-                date: dateFormat(this.selectionStatus.range.start, DATE_FORMAT_STRING),
-                time: dateFormat(this.selectionStatus.range.start, TIME_FORMAT_STRING)
-            },
-            right: {
-                date: dateFormat(this.selectionStatus.range.end, DATE_FORMAT_STRING),
-                time: dateFormat(this.selectionStatus.range.end, TIME_FORMAT_STRING)
-            }
-        };
     }
 
     constructor(
         private self: ElementRef,
+        private vms: VideoManagementSystemService,
         protected timeline: TimelineService,
         protected selection: TimelineSelectionService,
         protected playback: PlaybackService,
@@ -136,7 +134,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         }
         const duration = Math.abs(t - this.playback.state.currentTime);
         const width = this.timeline.durationToDomWidth(duration);
-        return width < PLAYBACK_OVERLAY_TRESHOLD_PX;
+        return width < PLAYBACK_OVERLAY_THRESHOLD_PX;
     }
 
     protected get _leftEarOverPlayback(): boolean {
@@ -150,6 +148,7 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     public onSelectionSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.selectionStatus = s;
         this._updateCss();
+        this.dateStrings();
     }
 
     public onTimelineSubjectChange(s: TimelineServiceStatus): void {
