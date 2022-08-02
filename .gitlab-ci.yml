@@ -129,7 +129,9 @@ no-changes:
     when: always
     reports:
       junit: cloud/report.xml
-      cobertura: cloud/coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: cloud/coverage.xml
 
 django-checks:
   extends: .backend-changes
@@ -194,7 +196,9 @@ frontend-unit-test:
   artifacts:
     reports:
       junit: front_end/reports/*.xml
-      cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/test-karma/cobertura-coverage.xml
 
 authorization-unit-test:
   extends: .frontend-node
@@ -209,7 +213,9 @@ authorization-unit-test:
   artifacts:
     reports:
       junit: front_end/reports/*.xml
-      cobertura: front_end/coverage/test-karma/cobertura-coverage.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: front_end/coverage/test-karma/cobertura-coverage.xml
 
 webadmin:
   extends: .frontend-changes
