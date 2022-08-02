@@ -34,8 +34,8 @@
             border-radius : 2px;
             //border        : 1px solid $light6;
             background    : transparent !important;
-            outline       : none !important;
-            box-shadow    : none !important;
+            outline       : none;
+            box-shadow    : none;
             caret-color   : var(--input-color) !important;
 
             &:focus::placeholder {
@@ -46,9 +46,10 @@
                 @include mixins.placeholder();
             }
 
-            &:active, &:focus, &.non-empty {
-                border : 1px solid var(--brand-core) !important;
-            }
+            // defined in inputs
+            //&:active, &:focus, &.non-empty {
+            //    border : 1px solid var(--brand-core) !important;
+            //}
 
             &:hover:not(:active):not(:focus) {
                 border : 1px solid $light8;

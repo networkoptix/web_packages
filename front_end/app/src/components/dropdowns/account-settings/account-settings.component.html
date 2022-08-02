@@ -5,7 +5,7 @@
     (nxClickElsewhere)="show = false"
 >
     <button
-        class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+        class="inset btn btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
         *ngIf="!newHeader; else newHeaderButton"
         [ngClass]="{ 'small-icon-overrides': small }"
         (resize)="buttonWidth.next($event.width)"
