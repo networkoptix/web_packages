@@ -164,25 +164,22 @@ def rename_permission_group(group, asset):
     group.save()
 
 
-def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
-    asset = Asset.objects.filter(
-        customizations__name__in=[customization], asset_type__name="",
-        asset_type__type=AssetType.ASSET_TYPES.cloud_portal
-    ).first()
-    if asset:
+def get_cloud_portal_asset(customization=settings.CUSTOMIZATION, no_create=False):
+    if asset := Asset.objects.filter(customizations__name__in=[customization], asset_type__name="", asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first():
         return asset
 
-    customization_obj = Customization.objects.filter(
-        name=customization).first()
-    if customization_obj:
-        asset_type = AssetType.objects.get(
-            type=AssetType.ASSET_TYPES.cloud_portal, name='')
-        cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}",
-                                            asset_type=asset_type)
+    if no_create:
+        return None
+
+    if customization_obj := Customization.objects.filter(name=customization).first():
+        asset_type = AssetType.objects.get(type=AssetType.ASSET_TYPES.cloud_portal, name='')
+
+        cloud_portal = Asset.objects.create(name=f"Cloud portal - {customization}", asset_type=asset_type)
+
         cloud_portal.customizations.set([customization_obj])
         return cloud_portal
-    raise Asset.DoesNotExist(f"No cloud portal asset found for {customization}. "
-                             f"Most likely a customization with the name \"{customization}\" doesn't exist.")
+
+    raise Asset.DoesNotExist(f"""No cloud portal asset found for {customization}. Most likely a customization with the name \"{customization}\" doesn't exist.""")
 
 
 def get_vms_asset(customization=settings.CUSTOMIZATION):
@@ -1468,10 +1465,12 @@ class UserGroupsToAssetPermissions(models.Model):
         return UserGroupsToAssetPermissions.check_permission(user, asset, "cms.edit_content")
 
     @staticmethod
-    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None):
+    def check_customization_permission(user, customization=settings.CUSTOMIZATION, permission=None, no_create=True):
+        if not (cloud_portal := get_cloud_portal_asset(customization, no_create)):
+            return False
+
         return UserGroupsToAssetPermissions.\
-            check_permission(user, get_cloud_portal_asset(
-                customization), permission)
+            check_permission(user, cloud_portal, permission)
 
     @staticmethod
     def get_customizations_with_permission(user, permission):
