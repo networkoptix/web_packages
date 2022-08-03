@@ -47,18 +47,6 @@
       }
     },
     {
-      "name": "apiFresh",
-      "urls": [
-        "/api/utils/language"
-      ],
-      "cacheConfig": {
-        "maxAge": "2h",
-        "maxSize": 100,
-        "timeout": "0u",
-        "strategy": "freshness"
-      }
-    },
-    {
       "name": "cloudSystemAPI",
       "urls": [
         "/api/systems**"
@@ -80,6 +68,7 @@
     "!/admin/**",
     "!/cdb/**",
     "!/authorize",
-    "!/authorize/**"
+    "!/authorize/**",
+    "!/api/utils/language"
   ]
 }
