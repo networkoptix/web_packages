@@ -51,10 +51,6 @@
         outline        : 1px solid var(--input-focus-border-color) !important;
         outline-offset : 0;
         box-shadow     : 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
-        //background-color: var(--input-active-bg) !important;
-        //color : var(--input-focus-color) !important;
-        //border-color : var(--input-focus-border-color) !important;
-        //box-shadow   : none;
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
@@ -82,7 +78,7 @@
     }
     
     input {
-        border: 1px solid var(--input-border-color) !important;
+        border: 1px solid var(--input-border-color);
         caret-color : var(--input-color) !important;
         
         &:-webkit-autofill,
@@ -92,19 +88,26 @@
             -webkit-text-fill-color : var(--input-color);
             -webkit-box-shadow      : 0 0 0 40px var(--input-bg) inset !important;
         }
+        
+        &:focus, &:active {
+            border-color   : var(--input-focus-border-color) !important;
+            outline        : 1px solid var(--input-focus-border-color) !important;
+            outline-offset : 0;
+            box-shadow     : 0 0 0 2px rgba(var(--input-focus-shadow-color), 0.3) !important;
+        }
     }
     
     &.ng-untouched {
         input {
-            border : 1px solid var(--input-border-color) !important;
+            border : 1px solid var(--input-border-color);
             color  : var(--input-color) !important;
         }
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched) {
         input {
-            border : 1px solid var(--input-error-border-color) !important;
-            color  : var(--input-error-color) !important;
+            border : 1px solid var(--input-error-border-color);
+            color  : var(--input-error-color);
 
             + .input-group-addon {
                 border-color     : transparent;
