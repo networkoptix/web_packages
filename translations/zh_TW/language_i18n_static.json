@@ -1070,7 +1070,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Health Report For System {systemName}"
+        "healthReportForSystem": "系統{systemName} 的資源使用報告"
     },
     "license": {
         "licenseTypeTitles": {

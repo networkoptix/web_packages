@@ -1070,7 +1070,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Health Report For System {systemName}"
+        "healthReportForSystem": "Hälsorapport för system {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

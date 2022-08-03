@@ -1070,7 +1070,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Health Report For System {systemName}"
+        "healthReportForSystem": "システム {systemName} のヘルスレポート"
     },
     "license": {
         "licenseTypeTitles": {
