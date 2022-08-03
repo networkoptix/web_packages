@@ -139,8 +139,9 @@ html {
     --switch-bar-disable-color    : #{$light12};
     --switch-warning-color        : #{$red_l1};
     --switch-warning-hover-color  : #{$red_l2};
-    --switch-circle-color         : #{$red_d1};
-    --switch-circle-hover-color   : #{$red_d1};
+    --switch-warning-circle-color : #{$red_d2};
+    --switch-circle-color         : #{$light12};
+    --switch-circle-hover-color   : #{$light12};
     --switch-circle-disable-color : #{$light12};
 
     --developer-menu-bg : #{$additional_light2};
