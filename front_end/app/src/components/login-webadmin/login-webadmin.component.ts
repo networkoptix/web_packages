@@ -104,7 +104,11 @@ export class LoginWebadminModalContent implements OnInit {
         private router: Router,
         private cookieService: CookieService,
         private dialogRef: DialogRef,
-        @Inject(DIALOG_DATA) private dialogData,
+        @Inject(DIALOG_DATA) private dialogData: {
+            account: NxAccountService;
+            keepPage: boolean;
+            blockNavigation: boolean;
+        },
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) protected window: Window
     ) {

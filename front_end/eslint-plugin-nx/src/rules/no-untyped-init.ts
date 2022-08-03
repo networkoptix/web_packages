@@ -38,6 +38,7 @@ export = createRule({
         schema: [],
         messages: {
             untypedProp: 'Untyped property.',
+            untypedParamProp: 'Untyped parameter property.',
             untypedDeclaration: 'Untyped declaration.',
         },
     },
@@ -46,7 +47,7 @@ export = createRule({
         function reportNode(
             node: TSESTree.Node,
             expression: TSESTree.Expression,
-            messageId: 'untypedProp' | 'untypedDeclaration'
+            messageId: 'untypedProp' | 'untypedParamProp' | 'untypedDeclaration'
         ): void {
             if (expression === null || isUntypedValue(expression)) {
                 context.report({
@@ -75,6 +76,35 @@ export = createRule({
                 }
 
                 reportNode(node, value, 'untypedProp');
+            },
+            'ClassBody > MethodDefinition[kind="constructor"]'(
+                node: TSESTree.MethodDefinition
+            ) {
+                node.value.params.forEach(param => {
+                    if (param.type !== AST_NODE_TYPES.TSParameterProperty) {
+                        return;
+                    }
+
+                    const { parameter } = param;
+                    if (
+                        parameter.type === AST_NODE_TYPES.Identifier &&
+                        !parameter.typeAnnotation
+                    ) {
+                        context.report({
+                            node: param,
+                            messageId: 'untypedParamProp'
+                        });
+                    } else if (
+                        parameter.type === AST_NODE_TYPES.AssignmentPattern &&
+                        !parameter.left.typeAnnotation &&
+                        isUntypedValue(parameter.right)
+                    ) {
+                        context.report({
+                            node: param,
+                            messageId: 'untypedParamProp'
+                        });
+                    }
+                });
             },
             VariableDeclaration(node) {
                 const { parent, declarations } = node;

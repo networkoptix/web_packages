@@ -17,6 +17,7 @@ module.exports = (0, utils_2.createRule)({
         schema: [],
         messages: {
             untypedProp: 'Untyped property.',
+            untypedParamProp: 'Untyped parameter property.',
             untypedDeclaration: 'Untyped declaration.',
         },
     },
@@ -43,6 +44,29 @@ module.exports = (0, utils_2.createRule)({
                     return;
                 }
                 reportNode(node, value, 'untypedProp');
+            },
+            'ClassBody > MethodDefinition[kind="constructor"]'(node) {
+                node.value.params.forEach(param => {
+                    if (param.type !== utils_1.AST_NODE_TYPES.TSParameterProperty) {
+                        return;
+                    }
+                    const { parameter } = param;
+                    if (parameter.type === utils_1.AST_NODE_TYPES.Identifier &&
+                        !parameter.typeAnnotation) {
+                        context.report({
+                            node: param,
+                            messageId: 'untypedParamProp'
+                        });
+                    }
+                    else if (parameter.type === utils_1.AST_NODE_TYPES.AssignmentPattern &&
+                        !parameter.left.typeAnnotation &&
+                        (0, utils_2.isUntypedValue)(parameter.right)) {
+                        context.report({
+                            node: param,
+                            messageId: 'untypedParamProp'
+                        });
+                    }
+                });
             },
             VariableDeclaration(node) {
                 const { parent, declarations } = node;

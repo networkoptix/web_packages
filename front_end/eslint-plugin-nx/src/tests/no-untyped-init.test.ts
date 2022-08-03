@@ -15,6 +15,9 @@ ruleTester.run('no-untyped-init', rule, {
         { code: classWrapper('foo: number = 3;') },
         { code: classWrapper('foo = [1, 2, 3];') },
         { code: classWrapper('foo = { a: 1, b: 2, c: 3 };') },
+        { code: classWrapper('constructor(public foo: bar) {}') },
+        { code: classWrapper('constructor(public foo = baz) {}') },
+        { code: classWrapper('constructor(public foo: bar = baz) {}') },
         { code: 'let foo: number;' },
         { code: 'let foo = 3;' },
         { code: 'let foo: number = 3;' },
@@ -44,6 +47,14 @@ ruleTester.run('no-untyped-init', rule, {
         {
             code: classWrapper('foo = {};'),
             errors: [{ messageId: 'untypedProp' }]
+        },
+        {
+            code: classWrapper('constructor(public foo) {}'),
+            errors: [{ messageId: 'untypedParamProp' }]
+        },
+        {
+            code: classWrapper('constructor(public foo = []) {}'),
+            errors: [{ messageId: 'untypedParamProp' }]
         },
         { code: 'let foo;', errors: [{ messageId: 'untypedDeclaration' }] },
         {

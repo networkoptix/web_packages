@@ -239,6 +239,7 @@ const typeLintBlacklist = [
     'app/src/services/fps-meter.service.ts',
     'app/src/services/login.service.ts',
     'app/src/services/menus.service.ts',
+    'app/src/services/menus.service.types.ts',
     'app/src/services/nx-app-source.service.ts',
     'app/src/services/nx-app-state.service.ts',
     'app/src/services/nx-bootstrap-provider.ts',
