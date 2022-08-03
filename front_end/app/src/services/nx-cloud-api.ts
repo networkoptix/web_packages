@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import LogRocket from 'logrocket';
+import { WINDOW } from 'ngx-window-token';
 import { EMPTY, of, from, BehaviorSubject, throwError } from 'rxjs';
 import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap } from 'rxjs/operators';
@@ -109,7 +110,8 @@ export class NxCloudApiService {
         private nxSwCacheService: NxSwCacheService,
         private injector: Injector,
         private consoleService: NxConsoleService,
-        private oauthService: OauthService
+        private oauthService: OauthService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.customClient = new CustomClientAPI(this, this.CONFIG, this.http, this.consoleService);
@@ -503,7 +505,7 @@ export class NxCloudApiService {
     getLanguages() {
         const uri = environment.isLocal
             ? '/static/languages.json'
-            : `${this.CONFIG.apiBase}/utils/languages/`;
+            : `${this.window.location.origin}/${this.CONFIG.staticBase}/languages.json`;
         return this.http.get<t.ILanguages>(uri).toPromise();
     }
 
@@ -756,7 +758,7 @@ export class CustomClientAPI {
         private cloudAPI: NxCloudApiService,
         private config: IConfig,
         private http: HttpClient,
-        private consoleService: NxConsoleService
+        private consoleService: NxConsoleService,
     ) {
         this.apiBase = this.config.apiBase + '/custom_clients/';
     }

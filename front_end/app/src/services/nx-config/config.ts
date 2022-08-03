@@ -16,6 +16,10 @@ import metaDefaults from '../../../scripts/metaDefaults.json';
 
 import { IConfig } from './config-types';
 
+// Swapped with BUILD env during cloud portal build
+const buildSubstituted = !'{{BUILD}}'.includes('BUILD');
+const staticBase = buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
+
 export const nxConfig: IConfig = {
     alertTimeout: 3 * 1000, // Alerts are shown for 3 seconds,
     longAlertTimeout: 6 * 1000, // Alerts are shown for 6 seconds,
@@ -23,6 +27,7 @@ export const nxConfig: IConfig = {
     extendedRequestTimeout: 15 * 1000,
     apiRequestAttempts: 4,    // combined with extendedRequestTimeout this mean we'll give up after 1 min
     maxNumberServerChecked: 6, // checks server status for restart; checks every 4 seconds, so constant * 4 = # of secs it checks for
+    staticBase,
     animations: {
         carouselImage: {
             enter: '0.25s ease-in',
@@ -189,34 +194,34 @@ export const nxConfig: IConfig = {
         }
     },
     icons: {
-        default: '/static/images/integration/integration_tile_preview_plugin.svg',
+        default: `/${staticBase}/images/integration/integration_tile_preview_plugin.svg`,
         platforms: [
-            { name: 'mac', src: '/static/images/integration/integration_tile_os_mac.svg' },
-            { name: 'android', src: '/static/images/integration/integration_tile_os_android.svg' },
-            { name: 'arm', src: '/static/images/integration/integration_tile_os_arm.svg' },
-            { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
-            { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
+            { name: 'mac', src: `/${staticBase}/images/icons/platforms/mac.svg` },
+            { name: 'android', src: `/${staticBase}/images/icons/platforms/android.svg` },
+            { name: 'arm', src: `/${staticBase}/images/icons/platforms/arm.svg` },
+            { name: 'linux', src: `/${staticBase}/images/icons/platforms/linux.svg` },
+            { name: 'windows', src: `/${staticBase}/images/icons/platforms/windows.svg` }
         ],
-        backgrounds: '/static/images/icons/backgrounds/',
-        devTools: '/static/images/icons/dev_tools/',
-        dir: '/static/images/icons/standard/',
-        dirDevtools: '/static/images/icons/dev_tools/',
-        dirButtons: '/static/images/icons/buttons/',
-        dirTextButtons: '/static/images/icons/text_buttons/',
-        dirHeader: '/static/images/icons/header/',
-        dirNonStandard: '/static/images/icons/',
-        dirNonStandardView: '/static/images/icons/view/',
-        dirPagePlaceholder: '/static/images/placeholders/page/',
-        dirSectionPlaceholder: '/static/images/placeholders/section/',
-        dirDevCapabilities: '/static/images/icons/dev_capabilities/',
-        dirLandingIcons: '/static/images/landing/block_icons/'
+        backgrounds: `/${staticBase}/images/icons/backgrounds/`,
+        devTools: `/${staticBase}/images/icons/dev_tools/`,
+        dir: `/${staticBase}/images/icons/standard/`,
+        dirDevtools: `/${staticBase}/images/icons/dev_tools/`,
+        dirButtons: `/${staticBase}/images/icons/buttons/`,
+        dirTextButtons: `/${staticBase}/images/icons/text_buttons/`,
+        dirHeader: `/${staticBase}/images/icons/header/`,
+        dirNonStandard: `/${staticBase}/images/icons/`,
+        dirNonStandardView: `/${staticBase}/images/icons/view/`,
+        dirPagePlaceholder: `/${staticBase}/images/placeholders/page/`,
+        dirSectionPlaceholder: `/${staticBase}/images/placeholders/section/`,
+        dirDevCapabilities: `/${staticBase}/images/icons/dev_capabilities/`,
+        dirLandingIcons: `/${staticBase}/images/landing/block_icons/`
     },
     images: {
-        dir: '/static/images/',
-        dirDevelopers: '/static/images/developers/',
-        dirDevelopersDevtools: '/static/images/developers/dev_tools/',
-        dirLanding: '/static/images/landing/',
-        dirLandingGraphic: '/static/images/landing/main_screen/'
+        dir: `/${staticBase}/images/`,
+        dirDevelopers: `/${staticBase}/images/developers/`,
+        dirDevelopersDevtools: `/${staticBase}/images/developers/dev_tools/`,
+        dirLanding: `/${staticBase}/images/landing/`,
+        dirLandingGraphic: `/${staticBase}/images/landing/main_screen/`
     },
     integration: {
         adminLink: '/admin/cms/asset/%ID%/pages/',
