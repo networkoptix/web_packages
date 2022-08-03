@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "Ny version af %CLOUD_NAME% er tilgængelig",
-            "installButton": "Refresh to Update"
+            "installButton": "Opdater for at opdatere"
         },
         "systemOffline": "Systemet er offline. Nogle indstillinger er muligvis ikke tilgængelige.",
         "systemsMerging": "This system is currently involved in a merge operation."
@@ -1003,7 +1003,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Heath Report For System {systemName}"
+        "healthReportForSystem": "Heath rapport for system {systemName}"
     },
     "license": {
         "licenseTypeTitles": {

@@ -1003,7 +1003,7 @@
         }
     },
     "headerLabels": {
-        "healthReportForSystem": "Báo cáo tình trạng cho Hệ thống {systemName}"
+        "healthReportForSystem": "Báo cáo sức khỏe cho hệ thống {systemName}"
     },
     "license": {
         "licenseTypeTitles": {
