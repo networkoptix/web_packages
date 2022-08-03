@@ -28,7 +28,6 @@ import { ProcessCancelButtonModule } from './process-cancel-Button/process-cance
 import { RadioModule } from './radio/radio.module';
 import { SwtichModule } from './switch/switch.module';
 import { TagModule } from './tag/tag.module';
-import { ToastModule } from './toast/toast.module';
 import { TooltipModule } from './tooltip/tooltip.module';
 import { UpdateWebadminSessionModule } from './update-webadmin-session/update-webadmin-session.module';
 
@@ -62,7 +61,6 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         RadioModule,
         SwtichModule,
         TagModule,
-        ToastModule,
         TooltipModule,
         UpdateWebadminSessionModule,
     ],
@@ -96,7 +94,6 @@ import { UpdateWebadminSessionModule } from './update-webadmin-session/update-we
         RadioModule,
         SwtichModule,
         TagModule,
-        ToastModule,
         TooltipModule,
         UpdateWebadminSessionModule,
     ]

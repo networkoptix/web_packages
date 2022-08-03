@@ -63,18 +63,19 @@ export class ResetServerModalContent {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
-        const options = {
-            classname: this.CONFIG.toast.warning,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
-        const handleResetFailError = (from: string, error) => {
+        const handleResetFailError = (from: string, error): void => {
             console.error(`Error in reset-server dialog from ${from}:`, error);
-            this.toastService.show(this.LANG.servers.resetFailed?.(), options);
+            this.toastService.notify(
+                this.LANG.servers.resetFailed(),
+                this.CONFIG.toast.warning,
+            );
         };
 
-        const wrongPasswordHandler = () => {
-            this.toastService.show(this.LANG.servers.resetFailed?.(), options);
+        const wrongPasswordHandler = (): false => {
+            this.toastService.notify(
+                this.LANG.servers.resetFailed(),
+                this.CONFIG.toast.warning,
+            );
             return false;
         };
         const isResettingCurrentServer = (): boolean => {
@@ -160,8 +161,7 @@ export class ResetServerModalContent {
                                         .resetSuccessful({
                                             serverName: this.serverName
                                         });
-                                    options.classname = this.CONFIG.toast.success;
-                                    this.toastService.show(successMessage, options);
+                                    this.toastService.notify(successMessage, this.CONFIG.toast.success);
                                     serverSubscription.unsubscribe();
                                 },
                                 err => {

@@ -137,12 +137,6 @@ export class EditModalContent {
             }
         }
 
-        const options = {
-            classname: this.CONFIG.toast.success,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
-
         const updateErrors = () => {
             for (const { name, meta } of this.manifest.fields) {
                 const required = meta?.options?.required;
@@ -201,7 +195,10 @@ export class EditModalContent {
             { ignoreError: true },
             _ => {
                 // Need spec for saving message
-                this.toastService.show('Custom Client Saved', options);
+                this.toastService.notify(
+                    'Custom Client Saved',
+                    this.CONFIG.toast.success,
+                );
                 this.close({ id: this.values.id, action: 'save' });
             },
             ({ values: errors }) => {
@@ -214,7 +211,10 @@ export class EditModalContent {
             {},
             _ => {
                 // Need spec for saving deleting message
-                this.toastService.show('Custom Client Deleted', options);
+                this.toastService.notify(
+                    'Custom Client Deleted',
+                    this.CONFIG.toast.success,
+                );
                 this.close({ id: this.values.id, action: 'delete' });
             }, err => { console.error(err); });
     }

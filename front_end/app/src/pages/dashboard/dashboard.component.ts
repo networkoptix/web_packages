@@ -219,12 +219,9 @@ export class NxDashboardComponent implements DashboardGroup {
         const dashboardUrlCleaned = this.environment.isLocal ? dashboardUrl : last(dashboardUrl.split(this.environment.cloudHost));
 
         const downloaded = await this.http.get(dashboardUrlCleaned).toPromise().catch(_ => {
-            const options = {
-                classname: this.CONFIG.toast.danger
-            };
             this.toastService.show(
                 'Unable to download dashboard requested dashboard, please check link and try again. If you keep having issues try downloading the dashboard first and applying config directly.',
-                options
+                this.CONFIG.toast.danger,
             );
             return false as const;
         }) as Promise<Record<any, any>>;

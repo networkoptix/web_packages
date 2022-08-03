@@ -102,14 +102,9 @@ export class DisconnectModalContent {
             // errorPrefix        : this.LANG.errorCodes.cantDisconnectSystemPrefix()
         }, res => {
             this.close(true);
-            const options = {
-                classname: this.CONFIG.toast.success,
-                autohide: true,
-                delay: this.CONFIG.alertTimeout
-            };
-            this.toastService.show(
+            this.toastService.notify(
                 this.LANG.toastMessage.system.disconnected.success(),
-                options
+                this.CONFIG.toast.success,
             );
         }, err => {
             if (err?.resultCode === 'userPasswordRequired' || err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {

@@ -94,12 +94,7 @@ export class NxSystemsService implements OnDestroy {
                 primary: undefined,
                 secondary: undefined
             };
-            const options = {
-                autohide: true,
-                classname: this.CONFIG.toast.success,
-                delay: this.CONFIG.alertTimeout
-            };
-            this.toastService.show(message, options);
+            this.toastService.notify(message, this.CONFIG.toast.success);
             this.finishedMerged = true;
         }
     }

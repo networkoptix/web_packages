@@ -65,12 +65,6 @@ export class Nx404Component {
         let [_, redirectUrl, customMessage = 'redirects.defaultMessage'] = this.routeChecker(url);
 
         if (redirectUrl) {
-            const options = {
-                autohide: true,
-                classname: this.CONFIG.toast.info,
-                delay: this.CONFIG.longAlertTimeout
-            };
-
             // translatedLink would contain links from cloud portal
             const key = `redirects.cloudLinks.${redirectUrl}`;
             const translatedLink = this.translate.instant(key).replace(key, '');
@@ -95,7 +89,11 @@ export class Nx404Component {
                         redirectUrl: translatedLink || `${origin}/#${redirectUrl}`
                     });
                 const additionalMessage = this.getAdditionalMessage(customMessage);
-                this.toastService.show(`${redirectMessage} ${additionalMessage}`, options);
+                this.toastService.notify(
+                    `${redirectMessage} ${additionalMessage}`,
+                    this.CONFIG.toast.info,
+                    this.CONFIG.longAlertTimeout,
+                );
             });
         }
     }

@@ -209,14 +209,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 await this.system.saveUser(user, user.role);
                 await this.system.getUsers(true).catch(err => console.error(err));
             } catch (_) {
-                const options = {
-                    classname: this.CONFIG.toast.warning,
-                    autohide: true,
-                    delay: this.CONFIG.alertTimeout
-                };
-                this.toastService.show(
+                this.toastService.notify(
                     this.LANG.toastMessage.userChangesFail(),
-                    options
+                    this.CONFIG.toast.warning,
                 );
             } finally {
                 this.locked[user.email] = false;

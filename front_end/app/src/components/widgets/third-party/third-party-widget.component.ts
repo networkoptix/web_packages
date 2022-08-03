@@ -97,19 +97,19 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
         };
 
         fileEntry.file((file: File) => {
-            const options = {
-                classname: this.CONFIG.toast.warning,
-                autohide: true,
-                delay: this.CONFIG.alertTimeout
-            };
-
             if (file instanceof DataTransferItem) {
-                this.toastService.show('Please upload a valid .wgt, .html, image, or text file.', options);
+                this.toastService.notify(
+                    'Please upload a valid .wgt, .html, image, or text file.',
+                    this.CONFIG.toast.warning,
+                );
                 return;
             }
 
             if (!file.name.endsWith('.wgt') && file.size > NxThirdPartyWidgetComponent.MAX_SIZE) {
-                this.toastService.show('File is not a valid widget format and is to large to render', options);
+                this.toastService.notify(
+                    'File is not a valid widget format and is to large to render',
+                    this.CONFIG.toast.warning,
+                );
                 return;
             }
 

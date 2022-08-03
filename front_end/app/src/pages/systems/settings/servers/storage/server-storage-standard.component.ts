@@ -821,11 +821,8 @@ export class NxSystemStorageComponent implements OnInit {
         if (action) {
             this.updateStorageStatus(type, STORAGE_STATUS.REINDEXING);
         }
-        const options = {
-            classname: this.CONFIG.toast.success,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
+
+        let toastType = this.CONFIG.toast.success;
         let message: string;
         // @ts-expect-error TODO: Fix type
         return defer(() => this.system.storageManager
@@ -865,14 +862,14 @@ export class NxSystemStorageComponent implements OnInit {
             err => {
                 console.error(err);
                 message = this.LANG.storage.reindexingDone[`${type ? 'main' : 'backup'}Failed`]();
-                options.classname = this.CONFIG.toast.warning;
+                toastType = this.CONFIG.toast.warning;
             }
         ).add(() => {
             this.updateStorageStatus(type, STORAGE_STATUS.IN_USE);
             this.cancelIndexing(type ? 'main' : 'backup');
             this[`reindexing${type ? 'Main' : 'Backup'}`] = false;
             if (message && !onlyCheck) {
-                this.toastService.show(message, options);
+                this.toastService.notify(message, toastType);
             }
         });
     }

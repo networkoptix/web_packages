@@ -52,7 +52,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                         this.haveTrialLicense = true;
 
                         this.dialogsService.notify(
-                            this.LANG.license.messages.trialActivated?.(),
+                            this.LANG.license.messages.trialActivated(),
                             'success'
                         );
                     }

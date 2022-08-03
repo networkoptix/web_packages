@@ -116,11 +116,6 @@ export class AddStorageModalContent {
                 this.passwordChecked = false;
             });
 
-        const options = {
-            classname: this.CONFIG.toast.danger,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
         this.addStorage = this.processService
             .createProcess(async () => {
                 const { url, login, password } = this.storageForm.value;
@@ -140,14 +135,15 @@ export class AddStorageModalContent {
                 return id;
             }, { ignoreError: true },
             (res: any) => {
+                let toastType = this.CONFIG.toast.danger;
                 let message = this.LANG.storage.failed();
                 if (res.id) {
-                    options.classname = this.CONFIG.toast.success;
+                    toastType = this.CONFIG.toast.success;
                     message = this.LANG.storage.success();
                 }
                 this.storageForm.reset();
                 this.close(res.id && this.CONFIG.responseOk);
-                this.toastService.show(message, options);
+                this.toastService.notify(message, toastType);
             },
             err => {
                 if (err?.message === 'alreadyExists') {
@@ -159,7 +155,7 @@ export class AddStorageModalContent {
                     this.passwordChecked = true;
                     this.loginPasswordWrong = true;
                 } else {
-                    let message;
+                    let message: string;
                     if (err?.message === 'WrongPath') {
                         this.getControls('url').setErrors({ wrongPath: true });
                     } else {
@@ -167,7 +163,10 @@ export class AddStorageModalContent {
                         this.storageForm.reset();
                     }
                     if (message) {
-                        this.toastService.show(message, options);
+                        this.toastService.notify(
+                            message,
+                            this.CONFIG.toast.danger
+                        );
                     }
                     this.addStorage.processing = false;
                 }

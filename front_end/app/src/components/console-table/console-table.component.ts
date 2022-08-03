@@ -242,18 +242,18 @@ export class NxConsoleTableComponent {
             [ModalType.CLIENT_DOWNLOAD]: ConsoleSection.CUSTOM_CLIENTS
         };
 
-        const buildDownloadToast = url => asyncSettings.manifest.fields[0].meta.options.toastMessage.replace(
-            '%NAME%', asyncSettings.values.name
-        ).replace(
-            '%URL%', url
-        );
+        const buildDownloadToast = (url: string): string => {
+            return asyncSettings.manifest.fields[0].meta.options.toastMessage
+                .replace('%NAME%', asyncSettings.values.name)
+                .replace('%URL%', url);
+        };
 
-        const notifyDownload = url => {
-            const options = {
-                classname: this.CONFIG.toast.success,
-                showHTML: true
-            };
-            this.toastService.show(buildDownloadToast(url), options);
+        const notifyDownload = (url: string): void => {
+            this.toastService.show(
+                buildDownloadToast(url),
+                this.CONFIG.toast.success,
+                { showHTML: true }
+            );
         };
 
         const {

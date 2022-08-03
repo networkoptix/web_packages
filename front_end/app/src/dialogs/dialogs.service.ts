@@ -67,17 +67,12 @@ export class NxDialogsService extends DialogBase {
         this.toastService.remove();
     }
 
-    public notify(message: string, type: string, hold?: boolean) {
-        type = type || this.CONFIG.toast.info;
-        hold = hold || false;
-
-        const options = {
-            autohide: !hold,
-            classname: type,
-            delay: this.CONFIG.alertTimeout
-        };
-
-        return this.toastService.show(message, options);
+    public notify(
+        message: string,
+        type: string = this.CONFIG.toast.info,
+        hold?: boolean
+    ): void {
+        this.toastService.show(message, type, { autohide: !hold });
     }
 
     public async alert(message: string, title: string, footerClass?: string) {

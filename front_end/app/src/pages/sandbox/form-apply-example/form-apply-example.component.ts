@@ -42,8 +42,6 @@ export class FormApplyExampleComponent {
     form2Field1Input: string;
     saveForm2 : Process;
 
-    options: {};
-
     show1: boolean;
     show2: boolean;
     blah: string;
@@ -67,12 +65,6 @@ export class FormApplyExampleComponent {
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef
     ) {
         this.CONFIG = configService.config;
-
-        this.options = {
-            classname: this.CONFIG.toast.success,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
 
         this.show1 = false;
         this.show2 = false;
@@ -129,7 +121,7 @@ export class FormApplyExampleComponent {
         this.saveForm1 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
-            this.toastService.show('form1 saved', this.options);
+            this.toastService.notify('form1 saved', this.CONFIG.toast.success);
         }, _ => {
         });
 
@@ -138,7 +130,7 @@ export class FormApplyExampleComponent {
         this.saveForm2 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
-            this.toastService.show('form2 saved', this.options);
+            this.toastService.notify('form2 saved', this.CONFIG.toast.success);
         }, _ => {
         });
     }
@@ -156,7 +148,7 @@ export class FormApplyExampleComponent {
 
         // setTimeout(() => {
         //     this.applyService.removeFormWatcher('form2');
-        //     this.toastService.show('form2 removed', this.options);
+        //     this.toastService.notify('form2 removed', this.options);
         // }, 5000);
     }
 

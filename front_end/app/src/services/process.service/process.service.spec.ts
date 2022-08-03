@@ -17,7 +17,7 @@ describe('Process service', () => {
     let process: jasmine.SpyObj<NxProcessService>;
     let toast: jasmine.SpyObj<NxToastService>;
     let toastSpy: jasmine.Spy<NxToastService['show']>;
-    const toastOptions = { autohide: true, classname: 'danger', delay: 3000 };
+    const toastOptions = { autohide: true };
 
     const configMock = { getConfig: () => nxConfig };
 
@@ -77,7 +77,11 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Fail', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith(
+            'Fail',
+            'danger',
+            toastOptions
+        );
     }));
 
     it('should create process and fail w/ settings defined error ', fakeAsync(() => {
@@ -95,7 +99,8 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('failed forbidden', toastOptions);
+        expect(toastSpy)
+            .toHaveBeenCalledOnceWith('failed forbidden', 'danger', toastOptions);
     }));
 
     it('should create process and fail w/ unknown error No.1 ', fakeAsync(() => {
@@ -113,7 +118,11 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith(translateMock.translations.errorCodes.unknownError(), toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith(
+            translateMock.translations.errorCodes.unknownError(),
+            'danger',
+            toastOptions,
+        );
     }));
 
     it('should create process and fail w/ unknown error No.2 ', fakeAsync(() => {
@@ -128,7 +137,11 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith(translateMock.translations.errorCodes.unknownError(), toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith(
+            translateMock.translations.errorCodes.unknownError(),
+            'danger',
+            toastOptions
+        );
     }));
 
     it('should create process and fail w/ error.resultCode ', fakeAsync(() => {
@@ -146,7 +159,7 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
     }));
 
     it('should create process and fail w/ error.errorText ', fakeAsync(() => {
@@ -164,7 +177,7 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
     }));
 
     it('should create process and fail w/ error.errorId ', fakeAsync(() => {
@@ -182,7 +195,7 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
     }));
 
     it('should create process and fail w/ error.data.resultCode ', fakeAsync(() => {
@@ -200,7 +213,7 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith('Boom!', 'danger', toastOptions);
     }));
 
     it('should create process and fail w/ error.type ', fakeAsync(() => {
@@ -218,7 +231,11 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Network Connection Fail', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith(
+            'Network Connection Fail',
+            'danger',
+            toastOptions,
+        );
     }));
 
     it('should create process and fail w/ 2fa error.errorText ', fakeAsync(() => {
@@ -232,6 +249,6 @@ describe('Process service', () => {
         }).run();
 
         tick();
-        expect(toastSpy).toHaveBeenCalledOnceWith('Required', toastOptions);
+        expect(toastSpy).toHaveBeenCalledOnceWith('Required', 'danger', toastOptions);
     }));
 });

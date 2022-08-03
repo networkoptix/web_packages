@@ -172,12 +172,11 @@ export class Process {
         } else {
             this.success = true;
             if (this.settings.successMessage && data !== false) {
-                const options = {
-                    classname: this.CONFIG.toast.success,
-                    autohide: !this.settings.holdAlerts,
-                    delay: this.CONFIG.alertTimeout
-                };
-                this.toastService.show(this.settings.successMessage, options);
+                this.toastService.show(
+                    this.settings.successMessage,
+                    this.CONFIG.toast.success,
+                    { autohide: !this.settings.holdAlerts }
+                );
             }
             return this._successHandler(data);
         }
@@ -258,12 +257,11 @@ export class Process {
                 ? this.settings.errorPrefix + ': '
                 : ''}${this.settings.errorMessage}`;
 
-            const options = {
-                autohide: !this.settings.holdAlerts,
-                classname: this.CONFIG.toast.danger,
-                delay: this.CONFIG.alertTimeout
-            };
-            this.toastService.show(message, options);
+            this.toastService.show(
+                message,
+                this.CONFIG.toast.danger,
+                { autohide: !this.settings.holdAlerts }
+            );
         }
         this.error = true;
         this.errorData = data;

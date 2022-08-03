@@ -29,12 +29,10 @@ export class NxCopyToClipboardComponent {
             .pipe(untilDestroyed(this))
             .subscribe((res: IClipboardResponse) => {
                 if (res.isSuccess) {
-                    const options = {
-                        classname: this.CONFIG.toast.success,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.LANG.common.copiedToClipboard(), options);
+                    this.toastService.notify(
+                        this.LANG.common.copiedToClipboard(),
+                        this.CONFIG.toast.success,
+                    );
                 }
             });
     }

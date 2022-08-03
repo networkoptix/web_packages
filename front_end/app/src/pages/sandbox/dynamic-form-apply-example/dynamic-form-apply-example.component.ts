@@ -20,7 +20,6 @@ export class DynamicFormApplyExampleComponent {
     // page process
     saveAll: Process;
 
-    options: {};
     form2Group: UntypedFormGroup;
 
     @ViewChild('form3') form3;
@@ -35,12 +34,6 @@ export class DynamicFormApplyExampleComponent {
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.config;
-
-        this.options = {
-            classname: this.CONFIG.toast.success,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
     }
 
     ngOnInit(): void {
@@ -51,7 +44,7 @@ export class DynamicFormApplyExampleComponent {
         this.saveForm3 = this.processService.createProcess(() => {
             return Promise.resolve();
         }, {}, result => {
-            this.toastService.show('form3 saved', this.options);
+            this.toastService.notify('form3 saved', this.CONFIG.toast.success);
         }, _ => {
         });
     }

@@ -208,12 +208,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 const { sessionRenewed, failedToUpdateSession } = this.LANG.toastMessage;
                 const { success, danger } = this.CONFIG.toast;
                 const toastMessage = ready ? sessionRenewed() : failedToUpdateSession();
-                const options = {
-                    classname: ready ? success : danger,
-                    autohide: true,
-                    delay: this.CONFIG.alertTimeout
-                };
-                this.toastService.show(toastMessage, options);
+                this.toastService.notify(toastMessage, ready ? success : danger);
             });
     };
 

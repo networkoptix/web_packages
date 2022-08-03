@@ -87,15 +87,10 @@ export class RemoveSystemModalContent {
             errorPrefix: this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
         }, () => {
             this.close(true);
-            const options = {
-                classname: this.CONFIG.toast.success,
-                autohide: true,
-                delay: this.CONFIG.alertTimeout
-            };
             const msg = this.LANG.toastMessage.system.deleted.success({
                 systemName: this.system.info.systemName || this.system.info.name
             });
-            this.toastService.show(msg, options);
+            this.toastService.notify(msg, this.CONFIG.toast.success);
         }, err => console.error(err));
     }
 

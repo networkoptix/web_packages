@@ -70,11 +70,6 @@ export class RestartServerModalContent {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
-        const options = {
-            classname: this.CONFIG.toast.warning,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
         this.restartServer = this.processService
             .createProcess(() => {
                 const haveOnlineServers = this.system.servers
@@ -209,10 +204,9 @@ export class RestartServerModalContent {
                             this.system.currentBusyServerIds.delete(this.serverId);
                         }
                         this.system.systemInfo = this.system;
-                        options.classname = this.CONFIG.toast.success;
-                        this.toastService.show(
-                            this.LANG.servers.restartSuccessful?.(),
-                            options
+                        this.toastService.notify(
+                            this.LANG.servers.restartSuccessful(),
+                            this.CONFIG.toast.success
                         );
                         serverSubscription.unsubscribe();
                     });
@@ -224,9 +218,9 @@ export class RestartServerModalContent {
                 let message = this.LANG.servers.restartFailed();
 
                 if (err && (err.name === 'TimeoutError' || err.status === 503)) {
-                    message = this.LANG.servers.serverOffline?.();
+                    message = this.LANG.servers.serverOffline();
                     this.close(this.CONFIG.servers.status.offline);
-                    this.toastService.show(message, options);
+                    this.toastService.notify(message, this.CONFIG.toast.warning);
                 } else if (err.errorId === this.CONFIG.servers.errors.oldSessionErrorId) {
                     this.needsUpdate = true;
                     this.loginService.currentSystem = this.system;
@@ -240,7 +234,7 @@ export class RestartServerModalContent {
                 } else if (err.status === 403 || err.errorId === this.CONFIG.servers.errors.unauthorized) {
                     return this.simpleDialogService.expiredSession().then(() => this.window.location.reload());
                 } else {
-                    this.toastService.show(message, options);
+                    this.toastService.notify(message, this.CONFIG.toast.warning);
                 }
             });
     }

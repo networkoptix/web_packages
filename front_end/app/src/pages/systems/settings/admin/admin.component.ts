@@ -308,17 +308,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.pageService.pageTitle = this.systemName;
                     return this.system.update();
                 }).catch(() => {
-                    const options = {
-                        classname: this.CONFIG.toast.warning,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(
+                    this.toastService.notify(
                         this.LANG.toastMessage.nameFail().replace(
                             '{type}',
-                            this.LANG.common.system?.()
+                            this.LANG.common.system()
                         ),
-                        options
+                        this.CONFIG.toast.warning,
                     );
                 });
         });
@@ -471,21 +466,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             ).then(result => {
                 if (result === true) {
                     return this.system.deleteFromCurrentAccount().subscribe(res => {
-                        this.toastService.show(
+                        this.toastService.notify(
                             this.LANG.toastMessage.system.deleted.success({
                                 systemName: this.system.info.systemName ||
                                 this.system.info.name
                             }),
-                            {
-                                classname: this.CONFIG.toast.success,
-                                autohide: true,
-                                delay: this.CONFIG.alertTimeout
-                            });
+                            this.CONFIG.toast.success,
+                        );
                     }, err => {
                         console.error(err);
                         this.toastService.show(
                             this.LANG.errorCodes.cantUnshareWithMeSystemPrefix(),
-                            { classname: this.CONFIG.toast.danger }
+                            this.CONFIG.toast.danger,
                         );
                     },
                     this.updateAndGoToSystems

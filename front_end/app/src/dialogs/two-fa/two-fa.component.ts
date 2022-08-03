@@ -140,12 +140,10 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
             .pipe(untilDestroyed(this))
             .subscribe((res: IClipboardResponse) => {
                 if (res.isSuccess) {
-                    const options = {
-                        classname: this.CONFIG.toast.success,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.LANG.common.copiedToClipboard(), options);
+                    this.toastService.notify(
+                        this.LANG.common.copiedToClipboard(),
+                        this.CONFIG.toast.success,
+                    );
                 }
             });
 
@@ -333,12 +331,10 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
                 },
                 noBackupCodes: () => {
-                    const options = {
-                        classname: this.CONFIG.toast.danger,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.LANG.common.generalError(), options);
+                    this.toastService.notify(
+                        this.LANG.common.generalError(),
+                        this.CONFIG.toast.danger,
+                    );
                 },
                 forbidden: codeProcessUnauthorizedHandles,
                 notAuthorized: codeProcessUnauthorizedHandles,
@@ -378,12 +374,10 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.renderer.selectRootElement('#tfaCodeInput').focus();
                 },
                 noBackupCodes: () => {
-                    const options = {
-                        classname: this.CONFIG.toast.danger,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.LANG.common.generalError(), options);
+                    this.toastService.notify(
+                        this.LANG.common.generalError(),
+                        this.CONFIG.toast.danger
+                    );
                 },
                 forbidden: () => {
                     this.notAuthorized = true;
@@ -485,12 +479,10 @@ export class TwoFAModalContent implements OnInit, AfterViewInit {
                     this.setTemplate(T_FA_STEPS.Code);
                 }, () => {
                     this.close();
-                    const options = {
-                        classname: this.CONFIG.toast.danger,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.LANG.common.generalError(), options);
+                    this.toastService.notify(
+                        this.LANG.common.generalError(),
+                        this.CONFIG.toast.danger
+                    );
                 });
         } else {
             this.setTemplate(T_FA_STEPS.WizardLogin);

@@ -51,11 +51,6 @@ export class DetachServerModalContent {
     ngOnInit(): void {
         pickFrom(this.dialogData, ['system', 'serverName', 'serverId'], this);
 
-        const options = {
-            classname: this.CONFIG.toast.warning,
-            autohide: true,
-            delay: this.CONFIG.longAlertTimeout
-        };
         this.detachServer = this.processService
             .createProcess(
                 () => this.system.serverManager.detachFromSystem(
@@ -66,10 +61,9 @@ export class DetachServerModalContent {
                 () => {
                     this.system.currentServerNotBusy = true;
                     this.close('success');
-                    options.classname = this.CONFIG.toast.success;
-                    this.toastService.show(
+                    this.toastService.notify(
                         this.LANG.servers.detachSystemSuccess(),
-                        options
+                        this.CONFIG.toast.success,
                     );
                     window.location.reload();
                     // may need to remove & update system eventually
@@ -96,9 +90,9 @@ export class DetachServerModalContent {
                     } else {
                         this.close();
                         this.system.currentServerNotBusy = true;
-                        this.toastService.show(
+                        this.toastService.notify(
                             this.LANG.servers.detachSystemFailed(),
-                            options
+                            this.CONFIG.toast.warning,
                         );
                     }
                 }

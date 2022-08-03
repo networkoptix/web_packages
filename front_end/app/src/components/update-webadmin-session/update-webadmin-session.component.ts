@@ -74,7 +74,10 @@ export class UpdateWebadminSessionComponent implements OnInit {
             this.isCloud = this.bypassOauth || this.system.mediaserver.isSessionOauth;
             if (this.isCloud && !(this.window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))) {
                 this.close();
-                this.toastService.notify(`${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`, this.CONFIG.toast.danger, true);
+                this.toastService.notify(
+                    `${this.noConnectionMsg} ${this.LANG.toastMessage.noConnection()}`,
+                    this.CONFIG.toast.danger,
+                );
             }
         }).catch(() => {
             this.isCloud = !environment.isLocal;

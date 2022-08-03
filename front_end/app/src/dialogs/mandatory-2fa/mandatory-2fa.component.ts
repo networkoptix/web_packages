@@ -58,11 +58,6 @@ export class Mandatory2faModalContent {
         pickFrom(this.dialogData, ['system2faEnabled', 'system'], this);
 
         this.showError = !this.accountService.account.totpExistsForAccount;
-        const options = {
-            classname: this.CONFIG.toast.warning,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
-        };
         const notAuthorizedHandler = () => {
             this.notAuthorized = true;
             this.mandatory2faForm.controls.verificationCode.markAsTouched();
@@ -86,11 +81,13 @@ export class Mandatory2faModalContent {
             }, () => {
                 this.system.currentServerNotBusy = true;
                 this.close('success');
-                options.classname = this.CONFIG.toast.success;
                 const successMessage = this.system2faEnabled
                     ? this.LANG.dialogs.message.system2faEnabled()
                     : this.LANG.dialogs.message.system2faDisabled();
-                this.toastService.show(successMessage, options);
+                this.toastService.notify(
+                    successMessage,
+                    this.CONFIG.toast.success,
+                );
             // });
             }, err => {
                 if (!err.resultCode) {

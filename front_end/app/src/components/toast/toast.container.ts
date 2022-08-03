@@ -10,6 +10,8 @@ import {
 
 import { NxToastService } from '@dialogs/toast.service';
 
+import type { Toast } from './toast.types';
+
 @Component({
     selector: 'app-toasts',
     templateUrl: 'toast.container.html',
@@ -32,7 +34,7 @@ export class NxToastsContainer {
     ) {
     }
 
-    remove(toast): void {
+    remove(toast: Toast): void {
         this.toastService.remove(toast);
     }
 }

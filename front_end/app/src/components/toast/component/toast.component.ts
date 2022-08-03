@@ -12,6 +12,8 @@ import { takeUntil } from 'rxjs/operators';
 
 import { NgChanges } from '@utils/ng-changes';
 
+import type { Toast } from '../toast.types';
+
 @UntilDestroy()
 @Component({
     selector: 'nx-toast',
@@ -19,15 +21,15 @@ import { NgChanges } from '@utils/ng-changes';
     styleUrls: ['toast.component.scss']
 })
 export class NxToast implements OnChanges {
-    @Input() toast: any;
+    @Input() toast: Toast;
     @Output() hide = new EventEmitter<boolean>();
 
-    destroy$ = new Subject();
+    destroy$ = new Subject<boolean>();
     isTemplate: boolean;
 
     ngOnChanges(changes: NgChanges<NxToast>): void {
         if (changes.toast.currentValue) {
-            this.isTemplate = this.toast.textOrTpl instanceof TemplateRef;
+            this.isTemplate = this.toast.content instanceof TemplateRef;
 
             if (this.toast.autohide) {
                 timer(this.toast.delay).pipe(

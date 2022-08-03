@@ -255,17 +255,11 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     this.selectedServer.name = this.serverNameWatcher.value;
                 }).catch(() => {
                     this.serverNameWatcher.reset();
-                    const options = {
-                        classname: this.CONFIG.toast.warning,
-                        autohide: true,
-                        delay: this.CONFIG.alertTimeout
-                    };
-
-                    this.toastService.show(
+                    this.toastService.notify(
                         this.LANG.toastMessage.nameFail({
                             type: this.LANG.common.server()
                         }),
-                        options
+                        this.CONFIG.toast.warning,
                     );
                 });
             }
@@ -556,15 +550,10 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         await this.system.update();
                         this.system.storageManager.update();
                     } else if (closeRes === 'error') {
-                        const options = {
-                            classname: this.CONFIG.toast.warning,
-                            autohide: true,
-                            delay: this.CONFIG.alertTimeout
-                        };
                         this.setSystemStorageChosen(this.selectedStorage);
-                        this.toastService.show(
+                        this.toastService.notify(
                             this.LANG.servers.analyticsDataPolicyError(),
-                            options
+                            this.CONFIG.toast.warning,
                         );
                     } else if (closeRes === 'cancel') {
                         this.selectedStorage = { ...this.selectedStorage };
