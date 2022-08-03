@@ -324,7 +324,15 @@ Force Tags        merge
     Wait Until Element Is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
 #       Click Element    //a[@id="${server 1 id}"]//span[contains(text(), "Server ${system 1}[id]")]
+<<<<<<< HEAD
+<<<<<<< HEAD
     #Dismiss New Feature Modal
+=======
+    Dismiss New Feature Modal
+>>>>>>> fixes for merge tests 2 3 and 8 and addition of dismiss modal
+=======
+    #Dismiss New Feature Modal
+>>>>>>> small fixes for smoke check
     Verify On Servers Page
     Select Server By Name    Server ${system 1}[id]
     Wait Until Element Is Visible    ${SERVER NAME}\[contains(text(), "Server ${system 1}[id]")]
