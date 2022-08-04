@@ -1,16 +1,16 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSystem } from '@services/system.service/system';
-import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +18,7 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: './new-header.component.html',
     styleUrls: ['./new-header.component.scss']
 })
-export class NxNewHeaderComponent implements OnChanges {
+export class NxNewHeaderComponent {
     @Input() nodes: MenuNode[];
     @Input() systems: NxSystem[];
     @Input() loginState: boolean;
@@ -26,9 +26,9 @@ export class NxNewHeaderComponent implements OnChanges {
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
     loggedIn = false;
-    isMobile$: Observable<boolean>;
+    isMobile$ = new Subject<boolean>();
 
-    constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router) {
+    constructor(public headerService: NxHeaderService, menusService: NxMenusService, accountService: NxAccountService, router: Router, private scrollMechanicsService: NxScrollMechanicsService) {
         router.events.pipe(filter(event => event instanceof NavigationEnd), untilDestroyed(this)).subscribe((event: NavigationEnd) => {
             if (event.url === '/') {
                 this.selectedNode = this.findNodeBasedOnURL(this.displayedNodes, 'content/about');
@@ -55,6 +55,15 @@ export class NxNewHeaderComponent implements OnChanges {
                     this.loggedIn = false;
                 }
             });
+
+        this.headerService.nodes$.pipe(untilDestroyed(this)).subscribe(nodes => {
+            this.displayedNodes = nodes;
+            this.selectedNode = this.findNodeBasedOnURL(nodes, this.headerService.currentLocation?.path);
+        });
+
+        this.scrollMechanicsService.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(({ width }) => {
+            this.isMobile$.next(width < 576);
+        });
     }
 
     handleNodeSelect(node: MenuNode): void {
@@ -64,23 +73,10 @@ export class NxNewHeaderComponent implements OnChanges {
     }
 
     navigateToSystemsList(): void {
-        this.selectedNode = this.nodes.find(node => node.url === '/systems') || this.selectedNode;
+        this.selectedNode = this.headerService.nodes.find(node => node.url === '/systems') || this.selectedNode;
     }
 
     findNodeBasedOnURL(nodes: MenuNode[], url: string): MenuNode {
         return nodes?.find(node => node?.nodes.find(subNode => subNode.url === url)) || this.selectedNode;
-    }
-
-    ngOnChanges(changes: NgChanges<NxNewHeaderComponent>): void {
-        if (changes.nodes?.currentValue?.length) {
-            this.displayedNodes = changes.nodes.currentValue;
-            this.selectedNode = this.findNodeBasedOnURL(changes.nodes.currentValue, this.headerService.currentLocation?.path);
-        }
-
-        if (changes.width?.currentValue) {
-            this.isMobile$ = changes.width.currentValue.pipe(
-                map(width => width < 576)
-            );
-        }
     }
 }

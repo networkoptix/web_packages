@@ -30,12 +30,11 @@ export class NxHeaderLevelTwoComponent {
         left: false,
         right: true
     };
-    controlButtonVisible = true;
     sizeConstants = {
         logoAreaWidth: 256,
         margins: 25
     };
-    contextButtonWidth = 0;
+    mainActionWidth = 0;
     optimisticSelectedSubNode: MenuNode; // The selected node is typically controlled by the headerServices currentLocation,
     // but this property is used to make the UI smooth when navigating between nodes while the currentLocation is changing
 
@@ -44,21 +43,8 @@ export class NxHeaderLevelTwoComponent {
                 private menusService: NxMenusService,
                 private scrollMechanics: NxScrollMechanicsService) {
         this.CONFIG = configService.getConfig();
-        this.headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(currentLocation => {
-            let newLogoState = logoAreaState.LOGO;
-            if (currentLocation?.path === '/systems') {
-                newLogoState = logoAreaState.SYSTEMS;
-            } else if (this.headerService.activeSystem && currentLocation?.path?.includes('/systems/')) {
-                newLogoState = logoAreaState.SYSTEM;
-            }
-            this.logoState = newLogoState;
-        });
-
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
-            this.contextButtonWidth = this.getContextButtonWidth();
-            const { logoAreaWidth, margins } = this.sizeConstants;
-            this.menuItemsWidth = size.width - logoAreaWidth - this.contextButtonWidth - margins;
-            this.checkNavArrowsVisible(true);
+            this.recalculateSizes(size.width);
         });
     }
 
@@ -70,13 +56,6 @@ export class NxHeaderLevelTwoComponent {
         if (clickType === 'systems-list') {
             this.systemNav.emit(true);
         }
-    }
-
-    getContextButtonWidth(): number {
-        if (this.contextButtonRef?.nativeElement) {
-            return this.contextButtonRef.nativeElement.getBoundingClientRect().width;
-        }
-        return 0;
     }
 
     scrollMenuItems(direction: 'left' | 'right'): void {
@@ -103,10 +82,19 @@ export class NxHeaderLevelTwoComponent {
         }, 0);
     }
 
+    recalculateSizes(windowWidth = this.scrollMechanics.windowSizeSubject.value.width): void {
+        const { logoAreaWidth, margins } = this.sizeConstants;
+        this.menuItemsWidth = windowWidth - logoAreaWidth - this.mainActionWidth - margins;
+        this.checkNavArrowsVisible(true);
+    }
+
+    onActionWidthChange(width: number): void {
+        this.mainActionWidth = width;
+        this.recalculateSizes();
+    }
+
     ngAfterViewInit(): void {
         this.checkNavArrowsVisible();
-        this.contextButtonWidth = this.getContextButtonWidth();
-        this.menuItemsWidth = this.menuItemsWidth - this.contextButtonWidth;
     }
 
     nodeClick(node: MenuNode, event: MouseEvent): void {

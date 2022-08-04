@@ -95,7 +95,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     newHeader = false;
     logoSrc: string;
 
-    @ViewChild('newHeader', { read: ViewContainerRef }) newHeaderRef: ViewContainerRef;
+    @ViewChild('newHeaderRef', { read: ViewContainerRef }) newHeaderRef: ViewContainerRef;
 
     // Observables used to manage component view states for adaptive views
     showIcon$ = new BehaviorSubject(true);
@@ -139,7 +139,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         if (this.newHeader) {
             this.lazyLoadNewHeader();
@@ -153,7 +152,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     const firstNode = this.loginState
                         ? this.menusService.makeSystemMenuNode()
                         : this.menusService.makeWelcomeNode();
+                    const accountNode = this.menusService.makeAccountSettingsNode();
                     nodes.unshift(firstNode);
+                    nodes.push(accountNode);
                 }
                 this.headerService.nodes = nodes;
 
@@ -289,7 +290,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         await import('./new-header/new-header.module').then(m => m.NewHeaderModule);
         const { NxNewHeaderComponent } = await import('./new-header/new-header.component');
         const compRef = this.newHeaderRef.createComponent(NxNewHeaderComponent);
-        compRef.instance.nodes = this.headerService.nodes;
         compRef.instance.width = this.windowWidth$;
     }
 

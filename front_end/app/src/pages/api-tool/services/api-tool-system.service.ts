@@ -254,7 +254,7 @@ export class NxAPIToolSystemService {
                         if (server.status !== 'Offline') {
                             if (cachedFiles) {
                                 const { json, markdown } = cachedFiles;
-                                this.setRequestURL(json, server.id);
+                                this.setRequestURL(json);
                                 this.currentServerId = server.id;
                                 markdown ? this.emitServer(server, json, false, '', markdown) : this.emitServer(server, json);
                                 validServerFound = true;
@@ -293,7 +293,7 @@ export class NxAPIToolSystemService {
         let markdown = await this.getAPIInfoMarkdown(server.id);
         markdown = (markdown.APIPreamble && markdown.APIChangelog) ? markdown : null;
         this.cacheJSON('main', this.currentSystem.id, this.systemVersion, json);
-        this.setRequestURL(json, server.id);
+        this.setRequestURL(json);
         this.currentServerId = this.currentServerId || server.id;
         this.emitServer(server, json, false, '', markdown);
     }
@@ -393,8 +393,9 @@ export class NxAPIToolSystemService {
         return this.currentSystem.serverManager.mediaserver instanceof NxSystemRestAPI;
     }
 
-    private setRequestURL(api: APIDoc, serverID): void {
+    private setRequestURL(api: APIDoc): void {
         // servers.url currently only has a single item which determines the route that API requests go to.
+        console.log(this.currentSystem.serverManager.mediaserver.urlBase);
         api.servers[0].url = this.currentSystem.serverManager.mediaserver.urlBase;
     }
 

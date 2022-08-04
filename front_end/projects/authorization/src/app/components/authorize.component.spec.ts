@@ -116,7 +116,8 @@ describe('NxAuthorizeComponent', () => {
                 subtitle: '',
                 name_raw: '',
                 queryParamsHandling: '',
-                nodes: []
+                nodes: [],
+                invisible: false
             },
             {
                 name: 'Terms',
@@ -133,7 +134,8 @@ describe('NxAuthorizeComponent', () => {
                 subtitle: '',
                 name_raw: '',
                 queryParamsHandling: '',
-                nodes: []
+                nodes: [],
+                invisible: false
             },
             {
                 name: 'Privacy Policy',
@@ -150,7 +152,8 @@ describe('NxAuthorizeComponent', () => {
                 subtitle: '',
                 name_raw: '',
                 queryParamsHandling: '',
-                nodes: []
+                nodes: [],
+                invisible: false
             }
         ]
     };

@@ -64,7 +64,8 @@ describe('NxHeaderComponent', () => {
                     pending: false,
                     related_asset_ids: [],
                     subtitle: '',
-                    url: ''
+                    url: '',
+                    invisible: false
                 },
                 {
                     accepted: true,
@@ -84,7 +85,8 @@ describe('NxHeaderComponent', () => {
                     pending: false,
                     related_asset_ids: [],
                     subtitle: '',
-                    url: ''
+                    url: '',
+                    invisible: false
                 }
             ]
         }),

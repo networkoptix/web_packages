@@ -37,6 +37,7 @@ export class MenuNode {
         public urlified = '',
         public subtitle = '',
         public name_raw = '',
+        public invisible = false
     ) {
         this.icon = icon;
         this.currentRoute = currentRoute;

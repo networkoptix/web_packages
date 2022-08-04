@@ -17,7 +17,7 @@ import { NxNewHeaderComponent } from './new-header.component';
         HeaderMobileModule,
     ],
     declarations: [
-        NxNewHeaderComponent
+        NxNewHeaderComponent,
     ],
     providers: [
         NxNewHeaderComponent

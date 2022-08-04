@@ -18,6 +18,7 @@ export const headerNodes: Partial<MenuNode[]> = [
         name: 'Services',
         name_raw: 'Services',
         display_name: 'Services',
+        invisible: false,
         nodes: [
             {
                 subtitle: '',
@@ -39,7 +40,8 @@ export const headerNodes: Partial<MenuNode[]> = [
                 nodes: [],
                 breadcrumbs: [],
                 queryParamsHandling: '',
-                urlified: ''
+                urlified: '',
+                invisible: false
             },
             {
                 subtitle: '',
@@ -61,7 +63,8 @@ export const headerNodes: Partial<MenuNode[]> = [
                 nodes: [],
                 breadcrumbs: [],
                 queryParamsHandling: '',
-                urlified: ''
+                urlified: '',
+                invisible: false
             },
             {
                 subtitle: '',
@@ -83,7 +86,8 @@ export const headerNodes: Partial<MenuNode[]> = [
                 nodes: [],
                 breadcrumbs: [],
                 queryParamsHandling: '',
-                urlified: ''
+                urlified: '',
+                invisible: false
             }
         ],
         breadcrumbs: [],

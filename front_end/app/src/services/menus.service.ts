@@ -242,6 +242,13 @@ export class NxMenusService {
         return systemNode;
     }
 
+    makeAccountSettingsNode() {
+        const accountNode = new MenuNode('account', '/account');
+        accountNode.invisible = true;
+        accountNode.nodes.push(new MenuNode('Account Settings', '/account'));
+        return accountNode;
+    }
+
     makeWelcomeNode() {
         const welcomeNode = new MenuNode('Welcome', 'content/about');
         welcomeNode.nodes.push(new MenuNode('Welcome To Nx', 'content/about'));

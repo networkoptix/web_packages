@@ -48,7 +48,8 @@ describe('NxTabsComponent', () => {
                     next_item: false,
                     urlified: 'testUrlified',
                     subtitle: 'subtitleText',
-                    name_raw: 'nameRaw'
+                    name_raw: 'nameRaw',
+                    invisible: false
                 };
             })
             .catch(err => console.error(err));

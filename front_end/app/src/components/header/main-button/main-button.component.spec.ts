@@ -58,7 +58,8 @@ describe('NxHeaderMainButtonComponent', () => {
         next_item: false,
         urlified: 'testUrlified',
         subtitle: 'subtitleText',
-        name_raw: 'nameRaw'
+        name_raw: 'nameRaw',
+        invisible: false
     };
 
     beforeEach(waitForAsync(() => {

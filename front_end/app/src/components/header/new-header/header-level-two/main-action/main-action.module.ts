@@ -4,28 +4,23 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ComponentsCoreModule } from '@components/components-core.module';
 import { SharedComponentsModule } from '@components/shared-components.module';
 
-import { HeaderLogoAreaModule } from '../logo-area/logo-area.module';
-
-import { NxHeaderLevelTwoComponent } from './header-level-two.component';
-import { MainActionModule } from './main-action/main-action.module';
+import { NxMainActionComponent } from './main-action.component';
 
 @NgModule({
     imports: [
         AngularSvgIconModule.forRoot(),
         SharedComponentsModule,
         ComponentsCoreModule,
-        HeaderLogoAreaModule,
-        MainActionModule
     ],
     declarations: [
-        NxHeaderLevelTwoComponent
+        NxMainActionComponent
     ],
     providers: [
-        NxHeaderLevelTwoComponent
+        NxMainActionComponent
     ],
     exports: [
-        NxHeaderLevelTwoComponent
+        NxMainActionComponent
     ]
 })
 
-export class HeaderLevelTwoModule {}
+export class MainActionModule {}

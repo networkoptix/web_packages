@@ -1,0 +1,5 @@
+<svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path class="logout" d="M9 10L9 12.1429C9 12.6571 8.68 13 8.2 13L1.8 13C1.32 13 0.999999 12.6571 0.999999 12.1429L1 1.85714C1 1.34286 1.32 1 1.8 1L8.2 1C8.68 1 9 1.34286 9 1.85714L9 4" stroke="#698796" stroke-miterlimit="10" stroke-linecap="round"/>
+<path class="logout" d="M12 5L14 7L12 9" stroke="#698796" stroke-miterlimit="10" stroke-linecap="round"/>
+<path class="logout" d="M14 7L5 7" stroke="#698796" stroke-miterlimit="10" stroke-linecap="round"/>
+</svg>

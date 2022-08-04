@@ -22,7 +22,7 @@ html {
 
     --image-box-border-color : #{$light6};
     --image-box-selected-border-color : var(--brand-l1);
-    
+
     --storage-size-available : #{$additional_light1};
     --storage-size-reserved : repeating-linear-gradient(
                 -45deg,
@@ -120,7 +120,7 @@ html {
     --placeholder-accent2-color : #{$dark7};
     --placehoder-title-color : #{$dark9};
     --placehoder-body-color : #{$dark9};
-    
+
     --progress-bar-color                  : #{$light4};
     --progress-bar-border-color           : #{$light6};
     --progress-bar-reindex-color          : var(--brand-core);
@@ -200,6 +200,7 @@ html {
     --header-level-two-hover-border-color : #{$dark11};
     --header-arrow-hover                  : #{$dark8};
     --header-nav-arrow-bg                 : #{$dark7};
+    --header-logout-action-color          : #{$light16};
 
     // Mobile header
     --mobile-header-bg                    : #{$dark4};
@@ -238,7 +239,7 @@ html {
     --left-menu-view-hover-bg    : #{$additional_light3};
     --left-menu-view-selected-bg : #{$light5};
     // end View tab ****************************
-    
+
     --time-under-mouse-bg               : rgba(var(--light6--rgb), 0.9);
     --time-under-mouse-color            : #{$dark9};
     --timeline-bg                       : #{$light1};
@@ -346,14 +347,14 @@ html {
     --btn-header-webadm-main-color      : #{$additional_light1};
     --btn-header-webadm-main-hover-bg   : #{$dark15};
     --btn-header-webadm-main-active-bg  : #{$dark13};
-    
+
     --dialog-bg : #{$light1};
     --dialog-border-color : #{$additional_light8};
     --dialog-header-bg : #{$additional_light1};
-    
+
     --svg-legend-bg : #{$additional_light1};
     --svg-legend-border-color : #{$additional_light8};
-    
+
     --light-text-color : #{$light16};
     --light-text-opacity : 1;
 
@@ -376,7 +377,7 @@ html {
     --dropdown-menu-bg : #{$additional_light1};
     --drop-menu-systems-bg : #{$additional_light1};
     --drop-menu-navigation-bg : #{$light1};
-    
+
     --dropdown-item-color: #{$dark9};
     --dropdown-item-active-bg : #{$light4};
     --dropdown-item-active-color : #{$dark9};
@@ -433,7 +434,7 @@ html {
     --promo-tile-img-1-path : url("/static/images/promo/landing_promo_1.svg");
     --promo-tile-img-2-path : url("/static/images/promo/landing_promo_2.svg");
     --promo-tile-img-3-path : url("/static/images/promo/landing_promo_3.svg");
-    
+
     --toast-danger-bg : #f8d7da;
     --toast-danger-color : #721c24;
     --toast-danger-border-color : #f5c6cb;
@@ -471,11 +472,11 @@ html {
     --card-simple-default-bg : #{$red2};
     --card-simple-default-color : #{$dark9};
     --card-simple-default-border-color : #{$red1};
-    
+
     --card-support-bg : #{$light1};
     --card-support-color : #{$dark9};
     --card-support-svg-elem-bg : #{$light1};
-    
+
     --card-capability-header-bg : #{$dark11};
     --card-capability-intro-color : #{$light10};
     --card-capability-icon : var(--brand-core);

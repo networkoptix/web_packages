@@ -44,7 +44,7 @@
             class="nav-arrow-container"
             (click)="scrollMenuItems('right')"
             *ngIf="navArrowState.visible && navArrowState.right"
-            [ngStyle]="{ 'right.px': controlButtonVisible ? contextButtonWidth : 0 }"
+            [ngStyle]="{ 'right.px': mainActionWidth }"
         >
             <div class="nav-arrow right">
                 <svg-icon
@@ -54,16 +54,5 @@
             </div>
         </div>
     </div>
-    <div
-        class="context-button-container"
-        *ngIf="controlButtonVisible"
-        #contextButton
-    >
-        <a
-            class="login btn btn-primary text-nowrap"
-            [href]="headerService.authorizeUrl | unsafe"
-            translate
-            >Log In</a
-        >
-    </div>
+    <nx-main-action (widthChange)="onActionWidthChange($event)"></nx-main-action>
 </div>

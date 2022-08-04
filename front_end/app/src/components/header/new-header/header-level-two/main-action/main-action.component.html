@@ -1,0 +1,29 @@
+<div
+    #mainAction
+    [ngSwitch]="action$ | async"
+>
+    <div
+        *ngSwitchCase="'login'"
+        class="auth-hidden context-button-container"
+    >
+        <a
+            class="login btn btn-primary text-nowrap"
+            [href]="headerService.authorizeUrl | unsafe"
+            translate
+            >Log In</a
+        >
+    </div>
+    <div
+        *ngSwitchCase="'logout'"
+        class="context-button-container"
+        translate
+    >
+        <div
+            (click)="logout()"
+            class="logout"
+        >
+            Log Out
+            <svg-icon [src]="CONFIG.icons.dirHeader + 'logout.svg'"></svg-icon>
+        </div>
+    </div>
+</div>

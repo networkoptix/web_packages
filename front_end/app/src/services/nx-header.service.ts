@@ -25,13 +25,21 @@ export class NxHeaderService {
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject(null);
     public lastActive$ = new BehaviorSubject(null);
-    public nodes: MenuNode[] = [];
+    public nodes$ = new BehaviorSubject<MenuNode[]>([]);
     public currentLocation$ = new BehaviorSubject<any>({});
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');
     public authorizeUrl = '/authorize';
     public createUrl: string;
 
     public dynamicRoutes = {};
+
+    get nodes(): MenuNode[] {
+        return this.nodes$.getValue();
+    }
+
+    set nodes(menunodes: MenuNode[]) {
+        this.nodes$.next(menunodes);
+    }
 
     constructor(
         private router: Router,
