@@ -857,6 +857,24 @@
             "advanced": true
           },
           {
+            "label": "Log Rocket Project",
+            "name": "%LOGROCKET_PROJECT%",
+            "description": "String used for identifying the LogRocket project",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true
+          },
+          {
+            "label": "FullStory Org ID",
+            "name": "%FULLSTORY_ID%",
+            "description": "String used for identifying the FullStory ord ID",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true
+          },
+          {
             "label": "Enable review emails",
             "name": "%REVIEWS_ENABLED%",
             "description": "Sends review emails to portal managers when enabled.",
