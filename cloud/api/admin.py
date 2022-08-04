@@ -190,12 +190,13 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
 
 @admin.register(AccountLoginHistory)
-class AccountLoginHistoryAdmin(admin.ModelAdmin):
+class AccountLoginHistoryAdmin(CMSAdmin, CSVExportAdmin):
     list_display = ('action', 'email', 'ip', 'date')
     list_filter = ('action', 'date')
     search_fields = ('email', 'ip', 'date')
 
-    actions = ['clean_old_records']
+    csv_fields = ('action', 'email', 'ip', 'date')
+    # actions = ['clean_old_records']
 
     def clean_old_records(self, request, queryset):
         from datetime import datetime, timedelta
