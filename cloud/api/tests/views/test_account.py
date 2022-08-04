@@ -449,9 +449,19 @@ class TestAccountViews:
 
     def test_check_account_in_portal_doesnt_exist(self):
         req = self.arf.post('/api/account/check', data={'email': 'not_exist@test.com'})
+        req.session = {}
+        self.mocker.patch.object(Account, 'check_account', side_effect=APINotFoundException(error_text=''))
         resp = check_account_in_portal(req)
         assert resp.status_code == status.HTTP_200_OK
         assert resp.data == {'active': False, 'emailExists': False}
+
+    def test_check_account_in_cloud_db_exists(self):
+        req = self.arf.post('/api/account/check', data={'email': 'not_exist@test.com'})
+        req.session = {}
+        self.mocker.patch.object(Account, 'check_account', return_value={'status': 'invited'})
+        resp = check_account_in_portal(req)
+        assert resp.status_code == status.HTTP_200_OK
+        assert resp.data == {'active': False, 'emailExists': True}
 
     def test_check_account_in_portal_not_active(self):
         self.user.activated_date = None

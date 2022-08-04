@@ -82,7 +82,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
                     'is_staff', 'language', 'customization']
     # forbid changing all fields which can be edited by user in cloud portal except sub
     readonly_fields = ('email', 'first_name', 'last_name', 'created_date', 'activated_date', 'last_login',
-                       'language', 'customization')
+                       'customization')
 
     exclude = ("user_permissions",)
 
@@ -125,6 +125,11 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         ):
             return self.list_display + ['user_groups']
         return self.list_display
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return self.readonly_fields
+        return self.readonly_fields + ('language',)
 
     def has_add_permission(self, request):  # Only superuser can add users
         return False

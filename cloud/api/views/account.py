@@ -61,6 +61,22 @@ code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_S
 account__response = openapi.Response('Account info.', AccountSerializer)
 
 
+def create_user(email, first_name=None, last_name=None, customization=None, is_active=False):
+    default_language_code = models.Customization.objects.\
+        get(name=customization).default_language.code
+    user = models.Account.objects.create(
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+        language=default_language_code,
+        customization=customization
+    )
+    if is_active:
+        user.activated_date = timezone.now()
+        user.save()
+    return user
+
+
 def login_helper(request, token, user):
     django.contrib.auth.login(request, user)
     request.session['access_token'] = token['access_token']
@@ -196,10 +212,20 @@ def login_with_code(request):
             return api_success(tokens, status_code=status.HTTP_401_UNAUTHORIZED)
         raise e
 
+    account_info = Account.get(tokens)
+    customization = account_info['customization']
     try:
         user = models.Account.objects.get(email=validate_token['username'])
+        if user.customization != customization:
+            user.update(customization=customization)
     except models.Account.DoesNotExist:
-        raise APINotFoundException("User not in cloud")
+        first_name, last_name = account_info.get('fullname').split(' ')
+        user = create_user(
+            account_info['email'],
+            first_name=first_name,
+            last_name=last_name,
+            customization=customization,
+            is_active=True)
 
     request.session.set_expiry(get_authenticated_session_cookie_age())
     return login_helper(request, tokens, user)
@@ -572,8 +598,28 @@ def check_account_in_portal(request):
     require_params(request, ('email',))
     email = request.data['email']
     account = models.Account.objects.filter(email=email).first()
+    is_active = False
+    if account:
+        is_active = account.activated_date is not None
+    else:
+        try:
+            account = Account.check_account(email)
+            is_active = account.get('statusCode', '') == 'activated'
+            account = create_user(
+                email=email,
+                first_name='',
+                last_name='',
+                customization=settings.CUSTOMIZATION,
+                is_active=is_active
+            )
+            if account.is_active:
+                account.activated_date = timezone.now()
+                account.save()
+        except APINotFoundException:
+            account = None
+
     return api_success({
-        'active': bool(account) and account.activated_date is not None,
+        'active': bool(account) and is_active,
         'emailExists': bool(account)
     })
 
