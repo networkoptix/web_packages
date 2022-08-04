@@ -106,7 +106,7 @@ export function paramSortFunc<Param>(
 }
 
 /* Object */
-export function isObject(obj) {
+export function isObject(obj: unknown): boolean {
     return (!!obj) && (obj.constructor === Object);
 }
 
@@ -126,6 +126,8 @@ export function mapValuesToStrings(
     return obj as Record<string, string>;
 }
 
+// Can't quite figure out how to not use any here, may revisit in the future
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Helper function to initialize local variables from object properties named in  `keys`.
  *
@@ -177,6 +179,7 @@ export function pickFrom(
         return { ...acc, key: source[key] };
     }, target);
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* DOM */
 export interface PseudoAnchorTarget {
@@ -199,9 +202,9 @@ export interface PseudoAnchorTarget {
 export function addPseudoAnchor(
     targetArr: PseudoAnchorTarget[],
     target: HTMLElement,
-    template: TemplateRef<any>,
+    template: TemplateRef<unknown>,
     eventType: string,
-    handler: (template: TemplateRef<any>, target: HTMLElement) => void
+    handler: (template: TemplateRef<unknown>, target: HTMLElement) => void
 ): void {
     const newTarget: PseudoAnchorTarget = {
         id: `${target.id}`,
@@ -236,7 +239,7 @@ function createPseudoAnchor(
 export function delayInitial<Source>(
     source: Observable<Source> | Promise<Source>,
     msDelay = 750
-) {
+): Observable<Source> {
     return combineLatest([source, timer(msDelay)])
         .pipe(map(([source]) => source));
 }

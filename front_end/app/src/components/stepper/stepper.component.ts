@@ -10,7 +10,9 @@ import { Component, Input, TemplateRef } from '@angular/core';
 })
 export class NxStepperComponent extends CdkStepper {
     @Input() customButtonLabels: string[];
+    // Can't use unknown here because templateRef is used with else
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Input() saveButton: TemplateRef<any>;
-    @Input() columns = 4;
-    @Input() controlledSteps = false;
+    @Input() columns: number = 4;
+    @Input() controlledSteps: boolean = false;
 }

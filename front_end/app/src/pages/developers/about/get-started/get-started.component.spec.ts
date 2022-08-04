@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DebugElement } from '@angular/core';
+import { DebugElement, ElementRef } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, RouterLink } from '@angular/router';
 import { MockDirective } from 'ng-mocks';
@@ -16,6 +16,11 @@ import {
 
 import { NxGetStartedComponent } from './get-started.component';
 
+interface StepContent {
+    title: string;
+    imageSrc: string;
+}
+
 describe('NxGetStartedComponent', () => {
     const stepToTest = 1;
     const step = getStartedNode.nodes[stepToTest - 1];
@@ -23,15 +28,18 @@ describe('NxGetStartedComponent', () => {
     let component: NxGetStartedComponent;
     let fixture: ComponentFixture<NxGetStartedComponent>;
     let el: DebugElement;
-    let stepContent;
+    let stepContent: StepContent;
 
     const configMock = { config: nxConfig };
 
-    const getFirstStepContent = el => {
+    const getFirstStepContent = (el: ElementRef<HTMLElement>): StepContent => {
         const detailBlock = el.nativeElement.querySelector('.detail-block');
         const stepText = detailBlock.querySelector('.step-text');
         const title = stepText.querySelector('h3').innerText;
-        const imageSrc = '/static' + detailBlock.querySelector('.step-image > img').src.split('static')[1];
+        const imageSrc = '/static' +
+            detailBlock.querySelector<HTMLImageElement>('.step-image > img')
+                .src
+                .split('static')[1];
 
         return { title, imageSrc };
     };

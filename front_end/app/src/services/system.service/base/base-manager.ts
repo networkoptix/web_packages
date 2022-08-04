@@ -11,11 +11,11 @@ export class BaseManager {
     /**
      * Getter and setter for serverId. Updating serverId triggers state update.
      */
-    get serverId() {
+    get serverId(): string {
         return this.#serverId$.value;
     }
 
-    set serverId(id) {
+    set serverId(id: string) {
         this.#serverId$.next(id);
     }
 }

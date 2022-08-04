@@ -77,7 +77,7 @@ describe('Scroll mechanics service', () => {
     });
 
     it('should check window size (max)', () => {
-        let result;
+        let result: boolean;
         viewport.set('screen');
 
         result = scroll.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
@@ -88,7 +88,7 @@ describe('Scroll mechanics service', () => {
     });
 
     it('should check window size (min)', () => {
-        let result;
+        let result: boolean;
         viewport.set('screen');
 
         result = scroll.mediaQueryMin(NxScrollMechanicsService.MEDIA.sm);

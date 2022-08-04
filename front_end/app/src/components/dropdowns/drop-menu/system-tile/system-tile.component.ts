@@ -11,15 +11,15 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 })
 export class NxSystemTileComponent {
     @Input() system: System;
-    @Input() active = false;
-    @Input() width = 240;
+    @Input() active: boolean = false;
+    @Input() width: number = 240;
 
     CONFIG: IConfig;
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.config;
     }
 
-    get icon() {
+    get icon(): string {
         const icon =
             this.system.stateOfHealth === this.CONFIG.system.status.online
                 ? 'system.svg'

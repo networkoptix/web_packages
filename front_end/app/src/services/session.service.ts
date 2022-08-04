@@ -47,7 +47,7 @@ export class NxSessionService {
         });
     }
 
-    get email() {
+    get email(): string | undefined {
         return this.email$?.getValue();
     }
 
@@ -56,7 +56,7 @@ export class NxSessionService {
         this.email$.next(email);
     }
 
-    get language() {
+    get language(): string | undefined {
         return this.language$?.getValue();
     }
 
@@ -65,7 +65,7 @@ export class NxSessionService {
         this.language$.next(lang);
     }
 
-    get loginState() {
+    get loginState(): string {
         return this.session.retrieve('loginState');
     }
 

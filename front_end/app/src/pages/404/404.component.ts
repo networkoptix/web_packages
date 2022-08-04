@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
+import type { RouteCheckTuple } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -47,23 +48,26 @@ export class Nx404Component {
         }
     }
 
-    getAdditionalMessage(key: string) {
+    getAdditionalMessage(key: string): string {
         const defaultKey = 'redirects.defaultMessage';
-        const additionalMessages = this.translate.instant(
-            [key, defaultKey]
-        );
+        const additionalMessages: Record<string, string> =
+            this.translate.instant([key, defaultKey]);
         const translatedCustom = additionalMessages[key];
         const translatedDefault = additionalMessages[defaultKey];
 
         return translatedCustom !== key ? translatedCustom : translatedDefault;
     }
 
-    routeChecker = (url: string) => this.CONFIG.webadminRoutesLookup.find(routeTuple => {
-        const [checker] = routeTuple;
-        return checker.test(url.split('/').filter(segment => segment).join('/'));
-    }) || [];
+    routeChecker = (url: string): RouteCheckTuple => {
+        return this.CONFIG.webadminRoutesLookup.find(routeTuple => {
+            const [checker] = routeTuple;
+            return checker.test(
+                url.split('/').filter(segment => segment).join('/')
+            );
+        }) || [];
+    };
 
-    handleRedirect(url: string) {
+    handleRedirect(url: string): void {
         let [_, redirectUrl, customMessage = 'redirects.defaultMessage'] = this.routeChecker(url);
 
         if (redirectUrl) {

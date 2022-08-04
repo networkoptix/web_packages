@@ -84,6 +84,9 @@ describe('Nx utils', () => {
     });
 });
 
+/* Everything below here is deprecated and kept for archive purposes only */
+/* eslint-disable */
+
 /** @deprecated
  * Replaced with lodash `cloneDeep()`.
  *

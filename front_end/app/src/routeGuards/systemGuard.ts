@@ -13,6 +13,9 @@ import { NxSettingsService } from '@pages/systems/settings/settings.service';
 import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import type {
+    SystemPermissions
+} from '@services/system.service/user-manager/user-manager-types';
 
 @Injectable()
 export class SystemGuard implements CanActivate {
@@ -47,12 +50,12 @@ export class SystemGuard implements CanActivate {
             'monitoring'
         ];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
-        const systemId = environment.isLocal || route.pathFromRoot.find((snapshot: any) => {
-            return snapshot.params.systemId;
-        }).params.systemId;
+        const systemId = environment.isLocal ||
+            route.pathFromRoot.find(snapshot => snapshot.params.systemId)
+                .params.systemId;
 
-        const checkPermissionsFor = (system: NxSystem) => {
-            const permissions: any = system.userManager?.permissions || {};
+        const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
+            const permissions = system.userManager?.permissions || {} as SystemPermissions;
             const isOwner = system.userManager.isOwner(system.userManager.currentUser);
             const canViewChecks = {
                 users: permissions.editUsers,
@@ -69,34 +72,45 @@ export class SystemGuard implements CanActivate {
             );
         };
 
-        return systemId && currentRoute && this.accountService
-            .get()
-            .then(account => {
-                if (account) {
-                    let currSystem = this.systemService.getCurrentSystem();
-                    if (!this.settingsService.system) {
-                        this.settingsService.system = currSystem;
+        if (!(systemId && currentRoute)) {
+            return;
+        }
+        return this.accountService.get().then(account => {
+            if (!account) {
+                return;
+            }
+            let currSystem = this.systemService.getCurrentSystem();
+            if (!this.settingsService.system) {
+                this.settingsService.system = currSystem;
+            }
+
+            return new Promise(resolve => {
+                if (currSystem) {
+                    currSystem.update().then(_ => {
+                        resolve(checkPermissionsFor(currSystem));
+                    });
+                } else {
+                    if (environment.isLocal) {
+                        currSystem = this.systemService.createLocalSystem(
+                            this.accountService.mediaServerApi,
+                            account.id,
+                            account.email
+                        );
+                    } else {
+                        currSystem = this.systemService.createSystem(
+                            account.email,
+                            systemId,
+                            undefined,
+                            true
+                        );
                     }
 
-                    return new Promise(resolve => {
-                        if (currSystem) {
-                            currSystem.update().then(_ => {
-                                resolve(checkPermissionsFor(currSystem));
-                            });
-                        } else {
-                            if (environment.isLocal) {
-                                currSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
-                            } else {
-                                currSystem = this.systemService.createSystem(account.email, systemId, undefined, true);
-                            }
-
-                            currSystem.update().then(_ => {
-                                this.settingsService.system = currSystem;
-                                resolve(checkPermissionsFor(currSystem));
-                            });
-                        }
+                    currSystem.update().then(_ => {
+                        this.settingsService.system = currSystem;
+                        resolve(checkPermissionsFor(currSystem));
                     });
                 }
             });
+        });
     }
 }

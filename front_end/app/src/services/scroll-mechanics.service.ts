@@ -26,7 +26,7 @@ export class NxScrollMechanicsService {
     private panelSubject = new BehaviorSubject(false);
 
     // trigger offset change
-    offsetSubject = new BehaviorSubject(undefined);
+    offsetSubject = new BehaviorSubject<boolean>(undefined);
 
     public static HEADER_OFFSET: number = 48;
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
@@ -40,7 +40,7 @@ export class NxScrollMechanicsService {
         this.elementTableWidthSubject.next(width);
     }
 
-    get elementTableWidth() {
+    get elementTableWidth(): number {
         return this.elementTableWidthSubject.getValue();
     }
 
@@ -48,7 +48,7 @@ export class NxScrollMechanicsService {
         this.elementViewWidthSubject.next(width);
     }
 
-    get elementViewWidth() {
+    get elementViewWidth(): number {
         return this.elementViewWidthSubject.getValue();
     }
 
@@ -56,7 +56,7 @@ export class NxScrollMechanicsService {
         this.searchViewHeightSubject.next(height);
     }
 
-    get searchViewHeight() {
+    get searchViewHeight(): number {
         return this.searchViewHeightSubject.getValue();
     }
 
@@ -68,11 +68,11 @@ export class NxScrollMechanicsService {
         this.windowScrollSubject.next(value);
     }
 
-    get windowScroll() {
+    get windowScroll(): number {
         return this.windowScrollSubject.getValue();
     }
 
-    get panelVisible() {
+    get panelVisible(): boolean {
         return this.panelSubject.getValue();
     }
 
@@ -80,11 +80,11 @@ export class NxScrollMechanicsService {
         this.panelSubject.next(value);
     }
 
-    mediaQueryMax(media: number) {
+    mediaQueryMax(media: number): boolean {
         return this.window.matchMedia('(max-width: ' + media + 'px)').matches;
     }
 
-    mediaQueryMin(media: number) {
+    mediaQueryMin(media: number): boolean {
         return this.window.matchMedia('(min-width: ' + media + 'px)').matches;
     }
 }

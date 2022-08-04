@@ -8,10 +8,10 @@ import { NxSessionService } from './session.service';
 describe('Session service', () => {
     let session: NxSessionService;
 
-    let localStorageMockStore = {};
+    let localStorageMockStore: Record<string, unknown> = {};
     const localStorageMock = {
         retrieve: (key: string) => localStorageMockStore[key],
-        store: (key: string, value: any) => {
+        store: (key: string, value: unknown) => {
             localStorageMockStore[key] = value;
         },
         observe: () => ({

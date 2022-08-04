@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 import { NxApplyService } from '@services/apply.service';
 
 @Injectable()
-export class ApplyGuard implements CanActivate, CanDeactivate<any> {
+export class ApplyGuard<T> implements CanActivate, CanDeactivate<T> {
     constructor(
         private applyService: NxApplyService
     ) {
@@ -27,7 +27,7 @@ export class ApplyGuard implements CanActivate, CanDeactivate<any> {
     }
 
     canDeactivate(
-        component: any,
+        component: T,
         currentRoute: ActivatedRouteSnapshot,
         currentState: RouterStateSnapshot,
         nextState?: RouterStateSnapshot

@@ -1,15 +1,19 @@
+import { HttpEvent, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+type CachedData = HttpResponse<unknown> | Observable<HttpEvent<unknown>>;
 
 @Injectable()
 export class NxUriCacheService {
-    private cachedUri = [];
-    private cachedData = new Map<string, any>();
+    private cachedUri: string[] = [];
+    private cachedData = new Map<string, CachedData>();
 
-    public setData(key: string, value: any): void {
+    public setData(key: string, value: CachedData): void {
         this.cachedData.set(key, value);
     }
 
-    public getData(key: string) {
+    public getData(key: string): CachedData {
         return this.cachedData.get(key);
     }
 
@@ -21,7 +25,7 @@ export class NxUriCacheService {
         this.cachedData.clear();
     }
 
-    public addedToCache(serviceUri: string) {
+    public addedToCache(serviceUri: string): boolean {
         return this.cachedUri.includes(serviceUri);
     }
 

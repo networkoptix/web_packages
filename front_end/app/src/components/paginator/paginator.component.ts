@@ -16,13 +16,13 @@ import { NgChanges } from '@utils/ng-changes';
 export class NxPaginatorComponent {
     @Input() numPages: number;
     @Input() pagesToShow: number;
-    @Input() tempDisabled = false;
-    @Input() showPrevNext = false;
+    @Input() tempDisabled: boolean = false;
+    @Input() showPrevNext: boolean = false;
 
     CONFIG: IConfig;
     showExperimental: boolean = false;
     page$ = new BehaviorSubject(1);
-    pages$ = new BehaviorSubject([]);
+    pages$ = new BehaviorSubject<number[]>([]);
     numPages$ = new BehaviorSubject(0);
 
     constructor(

@@ -66,7 +66,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         this.window.location.href = url;
     }
 
-    checkVisible(elm: HTMLElement) {
+    checkVisible(elm: HTMLElement): boolean {
         const headerHeight = 48;
         const rect = elm.getBoundingClientRect();
         const viewHeight = Math.max(
@@ -74,10 +74,6 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
             this.window.innerHeight
         );
         return !(rect.bottom - headerHeight < 0 || rect.top - viewHeight >= 0);
-    }
-
-    logItem(info: any): void {
-        console.log(info);
     }
 
     changeHeaderButton = (visbility: IntersectionStatus): void => {
@@ -93,7 +89,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         }
     };
 
-    getElementPosition(elm: HTMLElement) {
+    getElementPosition(elm: HTMLElement): { top: number, left: number } {
         const rect = elm.getBoundingClientRect();
         const scrollLeft = this.window.pageXOffset ||
             this.document.documentElement.scrollLeft;

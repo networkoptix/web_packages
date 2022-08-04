@@ -22,7 +22,7 @@ import { concatMap, takeUntil } from 'rxjs/operators';
  * examplePoll.cancel();
  */
 export class NxPollService {
-    unsub$ = new Subject();
+    unsub$ = new Subject<'done'>();
 
     ngOnDestroy(): void {
         this.unsub$.next('done');
@@ -35,7 +35,7 @@ export class NxPollService {
     createPoll<T>(
         apiCall: () => Observable<T> | Promise<T>,
         intervalDelay: number
-    ): Observable<any> {
+    ): Observable<T> {
         return timer(0, intervalDelay)
             .pipe(
                 concatMap(apiCall),

@@ -15,9 +15,9 @@ export class NxContentLandingBlockComponent {
     @Input() type: InputType;
     @Input() title: string;
     @Input() content: string;
-    @Input() svg = 'eye_closed';
-    @Input() url = '';
-    @Input() externalLink = false;
+    @Input() svg: string = 'eye_closed';
+    @Input() url: string = '';
+    @Input() externalLink: boolean = false;
 
     svgSizes = {
         mainSvg: {

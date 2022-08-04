@@ -17,7 +17,7 @@ export class NxAppSourceService {
         this.CONFIG = configService.getConfig();
     }
 
-    getMenuBase(system: Partial<NxSystem>) {
+    getMenuBase(system: Partial<NxSystem>): string {
         if (this.environment.isLocal) {
             return `${this.CONFIG.menus.systemHealth.baseUrl}`;
         } else {
@@ -25,7 +25,7 @@ export class NxAppSourceService {
         }
     }
 
-    getMonitoringMenuBase(system: Partial<NxSystem>) {
+    getMonitoringMenuBase(system: Partial<NxSystem>): string {
         if (this.environment.isLocal) {
             return `${this.CONFIG.menus.systemMonitoring.baseUrl}`;
         } else {

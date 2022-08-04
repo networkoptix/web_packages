@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DebugElement } from '@angular/core';
+import { DebugElement, ElementRef } from '@angular/core';
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -18,22 +18,31 @@ import { capabilitiesNode } from '../../../../_mocks/knowledge_base_landing.mock
 
 import { NxCapabilitiesComponent } from './capabilities.component';
 
+interface BlockContent {
+    details: string;
+    introLine: string;
+    headerBackground: string;
+    heading: string;
+}
+
 // Disable for now until slowdown can be fixed
 xdescribe('NxCapabilitiesComponent', () => {
     const capability = capabilitiesNode.nodes[0];
     let component: NxCapabilitiesComponent;
     let fixture: ComponentFixture<NxCapabilitiesComponent>;
     let el: DebugElement;
-    let blockContent;
+    let blockContent: BlockContent;
 
     const configMock = { config: nxConfig };
 
-    const getFirstBlockContent = el => {
+    const getFirstBlockContent = (el: ElementRef<HTMLElement>): BlockContent => {
         const detailBlock = el.nativeElement.querySelector('.capability-card');
         const header = detailBlock.querySelector('header');
-        const introLine = header.querySelector('.intro-line').innerText;
+        const introLine = header
+            .querySelector<HTMLDivElement>('.intro-line').innerText;
         const heading = header.querySelector('h3').innerText;
-        const details = detailBlock.querySelector('.capability-detail').innerText;
+        const details = detailBlock
+            .querySelector<HTMLDivElement>('.capability-detail').innerText;
         const headerBackground = header.style.backgroundImage;
 
         return { details, introLine, headerBackground, heading };
