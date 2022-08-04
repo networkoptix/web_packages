@@ -89,7 +89,7 @@ ${STORAGE ENABLED MAIN ADDRESS}     ${STORAGE DISK 0}
 ${STORAGE RESERVED TOOLTIP ICON}    ${STORAGE DISABLED RESERVED}/following-sibling::*[name()="svg-icon" and contains(@data-src,"/images/icons/text_buttons/info.svg")]
 ${STORAGE RESERVED TOOLTIP}         //div[contains(@class, "tooltip-body") and contains(text(), "${RESERVED NONSYSTEM TOOLTIP}")]
 ${STORAGE INACCESSIBLE SIZE}        ${STORAGE DISABLED INACCESSIBLE}/parent::td/following-sibling::td
-${RESERVED SPACE}                   ${STORAGE POPOVER}//td[text()="Reserved"]/following-sibling::td
+${RESERVED SPACE}                   ${STORAGE POPOVER}//td[contains(text(),"Reserved")]/following-sibling::td
 ${RESERVED SPACE ADVANCED}          //input[@id="reservedSpace0-numeric"]
 &{MEDIA ATTRIBUTES DICT}            allowAutoRedundancy=${FALSE}    backupBitrate=-12500000     backupDaysOfTheWeek=254    backupDuration=-1    backupStart=0    backupType=${EMPTY}    maxCameras=0    metadataStorageId={00000000-0000-0000-0000-000000000000}    serverId=${EMPTY}    serverName=${EMPTY}
 ${ARCHIVE BACKUP CHECK BOX}         //nx-switch/div[@id="archive-backup-switch-wrapper"]
@@ -122,9 +122,9 @@ ${STORAGE MODE COLUMN}              ${STORAGE SCROLLBAR}//th[contains(text(),"${
 ${STORAGE SPACE COLUMN}             ${STORAGE SCROLLBAR}//th[contains(text(),"${STORAGE LOCATIONS SPACE TEXT}")]
 ${STORAGE SIZE CHART}               //td[@class="size-chart"]
 
-${DELETE STORAGE MODAL}             //div[@class="modal-content"]
-${DELETE STORAGE CLOSE BUTTON}      ${DELETE STORAGE MODAL}//button[@aria-label="Close"]
-${DELETE STORAGE CANCEL BUTTON}     ${DELETE STORAGE MODAL}//button/span/parent::button
+${DELETE STORAGE MODAL}             //div[@class="modal-body"]
+${DELETE STORAGE CLOSE BUTTON}      //button[@aria-label="Close"]
+${DELETE STORAGE CANCEL BUTTON}     //div[@class="modal-footer"]//button/span/parent::button
 ${DELETE STORAGE DELETE BUTTON}     //button[contains(text(), "${DELETE BUTTON TEXT}")]
 
 ${STORAGE ADD BUTTON}               ${STORAGE LOCATIONS BLOCK}//nx-section//button[contains(text(), "${ADD EXTERNAL STORAGE}")]

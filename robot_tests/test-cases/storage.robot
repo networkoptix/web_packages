@@ -247,7 +247,7 @@ Force Tags        storage
     Mouse Over    ${STORAGE LOCATIONS FIRST SPACE}
     Wait Until Element is Visible    ${STORAGE POPOVER}       #${STORAGE LOCATIONS FIRST SPACE}/following-sibling::ngb-popover-window
     ${reserved} =    Get Text    ${RESERVED SPACE}
-    Should Contain  ${reserved}    5.0
+    Should Contain  ${reserved}    10
 
 11. No Size Tooltip when Inaccessble
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED INACCESSIBLE}
@@ -336,7 +336,7 @@ Force Tags        storage
     Wait Until Element is Visible     ${SAVE BUTTON}
     Click    Button    ${SAVE BUTTON}
     Log    Step 4 - C81779
-    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}    ${value}    ${camera resourceId}
+    Turn On Analytics    https://${QA BURBANK IP}:${server 1['port']}    ${value}    ${camera resourceId}     ${server 1['local auth']}
     Reload Page
     Log    C81754
     Wait Until Element is Visible with Retry    ${ANALYTICS DROPDOWN}
@@ -937,7 +937,7 @@ Force Tags        storage
 34. Backup settings block availability for owner, administrator and other users
     [Tags]    C81804    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test     5.0    5.1    msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -960,14 +960,14 @@ Force Tags        storage
 35. Backup settings block is not shown if no one storage is assigned “Backup” mode
     [Tags]    C81810    archive
     [Setup]     Test Setup    disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     Verify on Servers Page
     Page Should Not Contain Element    ${ARCHIVE BACKUP CHECK BOX}
 
 36. Backup off
     [Tags]    C81807    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -982,7 +982,7 @@ Force Tags        storage
 37. Backup on – default settings
     [Tags]    C81808    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -997,7 +997,7 @@ Force Tags        storage
 38. Backup on – custom settings
     [Tags]    C81809    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1017,7 +1017,7 @@ Force Tags        storage
 39. It is not necessary to apply changes to make the backup settings block appear
     [Tags]    C81811    archive     
     [Setup]     Test Setup    disk1 disk2 disk3
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible With Retry
@@ -1054,7 +1054,7 @@ Force Tags        storage
 40. Cancel Backup enabling
     [Tags]    C83183    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1077,7 +1077,7 @@ Force Tags        storage
 41. Cancel Backup disabling - default settings
     [Tags]    C83184    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1101,7 +1101,7 @@ Force Tags        storage
 42. Cancel Backup disabling - custom settings
     [Tags]    C83185    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1139,7 +1139,7 @@ Force Tags        storage
 43. Cancel resetting backup settings for system of 1 server
     [Tags]    C83328    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1186,7 +1186,7 @@ Force Tags        storage
 44. Reset backup settings for system of 1 server
     [Tags]    C83330    archive
     [Setup]     Log    Override and do nothing
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     IF    ${backup initialized} == ${False}
         Initialize Backup For User and System    ${server 1['owner']}     ${server 1['cloud id']}
     END
@@ -1236,7 +1236,7 @@ Force Tags        storage
 
 46. Reindex archive block owerview: Main and Backup storages
     [Tags]    C81606    archive     
-    Skip If Image Is    4.3_test    5.0_test      msg=Backup Archive not supported with ${IMAGE}
+    Skip If Image Is    4.3_test    5.0_test      5.0      5.1     msg=Backup Archive not supported with ${IMAGE}
     Verify on Servers Page
     Select Server By Name    ${server 1['id']}
     Wait Until Elements Are Visible

@@ -178,6 +178,7 @@ Set Default Storage Config
     ${storages string} =    Replace String    ${storages string}    False    "False"
     ${storages string} =    Replace String    ${storages string}    True    "True"
     ${storages dict} =    Evaluate    json.loads("""${storages string}""")    json
+    ${range} =     Get Length    ${storages dict}
     FOR    ${n}    IN RANGE    ${range}
         ${status} =     Run Keyword And Return Status    Dictionary Should Contain Key  ${storages dict[${n}]}    url
         IF   ${status}
