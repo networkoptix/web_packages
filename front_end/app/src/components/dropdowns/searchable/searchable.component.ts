@@ -144,14 +144,13 @@ export class NxSearchableDropdown extends BaseDropdown {
         });
     }
 
-    blockSearchEnter(event: KeyboardEvent): void {
+    handleSearchEnter(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             event.preventDefault();
-        }
-        // Don't allow newline
-
-        if (this._items.length === 1 && this._items[0].value !== undefined) {
-            this.selectItem(this._items[0]);
+            // Don't allow newline
+            if (this._items.length === 1 && this._items[0].value !== undefined) {
+                this.selectItem(this._items[0]);
+            }
         }
     }
 

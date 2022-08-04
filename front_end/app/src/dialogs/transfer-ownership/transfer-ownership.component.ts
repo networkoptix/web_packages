@@ -14,7 +14,6 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import { pickFrom } from '@utils/general';
 
 interface UserItem extends SearchableDropdownItem {
     userEnabled: boolean;
@@ -27,7 +26,6 @@ interface UserItem extends SearchableDropdownItem {
 })
 export class TransferOwnershipModalContent implements OnInit {
     system: NxSystem;
-    transfers: SystemTransferInfo[];
     closable: boolean = true;
 
     @ViewChild('transferOwnershipForm') form: NgForm;
@@ -35,6 +33,7 @@ export class TransferOwnershipModalContent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    transferInfo: SystemTransferInfo;
     transferComplete: boolean = false;
     hideErrors: boolean = false;
     transferOwnership: Process;
@@ -50,13 +49,12 @@ export class TransferOwnershipModalContent implements OnInit {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: {
             system: NxSystem,
-            transfers: SystemTransferInfo[],
         },
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
-        pickFrom(this.dialogData, ['system', 'transfers'], this);
+        this.system = this.dialogData.system;
     }
 
     ngOnInit(): void {
@@ -69,11 +67,6 @@ export class TransferOwnershipModalContent implements OnInit {
             }));
 
         const errorCodes = {
-            duplicateTransfer: () => {
-                this.form.control.setErrors({
-                    duplicateTransfer: true
-                });
-            },
             userDisabled: () => {
                 this.form.control.setErrors({
                     userDisabled: true
@@ -85,10 +78,6 @@ export class TransferOwnershipModalContent implements OnInit {
             async () => {
                 const newOwnerEmail = this.selectedUser.value;
 
-                if (this.transfers.some(t => t.toAccount === newOwnerEmail)) {
-                    return Promise.reject({ error: 'duplicateTransfer' });
-                }
-
                 return this.cloudService
                     .startTransfer(this.system.id, newOwnerEmail)
                     .toPromise();
@@ -96,7 +85,7 @@ export class TransferOwnershipModalContent implements OnInit {
             { errorCodes },
             (res: SystemTransferInfo) => {
                 this.transferComplete = true;
-                this.transfers.push(res);
+                this.transferInfo = res;
             },
             () => {},
         );
@@ -112,7 +101,7 @@ export class TransferOwnershipModalContent implements OnInit {
         this.selectedUser = { ...user };
     }
 
-    close = (): void => {
-        this.dialogRef.close();
+    close = (info?: SystemTransferInfo): void => {
+        this.dialogRef.close(info);
     };
 }

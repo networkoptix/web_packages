@@ -31,85 +31,105 @@
                     </div>
                 </form>
 
+                <ng-template #ownerText>
+                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                    <span>
+                        <span
+                            *ngIf="system.userManager.isMine"
+                            class="system-header-bold"
+                            translate
+                            >you</span
+                        >
+                        <ng-container *ngIf="!system.userManager.isMine">
+                            <span class="system-header-bold">{{ system.info.ownerFullName }}</span>
+                            <span>&nbsp;({{ system.info.ownerAccountEmail }})</span>
+                        </ng-container>
+                    </span>
+                    <a
+                        *ngIf="canSendTransferRequest"
+                        id="change-ownership"
+                        class="ml-1 btn-text"
+                        (click)="$event.preventDefault(); transferOwnership()"
+                        translate
+                        >(change)</a
+                    >
+                </ng-template>
+                <ng-template #cancelTransferText>
+                    <span
+                        [innerHTML]="
+                            LANG.system.transferTo({
+                                newOwnerName: newOwnerName,
+                                newOwnerEmail: transferInfo.toAccount
+                            })
+                        "
+                    ></span>
+                    <a
+                        id="cancel-transfers"
+                        class="ml-1 btn-text"
+                        (click)="$event.preventDefault(); cancelOwnershipTransfer()"
+                        translate
+                        >(cancel)</a
+                    >
+                </ng-template>
+                <ng-template #systemOfferedText>
+                    <div class="mb-2">
+                        <span
+                            [innerHTML]="
+                                LANG.system.ownerWantsToTransfer({
+                                    ownerName: system.info.ownerFullName,
+                                    ownerEmail: system.info.ownerAccountEmail
+                                })
+                            "
+                        ></span>
+                    </div>
+                </ng-template>
+
                 <div class="d-flex align-items-center">
                     <span
                         class="system-owner"
                         *ngIf="!environment.isLocal"
                     >
-                        <div
-                            *ngIf="ownershipOffered"
-                            class="mt-2 mb-3"
-                        >
-                            <span
-                                [innerHTML]="
-                                    LANG.system.ownerWantsToTransfer({
-                                        ownerName: system.info.ownerFullName
-                                    })
-                                "
-                            ></span>
-                        </div>
-                        <ng-container *ngIf="!ownershipOffered">
-                            <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
-                            <span>
-                                <span
-                                    *ngIf="system.userManager.isMine"
-                                    class="system-header-bold"
-                                    translate
-                                    >you</span
-                                >
-                                <ng-container *ngIf="!system.userManager.isMine">
-                                    <span class="system-header-bold">{{
-                                        system.info.ownerFullName
-                                    }}</span>
-                                    <span>&nbsp;({{ system.info.ownerAccountEmail }})</span>
-                                </ng-container>
-                            </span>
-                            <a
-                                *ngIf="
-                                    ownershipTransferEnabled &&
-                                    system.userManager.isMine &&
-                                    !transfers.length &&
-                                    system.userManager.nonOwners({ cloud: true }).length
-                                "
-                                id="change-ownership"
-                                class="ml-1 btn-text"
-                                (click)="$event.preventDefault(); transferOwnership()"
-                                translate
-                                >(change)</a
-                            >
-                            <a
-                                *ngIf="
-                                    ownershipTransferEnabled &&
-                                    system.userManager.isMine &&
-                                    transfers.length
-                                "
-                                id="cancel-transfers"
-                                class="ml-1 btn-text"
-                                (click)="$event.preventDefault(); cancelOwnershipTransfer()"
-                                translate
-                                >(cancel)</a
-                            >
-                        </ng-container>
+                        <ng-template
+                            *ngIf="
+                                !transferInfo ||
+                                (transferInfo &&
+                                    !system.userManager.isMine &&
+                                    transferInfo.toAccount !== system.userManager.currentUserEmail)
+                            "
+                            [ngTemplateOutlet]="ownerText"
+                        ></ng-template>
+                        <ng-template
+                            *ngIf="transferInfo && system.userManager.isMine"
+                            [ngTemplateOutlet]="cancelTransferText"
+                        ></ng-template>
+                        <ng-template
+                            *ngIf="
+                                transferInfo &&
+                                transferInfo.toAccount === system.userManager.currentUserEmail
+                            "
+                            [ngTemplateOutlet]="systemOfferedText"
+                        ></ng-template>
                     </span>
                 </div>
-                <ng-container *ngIf="ownershipOffered">
-                    <div class="d-flex">
-                        <button
-                            class="btn btn-primary mr-2"
-                            (click)="acceptOwnershipTransfer()"
-                            translate
-                        >
-                            Accept
-                        </button>
-                        <button
-                            class="btn btn-default"
-                            (click)="rejectOwnershipTransfer()"
-                            translate
-                        >
-                            Reject
-                        </button>
-                    </div>
-                </ng-container>
+                <div
+                    *ngIf="systemOffered"
+                    class="d-flex"
+                >
+                    <button
+                        class="btn btn-primary mr-2"
+                        (click)="acceptOwnershipTransfer()"
+                        translate
+                    >
+                        Accept
+                    </button>
+                    <button
+                        class="btn btn-default"
+                        (click)="rejectOwnershipTransfer()"
+                        translate
+                    >
+                        Reject
+                    </button>
+                </div>
             </header>
 
             <nx-section *ngIf="system.isMine">

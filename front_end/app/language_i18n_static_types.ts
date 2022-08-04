@@ -1112,6 +1112,7 @@ export interface LanguageI18NStaticTypesSystem {
     loggerDropdownLabel:  (params?: Record<string, string | number>) => string;
     storageToolTips:      StorageToolTips;
     ownerWantsToTransfer: (params?: Record<string, string | number>) => string;
+    transferTo:           (params?: Record<string, string | number>) => string;
 }
 
 export interface Loggers {

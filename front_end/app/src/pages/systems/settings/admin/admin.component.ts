@@ -84,13 +84,27 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
 
-    transfers: SystemTransferInfo[] = [];
-    systemTransferInProcess: boolean = false;
+    transferInfo: SystemTransferInfo;
 
-    get ownershipOffered(): boolean {
+    /** Owner (current user) can send a new ownership transfer request */
+    get canSendTransferRequest(): boolean {
+        return this.ownershipTransferEnabled &&
+            this.system.userManager.isMine &&
+            !this.transferInfo &&
+            !!this.system.userManager.nonOwners({ cloud: true }).length;
+    }
+
+    /** System ownership is offered to the current user */
+    get systemOffered(): boolean {
         return !environment.isLocal &&
-            this.ownershipTransferEnabled &&
-            this.systemTransferInProcess;
+            !!this.transferInfo &&
+            this.transferInfo.toAccount === this.system.userManager.currentUserEmail;
+    }
+
+    get newOwnerName(): string {
+        return this.system.userManager.users
+            .find(u => u.email === this.transferInfo.toAccount)
+            ?.fullName;
     }
 
     private setupDefaults(): void {
@@ -279,11 +293,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (this.ownershipTransferEnabled && !environment.isLocal) {
                     this.cloudApiService.getTransfers()
                         .subscribe((res: SystemTransferInfo[]) => {
-                            this.transfers = res.filter(transfer =>
+                            this.transferInfo = res.find(transfer =>
                                 transfer.systemId === this.system.id
-                            );
-                            this.systemTransferInProcess = this.transfers.some(info =>
-                                info.toAccount === system.userManager.currentUserEmail
                             );
                         });
                 }
@@ -350,7 +361,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     transferOwnership(): void {
-        this.dialogs.transferOwnership(this.system, this.transfers);
+        this.dialogs.transferOwnership(this.system).then(info => {
+            if (info) {
+                this.transferInfo = info;
+            }
+        });
     }
 
     connectLocalToCloud() {
@@ -566,7 +581,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     acceptOwnershipTransfer(): void {
         this.cloudApiService.respondToTransfer(this.system.id, 'accepted')
             .subscribe((_res: CloudResponse) => {
-                this.systemTransferInProcess = false;
+                this.transferInfo = undefined;
                 this.window.location.reload();
             });
     }
@@ -574,14 +589,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     rejectOwnershipTransfer(): void {
         this.cloudApiService.respondToTransfer(this.system.id, 'rejected')
             .subscribe((_res: CloudResponse) => {
-                this.systemTransferInProcess = false;
+                this.transferInfo = undefined;
             });
     }
 
     cancelOwnershipTransfer(): void {
         this.cloudApiService.cancelTransfer(this.system.id)
             .subscribe((_res: CloudResponse) => {
-                this.transfers = [];
+                this.transferInfo = undefined;
             });
     }
 }

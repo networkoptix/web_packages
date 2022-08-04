@@ -621,14 +621,10 @@ export class NxDialogsService extends DialogBase {
             .afterClosed();
     }
 
-    public async transferOwnership(
-        system: NxSystem,
-        transfers: SystemTransferInfo[],
-    ): Promise<void> {
+    public async transferOwnership(system: NxSystem): Promise<void | SystemTransferInfo> {
         const config: Partial<DialogConfig> = {
             data: {
                 system,
-                transfers,
             }
         };
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);

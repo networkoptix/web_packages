@@ -17,7 +17,7 @@
             class="close"
             data-dismiss="modal"
             aria-label="Close"
-            (click)="close()"
+            (click)="close(transferInfo)"
         >
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
@@ -43,12 +43,6 @@
                     class="col-12 ml-n2 d-flex"
                     *ngIf="transferOwnershipForm.errors"
                 >
-                    <span
-                        *ngIf="transferOwnershipForm.errors.duplicateTransfer"
-                        class="input-error"
-                        translate
-                        >Transfer to this user is already in process</span
-                    >
                     <span
                         *ngIf="transferOwnershipForm.errors.userDisabled"
                         class="input-info subtext"
@@ -111,7 +105,7 @@
     <div class="modal-footer">
         <button
             class="btn btn-primary min-w-100 mt-4 mb-4"
-            (click)="close()"
+            (click)="close(transferInfo)"
             translate
         >
             OK
