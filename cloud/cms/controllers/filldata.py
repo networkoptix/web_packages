@@ -706,18 +706,17 @@ def calculate_custom_client_data(custom_client: CustomClient) -> Tuple[Dict, Lis
 
     if custom_client.created_customization.name == settings.META_CUSTOMIZATION:
         portal_url = client_values.get('portalUrl', '')
-        if not portal_url:
-            errors.append({'message': f'Missing required field portalUrl'})
-        cloud_host_vms_asset = host_to_vms_asset(portal_url)
-        if not cloud_host_vms_asset:
-            errors.append({'message': f'Invalid portalUrl'})
-        else:
-            for host_field in cloud_host_fields:
-                if host_field not in custom_data:
-                    ds: Union[DataStructure, None] = DataStructure.objects.filter(
-                        context__asset_type=custom_client.base_vms.asset_type, name=host_field).first()
-                    if ds:
-                        custom_data[host_field] = ds.find_actual_value(
-                            cloud_host_vms_asset)
+        if portal_url:
+            cloud_host_vms_asset = host_to_vms_asset(portal_url)
+            if not cloud_host_vms_asset:
+                errors.append({'message': f'Invalid portalUrl'})
+            else:
+                for host_field in cloud_host_fields:
+                    if host_field not in custom_data:
+                        ds: Union[DataStructure, None] = DataStructure.objects.filter(
+                            context__asset_type=custom_client.base_vms.asset_type, name=host_field).first()
+                        if ds:
+                            custom_data[host_field] = ds.find_actual_value(
+                                cloud_host_vms_asset)
 
     return custom_data, errors

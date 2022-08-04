@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "Neue Version von %CLOUD_NAME% ist verfügbar",
-            "installButton": "Jetzt installieren"
+            "installButton": "Aktualisieren zum Update"
         },
         "systemOffline": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
         "systemsMerging": "Dieses System ist derzeit an einem Zusammenführungsvorgang beteiligt."

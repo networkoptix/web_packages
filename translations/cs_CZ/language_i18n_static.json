@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "New version of %CLOUD_NAME% is available",
-            "installButton": "Install Now"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "Systém je offline. Některá nastavení nemusí být k dispozici.",
         "systemsMerging": "Tento systém se v současné době slučuje."

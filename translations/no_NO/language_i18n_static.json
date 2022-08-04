@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "Ny versjon av %CLOUD_NAME% er tilgjengelig",
-            "installButton": "Installer nå"
+            "installButton": "Refresh to Update"
         },
         "systemOffline": "Systemet er frakoblet. Noen innstillinger er kanskje ikke tilgjengelige.",
         "systemsMerging": "Dette systemet er for tiden involvert i en sammenslåingsoperasjon."

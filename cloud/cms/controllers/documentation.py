@@ -329,7 +329,7 @@ def generate_doc_json(docs, language, draft=False, review=False, trust_cache=Fal
             doc_dict['version'] = version
             doc_dict['blocks'] = split_blocks(
                 inline_styles(doc_dict['blocks'], css))
-            doc_dict['id'] = doc.id
+            doc_dict['id'] = doc_id
 
             if review and pending_review:
                 doc_dict['reviewId'] = pending_review.id

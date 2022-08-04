@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "Ny version av %CLOUD_NAME% är tillgänglig",
-            "installButton": "Installera nu"
+            "installButton": "Läs om för att uppdatera"
         },
         "systemOffline": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
         "systemsMerging": "Detta system är för närvarande involverat i en sammanslagningsoperation."
