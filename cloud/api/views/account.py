@@ -217,7 +217,8 @@ def login_with_code(request):
     try:
         user = models.Account.objects.get(email=validate_token['username'])
         if user.customization != customization:
-            user.update(customization=customization)
+            user.customization = customization
+            user.save()
     except models.Account.DoesNotExist:
         first_name, last_name = account_info.get('fullname').split(' ')
         user = create_user(
