@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core import validators, exceptions
 from rest_framework import serializers, fields
 
-from cms.models import AssetType, CustomClient, Customization
+from cms.models import AssetType, CustomClient, Customization, get_vms_asset
 
 
 class EmailOrUrlValidator:
@@ -123,6 +123,8 @@ class CustomClientSerializer(serializers.ModelSerializer):
             self.fields['base_vms'].read_only = True
         else:
             self.fields['base_vms'].queryset = self.context['request'].user.custom_client_vms_assets
+            self.fields['base_vms'].required = False
+            self.fields['base_vms'].default = get_vms_asset()
 
 
 class FieldeManifestSerialzier(serializers.Serializer):

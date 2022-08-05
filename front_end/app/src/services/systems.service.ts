@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
-import { of, ReplaySubject, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';

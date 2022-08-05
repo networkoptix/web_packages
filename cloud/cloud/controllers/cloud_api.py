@@ -530,6 +530,12 @@ class Account(object):
         return password_ha1, password_ha1_sha256
 
     @staticmethod
+    @validate_response
+    @lower_case_email
+    def check_account(email):
+        return get_wrapper(f"{CLOUD_DB_URL}/account/{email}/status")
+
+    @staticmethod
     @lower_case_email
     def register(email, password, first_name, last_name, ip=None, code=None):
         logger.debug('cloud_api.Account.register: ' + email)

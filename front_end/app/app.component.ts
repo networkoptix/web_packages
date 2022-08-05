@@ -335,7 +335,7 @@ export class AppComponent {
             if (this.CONFIG.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
                 try {
                     FullStory.init({ orgId: this.CONFIG.cloudMonitoring.fullStory });
-                    // eslint-disable-next-line dot-notation
+                    // eslint-disable-next-line dot-notation,@typescript-eslint/dot-notation
                     this.window['_fs_ready'] = () => {
                         this.CONFIG.cloudMonitoring.isFullStoryActive = true;
                         console.info('FS: Please attach session url below to tickets');
