@@ -60,6 +60,7 @@ class TestTransferViews:
         assert view(request, system_id).status_code == 400
         assert not mock_act_on.called
 
+        mocker.patch('cloud.controllers.cloud_api.System.get')
         mocker.patch(self.ownership_email_response_mock + 'send_ownership_transfer_response_email')
 
         request = arf.put(f'/transfer/{system_id}', {'action': action})

@@ -40,8 +40,7 @@ def send_ownership_transfer_email(request, system_id, new_owner_email):
     )
 
 
-def send_ownership_transfer_response_email(request, system_id, status):
-    system_info = System.get(request, system_id).get('systems', [])[0]
+def send_ownership_transfer_response_email(request, system_info, status):
     message = {
         "status": status,
         "system_name": system_info.get('name'),
@@ -106,10 +105,12 @@ class TransferSystemActions(APIView):
     def put(self, request, system_id):
         serializer = self.get_serializer()(data=request.data)
         serializer.is_valid(raise_exception=True)
+        # Get the info so that we can email the previous owner after the transfer.
+        system_info = System.get(request, system_id).get('systems', [])[0]
         res_serializer = CloudResponseSerializer(
             data=OwnershipTransfer.act_on(request, system_id, offered_status=serializer.data["action"]))
         res_serializer.is_valid()
-        send_ownership_transfer_response_email(request, system_id, serializer.data["action"])
+        send_ownership_transfer_response_email(request, system_info, serializer.data["action"])
         return api_success(res_serializer.data)
 
     @method_decorator(swagger_auto_schema(
