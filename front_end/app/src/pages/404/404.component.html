@@ -6,6 +6,7 @@
     *ngIf="!redirecting; else preloader"
     type="404"
     withFooter
+    [placeholderTitle]="message"
 >
     <button class="btn btn-primary main-button mx-auto">
         <a

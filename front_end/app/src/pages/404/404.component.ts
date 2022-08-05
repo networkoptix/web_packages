@@ -22,6 +22,7 @@ export class Nx404Component {
     CONFIG: IConfig;
     environment = environment;
     redirecting = true;
+    message = '';
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -40,6 +41,7 @@ export class Nx404Component {
         if (this.environment.isLocal && !this.route.snapshot.queryParams.redirected) {
             this.handleRedirect(this.location.path(true));
         } else {
+            this.message = this.route.snapshot.queryParams.message || '';
             this.redirecting = false;
             pageService.pageTitle = this.LANG.pageTitles.pageNotFound?.();
         }

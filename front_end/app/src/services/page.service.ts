@@ -172,10 +172,17 @@ export class NxPageService {
         this.updateLookups('viewport', this.CONFIG.meta.viewport.desktopLayout);
     }
 
-    public show404 = (): void => {
+    public show404 = (message = ''): void => {
+        const queryParams: Record<string, string> = {};
+
+        if (message) {
+            queryParams.message = message;
+        }
+
         this.router
             .navigate([this.CONFIG.redirect.page404], {
-                replaceUrl: true
+                replaceUrl: true,
+                queryParams
             })
             .catch(error => {
                 console.error(error);

@@ -105,6 +105,12 @@ export class NxContentComponent implements OnInit {
             this.body = '';
             this.loaded = false;
             this.showAgree = false;
+            this.articleParam = paramMap.get('article_param');
+            if (this.articleParam === 'temp_url' && this.state === 'draft') {
+                // Internal no need to translate
+                return this.pageService.show404('No saved content to preview. Please save draft or submit for review to view preview.');
+            }
+
             if (this.agreement) {
                 this.getContent();
             } else {

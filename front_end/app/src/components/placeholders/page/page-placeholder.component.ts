@@ -147,7 +147,7 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.iconName = 'NoAccess';
                     break;
                 case '404' :
-                    this.placeholderTitle = this.LANG.pageTitles.pageNotFound();
+                    this.placeholderTitle ||= this.LANG.pageTitles.pageNotFound();
                     this.message = '';
                     this.iconName = '404';
                     break;
