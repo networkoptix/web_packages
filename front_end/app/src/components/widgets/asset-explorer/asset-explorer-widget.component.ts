@@ -22,7 +22,9 @@ interface AssetTypeInterface {
     templateUrl: './asset-explorer-widget.component.html',
     styleUrls: ['./asset-explorer-widget.component.scss']
 })
-export class NxAssetExplorerWidgetComponent extends FirstPartyWidget {
+export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
+    typeof NxAssetExplorerWidgetComponent.BASE_CONFIG
+> {
     static IDENTIFIER = 'asset-explorer';
     static NAME = 'Asset Explorer';
     static SIZES = [

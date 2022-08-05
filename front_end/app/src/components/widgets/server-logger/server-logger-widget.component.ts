@@ -23,7 +23,9 @@ interface SystemDropdownItem extends DropdownItem<string> {
     templateUrl: './server-logger-widget.component.html',
     styleUrls: ['./server-logger-widget.component.scss']
 })
-export class NxServerLoggerWidgetComponent extends FirstPartyWidget {
+export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
+    typeof NxServerLoggerWidgetComponent.BASE_CONFIG
+> {
     CONFIG: IConfig;
     static IDENTIFIER = 'server-logger';
     static NAME = 'Server Logger';

@@ -32,7 +32,9 @@ interface CameraDropdownItem extends DropdownItem<string> {
     templateUrl: './live-view-widget.component.html',
     styleUrls: ['./live-view-widget.component.scss']
 })
-export class NxLiveViewWidgetComponent extends FirstPartyWidget {
+export class NxLiveViewWidgetComponent extends FirstPartyWidget<
+    typeof NxLiveViewWidgetComponent.BASE_CONFIG
+> {
     CONFIG: IConfig;
 
     static IDENTIFIER = 'live-view';

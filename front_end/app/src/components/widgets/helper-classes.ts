@@ -17,18 +17,20 @@ abstract class BaseFirstPartyWidget {
     static NAME: string;
     static SIZES: WidgetSize[];
     static SELECTED_SIZE: number;
-    static BASE_CONFIG: Record<any, any>;
+    static BASE_CONFIG: Record<string, unknown>;
 }
 
 /**
  * This is the interface used from rendering the widgets and also for saving to json or cloud
  */
-export interface WidgetCard {
+export interface WidgetCard<
+    BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>
+> {
     identifier: typeof BaseFirstPartyWidget.IDENTIFIER,
     title: typeof BaseFirstPartyWidget.NAME,
     sizes: typeof BaseFirstPartyWidget.SIZES,
     size: WidgetSize,
-    config: typeof BaseFirstPartyWidget.BASE_CONFIG,
+    config: BC & { devSource?: string; devEditSource?: string },
     editMode?: boolean
 }
 
@@ -39,8 +41,10 @@ export interface WidgetCard {
  *
  * Example NxHealthMonitorWidgetComponent.registerWidget()
  */
-export class FirstPartyWidget extends BaseFirstPartyWidget {
-    card: WidgetCard;
+export class FirstPartyWidget<
+    BC extends typeof BaseFirstPartyWidget.BASE_CONFIG = Record<string, unknown>
+> extends BaseFirstPartyWidget {
+    card: WidgetCard<BC>;
     saveSettings: (editMode?: boolean) => Promise<void>;
     showAction: (action?) => any;
     #staticProperties: typeof FirstPartyWidget;

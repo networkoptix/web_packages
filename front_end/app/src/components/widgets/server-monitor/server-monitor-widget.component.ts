@@ -23,7 +23,9 @@ interface SystemDropdownItem extends DropdownItem<string> {
     templateUrl: './server-monitor-widget.component.html',
     styleUrls: ['./server-monitor-widget.component.scss']
 })
-export class NxServerMonitorWidgetComponent extends FirstPartyWidget {
+export class NxServerMonitorWidgetComponent extends FirstPartyWidget<
+    typeof NxServerMonitorWidgetComponent.BASE_CONFIG
+> {
     CONFIG: IConfig;
     static IDENTIFIER = 'server-monitor';
     static NAME = 'Server Monitor';

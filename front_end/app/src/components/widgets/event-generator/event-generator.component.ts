@@ -28,7 +28,9 @@ interface SystemDropdownItem extends DropdownItem<string> {
     templateUrl: './event-generator.component.html',
     styleUrls: ['./event-generator.component.scss']
 })
-export class NxEventGeneratorWidgetComponent extends FirstPartyWidget implements OnInit {
+export class NxEventGeneratorWidgetComponent extends FirstPartyWidget<
+    typeof NxEventGeneratorWidgetComponent.BASE_CONFIG
+> implements OnInit {
     CONFIG: IConfig;
     createEvent: Process;
     errorParams: boolean;

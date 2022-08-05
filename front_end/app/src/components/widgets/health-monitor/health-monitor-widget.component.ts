@@ -54,7 +54,9 @@ const summarizeByLevel = (
     templateUrl: './health-monitor-widget.component.html',
     styleUrls: ['./health-monitor-widget.component.scss']
 })
-export class NxHealthMonitorWidgetComponent extends FirstPartyWidget {
+export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
+    typeof NxHealthMonitorWidgetComponent.BASE_CONFIG
+> {
     CONFIG: IConfig;
     static IDENTIFIER = 'health-monitor';
     static NAME = 'Health Monitor';

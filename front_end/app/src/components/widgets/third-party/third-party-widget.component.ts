@@ -16,7 +16,9 @@ import { FirstPartyWidget } from '../helper-classes';
     templateUrl: './third-party-widget.component.html',
     styleUrls: ['./third-party-widget.component.scss']
 })
-export class NxThirdPartyWidgetComponent extends FirstPartyWidget {
+export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
+    typeof NxThirdPartyWidgetComponent.BASE_CONFIG
+> {
     CONFIG: IConfig;
     static IDENTIFIER = 'third-party';
     static NAME = 'Third Party';

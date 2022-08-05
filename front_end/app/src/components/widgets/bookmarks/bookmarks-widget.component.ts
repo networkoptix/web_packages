@@ -41,7 +41,9 @@ interface SystemDropdownItem extends DropdownItem<string> {
     templateUrl: './bookmarks-widget.component.html',
     styleUrls: ['./bookmarks-widget.component.scss']
 })
-export class NxBookmarksWidgetComponent extends FirstPartyWidget {
+export class NxBookmarksWidgetComponent extends FirstPartyWidget<
+    typeof NxBookmarksWidgetComponent.BASE_CONFIG
+> {
     CONFIG: IConfig;
     static IDENTIFIER = 'bookmarks';
     static NAME = 'Bookmarks';

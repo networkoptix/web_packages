@@ -42,7 +42,9 @@ class DashboardGroup {
         public activeId?: string,
         public dragEnabled = true
     ) {
-        const systemsWidget = FirstPartyWidget.getConfig(NxSystemsListWidgetComponent);
+        const systemsWidget = FirstPartyWidget.getConfig(
+            NxSystemsListWidgetComponent as typeof FirstPartyWidget
+        );
         systemsWidget.size = systemsWidget.sizes[2];
         if (!this.menu || !this.menu.length) {
             this.menu = [new DashboardConfiguration('Systems', [systemsWidget])];
@@ -294,7 +296,9 @@ export class NxDashboardComponent implements DashboardGroup {
 
     private updateCards(activeId: string, menu: DashboardConfiguration[] = this.menu): void {
         // Default to show systems widget if not configured
-        const systemsWidget = FirstPartyWidget.getConfig(NxSystemsListWidgetComponent);
+        const systemsWidget = FirstPartyWidget.getConfig(
+            NxSystemsListWidgetComponent as typeof FirstPartyWidget
+        );
         systemsWidget.size = systemsWidget.sizes[2];
         this.activeDashboard = menu.find(({ id }) => id === activeId) || menu.find(({ cards }) => cards.length);
         const hasCards = this.menu.length || !!this.activeDashboard?.cards?.length;

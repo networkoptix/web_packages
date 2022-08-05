@@ -11,7 +11,9 @@ import { FirstPartyWidget } from '../helper-classes';
     templateUrl: './systems-list-widget.component.html',
     styleUrls: ['./systems-list-widget.component.scss']
 })
-export class NxSystemsListWidgetComponent extends FirstPartyWidget {
+export class NxSystemsListWidgetComponent extends FirstPartyWidget<
+    typeof NxSystemsListWidgetComponent.BASE_CONFIG
+> {
     static IDENTIFIER = 'systems-list';
     static NAME = 'Systems';
     static SIZES = [

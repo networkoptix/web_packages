@@ -94,7 +94,7 @@ export class AddWidgetModalContent {
         if (isDevServer) {
             Object.assign(this.selectedWidget.value.config, { editMode: false, devSource, devEditSource });
         } else {
-            this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise();
+            this.selectedWidget.value.config = await delayInitial(this.http.get(widgetUrl)).toPromise() as Record<string, unknown>;
         }
         this.downloadingThirdParty = false;
     };
