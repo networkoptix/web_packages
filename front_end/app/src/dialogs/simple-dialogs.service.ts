@@ -82,7 +82,7 @@ export class NxSimpleDialogsService extends DialogBase {
 
         const dialogConfig: DialogConfig = Object.assign({}, defaultConfig, config);
 
-        return this.open(GenericModalContent, dialogConfig);
+        return this.open(GenericModalContent, dialogConfig).afterClosed();
     }
 
     public expiredSession() {
