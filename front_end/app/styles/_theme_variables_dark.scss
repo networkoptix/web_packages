@@ -472,9 +472,9 @@ html[data-theme="dark"] {
     --card-simple-error-color        : #E1E7EA; //$light4;
     --card-simple-error-svg-color    : #E1E7EA; //$light4;
 
-    --card-simple-default-bg           : #C22626; //$red_main;
+    --card-simple-default-bg           : var(--red_d3);
+    --card-simple-default-border-color : var(--red_d3);
     --card-simple-default-color        : #E1E7EA; //$light4;
-    --card-simple-default-border-color : #AA1E1E; //$red_d1;
 
     --card-support-bg : #1C2327; //$dark6;
     --card-support-color : #A5B7C0; //$light10;
