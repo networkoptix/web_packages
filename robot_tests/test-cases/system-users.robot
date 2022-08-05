@@ -599,25 +599,27 @@ Force Tags        system    Threaded
     ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
     Sleep    5
     Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
-    ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
-    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
-    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
-    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
-    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ${activation link}    Get Links From Email    ${email}
-    @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/authorize/activate
-    FOR    ${link}  IN  @{activation link}
-        check in list    ${expected links}    ${link}
-    END
-    ${link2}=   Get Email Link    ${random email}    activate_account
-    Delete Email    ${email}
-    Close Mailbox
-    Go To    ${link2}
+##  Commented out steps below are to check email that is no longer being sent out. Leaving it commented out in order to have an easy way to revert if this behavior changes again.
+#    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+#    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+#    ${email text}    Get Email Body    ${email}
+#    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
+#    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
+#    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
+#    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
+#    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
+#    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+#    ${activation link}    Get Links From Email    ${email}
+#    @{expected links}    Set Variable    mailto:${server 1['owner']}    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/authorize/activate
+#    FOR    ${link}  IN  @{activation link}
+#        check in list    ${expected links}    ${link}
+#    END
+#    ${link2}=   Get Email Link    ${random email}    activate_account
+#    Delete Email    ${email}
+#    Close Mailbox
+#    Go To    ${link2}
     Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
+#    Log In   ${random email}   ${BASE PASSWORD}
     Go To    ${ENV}/systems/${server 1['cloud id']}
     Go To Users List
     Wait Until Element Is Visible     //nx-menu//span[contains(text(),"${random email}")]

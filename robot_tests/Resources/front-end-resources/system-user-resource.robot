@@ -581,10 +581,13 @@ Share System With New User And Grab Email Link
     Append To List    ${TMP USERS}    ${random email}
     Go To Users List    
     Share To    ${random email}    ${ADMIN TEXT}
-    Sleep    10      
+    Sleep    10
+    Log Out
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True    
     ${email} =    Wait For Email    recipient=${random email}    timeout=120
     ${invite link}=   Get Nx Links From Email    ${email}    system_invite     
-    Set Test Variable     ${invite link}    ${invite link}    
+    Set Test Variable     ${random email}    ${random email}
+    Set Test Variable     ${invite link}    ${invite link}
     Delete Email    ${email}   
     Close Mailbox
+    
