@@ -972,7 +972,8 @@
             "smb": "Red (smb), añadida a través de VMS",
             "cloud": "Nube"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "activado",

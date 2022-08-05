@@ -972,7 +972,8 @@
             "smb": "網絡（smb），已透過VMS新增",
             "cloud": "雲端"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName }</strong>欲將此系統的擁有權轉讓給您"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "啟用",

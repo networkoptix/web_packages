@@ -972,7 +972,8 @@
             "smb": "Netzwerk (smb), über VMS hinzugefügt",
             "cloud": "Cloud"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> möchte den Besitz an diesem System auf Sie übertragen"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "aktiviert",

@@ -502,7 +502,6 @@
     "Too many attempts. Try again in a minute.": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
     "Tracks and logs all user actions.": "すべてのユーザーアクションを追跡して記録します。",
     "Transfer Ownership": "オーナー権限を譲渡",
-    "Transfer to this user is already in process": "このユーザーへの移行は既に進行中です",
     "Transport": "通信形式",
     "Try Again": "再試行",
     "Two-factor authentication": "二要素認証",

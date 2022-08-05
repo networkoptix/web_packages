@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "Ny version af %CLOUD_NAME% er tilgængelig",
-            "installButton": "Installér nu"
+            "installButton": "Opdater for at opdatere"
         },
         "systemOffline": "Systemet er offline. Nogle indstillinger er muligvis ikke tilgængelige.",
         "systemsMerging": "This system is currently involved in a merge operation."
@@ -972,7 +972,8 @@
             "smb": "Network (smb), added through VMS",
             "cloud": "Cloud"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> ønsker at overføre ejerskabet af dette system til dig"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "activated",

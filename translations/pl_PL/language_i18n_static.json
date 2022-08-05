@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "Dostępna jest nowa wersja %CLOUD_NAME%",
-            "installButton": "Refresh to Update"
+            "installButton": "Odśwież, aby zaktualizować"
         },
         "systemOffline": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "systemsMerging": "Ten system jest obecnie zaangażowany w operację złączania."
@@ -972,7 +972,8 @@
             "smb": "Sieć (smb), dodana przez VMS",
             "cloud": "Chmura"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> chce przenieść własność tego systemu na Ciebie"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "aktywny",

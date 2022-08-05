@@ -972,7 +972,8 @@
             "smb": "Mạng (smb), được thêm vào thông qua VMS",
             "cloud": "Đám mây"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName }</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "đã kích hoạt",
