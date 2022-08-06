@@ -28,7 +28,7 @@
                     }}"
                 >
                     <ng-container>{{
-                        LANG.systemStatuses[system['stateOfHealth']]() || system['stateOfHealth']
+                        LANG.systemStatuses?.[system['stateOfHealth']]?.() || system['stateOfHealth']
                     }}</ng-container>
                 </nx-tag>
                 <nx-client-button

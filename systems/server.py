@@ -707,16 +707,16 @@ async def receiving(cloud_connector):
 async def ws():
     if code := websocket.args.get('code'):
         try:
-            with PrintDebug(app.logger.debug) as logger:
+            with PrintDebug(app.logger.debug) as p:
                 cloud_connector = CloudConnector()
-                logger('logging in')
+                p.log('logging in')
                 await cloud_connector.login(code)
-                logger('code exchanged for tokens')
+                p.log('code exchanged for tokens')
                 await cloud_connector.get_account_info()
-                logger('user info fetched')
+                p.log('user info fetched')
                 if not cloud_connector.account or not cloud_connector.account.get('is_authenticated', False):
                     return await websocket.close(401, 'Not Authenticated')
-                logger('starting handler')
+                p.log('starting handler')
             return await asyncio.create_task(receiving(cloud_connector))
         except requests.exceptions.HTTPError as e:
             app.logger.error(e)

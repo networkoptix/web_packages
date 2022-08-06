@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable /*, Inject */ } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-// import { of } from 'rxjs';
-import { map, delay, retryWhen, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
-// import { WINDOW } from '@services/window-provider';
+import { WINDOW } from '@services/window-provider';
 
 import * as GroupActions from '../store/groups/groups.actions';
 import { ListItem, SystemsItem } from '../store/groups/groups.types';
@@ -28,10 +27,9 @@ export class NxSystemGroupsService {
     constructor(
         private store: Store,
         private http: HttpClient,
-        // @Inject(WINDOW) private window: Window,
+        @Inject(WINDOW) private window: Window,
     ) {
-        // this.WEBSOCKET_URL = `wss://${this.window.location.host}/ws`;
-        this.WEBSOCKET_URL = 'ws://127.0.0.1:5000/ws';
+        this.WEBSOCKET_URL = `wss://${this.window.location.host}/system_groups/ws`;
     }
 
     static connection$: WebSocketSubject<ISocketOutgoingMessage>;
@@ -39,22 +37,22 @@ export class NxSystemGroupsService {
     connect(): void {
         this.http.post<{ code: string }>('/api/systems/*/code', null)
             .pipe(
-                map(response =>
-                    this.WEBSOCKET_URL + `?code=${response.code}`
-                )
-            ).pipe(
+                map(response => this.WEBSOCKET_URL + `?code=${response.code}`),
                 switchMap(url => {
                     if (!NxSystemGroupsService.connection$) {
                         NxSystemGroupsService.connection$ = webSocket(url);
                         this.act('systems');
                     }
                     return NxSystemGroupsService.connection$;
-                }),
-                retryWhen(errors => errors.pipe(delay(10 * 1000)))
+                })
             )
             .subscribe({
                 next: this._onSocketMessage.bind(this),
-                error: console.error,
+                error: () => {
+                    NxSystemGroupsService.connection$.unsubscribe();
+                    NxSystemGroupsService.connection$ = undefined;
+                    setTimeout(() => this.connect(), 10000);
+                },
                 complete: () => console.log('websocket connection closed')
             });
     }

@@ -18,6 +18,10 @@ const rewritePaths = {
     '/api/notifications': '/api'
 };
 
+const websocketRewrite = {
+    '^/system_groups': ''
+};
+
 const PROXY_CONFIG = [
     {
         context: [
@@ -51,7 +55,8 @@ const PROXY_CONFIG = [
         changeOrigin: true,
         secure: false,
         pathRewrite: rewriteLegacy ? rewritePaths : {}
-    }, {
+    },
+    {
         context: [
             '/static/lang_en_US',
             '/static'
@@ -66,16 +71,16 @@ const PROXY_CONFIG = [
             return req.url.replace('/static', '');
         }
     },
-    // {
-    //     context: [
-    //         '/ws',
-    //         '/system-groups',
-    //     ],
-    //     target: 'http://127.0.0.1:5000',
-    //     changeOrigin: true,
-    //     secure: false,
-    //     ws: true
-    // }
+    {
+        context: [
+            '/system_groups',
+        ],
+        target: proxyTargetConfig[target],
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+        pathRewrite: target === 'local' ? websocketRewrite : {}
+    }
 ];
 
 module.exports = PROXY_CONFIG;
