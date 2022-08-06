@@ -972,8 +972,8 @@
             "smb": "Nätverk (smb), läggs till via VMS",
             "cloud": "Moln"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> vill överföra äganderätten till detta system till dig",
+        "transferTo": "Överför äganderätten till – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
     "systemStatuses": {
         "activated": "aktiverad",

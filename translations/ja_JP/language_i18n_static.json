@@ -972,8 +972,8 @@
             "smb": "ネットワーク (smb, VMS経由で追加)",
             "cloud": "クラウド"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> がこのシステムの所有権をあなたに譲渡しようとしています",
+        "transferTo": "<strong>{ newOwnerName } ({ newOwnerEmail })</strong> に所有権を譲渡"
     },
     "systemStatuses": {
         "activated": "有効化済み",

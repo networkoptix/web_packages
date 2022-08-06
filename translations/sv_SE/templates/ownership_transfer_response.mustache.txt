@@ -1,1 +1,1 @@
-{{ message.user_full_name }} ({{ message.user_email }}) har {{ message.status }} din begäran om att överföra äganderätten för {{ message.system_name }}
+{{ message.user_full_name }} ({{ message.user_email }}) has {{ message.status }} your request to transfer ownership of {{ message.system_name }}
