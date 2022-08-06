@@ -12,7 +12,7 @@ from logging.config import dictConfig
 from quart import Quart, current_app, websocket
 from flask_sqlalchemy import SQLAlchemy
 
-CLOUD_HOST = os.getenv('CLOUD_HOST') or 'localhost:8000' or 'cloud-test.hdw.mx'  # or 'localhost:8001'
+CLOUD_HOST = os.getenv('CLOUD_HOST') or 'cloud-test.hdw.mx'  # or 'localhost:8001'
 RELAY = os.getenv('CLOUD_RELAY') or 'https://{systemId}.relay.vmsproxy.hdw.mx'
 
 dictConfig({
@@ -510,7 +510,7 @@ class CloudConnector:
     def _get_wrapper(self, route, params=None, _websocket=None):
         res = None
         try:
-            res = self.session.get(f'http://{CLOUD_HOST}{route}', params=params)
+            res = self.session.get(f'https://{CLOUD_HOST}{route}', params=params)
             res.raise_for_status()
             if res and res.status_code == 401:
                 websocket.close(res.status_code, 'Failed auth')
@@ -525,7 +525,7 @@ class CloudConnector:
     def _post_wrapper(self, route, data=None, _websocket=None):
         res = None
         try:
-            res = self.session.post(f'http://{CLOUD_HOST}{route}', json=data)  # , verify=False)
+            res = self.session.post(f'https://{CLOUD_HOST}{route}', json=data)  # , verify=False)
             res.raise_for_status()
             return res.json()
         except requests.exceptions.HTTPError as e:
@@ -707,18 +707,19 @@ async def receiving(cloud_connector):
 async def ws():
     if code := websocket.args.get('code'):
         try:
-            cloud_connector = CloudConnector()
-            app.logger.debug('logging in')
-            await cloud_connector.login(code)
-            app.logger.debug('code exchanged for tokens')
-            await cloud_connector.get_account_info()
-            app.logger.debug('user info fetched')
-            if not cloud_connector.account or not cloud_connector.account.get('is_authenticated', False):
-                return await websocket.close(401, 'Not Authenticated')
-            app.logger.debug('starting handler')
+            with PrintDebug(app.logger.debug) as logger:
+                cloud_connector = CloudConnector()
+                logger('logging in')
+                await cloud_connector.login(code)
+                logger('code exchanged for tokens')
+                await cloud_connector.get_account_info()
+                logger('user info fetched')
+                if not cloud_connector.account or not cloud_connector.account.get('is_authenticated', False):
+                    return await websocket.close(401, 'Not Authenticated')
+                logger('starting handler')
             return await asyncio.create_task(receiving(cloud_connector))
         except requests.exceptions.HTTPError as e:
-            print(e)
+            app.logger.error(e)
             return await websocket.close(500, 'Something went wrong')
     return await websocket.close(400, 'Missing code')
 

@@ -119,6 +119,7 @@
         }
 
         let systems = {};
+        // ws = new WebSocket(`wss://cloud-test.hdw.mx/sys?tem_groups/ws?code=${window.code}`);
         ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
         ws.onmessage = function (event) {
             let { action, data } = JSON.parse(event.data);
