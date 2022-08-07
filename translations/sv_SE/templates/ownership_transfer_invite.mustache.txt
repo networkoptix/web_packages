@@ -2,6 +2,6 @@ Hej, {{message.user_full_name}}
 
 {{message.current_owner_full_name}} ({{message.current_owner_email}}) inbjuder dig att bli systemägare för {{message.system_name}}.
 
-Log in and process the request on the System Settings page
+Logga in och behandla begäran på sidan Systeminställningar
 
 {{config.portal_url}}/system/{{message.system_id}}

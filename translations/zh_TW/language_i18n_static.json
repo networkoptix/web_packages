@@ -856,7 +856,7 @@
         },
         "newVersionAvailable": {
             "notification": "有新版本的 %CLOUD_NAME% 可以安裝",
-            "installButton": "Refresh to Update"
+            "installButton": "重新載入以更新"
         },
         "systemOffline": "系統離線。某些設定可能無法使用。",
         "systemsMerging": "此系統正在合併中。"
