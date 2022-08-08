@@ -286,22 +286,22 @@ export class AppComponent {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
         }
-        if (false && !environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver) {
-            if (this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
-                try {
-                    LogRocket.init(this.CONFIG.cloudMonitoring.logRocket, {
-                        release: '22.1'
-                    });
-                    this.CONFIG.cloudMonitoring.isLogRocketActive = true;
-                    LogRocket.getSessionURL(sessionURL => {
-                        console.info('LR: Please attach session url below to tickets');
-                        console.info(`LR - Debug session url: ${sessionURL}`);
-                    });
-                } catch (e) {
-                    console.error('LogRocket failed to init');
-                    console.error(e);
-                }
-            }
+        if (!environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver) {
+            // if (this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
+            //     try {
+            //         LogRocket.init(this.CONFIG.cloudMonitoring.logRocket, {
+            //             release: '22.1'
+            //         });
+            //         this.CONFIG.cloudMonitoring.isLogRocketActive = true;
+            //         LogRocket.getSessionURL(sessionURL => {
+            //             console.info('LR: Please attach session url below to tickets');
+            //             console.info(`LR - Debug session url: ${sessionURL}`);
+            //         });
+            //     } catch (e) {
+            //         console.error('LogRocket failed to init');
+            //         console.error(e);
+            //     }
+            // }
             if (this.CONFIG.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
                 try {
                     FullStory.init({ orgId: this.CONFIG.cloudMonitoring.fullStory });

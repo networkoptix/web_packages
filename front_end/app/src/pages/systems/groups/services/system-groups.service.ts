@@ -49,7 +49,7 @@ export class NxSystemGroupsService {
             .subscribe({
                 next: this._onSocketMessage.bind(this),
                 error: () => {
-                    NxSystemGroupsService.connection$.unsubscribe();
+                    NxSystemGroupsService.connection$.complete();
                     NxSystemGroupsService.connection$ = undefined;
                     setTimeout(() => this.connect(), 10000);
                 },

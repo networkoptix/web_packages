@@ -41,6 +41,11 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     protected selectionSubscription: Subscription;
     protected selectionStatus: TimelineSelectionServiceStatus;
 
+    public hideLeftEar: boolean = false;
+    public hideRightEar: boolean = false;
+
+    private selectionMode: boolean;
+
     leftDate: string = '';
     leftTime: string = '';
     rightDate: string = '';
@@ -115,11 +120,11 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
             );
             this.selectedRangeView.nativeElement.style.left = `${left}px`;
             this.selectedRangeView.nativeElement.style.width = `${width}px`;
-            this.leftEarView.nativeElement.classList.toggle(
+            this.leftEarView?.nativeElement.classList.toggle(
                 'playback',
                 this._leftEarOverPlayback
             );
-            this.rightEarView.nativeElement.classList.toggle(
+            this.rightEarView?.nativeElement.classList.toggle(
                 'playback',
                 this._rightEarOverPlayback
             );
@@ -156,8 +161,16 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     @HostListener('mousedown', ['$event'])
-    public mouseDownHandler(e: MouseEvent): void {
+    public mouseSelectionDownHandler(e: MouseEvent): void {
+        this.selectionMode = true;
         this.selection.handleBackgroundMouseDown(e);
+    }
+
+    @HostListener('mouseup', ['$event'])
+    public mouseSelectionUpHandler(e: MouseEvent): void {
+        this.selectionMode = false;
+        this.hideLeftEar = this.selectionStatus.isActive;
+        this.hideRightEar = this.selectionStatus.isActive;
     }
 
     @HostListener('document:mouseup', ['$event'])
@@ -187,10 +200,14 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
                 e.offsetX
         });
         this.selection.handleMouseMove(e);
+        if (this.selectionMode) {
+            this.hideLeftEar = this.selection.range.duration === 0;
+            this.hideRightEar = this.selection.range.duration === 0;
+        }
     }
 
     public selectedRangeMouseDownHandler(e: MouseEvent): void {
-        this.selection.handleSelectedRangeMouseDown(e);
+        this.selection.reset();
     }
 
     public selectedRangeDoubleClickHandler(e: MouseEvent): void {
@@ -199,10 +216,12 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
 
     public leftEarMouseDownHandler(e: MouseEvent): void {
         this.selection.handleLeftEarMouseDown(e);
+        this.hideLeftEar = false;
     }
 
     public rightEarMouseDownHandler(e: MouseEvent): void {
         this.selection.handleRightEarMouseDown(e);
+        this.hideRightEar = false;
     }
 
     @HostListener('wheel', ['$event'])
