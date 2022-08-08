@@ -44,13 +44,13 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
 
     account: Account;
     account2faEnabled: boolean;
+    account2faEnabledCheck: boolean;
     totpExistsForAccount: boolean;
 
     twoFaSystems: NxSystemWithUserInfo[] = [];
     subV5Systems: NxSystemWithUserInfo[] = [];
 
     targets: PseudoAnchorTarget[] = [];
-    verificationCode: boolean;
 
     @ViewChild('twoFaSystemsSpan') twoFaSystemsSpan: ElementRef;
     @ViewChild('v5WarningSpan') v5WarningSpan: ElementRef;
@@ -84,6 +84,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
         this.account = this.accountService.account;
 
         this.account2faEnabled = this.account.account2faEnabled;
+        this.account2faEnabledCheck = this.account.account2faEnabled;
         this.totpExistsForAccount = this.account.totpExistsForAccount;
 
         this.systemsService.systemsSubject
@@ -114,19 +115,19 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     toggleVerification(value) {
-        if (value === undefined) {
+        if (value === undefined || value === this.account2faEnabled) {
             // checkbox not initialized
+            // or click happened during initialization
             return;
         }
         this.dialogs
             .toggleVerificationCode(value)
             .then(action => {
-                if (action === 'canceled') {
-                    this.verificationCode = !this.verificationCode;
-                } else {
+                if (action !== 'canceled') {
                     this.account2faEnabled = (action === 'enabled');
                     this.accountService.get(true).catch(e => {});
                 }
+                this.account2faEnabledCheck = this.account2faEnabled;
             });
     }
 

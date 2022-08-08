@@ -96,7 +96,7 @@
                     <div class="tfauth-checkbox mt-3 mb-3">
                         <nx-checkbox
                             componentId="skip-tfauth"
-                            [(ngModel)]="verificationCode"
+                            [(ngModel)]="account2faEnabledCheck"
                             (onClick)="toggleVerification($event)"
                         ></nx-checkbox>
 
@@ -110,7 +110,7 @@
 
                     <div
                         class="tfauth-v5-warning"
-                        *ngIf="subV5Systems.length && verificationCode"
+                        *ngIf="subV5Systems.length && account2faEnabled"
                     >
                         <h4
                             class="mt-0"
