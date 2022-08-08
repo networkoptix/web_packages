@@ -25,6 +25,7 @@ import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { PlaybackState, PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { TimelineExtendToNowService } from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
+import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import {
     ICamera,
@@ -111,6 +112,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         protected vms: VideoManagementSystemService,
         protected playback: PlaybackService,
         public timeline: TimelineService,
+        private selection : TimelineSelectionService,
         public timelineExtendToNow: TimelineExtendToNowService,
         protected fpsMeter: FpsMeterService,
         protected ux: WebClientUxService,
@@ -641,6 +643,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.playback.save();
         this.vms.clearCameraSelection();
         this.vms.selectCamera(this.id);
+        this.selection.reset();
         this.resetTransport();
         this.resetQuality();
 
