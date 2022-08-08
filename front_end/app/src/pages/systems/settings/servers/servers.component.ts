@@ -95,6 +95,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     this.storageTimer = undefined;
                 }
 
+                this.storagesOutdated = false;
                 this.setServer(true);
             });
 
@@ -222,9 +223,11 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
             if (!this.isServerOffline && !this.storageTimer) {
                 // remove when storages update with normal 30 second poll
-                this.storageTimer = timer(60000).subscribe(() => {
-                    this.storagesOutdated = true;
-                });
+                this.storageTimer = timer(60000)
+                    .pipe(untilDestroyed(this))
+                    .subscribe(() => {
+                        this.storagesOutdated = true;
+                    });
             }
 
             this.menuService.detail = this.selectedServer.id;
