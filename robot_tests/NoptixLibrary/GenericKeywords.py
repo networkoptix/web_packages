@@ -146,6 +146,8 @@ class GenericKeywords(object):
         if observedValue == expectedValue:
             pass
         else:
+            seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+            seleniumlib.capture_page_screenshot()
             raise AssertionError(f"Expected: {expectedValue}\nObserved: {observedValue}")
 
     @keyword

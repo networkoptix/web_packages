@@ -1,6 +1,6 @@
 *** Settings ***
-Resource          ../resource.robot
-Resource          ../Resources/front-end-resources/system-server-resource.robot
+Resource          ../../resource.robot
+Resource          system-server-resource.robot
 
 *** Keywords ***
 Merge Suite Setup
