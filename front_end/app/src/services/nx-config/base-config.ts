@@ -195,7 +195,8 @@ const FeatureFlagKeys = [
     'newHeader',
     'cloudStorage',
     'logRocket',
-    'fullStory'
+    'fullStory',
+    'layouts'
 ] as const;
 
 export type FeatureFlagType = typeof FeatureFlagKeys[number];

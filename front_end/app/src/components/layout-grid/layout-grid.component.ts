@@ -1,0 +1,588 @@
+import { ArrayDataSource } from '@angular/cdk/collections';
+import { CdkDrag, CdkDragEnter, CdkDropList } from '@angular/cdk/drag-drop';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import {
+    ChangeDetectorRef,
+    Component, EventEmitter, Input, Output
+} from '@angular/core';
+import { cloneDeep, isEqual } from 'lodash-es';
+import { BehaviorSubject, combineLatest, interval, Observable, Subject } from 'rxjs';
+import { distinctUntilChanged, filter, map, shareReplay, take, tap, switchMap, skip } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
+
+import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { IConfig } from '@services/nx-config/config-types';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystem } from '@services/system.service/system';
+import { NgChanges } from '@utils/ng-changes';
+
+import type { BaseResourceNode, LayoutRenderConfig, LayoutResourceTree, NewPosition, ParsedLayout, ParsedLayoutItem, ParsedLayoutItems, Point, Position, ResourceNode, Setting, Size } from './layout-grid.types';
+import { ResourceType } from './layout-grid.types';
+
+const SETTINGS_CONFIG: Setting[] = [
+    { label: 'Layout', type: 'heading' },
+    { name: 'name', label: 'Layout Name', type: 'string' },
+    { name: 'locked', label: 'Locked', type: 'boolean' },
+    { name: 'logicalId', label: 'Logical Identifier', type: 'number', step: 1, min: 0, max: 1 },
+    { name: 'cellAspectRatio', label: 'Cell Aspect Ratio', type: 'number', step: 'any', min: 0.3, max: 4 },
+    { name: 'cellSpacing', label: 'Cell Spacing', type: 'number', step: 0.01, min: 0, max: 0.25 },
+    { name: 'fixedHeight', label: 'Fixed Height', type: 'number', step: 1, min: 0, max: 999 },
+    { name: 'fixedWidth', label: 'Fixed Width', type: 'number', step: 1, min: 0, max: 999 },
+    { label: 'Background', type: 'heading' },
+    { name: 'backgroundImageFilename', label: 'Background Image Filename', type: 'readonly' },
+    { name: 'backgroundOpacity', label: 'Background Opacity', type: 'number', step: 'any', min: 0, max: 1 },
+    { name: 'backgroundHeight', label: 'Background Height', type: 'number', step: 1, min: -1, max: 99999 },
+    { name: 'backgroundWidth', label: 'Background Width', type: 'number', step: 1, min: -1, max: 99999 }
+];
+
+interface Transform {
+    transform: string;
+    transformOrigin: string;
+}
+
+interface HighlightTransform {
+    [id: string]: Transform
+}
+
+type HighlightState = Point & Size & { resize: Point } & HighlightTransform;
+
+interface DragPosition extends Size {
+    move: Point;
+    resize: Point;
+    origin: Point;
+    transformOrigin: string;
+    id: string;
+}
+
+interface Collisions {
+    moveTo?: unknown;
+    opacity?: number;
+    background?: 'red';
+}
+
+@Component({
+    selector: 'nx-layout-grid',
+    templateUrl: 'layout-grid.component.html',
+    styleUrls: ['layout-grid.component.scss']
+})
+
+export class NxLayoutGridComponent {
+    @Input() layout: Layout;
+    @Input() layoutItemLookup: LayoutResourceTree;
+    @Input() system: NxSystem;
+
+    @Output() layoutChanged = new EventEmitter<string>();
+
+    treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
+    dataSource: ArrayDataSource<BaseResourceNode>;
+
+    openMenu: false | HTMLElement = false;
+    hideGrid = false;
+    showResources = false;
+    unsaved: Layout | false = false;
+    readonly EDGE_GAP = 60;
+    readonly INITIAL_DRAG_STATE = { move: { x: 0, y: 0 }, resize: { x: 0, y: 0 }, id: '', transformOrigin: 'top left' };
+    readonly SETTINGS_CONFIG = SETTINGS_CONFIG;
+
+    #initialLayout$ = new BehaviorSubject<Layout>(null);
+    #wrapperSize$ = new BehaviorSubject<Size>(null);
+    #countdownTimer$ = new Subject<number>();
+
+    autoSaveHandler$ = this.#countdownTimer$.pipe(
+        skip(1),
+        switchMap(time => interval(1000).pipe(map(cur => time - cur))),
+        tap(time => !time && this.saveLayout()),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    layout$ = this.#initialLayout$.pipe(
+        filter(layout => !!layout),
+        map(initial => this.parseLayout(initial)),
+        tap(layout => {
+            console.log(layout);
+        }),
+        map(({ items, renderConfig, ...layout }) => ({
+            ...layout,
+            renderConfig,
+            items: this.annotateWithRenderConfig({ items, renderConfig })
+        })),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    aspectHandler$ = combineLatest([
+        this.#wrapperSize$,
+        this.layout$
+    ]).pipe(
+        filter(([wrapper]) => !!wrapper),
+        map(([{ width: wrapperWidth, height: wrapperHeight }, { cellAspectRatio, renderConfig: { gridWrapper, rows, columns, origin } }]) => {
+            cellAspectRatio ||= 1.7777777910232544;
+            wrapperWidth = wrapperWidth - this.EDGE_GAP;
+            wrapperHeight = wrapperHeight - this.EDGE_GAP;
+            const aspect = (wrapperWidth / columns) / (wrapperHeight / rows);
+            const tooWide = aspect > cellAspectRatio;
+            const calcWidth = tooWide ? (wrapperHeight / rows * columns) * cellAspectRatio : wrapperWidth;
+            const calcHeight = tooWide ? wrapperHeight : (wrapperWidth / columns * rows) / cellAspectRatio;
+            const width = `${calcWidth}px`;
+            const height = `${calcHeight}px`;
+            const cellSize = {
+                width: calcWidth / columns,
+                height: calcHeight / rows
+            };
+            const wrapperPosition = {
+                left: (wrapperWidth - calcWidth + this.EDGE_GAP) / 2,
+                top: (wrapperHeight - calcHeight + this.EDGE_GAP) / 2
+            };
+            const outerWrapper = {
+                'background-position': `${wrapperPosition.left}px ${wrapperPosition.top}px`,
+                'background-size': `${cellSize.width}px ${cellSize.height}px`
+            };
+            return { width, height, outerWrapper, wrapperPosition, cellSize, origin, ...gridWrapper };
+        }),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    #draggingPosition$ = new BehaviorSubject(this.INITIAL_DRAG_STATE as { move?: { x: number, y: number }, id: string, resize?: { x: number, y: number }, transformOrigin?: string });
+
+    #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
+        this.#draggingPosition$,
+        this.aspectHandler$
+    ]).pipe(
+        map(([{ move = this.INITIAL_DRAG_STATE.move, resize = this.INITIAL_DRAG_STATE.resize, id, transformOrigin = this.INITIAL_DRAG_STATE.transformOrigin }, { cellSize: { width, height }, wrapperPosition, origin }]) => ({
+            transformOrigin,
+            move: id === 'added' ? this.calculatePosition(move, { cellSize: { width, height }, wrapperPosition, origin }) : {
+                x: Math.round(move.x / width),
+                y: Math.round(move.y / height)
+            },
+            resize: {
+                x: Math.round(resize.x / width),
+                y: Math.round(resize.y / height)
+            },
+            id,
+            width,
+            height,
+            origin
+        })),
+        distinctUntilChanged(isEqual),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    highlightState$: Observable<HighlightState> = this.#distinctDraggingPosition$.pipe(
+        map(({ move: { x, y }, resize, transformOrigin, id, width, height, origin }) => (<HighlightState>{
+            [id]: {
+                // TODO: Use resize to determine scale,
+                transform: this.getScale(id, resize) || `translate(${(id === 'added' ? x - origin.x : x) * width}px, ${(id === 'added' ? y - origin.y : y) * height}px)`,
+                transformOrigin
+            },
+            x,
+            y,
+            resize,
+            width,
+            height
+        })),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    #collisions$ = this.#distinctDraggingPosition$.pipe(
+        map(({ id, move, resize }) => {
+            const currentlyDragging = this.layout.items.find(({ id: itemId }) => itemId === id);
+
+            if (!currentlyDragging) {
+                const { y: top, x: left } = move;
+                return id ? {
+                    id: 'added',
+                    top,
+                    bottom: top + 1,
+                    left,
+                    right: left + 1
+                } : {};
+            }
+            const constrainedResize = this.getConstraint(currentlyDragging, resize);
+
+            return {
+                ...currentlyDragging,
+                top: currentlyDragging.top + move.y,
+                bottom: currentlyDragging.bottom + move.y + constrainedResize.y,
+                left: currentlyDragging.left + move.x,
+                right: currentlyDragging.right + move.x + constrainedResize.x
+            };
+        }),
+        map(draggingItem => ({
+            draggingItem,
+            collisions: this.layout.items.reduce((
+                collided, item
+            ) => this.checkCollision(item, draggingItem)
+                ? { ...collided, [item.id]: item } : collided, {})
+        })),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    collisions$: Observable<Collisions> = combineLatest([
+        this.#collisions$,
+        this.layout$
+    ]).pipe(
+        map(([{ draggingItem, collisions }, { items }]) => Object.keys(collisions).reduce((collisions, currentId) => {
+            const current = items.find(({ id }) => id === currentId && id !== draggingItem.id);
+            if (!current) {
+                return collisions;
+            }
+
+            return {
+                ...collisions,
+                [currentId]: this.getCollisionStyle(current, draggingItem, items)
+            };
+        }, {})),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true
+        })
+    );
+
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private cd: ChangeDetectorRef
+    ) {
+        this.CONFIG = configService.config;
+    }
+
+    async ngOnChanges({ layout, layoutItemLookup }: NgChanges<NxLayoutGridComponent>): Promise<void> {
+        if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
+            this.showResources = false;
+            this.#initialLayout$.next(layout.currentValue);
+            if (this.unsaved) {
+                await this.saveLayout();
+            }
+        }
+
+        if (layoutItemLookup?.currentValue && !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)) {
+            this.dataSource = new ArrayDataSource(layoutItemLookup.currentValue.tree);
+        }
+    }
+
+    async ngOnDestroy(): Promise<void> {
+        if (this.unsaved) {
+            await this.saveLayout();
+        }
+    }
+
+    getScale = (itemId: string, resize: Point): string => {
+        if (resize.x === 0 && resize.y === 0) {
+            return;
+        }
+
+        const item = this.#initialLayout$.value.items.find(({ id }) => id === itemId);
+        return `scale(${this.getConstraint(item, resize).scale})`;
+    };
+
+    calculatePosition = ({ x, y }: Point, { cellSize: { width, height }, wrapperPosition, origin }: { cellSize: { width: number, height: number }, wrapperPosition: Pick<Position, 'left' | 'top'>, origin: Point }): Point => ({
+        x: Math.round((x - width / 2 - wrapperPosition.left) / width) + origin.x,
+        y: Math.round((y - height - wrapperPosition.top) / height) + origin.y
+    });
+
+    getConstraint = (item: LayoutItem, { x, y }: Point): Point & { scale: number } => {
+        const { top, right, bottom, left } = item;
+        const width = right - left;
+        const height = bottom - top;
+        const constrainedByWidth = Math.abs(x) / width > Math.abs(y) / height;
+
+        const scale = constrainedByWidth ? (height + y) / height : (width + x) / width;
+        if (scale <= 0) {
+            return { scale: 1, x: 0, y: 0 };
+        }
+
+        return { x: (width * scale) - width, y: (height * scale) - height, scale };
+    };
+
+    generateItemRenderConfig = ({ spacing, aspectRatio, origin }: LayoutRenderConfig) => item => {
+        const calcFactory = (origin: number) => (point: number) => point - origin + 1;
+
+        const calcX = calcFactory(origin.x);
+        const calcY = calcFactory(origin.y);
+        const { top, bottom, left, right } = item;
+        const renderConfig = {
+            padding: `${spacing * 25 / aspectRatio}%`,
+            'grid-column': `${calcX(left)} / ${calcX(right)}`,
+            'grid-row': `${calcY(top)} / ${calcY(bottom)}`,
+            aspect: aspectRatio
+        };
+        return {
+            ...item,
+            renderConfig
+        };
+    };
+
+    annotateWithRenderConfig = ({
+        items,
+        renderConfig
+    }: Pick<ParsedLayout, 'items' | 'renderConfig'>): ParsedLayoutItems => items.map(this.generateItemRenderConfig(renderConfig));
+
+    calculateEdges(
+        { top: prevTop, bottom: prevBottom, left: prevLeft, right: prevRight }: Position,
+        { top, bottom, left, right }: Position): Position {
+        return {
+            top: Math.min(prevTop, top ?? Infinity),
+            right: Math.max(prevRight, right ?? -Infinity),
+            bottom: Math.max(prevBottom, bottom ?? 0),
+            left: Math.min(prevLeft, left ?? Infinity)
+        };
+    }
+
+    calculateSize(items: LayoutItems): { width: number, height: number, originX: number, originY: number } {
+        const initialValues = { top: Infinity, bottom: -Infinity, left: Infinity, right: -Infinity };
+        const { top: originY, bottom, left: originX, right } = items.reduce(
+            this.calculateEdges,
+            initialValues
+        );
+        const height = Math.floor(bottom - originY);
+        const width = Math.floor(right - originX);
+        return { width, height, originY, originX };
+    }
+
+    calculateItemSize = ({ height, width }: Size, { renderConfig }: ParsedLayoutItem, item: ResourceNode): void => {
+        if (item?.type !== ResourceType.CAMERA) {
+            return;
+        }
+
+        // const tooWide = width > height * item.aspectRatio;
+        // renderConfig.child = {
+        //     'max-height': `${tooWide ? height : width / item.aspectRatio}px`,
+        //     'max-width': `${tooWide ? height * item.aspectRatio : width}px`
+        // };
+        this.cd.markForCheck();
+    };
+
+    generateRenderConfig({ cellAspectRatio, cellSpacing, items, fixedWidth, fixedHeight }: Layout): LayoutRenderConfig {
+        const aspectRatio = cellAspectRatio || 1.7777777910232544;
+        const spacing = cellSpacing || 0.1;
+        const { width, height, originX: x, originY: y } = this.calculateSize(items);
+        const columns = items.length <= 1 ? 1 : fixedWidth || width;
+        const rows = items.length <= 1 ? 1 : fixedHeight || height;
+        // const widthPercent = 1 / columns * 100;
+        // const heightPercent = 1 / rows * 100;
+        const gridWrapper = {
+            'grid-template-columns': `repeat(${columns}, 1fr)`,
+            'grid-template-rows': `repeat(${rows}, 1fr)`,
+        };
+        return { aspectRatio, spacing, columns, rows, gridWrapper, origin: { x, y } };
+    }
+
+    updateWrapperSize = ({ height, width }: Size): void => {
+        this.#wrapperSize$.next({ height, width });
+    };
+
+    parseLayout = (layout: Layout): ParsedLayout => ({ ...layout, renderConfig: this.generateRenderConfig(layout), settings: this.SETTINGS_CONFIG });
+
+    entered(event: CdkDragEnter): void {
+        console.log(event);
+    }
+
+    updateBackground = ({ distance }: { distance: Point }, { id }: ParsedLayoutItem, action = 'move'): void => {
+        this.#draggingPosition$.next({ [action]: distance, id });
+    };
+
+    moveAddedItem = ({ pointerPosition: move }: { pointerPosition: Point }): void => {
+        this.showResources &&= false;
+        this.#draggingPosition$.next({ move, id: 'added' });
+    };
+
+    updateLayout = (): void => {
+        this.#initialLayout$.next(this.layout);
+        this.#draggingPosition$.next(this.INITIAL_DRAG_STATE);
+        this.cd.markForCheck();
+    };
+
+    moveItem = ({ id }: LayoutItem): void => {
+        combineLatest([
+            this.highlightState$,
+            this.collisions$
+        ]).pipe(
+            take(1)
+        ).subscribe(([{ x, y, resize }, collisions]) => {
+            const unresolvedCollisions = Object.values(collisions).reduce((prevCollision, { moveTo }) => prevCollision || !moveTo, false);
+            const notMoved = [x, y, resize.x, resize.y].every(change => !change);
+            if (unresolvedCollisions || notMoved) {
+                return this.updateLayout();
+            }
+
+            this.layout.items = this.layout.items.map(item => {
+                const dragging = item.id === id;
+                const resolvedCollision = collisions[item.id];
+                if (dragging) {
+                    const { x: resizeX, y: resizeY } = this.getConstraint(item, resize);
+                    item.top += y;
+                    item.bottom += y + resizeY;
+                    item.left += x;
+                    item.right += x + resizeX;
+                } else if (resolvedCollision) {
+                    item = { ...item, ...resolvedCollision.moveTo };
+                }
+
+                return item;
+            });
+            this.autoSave();
+        });
+    };
+
+    autoSave<T = unknown>(settingName?: string, value?: T): void {
+        if (settingName) {
+            this.layout[settingName] = value;
+        }
+        this.updateLayout();
+        this.unsaved = cloneDeep(this.layout);
+        this.#countdownTimer$.next(10);
+    }
+
+    saveLayout = async (): Promise<void> => {
+        const mediaserver = this.system.mediaserver as NxSystemRestAPI;
+        const { systemId: _, ..._layout } = this.unsaved || this.layout;
+        this.unsaved = false;
+        if (_layout.id === 'new') {
+            const { id: __, ...layout } = _layout;
+            if (!layout.items.length && layout.name === 'Create New Layout') {
+                return;
+            }
+            _layout.id = (await mediaserver.createLayout(layout).toPromise()).id;
+        } else {
+            await mediaserver.putLayout(_layout.id, _layout).toPromise();
+        }
+        if (_layout.id === this.layout.id) {
+            this.layoutChanged.emit(_layout.id);
+        }
+    };
+
+    generateLayoutItem = ({ details: { id: resourceId } }: ResourceNode, { x, y }: Point): LayoutItem => {
+        const left = x === Infinity ? 0 : x;
+        const top = y === Infinity ? 0 : y;
+        const right = left + 1;
+        const bottom = top + 1;
+        const id = `{${uuid()}}`;
+        return {
+            bottom,
+            contrastParams: {
+                blackLevel: 0.001,
+                enabled: false,
+                gamma: 1,
+                whiteLevel: 0.0005
+            },
+            controlPtz: false,
+            dewarpingParams: {
+                enabled: false,
+                fov: 1.2217304763960306,
+                panoFactor: 1,
+                xAngle: 0,
+                yAngle: 0
+            },
+            displayAnalyticsObjects: false,
+            displayInfo: false,
+            displayRoi: false,
+            flags: 1,
+            id,
+            left,
+            resourceId,
+            resourcePath: '',
+            right,
+            rotation: 0,
+            top,
+            zoomBottom: 0,
+            zoomLeft: 0,
+            zoomRight: 0,
+            zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
+            zoomTop: 0
+        };
+    };
+
+    addItem = (node: ResourceNode): void => {
+        combineLatest([
+            this.highlightState$,
+            this.collisions$
+        ]).pipe(
+            take(1)
+        ).subscribe(([{ x, y, resize }, collisions]) => {
+            const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
+            const notMoved = [x, y, resize.x, resize.y].every(change => !change);
+            if (unresolvedCollisions || notMoved) {
+                return this.updateLayout();
+            }
+
+            this.layout.items.push(this.generateLayoutItem(node, { x, y }));
+
+            this.autoSave();
+        });
+    };
+
+    itemId = (index: number, { id }: LayoutItem): string => id;
+
+    checkCollision = (item: LayoutItem, itemTwo: Partial<Position>): boolean => item.left < itemTwo.right &&
+        item.right > itemTwo.left &&
+        item.top < itemTwo.bottom &&
+        item.bottom > itemTwo.top;
+
+    getNewPosition = ({ top, bottom, left, right }: LayoutItem, dragging: CdkDrag<LayoutItem>): NewPosition => {
+        const x = -1;
+        const y = 1;
+        const translateX = x / Math.abs(right - left) * 100;
+        const translateY = y / Math.abs(top - bottom) * 100;
+        const transform = `translate(${translateX}%, ${translateY}%)`;
+        return { top: top + y, bottom: bottom + y, left: left + x, right: right + x, transform };
+    };
+
+    getCollisionStyle = (item: LayoutItem, dragging: Partial<Position>, items: LayoutItems): { moveTo?: null, opacity?: number, background?: 'red' } => {
+        // TODO: Need to find algorithm for finding best position
+        // const { transform, ...targetPosition } = this.getNewPosition(item, dragging);
+        const collided = items.length;
+
+        if (collided) {
+            return {
+                moveTo: null,
+                opacity: 0.2,
+                background: 'red'
+            };
+        }
+
+        return {};
+
+        // return {
+        //     moveTo: targetPosition,
+        //     transform,
+        //     opacity: 0.4,
+        //     background: 'green'
+        // };
+    };
+
+    preventDrop = (dragging: CdkDrag<LayoutItem>, target: CdkDropList<LayoutItem>): boolean => {
+        const dragId = dragging?.data?.id;
+        const targetId = target?.data?.id;
+        return dragId === targetId;
+    };
+
+    removeItem = ({ id }: LayoutItem): void => {
+        this.layout.items = this.layout.items.filter(item => item.id !== id);
+        this.autoSave();
+    };
+
+    hasChild = (_: number, node: ResourceNode): boolean => !!node.children && node.children.length > 0;
+}

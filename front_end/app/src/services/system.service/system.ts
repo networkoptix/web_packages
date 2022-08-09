@@ -97,6 +97,7 @@ export class NxSystem extends System {
     serverManager: ServerManager;
     cameraManager: CameraManager;
     storageManager: StorageManager;
+    version = 0;
 
     private _subscribersCount = new BehaviorSubject<number>(0);
     private attempts = 0; // used to limit consecutive api call attempts
@@ -237,7 +238,7 @@ export class NxSystem extends System {
         );
 
         this.cameraManager = new CameraManager(
-            this.serverManager
+            this
         );
 
         this.storageManager = new StorageManager(this);

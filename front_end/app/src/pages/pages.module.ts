@@ -32,6 +32,14 @@ const lazyRoutes: Routes = [
         loadChildren: () => import('./systems/view/view.module').then(m => m.NxSystemViewModule)
     },
     {
+        path: 'systems/:systemId/layouts',
+        loadChildren: () => import('./systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
+        canLoad: [FeatureGuard],
+        data: {
+            flags: FeatureFlagStrings.layouts
+        },
+    },
+    {
         path: 'health-report',
         loadChildren: () => import('./health/health.module').then(m => m.NxHealthModule)
     },

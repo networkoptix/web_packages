@@ -155,11 +155,11 @@ export class NxSystemAPI {
         return btoa(`${login}:${nonce}:${authDigest}`);
     }
 
-    protected getUrlBase() {
+    protected getUrlBase(protocol = window.location.protocol) {
         let urlBase = '';
         if (this.systemId) {
             urlBase =
-                window.location.protocol +
+                protocol +
                 '//' +
                 this.CONFIG.trafficRelayHost
                     .replace('{host}', window.location.host)
@@ -230,7 +230,7 @@ export class NxSystemAPI {
                     // 'Gateway Timeout' is added for 'local' testing of webadmin
                     if (
                         environment.isLocal && (error.name === 'TimeoutError' ||
-                        error.statusText === 'Gateway Timeout')
+                            error.statusText === 'Gateway Timeout')
                     ) {
                         this.appState.systemAvailable$.next(false);
                     }
@@ -1138,7 +1138,7 @@ export class NxSystemAPI {
         return this.generateGetUrl(endpoint, data);
     }
 
-    hlsUrl(cameraId: string, position: string, resolution: string) {
+    hlsUrl(cameraId: string, position: string = 'now', resolution: string = '') {
         const data: {
             pos?: string;
             auth: string;
@@ -1149,7 +1149,7 @@ export class NxSystemAPI {
             data.pos = position;
         }
         const url = `/web/hls/${this.cleanId(cameraId)}.m3u8?${resolution}`;
-        return this.generateGetUrl(url, data, true);
+        return this.generateGetUrl(url, data);
     }
 
     webmUrl(
@@ -1311,29 +1311,27 @@ export class NxSystemAPI {
             return '';
         }
         switch (transport) {
+            case 'webRtc':
+                url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&`;
+                break;
             case 'hls':
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
-                if (this.authGet) {
-                    url += `auth=${this.authGet}&`;
-                }
-                if (position) {
-                    url += `pos=${position}&`;
-                }
-                return url;
+                break;
             default:
                 // Rtsp plays as webm but does not support transcoding.
                 if (['rtsp', 'mjpeg'].includes(transport)) {
                     transport = 'webm';
                 }
                 url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
-                if (this.authGet) {
-                    url += `auth=${this.authGet}&`;
-                }
-                if (position) {
-                    url += `pos=${position}&`;
-                }
-                return url;
         }
+
+        if (this.authGet) {
+            url += `auth=${this.authGet}&`;
+        }
+        if (position) {
+            url += `pos=${position}&`;
+        }
+        return url;
     }
 
     /** Merge Systems */
@@ -1427,6 +1425,18 @@ export class NxSystemAPI {
     }
 
     getDevices(): Observable<unknown> {
+        throw new Error('should only be using rest version');
+    }
+
+    getWebPages(): Observable<unknown> {
+        throw new Error('should only be using rest version');
+    }
+
+    getLayouts(): Observable<unknown> {
+        throw new Error('should only be using rest version');
+    }
+
+    getLayout(layoutId): Observable<unknown> {
         throw new Error('should only be using rest version');
     }
 

@@ -1032,6 +1032,7 @@ export interface ServerTabTitles {
     Settings:    (params?: Record<string, string | number>) => string;
     Information: (params?: Record<string, string | number>) => string;
     Bookmarks:   (params?: Record<string, string | number>) => string;
+    Layouts:     (params?: Record<string, string | number>) => string;
     Monitoring:  (params?: Record<string, string | number>) => string;
 }
 

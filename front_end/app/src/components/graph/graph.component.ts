@@ -10,10 +10,13 @@ import { Subject, timer } from 'rxjs';
 import { concatMap, takeUntil } from 'rxjs/operators';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
+import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSystem } from '@services/system.service/system';
+import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
@@ -29,6 +32,7 @@ import { NgChanges } from '@utils/ng-changes';
 
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
+    @Input() systemId: string;
     @Input() selectedServerId: string;
     @Input() noFrame = false;
     @Input() refreshInterval = 1000;
@@ -67,6 +71,9 @@ export class NxMonitoringGraphComponent implements OnChanges {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private systemsService: NxSystemsService,
+        private systemService: NxSystemService,
+        private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -76,9 +83,16 @@ export class NxMonitoringGraphComponent implements OnChanges {
         this.multi = [];
     }
 
-    ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): void {
-        if (changes.system?.currentValue || changes.selectedServerId?.currentValue) {
+    async ngOnChanges(changes: NgChanges<NxMonitoringGraphComponent>): Promise<void> {
+        if (changes.system?.currentValue || changes.selectedServerId?.currentValue || changes.systemId?.currentValue) {
             this.destroy$.next(true);
+
+            if (this.systemId && !this.system) {
+                await this.systemsService.getSystemAsPromise(this.systemId);
+                this.system = this.systemService.createSystem(this.accountService.account.email, this.systemId);
+                await this.system.update();
+                await this.system.serverManager.initSystemMediaServers();
+            }
 
             if (this.system && this.selectedServerId) {
                 this.multi = [];

@@ -1,0 +1,17 @@
+<div class="select-wrapper">
+    <nx-select
+        [selected]="selectedLayoutDropdown$ | async"
+        [items]="availableLayoutsDropdown$ | async"
+        (onSelected)="changeLayout($event)"
+        [stillLoading]="!(availableLayoutsDropdown$ | async)"
+    >
+    </nx-select>
+</div>
+<div class="layout-wrapper">
+    <nx-layout-grid
+        (layoutChanged)="updateLayout($event)"
+        [layout]="selectedLayout$ | async"
+        [layoutItemLookup]="layoutItemLookup$ | async"
+        [system]="selectedSystem$ | async"
+    ></nx-layout-grid>
+</div>

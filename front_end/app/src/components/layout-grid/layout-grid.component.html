@@ -1,0 +1,225 @@
+<div
+    *ngIf="layout$ | async as layout"
+    class="grid-wrapper"
+    (resize)="updateWrapperSize($event)"
+    [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
+    [ngClass]="{ 'hide-grid': hideGrid }"
+>
+    <h2
+        *ngIf="(autoSaveHandler$ | async) > 0"
+        class="auto-save-overlay"
+    >
+        Auto saving in {{ autoSaveHandler$ | async }} seconds...
+    </h2>
+    <div
+        class="resources-sidebar"
+        [ngClass]="{ 'hide-resource-menu': !showResources }"
+    >
+        <div
+            class="resource-toggle"
+            (click)="showResources = !showResources"
+        ></div>
+        <header
+            #settings
+            (click)="openMenu = settings"
+        >
+            <h3>Settings</h3>
+        </header>
+        <div
+            class="settings-menu"
+            [ngClass]="{ 'hide-settings': openMenu !== settings }"
+        >
+            <ng-container *ngFor="let setting of layout.settings">
+                <ng-container [ngSwitch]="setting.type">
+                    <div *ngSwitchCase="'number'">
+                        <label>{{ setting.label }}</label>
+                        <nx-numeric
+                            [step]="setting.step"
+                            [min]="setting.min"
+                            [max]="setting.max"
+                            [disabled]="layout.locked"
+                            [ngModel]="layout[setting.name]"
+                            (ngModelChange)="autoSave(setting.name, $event)"
+                        ></nx-numeric>
+                    </div>
+                    <div *ngSwitchCase="'boolean'">
+                        <label [for]="setting.name">{{ setting.label }}</label>
+                        <nx-checkbox
+                            [componentId]="setting.name"
+                            [disabled]="layout.locked && setting.name !== 'locked'"
+                            [ngModel]="layout[setting.name]"
+                            (ngModelChange)="autoSave(setting.name, $event)"
+                        ></nx-checkbox>
+                    </div>
+                    <h4
+                        *ngSwitchCase="'heading'"
+                        class="settings-heading"
+                    >
+                        {{ setting.label }}
+                    </h4>
+                    <div *ngSwitchDefault>
+                        <label>{{ setting.label }}</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            [disabled]="setting.type === 'readonly' || layout.locked"
+                            [ngModel]="layout[setting.name]"
+                            (ngModelChange)="autoSave(setting.name, $event)"
+                        />
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <header
+            #resources
+            (click)="openMenu = resources"
+        >
+            <h3>Resources</h3>
+        </header>
+        <cdk-tree
+            [ngClass]="{ 'hide-settings': openMenu && openMenu !== resources }"
+            cdkDropList
+            [cdkDropListDisabled]="layout.locked"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <!-- This is the tree node template for leaf nodes -->
+            <cdk-nested-tree-node
+                *cdkTreeNodeDef="let node"
+                class="tree-node"
+            >
+                <span
+                    cdkDrag
+                    [cdkDragDisabled]="!node.details || layout.locked"
+                    (cdkDragMoved)="moveAddedItem($event)"
+                    (cdkDragReleased)="addItem(node)"
+                    >{{ node.name }}</span
+                >
+            </cdk-nested-tree-node>
+            <!-- This is the tree node template for expandable nodes -->
+            <cdk-nested-tree-node
+                *cdkTreeNodeDef="let node; when: hasChild"
+                class="tree-node"
+            >
+                <span
+                    cdkTreeNodeToggle
+                    cdkDrag
+                    [cdkDragDisabled]="!node.details || layout.locked"
+                    (cdkDragMoved)="moveAddedItem($event)"
+                    (cdkDragReleased)="addItem(node)"
+                    >{{ node.name }}</span
+                >
+                <div [class.tree-invisible]="!treeControl.isExpanded(node)">
+                    <ng-container cdkTreeNodeOutlet></ng-container>
+                </div>
+            </cdk-nested-tree-node>
+        </cdk-tree>
+    </div>
+    <div
+        *ngIf="aspectHandler$ | async as aspectStyle"
+        class="layout-grid"
+        cdkDropListGroup
+        [ngStyle]="aspectStyle"
+    >
+        <div
+            *ngIf="(highlightState$ | async)?.added as added"
+            [style.transform]="added.transform || 'translate(0, 0)'"
+            [style.transform-origin]="added.transformOrigin || 'top left'"
+            class="layout-item-wrapper highlight-adding"
+        ></div>
+
+        <ng-container *ngFor="let item of layout.items; trackBy: itemId">
+            <div
+                *ngIf="layoutItemLookup"
+                cdkDropList
+                [cdkDropListDisabled]="layout.locked"
+                [cdkDropListEnterPredicate]="preventDrop"
+                [cdkDropListData]="item"
+                [ngStyle]="item.renderConfig"
+                [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
+                [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
+                class="layout-item-wrapper"
+                (resize)="calculateItemSize($event, item, layoutItemLookup[item.resourceId])"
+            >
+                <div
+                    cdkDrag
+                    [cdkDragDisabled]="layout.locked"
+                    [cdkDragData]="item"
+                    (cdkDragReleased)="moveItem(item)"
+                    (cdkDragMoved)="updateBackground($event, item, 'move')"
+                    class="layout-item"
+                    [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
+                >
+                    <header
+                        cdkDragHandle
+                        [cdkDragHandleDisabled]="layout.locked"
+                    >
+                        <span>{{
+                            layoutItemLookup[item.resourceId]?.name || 'Not Supported'
+                        }}</span>
+                        <div>
+                            <svg-icon
+                                nx-add-svg-src
+                                (click)="removeItem(item)"
+                                [src]="CONFIG.icons.dirTextButtons + 'close.svg'"
+                                [svgStyle]="{ 'width.px': '18', 'height.px': '18' }"
+                                class="close-svg"
+                                [applyClass]="true"
+                            ></svg-icon>
+                        </div>
+                    </header>
+                    <ng-template #notSupported>
+                        <div class="not-supported">Not supported</div>
+                    </ng-template>
+                    <div
+                        cdkDragHandle
+                        [cdkDragHandleDisabled]="layout.locked"
+                        class="drag-overlay"
+                    ></div>
+                    <ng-container
+                        *ngIf="layoutItemLookup[item.resourceId] as itemDetail; else notSupported"
+                        [ngSwitch]="itemDetail.type"
+                    >
+                        <ng-container *ngSwitchCase="'camera'">
+                            <nx-video-player
+                                cdkDragHandle
+                                [cdkDragHandleDisabled]="layout.locked"
+                                [camera]="itemDetail.details"
+                            >
+                            </nx-video-player>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'server'">
+                            <monitoring-graph
+                                [systemId]="layout.systemId"
+                                [noFrame]="true"
+                                [selectedServerId]="itemDetail.details.id"
+                            ></monitoring-graph>
+                        </ng-container>
+                        <iframe
+                            *ngSwitchCase="'webPage'"
+                            [src]="itemDetail.details.url | safe: 'resourceUrl'"
+                            frameBorder="0"
+                        ></iframe>
+                        <ng-container *ngSwitchCaseDefault>
+                            <ng-container *ngTemplateOutlet="notSupported"></ng-container>>
+                        </ng-container>
+                    </ng-container>
+                    <div
+                        cdkDropList
+                        [cdkDropListDisabled]="layout.locked"
+                        [cdkDropListConnectedTo]="[]"
+                    >
+                        <div
+                            cdkDrag
+                            [cdkDragDisabled]="layout.locked"
+                            [cdkDragData]="item"
+                            (cdkDragMoved)="updateBackground($event, item, 'resize')"
+                            (cdkDragReleased)="moveItem(item)"
+                            class="resize-handle"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

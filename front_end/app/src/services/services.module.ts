@@ -13,6 +13,7 @@ import { NxConfigService } from './nx-config/nx-config.service';
 import { NxHeaderService } from './nx-header.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPageService } from './page.service';
+import { NxPlaybackSyncService } from './playback-sync.service';
 import { NxScrollMechanicsService } from './scroll-mechanics.service';
 import { NxSearchService } from './search.service';
 import { NxSwPromptUpdateService } from './sw-prompt-update.service';
@@ -41,6 +42,8 @@ import { NxUrlProtocolService } from './url-protocol.service';
         NxSwCacheService,
         NxSwPromptUpdateService,
         NxThemeService,
+        // SystemGroupsDataService,
+        NxPlaybackSyncService
     ],
     exports: []
 })

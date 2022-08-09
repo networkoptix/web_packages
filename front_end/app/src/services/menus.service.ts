@@ -37,6 +37,7 @@ export class NxMenusService {
         information: boolean,
         bookmarks: boolean,
         monitoring: boolean,
+        layouts: boolean
     }> = {};
 
     constructor(
@@ -232,6 +233,10 @@ export class NxMenusService {
             segment = '/monitoring';
         }
 
+        if (endpoint.layouts) {
+            segment = '/layouts';
+        }
+
         return (!environment.isLocal && systemId) ? url + segment : segment;
     }
 
@@ -303,6 +308,16 @@ export class NxMenusService {
                 this.endpoint.monitoring || false
             );
             nodes.push(monitoringNode);
+        }
+
+        if (activeSystem.useRest && this.CONFIG.featureFlags.layouts) {
+            const layoutsNode = new MenuNode(
+                'Layouts',
+                this.getUrl(activeSystem.id, { layouts: true }),
+                this.LANG?.serverTabTitles.Layouts(),
+                this.endpoint.layouts || false
+            );
+            nodes.push(layoutsNode);
         }
 
         if (this.configService.flagsEnabled('bookmarks')) {

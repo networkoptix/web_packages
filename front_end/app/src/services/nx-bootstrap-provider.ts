@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
@@ -9,6 +9,7 @@ import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxPageService } from './page.service';
+import { WINDOW } from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -26,11 +27,41 @@ export class NxBootstrapProvider {
         private languageService: NxLanguageProviderService,
         private pageService: NxPageService,
         private http: HttpClient,
+        @Inject(WINDOW) private window: Window
     ) {
+        this.#init();
+    }
+
+    /**
+     * To determine if the javascript client API is available the initialization code from the server https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2605678593/In-client+JavaScript+API+specification#Entry-point
+     *
+     * The initialization code for javascript client API blocks the main thread. If the requestIdleCallback gets called then that means that the javascript client api isn't available.
+     *
+     * @returns boolean
+     */
+    #isVmsApiAvailable = () => new Promise(resolve => {
+        // @ts-expect-error
+        this.window.vmsApiInit = () => resolve(true);
+        requestIdleCallback(() => resolve(false));
+    });
+
+    #useRefreshTokenFromVms = async () => {
+        // @ts-expect-error
+        const refreshToken = await this.window.vms.auth.cloudToken();
+        const url = new URL(this.window.location.href);
+        url.searchParams.set('refresh_token', refreshToken);
+        this.window.history.pushState({ url: url.toString() }, '', url.toString());
+    };
+
+    #init = async (): Promise<void> => {
         this.CONFIG = this.configService.getConfig();
         this.isLoaded = false;
         this.isNewSystem = false;
-    }
+
+        if (await this.#isVmsApiAvailable()) {
+            await this.#useRefreshTokenFromVms();
+        }
+    };
 
     get loaded() {
         return this.isLoaded;

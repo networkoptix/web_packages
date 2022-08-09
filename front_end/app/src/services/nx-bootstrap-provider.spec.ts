@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { waitForAsync, TestBed } from '@angular/core/testing';
+import { MockProvider } from 'ng-mocks';
 
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
+import { WINDOW } from '@services/window-provider';
 import {
     getCloudSettings,
     getLocalSettings,
@@ -17,7 +19,7 @@ describe('Bootstrap Provider', () => {
 
     const configMock = {
         getConfig: () => nxConfig,
-        updateConfigUsingOverrides: () => {},
+        updateConfigUsingOverrides: () => { },
         getSettings: []
     };
 
@@ -41,7 +43,8 @@ describe('Bootstrap Provider', () => {
                 { provide: NxConfigService, useValue: configMock },
                 { provide: NxLanguageProviderService, useValue: translateMock },
                 { provide: NxPageService, useValue: {} },
-                { provide: HttpClient, useValue: {} }
+                { provide: HttpClient, useValue: {} },
+                MockProvider(WINDOW),
             ]
         });
         bootstrapService = TestBed.inject(NxBootstrapProvider);

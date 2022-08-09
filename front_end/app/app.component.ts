@@ -167,7 +167,7 @@ export class AppComponent {
 
         const code = url.searchParams.get('code');
         const refreshToken = url.searchParams.get('refresh_token');
-        if (!this.environment.isLocal && refreshToken) {
+        if (refreshToken) {
             this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {
                 this.appStateService.ready = true;
             });
@@ -180,17 +180,7 @@ export class AppComponent {
         ) {
             this.accountService.handleCodeLogin(code);
         } else {
-            try {
-                // Expected to throw when js client api doesn't exist or doesn't allow cloud tokens
-                // @ts-expect-error vms does not exist on window
-                this.window.vms.auth.cloudToken().then(
-                    this.accountService.handleRefreshTokenLogin
-                ).finally(() => {
-                    this.appStateService.ready = true;
-                });
-            } catch (_) {
-                this.appStateService.ready = true;
-            }
+            this.appStateService.ready = true;
         }
 
         /* No real need to update often unless some browser have major upgrade

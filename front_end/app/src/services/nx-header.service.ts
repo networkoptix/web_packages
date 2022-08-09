@@ -174,6 +174,7 @@ export class NxHeaderService {
             const healthUrl = environment.isLocal ? '/health' : systemUrl + '/health';
             const bookmarkUrl = environment.isLocal ? '/bookmarks' : systemUrl + '/bookmarks';
             const monitoringUrl = environment.isLocal ? '/monitoring' : systemUrl + '/monitoring';
+            const layoutsUrl = environment.isLocal ? '/layouts' : systemUrl + '/layouts';
 
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };
@@ -187,6 +188,9 @@ export class NxHeaderService {
             } else if (url.startsWith(monitoringUrl)) {
                 this.menusService.endpoint = { monitoring: true };
                 bestMatch.path = monitoringUrl;
+            } else if (url.startsWith(layoutsUrl)) {
+                this.menusService.endpoint = { layouts: true };
+                bestMatch.path = layoutsUrl;
             } else if (url.startsWith(systemUrl)) {
                 this.menusService.endpoint = { settings: true };
                 bestMatch.path = systemUrl;

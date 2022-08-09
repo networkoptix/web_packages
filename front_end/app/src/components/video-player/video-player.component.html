@@ -1,0 +1,44 @@
+<video
+    #webRtcPlayer
+    *ngIf="webRtcUrl"
+    autoplay
+    muted
+></video>
+
+<vm-player
+    #player
+    *ngIf="!webRtcUrl"
+    [controls]="controls"
+    [autoplay]="autoplay"
+    [autopause]="autopause"
+    [currentTime]="currentTime$ | async"
+>
+    <vm-hls
+        [config]="hlsConfig"
+        autoPiP
+    >
+        <source
+            data-src="{{ camera.liveUrl }}"
+            type="application/x-mpegURL"
+        />
+    </vm-hls>
+</vm-player>
+
+<ng-container
+    *ngIf="webRtcUrl ? !webRtcPlayer || !webRtcPlayer.nativeElement.srcObject : !player.playing"
+>
+    <img
+        [src]="posterSrc"
+        class="poster"
+        (load)="updateHash(true)"
+        (error)="updateHash()"
+    />
+    <nx-pre-loader></nx-pre-loader>
+</ng-container>
+
+<div
+    class="full-screen"
+    (click)="enterFullscreen()"
+>
+    Full Screen
+</div>

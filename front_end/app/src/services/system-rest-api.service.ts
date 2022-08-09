@@ -377,6 +377,34 @@ export class NxSystemRestAPI extends NxSystemAPI {
             );
     }
 
+    protected put<ResponseType = any>(
+        url: string,
+        data?: any,
+        paramsToAdd = {},
+        customTimeout = 60000
+    ) {
+        data = data || {};
+
+        const headers = this.buildHeader();
+        if (this.requiresWeb(url)) {
+            url = `/web${url}`;
+        }
+
+        let params = new HttpParams();
+        Object.keys(paramsToAdd).forEach(key => {
+            params = params.append(key, paramsToAdd[key]);
+        });
+
+        const fullUrl = `${this.urlBase}${url}`;
+
+        return this.http
+            .put<ResponseType>(fullUrl, data, { params, headers })
+            .pipe(
+                retryWhen(request => this.retryHandler(request)),
+                timeout(customTimeout)
+            );
+    }
+
     public getCurrentUser(forceReload?: boolean) {
         let customHeaders;
         if (forceReload) { // Clean cache to
@@ -719,6 +747,26 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     getDevices(params = {}) {
         return this.get('/rest/v1/devices', params);
+    }
+
+    getWebPages(params = {}): Observable<t.WebPages> {
+        return this.get('/rest/v1/webPages', params);
+    }
+
+    getLayouts(params = { _keepDefault: true }): Observable<t.Layouts> {
+        return this.get('/rest/v1/layouts', params);
+    }
+
+    getLayout(layoutId: string, params = { _keepDefault: true }): Observable<t.Layout> {
+        return this.get(`/rest/v1/layouts/${layoutId}`, params);
+    }
+
+    putLayout(layoutId: string, data: Partial<t.Layout>): Observable<t.Layout> {
+        return this.put(`/rest/v1/layouts/${layoutId}`, data);
+    }
+
+    createLayout(data: Omit<t.Layout, 'id' | 'systemId'>): Observable<t.Layout> {
+        return this.post('/rest/v1/layouts/', data);
     }
 
     getLicenseSummaries() {

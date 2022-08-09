@@ -2,6 +2,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { paramSortFunc } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
+import { NxSystem } from '../system';
 import { NxSystemServer, ModuleInfo } from '../system-types';
 
 import {
@@ -14,13 +15,15 @@ import {
 } from './camera-manager-types';
 
 export class CameraManager {
+    private serverManager: ServerManager;
     servers: NxSystemServer[];
     cameras: ICamera[];
     moduleInfo: ModuleInfo;
 
     constructor(
-        private serverManager: ServerManager
+        private system: NxSystem
     ) {
+        this.serverManager = this.system.serverManager;
     }
 
     async updateSystemServersCameras() {
@@ -28,6 +31,7 @@ export class CameraManager {
             const response = await this.serverManager.mediaserver.updateSystemServersCameras().toPromise();
             const [moduleInfo, servers, serverTimes, cameras] = response;
             this.moduleInfo = moduleInfo;
+            this.system.version = +this.moduleInfo.version.split('.').slice(0, 2).join('.');
             this.servers = servers.sort(
                 paramSortFunc((server: any) => server.name)
             );
@@ -103,6 +107,8 @@ export class CameraManager {
             const maxFps = _maxFps || 15;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.serverManager.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
+            const liveUrl = this.serverManager.mediaserver.getPlaybackUrl(id, 'hls');
+            const webRtcUrl = this.system.version >= 5.1 ? this.serverManager.mediaserver.getPlaybackUrl(id, 'webRtc') : '';
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             const isStream = ['GENERIC_RTSP', 'GENERIC_MULTICAST', 'GENERIC_MULTICAST', 'HTTP_URL_PLUGIN'].includes(vendor);
             // eslint-disable-next-line no-use-before-define
@@ -138,7 +144,7 @@ export class CameraManager {
                 ]
             };
             const deviceType = camerasHealth[id.replace(/{|}/g, '')]?.info?.type || 'Camera';
-            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
+            return { ...camera, deviceType, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, liveUrl, webRtcUrl, rotation, status, overrideAr, mediaCapabilities, vendor, isStream, motionLowResEnabled, defaultRatio, backupType };
         });
         this.cameras = mappedCameras;
         return mappedCameras;
@@ -191,14 +197,14 @@ export class CameraManager {
     private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, types: RecordingType[]) {
         const partialSchedule = scheduleTasks.some(({ recordingType, startTime, endTime, fps }) => (
             types.includes(recordingType) &&
-        fps > 0 &&
-        startTime < endTime
+            fps > 0 &&
+            startTime < endTime
         ));
 
         const fullSchedule = scheduleTasks.length && scheduleTasks.every(({ recordingType, startTime, endTime, fps }) => (
             types.includes(recordingType) &&
-        fps > 0 &&
-        startTime < endTime
+            fps > 0 &&
+            startTime < endTime
         ));
         return fullSchedule ? 2 : partialSchedule ? 1 : 0;
     }
@@ -209,9 +215,9 @@ export class CameraManager {
         }
         const recording = scheduleTasks.some(({ dayOfWeek: day, startTime, endTime, recordingType }) => (
             recordingType !== RecordingType.NEVER &&
-        day === dayOfWeek &&
-        startTime < secondsToday &&
-        secondsToday < endTime
+            day === dayOfWeek &&
+            startTime < secondsToday &&
+            secondsToday < endTime
         ));
         if (recording) {
             return 'Recording';

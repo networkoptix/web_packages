@@ -57,7 +57,7 @@ export class NxNumericComponent implements OnInit, ControlValueAccessor, Validat
     @Input() class: string;
     @Input() min: number;
     @Input() max: number;
-    @Input() step: number;
+    @Input() step: number | 'any';
     @IBool() @Input() disabled: CoercedBoolInput;
     @IBool() @Input() required: CoercedBoolInput;
     @Input() placeholder: string | number = '- -';

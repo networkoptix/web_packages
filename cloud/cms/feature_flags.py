@@ -63,6 +63,7 @@ class FLAGS(metaclass=_FlagType):
     cloud_storage = ('Cloud Storage', 'cloudStorage', '%CLOUD_STORAGE_FEATURE_ENABLED%')
     log_rocket = ('Log Rocket', 'logRocket', '%LOGROCKET_ENABLED%')
     full_story = ('Full Story', 'fullStory', '%FULLSTORY_ENABLED%')
+    layouts = ('Layouts', 'layouts', '%Layouts_ENABLED%')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')

@@ -5,6 +5,7 @@ $font-family-light : "robotolight", "Helvetica Neue", Helvetica, Arial, sans-ser
 $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 @import "~sass-rem/rem";
+@import "~@vime/core/themes/default.css";
 // @import './custom/_custom_palette';
 @import "./native-theme/theme_palette";
 @import "_theme_palette";

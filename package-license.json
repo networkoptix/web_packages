@@ -2867,6 +2867,14 @@
             "path": "cloud_portal/front_end/node_modules/@schematics/angular",
             "licenseFile": "cloud_portal/front_end/node_modules/@schematics/angular/LICENSE"
         },
+        "@stencil/core@2.5.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ionic-team/stencil",
+            "publisher": "Ionic Team",
+            "path": "cloud_portal/front_end/node_modules/@stencil/core",
+            "licenseFile": "cloud_portal/front_end/node_modules/@stencil/core/LICENSE.md",
+            "noticeFile": "cloud_portal/front_end/node_modules/@stencil/core/NOTICE.md"
+        },
         "@swimlane/ngx-charts@20.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/swimlane/ngx-charts",
@@ -3240,6 +3248,18 @@
             "path": "cloud_portal/front_end/node_modules/@videojs/xhr",
             "licenseFile": "cloud_portal/front_end/node_modules/@videojs/xhr/LICENCE"
         },
+        "@vime/angular@5.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/vime-js/vime",
+            "path": "cloud_portal/front_end/node_modules/@vime/angular",
+            "licenseFile": "cloud_portal/front_end/node_modules/@vime/angular/README.md"
+        },
+        "@vime/core@5.3.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/vime-js/vime",
+            "path": "cloud_portal/front_end/node_modules/@vime/core",
+            "licenseFile": "cloud_portal/front_end/node_modules/@vime/core/README.md"
+        },
         "@webassemblyjs/ast@1.11.1": {
             "licenses": "MIT",
             "repository": "https://github.com/xtuc/webassemblyjs",
@@ -3506,6 +3526,13 @@
             "publisher": "David Czeck",
             "path": "cloud_portal/front_end/node_modules/angular-svg-icon",
             "licenseFile": "cloud_portal/front_end/node_modules/angular-svg-icon/LICENSE"
+        },
+        "angular2-csv@0.2.9": {
+            "licenses": "MIT",
+            "repository": "https://github.com/javiertelioz/angular2-csv",
+            "publisher": "javiertelioz",
+            "path": "cloud_portal/front_end/node_modules/angular2-csv",
+            "licenseFile": "cloud_portal/front_end/node_modules/angular2-csv/LICENSE"
         },
         "ansi-align@3.0.1": {
             "licenses": "ISC",
@@ -6215,6 +6242,14 @@
             "path": "cloud_portal/front_end/node_modules/fs.realpath",
             "licenseFile": "cloud_portal/front_end/node_modules/fs.realpath/LICENSE"
         },
+        "fscreen@1.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/rafgraph/fscreen",
+            "publisher": "Rafael Pedicini",
+            "email": "rafael@rafgraph.dev",
+            "path": "cloud_portal/front_end/node_modules/fscreen",
+            "licenseFile": "cloud_portal/front_end/node_modules/fscreen/LICENSE"
+        },
         "function-bind@1.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/Raynos/function-bind",
@@ -8217,6 +8252,12 @@
             "url": "http://blog.izs.me/",
             "path": "cloud_portal/front_end/node_modules/minizlib",
             "licenseFile": "cloud_portal/front_end/node_modules/minizlib/LICENSE"
+        },
+        "mitt@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/developit/mitt",
+            "path": "cloud_portal/front_end/node_modules/mitt",
+            "licenseFile": "cloud_portal/front_end/node_modules/mitt/LICENSE"
         },
         "mkdirp@1.0.4": {
             "licenses": "MIT",
@@ -10627,6 +10668,13 @@
             "repository": "https://github.com/jshttp/statuses",
             "path": "cloud_portal/front_end/node_modules/statuses",
             "licenseFile": "cloud_portal/front_end/node_modules/statuses/LICENSE"
+        },
+        "stencil-wormhole@3.4.1": {
+            "licenses": "MIT",
+            "publisher": "Rahim Alwer",
+            "email": "rahim_alwer@hotmail.com",
+            "path": "cloud_portal/front_end/node_modules/stencil-wormhole",
+            "licenseFile": "cloud_portal/front_end/node_modules/stencil-wormhole/README.md"
         },
         "stream-chain@2.2.5": {
             "licenses": "BSD-3-Clause",
