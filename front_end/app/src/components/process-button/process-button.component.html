@@ -41,16 +41,29 @@
             ></svg-icon>
         </ng-container>
     </button>
+
+    <!-- Only used for "Open in %VMS_NAME% buttons for now,
+        generalize in future if needed" -->
     <ng-template #textButton>
-        <span class="header-button-span">
-            <svg-icon
-                [src]="CONFIG.icons.dirTextButtons + 'external.svg'"
-                [svgStyle]="{ 'margin-right': '2px', 'width.px': '20' }"
-            ></svg-icon>
+        <span
+            class="text-button"
+            [ngClass]="{ 'text-button--processing': process.processing }"
+        >
+            <ng-container *ngIf="!process.processing">
+                <svg-icon
+                    [src]="CONFIG.icons.dirTextButtons + 'external.svg'"
+                    [svgStyle]="{ 'margin-right': '2px', 'width.px': '20' }"
+                ></svg-icon>
+                <a
+                    (click)="clickHandler($event)"
+                    translate
+                    >Open in %VMS_NAME%</a
+                >
+            </ng-container>
             <span
-                (click)="clickHandler($event)"
+                *ngIf="process.processing"
                 translate
-                >Open in %VMS_NAME%</span
+                >Opening %VMS_NAME%...</span
             >
         </span>
     </ng-template>

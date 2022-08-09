@@ -94,14 +94,24 @@ describe('NxProcessButtonComponent', () => {
         component.textOnly = true;
         fixture.detectChanges();
 
-        const svgButton = el.querySelector('span.header-button-span svg-icon');
+        const svgButton = el.querySelector('.text-button svg-icon');
         expect(svgButton).toBeDefined();
 
-        const textButton = el.querySelector<HTMLSpanElement>(
-            'span.header-button-span span'
+        const textButton = el.querySelector<HTMLAnchorElement>(
+            '.text-button a'
         );
-        expect(textButton.innerHTML).toBe('Open in %VMS_NAME%');
+        expect(textButton.innerText).toBe('Open in %VMS_NAME%');
         textButton.click();
         expect(spy.calls.count()).toBe(1);
+    });
+
+    it('should display processing text in textOnly button', () => {
+        component.textOnly = true;
+        component.process.processing = true;
+        fixture.detectChanges();
+        const processText = el.querySelector<HTMLSpanElement>(
+            '.text-button span'
+        );
+        expect(processText.innerText).toBe('Opening %VMS_NAME%...');
     });
 });

@@ -144,9 +144,25 @@ nx-process-button {
         }
     }
 
-    .header-button-span {
+    .text-button {
         @include mixins.details-buttons;
-        @include typography.regular13light;
         cursor: pointer;
+
+        // Override to block hover styling in details-buttons while processing
+        &--processing:hover {
+            cursor: default;
+            svg-icon {
+                svg {
+                    height: 20px;
+                    g,
+                    path {
+                        fill: var(--btn-text-color) !important;
+                    }
+                }
+            }
+            span {
+                color: var(--btn-text-color) !important;
+            }
+        }
     }
 }

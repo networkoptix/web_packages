@@ -125,17 +125,18 @@
 @mixin details-buttons {
     flex: 0 0 auto;
     &:hover, &:hover > span {
-        color: theme_variables_common.$dark15 !important;
+        color: var(--btn-text-hover-color) !important;
         svg-icon {
             svg {
                 g,
                 path {
-                    fill: theme_variables_common.$dark15 !important;
+                    fill: var(--btn-text-hover-color) !important;
                 }
             }
         }
     }
-    @include typography.regular13light;
+    @include typography.regular13nocolor;
+    color: var(--btn-text-color);
     background-color: inherit;
     display: flex;
     align-items: center;
@@ -147,7 +148,7 @@
             height: 20px;
             g,
             path {
-                fill: theme_variables_common.$light16 !important;
+                fill: var(--btn-text-color) !important;
             }
         }
     }
