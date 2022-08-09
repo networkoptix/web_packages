@@ -2,6 +2,6 @@ Hallo, {{message.user_full_name}}
 
 {{message.current_owner_full_name}} ({{message.current_owner_email}}) lädt Sie ein, der Systembesitzer von {{message.system_name}} zu werden.
 
-Log in and process the request on the System Settings page
+Melden Sie sich an und bearbeiten Sie die Anfrage auf der Seite Systemeinstellungen
 
 {{config.portal_url}}/systems/{{message.system_id}}
