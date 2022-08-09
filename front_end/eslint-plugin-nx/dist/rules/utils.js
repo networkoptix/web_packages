@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isUntypedValue = exports.createRule = void 0;
 const utils_1 = require("@typescript-eslint/utils");
-exports.createRule = utils_1.ESLintUtils.RuleCreator(() => undefined);
+exports.createRule = utils_1.ESLintUtils.RuleCreator.withoutDocs;
 function isUntypedValue(expression) {
     const isNull = expression.value === null;
     const isUndefined = expression.type === utils_1.AST_NODE_TYPES.Identifier &&

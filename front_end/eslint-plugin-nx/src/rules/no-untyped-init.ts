@@ -28,12 +28,7 @@ const forTypes = [
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'no-untyped-init',
     meta: {
-        docs: {
-            description: 'Require types for properties/variables without initial values or where types cannot be inferred from initial values',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {

@@ -7,11 +7,14 @@ const path_1 = __importDefault(require("path"));
 module.exports = {
     rules: fs_1.default.readdirSync(path_1.default.join(__dirname, 'rules'))
         .reduce((rules, file) => {
-        if (file === 'utils.js') {
+        if (file.includes('utils.')) {
             return rules;
         }
         const { name } = path_1.default.parse(file);
-        rules[name] = require(`./rules/${name}`);
+        const ruleName = name.startsWith('template_')
+            ? name.replace('template_', 'template/')
+            : name;
+        rules[ruleName] = require(`./rules/${name}`);
         return rules;
     }, {})
 };

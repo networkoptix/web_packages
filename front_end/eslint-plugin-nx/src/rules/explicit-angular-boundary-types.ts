@@ -24,12 +24,7 @@ type TypeAnnotation = TSESTree.TSTypeAnnotation & {
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'explicit-angular-boundary-types',
     meta: {
-        docs: {
-            description: 'Require component inputs and outputs be explicitly typed',
-            recommended: false
-        },
         type: 'problem',
         schema: [], // no options
         hasSuggestions: true,

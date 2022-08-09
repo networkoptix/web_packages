@@ -16,11 +16,11 @@
     <div
         *ngSwitchCase="'logout'"
         class="context-button-container"
-        translate
     >
         <div
             (click)="logout()"
             class="logout"
+            translate
         >
             Log Out
             <svg-icon [src]="CONFIG.icons.dirHeader + 'logout.svg'"></svg-icon>

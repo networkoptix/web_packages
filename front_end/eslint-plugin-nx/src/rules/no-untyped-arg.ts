@@ -40,12 +40,7 @@ type FunctionLike = TSESTree.FunctionDeclaration
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'no-untyped-arg',
     meta: {
-        docs: {
-            description: 'Require types on named function arguments without types or informative default parameters',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {

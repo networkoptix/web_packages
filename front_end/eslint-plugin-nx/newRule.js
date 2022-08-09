@@ -10,6 +10,7 @@ if (!newRuleName) {
 const ignore = [
     'rule-template.ts',
     'utils.ts',
+    'template-utils.ts',
 ];
 const existingRules = fs.readdirSync(path.join(__dirname, 'src', 'rules'))
     .filter(file => !ignore.includes(file))
@@ -23,7 +24,7 @@ if (ignore.includes(`${newRuleName}.ts`)) {
     process.exit(1);
 }
 
-if (!/^[a-z]+(-[a-z]+)*$/.test(newRuleName)) {
+if (!/^[a-z]+(-[a-z]+)*$/.test(newRuleName.replace(/^template_/, ''))) {
     console.error('Rule name must be kebab-case.');
     process.exit(1);
 }
@@ -33,10 +34,14 @@ fs.writeFileSync(
     `./src/rules/${newRuleName}.ts`,
     ruleFile.replace(/rule-name/g, newRuleName)
 );
-const testFile = fs.readFileSync('./src/tests/test-template.ts', 'utf8');
-fs.writeFileSync(
-    `./src/tests/${newRuleName}.test.ts`,
-    testFile.replace(/rule-name/g, newRuleName)
-);
+let testFile = fs.readFileSync('./src/tests/test-template.ts', 'utf8')
+    .replace(/rule-name/g, newRuleName);
+if (/^template_/.test(newRuleName)) {
+    testFile = testFile.replace(
+        '@typescript-eslint/parser',
+        '@angular-eslint/template-parser'
+    );
+}
+fs.writeFileSync(`./src/tests/${newRuleName}.test.ts`, testFile);
 
 console.log(`New rule ${newRuleName} successfully created.`);

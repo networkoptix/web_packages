@@ -1,7 +1,6 @@
 import { ESLintUtils, TSESTree, AST_NODE_TYPES } from '@typescript-eslint/utils';
 
-export const createRule = ESLintUtils.RuleCreator(() => undefined as string);
-// No URL for rule info
+export const createRule = ESLintUtils.RuleCreator.withoutDocs;
 
 /**
  * Whether a type cannot be inferred from an initial value
@@ -18,7 +17,7 @@ export function isUntypedValue(expression: TSESTree.Expression): boolean {
     return isNull || isUndefined || isEmptyArray || isEmptyObject;
 }
 
-// Assuming that all decorators have calls like Input()
+/** Type assuming that all decorators have calls (e.g. `Input()`). */
 export type AngularDecorator = TSESTree.Decorator & {
     expression: TSESTree.CallExpression & {
         callee: TSESTree.Identifier;

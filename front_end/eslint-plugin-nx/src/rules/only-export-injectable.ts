@@ -30,12 +30,7 @@ const injectableDecorators = [
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'only-export-injectable',
     meta: {
-        docs: {
-            description: 'Disallow exporting anything other than the injectable in files with an injectable',
-            recommended: false,
-        },
         type: 'problem',
         schema: [], // no options
         messages: {

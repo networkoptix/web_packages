@@ -3,12 +3,7 @@ const utils_1 = require("@typescript-eslint/utils");
 const utils_2 = require("./utils");
 const primitives = ['boolean', 'number', 'string'];
 module.exports = (0, utils_2.createRule)({
-    name: 'explicit-angular-boundary-types',
     meta: {
-        docs: {
-            description: 'Require component inputs and outputs be explicitly typed',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         hasSuggestions: true,

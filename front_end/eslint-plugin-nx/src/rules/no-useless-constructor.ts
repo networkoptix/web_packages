@@ -18,12 +18,7 @@ import { createRule } from './utils';
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'no-useless-constructor',
     meta: {
-        docs: {
-            description: 'A custom implementation of the no-useless-constructor rule that ignores constructors if the class extends another class',
-            recommended: false,
-        },
         type: 'problem',
         schema: [],
         messages: {

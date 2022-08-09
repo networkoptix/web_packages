@@ -10,11 +10,14 @@ import path from 'path';
 export = {
     rules: fs.readdirSync(path.join(__dirname, 'rules'))
         .reduce<Record<string, unknown>>((rules, file) => {
-            if (file === 'utils.js') {
+            if (file.includes('utils.')) {
                 return rules;
             }
             const { name } = path.parse(file);
-            rules[name] = require(`./rules/${name}`);
+            const ruleName = name.startsWith('template_')
+                ? name.replace('template_', 'template/')
+                : name;
+            rules[ruleName] = require(`./rules/${name}`);
             return rules;
         }, {})
         // Avoids having to manually import+list rules

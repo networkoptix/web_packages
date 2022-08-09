@@ -12,12 +12,7 @@ const nonAssignments = [
     utils_1.AST_NODE_TYPES.RestElement,
 ];
 module.exports = (0, utils_2.createRule)({
-    name: 'no-untyped-arg',
     meta: {
-        docs: {
-            description: 'Require types on named function arguments without types or informative default parameters',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {

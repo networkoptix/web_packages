@@ -7,12 +7,7 @@ const injectableDecorators = [
     'Directive',
 ];
 module.exports = (0, utils_1.createRule)({
-    name: 'only-export-injectable',
     meta: {
-        docs: {
-            description: 'Disallow exporting anything other than the injectable in files with an injectable',
-            recommended: false,
-        },
         type: 'problem',
         schema: [],
         messages: {

@@ -7,12 +7,7 @@ const forTypes = [
     utils_1.AST_NODE_TYPES.ForInStatement,
 ];
 module.exports = (0, utils_2.createRule)({
-    name: 'no-untyped-init',
     meta: {
-        docs: {
-            description: 'Require types for properties/variables without initial values or where types cannot be inferred from initial values',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {

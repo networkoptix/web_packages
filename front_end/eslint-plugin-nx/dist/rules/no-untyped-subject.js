@@ -2,12 +2,7 @@
 const utils_1 = require("@typescript-eslint/utils");
 const utils_2 = require("./utils");
 module.exports = (0, utils_2.createRule)({
-    name: 'no-untyped-subject',
     meta: {
-        docs: {
-            description: 'Require generics for RxJS subjects where type cannot be inferred from an initial value',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {

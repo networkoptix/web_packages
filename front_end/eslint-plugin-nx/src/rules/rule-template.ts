@@ -15,12 +15,7 @@ import { createRule } from './utils';
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'rule-name',
     meta: {
-        docs: {
-            description: '',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {},

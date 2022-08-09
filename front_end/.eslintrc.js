@@ -580,6 +580,30 @@ module.exports = {
         },
         {
             files: ['*.component.html'],
+            plugins: ['nx'],
+            rules: {
+                'nx/template/translate-contents': ['error', [
+                    'svg-icon',
+                ]],
+            }
+        },
+        {
+            files: ['*.component.html'],
+            excludedFiles: [
+                'app/src/pages/debug/debug.component.html',
+                'app/src/pages/email-notifications/email-notifications.component.html',
+                'app/src/pages/layout/layout.component.html',
+                'app/src/pages/push-notifications/push-notifications.component.html',
+                'app/src/pages/sandbox/**/*',
+                // Not required for internal/testing components
+            ],
+            rules: {
+                // 'nx/template/require-translate': 'error',
+                // TODO: Activate and apply fixes
+            }
+        },
+        {
+            files: ['*.component.html'],
             excludedFiles: ['*inline-template-*.component.html'],
             extends: ['plugin:prettier/recommended'],
             plugins: ['prettier'],

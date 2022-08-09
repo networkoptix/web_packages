@@ -18,12 +18,7 @@ import { createRule, isUntypedValue } from './utils';
 // ----------------------------------------------------------------------------
 
 export = createRule({
-    name: 'no-untyped-subject',
     meta: {
-        docs: {
-            description: 'Require generics for RxJS subjects where type cannot be inferred from an initial value',
-            recommended: false
-        },
         type: 'problem',
         schema: [],
         messages: {

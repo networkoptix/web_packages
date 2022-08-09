@@ -1,6 +1,6 @@
 {
   "include": ["src"],
-  "exclude": ["src/tests", "src/rules/rule-template.ts"],
+  "exclude": ["src/tests", "src/sandbox", "src/rules/rule-template.ts"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
