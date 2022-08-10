@@ -41,7 +41,9 @@
                             >you</span
                         >
                         <ng-container *ngIf="!system.userManager.isMine">
-                            <span class="fs-mask system-header-bold">{{ system.info.ownerFullName }}</span>
+                            <span class="fs-mask system-header-bold">{{
+                                system.info.ownerFullName
+                            }}</span>
                             <span class="fs-mask">&nbsp;({{ system.info.ownerAccountEmail }})</span>
                         </ng-container>
                     </span>
