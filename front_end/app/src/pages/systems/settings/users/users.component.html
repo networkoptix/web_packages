@@ -84,7 +84,7 @@
                         <label for="fullName"
                             class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
                             translate>Name</label>
-                        <input type="text" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                        <input type="text" class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             [(ngModel)]="fullName"
                             name="fullName" id="fullName"
                             [disabled]="!(environment.isLocal && selectedUser.isMe) && !selectedUser.canBeEdited"
@@ -94,7 +94,7 @@
                         <label for="email"
                             class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
                             translate>Email</label>
-                        <input type="email" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                        <input type="email" class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
                             [(ngModel)]="email"
                             name="email" id="email" #emailInput="ngModel"
                             pattern="{{ CONFIG.credentialsValidation.emailRegex }}"

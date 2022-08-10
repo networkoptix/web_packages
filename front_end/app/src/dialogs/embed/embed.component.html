@@ -15,7 +15,7 @@
 
         <div class="form-group">
             <label for="login_email" translate>Email</label>
-            <input type="email" class="form-control"
+            <input type="email" class="fs-mask form-control"
                    id="login_email" name="login_email" #login_email="ngModel"
                    [(ngModel)]="auth.email"
                    [ngModelOptions]="{ updateOn: 'blur'}"

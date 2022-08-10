@@ -184,7 +184,7 @@
             <p [innerHTML]="LANG.dialogs.twoFa.installAuthApp()"></p>
         </div>
 
-        <div id="qrBadge" class="d-flex justify-content-center">
+        <div id="qrBadge" class="fs-exclude d-flex justify-content-center">
             <qr-code [value]="valueQR" size="200" errorCorrectionLevel="H"></qr-code>
         </div>
     </div>
@@ -227,7 +227,7 @@
             <div id="codeText" translate>Get a code from the authentication app and enter it below to complete the verification process.</div>
             <div class="form-group mt-3">
                 <label for="tfaCodeInput" translate>Enter verification code</label>
-                <input type="text" class="form-control" #tfaCodeInputWizardCode="ngModel"
+                <input type="text" class="fs-mask form-control" #tfaCodeInputWizardCode="ngModel"
                        name="tfaCodeInput" id="tfaCodeInput"
                        [(ngModel)]="tfaCode"
                        (ngModelChange)="notAuthorized = false"

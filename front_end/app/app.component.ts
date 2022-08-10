@@ -218,7 +218,7 @@ export class AppComponent {
         }
 
         if (!environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver) {
-            if (this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
+            if (false && this.CONFIG.featureFlags.logRocket && this.CONFIG.cloudMonitoring.logRocket) {
                 try {
                     LogRocket.init(this.CONFIG.cloudMonitoring.logRocket);
                     this.CONFIG.cloudMonitoring.isLogRocketActive = true;

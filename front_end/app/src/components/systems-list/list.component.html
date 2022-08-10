@@ -29,7 +29,7 @@
                                 <h2 class="old-h12 d-block"
                                     [innerHTML]="(system.name | unsafe | highlight:search.value)">
                                 </h2>
-                                <span class="user-name"
+                                <span class="fs-mask user-name"
                                     [innerHTML]="(getSystemOwnerName(system, userEmail) | unsafe | highlight:search.value)"></span>
                                 <div class="system-list-bottom-bar">
                                     <nx-tag style="display: block; margin-top: 24px;"

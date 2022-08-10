@@ -23,8 +23,8 @@
                     <span>
                         <span *ngIf="system.userManager.isMine" class="system-header-bold" translate>you</span>
                         <ng-container *ngIf="!system.userManager.isMine">
-                            <span class="system-header-bold">{{system.info.ownerFullName}}</span>
-                            <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                            <span class="fs-mask system-header-bold">{{system.info.ownerFullName}}</span>
+                            <span class="fs-mask">&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </ng-container>
                     </span>
                     <span
@@ -64,7 +64,7 @@
                     else notOwner"
             >
                 <div
-                    class="system-owner mb-2"
+                    class="fs-mask system-owner mb-2"
                     [innerHTML]="'system.transferNotification' | translate: {
                         ownerName: system.userManager.currentOwner.fullName
                     }"

@@ -45,7 +45,7 @@
         >
           <div class="preview">
             <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
-            <img *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
+            <img class="fs-exclude" *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
             <svg-icon nx-add-svg-src
               *ngIf="!camera.isAuthorized || previewLoaded[camera.id] === -1 || !camera.isOnline"
               [src]="CONFIG.icons.dirNonStandardView + 'cameras_list_placeholder_' +

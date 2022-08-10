@@ -19,7 +19,7 @@
     square: aspect === '1:1',
     fill: aspect === 'override'
 }">
-    <img alt="{{state}}" *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
+    <img class="fs-exclude" alt="{{state}}" *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
         [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
         [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"
