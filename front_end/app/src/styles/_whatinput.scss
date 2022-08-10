@@ -1,6 +1,6 @@
 @use "../../styles/theme_variables_common" as *;
 
-[data-whatintent="mouse"] *:focus:not(input:active):not(input:focus) {
+[data-whatintent="mouse"] *:focus:not(input:active):not(input:focus):not(select:active):not(select:focus) {
     outline : none !important;
 }
 

@@ -29,10 +29,11 @@
     }
 
     th {
-        @include typography.medium13dark9;
+        @include typography.medium13nocolor;
         padding          : 5px 15px;
-        background-color : var(--additional_light1);
-        border-bottom    : 1px solid var(--light3);
+        color            : var(--card-header-text);
+        background-color : var(--card-header-bg);
+        border-bottom    : 1px solid var(--border-color);
     }
 
     th:last-child {
@@ -40,11 +41,12 @@
     }
 
     td {
-        padding          : 5px 0 5px 15px;
-        background-color : var(--light1);
-        color            : var(--dark9);
+        @include typography.regular13nocolor;
+        color            : var(--card-header-text);
+        background-color : var(--card-body-bg);
         display          : flex;
         align-items      : center;
+        padding          : 5px 0 5px 15px;
     }
 
     td:first-child {
