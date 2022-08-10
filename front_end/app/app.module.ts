@@ -21,6 +21,7 @@ import { BrowserModule, Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { HoverPreloadModule } from 'ngx-hover-preload';
@@ -68,6 +69,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     imports: [
         BrowserModule,
         StoreModule.forRoot({ systems: systemsReducer }),
+        ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',

@@ -2661,6 +2661,13 @@
             "path": "cloud_portal/front_end/node_modules/@ngneat/until-destroy",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngneat/until-destroy/README.md"
         },
+        "@ngrx/store-devtools@14.1.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/ngrx/platform",
+            "publisher": "NgRx",
+            "path": "cloud_portal/front_end/node_modules/@ngrx/store-devtools",
+            "licenseFile": "cloud_portal/front_end/node_modules/@ngrx/store-devtools/README.md"
+        },
         "@ngrx/store@13.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/ngrx/platform",
