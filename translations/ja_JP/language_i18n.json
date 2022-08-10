@@ -350,6 +350,7 @@
     "Open %VMS_NAME%": "%VMS_NAME% を開く",
     "Open in %VMS_NAME%": "%VMS_NAME% で開く",
     "Open in a new window": "新しいウィンドウで開く",
+    "Opening %VMS_NAME%...": "Opening %VMS_NAME%...",
     "Other data": "その他のデータ",
     "Other packages:": "その他のパッケージ:",
     "Other releases, patches and beta versions": "その他のリリース、パッチ、ベータ版",
