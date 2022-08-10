@@ -73,10 +73,14 @@ input.hide-errors {
     }
 
     &[class*="ng-invalid"]:not(.ng-untouched):not(.notYetSubmitted):not(.hide-errors) {
-        border-color : var(--input-error-border-color) !important;
         color        : var(--input-error-color) !important;
-        outline      : none !important;
-        box-shadow   : none !important;
+
+        &:not(:focus) {
+            border-color : var(--input-error-border-color) !important;
+            outline      : none !important;
+            box-shadow   : none !important;
+        }
+
 
         + .input-group-addon {
             border-color     : transparent;
@@ -126,7 +130,7 @@ input.hide-errors {
     &[class*="ng-invalid"]:not(.ng-untouched) {
         input {
             border : 1px solid var(--input-error-border-color);
-            color  : var(--input-error-color);
+            color  : var(--input-error-color) !important;
 
             + .input-group-addon {
                 border-color     : transparent;
