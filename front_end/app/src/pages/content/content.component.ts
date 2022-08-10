@@ -128,9 +128,9 @@ export class NxContentComponent implements OnInit {
     getContent(): void {
         let uri;
         if (this.agreement) {
-            uri = `${this.CONFIG.apiBase}/agreement?`;
+            uri = `${this.CONFIG.apiBase}/cms/agreement?`;
         } else {
-            uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/?`;
+            uri = `${this.CONFIG.apiBase}/cms/article/${this.articleParam}/?`;
         }
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';
