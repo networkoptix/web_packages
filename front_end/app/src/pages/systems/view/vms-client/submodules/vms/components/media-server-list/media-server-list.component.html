@@ -73,6 +73,7 @@
                             *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"
                         ></nx-pre-loader>
                         <img
+                            class="fs-exclude"
                             *ngIf="camera.thumbnailUrl"
                             [src]="camera.thumbnailUrl"
                             (load)="handlePreviewLoaded(camera.id)"

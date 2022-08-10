@@ -1,5 +1,6 @@
 <input
     *ngIf="!lockEmail"
+    class="fs-mask"
     [ngModel]="value"
     (ngModelChange)="setValue($event)"
     (blur)="onTouchedCallback()"
@@ -18,7 +19,7 @@
     *ngIf="lockEmail"
     type="text"
     name="registerEmailLocked"
-    class="form-control"
+    class="fs-mask form-control"
     [readonly]="readonly"
     [ngClass]="{ 'hide-errors': hideErrors }"
     [(ngModel)]="value"

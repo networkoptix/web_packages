@@ -28,6 +28,7 @@ interface OauthStoreFlags {
 }
 
 export interface BaseConfig {
+    staticBase: string;
     commonPasswordsList?: { [key: string]: number; };
     capabilities?: Capabilities;
     viewsDir?: string;

@@ -170,7 +170,8 @@ def language(request):
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
-                     operation_description="Gets supported languages",
+                     operation_description="Gets supported languages. Redirects to languages.json but with version query param for cache busting. When possible /static/{{version}}/languages.json should be required directly.",
+                     deprecated=True,
                      responses={'302': 'Redirect to languages file with cache busting'})
 @api_view(['GET'])
 @permission_classes((AllowAny, ))

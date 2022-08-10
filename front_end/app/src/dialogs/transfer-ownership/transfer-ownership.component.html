@@ -31,6 +31,7 @@
                     >New system owner:</label
                 >
                 <nx-searchable-select
+                    class="fs-mask"
                     [items]="userItems"
                     [ngModel]="selectedUser"
                     (ngModelChange)="selectUser($event)"

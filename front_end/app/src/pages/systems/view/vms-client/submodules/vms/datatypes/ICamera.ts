@@ -91,7 +91,9 @@ export interface ICamera {
     getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
     setRecords(range: ISimpleTimeRange, records: CameraArchive)
 
+    mediaStreams: Array<any>
     rotation: int
+    streamUrls: string[]
 
     availableTransports: Array<PlaybackTransport>,
     availableTransportsAndResolutions: AvailableTransportsAndResolutions

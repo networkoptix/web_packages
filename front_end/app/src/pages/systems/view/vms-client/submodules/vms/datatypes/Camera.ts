@@ -30,6 +30,7 @@ export class Camera implements ICamera {
     protected _mediaStreams: Array<MediaStreamInfo> = [];
 
     protected _rotation: int = 0;
+    protected _streamUrls: string[] = [];
 
     constructor(
         public readonly id: string,
@@ -79,11 +80,21 @@ export class Camera implements ICamera {
             // console.log('got camera rotation', this._rotation)
         }
         // console.log('CAMERA ROTATION RECEIVED', rotation, this._rotation)
+
+        const streamUrls = ps.find(p => p.name === 'streamUrls');
+        if (streamUrls) {
+            this._streamUrls = Object.values(JSON.parse(streamUrls.value))
+                .map((stream: string) => stream);
+        }
     }
 
     public get rotation() {
         // console.log('CAMERA ROTATION GET', this._rotation)
         return this._rotation;
+    }
+
+    public get streamUrls() {
+        return this._streamUrls;
     }
 
     public get availableTransportsAndResolutions() {
@@ -112,6 +123,10 @@ export class Camera implements ICamera {
             // .filter(s => s.resolution !== '*')
             .map(s => s.transports.map(t => result.add(t)));
         return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>;
+    }
+
+    public get mediaStreams() {
+        return this._mediaStreams;
     }
 
     protected _getAvailableResolutions(transport) {
