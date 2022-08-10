@@ -18,6 +18,8 @@ import { SELECTION_DRAG_MODE } from './timeline.services.types';
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
 
+// const EAR_WIDTH = 120;
+
 enum EDGE_SCROLLING_SPEED {
     NONE = 0,
     SLOW = 1,
