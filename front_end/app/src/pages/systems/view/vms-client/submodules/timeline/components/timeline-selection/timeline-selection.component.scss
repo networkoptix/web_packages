@@ -32,9 +32,8 @@
         background-color : rgba(var(--brand-core--rgb), 0.3);
         transition       : opacity 0.2s ease-in-out;
         min-width        : 1px;
-        // border-left: 1px solid rgba(var(--brand-core--rgb), 0.9);
-        // border-right: 1px solid rgba(var(--brand-core--rgb), 0.9);
-        // cursor           : move;
+        border-left      : 2px solid rgba(var(--brand-core--rgb), 0.7);
+        border-right     : 2px solid rgba(var(--brand-core--rgb), 0.7);
         
         &.active {
             display : block;
