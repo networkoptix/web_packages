@@ -189,7 +189,6 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
     }
 
     switchToggle(targetState: boolean): void {
-        this.account2faEnabled = targetState;
         this.totpExistsForAccount = targetState;
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
@@ -199,6 +198,7 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
                     const newState = (action === 'enabled');
                     this.account2faEnabled = newState;
                     this.totpExistsForAccount = newState;
+                    this.account2faEnabledCheck = this.account2faEnabled;
                     this.accountService.get(true).catch(_ => {});
                     setTimeout(() => {
                         this.setPopoverTargets();
@@ -208,10 +208,15 @@ export class NxAccountSecurityComponent implements OnInit, AfterViewInit, OnDest
             this.dialogs
                 .off2FA(this.twoFaSystems.length)
                 .then(action => {
-                    const newState = !(action === 'disabled');
-                    this.account2faEnabled = newState;
-                    this.totpExistsForAccount = newState;
-                    this.accountService.get(true).catch(_ => {});
+                    if (action !== 'canceled') {
+                        const newState = !(action === 'disabled');
+                        this.account2faEnabled = newState;
+                        this.totpExistsForAccount = newState;
+                        this.account2faEnabledCheck = this.account2faEnabled;
+                        this.accountService.get(true).catch(_ => {});
+                    } else {
+                        this.totpExistsForAccount = true; // revert value on cancel
+                    }
                 });
         }
     }
