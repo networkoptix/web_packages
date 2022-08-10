@@ -3,6 +3,25 @@
 @use "./mixins";
 @use "bootstrap_utils" as bootdtrap;
 
+// This is used to implement updated validation handling where errors aren't shown until submit
+// See register.component for implementation example.
+// Moved in front so other styles (active, focus) will overwrite if needed --TT
+.override-error-style {
+    border-color: var(--input-border-color) !important;
+    color: var(--input-color) !important;
+}
+input.hide-errors {
+    @extend .override-error-style;
+}
+.hide-errors {
+    & .input-error {
+        display: none;
+    }
+    & .ng-invalid , & > input {
+        @extend .override-error-style;
+    }
+}
+
 .form-control {
     display          : block !important;
     width            : 100% !important;
@@ -146,25 +165,6 @@ select.form-control {
     -webkit-appearance : none;
     -moz-appearance    : none;
     background-color   : transparent;
-}
-
-
-// This is used to implement updated validation handling where errors aren't shown until submit
-// See register.component for implementation example.
-.override-error-style {
-    border-color: var(--input-border-color) !important;
-    color: var(--input-color) !important;
-}
-input.hide-errors {
-    @extend .override-error-style;
-}
-.hide-errors {
-    & .input-error {
-        display: none;
-    }
-    & .ng-invalid , & > input {
-        @extend .override-error-style;
-    }
 }
 
 .text-area-input {
