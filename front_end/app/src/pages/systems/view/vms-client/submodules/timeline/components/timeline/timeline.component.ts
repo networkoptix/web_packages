@@ -31,7 +31,6 @@ import { TimelineTimeUnderMouseService } from '../../services/timeline.time-unde
 import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
 
 import { onPinch } from './onPinch';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 const CANVAS_SELECTION_OFFSET_START = 60;
 const CANVAS_SELECTION_OFFSET_END = 85;
