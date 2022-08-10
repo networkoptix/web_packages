@@ -5,17 +5,17 @@ import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { WINDOW } from '@services/window-provider';
 
-import { ICamera } from '../../vms-client/submodules/vms/datatypes/ICamera';
+import { ICamera, MediaStreamInfo } from '../../vms-client/submodules/vms/datatypes/ICamera';
 
 interface ITransport {
     name: string;
     url: string;
-};
+}
 
 interface ICameraDetails {
     name: string;
     transports: ITransport[];
-};
+}
 
 @Component({
     selector: 'nx-camera-details',
@@ -47,16 +47,16 @@ export class NxCameraDetailsComponent implements OnChanges {
             }
             this.currentUrl = this.window.location.href;
             const mediaStreams = this.camera.mediaStreams;
-            const findIndexTransports = index => mediaStreams
-                .find(({ encoderIndex }) => index === encoderIndex) || {};
+            const findIndexTransports = (index: number): MediaStreamInfo | undefined => mediaStreams
+                .find(({ encoderIndex }) => index === encoderIndex);
 
-            const calcTransportUrls = stream => {
-                return stream.transports.reduce((urls, transport) => {
-                    const resolutions: any = this.camera.availableTransportsAndResolutions[transport];
+            const calcTransportUrls = (stream: MediaStreamInfo): Array<ITransport> => {
+                return stream.transports.reduce((urls: ITransport[], transport) => {
+                    const resolutions: { [key: string]: string } = this.camera.availableTransportsAndResolutions[transport];
                     let resolution = '';
                     switch (transport) {
                         case 'rtsp':
-                            resolution = stream.encoderIndex;
+                            resolution = stream.encoderIndex.toString();
                             break;
                         case 'hls':
                             resolution = stream.encoderIndex === 1 ? 'lo' : 'hi';
@@ -88,7 +88,7 @@ export class NxCameraDetailsComponent implements OnChanges {
         this.close.emit();
     }
 
-    public copyOnClick(data): void {
+    public copyOnClick(data: string): void {
         this.clipboardService.copy(data);
     }
 }

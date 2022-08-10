@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import LogRocket from 'logrocket';
@@ -18,6 +18,7 @@ import { NxConsoleService } from '@pages/developer-console/console/console.servi
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
+import { WINDOW } from '@services/window-provider';
 import { mapValuesToStrings } from '@utils/general';
 
 import { Account } from '../account.service/account';
@@ -109,7 +110,8 @@ export class NxCloudApiService {
         // @ts-ignore: Used in service worker decorators (above)
         private nxSwCacheService: NxSwCacheService,
         private consoleService: NxConsoleService,
-        private oauthService: OauthService
+        private oauthService: OauthService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.customClient = new CustomClientAPI(this.CONFIG, this.http, this.consoleService);
@@ -534,7 +536,7 @@ export class NxCloudApiService {
     getLanguages() {
         const uri = environment.isLocal
             ? '/static/languages.json'
-            : `${this.CONFIG.apiBase}/utils/languages/`;
+            : `${this.window.location.origin}/${this.CONFIG.staticBase}/languages.json`;
         return this.http.get<t.ILanguages>(uri).toPromise();
     }
 

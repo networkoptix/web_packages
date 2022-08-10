@@ -1,4 +1,4 @@
-import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
+import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
 export type CAMERA_STATUS = 'Live' | 'Archive' | 'Recording' | 'Online' | 'Offline' | 'Unauthorized';
@@ -56,10 +56,19 @@ export class SimpleTimeRange {
     }
 }
 
+export interface MediaStreamInfo {
+    codec: number,
+    customStreamParams: { [key: string]: string },
+    encoderIndex: number,
+    resolution: string,
+    transports: string[],
+    transcodingRequired: boolean
+}
+
 export type CameraArchive = Array<IRecord>;
 
 export interface AvailableTransportsAndResolutions {
-    [s: string]: Array<PlaybackQuality>, // means: [s: PlaybackTransport]
+    [s: string]: { [key: string]: string } // means: [s: PlaybackTransport]
 }
 
 export interface ICamera {
@@ -91,7 +100,7 @@ export interface ICamera {
     getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>
     setRecords(range: ISimpleTimeRange, records: CameraArchive)
 
-    mediaStreams: Array<any>
+    mediaStreams: Array<MediaStreamInfo>
     rotation: int
     streamUrls: string[]
 

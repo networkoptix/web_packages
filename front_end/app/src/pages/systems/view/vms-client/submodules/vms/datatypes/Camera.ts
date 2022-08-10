@@ -6,15 +6,14 @@ import {
     ICamera,
     ISimpleTimeRange,
     CAMERA_STATUS,
-    CameraArchive
+    CameraArchive,
+    MediaStreamInfo
 } from './ICamera';
 
 interface NameValue {
     name: string,
     value: string,
 }
-
-type MediaStreamInfo = any;
 
 export class Camera implements ICamera {
     protected _birdViewTree: BirdViewTree;
