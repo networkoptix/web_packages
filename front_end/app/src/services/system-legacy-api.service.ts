@@ -1301,11 +1301,16 @@ export class NxSystemAPI {
                     url += `pos=${position}&`;
                 }
                 return url;
-            default:
-                // Rtsp plays as webm but does not support transcoding.
-                if (['rtsp', 'mjpeg'].includes(transport)) {
-                    transport = 'webm';
+            case 'rtsp':
+                url = `${this.getUrlBase()}/${this.cleanId(cameraId)}?stream=${resolution}`.replace('https://', 'rtsp://');
+                if (this.authGet) {
+                    url += `auth=${this.authGet}&`;
                 }
+                if (position) {
+                    url += `pos=${position}&`;
+                }
+                return url;
+            default:
                 url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
                 if (this.authGet) {
                     url += `auth=${this.authGet}&`;
