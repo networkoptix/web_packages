@@ -1,8 +1,8 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/explicit-angular-boundary-types');
+import rule from '../rules/explicit-angular-boundary-types';
 
-const { classWrapper } = require('./utils');
+import { classWrapper } from './utils';
 
 const ruleTester = new ESLintUtils.RuleTester({
     parser: '@typescript-eslint/parser',
@@ -32,7 +32,7 @@ ruleTester.run('explicit-angular-boundary-types', rule, {
     invalid: [
         {
             code: classWrapper('@Input() invalidI1;'),
-            errors: 1,
+            errors: [{ messageId: 'missingInput' }],
         },
         {
             code: classWrapper('@Input() invalidI2 = false;'),
@@ -66,13 +66,13 @@ ruleTester.run('explicit-angular-boundary-types', rule, {
         },
         {
             code: classWrapper('@Output() invalidO1 = new EventEmitter();'),
-            errors: 1,
+            errors: [{ messageId: 'missingOutput' }],
         },
         {
             code: classWrapper(
                 '@Output() invalidO2: EventEmitter = new EventEmitter();'
             ),
-            errors: 1,
+            errors: [{ messageId: 'missingOutput' }],
         },
     ],
 });

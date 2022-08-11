@@ -1,11 +1,11 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/no-useless-constructor');
+import rule from '../rules/no-useless-constructor';
 
-const { classWrapper } = require('./utils');
+import { classWrapper } from './utils';
 
 const ruleTester = new ESLintUtils.RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
+    parser: '@typescript-eslint/parser',
 });
 
 ruleTester.run('no-useless-constructor', rule, {
@@ -32,7 +32,8 @@ ruleTester.run('no-useless-constructor', rule, {
             }],
         },
         {
-            code: classWrapper('constructor()\nconstructor() { }'),
+            code: classWrapper('constructor();\nconstructor() { }'),
+            // @ts-expect-error TODO: make rule handle overloads better
             errors: 1,
         },
     ],

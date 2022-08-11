@@ -34,12 +34,14 @@ fs.writeFileSync(
     `./src/rules/${newRuleName}.ts`,
     ruleFile.replace(/rule-name/g, newRuleName)
 );
+
+const expectError = '// @ts-expect-error: @typescript-eslint tester only expects TS parser';
 let testFile = fs.readFileSync('./src/tests/test-template.ts', 'utf8')
     .replace(/rule-name/g, newRuleName);
 if (/^template_/.test(newRuleName)) {
     testFile = testFile.replace(
-        '@typescript-eslint/parser',
-        '@angular-eslint/template-parser'
+        "parser: '@typescript-eslint/parser'",
+        `${expectError}\n${' '.repeat(4)}parser: '@angular-eslint/template-parser'`
     );
 }
 fs.writeFileSync(`./src/tests/${newRuleName}.test.ts`, testFile);

@@ -312,7 +312,8 @@ nx-lint-test:
     - cd front_end
     - npm ci
     - cd eslint-plugin-nx
-    - npm run test:ci
+    - npm ci
+    - npm run test
 
 webadmin:
   extends: .frontend-changes

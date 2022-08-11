@@ -1,8 +1,9 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/template_translate-contents');
+import rule from '../rules/template_translate-contents';
 
 const ruleTester = new ESLintUtils.RuleTester({
+    // @ts-expect-error: @typescript-eslint tester only expects TS parser
     parser: '@angular-eslint/template-parser',
 });
 

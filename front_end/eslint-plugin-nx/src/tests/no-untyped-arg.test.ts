@@ -1,11 +1,11 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/no-untyped-arg');
+import rule from '../rules/no-untyped-arg';
 
-const { classWrapper } = require('./utils');
+import { classWrapper } from './utils';
 
 const ruleTester = new ESLintUtils.RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
+    parser: '@typescript-eslint/parser',
 });
 
 ruleTester.run('no-untyped-arg', rule, {
@@ -20,12 +20,33 @@ ruleTester.run('no-untyped-arg', rule, {
         { code: 'function foo(...bars: string[]) {}' },
     ],
     invalid: [
-        { code: 'function foo(bar) {}', errors: 1 },
-        { code: 'const foo = (bar) => {};', errors: 1 },
-        { code: classWrapper('foo(bar) {}'), errors: 1 },
-        { code: classWrapper('foo = (bar) => {};'), errors: 1 },
-        { code: 'function foo(bar = []) {}', errors: 1 },
-        { code: 'function foo({ bar }) {}', errors: 1 },
-        { code: 'function foo(...bars) {}', errors: 1 },
+        {
+            code: 'function foo(bar) {}',
+            errors: [{ messageId: 'untypedArg' }]
+        },
+        {
+            code: 'const foo = (bar) => {};',
+            errors: [{ messageId: 'untypedArg' }]
+        },
+        {
+            code: classWrapper('foo(bar) {}'),
+            errors: [{ messageId: 'untypedArg' }]
+        },
+        {
+            code: classWrapper('foo = (bar) => {};'),
+            errors: [{ messageId: 'untypedArg' }]
+        },
+        {
+            code: 'function foo(bar = []) {}',
+            errors: [{ messageId: 'untypedArg' }]
+        },
+        {
+            code: 'function foo({ bar }) {}',
+            errors: [{ messageId: 'untypedArg' }]
+        },
+        {
+            code: 'function foo(...bars) {}',
+            errors: [{ messageId: 'untypedArg' }]
+        },
     ],
 });

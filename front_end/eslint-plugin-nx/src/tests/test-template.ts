@@ -1,6 +1,6 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/rule-name');
+import rule from '../rules/rule-name';
 
 const ruleTester = new ESLintUtils.RuleTester({
     parser: '@typescript-eslint/parser',

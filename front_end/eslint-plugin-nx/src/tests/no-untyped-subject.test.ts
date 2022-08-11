@@ -1,11 +1,11 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/no-untyped-subject');
+import rule from '../rules/no-untyped-subject';
 
-const { classWrapper } = require('./utils');
+import { classWrapper } from './utils';
 
 const ruleTester = new ESLintUtils.RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
+    parser: '@typescript-eslint/parser',
 });
 
 ruleTester.run('no-untyped-subject', rule, {
@@ -17,10 +17,25 @@ ruleTester.run('no-untyped-subject', rule, {
         { code: classWrapper('foo = new ReplaySubject({ a: 1, b: 2 })') },
     ],
     invalid: [
-        { code: classWrapper('foo = new Subject();'), errors: 1 },
-        { code: classWrapper('foo = new Subject(null);'), errors: 1 },
-        { code: classWrapper('foo = new Subject(undefined);'), errors: 1 },
-        { code: classWrapper('foo = new Subject([]);'), errors: 1 },
-        { code: classWrapper('foo = new Subject({});'), errors: 1 },
+        {
+            code: classWrapper('foo = new Subject();'),
+            errors: [{ messageId: 'untypedSubject' }]
+        },
+        {
+            code: classWrapper('foo = new Subject(null);'),
+            errors: [{ messageId: 'untypedSubject' }]
+        },
+        {
+            code: classWrapper('foo = new Subject(undefined);'),
+            errors: [{ messageId: 'untypedSubject' }]
+        },
+        {
+            code: classWrapper('foo = new Subject([]);'),
+            errors: [{ messageId: 'untypedSubject' }]
+        },
+        {
+            code: classWrapper('foo = new Subject({});'),
+            errors: [{ messageId: 'untypedSubject' }]
+        },
     ],
 });

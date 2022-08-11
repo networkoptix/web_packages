@@ -1,11 +1,11 @@
-const { ESLintUtils } = require('@typescript-eslint/utils');
+import { ESLintUtils } from '@typescript-eslint/utils';
 
-const rule = require('../../dist/rules/only-export-injectable');
+import rule from '../rules/only-export-injectable';
 
-const { joinLines } = require('./utils');
+import { joinLines } from './utils';
 
 const ruleTester = new ESLintUtils.RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
+    parser: '@typescript-eslint/parser',
 });
 
 ruleTester.run('only-export-injectable', rule, {
@@ -19,14 +19,14 @@ ruleTester.run('only-export-injectable', rule, {
                 '@Injectable() export class Foo {}',
                 'export const bar = false;',
             ),
-            errors: 1,
+            errors: [{ messageId: 'onlyExportInjectable' }],
         },
         {
             code: joinLines(
                 'export { baz } from \'@baz\';',
                 '@Injectable() export class Foo {}',
             ),
-            errors: 1,
+            errors: [{ messageId: 'onlyExportInjectable' }],
         },
         {
             code: joinLines(
@@ -34,7 +34,10 @@ ruleTester.run('only-export-injectable', rule, {
                 '@Injectable() export class Baz {}',
                 'export const bar = false;',
             ),
-            errors: 2,
+            errors: [
+                { messageId: 'onlyExportInjectable' },
+                { messageId: 'onlyExportInjectable' }
+            ],
         },
     ],
 });
