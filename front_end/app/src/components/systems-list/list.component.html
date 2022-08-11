@@ -4,7 +4,7 @@
 ></nx-pre-loader>
 
 <div
-    *ngIf="systems"
+    *ngIf="systems && !hasOneSystem"
     class="auth-visible"
     [ngClass]="{ 'm-2': showCompact, container: !showCompact }"
 >
@@ -60,7 +60,6 @@
                     </div>
                 </ng-container>
             </div>
-            <nx-pre-loader></nx-pre-loader>
         </div>
     </ng-container>
     <nx-footer *ngIf="!showCompact && !show2faRequired"></nx-footer>

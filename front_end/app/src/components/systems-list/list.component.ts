@@ -56,6 +56,7 @@ export class NxSystemsListComponent implements OnInit {
     filteredSystems: NxSystemWithUserInfo[];
     account: Account;
     endpoint: Endpoint = {};
+    hasOneSystem: boolean;
     searchChanged = new Subject<void>();
 
     static SYSTEMS_BASE = '/systems';
@@ -119,6 +120,12 @@ export class NxSystemsListComponent implements OnInit {
                     return;
                 }
 
+                if (this.systems.length === 1 && this.systems[0].stateOfHealth !== 'offline') {
+                    this.hasOneSystem = true;
+                } else {
+                    this.hasOneSystem = false;
+                }
+
                 this.systems.map(system => ({
                     ...system,
                     // avoid html being interpreted
@@ -128,7 +135,7 @@ export class NxSystemsListComponent implements OnInit {
                 if (this.location.path().startsWith(this.base)) {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be
                     // established, and we'll get into a loop. It's safer not to open the system.
-                    if (this.systems.length === 1 && this.systems[0].stateOfHealth !== 'offline') {
+                    if (this.hasOneSystem) {
                         this.openSystem(this.systems[0]);
                     }
 
