@@ -51,7 +51,8 @@ export class NxCameraDetailsComponent implements OnChanges {
                 .find(({ encoderIndex }) => index === encoderIndex);
 
             const calcTransportUrls = (stream: MediaStreamInfo): Array<ITransport> => {
-                return stream.transports.reduce((urls: ITransport[], transport) => {
+                // TODO: convert reduce to map
+                return stream?.transports.reduce((urls: ITransport[], transport) => {
                     const resolutions: { [key: string]: string } = this.camera.availableTransportsAndResolutions[transport];
                     let resolution = '';
                     switch (transport) {
@@ -66,7 +67,7 @@ export class NxCameraDetailsComponent implements OnChanges {
                     }
                     urls.push({ name: transport, url: this.camera.getVideoUrl(transport, resolution) });
                     return urls;
-                }, []);
+                }, []) || [];
             };
 
             this.cameraDetails = [
