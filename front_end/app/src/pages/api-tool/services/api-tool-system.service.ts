@@ -393,9 +393,8 @@ export class NxAPIToolSystemService {
         return this.currentSystem.serverManager.mediaserver instanceof NxSystemRestAPI;
     }
 
-    private setRequestURL(api: APIDoc): void {
+    setRequestURL(api: APIDoc): void {
         // servers.url currently only has a single item which determines the route that API requests go to.
-        console.log(this.currentSystem.serverManager.mediaserver.urlBase);
         api.servers[0].url = this.currentSystem.serverManager.mediaserver.urlBase;
     }
 

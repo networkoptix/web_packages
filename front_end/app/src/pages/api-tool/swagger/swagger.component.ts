@@ -134,6 +134,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     }
 
     private initSwagger(filter: string | string[], expand = 'list') {
+        this.APIToolSystemService.setRequestURL(this.currentAPIDoc);
         if (filter === '' || filter?.length === 0) {
             return;
         }
