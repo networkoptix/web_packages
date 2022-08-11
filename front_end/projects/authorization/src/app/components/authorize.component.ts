@@ -27,6 +27,7 @@ import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
+import { NxThemeService } from '@services/theme.service';
 import { WINDOW } from '@services/window-provider';
 
 import {
@@ -146,6 +147,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private title: Title,
         private localStorageService: LocalStorageService,
         private toastService: NxToastService,
+        private themeService: NxThemeService,
         @Inject(WINDOW) public window: Window
     ) {
         this.LANG = languageService.translations;
@@ -211,6 +213,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             const clientType = this.initialData.client_type || this.localStorageService.retrieve('client_type') || 'loginCloud';
             this.clientType = ClientType[clientType];
             this.viewType = this.initialData.view_type || 'web';
+
+            if (this.viewType === 'desktop') {
+                this.themeService.setTheme('dark', 'undefined');
+            }
             const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
             this.windowLargeEnough = this.window.innerWidth > 1024 && this.window.innerHeight > 768 && this.viewType === 'web';

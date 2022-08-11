@@ -44,7 +44,7 @@ export class NxThemeService {
         return this.themeSelected;
     }
 
-    setTheme(themeSelected: string, username:string = 'undefined'): void {
+    setTheme(themeSelected: string, username:string): void {
         if (
             themeSelected === 'auto' ||
             themeSelected === null
@@ -64,7 +64,7 @@ export class NxThemeService {
             );
         }
 
-        this.cloudApi.saveCustomAccountProperty(
+        username !== 'undefined' && this.cloudApi.saveCustomAccountProperty(
             { theme: themeSelected },
             'theme',
             username
