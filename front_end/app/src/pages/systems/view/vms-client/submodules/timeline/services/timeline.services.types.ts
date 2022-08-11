@@ -32,6 +32,7 @@ export interface TimelineSelectionServiceStatus {
     isActive: boolean,
     range: TimeRange,
     pixelRange: PixelRange,
+    dragMode: number,
 }
 
 export interface TimelineServiceStatus {
@@ -50,4 +51,12 @@ export interface TimelineTimeUnderMouseServiceStatus {
     timeUnderMouse: ms,
     offsetX: px,
     pressed: boolean,
+}
+
+export enum SELECTION_DRAG_MODE {
+    NO_DRAGGING = 0,
+    DRAGGING_BACKGROUND = 1,
+    DRAGGING_LEFT_EAR = 2,
+    DRAGGING_RIGHT_EAR = 3,
+    DRAGGING_SELECTED_RANGE = 4,
 }

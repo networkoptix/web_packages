@@ -13,19 +13,12 @@ import type {
     PixelRange,
     TimelineSelectionServiceStatus
 } from './timeline.services.types';
+import { SELECTION_DRAG_MODE } from './timeline.services.types';
 
 const MIN_SELECTION_WIDTH_PX = 5;
-const PLAYBACK_OVERLAY_TRESHOLD_PX = 5;
+const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
 
 // const EAR_WIDTH = 120;
-
-enum SELECTION_DRAG_MODE {
-    NO_DRAGGING = 0,
-    DRAGGING_BACKGROUND = 1,
-    DRAGGING_LEFT_EAR = 2,
-    DRAGGING_RIGHT_EAR = 3,
-    DRAGGING_SELECTED_RANGE = 4,
-}
 
 enum EDGE_SCROLLING_SPEED {
     NONE = 0,
@@ -71,7 +64,8 @@ export class TimelineSelectionService {
         {
             isActive: false,
             range: new TimeRange(0, 0),
-            pixelRange: { left: 0, right: 0 }
+            pixelRange: { left: 0, right: 0 },
+            dragMode: SELECTION_DRAG_MODE.NO_DRAGGING
         }
     );
 
@@ -151,7 +145,8 @@ export class TimelineSelectionService {
         this._subject.next({
             isActive: this.isActive,
             range: this.range,
-            pixelRange: this.pixelRange
+            pixelRange: this.pixelRange,
+            dragMode: this._dragMode,
         });
     }
 
@@ -178,7 +173,7 @@ export class TimelineSelectionService {
             const playbackTime = this.playback.state?.currentTime || Infinity;
             const diff_ms = Math.abs(mouseTime - playbackTime);
             const diff_px = this.timeline.durationToDomWidth(diff_ms);
-            if (diff_px < PLAYBACK_OVERLAY_TRESHOLD_PX) {
+            if (diff_px < PLAYBACK_OVERLAY_THRESHOLD_PX) {
                 this._selectedRange.start = playbackTime;
                 this._selectedRange.end = playbackTime;
             } else {
@@ -329,7 +324,7 @@ export class TimelineSelectionService {
         const playbackTime = this.playback.state?.currentTime || Infinity;
         const diff_ms = Math.abs(t - playbackTime);
         const diff_px = this.timeline.durationToDomWidth(diff_ms);
-        if (diff_px < PLAYBACK_OVERLAY_TRESHOLD_PX) {
+        if (diff_px < PLAYBACK_OVERLAY_THRESHOLD_PX) {
             return playbackTime;
         } else {
             return t;

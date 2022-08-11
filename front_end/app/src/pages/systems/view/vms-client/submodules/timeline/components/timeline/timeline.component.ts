@@ -7,6 +7,7 @@ import {
     OnDestroy,
     HostListener
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
@@ -25,6 +26,7 @@ import { TimelineService } from '../../services/timeline.service';
 import type {
     TimelineServiceStatus,
 } from '../../services/timeline.services.types';
+import { SELECTION_DRAG_MODE } from '../../services/timeline.services.types';
 import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';
 import { TimelineWheelHandlerService } from '../../services/timeline.wheel-handler.service';
 
@@ -37,6 +39,7 @@ const MOUSE_HIDE_UNTIL_PX = 8;
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
+@UntilDestroy()
 @Component({
     selector: 'timeline',
     templateUrl: './timeline.component.html',
@@ -62,6 +65,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.archiveSelectionEnabled = this.configService.flagsEnabled(
             'archiveSelection'
         );
+
+        this.selection.subject
+            .pipe(untilDestroyed(this))
+            .subscribe(selection => {
+                this.isDragging = selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING;
+            });
     }
 
     public readonly archiveSelectionEnabled: boolean = false;
@@ -148,7 +157,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         const screenX = calcScreenX(e);
         const delta = Math.abs(screenX - this._mouseDownScreenX);
         if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
-            // console.log('dragging started', delta)
+            // console.log('dragging started', delta);
             this.isDragging = true;
         }
         if (this.isDragging) {
