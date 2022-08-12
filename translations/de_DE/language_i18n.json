@@ -1,7 +1,7 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(ändern)",
-    "(copy)": "(copy)",
+    "(copy)": "(kopieren)",
     "1 professional license channel will be used": "Es wird 1 professioneller Lizenzkanal verwendet",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Eine einfache Möglichkeit, sich mit %VMS_NAME% -Systemen zu verbinden, diese zu verwalten und zu erweitern.",
     "API Documentation": "API-Dokumentation",
@@ -77,7 +77,7 @@
     "Browse for Report File": "Nach Berichtsdatei suchen",
     "Build Number:": "Versionsnummer:",
     "Camera Details": "Kameradetails",
-    "Camera ID": "Camera ID",
+    "Camera ID": "Kamera-ID",
     "Camera controls": "Kamerasteuerungen",
     "Camera header": "Kameraheader",
     "Camera is offline": "Kamera ist offline",

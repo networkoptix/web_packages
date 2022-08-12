@@ -8,7 +8,7 @@
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
     "Terms": "Voorwaarden",
-    "Developers Console": "Ontwikkelaars Console",
+    "Developers Console": "Developers Console",
     "productName": "",
     "monitoring": {
         "unavailable": "Make sure the specified server is online and try again."
@@ -796,7 +796,7 @@
             "publishedRibbon": "Deze pagina is de live versie die publiekelijk beschikbaar is."
         },
         "newVersionAvailable": {
-            "notification": "Nieuwe versie van %CLOUD_NAME% is beschikbaar",
+            "notification": "New version of %CLOUD_NAME% is available",
             "installButton": "Refresh to Update"
         },
         "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
@@ -1019,7 +1019,7 @@
             "IO Module": "I/O module",
             "Bridge": "Recorder",
             "NVR": "NVR",
-            "Invalid": "Ongeldig"
+            "Invalid": "Invalid"
         },
         "info": {
             "type": "Type",

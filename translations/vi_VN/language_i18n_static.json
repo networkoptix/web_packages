@@ -797,7 +797,7 @@
         },
         "newVersionAvailable": {
             "notification": "Đã có phiên bản mới của %CLOUD_NAME%",
-            "installButton": "Refresh to Update"
+            "installButton": "Làm mới để cập nhật"
         },
         "systemOffline": "Hệ thống đang ngoại tuyến. Một số cài đặt có thể không có sẵn.",
         "systemsMerging": "Hệ thống này hiện đang tham gia vào một hoạt động hợp nhất."

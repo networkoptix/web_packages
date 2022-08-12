@@ -1,7 +1,7 @@
 {
     "%CLOUD_NAME%": "%CLOUD_NAME%",
     "(change)": "(thay đổi)",
-    "(copy)": "(copy)",
+    "(copy)": "(sao chép)",
     "1 professional license channel will be used": "1 kênh giấy phép chuyên nghiệp sẽ được sử dụng",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Một cách đơn giản để kết nối, quản lý và mở rộng bất kỳ Hệ thống %VMS_NAME% nào.",
     "API Documentation": "Tài liệu API",
@@ -77,7 +77,7 @@
     "Browse for Report File": "Tìm Tệp Báo cáo",
     "Build Number:": "Số phiên bản:",
     "Camera Details": "Chi tiết về camera",
-    "Camera ID": "Camera ID",
+    "Camera ID": "ID Camera",
     "Camera controls": "Điều khiển máy ảnh",
     "Camera header": "Tiêu đề máy ảnh",
     "Camera is offline": "Máy ảnh đang ngoại tuyến",
