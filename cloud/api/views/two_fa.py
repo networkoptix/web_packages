@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from api.controllers.cloud_api import Auth
-from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params
+from api.helpers.exceptions import APINotAuthorisedException, api_success, require_params, APIInternalException
 
 
 class TwoFactorPermissionsMixin:
@@ -41,6 +41,12 @@ class DeleteBackupCodeSerializer(serializers.Serializer):
 class VerificationSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
     verification_code = serializers.CharField(required=True)
+
+    @staticmethod
+    def validate_verification_code(value):
+        if not value.isnumeric():
+            raise APIInternalException('Wrong totp', error_code='invalidTotp')
+        return value
 
 
 class TwoFactorVerification(TwoFactorPermissionsMixin, APIView):
