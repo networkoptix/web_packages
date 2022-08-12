@@ -12,7 +12,7 @@ ${BROWSER}                            Chrome
 
 ${LANGUAGE DROPDOWN}                  //header//nx-header-language-select//button[@id='dropdownMenuButton']
 ${LANGUAGE TO SELECT}                 //header//nx-header-language-select//span[@lang='${LANGUAGE}']/..
-${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
+${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Client Custom
 
