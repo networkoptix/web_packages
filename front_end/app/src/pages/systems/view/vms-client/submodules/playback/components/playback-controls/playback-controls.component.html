@@ -1,9 +1,16 @@
 <div
-    class="playback-control-button {{ btnClass }}"
+    class="playback-control-button"
     [ngClass]="{
         enabled: enabled
     }"
     (click)="handleClick()"
 >
-    <span class="glyph"></span>
+    <svg-icon
+        nx-add-svg-src
+        [src]="CONFIG.icons.dir + btnClass + '.svg'"
+        [svgStyle]="{
+            'width.px': '20',
+            'height.px': '20'
+        }"
+    ></svg-icon>
 </div>

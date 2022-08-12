@@ -1,7 +1,7 @@
 import {
     Component, Input, OnInit, TemplateRef, ViewContainerRef,
 } from '@angular/core';
-import { startCase } from 'lodash';
+import { startCase } from 'lodash-es';
 import { BehaviorSubject, filter, take } from 'rxjs';
 
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
