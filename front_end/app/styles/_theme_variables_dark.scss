@@ -253,8 +253,8 @@ html[data-theme="dark"] {
     --timeline-scrollbar-bg             : #2B383F; //$dark9;
     --timeline-scrollbar-hover-bg       : #263137; //$dark8;
     --timeline-scrollbar-stripe-bg      : #587785; //$dark18;
-    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.15);
-    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.25);
+    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.5);
+    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-bg    : #E1E7EA; //$light4;
     --timeline-playback-indicator-color : #080707; //$dark2
     --timeline-selection-panel-bg       : var(--brand-d3);

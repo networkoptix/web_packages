@@ -250,8 +250,8 @@ html {
     --timeline-scrollbar-bg             : #{$light16};
     --timeline-scrollbar-hover-bg       : #{$light14};
     --timeline-scrollbar-stripe-bg      : #{$dark12};
-    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.15);
-    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.25);
+    --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.5);
+    --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-bg    : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-color : #{$light1};
     --timeline-selection-panel-bg       : var(--brand-d1);
