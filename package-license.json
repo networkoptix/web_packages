@@ -1882,122 +1882,122 @@
             "path": "cloud_portal/front_end/node_modules/@ampproject/remapping",
             "licenseFile": "cloud_portal/front_end/node_modules/@ampproject/remapping/LICENSE"
         },
-        "@angular-devkit/architect@0.1400.4": {
+        "@angular-devkit/architect@0.1401.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/architect",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/architect/LICENSE"
         },
-        "@angular-devkit/build-angular@14.0.4": {
+        "@angular-devkit/build-angular@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/build-angular",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/build-angular/LICENSE"
         },
-        "@angular-devkit/build-webpack@0.1400.4": {
+        "@angular-devkit/build-webpack@0.1401.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/build-webpack",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/build-webpack/LICENSE"
         },
-        "@angular-devkit/core@14.0.4": {
+        "@angular-devkit/core@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/core",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/core/LICENSE"
         },
-        "@angular-devkit/schematics@14.0.4": {
+        "@angular-devkit/schematics@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular-devkit/schematics",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-devkit/schematics/LICENSE"
         },
-        "@angular-eslint/builder@14.0.1": {
+        "@angular-eslint/builder@14.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/builder",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/builder/LICENSE"
         },
-        "@angular-eslint/bundled-angular-compiler@14.0.0": {
+        "@angular-eslint/bundled-angular-compiler@14.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/bundled-angular-compiler",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/bundled-angular-compiler/LICENSE"
         },
-        "@angular-eslint/eslint-plugin-template@14.0.1": {
+        "@angular-eslint/eslint-plugin-template@14.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin-template",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin-template/LICENSE"
         },
-        "@angular-eslint/eslint-plugin@14.0.1": {
+        "@angular-eslint/eslint-plugin@14.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/eslint-plugin/LICENSE"
         },
-        "@angular-eslint/schematics@14.0.1": {
+        "@angular-eslint/schematics@14.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/schematics",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/schematics/LICENSE"
         },
-        "@angular-eslint/template-parser@14.0.0": {
+        "@angular-eslint/template-parser@14.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/angular-eslint/angular-eslint",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/template-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/template-parser/LICENSE"
         },
-        "@angular-eslint/utils@14.0.1": {
+        "@angular-eslint/utils@14.0.2": {
             "licenses": "MIT",
             "path": "cloud_portal/front_end/node_modules/@angular-eslint/utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular-eslint/utils/LICENSE"
         },
-        "@angular/animations@14.0.4": {
+        "@angular/animations@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/animations",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/animations/README.md"
         },
-        "@angular/cdk@14.0.4": {
+        "@angular/cdk@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/components",
             "path": "cloud_portal/front_end/node_modules/@angular/cdk",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/cdk/LICENSE"
         },
-        "@angular/cli@14.0.4": {
+        "@angular/cli@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
             "path": "cloud_portal/front_end/node_modules/@angular/cli",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/cli/LICENSE"
         },
-        "@angular/common@14.0.4": {
+        "@angular/common@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/common",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/common/README.md"
         },
-        "@angular/compiler-cli@14.0.4": {
+        "@angular/compiler-cli@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "path": "cloud_portal/front_end/node_modules/@angular/compiler-cli"
         },
-        "@angular/compiler@14.0.4": {
+        "@angular/compiler@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/compiler",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/compiler/README.md"
         },
-        "@angular/core@14.0.4": {
+        "@angular/core@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
@@ -2011,41 +2011,41 @@
             "path": "cloud_portal/front_end/node_modules/@angular/fire",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/fire/README.md"
         },
-        "@angular/forms@14.0.4": {
+        "@angular/forms@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/forms",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/forms/README.md"
         },
-        "@angular/language-service@14.0.4": {
+        "@angular/language-service@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/language-service"
         },
-        "@angular/platform-browser-dynamic@14.0.4": {
+        "@angular/platform-browser-dynamic@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/platform-browser-dynamic",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/platform-browser-dynamic/README.md"
         },
-        "@angular/platform-browser@14.0.4": {
+        "@angular/platform-browser@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/platform-browser",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/platform-browser/README.md"
         },
-        "@angular/router@14.0.4": {
+        "@angular/router@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
             "path": "cloud_portal/front_end/node_modules/@angular/router",
             "licenseFile": "cloud_portal/front_end/node_modules/@angular/router/README.md"
         },
-        "@angular/service-worker@14.0.4": {
+        "@angular/service-worker@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "angular",
@@ -2068,7 +2068,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/code-frame",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/code-frame/LICENSE"
         },
-        "@babel/compat-data@7.18.6": {
+        "@babel/compat-data@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2076,7 +2076,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/compat-data",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/compat-data/LICENSE"
         },
-        "@babel/core@7.17.10": {
+        "@babel/core@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2084,7 +2084,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/core",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/core/LICENSE"
         },
-        "@babel/generator@7.17.10": {
+        "@babel/generator@7.18.7": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2092,7 +2092,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/generator",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/generator/LICENSE"
         },
-        "@babel/helper-annotate-as-pure@7.16.7": {
+        "@babel/helper-annotate-as-pure@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2100,7 +2100,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-annotate-as-pure",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-annotate-as-pure/LICENSE"
         },
-        "@babel/helper-builder-binary-assignment-operator-visitor@7.18.6": {
+        "@babel/helper-builder-binary-assignment-operator-visitor@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2108,7 +2108,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-builder-binary-assignment-operator-visitor",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-builder-binary-assignment-operator-visitor/LICENSE"
         },
-        "@babel/helper-compilation-targets@7.18.6": {
+        "@babel/helper-compilation-targets@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2116,7 +2116,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-compilation-targets",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-compilation-targets/LICENSE"
         },
-        "@babel/helper-create-class-features-plugin@7.18.6": {
+        "@babel/helper-create-class-features-plugin@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2132,13 +2132,13 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-create-regexp-features-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-create-regexp-features-plugin/LICENSE"
         },
-        "@babel/helper-define-polyfill-provider@0.3.1": {
+        "@babel/helper-define-polyfill-provider@0.3.2": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel-polyfills",
             "path": "cloud_portal/front_end/node_modules/@babel/helper-define-polyfill-provider",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-define-polyfill-provider/LICENSE"
         },
-        "@babel/helper-environment-visitor@7.18.6": {
+        "@babel/helper-environment-visitor@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2154,7 +2154,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-explode-assignable-expression",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-explode-assignable-expression/LICENSE"
         },
-        "@babel/helper-function-name@7.18.6": {
+        "@babel/helper-function-name@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2170,7 +2170,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-hoist-variables",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-hoist-variables/LICENSE"
         },
-        "@babel/helper-member-expression-to-functions@7.18.6": {
+        "@babel/helper-member-expression-to-functions@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2186,7 +2186,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-module-imports",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-module-imports/LICENSE"
         },
-        "@babel/helper-module-transforms@7.18.6": {
+        "@babel/helper-module-transforms@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2202,7 +2202,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-optimise-call-expression",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-optimise-call-expression/LICENSE"
         },
-        "@babel/helper-plugin-utils@7.18.6": {
+        "@babel/helper-plugin-utils@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2210,7 +2210,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-plugin-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-plugin-utils/LICENSE"
         },
-        "@babel/helper-remap-async-to-generator@7.18.6": {
+        "@babel/helper-remap-async-to-generator@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2218,7 +2218,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-remap-async-to-generator",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-remap-async-to-generator/LICENSE"
         },
-        "@babel/helper-replace-supers@7.18.6": {
+        "@babel/helper-replace-supers@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2234,7 +2234,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-simple-access",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-simple-access/LICENSE"
         },
-        "@babel/helper-skip-transparent-expression-wrappers@7.18.6": {
+        "@babel/helper-skip-transparent-expression-wrappers@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2249,6 +2249,14 @@
             "url": "https://babel.dev/team",
             "path": "cloud_portal/front_end/node_modules/@babel/helper-split-export-declaration",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-split-export-declaration/LICENSE"
+        },
+        "@babel/helper-string-parser@7.18.10": {
+            "licenses": "MIT",
+            "repository": "https://github.com/babel/babel",
+            "publisher": "The Babel Team",
+            "url": "https://babel.dev/team",
+            "path": "cloud_portal/front_end/node_modules/@babel/helper-string-parser",
+            "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-string-parser/LICENSE"
         },
         "@babel/helper-validator-identifier@7.18.6": {
             "licenses": "MIT",
@@ -2266,7 +2274,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/helper-validator-option",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/helper-validator-option/LICENSE"
         },
-        "@babel/helper-wrap-function@7.18.6": {
+        "@babel/helper-wrap-function@7.18.11": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2290,7 +2298,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/highlight",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/highlight/LICENSE"
         },
-        "@babel/parser@7.18.6": {
+        "@babel/parser@7.18.11": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2306,7 +2314,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression/LICENSE"
         },
-        "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@7.18.6": {
+        "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2314,7 +2322,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining/LICENSE"
         },
-        "@babel/plugin-proposal-async-generator-functions@7.16.8": {
+        "@babel/plugin-proposal-async-generator-functions@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2346,7 +2354,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-dynamic-import",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-dynamic-import/LICENSE"
         },
-        "@babel/plugin-proposal-export-namespace-from@7.18.6": {
+        "@babel/plugin-proposal-export-namespace-from@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2362,7 +2370,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-json-strings",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-json-strings/LICENSE"
         },
-        "@babel/plugin-proposal-logical-assignment-operators@7.18.6": {
+        "@babel/plugin-proposal-logical-assignment-operators@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2386,7 +2394,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-numeric-separator",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-numeric-separator/LICENSE"
         },
-        "@babel/plugin-proposal-object-rest-spread@7.18.6": {
+        "@babel/plugin-proposal-object-rest-spread@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2402,7 +2410,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-optional-catch-binding",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-proposal-optional-catch-binding/LICENSE"
         },
-        "@babel/plugin-proposal-optional-chaining@7.18.6": {
+        "@babel/plugin-proposal-optional-chaining@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2465,6 +2473,14 @@
             "repository": "https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-export-namespace-from",
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-syntax-export-namespace-from",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-syntax-export-namespace-from/LICENSE"
+        },
+        "@babel/plugin-syntax-import-assertions@7.18.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/babel/babel",
+            "publisher": "The Babel Team",
+            "url": "https://babel.dev/team",
+            "path": "cloud_portal/front_end/node_modules/@babel/plugin-syntax-import-assertions",
+            "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-syntax-import-assertions/LICENSE"
         },
         "@babel/plugin-syntax-json-strings@7.8.3": {
             "licenses": "MIT",
@@ -2532,7 +2548,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-arrow-functions",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-arrow-functions/LICENSE"
         },
-        "@babel/plugin-transform-async-to-generator@7.16.8": {
+        "@babel/plugin-transform-async-to-generator@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2548,7 +2564,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-block-scoped-functions",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-block-scoped-functions/LICENSE"
         },
-        "@babel/plugin-transform-block-scoping@7.18.6": {
+        "@babel/plugin-transform-block-scoping@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2556,7 +2572,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-block-scoping",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-block-scoping/LICENSE"
         },
-        "@babel/plugin-transform-classes@7.18.6": {
+        "@babel/plugin-transform-classes@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2564,7 +2580,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-classes",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-classes/LICENSE"
         },
-        "@babel/plugin-transform-computed-properties@7.18.6": {
+        "@babel/plugin-transform-computed-properties@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2572,7 +2588,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-computed-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-computed-properties/LICENSE"
         },
-        "@babel/plugin-transform-destructuring@7.18.6": {
+        "@babel/plugin-transform-destructuring@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2588,7 +2604,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-dotall-regex",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-dotall-regex/LICENSE"
         },
-        "@babel/plugin-transform-duplicate-keys@7.18.6": {
+        "@babel/plugin-transform-duplicate-keys@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2604,7 +2620,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-exponentiation-operator",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-exponentiation-operator/LICENSE"
         },
-        "@babel/plugin-transform-for-of@7.18.6": {
+        "@babel/plugin-transform-for-of@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2612,7 +2628,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-for-of",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-for-of/LICENSE"
         },
-        "@babel/plugin-transform-function-name@7.18.6": {
+        "@babel/plugin-transform-function-name@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2620,7 +2636,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-function-name",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-function-name/LICENSE"
         },
-        "@babel/plugin-transform-literals@7.18.6": {
+        "@babel/plugin-transform-literals@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2652,7 +2668,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-modules-commonjs",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-modules-commonjs/LICENSE"
         },
-        "@babel/plugin-transform-modules-systemjs@7.18.6": {
+        "@babel/plugin-transform-modules-systemjs@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2692,7 +2708,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-object-super",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-object-super/LICENSE"
         },
-        "@babel/plugin-transform-parameters@7.18.6": {
+        "@babel/plugin-transform-parameters@7.18.8": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2724,7 +2740,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-reserved-words",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-reserved-words/LICENSE"
         },
-        "@babel/plugin-transform-runtime@7.17.10": {
+        "@babel/plugin-transform-runtime@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2740,7 +2756,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-shorthand-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-shorthand-properties/LICENSE"
         },
-        "@babel/plugin-transform-spread@7.18.6": {
+        "@babel/plugin-transform-spread@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2756,7 +2772,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-sticky-regex",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-sticky-regex/LICENSE"
         },
-        "@babel/plugin-transform-template-literals@7.18.6": {
+        "@babel/plugin-transform-template-literals@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2764,7 +2780,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-template-literals",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-template-literals/LICENSE"
         },
-        "@babel/plugin-transform-typeof-symbol@7.18.6": {
+        "@babel/plugin-transform-typeof-symbol@7.18.9": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2772,7 +2788,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-typeof-symbol",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-typeof-symbol/LICENSE"
         },
-        "@babel/plugin-transform-unicode-escapes@7.18.6": {
+        "@babel/plugin-transform-unicode-escapes@7.18.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2788,7 +2804,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/plugin-transform-unicode-regex",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/plugin-transform-unicode-regex/LICENSE"
         },
-        "@babel/preset-env@7.17.10": {
+        "@babel/preset-env@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2810,7 +2826,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/runtime-corejs3",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/runtime-corejs3/LICENSE"
         },
-        "@babel/runtime@7.17.9": {
+        "@babel/runtime@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2818,7 +2834,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/runtime",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/runtime/LICENSE"
         },
-        "@babel/template@7.16.7": {
+        "@babel/template@7.18.6": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2826,7 +2842,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/template",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/template/LICENSE"
         },
-        "@babel/traverse@7.18.6": {
+        "@babel/traverse@7.18.11": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2834,7 +2850,7 @@
             "path": "cloud_portal/front_end/node_modules/@babel/traverse",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/traverse/LICENSE"
         },
-        "@babel/types@7.18.7": {
+        "@babel/types@7.18.10": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel",
             "publisher": "The Babel Team",
@@ -2877,7 +2893,13 @@
             "path": "cloud_portal/front_end/node_modules/@cspotcode/source-map-support",
             "licenseFile": "cloud_portal/front_end/node_modules/@cspotcode/source-map-support/LICENSE.md"
         },
-        "@csstools/postcss-color-function@1.1.0": {
+        "@csstools/postcss-cascade-layers@1.0.5": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-cascade-layers",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-cascade-layers/LICENSE.md"
+        },
+        "@csstools/postcss-color-function@1.1.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2885,7 +2907,7 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-color-function",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-color-function/LICENSE.md"
         },
-        "@csstools/postcss-font-format-keywords@1.0.0": {
+        "@csstools/postcss-font-format-keywords@1.0.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2893,7 +2915,7 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-font-format-keywords",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-font-format-keywords/LICENSE.md"
         },
-        "@csstools/postcss-hwb-function@1.0.1": {
+        "@csstools/postcss-hwb-function@1.0.2": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2901,7 +2923,7 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-hwb-function",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-hwb-function/LICENSE.md"
         },
-        "@csstools/postcss-ic-unit@1.0.0": {
+        "@csstools/postcss-ic-unit@1.0.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2909,7 +2931,7 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-ic-unit",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-ic-unit/LICENSE.md"
         },
-        "@csstools/postcss-is-pseudo-class@2.0.6": {
+        "@csstools/postcss-is-pseudo-class@2.0.7": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2917,7 +2939,7 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-is-pseudo-class",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-is-pseudo-class/LICENSE.md"
         },
-        "@csstools/postcss-normalize-display-values@1.0.0": {
+        "@csstools/postcss-normalize-display-values@1.0.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2925,7 +2947,7 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-normalize-display-values",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-normalize-display-values/LICENSE.md"
         },
-        "@csstools/postcss-oklab-function@1.1.0": {
+        "@csstools/postcss-oklab-function@1.1.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -2941,19 +2963,25 @@
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-progressive-custom-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-progressive-custom-properties/LICENSE.md"
         },
-        "@csstools/postcss-stepped-value-functions@1.0.0": {
+        "@csstools/postcss-stepped-value-functions@1.0.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-stepped-value-functions",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-stepped-value-functions/LICENSE.md"
         },
-        "@csstools/postcss-unset-value@1.0.1": {
+        "@csstools/postcss-trigonometric-functions@1.0.2": {
+            "licenses": "CC0-1.0",
+            "repository": "https://github.com/csstools/postcss-plugins",
+            "path": "cloud_portal/front_end/node_modules/@csstools/postcss-trigonometric-functions",
+            "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-trigonometric-functions/LICENSE.md"
+        },
+        "@csstools/postcss-unset-value@1.0.2": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/@csstools/postcss-unset-value",
             "licenseFile": "cloud_portal/front_end/node_modules/@csstools/postcss-unset-value/LICENSE.md"
         },
-        "@csstools/selector-specificity@2.0.1": {
+        "@csstools/selector-specificity@2.0.2": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/@csstools/selector-specificity",
@@ -3428,6 +3456,14 @@
             "path": "cloud_portal/front_end/node_modules/@jridgewell/set-array",
             "licenseFile": "cloud_portal/front_end/node_modules/@jridgewell/set-array/LICENSE"
         },
+        "@jridgewell/source-map@0.3.2": {
+            "licenses": "MIT",
+            "repository": "https://github.com/jridgewell/source-map",
+            "publisher": "Justin Ridgewell",
+            "email": "justin@ridgewell.name",
+            "path": "cloud_portal/front_end/node_modules/@jridgewell/source-map",
+            "licenseFile": "cloud_portal/front_end/node_modules/@jridgewell/source-map/LICENSE"
+        },
         "@jridgewell/sourcemap-codec@1.4.14": {
             "licenses": "MIT",
             "repository": "https://github.com/jridgewell/sourcemap-codec",
@@ -3502,7 +3538,7 @@
             "path": "cloud_portal/front_end/node_modules/@ngrx/store",
             "licenseFile": "cloud_portal/front_end/node_modules/@ngrx/store/README.md"
         },
-        "@ngtools/webpack@14.0.4": {
+        "@ngtools/webpack@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
@@ -3539,7 +3575,7 @@
             "path": "cloud_portal/front_end/node_modules/@nodelib/fs.walk",
             "licenseFile": "cloud_portal/front_end/node_modules/@nodelib/fs.walk/LICENSE"
         },
-        "@npmcli/fs@2.1.0": {
+        "@npmcli/fs@2.1.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/fs",
             "publisher": "GitHub Inc.",
@@ -3583,12 +3619,19 @@
             "path": "cloud_portal/front_end/node_modules/@npmcli/promise-spawn",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/promise-spawn/LICENSE"
         },
-        "@npmcli/run-script@3.0.3": {
+        "@npmcli/run-script@4.2.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/run-script",
             "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/@npmcli/run-script",
             "licenseFile": "cloud_portal/front_end/node_modules/@npmcli/run-script/LICENSE"
+        },
+        "@nrwl/cli@14.5.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nrwl/nx",
+            "publisher": "Victor Savkin",
+            "path": "cloud_portal/front_end/node_modules/@nrwl/cli",
+            "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/cli/LICENSE"
         },
         "@nrwl/devkit@14.4.2": {
             "licenses": "MIT",
@@ -3596,6 +3639,19 @@
             "publisher": "Victor Savkin",
             "path": "cloud_portal/front_end/node_modules/@nrwl/devkit",
             "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/devkit/LICENSE"
+        },
+        "@nrwl/tao@14.5.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nrwl/nx",
+            "publisher": "Victor Savkin",
+            "path": "cloud_portal/front_end/node_modules/@nrwl/tao",
+            "licenseFile": "cloud_portal/front_end/node_modules/@nrwl/tao/LICENSE"
+        },
+        "@parcel/watcher@2.0.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/parcel-bundler/watcher",
+            "path": "cloud_portal/front_end/node_modules/@parcel/watcher",
+            "licenseFile": "cloud_portal/front_end/node_modules/@parcel/watcher/LICENSE"
         },
         "@phenomnomnominal/tsquery@4.2.0": {
             "licenses": "MIT",
@@ -3694,7 +3750,7 @@
             "path": "cloud_portal/front_end/node_modules/@protobufjs/utf8",
             "licenseFile": "cloud_portal/front_end/node_modules/@protobufjs/utf8/LICENSE"
         },
-        "@schematics/angular@14.0.4": {
+        "@schematics/angular@14.1.1": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular-cli",
             "publisher": "Angular Authors",
@@ -3723,13 +3779,14 @@
             "path": "cloud_portal/front_end/node_modules/@tinymce/tinymce-angular",
             "licenseFile": "cloud_portal/front_end/node_modules/@tinymce/tinymce-angular/README.md"
         },
-        "@tootallnate/once@1.1.2": {
+        "@tootallnate/once@2.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/TooTallNate/once",
             "publisher": "Nathan Rajlich",
             "email": "nathan@tootallnate.net",
             "url": "http://n8.io/",
-            "path": "cloud_portal/front_end/node_modules/@tootallnate/once"
+            "path": "cloud_portal/front_end/node_modules/@tootallnate/once",
+            "licenseFile": "cloud_portal/front_end/node_modules/@tootallnate/once/LICENSE"
         },
         "@tsconfig/node10@1.0.9": {
             "licenses": "MIT",
@@ -3851,17 +3908,17 @@
             "path": "cloud_portal/front_end/node_modules/@types/file-saver",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/file-saver/LICENSE"
         },
+        "@types/fscreen@1.0.1": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/fscreen",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/fscreen/LICENSE"
+        },
         "@types/hast@2.3.4": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/hast",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/hast/LICENSE"
-        },
-        "@types/hls.js@0.12.6": {
-            "licenses": "MIT",
-            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
-            "path": "cloud_portal/front_end/node_modules/@types/hls.js",
-            "licenseFile": "cloud_portal/front_end/node_modules/@types/hls.js/LICENSE"
         },
         "@types/http-proxy@1.17.9": {
             "licenses": "MIT",
@@ -3931,13 +3988,13 @@
             "path": "cloud_portal/front_end/node_modules/@types/md5",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/md5/LICENSE"
         },
-        "@types/mime@1.3.2": {
+        "@types/mime@3.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/mime",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/mime/LICENSE"
         },
-        "@types/node@12.20.55": {
+        "@types/node@16.11.47": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/node",
@@ -3987,7 +4044,7 @@
             "path": "cloud_portal/front_end/node_modules/@types/serve-index",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/serve-index/LICENSE"
         },
-        "@types/serve-static@1.13.10": {
+        "@types/serve-static@1.15.0": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
             "path": "cloud_portal/front_end/node_modules/@types/serve-static",
@@ -4385,19 +4442,12 @@
             "path": "cloud_portal/front_end/node_modules/ajv",
             "licenseFile": "cloud_portal/front_end/node_modules/ajv/LICENSE"
         },
-        "angular-svg-icon@13.0.0": {
+        "angular-svg-icon@14.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/czeckd/angular-svg-icon",
             "publisher": "David Czeck",
             "path": "cloud_portal/front_end/node_modules/angular-svg-icon",
             "licenseFile": "cloud_portal/front_end/node_modules/angular-svg-icon/LICENSE"
-        },
-        "angular2-csv@0.2.9": {
-            "licenses": "MIT",
-            "repository": "https://github.com/javiertelioz/angular2-csv",
-            "publisher": "javiertelioz",
-            "path": "cloud_portal/front_end/node_modules/angular2-csv",
-            "licenseFile": "cloud_portal/front_end/node_modules/angular2-csv/LICENSE"
         },
         "ansi-align@3.0.1": {
             "licenses": "ISC",
@@ -4406,7 +4456,7 @@
             "path": "cloud_portal/front_end/node_modules/ansi-align",
             "licenseFile": "cloud_portal/front_end/node_modules/ansi-align/LICENSE"
         },
-        "ansi-colors@4.1.1": {
+        "ansi-colors@4.1.3": {
             "licenses": "MIT",
             "repository": "https://github.com/doowb/ansi-colors",
             "publisher": "Brian Woodward",
@@ -4464,7 +4514,7 @@
             "path": "cloud_portal/front_end/node_modules/aproba",
             "licenseFile": "cloud_portal/front_end/node_modules/aproba/LICENSE"
         },
-        "are-we-there-yet@3.0.0": {
+        "are-we-there-yet@3.0.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/are-we-there-yet",
             "publisher": "GitHub Inc.",
@@ -4609,7 +4659,7 @@
             "path": "cloud_portal/front_end/node_modules/autolinker",
             "licenseFile": "cloud_portal/front_end/node_modules/autolinker/LICENSE"
         },
-        "autoprefixer@10.4.7": {
+        "autoprefixer@10.4.8": {
             "licenses": "MIT",
             "repository": "https://github.com/postcss/autoprefixer",
             "publisher": "Andrey Sitnik",
@@ -4666,13 +4716,13 @@
             "path": "cloud_portal/front_end/node_modules/babel-plugin-istanbul",
             "licenseFile": "cloud_portal/front_end/node_modules/babel-plugin-istanbul/LICENSE"
         },
-        "babel-plugin-polyfill-corejs2@0.3.1": {
+        "babel-plugin-polyfill-corejs2@0.3.2": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel-polyfills",
             "path": "cloud_portal/front_end/node_modules/babel-plugin-polyfill-corejs2",
             "licenseFile": "cloud_portal/front_end/node_modules/babel-plugin-polyfill-corejs2/LICENSE"
         },
-        "babel-plugin-polyfill-corejs3@0.5.2": {
+        "babel-plugin-polyfill-corejs3@0.5.3": {
             "licenses": "MIT",
             "repository": "https://github.com/babel/babel-polyfills",
             "path": "cloud_portal/front_end/node_modules/babel-plugin-polyfill-corejs3",
@@ -4850,7 +4900,7 @@
             "path": "cloud_portal/front_end/node_modules/browser-stdout",
             "licenseFile": "cloud_portal/front_end/node_modules/browser-stdout/LICENSE"
         },
-        "browserslist@4.21.1": {
+        "browserslist@4.21.3": {
             "licenses": "MIT",
             "repository": "https://github.com/browserslist/browserslist",
             "publisher": "Andrey Sitnik",
@@ -4933,7 +4983,7 @@
             "path": "cloud_portal/front_end/node_modules/bytesish",
             "licenseFile": "cloud_portal/front_end/node_modules/bytesish/README.md"
         },
-        "cacache@16.0.7": {
+        "cacache@16.1.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/cacache",
             "publisher": "GitHub Inc.",
@@ -4966,7 +5016,7 @@
             "path": "cloud_portal/front_end/node_modules/camelcase",
             "licenseFile": "cloud_portal/front_end/node_modules/camelcase/license"
         },
-        "caniuse-lite@1.0.30001361": {
+        "caniuse-lite@1.0.30001374": {
             "licenses": "CC-BY-4.0",
             "repository": "https://github.com/browserslist/caniuse-lite",
             "publisher": "Ben Briggs",
@@ -5321,12 +5371,11 @@
             "path": "cloud_portal/front_end/node_modules/concat-stream",
             "licenseFile": "cloud_portal/front_end/node_modules/concat-stream/LICENSE"
         },
-        "connect-history-api-fallback@1.6.0": {
+        "connect-history-api-fallback@2.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/bripkens/connect-history-api-fallback",
             "publisher": "Ben Ripkens",
-            "email": "bripkens.dev@gmail.com",
-            "url": "http://bripkens.de",
+            "email": "bripkens@gmail.com",
             "path": "cloud_portal/front_end/node_modules/connect-history-api-fallback",
             "licenseFile": "cloud_portal/front_end/node_modules/connect-history-api-fallback/LICENSE"
         },
@@ -5404,14 +5453,14 @@
             "path": "cloud_portal/front_end/node_modules/copy-to-clipboard",
             "licenseFile": "cloud_portal/front_end/node_modules/copy-to-clipboard/LICENSE"
         },
-        "copy-webpack-plugin@10.2.4": {
+        "copy-webpack-plugin@11.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/copy-webpack-plugin",
             "publisher": "Len Boyette",
             "path": "cloud_portal/front_end/node_modules/copy-webpack-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/copy-webpack-plugin/LICENSE"
         },
-        "core-js-compat@3.23.3": {
+        "core-js-compat@3.24.1": {
             "licenses": "MIT",
             "repository": "https://github.com/zloirock/core-js",
             "path": "cloud_portal/front_end/node_modules/core-js-compat",
@@ -6169,6 +6218,12 @@
             "path": "cloud_portal/front_end/node_modules/domutils",
             "licenseFile": "cloud_portal/front_end/node_modules/domutils/LICENSE"
         },
+        "dotenv@10.0.0": {
+            "licenses": "BSD-2-Clause",
+            "repository": "https://github.com/motdotla/dotenv",
+            "path": "cloud_portal/front_end/node_modules/dotenv",
+            "licenseFile": "cloud_portal/front_end/node_modules/dotenv/LICENSE"
+        },
         "duplexer2@0.1.4": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/deoxxa/duplexer2",
@@ -6220,7 +6275,7 @@
             "path": "cloud_portal/front_end/node_modules/ejs",
             "licenseFile": "cloud_portal/front_end/node_modules/ejs/LICENSE"
         },
-        "electron-to-chromium@1.4.177": {
+        "electron-to-chromium@1.4.211": {
             "licenses": "ISC",
             "repository": "https://github.com/kilian/electron-to-chromium",
             "publisher": "Kilian Valkhof",
@@ -6313,6 +6368,14 @@
             "publisher": "Tobias Koppers @sokra",
             "path": "cloud_portal/front_end/node_modules/enhanced-resolve",
             "licenseFile": "cloud_portal/front_end/node_modules/enhanced-resolve/LICENSE"
+        },
+        "enquirer@2.3.6": {
+            "licenses": "MIT",
+            "repository": "https://github.com/enquirer/enquirer",
+            "publisher": "Jon Schlinkert",
+            "url": "https://github.com/jonschlinkert",
+            "path": "cloud_portal/front_end/node_modules/enquirer",
+            "licenseFile": "cloud_portal/front_end/node_modules/enquirer/LICENSE"
         },
         "ent@2.2.0": {
             "licenses": "MIT",
@@ -6445,23 +6508,23 @@
             "path": "cloud_portal/front_end/node_modules/es6-weak-map",
             "licenseFile": "cloud_portal/front_end/node_modules/es6-weak-map/LICENSE"
         },
-        "esbuild-linux-64@0.14.38": {
+        "esbuild-linux-64@0.14.49": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/esbuild",
             "path": "cloud_portal/front_end/node_modules/esbuild-linux-64",
             "licenseFile": "cloud_portal/front_end/node_modules/esbuild-linux-64/README.md"
         },
-        "esbuild-wasm@0.14.38": {
+        "esbuild-wasm@0.14.49": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/esbuild",
             "path": "cloud_portal/front_end/node_modules/esbuild-wasm",
-            "licenseFile": "cloud_portal/front_end/node_modules/esbuild-wasm/README.md"
+            "licenseFile": "cloud_portal/front_end/node_modules/esbuild-wasm/LICENSE.md"
         },
-        "esbuild@0.14.38": {
+        "esbuild@0.14.49": {
             "licenses": "MIT",
             "repository": "https://github.com/evanw/esbuild",
             "path": "cloud_portal/front_end/node_modules/esbuild",
-            "licenseFile": "cloud_portal/front_end/node_modules/esbuild/README.md"
+            "licenseFile": "cloud_portal/front_end/node_modules/esbuild/LICENSE.md"
         },
         "escalade@3.1.1": {
             "licenses": "MIT",
@@ -7088,6 +7151,14 @@
             "path": "cloud_portal/front_end/node_modules/fresh",
             "licenseFile": "cloud_portal/front_end/node_modules/fresh/LICENSE"
         },
+        "fs-constants@1.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/mafintosh/fs-constants",
+            "publisher": "Mathias Buus",
+            "url": "@mafintosh",
+            "path": "cloud_portal/front_end/node_modules/fs-constants",
+            "licenseFile": "cloud_portal/front_end/node_modules/fs-constants/LICENSE"
+        },
         "fs-extra@10.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/jprichardson/node-fs-extra",
@@ -7254,7 +7325,7 @@
             "path": "cloud_portal/front_end/node_modules/glob-to-regexp",
             "licenseFile": "cloud_portal/front_end/node_modules/glob-to-regexp/README.md"
         },
-        "glob@8.0.1": {
+        "glob@8.0.3": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/node-glob",
             "publisher": "Isaac Z. Schlueter",
@@ -7467,12 +7538,6 @@
             "path": "cloud_portal/front_end/node_modules/highlight.js",
             "licenseFile": "cloud_portal/front_end/node_modules/highlight.js/LICENSE"
         },
-        "hls.js@0.14.16": {
-            "licenses": "Apache-2.0",
-            "repository": "https://github.com/video-dev/hls.js",
-            "path": "cloud_portal/front_end/node_modules/hls.js",
-            "licenseFile": "cloud_portal/front_end/node_modules/hls.js/LICENSE"
-        },
         "hoist-non-react-statics@3.3.2": {
             "licenses": "BSD-3-Clause",
             "repository": "https://github.com/mridgway/hoist-non-react-statics",
@@ -7545,7 +7610,7 @@
             "path": "cloud_portal/front_end/node_modules/http-parser-js",
             "licenseFile": "cloud_portal/front_end/node_modules/http-parser-js/LICENSE.md"
         },
-        "http-proxy-agent@4.0.1": {
+        "http-proxy-agent@5.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/TooTallNate/node-http-proxy-agent",
             "publisher": "Nathan Rajlich",
@@ -7786,7 +7851,7 @@
             "path": "cloud_portal/front_end/node_modules/invert-kv",
             "licenseFile": "cloud_portal/front_end/node_modules/invert-kv/license"
         },
-        "ip@1.1.8": {
+        "ip@2.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/indutny/node-ip",
             "publisher": "Fedor Indutny",
@@ -8609,14 +8674,14 @@
             "path": "cloud_portal/front_end/node_modules/lcid",
             "licenseFile": "cloud_portal/front_end/node_modules/lcid/license"
         },
-        "less-loader@10.2.0": {
+        "less-loader@11.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/less-loader",
             "publisher": "Johannes Ewald @jhnns",
             "path": "cloud_portal/front_end/node_modules/less-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/less-loader/LICENSE"
         },
-        "less@4.1.2": {
+        "less@4.1.3": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/less/less.js",
             "publisher": "Alexis Sellier",
@@ -8720,15 +8785,6 @@
             "path": "cloud_portal/front_end/node_modules/lodash.padend",
             "licenseFile": "cloud_portal/front_end/node_modules/lodash.padend/LICENSE"
         },
-        "lodash.sortby@4.7.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/lodash/lodash",
-            "publisher": "John-David Dalton",
-            "email": "john.david.dalton@gmail.com",
-            "url": "http://allyoucanleet.com/",
-            "path": "cloud_portal/front_end/node_modules/lodash.sortby",
-            "licenseFile": "cloud_portal/front_end/node_modules/lodash.sortby/LICENSE"
-        },
         "lodash@4.17.21": {
             "licenses": "MIT",
             "repository": "https://github.com/lodash/lodash",
@@ -8793,7 +8849,7 @@
             "path": "cloud_portal/front_end/node_modules/lowlight",
             "licenseFile": "cloud_portal/front_end/node_modules/lowlight/license"
         },
-        "lru-cache@7.12.0": {
+        "lru-cache@7.13.2": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/node-lru-cache",
             "publisher": "Isaac Z. Schlueter",
@@ -8817,7 +8873,7 @@
             "path": "cloud_portal/front_end/node_modules/m3u8-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/m3u8-parser/LICENSE"
         },
-        "magic-string@0.26.1": {
+        "magic-string@0.26.2": {
             "licenses": "MIT",
             "repository": "https://github.com/rich-harris/magic-string",
             "publisher": "Rich Harris",
@@ -8841,11 +8897,10 @@
             "path": "cloud_portal/front_end/node_modules/make-error",
             "licenseFile": "cloud_portal/front_end/node_modules/make-error/LICENSE"
         },
-        "make-fetch-happen@9.1.0": {
+        "make-fetch-happen@10.2.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/make-fetch-happen",
-            "publisher": "Kat Marchán",
-            "email": "kzm@zkat.tech",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/make-fetch-happen",
             "licenseFile": "cloud_portal/front_end/node_modules/make-fetch-happen/LICENSE"
         },
@@ -9041,7 +9096,7 @@
             "path": "cloud_portal/front_end/node_modules/min-document",
             "licenseFile": "cloud_portal/front_end/node_modules/min-document/LICENCE"
         },
-        "mini-css-extract-plugin@2.6.0": {
+        "mini-css-extract-plugin@2.6.1": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/mini-css-extract-plugin",
             "publisher": "Tobias Koppers @sokra",
@@ -9054,7 +9109,7 @@
             "path": "cloud_portal/front_end/node_modules/minimalistic-assert",
             "licenseFile": "cloud_portal/front_end/node_modules/minimalistic-assert/LICENSE"
         },
-        "minimatch@5.0.1": {
+        "minimatch@5.1.0": {
             "licenses": "ISC",
             "repository": "https://github.com/isaacs/minimatch",
             "publisher": "Isaac Z. Schlueter",
@@ -9080,9 +9135,10 @@
             "path": "cloud_portal/front_end/node_modules/minipass-collect",
             "licenseFile": "cloud_portal/front_end/node_modules/minipass-collect/LICENSE"
         },
-        "minipass-fetch@1.4.1": {
+        "minipass-fetch@2.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/npm/minipass-fetch",
+            "publisher": "GitHub Inc.",
             "path": "cloud_portal/front_end/node_modules/minipass-fetch",
             "licenseFile": "cloud_portal/front_end/node_modules/minipass-fetch/LICENSE"
         },
@@ -9237,7 +9293,7 @@
             "path": "cloud_portal/front_end/node_modules/natural-compare",
             "licenseFile": "cloud_portal/front_end/node_modules/natural-compare/README.md"
         },
-        "needle@2.9.1": {
+        "needle@3.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/tomas/needle",
             "publisher": "Tomás Pollak",
@@ -9433,7 +9489,7 @@
             "path": "cloud_portal/front_end/node_modules/node-gyp-build",
             "licenseFile": "cloud_portal/front_end/node_modules/node-gyp-build/LICENSE"
         },
-        "node-gyp@8.4.1": {
+        "node-gyp@9.1.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nodejs/node-gyp",
             "publisher": "Nathan Rajlich",
@@ -9450,7 +9506,7 @@
             "path": "cloud_portal/front_end/node_modules/node-int64",
             "licenseFile": "cloud_portal/front_end/node_modules/node-int64/LICENSE"
         },
-        "node-releases@2.0.5": {
+        "node-releases@2.0.6": {
             "licenses": "MIT",
             "repository": "https://github.com/chicoxyzzy/node-releases",
             "publisher": "Sergey Rubanov",
@@ -9516,7 +9572,7 @@
             "path": "cloud_portal/front_end/node_modules/npm-normalize-package-bin",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-normalize-package-bin/LICENSE"
         },
-        "npm-package-arg@9.0.2": {
+        "npm-package-arg@9.1.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-package-arg",
             "publisher": "GitHub Inc.",
@@ -9537,7 +9593,7 @@
             "path": "cloud_portal/front_end/node_modules/npm-pick-manifest",
             "licenseFile": "cloud_portal/front_end/node_modules/npm-pick-manifest/LICENSE.md"
         },
-        "npm-registry-fetch@13.1.1": {
+        "npm-registry-fetch@13.3.0": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/npm-registry-fetch",
             "publisher": "GitHub Inc.",
@@ -9576,6 +9632,13 @@
             "url": "sindresorhus.com",
             "path": "cloud_portal/front_end/node_modules/number-is-nan",
             "licenseFile": "cloud_portal/front_end/node_modules/number-is-nan/license"
+        },
+        "nx@14.5.4": {
+            "licenses": "MIT",
+            "repository": "https://github.com/nrwl/nx",
+            "publisher": "Victor Savkin",
+            "path": "cloud_portal/front_end/node_modules/nx",
+            "licenseFile": "cloud_portal/front_end/node_modules/nx/LICENSE"
         },
         "oauth-sign@0.9.0": {
             "licenses": "Apache-2.0",
@@ -9800,7 +9863,7 @@
             "path": "cloud_portal/front_end/node_modules/p-try",
             "licenseFile": "cloud_portal/front_end/node_modules/p-try/license"
         },
-        "pacote@13.3.0": {
+        "pacote@13.6.1": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/pacote",
             "publisher": "GitHub Inc.",
@@ -10047,7 +10110,7 @@
             "path": "cloud_portal/front_end/node_modules/pngjs",
             "licenseFile": "cloud_portal/front_end/node_modules/pngjs/LICENSE"
         },
-        "postcss-attribute-case-insensitive@5.0.1": {
+        "postcss-attribute-case-insensitive@5.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/postcss-attribute-case-insensitive",
@@ -10061,7 +10124,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-clamp",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-clamp/LICENSE"
         },
-        "postcss-color-functional-notation@4.2.3": {
+        "postcss-color-functional-notation@4.2.4": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10075,7 +10138,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-color-hex-alpha",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-color-hex-alpha/LICENSE.md"
         },
-        "postcss-color-rebeccapurple@7.1.0": {
+        "postcss-color-rebeccapurple@7.1.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/postcss-color-rebeccapurple",
@@ -10101,7 +10164,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-custom-selectors",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-custom-selectors/LICENSE.md"
         },
-        "postcss-dir-pseudo-class@6.0.4": {
+        "postcss-dir-pseudo-class@6.0.5": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10109,7 +10172,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-dir-pseudo-class",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-dir-pseudo-class/LICENSE.md"
         },
-        "postcss-double-position-gradients@3.1.1": {
+        "postcss-double-position-gradients@3.1.2": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10148,7 +10211,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-font-variant",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-font-variant/LICENSE"
         },
-        "postcss-gap-properties@3.0.3": {
+        "postcss-gap-properties@3.0.5": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10156,7 +10219,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-gap-properties",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-gap-properties/LICENSE.md"
         },
-        "postcss-image-set-function@4.0.6": {
+        "postcss-image-set-function@4.0.7": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10179,7 +10242,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-initial",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-initial/LICENSE"
         },
-        "postcss-lab-function@4.2.0": {
+        "postcss-lab-function@4.2.1": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10187,7 +10250,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-lab-function",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-lab-function/LICENSE.md"
         },
-        "postcss-loader@6.2.1": {
+        "postcss-loader@7.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/postcss-loader",
             "publisher": "Andrey Sitnik",
@@ -10255,7 +10318,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-opacity-percentage",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-opacity-percentage/LICENSE.md"
         },
-        "postcss-overflow-shorthand@3.0.3": {
+        "postcss-overflow-shorthand@3.0.4": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10271,7 +10334,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-page-break",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-page-break/LICENSE"
         },
-        "postcss-place@7.0.4": {
+        "postcss-place@7.0.5": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10279,7 +10342,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-place",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-place/LICENSE.md"
         },
-        "postcss-preset-env@7.5.0": {
+        "postcss-preset-env@7.7.2": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10287,7 +10350,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-preset-env",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-preset-env/LICENSE.md"
         },
-        "postcss-pseudo-class-any-link@7.1.5": {
+        "postcss-pseudo-class-any-link@7.1.6": {
             "licenses": "CC0-1.0",
             "repository": "https://github.com/csstools/postcss-plugins",
             "publisher": "Jonathan Neal",
@@ -10303,10 +10366,9 @@
             "path": "cloud_portal/front_end/node_modules/postcss-replace-overflow-wrap",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-replace-overflow-wrap/LICENSE"
         },
-        "postcss-selector-not@5.0.0": {
+        "postcss-selector-not@6.0.1": {
             "licenses": "MIT",
-            "repository": "https://github.com/postcss/postcss-selector-not",
-            "publisher": "Maxime Thirouin",
+            "repository": "https://github.com/csstools/postcss-plugins",
             "path": "cloud_portal/front_end/node_modules/postcss-selector-not",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-selector-not/LICENSE"
         },
@@ -10324,7 +10386,7 @@
             "path": "cloud_portal/front_end/node_modules/postcss-value-parser",
             "licenseFile": "cloud_portal/front_end/node_modules/postcss-value-parser/LICENSE"
         },
-        "postcss@8.4.13": {
+        "postcss@8.4.14": {
             "licenses": "MIT",
             "repository": "https://github.com/postcss/postcss",
             "publisher": "Andrey Sitnik",
@@ -10941,7 +11003,7 @@
             "path": "cloud_portal/front_end/node_modules/resolve-url-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/resolve-url-loader/LICENSE"
         },
-        "resolve@1.22.0": {
+        "resolve@1.22.1": {
             "licenses": "MIT",
             "repository": "https://github.com/browserify/resolve",
             "publisher": "James Halliday",
@@ -11105,7 +11167,7 @@
             "path": "cloud_portal/front_end/node_modules/sane",
             "licenseFile": "cloud_portal/front_end/node_modules/sane/README.md"
         },
-        "sass-loader@12.6.0": {
+        "sass-loader@13.0.2": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/sass-loader",
             "publisher": "J. Tangelder",
@@ -11382,7 +11444,7 @@
             "path": "cloud_portal/front_end/node_modules/sockjs",
             "licenseFile": "cloud_portal/front_end/node_modules/sockjs/LICENSE"
         },
-        "socks-proxy-agent@6.2.1": {
+        "socks-proxy-agent@7.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/TooTallNate/node-socks-proxy-agent",
             "publisher": "Nathan Rajlich",
@@ -11391,7 +11453,7 @@
             "path": "cloud_portal/front_end/node_modules/socks-proxy-agent",
             "licenseFile": "cloud_portal/front_end/node_modules/socks-proxy-agent/README.md"
         },
-        "socks@2.6.2": {
+        "socks@2.7.0": {
             "licenses": "MIT",
             "repository": "https://github.com/JoshGlazebrook/socks",
             "publisher": "Josh Glazebrook",
@@ -11414,7 +11476,7 @@
             "path": "cloud_portal/front_end/node_modules/source-map-js",
             "licenseFile": "cloud_portal/front_end/node_modules/source-map-js/LICENSE"
         },
-        "source-map-loader@3.0.1": {
+        "source-map-loader@4.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/source-map-loader",
             "publisher": "Tobias Koppers @sokra",
@@ -11697,7 +11759,7 @@
             "path": "cloud_portal/front_end/node_modules/stylis",
             "licenseFile": "cloud_portal/front_end/node_modules/stylis/LICENSE"
         },
-        "stylus-loader@6.2.0": {
+        "stylus-loader@7.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack-contrib/stylus-loader",
             "publisher": "Kyle Robinson Young",
@@ -11706,7 +11768,7 @@
             "path": "cloud_portal/front_end/node_modules/stylus-loader",
             "licenseFile": "cloud_portal/front_end/node_modules/stylus-loader/LICENSE"
         },
-        "stylus@0.57.0": {
+        "stylus@0.58.1": {
             "licenses": "MIT",
             "repository": "https://github.com/stylus/stylus",
             "publisher": "TJ Holowaychuk",
@@ -11776,6 +11838,14 @@
             "path": "cloud_portal/front_end/node_modules/tapable",
             "licenseFile": "cloud_portal/front_end/node_modules/tapable/LICENSE"
         },
+        "tar-stream@2.2.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/mafintosh/tar-stream",
+            "publisher": "Mathias Buus",
+            "email": "mathiasbuus@gmail.com",
+            "path": "cloud_portal/front_end/node_modules/tar-stream",
+            "licenseFile": "cloud_portal/front_end/node_modules/tar-stream/LICENSE"
+        },
         "tar@6.1.11": {
             "licenses": "ISC",
             "repository": "https://github.com/npm/node-tar",
@@ -11809,7 +11879,7 @@
             "path": "cloud_portal/front_end/node_modules/terser-webpack-plugin",
             "licenseFile": "cloud_portal/front_end/node_modules/terser-webpack-plugin/LICENSE"
         },
-        "terser@5.13.1": {
+        "terser@5.14.2": {
             "licenses": "BSD-2-Clause",
             "repository": "https://github.com/terser/terser",
             "publisher": "Mihai Bazon",
@@ -12235,7 +12305,7 @@
             "path": "cloud_portal/front_end/node_modules/unpipe",
             "licenseFile": "cloud_portal/front_end/node_modules/unpipe/LICENSE"
         },
-        "update-browserslist-db@1.0.4": {
+        "update-browserslist-db@1.0.5": {
             "licenses": "MIT",
             "repository": "https://github.com/browserslist/update-db",
             "publisher": "Andrey Sitnik",
@@ -12358,7 +12428,7 @@
             "path": "cloud_portal/front_end/node_modules/verror",
             "licenseFile": "cloud_portal/front_end/node_modules/verror/LICENSE"
         },
-        "video.js@7.19.2": {
+        "video.js@7.20.1": {
             "licenses": "Apache-2.0",
             "repository": "https://github.com/videojs/video.js",
             "publisher": "Steve Heffernan",
@@ -12466,14 +12536,14 @@
             "path": "cloud_portal/front_end/node_modules/webpack-bundle-analyzer",
             "licenseFile": "cloud_portal/front_end/node_modules/webpack-bundle-analyzer/LICENSE"
         },
-        "webpack-dev-middleware@5.3.1": {
+        "webpack-dev-middleware@5.3.3": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/webpack-dev-middleware",
             "publisher": "Tobias Koppers @sokra",
             "path": "cloud_portal/front_end/node_modules/webpack-dev-middleware",
             "licenseFile": "cloud_portal/front_end/node_modules/webpack-dev-middleware/LICENSE"
         },
-        "webpack-dev-server@4.9.0": {
+        "webpack-dev-server@4.9.3": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/webpack-dev-server",
             "publisher": "Tobias Koppers @sokra",
@@ -12503,7 +12573,7 @@
             "path": "cloud_portal/front_end/node_modules/webpack-subresource-integrity",
             "licenseFile": "cloud_portal/front_end/node_modules/webpack-subresource-integrity/LICENSE"
         },
-        "webpack@5.72.1": {
+        "webpack@5.73.0": {
             "licenses": "MIT",
             "repository": "https://github.com/webpack/webpack",
             "publisher": "Tobias Koppers @sokra",
@@ -12751,7 +12821,7 @@
             "path": "cloud_portal/front_end/node_modules/yargs-unparser",
             "licenseFile": "cloud_portal/front_end/node_modules/yargs-unparser/LICENSE"
         },
-        "yargs@17.4.1": {
+        "yargs@17.5.1": {
             "licenses": "MIT",
             "repository": "https://github.com/yargs/yargs",
             "path": "cloud_portal/front_end/node_modules/yargs",
@@ -12783,7 +12853,7 @@
             "path": "cloud_portal/front_end/node_modules/zenscroll",
             "licenseFile": "cloud_portal/front_end/node_modules/zenscroll/LICENSE"
         },
-        "zone.js@0.11.6": {
+        "zone.js@0.11.7": {
             "licenses": "MIT",
             "repository": "https://github.com/angular/angular",
             "publisher": "Brian Ford",

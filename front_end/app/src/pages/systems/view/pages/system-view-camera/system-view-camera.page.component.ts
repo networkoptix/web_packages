@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { isSupported } from 'hls.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, Subscription, timer, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
@@ -142,6 +141,23 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.isLocal = environment.isLocal;
     }
 
+    private getMediaSource(): typeof MediaSource | undefined {
+        return (window as any).MediaSource || (window as any).WebKitMediaSource;
+    }
+
+    private isSupported(): boolean {
+        const mediaSource = this.getMediaSource();
+        if (!mediaSource) {
+            return false;
+        }
+
+        const isTypeSupported = mediaSource &&
+                typeof mediaSource.isTypeSupported === 'function' &&
+                mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E,mp4a.40.2"');
+
+        return !!isTypeSupported;
+    }
+
     public isLocal: boolean = false;
 
     public cameraDetailsShown: boolean = false;
@@ -242,7 +258,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     rtsp: 'video/webm'
                 };
                 const video = this.document.createElement('video');
-                const isHlsSupported = isSupported();
+                const isHlsSupported = this.isSupported();
                 this.transports = <PlaybackTransport[]>Object.keys(
                     transportsAndResolutions
                 ).filter(transport => (
