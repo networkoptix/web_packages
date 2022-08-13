@@ -50,7 +50,7 @@
     "Allow system to optimize camera settings": "システムによるカメラ設定の変更を許可する",
     "An error has occurred when setting up event rules for Alexa. Please retry setting up event rules.": "Alexa のイベントルールを設定するときにエラーが発生しました。イベントルールの再設定を行ってください。",
     "Analytics DB Storage": "分析DBストレージ",
-    "Analytics Event": "解析イベント",
+    "Analytics Event": "分析イベント",
     "Analytics Events": "分析イベント",
     "Analytics data can take up large amounts of space.": "分析データは大量のスペースを占める可能性があります。",
     "Any": "全て",
