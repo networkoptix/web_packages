@@ -702,7 +702,7 @@
         "dvr": "DVR",
         "encoder": "エンコーダー",
         "hardwareType": "タイプ",
-        "isAnalyticsSupported": "解析",
+        "isAnalyticsSupported": "分析",
         "isAptzSupported": "高度なPTZ",
         "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
