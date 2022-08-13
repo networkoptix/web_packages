@@ -1,7 +1,7 @@
 {
     "language": "pt_BR",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "Todos os servidores",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "For developers": "Para desenvolvedores",
     "Integrations (β)": "Integrações (β)",
@@ -10,27 +10,30 @@
     "Terms": "Termos",
     "Developers Console": "Console do desenvolvedor",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Certifique-se de que o servidor especificado esteja online e tente novamente."
+    },
     "alarmTypes": {
         "Servers": "Servidores",
         "Cameras": "Câmeras",
-        "Storage Locations": "Storage Locations",
-        "Network Interfaces": "Network Interfaces"
+        "Storage Locations": "Locais de armazenamento",
+        "Network Interfaces": "Interfaces de rede"
     },
     "alarmLevels": {
         "offline": "Off-line",
-        "error": "Errors",
-        "warning": "Warnings"
+        "error": "Erros",
+        "warning": "Avisos"
     },
     "alertFilters": {
-        "all": "All Alerts",
-        "warning": "Only Warnings",
-        "error": "Only Errors"
+        "all": "Todos os alertas",
+        "warning": "Apenas avisos",
+        "error": "Apenas erros"
     },
     "deviceTypes": {
-        "All Device Types": "All Device Types",
+        "All Device Types": "Todos os tipos de dispositivos",
         "servers": "Servidor",
         "cameras": "Câmeras",
-        "storages": "Storages",
+        "storages": "Armazenamentos",
         "networkInterfaces": "Interface"
     },
     "accessRoles": {
@@ -47,23 +50,23 @@
             "label": "Personalizado"
         },
         "Live Viewer": {
-            "description": "Só pode visualizar o vídeo ao vivo",
+            "description": "Só pode ver vídeo ao vivo",
             "label": "Visualizador ao vivo"
         },
         "Owner": {
-            "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
-            "label": "Dono"
+            "description": "Acesso irrestrito, incluindo a capacidade de compartilhar e conectar/desconectar o sistema da nuvem",
+            "label": "Proprietário"
         },
         "Viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
             "label": "Visualizador"
         },
         "advancedViewer": {
-            "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc",
+            "description": "Pode visualizar vídeo ao vivo, navegar no arquivo, configurar câmeras, controlar PTZ etc",
             "label": "Visualizador Avançado"
         },
         "cloudAdmin": {
-            "description": "Pode configurar o Sistema e partilhá-lo",
+            "description": "Pode configurar o sistema e compartilhá-lo",
             "label": "Administrador"
         },
         "custom": {
@@ -72,19 +75,19 @@
         },
         "customRole": {
             "description": "Função de usuário personalizada especificada no sistema",
-            "label": "Perfil Personalizado"
+            "label": "Função personalizada"
         },
         "disabled": {
             "description": "O usuário está desabilitado e não pode fazer ‘login’ no sistema",
             "label": "Desabilitado"
         },
         "liveViewer": {
-            "description": "Só pode visualizar o vídeo ao vivo",
+            "description": "Só pode ver vídeo ao vivo",
             "label": "Visualizador ao vivo"
         },
         "owner": {
-            "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\"",
-            "label": "Dono"
+            "description": "Acesso irrestrito, incluindo a capacidade de compartilhar e conectar/desconectar o sistema da nuvem",
+            "label": "Proprietário"
         },
         "viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
@@ -94,7 +97,7 @@
     "account": {
         "account": "Conta",
         "key": "Chave",
-        "accountSavedSuccess": "A sua conta foi gravada com sucesso",
+        "accountSavedSuccess": "Sua conta foi salva com sucesso",
         "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de ativação enviado",
         "agreementAccepted": "O acordo foi aceito",
@@ -102,12 +105,12 @@
         "security": "Segurança",
         "newPasswordLabel": "Nova senha",
         "passwordChangedSuccess": "Senha salva com sucesso",
-        "saveChanges": "Gravar"
+        "saveChanges": "Salvar"
     },
     "activeActions": {
         "resetPassword": "Reset da Senha",
         "sendConfirm": "Reenviar Link de Ativação",
-        "setNewPassword": "Guardar senha",
+        "setNewPassword": "Salvar senha",
         "setNewPasswordLabel": "Nova senha"
     },
     "authorize": {
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Digite a senha da conta do proprietário em <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "A senha do usuário administrador está errada",
-            "knownBothSystemsConnectedToCloud": "O sistema {targetSystem} está conectado a %CLOUD_NAME%. Os sistemas em nuvem podem ser mesclados apenas a partir de %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "O sistema {targetSystem} está conectado a %CLOUD_NAME%. Os sistemas em nuvem podem ser mesclados apenas a partir de %CLOUD_NAME% portais.",
             "unknownBothSystemsConnectedToCloud": "Não é possível mesclar dois sistemas conectados à nuvem. Vá para %CLOUD_NAME% para mesclar esses sistemas.",
             "checking": "Verificando...",
             "cloud": "Nuvem",
             "commonText": "Falha ao mesclar os sistemas <strong>{primarySystem}</strong> e <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Conecte o sistema que deseja mesclar com este para <strong>%CLOUD_NAME%</strong> ou mesclar localmente usando <strong>%VMS_NAME%</strong> Cliente.",
-            "connectAnotherSystemToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>%CLOUD_NAME%</strong> usando a mesma conta, ou mesclar localmente usando <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Falha ao encontrar qualquer sistema para mesclar com",
+            "failedToFindAnySystem": "Certifique-se de ter a função Proprietário em um sistema de nuvem com o qual deseja mesclar. Ou que o sistema com o qual você deseja mesclar é acessível pela rede local ao sistema atual.",
             "differentOwners": "Tanto o sistema selecionado quanto o atual estão conectados a %CLOUD_NAME% e têm proprietários diferentes. Os sistemas em nuvem podem ser mesclados apenas se a conta do proprietário for a mesma.",
             "duplicateServers": "<p class=\"mb-2\">Um servidor parece estar se listando no sistema selecionado e no sistema atual.</p><p>Remova os servidores off-line e incompatíveis de cada sistema e tente novamente.</p>",
             "enterSystemAddressTitle": "Digite o endereço de qualquer servidor no sistema que deseja mesclar com este.",
@@ -453,14 +457,14 @@
             "deleteUser": "Deletar usuário?",
             "failedLoginTo": "Falha ao fazer login em {systemName}",
             "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
-            "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
+            "noClientDetected": "Instale %VMS_NAME% para visualizar seu sistema",
             "removeUser": "Remover usuário",
             "serversDetach": "Desanexar servidor&nbsp;<strong>{ title }</strong>&nbsp;do sistema atual?",
             "serversReset": "Redefinir o servidor&nbsp;<strong>{ title }</strong>&nbsp;para os padrões?",
             "serversRestart": "Reinicie o servidor&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Desconecte todos os sistemas dos quais você é proprietário do %CLOUD_NAME% para excluir sua conta."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         },
         "twoFactor": {
             "action": "Entrar",
@@ -571,7 +575,7 @@
         "cantChangePasswordPrefix": "Não é possível salvar a senha",
         "cantDeleteAccountOwningSystems": "Não é possível excluir a conta que possui sistemas",
         "cantConnectSystemPrefix": "Não é possível conectar o sistema",
-        "cantDisconnectSystemPrefix": "Não é possível apagar o Sistema",
+        "cantDisconnectSystemPrefix": "Não é possível excluir o sistema",
         "cantEditAdmin": "Este usuário tem permissões de administrador",
         "cantEditYourself": "Alterar as próprias permissões não é permitido",
         "cantGetSystemInfoPrefix": "As informações do sistema não estão disponíveis",
@@ -665,7 +669,7 @@
     "ipvdFeedback": {
         "request": "Por favor, <span id=\"request\">envie uma solicitação</span> para perguntas/preocupações adicionais sobre dispositivos suportados."
     },
-    "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
+    "alertsCount": "{count, plural, =0{#alerta} one{# alerta} other{#alerta}}",
     "ipvdTopXByVolume": "Top {value} por volume:",
     "ipvdDisclaimer": "Esta lista é limitada a dispositivos encontrados em {vmsName} onde os usuários permitiram relatórios automáticos de especificações do dispositivo para {companyName}. Nenhuma informação pessoal é coletada e cada usuário permanece completamente anônimo.",
     "menu": {
@@ -676,18 +680,18 @@
             "licenses": "Licenças",
             "users": "Usuários",
             "servers": "Servidores",
-            "alerts": "Alerts",
+            "alerts": "Alertas",
             "systems": "Sistema",
-            "storages": "Storage Locations",
-            "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "storages": "Locais de armazenamento",
+            "networkInterfaces": "Interfaces de rede",
+            "graphs": "Gráficos",
             "logs": "Logs"
         }
     },
     "tableHeaders": {
         "type": "Tipo",
         "server": "Servidor",
-        "alert": "Alert"
+        "alert": "Alerta"
     },
     "pageTitles": {
         "about": "Sobre",
@@ -718,7 +722,7 @@
         "systems": "Sistemas",
         "template": "{title} - %CLOUD_NAME%",
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
-        "view": "Visualizar câmaras",
+        "view": "Ver câmeras",
         "apiTool": "Ferramenta de teste de API",
         "security": "Segurança",
         "twofaRequired": "Autenticação de dois fatores necessária"
@@ -792,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "Nova versão de %CLOUD_NAME% está disponível",
-            "installButton": "Instale agora"
+            "installButton": "Install Now"
         },
         "systemOffline": "O sistema está offline. Algumas configurações podem não estar disponíveis.",
         "systemsMerging": "Este sistema está atualmente envolvido em uma operação de mesclagem."
@@ -950,51 +954,51 @@
     "healthMonitor": {
         "groups": {
             "info": "Informações",
-            "availability": "Availability",
-            "load": "Load",
-            "activity": "Activity"
+            "availability": "Disponibilidade",
+            "load": "Carga",
+            "activity": "Atividade"
         },
         "keys": {
-            "name": "Name",
+            "name": "Nome",
             "servers": "Servidores",
-            "cameras": "Camera channels",
-            "storages": "Storage locations",
+            "cameras": "Canais da câmera",
+            "storages": "Locais de armazenamento",
             "users": "Usuários",
-            "version": "System version",
-            "cloudSystemId": "Cloud system ID",
+            "version": "Versão do sistema",
+            "cloudSystemId": "Código do sistema em nuvem",
             "status": "Status",
-            "offlineEvents": "Events: Server Offline (24h)",
-            "uptimeS": "Uptime",
+            "offlineEvents": "Eventos: Servidor Offline (24h)",
+            "uptimeS": "Tempo de atividade",
             "cpuUsageP": "CPU %",
-            "serverCpuUsageP": "CPU (VMS Server) %",
-            "ramUsageB": "RAM Usage",
+            "serverCpuUsageP": "% de CPU (servidor VMS)",
+            "ramUsageB": "Uso de RAM",
             "ramUsageP": "RAM %",
-            "serverRamUsageB": "RAM (VMS Server)",
-            "serverRamUsageP": "RAM (VMS Server) %",
-            "threads": "Server threads",
-            "decodingThreads": "Decoding threads",
-            "decodingSpeed3s": "Decoding speed",
-            "encodingThreads": "Encoding threads",
-            "encodingSpeed3s": "Encoding speed",
-            "primaryStreams": "Outgoing Primary streams",
-            "secondaryStreams": "Outgoing Secondary streams",
-            "incomingConnections": "Incoming connections",
-            "outgoingConnections": "Outgoing connections",
-            "logLevel": "Logging level",
-            "publicIp": "Public IP",
+            "serverRamUsageB": "RAM (servidor VMS)",
+            "serverRamUsageP": "% de RAM (servidor VMS)",
+            "threads": "Threads do servidor",
+            "decodingThreads": "Decodificação de threads",
+            "decodingSpeed3s": "Velocidade de decodificação",
+            "encodingThreads": "Codificação de threads",
+            "encodingSpeed3s": "Velocidade de codificação",
+            "primaryStreams": "Fluxos primários de saída",
+            "secondaryStreams": "Fluxos secundários de saída",
+            "incomingConnections": "Conexões de entrada",
+            "outgoingConnections": "Conexões de saída",
+            "logLevel": "Nível de registro",
+            "publicIp": "IP Público",
             "os": "SO",
-            "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "osTime": "Hora do SO",
+            "vmsTime": "Hora do VMS",
             "cpu": "CPU",
-            "cpuCores": "Cores",
+            "cpuCores": "Núcleos",
             "ramB": "RAM",
-            "guidConflict": "Server GUID conflict",
-            "vmsTimeChanged24h": "Events: Time Changed (24h)",
-            "transactionsPerSecond1m": "Transactions/s",
-            "actionsTriggered1m": "Rules Activations/s",
-            "apiCalls1m": "API Calls/s",
-            "thumbnails1m": "Thumbnails/s",
-            "activePlugins": "Active plugins list"
+            "guidConflict": "Conflito de GUID do servidor",
+            "vmsTimeChanged24h": "Eventos: Horário Alterado (24h)",
+            "transactionsPerSecond1m": "Transações/s",
+            "actionsTriggered1m": "Ativações de regras",
+            "apiCalls1m": "Chamadas de API",
+            "thumbnails1m": "Miniaturas",
+            "activePlugins": "Lista de plugins ativos"
         }
     },
     "headerLabels": {
@@ -1206,16 +1210,16 @@
             "title": "webadmin - %VMS_NAME%"
         },
         "/settings": {
-            "title": "Settings - webadmin - %VMS_NAME%"
+            "title": "Configurações - webadmin - %VMS_NAME%"
         },
         "/view": {
-            "title": "View - webadmin - %VMS_NAME%"
+            "title": "Visualizar - webadmin - %VMS_NAME%"
         },
         "/health": {
-            "title": "Information - webadmin - %VMS_NAME%"
+            "title": "Informações - webadmin - %VMS_NAME%"
         },
         "/monitoring": {
-            "title": "Server Monitoring - webadmin - %VMS_NAME%"
+            "title": "Monitoramento do Servidor - webadmin - %VMS_NAME%"
         }
     },
     "maintenance": {

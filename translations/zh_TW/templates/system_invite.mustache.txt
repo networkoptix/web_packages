@@ -9,5 +9,5 @@
 您已被授予對{{message.system_name}}的存取權限.
 {{/message.sharer_name}}
 
-Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
+透過此連結{{config.portal_url}}/authorize/register/{{message.code}}來註冊並查看此系統。
 

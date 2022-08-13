@@ -10,6 +10,9 @@
     "Terms": "Villkor",
     "Developers Console": "Utvecklarkonsol",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Se till att den angivna servern är online och försök igen."
+    },
     "alarmTypes": {
         "Servers": "Servrar",
         "Cameras": "Kameror",
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Lösenord för administratörsanvändare är fel",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} är anslutet till %CLOUD_NAME%. Molnsystem kan endast slås samman från %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} är ansluten till %CLOUD_NAME%. Molnsystem kan endast slås samman från %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Det går inte att slå samman två system anslutna till molnet. Gå till %CLOUD_NAME% att slå samman dessa system.",
             "checking": "Kontrollerar...",
             "cloud": "Moln",
             "commonText": "Det gick inte att slå samman system <strong>{primarySystem}</strong> och <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Anslut systemet du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> eller slå samman lokalt med <strong>%VMS_NAME%</strong> klienten.",
-            "connectAnotherSystemToCloud": "Anslut System som du vill slå samman med detta till <strong>%CLOUD_NAME%</strong> med samma konto, eller slå samman lokalt med <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Det gick inte att hitta något system att sammanfoga med",
+            "failedToFindAnySystem": "Se till att du har rollen som ägare i ett molnsystem som du vill gå samman med. Eller att det system du vill slå ihop med är tillgängligt via det lokala nätverket till det nuvarande systemet.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet du vill slå ihop med den här.",
@@ -460,7 +464,7 @@
             "serversRestart": "Starta om servern&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         },
         "twoFactor": {
             "action": "Logga in",
@@ -792,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "Ny version av %CLOUD_NAME% är tillgänglig",
-            "installButton": "Installera nu"
+            "installButton": "Install Now"
         },
         "systemOffline": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
         "systemsMerging": "Detta system är för närvarande involverat i en sammanslagningsoperation."

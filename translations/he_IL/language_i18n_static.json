@@ -1,7 +1,7 @@
 {
-    "language": "en_US",
+    "language": "he_IL",
     "About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
-    "All Servers": "All Servers",
+    "All Servers": "כל השרתים",
     "Download %VMS_NAME%": "הורד %VMS_NAME%",
     "For developers": "For developers",
     "Integrations (β)": "אינטגרציות (בטא)",
@@ -10,10 +10,13 @@
     "Terms": "תנאי שימוש",
     "Developers Console": "Developers Console",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Make sure the specified server is online and try again."
+    },
     "alarmTypes": {
         "Servers": "שרתים",
         "Cameras": "מצלמות",
-        "Storage Locations": "Storage Locations",
+        "Storage Locations": "מיקום האחסון",
         "Network Interfaces": "Network Interfaces"
     },
     "alarmLevels": {
@@ -92,14 +95,14 @@
         }
     },
     "account": {
-        "account": "Account",
+        "account": "חשבון",
         "key": "Key",
         "accountSavedSuccess": "החשבון שלך נשמר בהצלחה",
         "accountSettings": "הגדרות חשבון",
         "activationLinkSent": "קישור הפעלה נשלח",
         "agreementAccepted": "ההסכם התקבל",
         "changePassword": "שנה סיסמא",
-        "security": "Security",
+        "security": "אבטחה",
         "newPasswordLabel": "סיסמא חדשה",
         "passwordChangedSuccess": "הסיסמה נשמרה בהצלחה",
         "saveChanges": "שמור"
@@ -111,17 +114,17 @@
         "setNewPasswordLabel": "סיסמא חדשה"
     },
     "authorize": {
-        "loginCloudHeader": "Log in to %CLOUD_NAME%",
-        "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
+        "loginCloudHeader": "היכנס ל- %CLOUD_NAME%",
+        "connectHeader": "חבר מערכת אל %CLOUD_NAME%",
+        "expiredHeader": "תוקף החיבור שלך הסתיים",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
         "connectAdditional": "This account will get owner access level",
-        "createText": "Create Account",
+        "createText": "צור חשבון",
         "setupText": "Setup Non-cloud System",
         "asAccountSubheader": "As",
-        "toAccountSubheader": "To",
+        "toAccountSubheader": "אל",
         "forAccountSubheader": "For {accountEmail}",
         "passwordDisconnect": "to disconnect system from %CLOUD_NAME%",
         "passwordMerge": "to merge systems",
@@ -131,31 +134,31 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "expiredAccountSubheader": "Please, log in again as",
-        "createAccountHeader": "Create %CLOUD_NAME% Account",
+        "createAccountHeader": "צור חשבון %CLOUD_NAME%",
         "activateHeader": "Activate %CLOUD_NAME% Account",
-        "createdText": "Account Created!",
+        "createdText": "חשבון נוצר!",
         "activatedText": "Account Activated!",
         "createdAdditional": "<p class=\"mb-2\">Confirmation message with the activation link is sent to {accountEmail}.</p><p>Please, activate the account and return here to finish the process.</p>",
         "activatedAdditional": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
         "passResetHeader": "איפוס סיסמא",
-        "newPassHeader": "Set New Password",
+        "newPassHeader": "הגדר סיסמה חדשה",
         "newPassConfirmText": "Password is set!",
         "newPassInvalidCode": "Cannot save password: Confirmation code is already used or incorrect",
         "notSecureText": "If you proceed you will allow<br><span class='error-label'>{ redirectUrl }</span><br>to access your %CLOUD_NAME% account.",
-        "confirmHeader": "System connected to %CLOUD_NAME%!",
-        "loginError": "Cannot connect to %CLOUD_NAME%",
+        "confirmHeader": "המערכת מחוברת אל %CLOUD_NAME%!",
+        "loginError": "אין אפשרות להתחבר אל %CLOUD_NAME%",
         "loginErrorAdditional": "Please try again or login to the system directly with your local account.",
-        "connectErrorAdditional": "Please try again later.",
+        "connectErrorAdditional": "נא לנסות שוב מאוחר יותר.",
         "setupErrorAdditional": "<p class=\"mb-2\">Please try again or set up non-cloud system.</p><p>You will be able to connect it to %CLOUD_NAME% anytime after.</p>",
-        "connectedText": "System connected to %CLOUD_NAME%",
+        "connectedText": "המערכת מחוברת אל %CLOUD_NAME%",
         "setupConnectedText": "System connected",
         "stayLoggedInHelpText": "Checkbox for staying logged in",
         "termsAndConditionsHelpText": "Checkbox agreeing to terms and conditions and the privacy policy",
-        "copiedToClipboard": "Copied to clipboard",
+        "copiedToClipboard": "הועתק ללוח",
         "authCode": {
             "message": "Enter a code from your authentication app to confirm it's really you trying to {suffix}",
             "newPass": "set a new password",
-            "login": "log in"
+            "login": "התחבר"
         },
         "emailSent": "Email sent!"
     },
@@ -207,8 +210,8 @@
             "unauthorized": "נדרש אימות"
         },
         "chromeCastWarning": "Chromecast הוא משאב אינטנסיבי ועשוי לגרום לבעיות בשרת שלך.",
-        "copiedToClipboard": "Copied to clipboard",
-        "login": "login",
+        "copiedToClipboard": "הועתק ללוח",
+        "login": "שם משתמש",
         "recordingSettingsWarning": "אנא עדכן את הגדרות ההקלטה החסרות.",
         "disableMotionWarning": "Recording mode will be changed to \"Record always\"",
         "recordingModes": {
@@ -229,7 +232,7 @@
         "inaccessibleFeatureMessage": "המערכת אינה מקוונת ולכן השרתים אינם נגישים.",
         "morePlugins": "{startTag}{count, plural, =0{#{endTag} more integrations...} one{#{endTag} more integration...} other{#{endTag} more integrations...}}",
         "searchCamPlaceholder": "חיפוש",
-        "system": "system",
+        "system": "מערכת",
         "systemHasNoCameras": "אין מצלמות",
         "systemHasNoCamerasMessage": "אין מצלמות נגישות עבורך במערכת. <br><br>חבר כמה מצלמות לרשת המקומית של השרת כדי להפוך אותם לגלויים, או בקש ממנהל המערכת לשנות את רמת הגישה שלך.",
         "systemNewVersion": "עדכן את המערכת שלך",
@@ -289,8 +292,8 @@
             "createAccount": "צור חשבון חדש",
             "delete": "מחק",
             "deleteAccount": "מחק חשבון",
-            "disable": "Disable",
-            "enable": "Enable",
+            "disable": "השבת",
+            "enable": "אפשר",
             "download": "הורד %VMS_NAME%",
             "logoutAuthorised": "יציאה",
             "ok": "אישור",
@@ -349,20 +352,21 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Password for admin user is wrong",
-            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "System {targetSystem} is connected to %CLOUD_NAME%. Cloud systems can be merged only from %CLOUD_NAME% portal.",
             "unknownBothSystemsConnectedToCloud": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",
             "checking": "בודק...",
-            "cloud": "Cloud",
+            "cloud": "ענן",
             "commonText": "Failed to merge Systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> using the same account, or merge locally using <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Failed to find any system to merge with",
+            "failedToFindAnySystem": "Make sure you have the Owner role in a cloud system you want to merge with. Or that the system you want to merge with is accessible over the local network to current system.",
             "differentOwners": "גם המערכת שנבחרה וגם המערכת הנוכחית מחוברים ל- %CLOUD_NAME% ויש להם בעלים שונים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
             "duplicateServers": "<p class=\"mb-2\">ישנו שרת המציג את עצמו שמערכת הנוכחית וגם כמערכת שנבחרה.</p><p>הסר שרתים לא מקוונים ו\\או עם גרסה שונה מכל מערכת ונסה שוב.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "latestBuild": "latest build",
+            "latestBuild": "גרסה האחרונה",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "מיזוג המערכת נכשל",
-            "mergeSuccess": "Merge of systems {primaryName} and {secondaryName} completed",
+            "mergeSuccess": "מיזוג המערכות {primaryName} ו- {secondaryName} הושלם",
             "mergeSystemsTitle": "מזג את המערכת הנוכחית עם",
             "noServerFound": "לא נמצא שרת",
             "newSystemDisplayName": "מערכת חדשה",
@@ -388,7 +392,7 @@
             "serverAtUrl": "server at {url}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {targetSystem} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "מערכת זו מחוברת ל- %CLOUD_NAME%, אך משוייכים לבעלים אחרים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionOld": "לשרת זה יש גרסת תוכנה ישנה שאינה תואמת את המערכת הנוכחית. עדכן אותה לגרסה האחרונה כדי למזג אותה עם הנוכחית.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
@@ -437,13 +441,13 @@
         },
         "removeSystem": {
             "action": "נתק",
-            "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-            "title": "Disconnect System?"
+            "message": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
+            "title": "נתק מערכת?"
         },
         "renewAuth": {
-            "action": "Login",
+            "action": "שם משתמש",
             "message": "Please log in again.",
-            "title": "Your session has expired"
+            "title": "תוקף החיבור שלך הסתיים"
         },
         "titles": {
             "error": "שגיאה",
@@ -451,19 +455,19 @@
             "changeAccount": "אתה כבר מחובר כ- {email}",
             "changePasswordFor": "Change Password for User \"{username}\"",
             "deleteUser": "מחק משתמש?",
-            "failedLoginTo": "Failed to login to {systemName}",
+            "failedLoginTo": "נכשלה ההתחברות ל- {systemName}",
             "loggedFromOtherAccount": "אתה עומד להיכנס בחשבון אחר",
             "noClientDetected": "התקן %VMS_NAME% כדי להציג את המערכת שלך",
-            "removeUser": "Remove user",
+            "removeUser": "האם להסיר משתמש",
             "serversDetach": "Detach server&nbsp;<strong>{ title }</strong>&nbsp;from current system?",
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "נתק את כל המערכות שאתה הבעלים שלהן %CLOUD_NAME% כדי למחוק את חשבונך."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         },
         "twoFactor": {
-            "action": "Login",
+            "action": "שם משתמש",
             "message": "Two factor authentication is enabled for this account. Please login.",
             "title": "Two factor is required!",
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
@@ -591,7 +595,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "סיסמא שגויה",
-        "badUsername": "Account not found",
+        "badUsername": "חשבון לא נמצא",
         "notFound": "לא נמצא",
         "ok": "אישור",
         "oldPasswordMistmatch": "הסיסמא הנוכחית אינה נכונה.",
@@ -678,9 +682,9 @@
             "servers": "שרתים",
             "alerts": "Alerts",
             "systems": "מערכת",
-            "storages": "Storage Locations",
+            "storages": "מיקום האחסון",
             "networkInterfaces": "Network Interfaces",
-            "graphs": "Graphs",
+            "graphs": "גרפים",
             "logs": "Logs"
         }
     },
@@ -696,7 +700,7 @@
         "activateCode": "הפעל חשבון",
         "activateSuccess": "החשבון הופעל",
         "articleTitle": "{ARTICLE_TITLE} for {VMS_NAME}",
-        "auth": "Authorization",
+        "auth": "אימות",
         "changePassword": "שינוי סיסמא",
         "debug": "איתור באגים",
         "default": "%CLOUD_NAME%",
@@ -720,7 +724,7 @@
         "templateWebadmin": "{title} - webadmin - %VMS_NAME%",
         "view": "הצג מצלמות",
         "apiTool": "API testing tool",
-        "security": "Security",
+        "security": "אבטחה",
         "twofaRequired": "Two-factor authentication required"
     },
     "pageDescriptions": {
@@ -784,7 +788,7 @@
         },
         "finishingMerge": "מיזוג מערכות הושלם",
         "integration": {
-            "accept": "Accept",
+            "accept": "לְקַבֵּל",
             "reject": "Reject",
             "backToEditText": "חזרה לממשקי העריכה",
             "previewRibbon": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",
@@ -821,8 +825,8 @@
         "detachSystemFailed": "ניתוק השרת מהמערכת נכשל. אנא בדוק אם הסיסמה שהזנת נכונה ושהשרת אינו במצב לא מקוון ונסה שוב.",
         "detachSystemSuccess": "השרת נותק בהצלחה מהמערכת.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
-        "refresh": "Refresh",
-        "refreshing": "Refreshing...",
+        "refresh": "רענן",
+        "refreshing": "מרענן...",
         "removeMediaserverFailed": "הסרת השרת מהמערכת נכשלה.",
         "resetFailed": "איפוס השרת נכשל. אנא בדוק אם הסיסמה שהזנת נכונה ושהשרת מקוון ונסה שוב.",
         "resetSuccessful": "Server {serverName} has been reset to defaults.",
@@ -839,14 +843,14 @@
         "successRename": "שם השרת נשמר."
     },
     "serverTabTitles": {
-        "View": "View",
-        "Settings": "Settings",
-        "Information": "Information",
-        "Bookmarks": "Bookmarks",
-        "Monitoring": "Monitoring"
+        "View": "הצג",
+        "Settings": "הגדרות",
+        "Information": "מידע",
+        "Bookmarks": "סימניות",
+        "Monitoring": "ניטור"
     },
     "system": {
-        "connected": "Connected",
+        "connected": "מחובר",
         "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)",
@@ -858,7 +862,7 @@
             "sessionLimitDuration": {
                 "hours": "שעות",
                 "minutes": "דקות",
-                "days": "days"
+                "days": "ימים"
             },
             "warningMessages": {
                 "videoEncryption": "הצפנת תעבורת וידאו תגדיל באופן משמעותי את השימוש במעבד."
@@ -900,11 +904,11 @@
             }
         },
         "storageToolTips": {
-            "local": "Local",
+            "local": "מקומי",
             "usb": "USB",
             "network": "Network, added through OS",
             "smb": "Network (smb), added through VMS",
-            "cloud": "Cloud"
+            "cloud": "ענן"
         },
         "transferNotification": "<strong>{ ownerName }</strong> wants to transfer ownership of this system to you"
     },
@@ -922,7 +926,7 @@
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
-        "userChangesFail": "Failed to apply changes",
+        "userChangesFail": "החלת השינויים נכשלה",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
@@ -932,12 +936,12 @@
                 "success": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%"
             },
             "cloudConnect": {
-                "success": "System connected to %CLOUD_NAME%",
+                "success": "המערכת מחוברת אל %CLOUD_NAME%",
                 "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "מיזוג המערכת נכשל",
-                "success": "System merge completed"
+                "success": "מיזוג המערכת הושלם"
             },
             "rename": {
                 "success": "שם המערכת נשמר"
@@ -952,10 +956,10 @@
             "info": "מידע",
             "availability": "Availability",
             "load": "Load",
-            "activity": "Activity"
+            "activity": "פעילות"
         },
         "keys": {
-            "name": "Name",
+            "name": "שם",
             "servers": "שרתים",
             "cameras": "Camera channels",
             "storages": "Storage locations",
@@ -984,7 +988,7 @@
             "publicIp": "Public IP",
             "os": "מערכת הפעלה",
             "osTime": "OS Time",
-            "vmsTime": "VMS Time",
+            "vmsTime": "זמן מערכת הקלטה",
             "cpu": "CPU",
             "cpuCores": "Cores",
             "ramB": "RAM",
@@ -1014,7 +1018,7 @@
             "IO Module": "מודול קלט/פלט",
             "Bridge": "Bridge",
             "NVR": "NVR",
-            "Invalid": "Invalid"
+            "Invalid": "לא תקין"
         },
         "info": {
             "type": "סוג",
@@ -1029,10 +1033,10 @@
             "expired": "פג תוקף",
             "ok": "אישור",
             "nvrError": "NVR Error",
-            "serverNotFound": "Server not found"
+            "serverNotFound": "השרת לא נמצא"
         },
         "messages": {
-            "required": "{number} more required",
+            "required": "נדרשים עוד {number}",
             "activated": "הרשיון הופעל",
             "inuse": "License key has already been activated and bound to server with hardware ID {hwid} in another system",
             "trialActivated": "רישיון ניסיון הופעל. החל מהיום תוכלו להקליט עד 4 מצלמות למשך 30 יום."
@@ -1145,7 +1149,7 @@
     "security": {
         "twoFa": {
             "twoFADescription": "Currently you have <span id=\"target2FaSystems\">{count, plural, =0{# such systems} one{# such system} other{# such systems}}</span>.",
-            "systemsRemainder": "and {count} more...",
+            "systemsRemainder": "ו {count} נוספים...",
             "v5Warning": "You have <span id=\"targetV5\">{count, plural, =0{# systems} one{# system} other{# systems}}</span> with software version lower than 5.0. {count, plural, =0{These systems} one{This system} other{These systems}} will be inaccessible via <strong>%VMS_NAME% Client</strong> since earlier versions of %VMS_NAME% Client do not support two-factor authentication.",
             "v5WarningExplanation": "To make {count, plural, =0{these systems} one{this system} other{these systems}} fully accessible upgrade {count, plural, =0{them} one{it} other{them}} to software version 5.0 or uncheck the checkbox.",
             "disableWarning": "You have {count, plural, one{# system} other{# systems}} that {count, plural, one{requires} other{require}} two-factor authentication. You will not be able to log in to {count, plural, one{this system} other{these systems}}."
@@ -1159,18 +1163,18 @@
             "backupFailed": "Backup storage reindexing failed"
         },
         "modes": {
-            "main": "Main",
-            "backup": "Backup",
+            "main": "ראשי",
+            "backup": "גיבוי",
             "notInUse": "Not in use",
-            "reserved": "Reserved",
-            "inaccessible": "Inaccessible",
+            "reserved": "שמור",
+            "inaccessible": "לא נגיש",
             "changing": "Changing mode...",
-            "disabled": "Disabled"
+            "disabled": "כבוי"
         },
         "alreadyUsed": "Storage path {url} is already used by another server.",
         "deleteExternalStorage": "Delete External Storage?",
         "failed": "Failed to add external storage",
-        "invalidPath": "Invalid storage path.",
+        "invalidPath": "נתיב אחסון לא חוקי.",
         "stillHasArchivesPreWarning": "Recording to this storage location will stop. However, outdated footage from it will continue being deleted.",
         "stillHasArchives": "Recording to this storage location is stopped. However, outdated footage from it is still being deleted.",
         "storageDeleted": "Storage {url} deleted",
@@ -1267,12 +1271,12 @@
             "timeNames": {
                 "a": "a",
                 "p": "p",
-                "am": "am",
-                "pm": "pm",
+                "am": "לפני הצהריים",
+                "pm": "אחרי הצהריים",
                 "A": "A",
                 "P": "P",
-                "AM": "AM",
-                "PM": "PM"
+                "AM": "לפני הצהריים",
+                "PM": "אחרי הצהריים"
             }
         }
     }

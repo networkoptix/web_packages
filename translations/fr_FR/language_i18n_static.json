@@ -10,6 +10,9 @@
     "Terms": "Conditions",
     "Developers Console": "Console développeur",
     "productName": "",
+    "monitoring": {
+        "unavailable": "Assurez-vous que le serveur spécifié est en ligne et réessayez."
+    },
     "alarmTypes": {
         "Servers": "Serveurs",
         "Cameras": "Caméras",
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "Entrez le mot de passe du compte du propriétaire dans <strong>{secondarySystem}</strong>",
             "adminPasswordWrong": "Le mot de passe de l'utilisateur admin est incorrect",
-            "knownBothSystemsConnectedToCloud": "Le système {targetSystem} est connecté à %CLOUD_NAME%. Les systèmes CLOUDS ne peuvent être fusionnés qu'à partir de %CLOUD_NAME%.",
+            "knownBothSystemsConnectedToCloud": "Le système {targetSystem} est connecté à %CLOUD_NAME%. Les systèmes clouds ne peuvent être fusionnés qu'à partir du portail %CLOUD_NAME%.",
             "unknownBothSystemsConnectedToCloud": "Impossible de fusionner deux systèmes connectés au cloud. Veuillez accéder à %CLOUD_NAME% pour fusionner ces systèmes.",
             "checking": "Vérification...",
             "cloud": "Cloud",
             "commonText": "Échec de la fusion des systèmes <strong>{primarySystem}</strong> et <strong>{secondarySystem}</strong>.",
             "connectToCloud": "Connectez le système que vous voulez fusionner avec celui-ci à <strong>%CLOUD_NAME%</strong> ou fusionnez localement en utilisant <strong>%VMS_NAME%</strong> Client.",
-            "connectAnotherSystemToCloud": "Connectez le système que vous voulez fusionner avec celui-ci à <strong>%CLOUD_NAME%</strong> en utilisant le même compte, ou fusionnez localement en utilisant <strong>%VMS_NAME%</strong> Client.",
+            "failedToFindAnySystemHeader": "Impossible de trouver un système avec lequel fusionner",
+            "failedToFindAnySystem": "Assurez-vous que vous disposez du rôle Propriétaire dans un système cloud avec lequel vous souhaitez fusionner. Ou que le système avec lequel vous souhaitez fusionner est accessible sur le réseau local au système actuel.",
             "differentOwners": "Le système sélectionné et le système actuel sont connectés à %CLOUD_NAME% et ont des propriétaires différents. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
             "duplicateServers": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
             "enterSystemAddressTitle": "Entrez l'adresse de n'importe quel serveur dans le système que vous voulez fusionner avec celui-ci.",
@@ -460,7 +464,7 @@
             "serversRestart": "Redémarrer le serveur&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Déconnectez tous les systèmes dont vous êtes propriétaire du portail %CLOUD_NAME% pour supprimer votre compte."
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         },
         "twoFactor": {
             "action": "Se connecter",
@@ -792,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "Une nouvelle version de %CLOUD_NAME% est disponible",
-            "installButton": "Installer maintenant"
+            "installButton": "Install Now"
         },
         "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
         "systemsMerging": "Ce système est actuellement impliqué dans une opération de fusion."
@@ -1110,7 +1114,7 @@
         "smtpHost": "Hôte SMTP",
         "smtpPort": "Port SMTP",
         "smtpSimple": "SMTP simple",
-        "smtpTimeout": "Délai d’attente SMTP",
+        "smtpTimeout": "Délai  SMTP",
         "smtpUser": "Utilisateur SMTP",
         "statisticsAllowed": "Envoyer des statistiques d'utilisation et des rapports d'erreur anonymes",
         "statisticsReportLastNumber": "Rapport statistique - dernier numéro",

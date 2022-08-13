@@ -1,15 +1,18 @@
 {
-    "language": "ja_JP",
+    "language": "en_US",
     "About %CLOUD_NAME%": "%CLOUD_NAME% について",
     "All Servers": "すべてのサーバー",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
     "For developers": "開発者向け",
-    "Integrations (β)": "統合 (β)",
+    "Integrations (β)": "インテグレーション (β)",
     "Privacy": "プライバシー",
     "Support": "サポート",
     "Terms": "利用規約",
     "Developers Console": "開発者用コンソール",
     "productName": "",
+    "monitoring": {
+        "unavailable": "指定されたサーバーがオンラインであることを確認して、再試行してください。"
+    },
     "alarmTypes": {
         "Servers": "サーバー",
         "Cameras": "カメラ",
@@ -71,8 +74,8 @@
             "label": "カスタム"
         },
         "customRole": {
-            "description": "システムで指定されたカスタムのユーザーの役割",
-            "label": "カスタムの役割"
+            "description": "システムで指定されたカスタムのユーザーロール",
+            "label": "カスタムロール"
         },
         "disabled": {
             "description": "ユーザーが無効の為にシステムにログインできません",
@@ -115,13 +118,13 @@
         "connectHeader": "システムを %CLOUD_NAME% に接続",
         "expiredHeader": "セッションの期限が切れました",
         "loginSystemSubheader": "%CLOUD_NAME% アカウントで",
-        "connectSubheader": "どこからでもアクセス & 追加機能を有効にするには",
+        "connectSubheader": "どこでもアクセス & 追加機能",
         "expiredSubheader": "もう一度ログインしてください",
         "connectAdditional": "このアカウントはオーナー権限を取得します。",
         "createText": "アカウント作成",
         "setupText": "非クラウドシステムのセットアップ",
         "asAccountSubheader": "ユーザー名",
-        "toAccountSubheader": "宛先",
+        "toAccountSubheader": "アカウント",
         "forAccountSubheader": "{accountEmail} 用",
         "passwordDisconnect": "%CLOUD_NAME% からシステムを切断するために",
         "passwordMerge": "システムを統合するために",
@@ -349,13 +352,14 @@
         "merge": {
             "adminPasswordTitle": "<strong>{secondarySystem}</strong> にオーナーアカウントのパスワードを入力してください。",
             "adminPasswordWrong": "adminユーザーのパスワードが間違っています",
-            "knownBothSystemsConnectedToCloud": "システム {targetSystem} は %CLOUD_NAME%に接続されています。クラウドシステムは %CLOUD_NAME% からのみ統合できます。",
+            "knownBothSystemsConnectedToCloud": "システム {targetSystem} は %CLOUD_NAME%に接続されています。クラウドシステムは %CLOUD_NAME% ポータルからのみ統合できます。",
             "unknownBothSystemsConnectedToCloud": "クラウドに接続されている2つのシステムを統合することはできません。これらのシステムを統合するには %CLOUD_NAME% に移動してください。",
             "checking": "チェック中...",
             "cloud": "クラウド",
             "commonText": "システム <strong>{primarySystem}</strong> および <strong>{secondarySystem}</strong>を統合できませんでした。",
             "connectToCloud": "統合したいサーバーを <strong>%CLOUD_NAME%</strong> に接続するか、 <strong>%VMS_NAME%</strong> クライアントを使用してローカルで統合してください。",
-            "connectAnotherSystemToCloud": "統合したいシステムを、同じアカウントで <strong>%CLOUD_NAME%</strong> に接続するか、<strong>%VMS_NAME%</strong> クライアントを使用してローカルで統合してください。",
+            "failedToFindAnySystemHeader": "統合するシステムが見つかりませんでした",
+            "failedToFindAnySystem": "統合したいクラウドシステムのオーナー権限を持っていることを確認してください。 もしくは、統合したいシステムがローカルネットワークを介して現在のシステムにアクセスできることを確認してください。",
             "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、オーナーが異なります。 クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
             "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
             "enterSystemAddressTitle": "統合先システム内の任意のサーバーのアドレスを入力してください。",
@@ -388,7 +392,7 @@
             "serverAtUrl": "{url} のサーバー",
             "serverNotAvailable": "<p class=\"mb-2\">{targetSystem} システムにアクセスできません。</p><p>当該サーバーがオンラインであることを確認し、もう一度やり直してください。</p>",
             "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、オーナーが異なります。クラウドシステムは、オーナー権限アカウントが同じ場合にのみ統合できます。",
-            "serverVersionOld": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。最新ビルドに更新してから統合してください。",
+            "serverVersionOld": "このサーバーは、現在のシステムと互換性のない古いソフトウェアバージョンです。対象システムを最新のビルドに更新してから、現在のシステムと統合してください。",
             "serverVersionNew": "このサーバーは、現在のシステムよりも新しいソフトウェアバージョンです。\n両システムを同じビルドに更新してから統合してください。",
             "systemOffline": "システム {targetSystem} がオフラインであるため、現在のシステムと統合することはできません。",
             "systemOfflineUrl": "{targetSystem} にアクセスできません",
@@ -460,7 +464,7 @@
             "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         },
         "twoFactor": {
             "action": "ログイン",
@@ -639,7 +643,7 @@
         "dvr": "DVR",
         "encoder": "エンコーダー",
         "hardwareType": "タイプ",
-        "isAnalyticsSupported": "解析",
+        "isAnalyticsSupported": "分析",
         "isAptzSupported": "高度なPTZ",
         "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
@@ -705,7 +709,7 @@
         "failedToAccess2FA": "システム \"{systemName}\" へのアクセスに失敗しました",
         "failedToAccessSystem": "システムにアクセスできませんでした",
         "failedToAccessCamera": "カメラにアクセスできませんでした",
-        "integrations": "%VMS_NAME% 統合",
+        "integrations": "%VMS_NAME% インテグレーション",
         "login": "ログイン",
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
@@ -792,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "%CLOUD_NAME% の新しいバージョンが利用可能です",
-            "installButton": "今すぐインストール"
+            "installButton": "Install Now"
         },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"
@@ -1065,10 +1069,10 @@
         "sessionLimitMinutes": "セッション制限(分)",
         "specificFeatures": "特定の機能",
         "systemName": "システム名",
-        "webSocketEnabled": "Webソケット",
+        "webSocketEnabled": "WebSocket",
         "arecontRtspEnabled": "Arecont RTSP有効",
         "auditTrailEnabled": "操作履歴有効",
-        "auditTrailPeriodDays": "操作履歴の期間日数",
+        "auditTrailPeriodDays": "操作履歴保存日数",
         "autoDiscoveryEnabled": "デバイスの自動検出を有効にする",
         "autoUpdateThumbnails": "サムネイルの自動更新",
         "backupNewCamerasByDefault": "デフォルトで新しいカメラをバックアップする",
@@ -1094,8 +1098,8 @@
         "ldapSearchFilter": "LDAP検索フィルター",
         "ldapUri": "LDAP URI",
         "localSystemId": "ローカルシステムID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "同期時間とインターネット時間の最大差（ミリ秒）",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "同期時刻とローカル時刻の最大差（ミリ秒）",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "同期された時刻とインターネット時刻の最大差 (ミリ秒)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "同期された時刻とローカル時刻の最大差 (ミリ秒)",
         "maxP2pQueueSizeBytes": "最大P2Pキューサイズ(バイト)",
         "maxRecordQueueSizeBytes": "レコードキューの最大サイズ（バイト）",
         "maxRecordQueueSizeElements": "レコードキューの最大サイズ（要素）",
@@ -1138,7 +1142,7 @@
         "watermarkSettings": "透かし設定",
         "maxHttpTranscodingSessions": "このサーバーに対する、トランスコーディングを使用したHTTP接続の最大数。Chromeは一度に2つの接続を開き、次に最初の接続を閉じます。したがって、このパラメータには2以上の値を設定することをお勧めします。",
         "maxEventLogRecords": "データベースに保存する最大イベントログレコード。削除されていないレコードの実際の量は、指定された値よりも最大20％大きくなる可能性があります。",
-        "forceLiveCacheForPrimaryStream": "プライマリストリーム用にいくつかのフレームをキャッシュするかどうか。値： \"yes\" - 常に有効（多くのRAMを使用する可能性があります）、 \"no\" - 再生で要求される場合を除いて常に無効（HLSなど）、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上すると（たとえば、Analyticsプラグインがカメラで動作しているときに）オンになります。"
+        "forceLiveCacheForPrimaryStream": "プライマリストリーム用にフレームをキャッシュするかどうか。値: \"yes\" - 常に有効 (RAMを多く消費する可能性あり)、 \"no\" - 再生時に要求される場合 (HLS等) を除いて常に無効、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上するとオンになります (分析プラグインがカメラで動作しているとき等)。"
     },
     "result": "{count, plural, =0{# 件の結果} one{# 件の結果} other{# 件の結果}}",
     "additionalSystems": "{count, plural, =0{+ # システム} one{+ # システム} other{+ # システム}}",
