@@ -1,4 +1,5 @@
 @use "../styles/theme_variables_common" as theme_vars;
+@use "../styles/typography" as typography;
 
 :host {
     display  : block;
@@ -11,17 +12,18 @@
     cursor   : default;
     
     .left-draggable, .right-draggable {
-        border : 3px solid transparent;
         position: absolute;
         bottom: 0;
         height: 86px;
-        left: -3px;
+        left: -4px;
         cursor: col-resize;
+        border : 1px solid transparent;
+        width: 6px;
     }
     
     .right-draggable {
         left : auto;
-        right : -3px;
+        right : -4px;
     }
     
     > .selected-range {
@@ -43,24 +45,28 @@
             width            : 120px;
             position         : absolute;
             background-color : var(--timeline-selection-panel-bg);
+            color            : var(--timeline-selection-panel-color);
             padding          : 2px 4px;
-            top              : 0;
-            height           : 34px;
+            top              : -45px;
+            height           : 45px;
             font-size        : 12px;
             line-height      : 1.2em;
-            
-            color            : var(--timeline-selection-panel-color);
-            
             cursor           : col-resize;
             
             > span {
-                display : block;
-                
+                display: block;
+                text-align: center;
+            
                 &.date {
+                    @include typography.regular13nocolor;
+                    padding-top: 2px;
+                    line-height: 1.5em;
                 }
-                
+            
                 &.time {
-                    font-family : theme_vars.$font-family-bold;
+                    @include typography.bold16nocolor;
+                    text-transform: uppercase;
+                    line-height: 1.0em;
                 }
             }
             
@@ -70,12 +76,12 @@
                 height     : 0;
                 position   : absolute;
                 bottom     : -4px;
-                border-top : 4px solid rgba(var(--brand-core--rgb), 0.9);
+                border-top : 4px solid var(--timeline-selection-panel-bg);
             }
             
             &.left {
                 left          : -120px;
-                border-radius : 2px 0 0 2px;
+                border-radius : 2px 2px 0 2px;
                 text-align    : right;
                 padding-right : 8px;
                 
@@ -87,7 +93,7 @@
             
             &.right {
                 right         : -120px;
-                border-radius : 0 2px 2px 0;
+                border-radius : 2px 2px 2px 0;
                 padding-left  : 8px;
                 
                 &::before {

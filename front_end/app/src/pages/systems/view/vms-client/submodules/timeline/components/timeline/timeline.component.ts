@@ -78,7 +78,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selection.subject
             .pipe(untilDestroyed(this))
             .subscribe(selection => {
-                this.isDragging = selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING;
+                this.isDragging =
+                    selection.dragMode !== SELECTION_DRAG_MODE.NO_DRAGGING ||
+                    selection.hoverMode;
             });
     }
 

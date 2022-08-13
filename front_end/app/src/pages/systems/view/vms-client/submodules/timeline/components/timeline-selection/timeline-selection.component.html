@@ -6,6 +6,8 @@
 >
     <div
         class="left-draggable"
+        (mouseover)="leftEarMouseInOutHandler(true)"
+        (mouseout)="leftEarMouseInOutHandler(false)"
         (mousedown)="leftEarMouseDownHandler($event)"
     ></div>
     <div
@@ -26,6 +28,8 @@
     </div>
     <div
         class="right-draggable"
+        (mouseover)="rightEarMouseInOutHandler(true)"
+        (mouseout)="rightEarMouseInOutHandler(false)"
         (mousedown)="rightEarMouseDownHandler($event)"
     ></div>
 </div>

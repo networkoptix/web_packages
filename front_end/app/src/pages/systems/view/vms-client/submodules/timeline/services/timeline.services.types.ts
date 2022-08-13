@@ -33,6 +33,7 @@ export interface TimelineSelectionServiceStatus {
     range: TimeRange,
     pixelRange: PixelRange,
     dragMode: number,
+    hoverMode: boolean,
 }
 
 export interface TimelineServiceStatus {

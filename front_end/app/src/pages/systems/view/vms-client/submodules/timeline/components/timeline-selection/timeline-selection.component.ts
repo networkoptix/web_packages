@@ -224,6 +224,16 @@ export class TimelineSelectionComponent implements OnInit, OnDestroy, AfterViewI
         this.hideRightEar = false;
     }
 
+    public rightEarMouseInOutHandler(status: boolean): void {
+        this.selection.handleEarMouseInOut(status);
+        this.hideRightEar = !status;
+    }
+
+    public leftEarMouseInOutHandler(status: boolean): void {
+        this.selection.handleEarMouseInOut(status);
+        this.hideLeftEar = !status;
+    }
+
     @HostListener('wheel', ['$event'])
     public wheelHandler(e: WheelEvent): void {
         e.preventDefault();

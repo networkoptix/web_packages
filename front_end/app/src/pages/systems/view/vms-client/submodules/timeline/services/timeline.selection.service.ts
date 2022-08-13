@@ -34,6 +34,7 @@ export class TimelineSelectionService {
     protected _isActive: boolean = false;
     protected _selectedRange: TimeRange = new TimeRange(0, 0);
 
+    protected _hoverMode: boolean = false;
     protected _dragMode: SELECTION_DRAG_MODE = SELECTION_DRAG_MODE.NO_DRAGGING;
     protected _dragAnchorPx: px = 0;
     protected _dragAnchorMs: ms = 0;
@@ -65,7 +66,8 @@ export class TimelineSelectionService {
             isActive: false,
             range: new TimeRange(0, 0),
             pixelRange: { left: 0, right: 0 },
-            dragMode: SELECTION_DRAG_MODE.NO_DRAGGING
+            dragMode: SELECTION_DRAG_MODE.NO_DRAGGING,
+            hoverMode: false,
         }
     );
 
@@ -146,6 +148,7 @@ export class TimelineSelectionService {
             range: this.range,
             pixelRange: this.pixelRange,
             dragMode: this._dragMode,
+            hoverMode: this._hoverMode,
         });
     }
 
@@ -219,6 +222,11 @@ export class TimelineSelectionService {
             this._dragAnchorPx = e.clientX;
             this._dragAnchorMs = this._selectedRange.end;
         }
+    }
+
+    public handleEarMouseInOut(status: boolean): void {
+        this._hoverMode = status;
+        this._emit();
     }
 
     protected _lastMouseMove: MouseEvent;
