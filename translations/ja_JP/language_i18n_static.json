@@ -464,7 +464,7 @@
             "serversRestart": "サーバー&nbsp;<strong>{ title }</strong> を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
         },
         "twoFactor": {
             "action": "ログイン",
@@ -796,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "%CLOUD_NAME% の新しいバージョンが利用可能です",
-            "installButton": "Install Now"
+            "installButton": "今すぐインストール"
         },
         "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "このシステムは現在マージ操作に関与しています。"
