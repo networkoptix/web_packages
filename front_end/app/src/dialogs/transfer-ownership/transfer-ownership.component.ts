@@ -98,6 +98,9 @@ export class TransferOwnershipModalContent implements OnInit {
         if (!user.userEnabled) {
             this.form.control.setErrors({ userDisabled: true });
         }
+        if (!user.value) {
+            this.form.control.setErrors({ userDisabled: false });
+        }
         this.selectedUser = { ...user };
     }
 
