@@ -148,6 +148,7 @@
 
 	@include generateVarAndRgb(--yellow_main, $yellow_main);
 	@include generateVarAndRgb(--yellow_d1, $yellow_d1);
+	@include generateVarAndRgb(--yellow_d2_lighter, $yellow_d2_lighter);
 	@include generateVarAndRgb(--yellow_d2, $yellow_d2);
 
 	@include generateVarAndRgb(--shadow, $shadow);
@@ -181,5 +182,6 @@
 	@include generateVarAndRgb(--brand_d1, $brand_d1);
 	@include generateVarAndRgb(--brand_d2, $brand_d2);
 	@include generateVarAndRgb(--brand_d3, $brand_d3);
+	@include generateVarAndRgb(--brand_d3_darker, $brand_d3_darker);
 	@include generateVarAndRgb(--brand_d4, $brand_d4);
 }

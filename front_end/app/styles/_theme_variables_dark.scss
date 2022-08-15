@@ -462,17 +462,17 @@ html[data-theme="dark"] {
     --card-body-bg   : #121517; //$dark4;
     --card-hover-bg : #263137; //$dark8;
 
-    --card-simple-info-bg           : var(--brand_d3);
-    --card-simple-info-border-color : var(--brand_d3);
+    --card-simple-info-bg           : var(--brand_d3_darker);
+    --card-simple-info-border-color : var(--brand_d3_darker);
     --card-simple-info-color        : #E1E7EA; //$light4;
     --card-simple-info-svg-color    : #E1E7EA; //$light4;
 
-    --card-simple-warning-bg           : var(--yellow_d2);
-    --card-simple-warning-border-color : var(--yellow_d2);
-    --card-simple-warning-color        : #1C2327; //$dark6;
+    --card-simple-warning-bg           : var(--yellow_d2_lighter);
+    --card-simple-warning-border-color : var(--yellow_d2_lighter);
+    --card-simple-warning-color        : #0D0E0F; //$dark3;
 
-    --card-simple-error-bg           : var(--red_d3);
-    --card-simple-error-border-color : var(--red_d3);
+    --card-simple-error-bg           : var(--red_d1_lighter);
+    --card-simple-error-border-color : var(--red_d1_lighter);
     --card-simple-error-color        : #E1E7EA; //$light4;
     --card-simple-error-svg-color    : #E1E7EA; //$light4;
 

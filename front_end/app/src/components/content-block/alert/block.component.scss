@@ -137,6 +137,10 @@
         background-color : var(--card-simple-default-bg);
         border           : 1px solid var(--card-simple-default-border-color);
 
+        button span {
+            color : var(--card-simple-default-color) !important;
+        }
+        
         .card--header {
             display : none;
         }
@@ -144,6 +148,11 @@
         .card--body {
             background-color : var(--card-simple-default-bg);
             border-top       : 1px solid var(--card-simple-default-border-color);
+            
+            svg-icon svg .st0 {
+                stroke: none;
+                fill: var(--card-simple-default-color);
+            }
         }
 
         .card--footer {
@@ -158,6 +167,10 @@
         border           : 1px solid var(--card-simple-error-border-color);
         margin-bottom    : 8px;
         line-height      : 18px;
+        
+        button span {
+            color : var(--card-simple-error-color) !important;
+        }
 
         .card--header {
             display : none;
@@ -195,7 +208,7 @@
         }
         
         button span {
-            color : var(--card-simple-warning-color);
+            color : var(--card-simple-warning-color) !important;
         }
 
         .card--header {
@@ -224,6 +237,10 @@
         border           : 1px solid var(--card-simple-info-bg);
         margin-bottom    : 8px;
         line-height      : 18px;
+        
+        button span {
+            color : var(--card-simple-info-color) !important;
+        }
 
         .card--header {
             display : none;

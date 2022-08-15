@@ -49,6 +49,7 @@
 	@include generateVarAndRgb(--red_l2, $red_l2);
 	@include generateVarAndRgb(--red_l1, $red_l1);
 	@include generateVarAndRgb(--red_main, $red_main);
+	@include generateVarAndRgb(--red_d1_lighter, $red_d1_lighter);
 	@include generateVarAndRgb(--red_d1, $red_d1);
 	@include generateVarAndRgb(--red_d2, $red_d2);
 	@include generateVarAndRgb(--red_d3, $red_d3);
