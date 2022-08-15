@@ -52,8 +52,29 @@
     .message {
         color: var(--ribbon-alert-color);
         text-align: center;
+        
         .larger {
             @include typography.regular18nocolor;
+        }
+        
+        .action-link {
+            span {
+                color : var(--ribbon-alert-color);
+            }
+        
+            &:hover {
+                span {
+                    color : var(--ribbon-alert-color);
+                }
+            
+                svg * {
+                    stroke : var(--ribbon-alert-color);
+                }
+            }
+        
+            svg * {
+                stroke : var(--ribbon-alert-color);
+            }
         }
     }
 
@@ -65,6 +86,7 @@
 .message-content-wrapper {
     display: flex;
     align-items: center;
+    
     .action-link {
         display: flex;
         align-items: center;
@@ -83,12 +105,12 @@
                 color: $blue9;
             }
             svg * {
-                fill: $blue9;
+                stroke: $blue9;
             }
         }
 
         svg * {
-            fill: $blue10;
+            stroke: $blue10;
         }
     }
 }

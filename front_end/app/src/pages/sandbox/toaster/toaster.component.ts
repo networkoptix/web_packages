@@ -1,31 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { IConfig } from '@services/nx-config/config-types';
 import { NxMenuService } from '@src/menu/menu.service';
 
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxRibbonService } from '../../../components/ribbon/ribbon.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
 import { NxConfigService } from '../../../services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector: 'toaster',
     templateUrl: 'toaster.component.html',
     styleUrls: ['toaster.component.scss']
 })
-export class ToasterComponent {
+export class ToasterComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     autohide: boolean;
+    ribbonType: string;
 
     constructor(
+        languageService: NxLanguageProviderService,
         configService: NxConfigService,
         private dialogs: NxDialogsService,
         private menuService: NxMenuService,
+        private ribbonService: NxRibbonService,
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
         this.menuService.section = 'components';
         this.menuService.detail = 'toaster';
+    }
+
+    ngOnDestroy():void {
+        this.ribbonService.hide();
+    }
+
+    showRibbon():void {
+        this.ribbonService.hide();
+        if (this.ribbonType) {
+            this.ribbonService.show(
+                this.LANG.common.viewingOutdatedReport(),
+                [{ type: 'link', text: 'Refresh', value: '' }],
+                this.ribbonType,
+                this.refreshHealth
+            );
+        }
+    }
+
+    refreshHealth(): void {
     }
 
     notify(msg: string, type: string): void {

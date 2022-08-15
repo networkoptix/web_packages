@@ -15,9 +15,9 @@ html[data-theme="dark"] {
     --ribbon-border : var(--brand-d4);
     --ribbon-color  : #{$light4};
 
-    --ribbon-alert-bg : #{$yellow_d2};
-    --ribbon-alert-border : #{$yellow_d2};
-    --ribbon-alert-color : #1C2327; //$dark6;
+    --ribbon-alert-bg : #{$yellow_d2_lighter};
+    --ribbon-alert-border : #{$yellow_d2_lighter};
+    --ribbon-alert-color : #0D0E0F; //$dark3;
 
     --image-box-border-color : #303F47; //$dark10;
     --image-box-selected-border-color : var(--brand-d1);

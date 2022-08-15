@@ -85,7 +85,7 @@ export class NxSandboxComponent {
                             path: '/tags'
                         }, {
                             id: 'toaster',
-                            label: 'Toaster & Buttons',
+                            label: 'Ribbon,  Banner, Toaster & Buttons',
                             path: '/toaster'
                         }, {
                             id: 'websocket',
