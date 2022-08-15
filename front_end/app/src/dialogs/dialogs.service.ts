@@ -608,6 +608,7 @@ export class NxDialogsService extends DialogBase {
 
     public async selectTimeRange(selection: TimelineSelectionService) {
         const config: Partial<DialogConfig> = {
+            width: DIALOG_SIZE.SMALL,
             data: {
                 selection
             }
