@@ -18,8 +18,6 @@ import { SELECTION_DRAG_MODE } from './timeline.services.types';
 const MIN_SELECTION_WIDTH_PX = 5;
 const PLAYBACK_OVERLAY_THRESHOLD_PX = 5;
 
-// const EAR_WIDTH = 120;
-
 enum EDGE_SCROLLING_SPEED {
     NONE = 0,
     SLOW = 1,
@@ -91,7 +89,6 @@ export class TimelineSelectionService {
     public set range(r: TimeRange) {
         this._selectedRange.start = r.start;
         this._selectedRange.end = r.end;
-        this._sanitizeRange();
         this._emit();
     }
 
@@ -233,11 +230,9 @@ export class TimelineSelectionService {
                 if (time < this._dragAnchorMs) {
                     this._selectedRange.start = time;
                     this._selectedRange.end = this._dragAnchorMs;
-                    this._sanitizeStart();
                 } else {
                     this._selectedRange.end = time;
                     this._selectedRange.start = this._dragAnchorMs;
-                    this._sanitizeEnd();
                 }
                 this._emit();
             } else if (this._dragMode === SELECTION_DRAG_MODE.DRAGGING_SELECTED_RANGE) {
@@ -283,7 +278,6 @@ export class TimelineSelectionService {
                 const newStart = this._dragAnchorMs - msDelta;
                 if (newStart < this._selectedRange.end) {
                     this._selectedRange.start = newStart;
-                    this._sanitizeStart();
                 } else {
                     this._dragMode = SELECTION_DRAG_MODE.DRAGGING_RIGHT_EAR;
                     const oldEnd = this._selectedRange.end;
@@ -304,7 +298,6 @@ export class TimelineSelectionService {
                 const newEnd = this._dragAnchorMs + msDelta;
                 if (newEnd > this._selectedRange.start) {
                     this._selectedRange.end = newEnd;
-                    this._sanitizeEnd();
                 } else {
                     this._dragMode = SELECTION_DRAG_MODE.DRAGGING_LEFT_EAR;
                     const oldStart = this._selectedRange.start;
@@ -349,9 +342,6 @@ export class TimelineSelectionService {
     }
 
     public handleMouseUp(e: MouseEvent) {
-        // console.log('hmu', this.rangeText, this.range)
-        this._sanitizeRange();
-        // console.log('hmuSan', this.rangeText, this.range)
         let result = true;
         if (
             this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND &&
@@ -376,18 +366,6 @@ export class TimelineSelectionService {
     protected _activate(): void {
         this._isActive = true;
         this.playback.pause();
-    }
-
-    protected _sanitizeRange(): void {
-        this._selectedRange.fitWithin(this.timeline.archiveRange);
-    }
-
-    protected _sanitizeStart(): void {
-        this._selectedRange.fitStart(this.timeline.archiveRange);
-    }
-
-    protected _sanitizeEnd(): void {
-        this._selectedRange.fitEnd(this.timeline.archiveRange);
     }
 
     protected _deactivate(): void {
@@ -448,7 +426,6 @@ export class TimelineSelectionService {
                         )
                     ) {
                         this._selectedRange.start -= offset * STEP;
-                        this._sanitizeStart();
                         this._dragAnchorMs = this._selectedRange.start;
                         this._dragAnchorPx = this._lastMouseMove.clientX;
                         // // this._dragAnchorPx += this.timeline.durationToDomWidth(offset) * STEP
@@ -486,7 +463,6 @@ export class TimelineSelectionService {
                         )
                     ) {
                         this._selectedRange.end += offset * STEP;
-                        this._sanitizeEnd();
                         this._dragAnchorMs = this._selectedRange.end;
                         this._dragAnchorPx = this._lastMouseMove.clientX;
                         // this._dragAnchorPx -= this.timeline.durationToDomWidth(offset) * STEP
@@ -503,7 +479,6 @@ export class TimelineSelectionService {
                         )
                     ) {
                         this._selectedRange.end -= offset * STEP;
-                        this._sanitizeEnd();
                         this._dragAnchorMs = this._selectedRange.end;
                         this._dragAnchorPx = this._lastMouseMove.clientX;
                         this._emit();
