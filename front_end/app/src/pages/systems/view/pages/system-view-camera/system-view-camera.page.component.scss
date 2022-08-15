@@ -421,17 +421,14 @@ $border-color: var(--light6);
       .controls-toggling-ear--wrapper {
         position : absolute;
         top      : -16px;
-        // left     : calc(50% - 70px / 2);
-        right    : 32px;
-        width    : 16px;
+        left     : calc(50% - 20px);
+        width    : 40px;
         height   : 40px;
 
         @include bootstrap.media-breakpoint-down(md) {
           content    : "";
           position   : absolute;
-          top        : -50px;
-          width      : 70px;
-          height     : 50px;
+          top        : -40px;
           background : transparent;
         }
 
@@ -485,7 +482,6 @@ $border-color: var(--light6);
           @include bootstrap.media-breakpoint-down(md) {
             position : absolute;
             bottom   : 0;
-            left     : 14px;
           }
 
           transform       : rotate(180deg);
