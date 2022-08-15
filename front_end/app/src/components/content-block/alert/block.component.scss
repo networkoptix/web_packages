@@ -133,12 +133,12 @@
     }
 
     &.simple-default {
-        color : var(--card-simple-default-color);
-        background-color : var(--card-simple-default-bg);
-        border           : 1px solid var(--card-simple-default-border-color);
+        color : var(--card-simple-error-color);
+        background-color : var(--card-simple-error-bg);
+        border           : 1px solid var(--card-simple-error-border-color);
 
         button span {
-            color : var(--card-simple-default-color) !important;
+            color : var(--card-simple-error-color) !important;
         }
         
         .card--header {
@@ -146,17 +146,17 @@
         }
 
         .card--body {
-            background-color : var(--card-simple-default-bg);
-            border-top       : 1px solid var(--card-simple-default-border-color);
+            background-color : var(--card-simple-error-bg);
+            border-top       : 1px solid var(--card-simple-error-border-color);
             
             svg-icon svg .st0 {
                 stroke: none;
-                fill: var(--card-simple-default-color);
+                fill: var(--card-simple-error-color);
             }
         }
 
         .card--footer {
-            background-color : var(--card-simple-default-bg);
+            background-color : var(--card-simple-error-bg);
         }
     }
 
