@@ -67,10 +67,13 @@
                         selected: camera.id === activeCameraId
                     }"
                 >
-                    <div class="preview">
+                    <div
+                        class="preview"
+                        (nxOnIntersect)="isCameraVisible[camera.id] = isCameraVisible[camera.id] || $event === 'Visible'"
+                        [intersectionThreshold]="0.1">
                         <nx-pre-loader
                             class="preloader"
-                            *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"
+                            *ngIf="isCameraVisible[camera.id] && camera.thumbnailUrl && !previewLoaded[camera.id]"
                         ></nx-pre-loader>
                         <img
                             class="fs-exclude"

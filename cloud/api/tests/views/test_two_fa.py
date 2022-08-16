@@ -1,4 +1,5 @@
 import random
+import re
 from rest_framework import serializers
 from rest_framework.fields import CharField, IntegerField
 from api.views.two_fa import *
@@ -73,6 +74,8 @@ class TestTwoFAViews:
         mock_verify_2fa = mocker.patch(self.auth_mock_path + 'verify_2fa_code', return_value=True)
         mock_generate_2fa_key = mocker.patch(self.auth_mock_path + 'generate_2fa_key', return_value=True)
         access_token, code, verification_code = self.make_uuids(3)
+        code = re.sub(r'\D', '', code)
+        verification_code = re.sub(r'\D', '', verification_code)
         view = TwoFactorVerification().as_view()
 
         # Valid Get
@@ -94,6 +97,8 @@ class TestTwoFAViews:
     def test_backup_code_get(self, create_user, arf, mocker):
         mock_verify_backup_code = mocker.patch(self.auth_mock_path + 'verify_backup_code', return_value=True)
         access_token, code, verification_code = self.make_uuids(3)
+        code = re.sub(r'\D', '', code)
+        verification_code = re.sub(r'\D', '', verification_code)
         request = arf.get(f'/?code={code}&verification_code={verification_code}')
         request.session = {'access_token': access_token}
         request.user = self.user

@@ -1318,9 +1318,18 @@ export class NxSystemAPI {
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
                 break;
             case 'rtsp':
-                url = `${this.getUrlBase()}/${this.cleanId(cameraId)}?stream=${resolution}`.replace('https://', 'rtsp://');
+                let urlBase = this.getUrlBase();
+                // If we are in webadmin we need to have the origin or else https is not replaced with rtsp.
+                if (!urlBase) {
+                    urlBase = window.location.origin;
+                }
+                url = `${urlBase}/${this.cleanId(cameraId)}?stream=${resolution}&`.replace(/https?:\/\//, 'rtsp://');
                 break;
             default:
+                // Rtsp plays as webm but does not support transcoding.
+                if (transport === 'mjpeg') {
+                    transport = 'webm';
+                }
                 url = `${this.getUrlBase()}/web/media/${this.cleanId(cameraId)}.${transport}?resolution=${resolution || ''}&`;
         }
 
