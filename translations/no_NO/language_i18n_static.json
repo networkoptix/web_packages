@@ -464,7 +464,7 @@
             "serversRestart": "Start server på nytt&nbsp;<strong>{ title }</strong>?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Koble alle systemene du er eier av fra %CLOUD_NAME% portalen for å slette kontoen din."
         },
         "twoFactor": {
             "action": "Logg Inn",
@@ -796,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "Ny versjon av %CLOUD_NAME% er tilgjengelig",
-            "installButton": "Install Now"
+            "installButton": "Installer nå"
         },
         "systemOffline": "Systemet er frakoblet. Noen innstillinger er kanskje ikke tilgjengelige.",
         "systemsMerging": "Dette systemet er for tiden involvert i en sammenslåingsoperasjon."
