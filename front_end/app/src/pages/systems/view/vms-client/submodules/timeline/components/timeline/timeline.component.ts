@@ -39,6 +39,8 @@ const MOUSE_HIDE_UNTIL_PX = 8;
 // const MAX_TIMES_RENDERED = 1
 // let times_rendered = 0
 
+const CLICK_AND_HOLD_TIMEOUT = 150;
+
 @UntilDestroy()
 @Component({
     selector: 'timeline',
@@ -49,9 +51,16 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
 
     protected _state: TimelineServiceStatus;
+    protected _mouseDownScreenX: px = 0;
+    protected _mouseNotReleasedYet: boolean = false;
+
     private updateCanvas = new Subject();
     private unsub$ = new Subject();
     private _animationTimeout;
+
+    public hideTimeUnderMouse: boolean = false;
+    public isDragging: boolean = false;
+    clickAndHoldHandler;
 
     constructor(
         protected configService: NxConfigService,
@@ -150,6 +159,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public canvasMouseMoveHandler(e: MouseEvent | TouchEvent): void {
+        e.stopPropagation();
+        e.preventDefault();
+
         this.timeUnderMouse.handleMouseMove(e);
         if (this.selection.handleMouseMove(e as MouseEvent)) {
             return;
@@ -181,17 +193,13 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
-    protected _mouseDownScreenX: px = 0;
-    protected _mouseNotReleasedYet: boolean = false;
-    public hideTimeUnderMouse: boolean = false;
-    public isDragging: boolean = false;
-
     public canvasMouseDownHandler(e: MouseEvent | TouchEvent): void {
+        e.stopPropagation();
+        e.preventDefault();
+
         if (e instanceof MouseEvent && e.button !== 0) {
             return;
         }
-        e.stopPropagation();
-        e.preventDefault();
         if (this.archiveSelectionEnabled) {
             const offsetY = calcOffsetY(e);
             if (offsetY >= CANVAS_SELECTION_OFFSET_START &&
@@ -201,14 +209,17 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
                 this.selection.reset();
                 this._mouseDownScreenX = calcScreenX(e);
-                this._mouseNotReleasedYet = true;
                 this.timeUnderMouse.handleMouseDown();
             }
         } else {
             this._mouseDownScreenX = calcScreenX(e);
-            this._mouseNotReleasedYet = true;
             this.timeUnderMouse.handleMouseDown();
         }
+        this._mouseNotReleasedYet = true;
+        this.clickAndHoldHandler = setTimeout(() => {
+            this.isDragging = true;
+            clearTimeout(this.clickAndHoldHandler);
+        }, CLICK_AND_HOLD_TIMEOUT);
     }
 
     protected _play(offsetX): void {
@@ -233,19 +244,27 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public canvasMouseUpHandler(e: MouseEvent | TouchEvent, mustPlay: boolean = false): void {
-        if (!mustPlay && this.archiveSelectionEnabled) {
-            mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
-        }
-        const screenX = calcScreenX(e);
-        const offsetX = calcOffsetX(e);
-        const delta = Math.abs(screenX - this._mouseDownScreenX);
-        // console.log('mouse up', e.screenX, delta)
-        mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
-        if (mustPlay) {
-            this._play(offsetX);
+        e.stopPropagation();
+        e.preventDefault();
 
-            // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
+        this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
+
+        if (!this.isDragging) {
+            if (!mustPlay && this.archiveSelectionEnabled) {
+                mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
+            }
+            const screenX = calcScreenX(e);
+            const offsetX = calcOffsetX(e);
+            const delta = Math.abs(screenX - this._mouseDownScreenX);
+            // console.log('mouse up', e.screenX, delta)
+            mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
+            if (mustPlay) {
+                this._play(offsetX);
+
+                // console.log('started to hide the time under mouse indicator', this._mouseDownScreenX)
+            }
         }
+
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
         this.timeUnderMouse.handleMouseUp();
@@ -253,6 +272,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @HostListener('document:mouseup', ['$event'])
     public documentMouseUpHandler(e: MouseEvent): void {
+        e.stopPropagation();
+        e.preventDefault();
+
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
