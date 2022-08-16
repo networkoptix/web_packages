@@ -442,8 +442,7 @@ export class NxSystem extends System {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.cameraManager.updateSystemServersCameras() : Promise.reject({ offline: true }))
                 .then(() => this.serverManager.getForceServers(false).toPromise())
-                .then(() => this.cameraManager.getCameras())
-                .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true))
+                .then(() => environment.isLocal ? Promise.resolve() : this.getUsers(true, true))
                 .catch(error => {
                     if (error?.offline) {
                         this.isOnline = false;
@@ -563,19 +562,6 @@ export class NxSystem extends System {
         return this.authPromise;
     }
 
-    public getResourceTypes(force: boolean = false) {
-        if (this.resourceTypes && !force) {
-            return Promise.resolve(this.resourceTypes);
-        }
-
-        return this.ensureSystemAuth().then(
-            () => this.mediaserver.getResourceTypes().toPromise()
-        ).then(resourceTypes => {
-            this.resourceTypes = resourceTypes;
-            return this.resourceTypes;
-        });
-    }
-
     public getMediaServersAndCameras(force: boolean = false): any {
         if (this.mediaservers && !force) {
             return Promise.resolve(this.mediaservers);
@@ -601,28 +587,16 @@ export class NxSystem extends System {
 
     protected _setMediaServersAndCameras(apiReply) {
         // `mss` stands for mediaservers, `cs` — for cameras
-
-        // sometimes the server sends weird keys (@gbezyuk)
         const mss = apiReply['ec2/getMediaServersEx'] ||
             apiReply['/ec2/getMediaServersEx'];
 
-        let cs = apiReply['ec2/getCamerasEx'];
+        const cs = apiReply['ec2/getCamerasEx'].map(trimIds);
 
-        return this.getResourceTypes().then(resourceTypes => {
-            const desktopCameraType = resourceTypes.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
-
-            cs = cs.filter(
-                c => c.typeId !== desktopCameraType.id &&
-                    !c.addParams.find(p => p.name === 'ioConfigCapability')
-            ).map(trimIds);
-
-            this.mediaservers = mss.map(trimIds).map(ms => ({
-                ...ms,
-                cameras: cs.filter(c => c.parentId === ms.id)
-            }));
-
-            return this.mediaservers;
-        });
+        this.mediaservers = mss.map(trimIds).map(ms => ({
+            ...ms,
+            cameras: cs.filter(c => c.parentId === ms.id)
+        }));
+        return this.mediaservers;
     }
 
     public getBookmarks() {

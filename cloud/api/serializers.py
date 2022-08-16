@@ -7,6 +7,7 @@ import functools
 import json
 import re
 
+from cloud.helpers.exceptions import APIInternalException
 from cms.models import LicenseType, Menu, MenuNode, UserGroupsToAssetPermissions, cached_doc_menu_map, get_cached_menu
 
 
@@ -57,6 +58,12 @@ class DeleteBackupCodeSerializer(serializers.Serializer):
 class VerificationSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
     verification_code = serializers.CharField(required=True)
+
+    @staticmethod
+    def validate_verification_code(value):
+        if not value.isnumeric():
+            raise APIInternalException('Wrong totp', error_code='invalidTotp')
+        return value
 
 
 class TransferSystemActionSerializer(serializers.Serializer):
