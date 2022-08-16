@@ -29,7 +29,7 @@
       <div class="cameras" *ngIf="isServerExpanded[server.id]">
         <a
           class="camera"
-          *ngFor="let camera of server.cameras; trackBy: cameraId"
+          *ngFor="let camera of server.cameras; trackBy: cameraId;"
           [routerLink]="[camera.id]"
           [ngClass]="{
             online: camera.isOnline,
@@ -43,9 +43,11 @@
             selected: camera.id === activeCameraId
           }"
         >
-          <div class="preview">
-            <nx-pre-loader class="preloader" *ngIf="camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
-            <img class="fs-exclude" *ngIf="camera.thumbnailUrl" [src]="camera.thumbnailUrl" (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
+          <div class="preview" (nxOnIntersect)="isCameraVisible[camera.id] = isCameraVisible[camera.id] || $event === 'Visible'" [intersectionThreshold]="0.1">
+            <nx-pre-loader class="preloader" *ngIf="isCameraVisible[camera.id] && camera.thumbnailUrl && !previewLoaded[camera.id]"></nx-pre-loader>
+            <img class="fs-exclude"
+                 *ngIf="isCameraVisible[camera.id] && camera.thumbnailUrl" [src]="camera.thumbnailUrl"
+                 (load)="handlePreviewLoaded(camera.id)" (error)="handlePreviewError(camera.id)">
             <svg-icon nx-add-svg-src
               *ngIf="!camera.isAuthorized || previewLoaded[camera.id] === -1 || !camera.isOnline"
               [src]="CONFIG.icons.dirNonStandardView + 'cameras_list_placeholder_' +

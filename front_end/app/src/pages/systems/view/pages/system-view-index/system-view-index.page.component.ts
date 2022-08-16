@@ -289,7 +289,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                     this.system = this.systemService.createSystem(account.email, this.systemId, undefined, false);
                     this.settingsService.system = this.system;
-                    return this.system.update();
+                    return Promise.resolve(); // this.system.update();
                 }
 
                 return Promise.reject();
@@ -361,8 +361,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                         this._setInitializationState(true, false);
                     }
 
-                    const mediaServers =
-                        await this.system.getMediaServersAndCameras(true);
+                    let mediaServers = this.system.mediaservers;
+                    if (mediaServers === null) {
+                        mediaServers = await this.system.getMediaServersAndCameras(true);
+                    }
                     // mediaServers length is 0 when getMediaServersAndCameras fails. No system can ever have 0 servers.
                     if (
                         this.initialized && !mediaServerChanged(mediaServers) ||

@@ -41,7 +41,7 @@ export class TwofaGuard implements CanActivate {
                 .subscribe((systems: NxSystemWithUserInfo[]) => {
                     const { systemId } = route.params;
                     const systemInfo = systems.find(system => system.id === systemId);
-                    if (systemInfo?.system2faEnabled) {
+                    if (systemInfo?.system2faEnabled && !account.sessionVerified) {
                         if (!account.totpExistsForAccount) {
                             const noRedirect = this.window.location.href.endsWith(
                                 `twofa-required?systemName=${systemInfo.name}`
@@ -56,7 +56,7 @@ export class TwofaGuard implements CanActivate {
                                 canActivateSubject.next(false);
                                 canActivateSubject.complete();
                             }
-                        } else if (!account.sessionVerified) {
+                        } else {
                             const system = this.systemService.createSystem(
                                 account.email,
                                 systemId,
@@ -71,9 +71,6 @@ export class TwofaGuard implements CanActivate {
                                 (system.mediaserver as NxSystemRestAPI).accessToken,
                                 Location.joinWithSlash(this.window.location.origin, state.url)
                             );
-                        } else {
-                            canActivateSubject.next(true);
-                            canActivateSubject.complete();
                         }
                     } else {
                         canActivateSubject.next(true);

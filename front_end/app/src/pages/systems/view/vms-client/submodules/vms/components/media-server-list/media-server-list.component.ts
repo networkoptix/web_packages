@@ -25,6 +25,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     public mediaservers: Array<MediaServer>
 
     public previewLoaded = {}
+    public isCameraVisible: { [key: string]: boolean} = {};
 
     public handlePreviewLoaded (cid) {
         this.previewLoaded[cid] = true;
@@ -67,9 +68,9 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
             case VMS_MODE.CAMERA_NOT_SELECTED:
             case VMS_MODE.CAMERA_SELECTED:
                 this._mediaservers = s.mediaServers;
-                this._mediaservers.map(server => {
+                this._mediaservers.forEach(server => {
                     server.name = NxUtilsService.htmlToEntity(server.name);
-                    server.cameras.map(camera => {
+                    server.cameras.forEach(camera => {
                         camera.name = NxUtilsService.htmlToEntity(camera.name);
                     });
                 });

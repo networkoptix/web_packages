@@ -187,7 +187,7 @@ export class CloudAccount extends BaseAccount {
     }
 
     requireLogin(): Promise<void | Account> {
-        return this.get(true)
+        return this.get(false)
             .then(account => {
                 if (account === null) {
                     this.logoutHelper(true, true);

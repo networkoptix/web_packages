@@ -157,6 +157,7 @@ export abstract class BaseAccount implements OnDestroy {
     }
 
     set account(account: Account) {
+        account?.permissions.sort();
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
             const loginState = this.sessionService.loginState;

@@ -79,9 +79,7 @@ export class SystemGuard implements CanActivate {
 
                     return new Promise((resolve) => {
                         if (currSystem) {
-                            currSystem.update().then(_ => {
-                                resolve(checkPermissionsFor(currSystem));
-                            });
+                            resolve(checkPermissionsFor(currSystem));
                         } else {
                             if (environment.isLocal) {
                                 currSystem = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);

@@ -282,7 +282,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         // Retrieve system info
         this.gettingSystem = this.processService.createProcess(() => {
-            return this.system.getInfo(true);
+            return this.system.getInfo(true, false, true);
             // Force reload system info when opening page
         }, {
             errorCodes: {
