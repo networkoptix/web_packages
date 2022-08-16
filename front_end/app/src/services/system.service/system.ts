@@ -572,7 +572,6 @@ export class NxSystem extends System {
                 () => this.mediaserver
                     .getMediaServersAndCameras().toPromise()
                     .then(
-                        // @ts-expect-error
                         response => {
                             if ((response.error && response.error !== '0') || !response.reply) {
                                 console.error('error getting mediaservers and cameras');

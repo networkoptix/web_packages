@@ -26,7 +26,7 @@ export class MediaServerListComponent implements OnInit, OnDestroy {
     public mediaservers: Array<MediaServer>;
 
     public previewLoaded = {};
-    public isCameraVisible: { [key: string]: boolean} = {};
+    public isCameraVisible: { [key: string]: boolean } = {};
 
     public handlePreviewLoaded(cid): void {
         this.previewLoaded[cid] = true;
