@@ -243,6 +243,8 @@ html {
     --left-menu-view-hover-bg    : #{$additional_light3};
     --left-menu-view-selected-bg : #{$light5};
     // end View tab ****************************
+    
+    --sidebar-toggling-ear-color : #{$light16};
 
     --time-under-mouse-bg               : rgba(var(--light6--rgb), 0.9);
     --time-under-mouse-color            : #{$dark9};

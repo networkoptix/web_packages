@@ -456,8 +456,6 @@ $border-color: var(--light6);
           width           : 40px;
           height          : 16px;
           background-color : var(--control-color);
-          //background      : var(--additional_light2) url("./img/arrow-down.png") no-repeat center center;
-          //background-size : 16px 16px;
           box-shadow      : 0 2px 0 0 rgba(var(--dark1--rgb), 0.1);
           cursor          : pointer;
           opacity         : 0.8;
@@ -471,7 +469,8 @@ $border-color: var(--light6);
               transform        : rotate(180deg);
               transform-origin : center;
               fill             : none;
-              stroke-width     : 2;
+              stroke-width     : 1;
+              stroke           : var(--sidebar-toggling-ear-color);
             }
           }
 
