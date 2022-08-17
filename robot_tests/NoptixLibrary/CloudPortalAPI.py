@@ -1,5 +1,3 @@
-from logging import raiseExceptions
-from sre_constants import FAILURE
 import requests
 import base64
 import uuid
@@ -12,7 +10,6 @@ import random
 from robot.api.deco import keyword, library
 import urllib3
 
-from robot.libraries.BuiltIn import BuiltIn
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
 from CloudSession import CloudSession
