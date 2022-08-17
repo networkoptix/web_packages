@@ -8,7 +8,7 @@
     background-color : var(--body-bg);
 
     .sticky1rem {
-        box-shadow: 0 -14px 0 2px $additional_light2;
+        box-shadow: 0 -14px 0 2px var(--body-bg);
         position: sticky;
         top: 1rem;
         z-index: 99;
@@ -149,7 +149,7 @@
             background-color : var(--card-simple-error-bg);
             border-top       : 1px solid var(--card-simple-error-border-color);
             
-            svg-icon svg .st0 {
+            svg-icon svg .st0, svg-icon svg .error {
                 stroke: none;
                 fill: var(--card-simple-error-color);
             }
@@ -180,9 +180,16 @@
             background-color : var(--card-simple-error-bg);
             border-top       : 1px solid var(--card-simple-error-border-color);
             
-            svg-icon svg .st0 {
+            svg-icon svg .st0,
+            svg-icon svg .error,
+            svg-icon svg path {
                 stroke: none;
                 fill: var(--card-simple-error-svg-color);
+            }
+            
+            svg-icon svg .svg-ornament {
+                stroke: none;
+                fill: var(--card-simple-error-svg-ornament-color);
             }
         }
 
@@ -199,7 +206,9 @@
         margin-bottom    : 8px;
         line-height      : 18px;
         
-        svg-icon svg .st0, svg-icon svg .st1 {
+        svg-icon svg .st0,
+        svg-icon svg .st1,
+        svg-icon svg .error {
             stroke : var(--card-simple-warning-color);
         }
         
@@ -219,7 +228,8 @@
             background-color : var(--card-simple-warning-bg);
             border-top       : 1px solid var(--card-simple-warning-border-color);
             
-            svg-icon svg .st0 {
+            svg-icon svg .st0,
+            svg-icon svg path {
                 stroke: none;
                 fill: var(--card-simple-warning-color);
             }
@@ -250,7 +260,8 @@
             background-color : rgba(var(--brand-core--rgb), .1);
             border-top       : 1px solid rgba(var(--brand-core--rgb), .3);
             
-            svg-icon svg .st0 {
+            svg-icon svg .st0,
+            svg-icon svg path {
                 stroke: none;
                 fill: var(--card-simple-info-svg-color);
             }
