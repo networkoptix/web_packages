@@ -464,7 +464,7 @@
             "serversRestart": "Server &nbsp;<strong>{ title }</strong> neu starten?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Trennen Sie alle Systeme, deren Besitzer Sie sind, vom %CLOUD_NAME%-Portal, um Ihr Konto zu löschen."
         },
         "twoFactor": {
             "action": "Login",
@@ -796,7 +796,7 @@
         },
         "newVersionAvailable": {
             "notification": "Neue Version von %CLOUD_NAME% ist verfügbar",
-            "installButton": "Install Now"
+            "installButton": "Jetzt installieren"
         },
         "systemOffline": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
         "systemsMerging": "Dieses System ist derzeit an einem Zusammenführungsvorgang beteiligt."
