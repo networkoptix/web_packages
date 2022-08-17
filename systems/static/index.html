@@ -3,6 +3,7 @@
 <head></head>
 <body>
 <div>
+    <button onclick="getCode()">Get access code</button>
     <button onclick="initWebsocket()">Connect</button>
     <button onclick="reset()">Reset Inputs</button>
 </div>
@@ -100,6 +101,7 @@
     }
 </script>
 <script>
+    const cloudHost = 'cloud-test.hdw.mx';
     const logger = document.getElementById('logger');
     const loggerContainer = document.getElementById('logger-container');
     const groupContainer = document.getElementById('group-container');
@@ -119,8 +121,9 @@
         }
 
         let systems = {};
-        // ws = new WebSocket(`wss://cloud-test.hdw.mx/sys?tem_groups/ws?code=${window.code}`);
-        ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
+        // uncomment to target an instance's system groups
+        ws = new WebSocket(`wss://${cloudHost}/system_groups/ws?code=${window.code}`);
+        // ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
         ws.onmessage = function (event) {
             let { action, data } = JSON.parse(event.data);
             console.log('message received', event, action, data)
@@ -131,7 +134,7 @@
             } else if (action === 'systems') {
                 console.log('systems action')
                 systemId.innerHTML = data.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`)
-                systemId.value ||= data[0].id
+                systemId.value ||= data[0]?.id
                 systems = data.reduce((_systems, system) => {
                     _systems[system.id] = system;
                     return _systems;
@@ -141,9 +144,9 @@
                 const groups = data.filter(r => r.type === 'group')
                 const gidOptions = groups.map(g => `<option value="${g.id}">${g.name} (${g.id})</option>`)
                 groupId.innerHTML = gidOptions
-                groupId.value ||= groups[0].id
+                groupId.value ||= groups[0]?.id
                 targetId.innerHTML = gidOptions
-                targetId.value ||= groups[0].id
+                targetId.value ||= groups[0]?.id
 
                 const mapIdsToSystem = (groupSystems) => groupSystems
                     .filter(({id}) => systems.hasOwnProperty(id))
@@ -204,6 +207,35 @@
         data.systemId = systemId.value
         console.log('sending action', action, ws, data, data.toJson())
         ws?.send(JSON.stringify(data.toJson()));
+    }
+
+    const getCode = () => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+            "client_id": "cloud_portal",
+            "grant_type": "password",
+            "response_type": "code",
+            "email": "email", // use cloud credentials
+            "password": "password"
+        });
+
+        const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        return fetch(`https://${cloudHost}/oauth/authenticate`, requestOptions)
+            .then(response => response.json())
+            .then(({ code }) => {
+                window.code = code;
+                console.log(`code: ${code}`);
+                console.log('If 2fa is enabled you will need to verify the code before connecting');
+            })
+            .catch(error => console.log('error', error));
     }
 </script>
 </body>

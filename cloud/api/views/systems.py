@@ -11,7 +11,7 @@ from api.account_backend import get_ip
 from cloud.controllers import cloud_api, cloud_gateway
 from cloud.controllers.cloud_api import Auth
 from cloud.helpers.exceptions import api_success, require_params, \
-    APIInternalException, APINotAuthorisedException, APIRequestException, ErrorCodes
+     APINotAuthorisedException, APIRequestException, ErrorCodes, APIException
 from api.serializers import *
 
 
@@ -399,6 +399,10 @@ def system_groups_users_management(request):
         return api_success();
     for system_id in systems:
         for user in users:
-            cloud_api.System.share(
-                request, system_id, user.get('email'), user.get('role', ''), enabled=user.get('enabled', True))
+            try:
+                cloud_api.System.share(
+                    request, system_id, user.get('email'), user.get('role', ''), enabled=user.get('enabled', True))
+            # A broad exception is used here because we don't know why sharing failed.
+            except APIException:
+                pass
     return api_success()

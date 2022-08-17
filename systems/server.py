@@ -61,8 +61,8 @@ class Group(db.Model):
     owner_account_email = db.Column(db.String(255), nullable=False)
     parent_group_id = db.Column(db.String(64), db.ForeignKey(id), nullable=True)
     parent = db.relationship('Group', backref='groups', remote_side=id, lazy=True)
-    systems = db.relationship('System', lazy=True)
-    users = db.relationship('User', lazy=True)
+    systems = db.relationship('System', lazy="dynamic")
+    users = db.relationship('User', lazy="dynamic")
 
     def __repr__(self):
         return f'<Group {self.name}>'
@@ -327,16 +327,16 @@ class GroupView:
             for system in group.systems:
                 parent_group.systems.append(system)
 
+        await group.add_users_from_above_group(modify_users)
         db.session.delete(group)
         db.session.commit()
-        await group.add_users_from_above(modify_users)
         return {'msg': 'Group was deleted.'}
 
     @staticmethod
     def list_groups(account_id=None):
         groups = Group.query.filter(Group.parent_group_id == None)
-        if account_id and False:
-            groups.filter(Group.owner_account_email == account_id)
+        if account_id:
+            groups = groups.filter(Group.owner_account_email == account_id)
         groups_list = [group.data() for group in groups]
         systems_list = [system.as_dict() for system in System.query.filter(System.group_id == None)]
 
@@ -651,7 +651,7 @@ async def receiving(cloud_connector):
             # TODO: support assigining parent on creation
             res = GroupView.create_group(data['name'], cloud_connector.account.get('email'))
         elif action == 'delete_group':
-            res = await GroupView.delete_group(data['group_id'], cloud_connector.account.get('email'))
+            res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'], cloud_connector.account.get('email'))
         elif action == 'move_group':
             res = await GroupView.move_group_to_group(cloud_connector.share_system, data['group_id'], data['target_id'])
         elif action == 'move_system':
