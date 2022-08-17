@@ -260,8 +260,14 @@ html[data-theme="dark"] {
     --timeline-playback-indicator-bg    : #E1E7EA; //$light4;
     --timeline-playback-indicator-color : #080707; //$dark2
     --timeline-selection-panel-bg       : var(--brand-d3);
+    --timeline-selection-panel-hover-bg       : var(--brand-d4);
+    --timeline-selection-panel-active-bg      : var(--brand-d2);
     --timeline-selection-panel-color    : #{$light4};
     --timeline-selection-picker         : dark;
+    --timeline-selection-panel-delimiter-color : rgba(var(--light4--rgb), 0.25);
+    --timeline-selection-panel-close-bg        : var(--brand-d6);
+    --timeline-selection-panel-close-hover-bg        : var(--brand-d5);
+    --timeline-selection-panel-close-active-bg        : var(--brand-d4);
     --timeline-control-color            : #{$light4};
 
     --paginator-bg           : #1C2327; //$dark6;

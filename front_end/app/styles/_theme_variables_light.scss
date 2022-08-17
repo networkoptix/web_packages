@@ -256,9 +256,15 @@ html {
     --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-bg    : rgba(var(--dark9--rgb), 0.9);
     --timeline-playback-indicator-color : #{$light1};
-    --timeline-selection-panel-bg       : var(--brand-d1);
+    --timeline-selection-panel-bg       : var(--brand-core);
+    --timeline-selection-panel-hover-bg       : var(--brand-l1);
+    --timeline-selection-panel-active-bg      : var(--brand-d1);
     --timeline-selection-panel-color    : #{$light1};
     --timeline-selection-picker         : light;
+    --timeline-selection-panel-delimiter-color : rgba(var(--light4--rgb), 0.25);
+    --timeline-selection-panel-close-bg        : var(--brand-d2);
+    --timeline-selection-panel-close-hover-bg        : var(--brand-d1);
+    --timeline-selection-panel-close-active-bg        : var(--brand-d4);
     --timeline-control-color            : #{$dark9};
 
     --paginator-bg    : #{$light4};

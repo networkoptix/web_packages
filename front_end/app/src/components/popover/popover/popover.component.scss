@@ -41,10 +41,16 @@
     transform : translateY(-50%);
 }
 
-:host-context(.right.center) .arrow {
-    right     : -16px;
-    top       : calc(50% - 8px); // arrow is within popover so padding need to be corrected minus rotation
-    transform : rotate(180deg);
+:host-context(.right.center) {
+    nx-popover {
+        transform : translateY(-8px) !important;
+    }
+    
+    .arrow {
+        right     : -16px;
+        top       : calc(50%);
+        transform : rotate(180deg);
+    }
 }
 
 :host-context(.bottom.center) .arrow {
@@ -55,7 +61,7 @@
 
 :host-context(.top.center) .arrow {
     top       : -16px;
-    left      : calc(50% );
+    left      : calc(50%);
     transform : rotate(90deg);
 }
 

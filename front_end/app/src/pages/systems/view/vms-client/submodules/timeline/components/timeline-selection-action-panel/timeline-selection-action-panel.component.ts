@@ -3,11 +3,12 @@ import {
     OnInit,
     OnDestroy,
     ElementRef,
-    AfterViewInit
+    AfterViewInit, TemplateRef, ViewContainerRef
 } from '@angular/core';
-import { interval, Observable, Subscription } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
+import { POS_STRATEGY } from '@components/popover/popover-config';
+import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
@@ -26,11 +27,6 @@ import type {
     TimelineSelectionServiceStatus,
 } from '../../services/timeline.services.types';
 
-import { msDurationToString } from './utils';
-
-const THROTTLE_MS = 50;
-const EAR_WIDTH = 120;
-
 type ssRange = { start: number, end: number };
 
 @Component({
@@ -44,12 +40,6 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
     protected subscription: Subscription;
     protected status: TimelineSelectionServiceStatus;
     protected system: NxSystem;
-
-    public get duration(): string {
-        return msDurationToString(
-            Math.floor(this.selection.range.duration / 1000) * 1000
-        );
-    }
 
     public get exportUrl(): string {
         // return this.selection.exportUrl
@@ -66,30 +56,16 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         protected accountService: NxAccountService,
         protected systemService: NxSystemService,
         protected vms: VideoManagementSystemService,
-        protected dialogs: NxDialogsService
+        protected dialogs: NxDialogsService,
+        private popoverService: NxPopoverService,
+        private _viewContainerRef: ViewContainerRef,
     ) {
         this.CONFIG = configService.getConfig();
         this.onSubjectChange = this.onSubjectChange.bind(this);
     }
 
-    protected get $self(): HTMLElement {
-        return this.self.nativeElement;
-    }
-
-    public duration$: Observable<string>;
-
     public ngOnInit(): void {
         this.subscription = this.selection.subject.subscribe(this.onSubjectChange);
-
-        // supposed to reduce jitter; doesn't quite work, though
-        // this.duration$ = this.selection.subject
-        //     .pipe(throttle(ev => interval(THROTTLE_MS)))
-        //     .pipe(map(s => msDurationToString(Math.floor(s.range.duration / 1000) * 1000)))
-
-        // a fallback jitter reduction solution
-        this.duration$ = interval(THROTTLE_MS)
-            .pipe(map(_ => this.duration))
-            .pipe(distinctUntilChanged());
 
         this.accountService.get().then(account => {
             if (!account) {
@@ -120,34 +96,29 @@ export class TimelineSelectionActionPanelComponent implements OnInit, OnDestroy,
         this.subscription.unsubscribe();
     }
 
+    showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
+        this.popoverService.open(
+            template,
+            target,
+            {
+                panelClass: 'hint-popover',
+                arrowOffset: 4,
+                positionStrategy: POS_STRATEGY.DEFAULT
+            },
+            this._viewContainerRef);
+    }
+
+    closeLegend(): void {
+        this.popoverService.close();
+    }
+
     public clearSelection(): void {
         this.selection.reset();
     }
 
     public onSubjectChange(s: TimelineSelectionServiceStatus): void {
         this.status = s;
-        this.$self.classList.toggle('active', s.isActive);
-    }
-
-    public handleDurationClick(e: MouseEvent): void {
-        this.timeline.jumpScrollTo(
-            this.selection.range.start -
-            this.timeline.domWidthToDuration(EAR_WIDTH)
-        );
-    }
-
-    public handleDurationDoubleClick(
-        e: MouseEvent,
-        recalibrate: boolean = false
-    ): void {
-        const margin = this.timeline.domWidthToDuration(EAR_WIDTH);
-        this.timeline.visibleRange = new TimeRange(
-            this.selection.range.start - margin,
-            this.selection.range.end + margin
-        );
-        if (recalibrate) {
-            setTimeout(() => this.handleDurationDoubleClick(e), 0);
-        }
+        this.self.nativeElement.classList.toggle('active', s.isActive);
     }
 
     public initSetTimeDialog(): void {
