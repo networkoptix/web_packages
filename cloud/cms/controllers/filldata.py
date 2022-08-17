@@ -604,7 +604,7 @@ def save_b64_to_file(value, filename, storage_location):
     file_name = os.path.join(storage_location, filename)
     make_dir(file_name)
 
-    image_png = base64.b64decode(value) if value else ''
+    image_png = base64.b64decode(value) if value else bytes()
 
     with open(file_name, 'wb') as f:
         f.write(image_png)
