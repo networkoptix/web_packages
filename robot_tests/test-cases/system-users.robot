@@ -443,7 +443,7 @@ Force Tags        system    Threaded
     FOR    ${user}    IN    @{list}
         ${random email}=   Register and activate account with random email    mark    harmill    ${password}
         Share    ${server 1['cloud auth']}    ${server 1['cloud id']}    ${ACCESS ROLES}[liveViewer]    ${random email}     ${permissions}[liveViewer]
-        #Sleep    10
+        Sleep    100
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${server 1['cloud id']}
         Go to Users List

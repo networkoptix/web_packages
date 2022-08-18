@@ -339,8 +339,8 @@ Force Tags        merge
     Wait Until Elements Are Visible    ${MERGE DIALOG}    ${MERGE SERVER NOT FOUND}     ${MERGE SERVER NOT FOUND BODY}    ${MERGE FAILED OK BUTTON}
     Click Button    ${MERGE FAILED OK BUTTON}
     Go To    ${ENV}/systems/
-    Wait Until Element Is Visible    //h2[contains(text(), "${system 1}[name]")]
-    Wait Until Element Is Not Visible    //h2[contains(text(), "${system 2}[name]")]
+    sleep    5
+    Location Should Be    ${ENV}/systems/${system 1}[cloud id]
 
 9. Positive scenario with selected cloud system (selected system is primary)
     [Tags]    C70931    pos    must
