@@ -148,9 +148,13 @@
                 targetId.innerHTML = gidOptions
                 targetId.value ||= groups[0]?.id
 
+                const placedSystems = new Set();
                 const mapIdsToSystem = (groupSystems) => groupSystems
                     .filter(({id}) => systems.hasOwnProperty(id))
-                    .map(system => ({...system, ...systems[system.id]}));
+                    .map(system => {
+                        placedSystems.add(system.id);
+                        return {...system, ...systems[system.id]}
+                    });
                 const mapGroupsToSystems = (groups) => groups.map(group => ({
                     ...group,
                     groups: mapGroupsToSystems(group.groups),
@@ -166,6 +170,12 @@
                         }
                         return element;
                     });
+                Object.entries(systems).forEach(([id, system]) => {
+                    if (!placedSystems.has(id)) {
+                        showData.push(system);
+                        placedSystems.add(id)
+                    }
+                });
                 pre.innerText = JSON.stringify(showData, undefined, 4);
                 groupContainer.style.display = 'block'
             } else {

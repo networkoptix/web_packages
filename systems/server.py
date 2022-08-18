@@ -338,9 +338,8 @@ class GroupView:
         if account_id:
             groups = groups.filter(Group.owner_account_email == account_id)
         groups_list = [group.data() for group in groups]
-        # systems_list = [system.as_dict() for system in System.query.filter(System.group_id == None)]
 
-        return groups_list # + systems_list
+        return groups_list
 
     @staticmethod
     async def move_system_to_group(modify_users, group_id, system, account):
@@ -351,12 +350,20 @@ class GroupView:
         if group and group.owner_account_email != account.get('email'):
             return {'msg': 'You can only move systems into groups that you own.', 'error': 403}
 
-        system = System.query.get(system.get('id'))
-        if system.group_id:
+        system_id = system.get('id')
+        system = System.query.get(system_id)
+        if not system:
+            system = System(id=system_id)
+            db.session.commit()
+
+        elif system.group_id:
             if src_group := Group.query.get(system.group_id):
                 await src_group.remove_users_from_system(modify_users, system.id)
 
-        system.group_id = group_id
+        if group_id:
+            system.group_id = group_id
+        else:
+            system.delete()
         db.session.commit()
 
         if group:
@@ -624,18 +631,6 @@ class CloudConnector:
         return await self.loop.run_in_executor(None, self._post_wrapper, request_url, data)
 
 
-def create_missing_systems(systems):
-    system_ids = list(filter(lambda id: id is not None, map(lambda system: system.get('id'), systems)))
-    existing_systems = list(map(lambda system: system.id, System.query.filter(System.id.in_(system_ids)).all()))
-    missing_system_ids = list(set(system_ids) - set(existing_systems))
-    app.logger.debug(f'Existing systems {existing_systems}')
-    app.logger.debug(f'Missing systems {missing_system_ids}')
-    for system_id in missing_system_ids:
-        db.session.add(System(id=system_id))
-    else:
-        db.session.commit()
-
-
 async def receiving(cloud_connector):
     await websocket.send(json.dumps({
         'action': 'connected',
@@ -676,7 +671,6 @@ async def receiving(cloud_connector):
         elif action == 'systems':
             res = await cloud_connector.get_systems()
             app.logger.debug(res)
-            create_missing_systems(res)
         elif action == 'aggregate_systems_request':
             res = await cloud_connector.aggregate_request(
                 data['url'], method=data['method'], post_body=data.get('postBody')

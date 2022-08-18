@@ -32,18 +32,22 @@ export const selectGroupsItems = createSelector(
     _selectGroupsItems,
     selectSystemInfoMap,
     (items, sysInfo) => {
+        const placedSystem: Set<string> = new Set();
         function extendSystemInfo(groupItem: BaseGroupItem): GroupItem {
             groupItem.groups = groupItem.groups.map(g =>
                 extendSystemInfo({ ...g })
             );
-            groupItem.systems = groupItem.systems.map(s => ({
-                ...s,
-                ...(sysInfo.get(s.id) ?? {})
-                // TODO: Remove once backend only returns your systems
-            }));
+            groupItem.systems = groupItem.systems.map(s => {
+                placedSystem.add(s.id);
+                return {
+                    ...s,
+                    ...(sysInfo.get(s.id) ?? {})
+                    // TODO: Remove once backend only returns your systems
+                };
+            });
             return groupItem as GroupItem;
         }
-        return items.map(item => {
+        const data = items.map(item => {
             if (item.type === 'group') {
                 item = extendSystemInfo({ ...item });
             } else {
@@ -54,6 +58,14 @@ export const selectGroupsItems = createSelector(
             }
             return item as GroupsItem;
         });
+
+        sysInfo.forEach(system => {
+            if (!placedSystem.has(system.id)) {
+                data.push({ ...system, type: 'system', group_id: '' });
+                placedSystem.add(system.id);
+            }
+        });
+        return data;
     }
 );
 
