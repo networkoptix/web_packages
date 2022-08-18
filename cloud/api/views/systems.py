@@ -392,7 +392,6 @@ def proxy(request, system_id, system_url):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def system_groups_users_management(request):
-    require_params(request, ('systems',))
     systems = request.data.get('systems', [])
     users = request.data.get('users', [])
     if len(users) == 0:
