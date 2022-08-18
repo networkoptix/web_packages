@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { LanguageI18NStaticTypes } from '@app/language_i18n_static_types';
 import { environment } from '@environments/environment';
 import { NxSystemRole } from '@services/system.service/user-manager/user-manager-types';
+import { processLanguageFactory } from '@utils/general';
 
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -128,17 +129,7 @@ export class NxBootstrapProvider {
             '%SUPPORT_LINK%': this.CONFIG.company.links.website,
             '%COMPANY_NAME%': this.CONFIG.company.name
         };
-        const processLanguage = language => {
-            Object.entries(language).forEach(([key, phrase]) => {
-                if (typeof phrase === 'string') {
-                    language[key] = Object.entries(customStrings)
-                        .reduce((text: string, [rKey, rValue]) => text.replace(new RegExp(rKey, 'g'), rValue), phrase);
-                } else if (typeof phrase !== 'number') {
-                    language[key] = processLanguage(phrase);
-                }
-            });
-            return language;
-        };
+        const processLanguage = processLanguageFactory(customStrings);
         this.languageService.setTranslations(data.language, processLanguage(data));
         this.LANG = this.languageService.translations;
         this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined

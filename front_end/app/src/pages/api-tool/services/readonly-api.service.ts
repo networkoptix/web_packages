@@ -39,7 +39,7 @@ export class NxReadonlyAPIService {
     constructor(
         private configService: NxConfigService,
         private api: NxCloudApiService,
-                private _route: ActivatedRoute) {
+        private _route: ActivatedRoute) {
         this.CONFIG = this.configService.getConfig();
         this.isEnabled = this.configService.flagsEnabled(FeatureFlagStrings.readonlyAPIs);
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {

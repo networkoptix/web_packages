@@ -100,6 +100,8 @@ export class NxOpenAPIJSONService {
         });
 
         this.readonlyAPIService.currentReadonlyAPI$.pipe(untilDestroyed(this), filter(api => !!api)).subscribe(api => {
+            this.APIToolService.useBrandingVariables(api.api);
+            this.APIToolService.useBrandingVariables(api.markdown);
             this.setReadonlyAPI(api);
         });
 
@@ -117,6 +119,7 @@ export class NxOpenAPIJSONService {
         const jsons = this.fetchAllJSONsInManifest(manifest);
         this.createAPIStore(server.id);
         if (markdown) {
+            this.APIToolService.useBrandingVariables(markdown);
             this.storeMarkdown(server.id, markdown);
         }
         let combinedJSON: APIDoc;
@@ -143,6 +146,7 @@ export class NxOpenAPIJSONService {
             this.storeAPIMenu(server.id, type, menu);
             addAPIInfoNodesToMenu(combinedJSON, menu, !!markdown);
         }
+        this.APIToolService.useBrandingVariables(combinedJSON);
 
         if (this.queuedServerChange === server.id) {
             // Handles race condition where the currentServer is changed to this server before it is ready to display

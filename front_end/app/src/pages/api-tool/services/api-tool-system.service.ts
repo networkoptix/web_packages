@@ -21,6 +21,7 @@ import type {
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxUriService } from '@services/uri.service';
+import { processLanguageFactory } from '@utils/general';
 
 import type { APIDoc } from '../api-tool-types';
 
@@ -440,6 +441,18 @@ export class NxAPIToolSystemService {
         return { APIPreamble, APIChangelog };
     }
 
+    useBrandingVariables(data: any) {
+        const customStrings = {
+            '%CLOUD_NAME%': this.CONFIG.cloudName,
+            '%VMS_NAME%': this.CONFIG.vmsName,
+            '%SUPPORT_LINK%': this.CONFIG.company.links.website,
+            '%COMPANY_NAME%': this.CONFIG.company.name
+        };
+        const processLanguage = processLanguageFactory(customStrings);
+        return processLanguage(data);
+    }
+
+    // Caching
     private makeCacheKey = (systemId: string, scheme: string) => {
         return systemId + '-api-tool-file-' + scheme;
     };
