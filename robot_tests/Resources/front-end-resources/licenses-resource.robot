@@ -37,6 +37,9 @@ LM Suite Set Up
     Sleep    30
     Open Browser and go to URL    ${ENV}
 
+LM Test Teardown
+    Run Keyword If Test Failed    LM Test Restart
+
 LM Suite Teardown
 #    ${systems}=   Get Account Systems    ${ENV}    ${LM OWNER}    ${BASE PASSWORD}
 #    FOR   ${sys}    IN    @{systems}

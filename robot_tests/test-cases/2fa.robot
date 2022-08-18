@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/2fa-resource.robot
 Suite Setup       2fa-resource.Setup
-Test Setup        2fa-resource.Restart
-Test Teardown     2fa Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start   2fa-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop    2fa Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    2fa Suite Teardown
 Force Tags        Threaded
 

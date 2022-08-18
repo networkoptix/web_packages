@@ -1,6 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
-Test Teardown     Close Browser
+Test Setup        Run Keywords    QA Video Recording Start
+Test Teardown     Run Keywords    QA Video Recording Stop      Close Browser
 Force Tags        Threaded
 
 

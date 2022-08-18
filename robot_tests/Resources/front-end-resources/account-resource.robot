@@ -6,7 +6,10 @@ Resource          restore-pass-resource.robot
 Restart
     Common Restart Logout    ${url}
     Set Language Anonymous
-    
+
+Account Test Teardown
+    Run Keyword If Test Failed    account-resource.Reset DB and Open New Browser On Failure
+
 Reset DB and Open New Browser On Failure
     Set Account Name    ${no perm}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Set Account Name    ${server 1}[cloud users][viewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}

@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/health-monitor-resource.robot
 Suite Setup       Health Monitor Suite Setup
-Test Setup        Health Monitor Test Setup
-Test Teardown     Health Monitor Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start            Health Monitor Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop         Health Monitor Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Health Monitor Suite Teardown
 Force Tags        Threaded    hm
 

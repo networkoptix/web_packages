@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/activate-resource.robot
 # Suite Setup       Clear Emails
-Test Setup        activate-resource.Restart
-Test Teardown     Run Keyword If Test Failed    activate-resource.Open New Browser On Failure
+Test Setup        Run Keywords    activate-resource.Restart     QA Video Recording Start
+Test Teardown     Run Keywords    QA Video Recording Stop      Activate Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded    activate
 
@@ -89,6 +89,8 @@ Force Tags        Threaded    activate
 
 13. Link works and suggests to log out user, if he was logged in, buttons operate correctly
     [Tags]    email    C41564
+    [Setup]       No Operation
+    [Teardown]    No Operation
     Skip    Not sure if this is necessary anymore.
     ${email1}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${FROM EMAIL DEFAULT}
     Register Account    mark    hamill    ${email1}    ${password}

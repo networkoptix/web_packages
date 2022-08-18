@@ -46,3 +46,6 @@ Reset DB and Open New Browser On Failure
     Restore Password using API    ${email}    ${BASE PASSWORD}
     Close Browser
     Open Browser and go to URL    ${url}
+
+Change Pass Test Teardown
+    Run Keyword If Test Failed    change-pass-resource.Reset DB and Open New Browser On Failure

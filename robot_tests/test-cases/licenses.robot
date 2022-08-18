@@ -1,7 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/licenses-resource.robot
 Suite Setup       LM Suite Set Up
-Test Teardown     Run Keyword If Test Failed    LM Test Restart
+Test Setup        Run Keywords    QA Video Recording Start
+Test Teardown     Run Keywords    QA Video Recording Stop    LM Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    LM Suite Teardown
 Force Tags    Threaded    Licenses
 

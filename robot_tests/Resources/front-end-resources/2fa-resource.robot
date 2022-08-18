@@ -48,6 +48,7 @@ Turn on 2fa Functionality
         Click Element    ${2FA QA CODE BTN}
         Wait Until Element Is Visible    ${2FA KEY}
         ${key}=    Get Text    ${2FA KEY}
+        ${key}=    Strip String	   ${key}
         Click Element    ${2FA KEY MODAL NEXT BTN}
     ELSE
         ${key}=    Scan QR and decode to key
@@ -139,8 +140,8 @@ Check or uncheck 2fa ask for verification checkbox
         Click Element    ${2FA VERIFICATION CHECKBOX}
         Log    checkbox checked
     END
-    Wait Until Element Is Visible    ${2FA SECURITY PAGE SAVE BTN}
-    Click Element    ${2FA SECURITY PAGE SAVE BTN}
+#    Wait Until Element Is Visible    ${2FA SECURITY PAGE SAVE BTN}
+#    Click Element    ${2FA SECURITY PAGE SAVE BTN}
     Wait Until Element Is Visible    ${2FA TOTP FIELD}
     Element Should Be Visible    ${2FA SETTINGS MODAL HEADER}
     IF    ${checked}

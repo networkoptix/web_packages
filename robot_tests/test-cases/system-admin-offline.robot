@@ -1,7 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Offline Suite Setup
-Test Setup        System Offline Restart
+Test Setup        Run Keywords    QA Video Recording Start     System Offline Restart
+Test Teardown     Run Keywords    QA Video Recording Stop
 Suite Teardown    Run Keyword and Ignore Error    System Offline Suite Teardown
 Force Tags        system
 

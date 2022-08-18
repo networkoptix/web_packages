@@ -3,6 +3,9 @@ Resource          ../../resource.robot
 Resource          system-admin-resource.robot
 
 *** Keywords ***
+Settings Menu Test Teardown
+    Run Keyword If Test Failed    System Settings Menu Test Restart
+
 System Settings Menu Test Setup
     Run Keyword and Ignore Error    Dismiss New Feature Modal
     Log Out

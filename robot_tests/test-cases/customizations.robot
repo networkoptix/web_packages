@@ -1,7 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/customizations-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Teardown     customizations-resource.Restart
+Test Setup        Run Keywords    QA Video Recording Start
+Test Teardown     Run Keywords    QA Video Recording Stop         customizations-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded    Customizations
 

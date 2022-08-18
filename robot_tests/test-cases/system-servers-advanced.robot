@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-server-resource.robot
 Suite Setup       Server Advanced Settings Suite Setup
-Test Setup        Advanced Server Settings Test Setup
-Test Teardown     Advanced Server Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start      Advanced Server Settings Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop       Advanced Server Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Server Advanced Settings Suite Teardown
 Force Tags        advanced server
 

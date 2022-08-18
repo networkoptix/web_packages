@@ -13,6 +13,7 @@ robotframework-pabot==1.13
 robotframework-requests==0.6.2
 robotframework-seleniumlibrary==5.1.3
 robotframework-sshlibrary==3.6.0
+robotframework-screencaplibrary
 selenium==3.141.0
 six==1.12.0
 urllib3==1.24.2

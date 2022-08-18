@@ -1,12 +1,11 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/restore-pass-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Restart Restore Pass
-Test Teardown     Run Keyword If Test Failed    restore-pass-resource.Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start     Restart Restore Pass
+Test Teardown     Run Keywords    QA Video Recording Stop      Restore Pass Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags
 
-    
 *** Test Cases ***
 1. Reset password email sent screen
     [Tags]    email    C26260

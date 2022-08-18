@@ -1,15 +1,16 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/storage-resource.robot
 Suite Setup       Storage Suite Setup
-#Test Setup        Server Settings Test Setup    qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
-Test Teardown     storage-resource.Restart
+Test Setup
+#Test Setup        Server Settings Storage Test Setup     qaburbank@gmail.com    ${AUTO TESTS SYSTEM ID}
+Test Teardown     Run Keywords    QA Video Recording Stop      storage-resource.Restart
 Suite Teardown    Run Keyword and Ignore Error   Storage Suite Teardown
 Force Tags        storage
 
 *** Test Cases ***
 1. Disabling storage warnings aren't shown - Main storages
     [Tags]    C81570    mode
-    [Setup]     Test Setup      disk3    disk1
+    [Setup]     Storage Test Setup       disk3    disk1
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE MAIN MODE}
@@ -51,7 +52,7 @@ Force Tags        storage
 
 2. Disabling storage warnings aren't shown - Backup storages
     [Tags]    C81571    mode
-    [Setup]     Test Setup      disk3    disk1 disk2
+    [Setup]     Storage Test Setup       disk3    disk1 disk2
     [Documentation]    This test case will likely fail when run along with others in the suite. Running it by itself should garauntee empty disks
     Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 2}/ancestor::tr${STORAGE BACKUP MODE}
@@ -93,7 +94,7 @@ Force Tags        storage
 
 3. Change storage mode: Main -> Backup
     [Tags]    C81541    mode
-    [Setup]     Test Setup      disk3    disk2
+    [Setup]     Storage Test Setup       disk3    disk2
     Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
@@ -156,7 +157,7 @@ Force Tags        storage
 
 4. Change storage mode: Backup -> Main
     [Tags]    C81542    mode
-    [Setup]     Test Setup      config storage=${False}
+    [Setup]     Storage Test Setup       config storage=${False}
     Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE ENABLED BACKUP}
 
@@ -225,7 +226,7 @@ Force Tags        storage
 
 5. Enable storage: Not in use -> Main
     [Tags]    C81543    mode
-    [Setup]     Test Setup      config storage=${False}
+    [Setup]     Storage Test Setup       config storage=${False}
     Log    Step 1
     Wait Until Elements Are Visible With Retry    ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE DISABLED NOT IN USE}
     ${files disk2} =    Verify Recorded Video Files    disk2
@@ -262,7 +263,7 @@ Force Tags        storage
 
 6. Enable storage: Not in use -> Backup
     [Tags]    C81544    mode    archive
-    [Setup]     Test Setup      disk1 disk2 disk3
+    [Setup]     Storage Test Setup       disk1 disk2 disk3
     Skip If Image Is    4.3_test    5.0_test    5.0    5.1      msg=Backup Archive not supported with 5.0_test
 #    @{disabled} =    Create List    disk1    disk2    disk3
 #    @{backups} =    Create List
@@ -352,7 +353,7 @@ Force Tags        storage
 
 7. Disable storage: Main -> Not in use
     [Tags]    C81545    mode
-    [Setup]     Test Setup      disk3    disk2
+    [Setup]     Storage Test Setup       disk3    disk2
     Log    Step 1
     Wait Until Elements Are Visible With Retry   ${STORAGE LOCATIONS BLOCK}    ${STORAGE ADD BUTTON}    ${STORAGE ENABLED MAIN}    ${STORAGE DISK 1}/ancestor::tr${STORAGE MAIN MODE}
 
@@ -400,7 +401,7 @@ Force Tags        storage
 
 8. Disable storage: Backup -> Not in use
     [Tags]    C81546    mode    archive
-    [Setup]     Test Setup      config storage=${False}
+    [Setup]     Storage Test Setup       config storage=${False}
     Skip If Image Is    4.3_test    5.0_test    5.0    5.1       msg=Backup Archive not supported with 5.0_test
 #    Log    Step 1
 #    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
@@ -453,7 +454,7 @@ Force Tags        storage
 
 9. Changing mode state - reload page
     [Tags]    C81558    mode
-    [Setup]     Test Setup      config storage=${False}
+    [Setup]     Storage Test Setup       config storage=${False}
     Log    Step 1
 #    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}
 #    Go to Servers
@@ -483,7 +484,7 @@ Force Tags        storage
 
 10. Disabling storage warnings - Main storages
     [Tags]    C81562    mode
-    [Setup]     Test Setup      disk3    disk2
+    [Setup]     Storage Test Setup       disk3    disk2
 #    @{disabled} =    Create List    disk3
 #    @{backups} =    Create List     disk2
 #    Set Default Storage Config    https://${QA BURBANK IP}:${server 1['port']}    ${disabled}    ${backups}
@@ -537,7 +538,7 @@ Force Tags        storage
 
 11. Disabling storage warnings - Backup storages
     [Tags]    C81564    mode    archive
-    [Setup]     Test Setup      config storage=${False}
+    [Setup]     Storage Test Setup       config storage=${False}
     Skip If Image Is    4.3_test    5.0_test    5.0    5.1     msg=Backup Archive not supported with 5.0_test
     Log    Step 1
 #    Log in to user and system    ${server 1['owner']}     ${server 1['cloud id']}

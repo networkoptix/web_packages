@@ -14,3 +14,6 @@ Setup
 Restart
     Go To    ${url}
     Common Restart Logout    ${url}
+
+Login Dialog Test Teardown
+    Run Keyword If Test Failed    Open New Browser On Failure

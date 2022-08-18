@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/account-resource.robot
 Suite Setup       Account Suite Setup
-Test Setup        account-resource.Restart
-Test Teardown     Run Keyword If Test Failed    account-resource.Reset DB and Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start     account-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop      Account Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Account Suite Teardown
 Force Tags        account
 
@@ -25,6 +25,8 @@ Force Tags        account
 
 3. Accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page
     [Tags]
+    [Setup]    No Operation
+    [Teardown]    No Operation
     Skip    No more close button. Login has changed.
     Go To    ${url}/account
     Wait Until Element is Visible    ${LOG IN CLOSE BUTTON}

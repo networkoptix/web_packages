@@ -9,3 +9,6 @@ Open New Browser On Failure
 
 Restart
     Common Restart Logout    ${url}
+
+Login Everywhere Test Teardown
+    Run Keyword If Test Failed    login-everywhere-resource.Open New Browser On Failure

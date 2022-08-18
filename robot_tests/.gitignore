@@ -22,3 +22,4 @@ pabot_results
 server-connect.robot
 robot.sh
 pabot.sh
+*.webm

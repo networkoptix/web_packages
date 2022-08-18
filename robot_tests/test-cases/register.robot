@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/register-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        register-resource.Restart
-Test Teardown     Open New Browser and Reset DB On Failure
+Test Setup        Run Keywords    QA Video Recording Start        register-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop         Open New Browser and Reset DB On Failure
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
 

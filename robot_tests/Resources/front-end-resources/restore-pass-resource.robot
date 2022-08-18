@@ -2,6 +2,9 @@
 Resource          ../../resource.robot
 
 *** Keywords ***
+Restore Pass Test Teardown
+    Run Keyword If Test Failed    restore-pass-resource.Open New Browser On Failure
+
 Register Random User
     ${email}=   Get Random Email Robot    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${email}    ${password}

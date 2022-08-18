@@ -1,7 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/ipvd-resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
-Test Setup        ipvd-resource.Restart
+Test Setup        Run Keywords    QA Video Recording Start     ipvd-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded 
 

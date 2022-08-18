@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-server-resource.robot
 Suite Setup       Server Settings Suite Setup
-Test Setup        Server Settings Test Setup
-Test Teardown     Server Settings Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start     Server Settings Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop      Server Settings Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Server Settings Suite Tear Down
 Force Tags        system    
 

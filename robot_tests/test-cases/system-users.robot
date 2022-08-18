@@ -2,8 +2,8 @@
 Resource          ../Resources/front-end-resources/system-user-resource.robot
 #Resource    ../special-cases/qa-user-creation.robot
 Suite Setup       Users Suite Setup
-Test Setup        Skip If Irrelevant
-Test Teardown     Users Test Tear Down
+Test Setup        Run Keywords    QA Video Recording Start       Skip If Irrelevant
+Test Teardown     Run Keywords    QA Video Recording Stop        Users Test Tear Down
 Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded
 

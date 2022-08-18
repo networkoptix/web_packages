@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/system-admin-resource.robot
 Suite Setup       System Admin Suite Setup
-Test Setup        System Admin Test Setup
-Test Teardown     System Admin Test Restart
+Test Setup        Run Keywords    QA Video Recording Start      System Admin Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop       System Admin Test Restart
 Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system
 

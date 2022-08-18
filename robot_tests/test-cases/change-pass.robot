@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/change-pass-resource.robot
 Suite Setup       change-pass-resource.Setup
-Test Setup        change-pass-resource.Restart
-Test Teardown     Run Keyword If Test Failed    change-pass-resource.Reset DB and Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start      change-pass-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop    Change Pass Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    change-pass-resource.Clean up
 Force Tags        Threaded
 

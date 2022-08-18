@@ -9,6 +9,7 @@ Library      Collections
 Library      OperatingSystem
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      SSHLibrary
+Library      ScreenCapLibrary
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/GenericKeywords.py
 Library      NoptixLibrary/CloudPortalAPI.py    ${ENV}    ${customization}    ${BASE PASSWORD}    ${BASE EMAIL NO SEND}
@@ -25,6 +26,7 @@ ${headless}    true
 @{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --ignore-certificate-errors    --log-level=3     --headless
 ${speed}    0
 ${selenium_timeout}    40
+${video_recording}      ${False}
 
 @{auth}    ${EMAIL OWNER}    ${BASE PASSWORD}
 
@@ -37,6 +39,8 @@ Open Browser and go to URL
         # ...    Release Lock    MyLock
     IF    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"
         Regular Open Browser
+        ${video_recording} =     Set Variable    ${True}
+        Set Suite Variable      ${video_recording}      ${video_recording}
     ELSE
         Open Browser With Options
     END
@@ -48,7 +52,7 @@ Open Browser and go to URL
     Go To    ${url}
 
 Regular Open Browser
-    Set Screenshot Directory    screenshots
+    SeleniumLibrary.Set Screenshot Directory    screenshots
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
     Set Window Size    1920    1080
@@ -1591,3 +1595,17 @@ Click
 Dismiss New Feature Modal
     Wait Until Element Is Visible    ${NEW FEATURE CLOSE BUTTON}    timeout=2
     Click Button    ${NEW FEATURE CLOSE BUTTON}
+
+QA Video Recording Start
+    [Arguments]     ${fps}=15      ${width}=1200    ${monitor}=2
+    ${test case} =     Fetch From Left     ${TEST_NAME}   .
+    IF    ${video_recording}
+        ScreenCapLibrary.Set Screenshot Directory    videos
+        Start Video Recording     alias=${TEST_NAME}    name=${SUITE_NAME}_${test case}    fps=${fps}    embed_width=${width}    monitor=${monitor}
+    END
+
+QA Video Recording Stop
+    IF    ${video_recording}
+        Run Keyword If Test Failed      Stop Video Recording   alias=${TEST_NAME}
+        Run Keyword And Ignore Error    Stop Video Recording   alias=${TEST_NAME}    save_to_disk=${False}
+    END

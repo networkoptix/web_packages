@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/cloud-merge-resource.robot
 Suite Setup       Merge Suite Setup
-Test Setup        Merge Test Setup
-Test Teardown     Merge Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start            Merge Test Setup
+Test Teardown     Run Keywords    QA Video Recording Stop         Merge Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Merge Suite Teardown
 Force Tags        merge
 

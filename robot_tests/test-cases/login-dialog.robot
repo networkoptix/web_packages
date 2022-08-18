@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/login-dialog-resource.robot
 Suite Setup       login-dialog-resource.Setup
-Test Setup        login-dialog-resource.Restart
-Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
+Test Setup        Run Keywords    QA Video Recording Start     login-dialog-resource.Restart
+Test Teardown     Run Keywords    QA Video Recording Stop      Login Dialog Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
 

@@ -465,10 +465,11 @@ Restart
     Common Restart Logout    ${url}
     Reset to Default Storage Config
 
-Test Setup
+Storage Test Setup
     [Arguments]     ${disabled}=${None}     ${backups}=${None}     ${port}=${server 1['port']}     ${email}=${server 1['owner']}    ${system}=${server 1['cloud id']}   ${config storage}=${True}
     ${disabled disks} =    Convert Disk String to List      ${disabled}
     ${backup disks} =    Convert Disk String to List      ${backups}
     Run Keyword If    ${config storage}     Set Default Storage Config    https://${QA BURBANK IP}:${port}    ${disabled disks}     ${backup disks}
+    QA Video Recording Start
     Log in to user and system    ${email}     ${system}
     Go to Servers

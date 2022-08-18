@@ -1,8 +1,8 @@
 *** Settings ***
 Resource          ../Resources/front-end-resources/footer-resource.robot
 Suite Setup       Footer Suite Setup
-Test Setup        Footer Test Setup
-Test Teardown     Footer Test Teardown
+Test Setup        Run Keywords    QA Video Recording Start            Footer Test Setup
+Test Teardown        Run Keywords    QA Video Recording Stop         Footer Test Teardown
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags    threaded
 
