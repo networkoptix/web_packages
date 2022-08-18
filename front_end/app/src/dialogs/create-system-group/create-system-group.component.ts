@@ -1,15 +1,15 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+// import { Store } from '@ngrx/store';
+// import { Observable } from 'rxjs';
 
 import type {
     DropdownItem
 } from '@components/dropdowns/generic/dropdown.component.types';
 import { DIALOG_DATA, DialogRef } from '@dialogs/dialog-ref';
 import { NxSystemGroupsService } from '@pages/systems/groups/services/system-groups.service';
-import { selectGroupState } from '@pages/systems/groups/store/groups/groups.selectors';
-import { GroupsState } from '@pages/systems/groups/store/groups/groups.state';
+// import { selectGroupState } from '@pages/systems/groups.bak/store/groups/groups.selectors';
+// import { GroupsState } from '@pages/systems/groups.bak/store/groups/groups.state';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 
@@ -23,7 +23,7 @@ type GroupNameOption = DropdownItem<string>;
 export class CreateSystemGroupModalContent implements OnInit {
     @ViewChild('createSystemGroupForm') form: NgForm;
 
-    _groups$: Observable<GroupsState> = this.store.select(selectGroupState);
+    // _groups$: Observable<GroupsState> = this.store.select(selectGroupState);
 
     newGroupName: string;
     groupNames: string[];
@@ -35,7 +35,7 @@ export class CreateSystemGroupModalContent implements OnInit {
     constructor(
         private processService: NxProcessService,
         public dialogRef: DialogRef,
-        private store: Store,
+        // private store: Store,
         @Inject(DIALOG_DATA) _dialogData: Record<string, never>,
         private groupsService: NxSystemGroupsService,
     ) {
@@ -59,14 +59,10 @@ export class CreateSystemGroupModalContent implements OnInit {
 
     ngOnInit(): void {
         this.createSystemGroupProcess = this.processService.createProcess(
-            // () => this.groupsService.addGroup(
-            //     this.newGroupName,
-            //     this.selectedParent.value
-            // ),
-            () => Promise.resolve(this.groupsService.act(
-                'create_group',
-                { name: this.newGroupName },
-            )),
+            () => {
+                this.groupsService.createGroup(this.newGroupName);
+                return Promise.resolve();
+            },
             {},
             () => this.dialogRef.close()
         );

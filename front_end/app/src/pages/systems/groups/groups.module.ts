@@ -1,62 +1,51 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+// import { AngularSvgIconModule } from 'angular-svg-icon';
 import { StoreModule } from '@ngrx/store';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { CookieService } from 'ngx-cookie-service';
 
-import { ComponentsModule } from '@components/components.module';
-import { ClientButtonModule } from '@components/open-client-button/client-button.module';
-import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
-import { DirectivesModule } from '@directives/directives.module';
-import { PipesModule } from '@src/pipes/pipes.module';
+import { ComponentsCoreModule } from '@components/components-core.module';
+import { AuthGuard } from '@guards/authGuard';
 
-import { NxGroupListDumbComponent } from './components/group-list-dumb/group-list-dumb.component';
-import { NxSystemGroupTreeComponent } from './components/system-group-tree/system-group-tree.component';
-import { NxSystemListDumbComponent } from './components/system-list-dumb/system-list-dumb.component';
-import { NxSystemGroupPageComponent } from './pages/system-group/system-group-page.component';
-import { NxSystemGroupsIndexPageComponent } from './pages/system-groups-index/system-groups-index-page.component';
-import { NxSystemGroupsPageComponent } from './pages/system-groups/system-groups-page.component';
-import { routes } from './routes';
-import { NxSystemGroupsService } from './services/system-groups.service';
-import { groupsReducer } from './store/groups/groups.reducer';
+import {
+    NxGroupsCardsModule
+} from './components/groups-cards/groups-cards.module';
+import {
+    NxGroupsSidebarLevelModule
+} from './components/sidebar-level/sidebar-level.module';
+import { NxSystemGroupsComponent } from './groups.component';
+import { groupsReducer } from './store/groups.reducer';
 
 @NgModule({
     imports: [
-        CommonModule,
-        RouterModule,
-        TranslateModule,
-        RouterModule.forChild(routes),
-        FormsModule,
-        ComponentsModule,
-        DirectivesModule,
-        PipesModule,
-        AngularSvgIconModule.forRoot(),
+        // AngularSvgIconModule.forRoot(),
+        ComponentsCoreModule,
         DragDropModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: NxSystemGroupsComponent,
+                canActivate: [AuthGuard],
+            },
+            {
+                path: ':groupId',
+                component: NxSystemGroupsComponent,
+                canActivate: [AuthGuard],
+            }
+        ]),
         StoreModule.forFeature('groups', groupsReducer),
-        PagePlaceHolderModule,
-        ClientButtonModule
-    ],
-    providers: [
-        CookieService,
-        NxSystemGroupsService,
+
+        NxGroupsSidebarLevelModule,
+        NxGroupsCardsModule,
     ],
     declarations: [
-        NxSystemGroupTreeComponent,
-        NxSystemListDumbComponent,
-        NxGroupListDumbComponent,
-
-        NxSystemGroupsPageComponent,
-        NxSystemGroupsIndexPageComponent,
-        NxSystemGroupPageComponent
+        NxSystemGroupsComponent,
     ],
-    bootstrap: [],
+    providers: [
+        NxSystemGroupsComponent,
+    ],
     exports: [
-        NxSystemGroupsPageComponent,
+        NxSystemGroupsComponent,
     ]
 })
-export class NxSystemGroupsModule {
-}
+export class NxSystemGroupsModule {}

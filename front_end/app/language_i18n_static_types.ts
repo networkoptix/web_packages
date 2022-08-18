@@ -51,8 +51,8 @@ export interface LanguageI18NStaticTypes {
     servers:               Servers;
     serverTabTitles:       ServerTabTitles;
     system:                LanguageI18NStaticTypesSystem;
+    systemGroups:          SystemGroups;
     systemStatuses:        SystemStatuses;
-    tile:                  Tile;
     toastMessage:          ToastMessage;
     healthMonitor:         HealthMonitor;
     headerLabels:          HeaderLabels;
@@ -1166,6 +1166,11 @@ export interface Users {
     localDelete: (params?: Record<string, string | number>) => string;
 }
 
+export interface SystemGroups {
+    groupCount:  (params?: Record<string, string | number>) => string;
+    systemCount: (params?: Record<string, string | number>) => string;
+}
+
 export interface SystemStatuses {
     activated:    (params?: Record<string, string | number>) => string;
     incompatible: (params?: Record<string, string | number>) => string;
@@ -1180,11 +1185,6 @@ export interface TableHeaders {
     type:   (params?: Record<string, string | number>) => string;
     server: (params?: Record<string, string | number>) => string;
     alert:  (params?: Record<string, string | number>) => string;
-}
-
-export interface Tile {
-    groupCount:  (params?: Record<string, string | number>) => string;
-    systemCount: (params?: Record<string, string | number>) => string;
 }
 
 export interface ToastMessage {

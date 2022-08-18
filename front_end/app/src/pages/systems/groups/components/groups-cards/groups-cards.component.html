@@ -1,0 +1,47 @@
+<!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
+<!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
+<div class="row">
+    <ng-container *ngFor="let group of groups; trackBy: trackItem">
+        <div
+            class="col-sm-12 mb-3 mb-lg-0 col-lg-4 col-xl-3 col-md-6"
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="group"
+            (cdkDropListDropped)="onDrop($event)"
+        >
+            <div
+                cdkDrag
+                [cdkDragData]="group"
+            >
+                <div *cdkDragPlaceholder></div>
+                <!-- <div *cdkDragPlaceholder></div> -->
+                <nx-group-card [group]="group"></nx-group-card>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngFor="let system of systems; trackBy: trackItem">
+        <!-- TODO: Remove name check once backend is fixed -->
+        <div
+            *ngIf="system.name"
+            class="system-card col-sm-12 mb-3 mb-lg-0 col-lg-4 col-xl-3 col-md-6"
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="system"
+            (cdkDropListDropped)="onDrop($event)"
+        >
+            <div
+                cdkDrag
+                [cdkDragData]="system"
+            >
+                <div *cdkDragPlaceholder></div>
+                <!-- Don't need full system data, just a system-like data set -->
+                <system-card
+                    [system]="$any(system)"
+                    [search]="''"
+                    [account]="account"
+                    [openSystem]="openSystem"
+                ></system-card>
+            </div>
+        </div>
+    </ng-container>
+</div>

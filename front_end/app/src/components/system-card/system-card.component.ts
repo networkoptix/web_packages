@@ -15,7 +15,6 @@ import { NxSystemsService } from '@services/systems.service';
 })
 export class SystemCardComponent {
     @Input() system: NxSystemWithUserInfo;
-    @Input() size: 'full' | 'mid' | 'compact';
     @Input() search: string;
     @Input() account: Account;
     @Input() openSystem: (system: NxSystemWithUserInfo) => void;
@@ -29,7 +28,7 @@ export class SystemCardComponent {
     }
 
     get systemState(): string {
-        return this.LANG.systemStatuses[this.system.stateOfHealth]() ||
+        return this.LANG.systemStatuses[this.system.stateOfHealth]?.() ||
             this.system.stateOfHealth;
     }
 
@@ -45,7 +44,7 @@ export class SystemCardComponent {
     getSystemOwnerName(): string {
         return this.systemsService.getSystemOwnerName(
             this.system,
-            this.account.email
+            this.account?.email
         );
     }
 

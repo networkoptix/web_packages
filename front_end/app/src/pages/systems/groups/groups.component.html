@@ -1,0 +1,34 @@
+<div
+    id="groups"
+    cdkDropListGroup
+>
+    <div class="sidebar">
+        <button
+            class="btn btn-default mr-2"
+            (click)="newGroupDialog()"
+            translate
+        >
+            New group
+        </button>
+        <div
+            class="group-drop-list"
+            cdkDropList
+            (cdkDropListDropped)="moveToRoot($event)"
+        >
+            <h3>
+                <a routerLink="/systems/groups/">(root)</a>
+            </h3>
+        </div>
+        <nx-sidebar-level
+            [groups]="rootGroups$ | async"
+            [systems]="rootSystems$ | async"
+        ></nx-sidebar-level>
+    </div>
+    <div class="cards">
+        <nx-groups-cards
+            [rootGroups]="rootGroups$ | async"
+            [rootSystems]="rootSystems$ | async"
+        ></nx-groups-cards>
+    </div>
+</div>
+<!-- TODO: preloader -->

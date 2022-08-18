@@ -6,23 +6,19 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { WINDOW } from '@services/window-provider';
 
-import * as GroupActions from '../store/groups/groups.actions';
-import { ListItem, SystemsItem } from '../store/groups/groups.types';
+import * as GroupActions from '../store/groups.actions';
 
 import {
-    socketIncomingActionType,
-    ISocketIncomingMessage,
-} from './incoming-message-types';
-import {
-    socketOutgoingActionType,
-    ISocketOutgoingMessage
-} from './outgoing-message-types';
+    WebSocketAction,
+    IncomingData,
+    OutgoingData,
+} from './system-groups.service.types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSystemGroupsService {
-    protected WEBSOCKET_URL: string;
+    private WEBSOCKET_URL: string;
 
     constructor(
         private store: Store,
@@ -32,7 +28,9 @@ export class NxSystemGroupsService {
         this.WEBSOCKET_URL = `wss://${this.window.location.host}/system_groups/ws`;
     }
 
-    static connection$: WebSocketSubject<ISocketOutgoingMessage>;
+    private static connection$: WebSocketSubject<
+        IncomingData[WebSocketAction] | OutgoingData[WebSocketAction]
+    >;
 
     connect(): void {
         this.http.post<{ code: string }>('/api/systems/*/code', null)
@@ -41,15 +39,15 @@ export class NxSystemGroupsService {
                 switchMap(url => {
                     if (!NxSystemGroupsService.connection$) {
                         NxSystemGroupsService.connection$ = webSocket(url);
-                        this.act('systems');
+                        this.send({ action: WebSocketAction.SYSTEMS });
                     }
                     return NxSystemGroupsService.connection$;
                 })
             )
             .subscribe({
-                next: this._onSocketMessage.bind(this),
+                next: this.receive,
                 error: () => {
-                    NxSystemGroupsService.connection$.complete();
+                    NxSystemGroupsService.connection$?.complete();
                     NxSystemGroupsService.connection$ = undefined;
                     setTimeout(() => this.connect(), 10000);
                 },
@@ -57,7 +55,7 @@ export class NxSystemGroupsService {
             });
     }
 
-    send(data: ISocketOutgoingMessage): void {
+    private send(data: OutgoingData[WebSocketAction]): void {
         if (!NxSystemGroupsService.connection$) {
             console.error('no ws connection');
             return;
@@ -65,33 +63,34 @@ export class NxSystemGroupsService {
         NxSystemGroupsService.connection$.next(data);
     }
 
-    public act(action: socketOutgoingActionType, data: Record<string, unknown> = {}): void {
-        this.send({ action, ...data } as ISocketOutgoingMessage);
-    }
-
-    public move(id: string, newParentId: string, type: string): void {
-        switch (type) {
-            case 'group':
-                this.act('move_group', { group_id: id, target_id: newParentId });
+    private receive = ({ action, data }: IncomingData[WebSocketAction]): void => {
+        switch (action) {
+            case WebSocketAction.CREATE_GROUP:
+            case WebSocketAction.MOVE_SYSTEM:
+                // Automatically sends back updated list_groups
                 break;
-            case 'system':
-                this.act('move_system', { system_id: id, group_id: newParentId });
+            case WebSocketAction.LIST_GROUPS:
+                this.store.dispatch(GroupActions.setItems({ items: data }));
                 break;
-        }
-    }
-
-    protected _onSocketMessage({ action, data }: ISocketIncomingMessage): void {
-        switch (action as socketIncomingActionType) {
-            case 'list_groups':
-                this.store.dispatch(GroupActions.loadList({
-                    list: data as unknown as Array<ListItem>
-                }));
-                break;
-            case 'systems':
-                this.store.dispatch(GroupActions.loadSystems({
-                    systems: data as unknown as Array<SystemsItem>
-                }));
+            case WebSocketAction.SYSTEMS:
+                this.store.dispatch(
+                    GroupActions.setSystemInfo({ systemInfo: data })
+                );
                 break;
         }
+    };
+
+    createGroup(name: string): void {
+        this.send({ action: WebSocketAction.CREATE_GROUP, name });
+    }
+
+    // eslint-disable-next-line camelcase
+    moveGroup(group_id: string, target_id: string | null): void {
+        this.send({ action: WebSocketAction.MOVE_GROUP, group_id, target_id });
+    }
+
+    // eslint-disable-next-line camelcase
+    moveSystem(system_id: string, group_id: string | null): void {
+        this.send({ action: WebSocketAction.MOVE_SYSTEM, system_id, group_id });
     }
 }

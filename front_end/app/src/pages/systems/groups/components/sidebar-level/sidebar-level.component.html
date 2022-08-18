@@ -1,0 +1,52 @@
+<ul>
+    <li *ngFor="let group of groups">
+        <div
+            class="group-drop-list"
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="group"
+            (cdkDropListDropped)="onDrop($event)"
+        >
+            <h3
+                cdkDrag
+                [cdkDragData]="group"
+                cdkDragBoundary=".sidebar"
+            >
+                <span *cdkDragPlaceholder></span>
+                <!-- TODO: Replace with icon -->
+                <span
+                    class="group-toggle-btn"
+                    (click)="openState[group.id] = !openState[group.id]"
+                    >{{ openState[group.id] ? '(v)' : '(>)' }}</span
+                >
+                {{ ' ' }}
+                <a [routerLink]="'/systems/groups/' + group.id">{{ group.name }}</a>
+            </h3>
+        </div>
+        <nx-sidebar-level
+            *ngIf="group.groups.length || group.systems.length"
+            [ngClass]="{ 'closed-level': !openState[group.id] }"
+            [groups]="group.groups"
+            [systems]="group.systems"
+        ></nx-sidebar-level>
+    </li>
+
+    <li *ngFor="let system of systems">
+        <div
+            cdkDropList
+            cdkDropListSortingDisabled
+            [cdkDropListData]="system"
+            (cdkDropListDropped)="onDrop($event)"
+        >
+            <h3
+                cdkDrag
+                [cdkDragData]="system"
+                cdkDragBoundary=".sidebar"
+            >
+                <span *cdkDragPlaceholder></span>
+                <a [routerLink]="'/systems/' + system.id">{{ system.name ?? '(INACCESSIBLE)' }}</a>
+                <!-- Backend needs to be fixed to only send own systems -->
+            </h3>
+        </div>
+    </li>
+</ul>

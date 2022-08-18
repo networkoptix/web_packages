@@ -1,0 +1,8 @@
+:host {
+  .system-list-bottom-bar {
+    flex-direction: column;
+    margin-top: 27px;
+    // TODO: nx-tag margin-top when system is offline is also hard-coded,
+    // this should really be fixed
+  }
+}
