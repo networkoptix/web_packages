@@ -338,9 +338,9 @@ class GroupView:
         if account_id:
             groups = groups.filter(Group.owner_account_email == account_id)
         groups_list = [group.data() for group in groups]
-        systems_list = [system.as_dict() for system in System.query.filter(System.group_id == None)]
+        # systems_list = [system.as_dict() for system in System.query.filter(System.group_id == None)]
 
-        return groups_list + systems_list
+        return groups_list # + systems_list
 
     @staticmethod
     async def move_system_to_group(modify_users, group_id, system, account):
@@ -644,14 +644,15 @@ async def receiving(cloud_connector):
     while True:
         action, data = ParamsValidator.validate_group(await websocket.receive())
         res = None
+        user_email = cloud_connector.account.get('email')
         if 'error' in data:
             res = data
         # TODO actions: import/export, rename group
         elif action == 'create_group':
             # TODO: support assigining parent on creation
-            res = GroupView.create_group(data['name'], cloud_connector.account.get('email'))
+            res = GroupView.create_group(data['name'], user_email)
         elif action == 'delete_group':
-            res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'], cloud_connector.account.get('email'))
+            res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'], user_email)
         elif action == 'move_group':
             res = await GroupView.move_group_to_group(cloud_connector.share_system, data['group_id'], data['target_id'])
         elif action == 'move_system':
@@ -659,7 +660,7 @@ async def receiving(cloud_connector):
             res = await GroupView.move_system_to_group(
                 cloud_connector.share_system, data['group_id'], system, cloud_connector.account)
         elif action == 'update_group':
-            res = await GroupView.update_group(data['group_id'], cloud_connector.account.get('email'), data['name'])
+            res = await GroupView.update_group(data['group_id'], user_email, data['name'])
         # User management
         elif action == 'create_user':
             res = await UserView.add_user_to_group(
@@ -698,7 +699,7 @@ async def receiving(cloud_connector):
         if not res or 'error' not in res:
             await websocket.send(json.dumps({
                 'action': 'list_groups',
-                'data': GroupView.list_groups(data.get('account_id'))
+                'data': GroupView.list_groups(user_email)
             }))
 
 
