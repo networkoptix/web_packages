@@ -15,6 +15,7 @@ import { HealthMonitorWidgetModule } from '@components/widgets/health-monitor/he
 import { LiveViewWidgetModule } from '@components/widgets/live-view/live-view-widget.module';
 import { ServerLoggerWidgetModule } from '@components/widgets/server-logger/server-logger-widget.module';
 import { ServerMonitorWidgetModule } from '@components/widgets/server-monitor/server-monitor-widget.module';
+import { SystemLicenseSummaryModule } from '@components/widgets/system-license-summary/system-license-summary-widget.module';
 import { SystemListWidgetModule } from '@components/widgets/systems-list/systems-list-widget.module';
 import { ThirdsPartyWidgetModule } from '@components/widgets/third-party/third-party-widget.module';
 import { DirectivesModule } from '@directives/directives.module';
@@ -44,6 +45,7 @@ const appRoutes: Routes = [
         LiveViewWidgetModule,
         ServerLoggerWidgetModule,
         ServerMonitorWidgetModule,
+        SystemLicenseSummaryModule,
         SystemListWidgetModule,
         ThirdsPartyWidgetModule,
         EventGeneratorModule

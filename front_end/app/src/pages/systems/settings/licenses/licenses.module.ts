@@ -11,13 +11,13 @@ import { ComponentsModule } from '@components/components.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { InfoBlockModule } from '@components/info-block/info-block.module';
 import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeholder.module';
+import { LicenseSummaryModule } from '@components/summary/summary.module';
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@src/pipes/pipes.module';
 
 import { NxLicenseDetailComponent } from './license-details/license.component';
 import { NxSystemLicensesComponent } from './licenses.component';
 import { NxLicenseNewComponent } from './new/new.component';
-import { NxLicenseSummaryComponent } from './summary/summary.component';
 import { NxLicenseTrialComponent } from './trial/trial.component';
 
 @NgModule({
@@ -34,7 +34,8 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         NgxMaskModule.forRoot(),
         PagePlaceHolderModule,
         InfoBlockModule,
-        ContentBlockModule
+        ContentBlockModule,
+        LicenseSummaryModule
     ],
     providers: [
     ],
@@ -43,7 +44,6 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         NxLicenseTrialComponent,
         NxSystemLicensesComponent,
         NxLicenseDetailComponent,
-        NxLicenseSummaryComponent
     ],
     bootstrap: [
     ],

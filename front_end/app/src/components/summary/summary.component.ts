@@ -9,6 +9,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
+import { License } from '@services/system.service/system-types';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy({ checkProperties: true })
@@ -19,13 +20,16 @@ import { NgChanges } from '@utils/ng-changes';
 })
 
 export class NxLicenseSummaryComponent implements OnInit, OnChanges {
-    @Input() licensesLegacyInfo: any = [];
+    @Input() selectedSystem: NxSystem;
+    @Input() update: string;
+    @Input() licensesLegacyInfo: License[];
+
+    licenses: License[];
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     system: NxSystem;
-    licenses: any = [];
 
     constructor(
         configService: NxConfigService,
@@ -37,6 +41,9 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        this.system = this.selectedSystem;
+        this.getLicenses();
+
         this.settingsService.systemSubject
             .pipe(
                 untilDestroyed(this),
@@ -48,6 +55,10 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<NxLicenseSummaryComponent>): void {
+        if (changes.update.previousValue !== changes.update.currentValue) {
+            this.getLicenses();
+        }
+
         if (changes.licensesLegacyInfo.previousValue &&
             changes.licensesLegacyInfo?.currentValue &&
             !isEqual(
@@ -63,7 +74,7 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
         if (this.system.useRest) {
             this.system
                 .getLicenseSummaries()
-                .then((response: any) => {
+                .then(response => {
                     if (response && Object.keys(response).length) {
                         this.setLicenses(response);
                     }

@@ -215,3 +215,11 @@ export interface NxSystemWithUserInfo extends NxSystem {
     system2faEnabled: boolean;
     version: number;
 }
+
+export interface License {
+    type: string,
+    count: number,
+    countAvail: number,
+    inUse?: number | string,
+    required: number
+}

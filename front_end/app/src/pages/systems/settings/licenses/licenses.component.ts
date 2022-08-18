@@ -8,7 +8,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { License, NxSystemServer } from '@services/system.service/system-types';
 import { NxMenuService } from '@src/menu/menu.service';
 import { cleanId } from '@utils/general';
 
@@ -32,13 +32,7 @@ export class NxSystemLicensesComponent implements OnInit {
     resetLicense$ = new Subject();
 
     licenses: any = [];
-    licenseSummaries: Array<{
-        type: string,
-        count: number,
-        countAvail: number,
-        inUse: number | string,
-        required: number
-    }>;
+    licenseSummaries: License[];
 
     // Constructor and class initialization methods
     private setupDefaults(): void {

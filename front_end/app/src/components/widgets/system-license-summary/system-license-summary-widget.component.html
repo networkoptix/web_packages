@@ -1,0 +1,64 @@
+<ng-template #editMode>
+    <ng-template #saveButton>
+        <button
+            class="btn btn-primary"
+            (click)="saveSettings()"
+            translate
+        >
+            Save Settings
+        </button>
+    </ng-template>
+    <nx-stepper
+        [saveButton]="saveButton"
+        [columns]="card.size.value.cols"
+    >
+        <cdk-step>
+            <div class="h-100 p-3">
+                <h4 translate>Select system</h4>
+                <nx-select
+                    [items]="systemsDropdownItems$ | async"
+                    [selected]="selectedSystem$ | async"
+                    [stillLoading]="!(selectedSystem$ | async)"
+                    (onSelected)="updateSystem($event)"
+                ></nx-select>
+            </div>
+        </cdk-step>
+        <cdk-step>
+            <div class="h-100 p-3">
+                <h4 translate>Auto update in minutes</h4>
+
+                <label class="my-0">
+                    <span>Minutes between updates</span>
+                </label>
+                <nx-numeric
+                    [min]="1"
+                    [max]="60"
+                    [(ngModel)]="card.config.refreshInterval"
+                ></nx-numeric>
+            </div>
+        </cdk-step>
+    </nx-stepper>
+</ng-template>
+
+<ng-template #preloader>
+    <nx-pre-loader [minHeight]="144"></nx-pre-loader>
+</ng-template>
+
+<div *ngIf="!card.editMode && card.config.selectedSystem; else editMode">
+    <ng-container *ngIf="system$ | async as system; else preloader">
+        <ng-template #offlinePlaceholder>
+            <h2
+                class="mx-auto"
+                translate
+            >
+                Unable to connect to selected system
+            </h2>
+        </ng-template>
+
+        <nx-license-summary-component
+            [selectedSystem]="system"
+            [update]="updater$ | async"
+        >
+        </nx-license-summary-component>
+    </ng-container>
+</div>

@@ -17,7 +17,10 @@
 
     <nx-pre-loader *ngIf="!licenses"></nx-pre-loader>
 
-    <nx-license-summary-component [licensesLegacyInfo]="licenseSummaries">
+    <nx-license-summary-component
+        [licensesLegacyInfo]="licenseSummaries"
+        [selectedSystem]="system"
+    >
     </nx-license-summary-component>
 
     <nx-license-detail-component
