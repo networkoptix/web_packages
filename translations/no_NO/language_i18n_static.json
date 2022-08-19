@@ -976,6 +976,10 @@
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> ønsker å overføre eierskapet til dette systemet til deg",
         "transferTo": "Overfør eierskap til – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+    },
     "systemStatuses": {
         "activated": "aktivert",
         "incompatible": "uforenlig",
@@ -984,10 +988,6 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "utilgjengelig"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",

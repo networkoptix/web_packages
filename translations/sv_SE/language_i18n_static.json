@@ -976,6 +976,10 @@
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> vill överföra äganderätten till detta system till dig",
         "transferTo": "Överför äganderätten till – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+    },
     "systemStatuses": {
         "activated": "aktiverad",
         "incompatible": "oförenlig",
@@ -984,10 +988,6 @@
         "offline": "frånkopplad",
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# Grupper} one{# Grupp} other{# Grupper}}",
-        "systemCount": "{count, plural, =0{# System} one{# Systemet} other{# System}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Något gick fel. Vänligen uppdatera sidan och försök igen.",

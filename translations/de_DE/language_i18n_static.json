@@ -976,6 +976,10 @@
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> möchte Ihnen das Eigentum an diesem System übertragen",
         "transferTo": "Eigentum übertragen auf – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+    },
     "systemStatuses": {
         "activated": "aktiviert",
         "incompatible": "inkompatibel",
@@ -984,10 +988,6 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "nicht verfügbar"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# Gruppen} one{# Gruppe} other{# Gruppen}}",
-        "systemCount": "{count, plural, =0{# Systeme} one{# System} other{# Systeme}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Etwas ist schief gelaufen. Bitte aktualisieren Sie die Seite in etwa 30 Sekunden.",

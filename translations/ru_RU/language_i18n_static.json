@@ -976,6 +976,10 @@
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
         "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+    },
     "systemStatuses": {
         "activated": "активирован",
         "incompatible": "несовместима",
@@ -984,10 +988,6 @@
         "offline": "не в сети",
         "online": "в сети",
         "unavailable": "недоступен"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Что-то пошло не так. Пожалуйста, обновите страницу и повторите попытку.",

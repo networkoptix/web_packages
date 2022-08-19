@@ -908,7 +908,7 @@
         "Settings": "Ajustes",
         "Information": "Información",
         "Bookmarks": "Marcadores",
-        "Layouts": "Layouts",
+        "Layouts": "Diseños",
         "Monitoring": "Monitoreo"
     },
     "system": {
@@ -973,8 +973,12 @@
             "smb": "Red (smb), añadida a través de VMS",
             "cloud": "Nube"
         },
-        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
-        "transferTo": "Transfer ownership to – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+        "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> quiere transferirle la propiedad de este sistema a usted",
+        "transferTo": "Transferir propiedad a – <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
+    },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "systemStatuses": {
         "activated": "activado",
@@ -984,10 +988,6 @@
         "offline": "desconectado",
         "online": "en línea",
         "unavailable": "no disponible"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
-        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Algo salió mal. Por favor, actualiza la página en unos 30 segundos.",

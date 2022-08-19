@@ -976,6 +976,10 @@
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn",
         "transferTo": "Chuyển quyền sở hữu cho - <strong>{ newOwnerName } ({ newOwnerEmail })</strong>"
     },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+    },
     "systemStatuses": {
         "activated": "đã kích hoạt",
         "incompatible": "không tương thích",
@@ -984,10 +988,6 @@
         "offline": "ngoại tuyến",
         "online": "trực tuyến",
         "unavailable": "không khả dụng"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# Nhóm} one{# Nhóm} other{# Nhóm}}",
-        "systemCount": "{count, plural, =0{# Hệ thống} one{# Hệ thống} other{# Hệ thống}}"
     },
     "toastMessage": {
         "cloudUnavailable": "Đã xảy ra lỗi. Vui lòng làm mới trang sau khoảng 30 giây.",

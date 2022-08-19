@@ -976,6 +976,10 @@
         "ownerWantsToTransfer": "<strong>{ ownerName } ({ ownerEmail })</strong> がこのシステムの所有権をあなたに譲渡しようとしています",
         "transferTo": "<strong>{ newOwnerName } ({ newOwnerEmail })</strong> に所有権を譲渡"
     },
+    "systemGroups": {
+        "groupCount": "{count, plural, =0{# Groups} one{# Group} other{# Groups}}",
+        "systemCount": "{count, plural, =0{# Systems} one{# System} other{# Systems}}"
+    },
     "systemStatuses": {
         "activated": "有効化済み",
         "incompatible": "互換性なし",
@@ -984,10 +988,6 @@
         "offline": "オフライン",
         "online": "オンライン",
         "unavailable": "利用できません"
-    },
-    "tile": {
-        "groupCount": "{count, plural, =0{# グループ} one{# グループ} other{# グループ}}",
-        "systemCount": "{count, plural, =0{# システム} one{# システム} other{# システム}}"
     },
     "toastMessage": {
         "cloudUnavailable": "問題が発生しました。30秒後にページを更新してください。",
